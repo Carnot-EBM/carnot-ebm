@@ -26496,3 +26496,58 @@ a real commit SHA instead of `None`, then restoring the fix and confirming green
 mutation-proof discipline, not just a new assertion added and trusted). 23/23 in
 `test_autoresearch_conductor_round.py`, 88/88 across the full autoresearch suite, ruff and mypy
 clean.
+
+## 2026-09-12 (same day, later still): CRITICAL finding 1 (self-reported fitness) closed for real — REQ-AUTO-021
+
+Operator directive: "build the real energy function fix." The prior entry mitigated the worse
+half of CRITICAL 1 (a no-op or made-up benchmark could no longer reach a commit) but left the
+core gap open: a self-reported `final_energy` for a REAL benchmark name was still trusted.
+
+**The fix.** New `python/carnot/autoresearch/toy_benchmarks.py`: real, deterministic potential
+functions for `double_well` (`sum_i (x_i^2-1)^2`) and `rosenbrock` (the classic banana
+function), plus `recompute_final_energy(name, final_state)` that computes the true energy from
+a claimed state and never raises (returns `None` on anything unscoreable — unknown name,
+missing/malformed/non-finite state, oversized state). The hypothesis contract changed: a new
+`AUTORESEARCH_SYSTEM_PROMPT` (replacing `hypothesis_generator.DEFAULT_SYSTEM_PROMPT` for this
+integration) asks for a `final_state` — the point the procedure converged to — and states
+plainly that any self-reported `final_energy` is ignored. `_verified_execute_hypothesis` wraps
+the real `sandbox.execute_hypothesis` and runs every returned metric through
+`_recompute_metrics`, which discards whatever `final_energy` the hypothesis claimed and
+replaces it with the independently recomputed value (or drops the key entirely if recomputation
+isn't possible).
+
+**How it's wired without touching the shared, heavily-tested core.** `orchestrator.py` (the
+already-tested `run_loop`/`run_loop_with_generator`/`run_loop_with_skills`) binds
+`execute_hypothesis` into its own module namespace at import time. `_energy_verification_patch`
+is a context manager that substitutes `_verified_execute_hypothesis` for that one name, only for
+the duration of `run_loop_with_generator`'s call inside `run_round`, then restores the original.
+This reuses 100% of the orchestrator's existing accept/reject/circuit-breaker/logging logic
+unmodified — REQ-AUTO-021 changes what number the evaluator sees, never how it decides.
+
+**Verification, not assertion.** The exact reproduction from the adversarial review
+(`def run(d): return {'double_well': {'final_energy': -999999.0}}`) now runs through the real
+sandbox, real evaluator, and real commit-or-not pipeline (nothing mocked below
+`codex_generate_hypotheses`) and correctly produces ZERO commits
+(`test_fabricated_energy_claim_is_never_committed_end_to_end`). Confirmed this test actually
+catches the bug by temporarily removing the `_energy_verification_patch()` wrapper and
+re-running it: it failed with a real commit landing the fabricated `-999999.0` value, exactly as
+expected, before the fix was restored. 16 new tests for `toy_benchmarks.py`, 9 more for the
+recompute/patch/end-to-end machinery in `test_autoresearch_conductor_round.py` (32 total in that
+file now), 308 across the full `test_autoresearch_*` suite, ruff and mypy clean.
+
+**Real end-to-end dry run against live codex/gpt-6-astra**, not simulated: in a scratch repo,
+the model wrote a genuine damped Gauss–Newton optimizer with a tridiagonal linear solve and
+Armijo backtracking line search, converged both benchmarks to their true global minimum
+(`final_state: [1.0, 1.0]`), and the committed record's `final_energy: 0.0` was the harness's
+own recomputation from that state — the hypothesis's code never returns a `final_energy` key at
+all under the new contract. 1 accepted entry, 2 commits (both benchmarks improved in the same
+call), both showing genuinely reasoned optimization code, not a fabricated number.
+
+**What this does not claim to solve.** A hypothesis can still reach the true analytic optimum
+by hardcoding it directly (e.g. returning `final_state: [1.0, 1.0]` without deriving it) rather
+than implementing a real search procedure. This is not a fabrication risk — the energy for that
+state is genuinely 0.0, the true minimum, so the number is never wrong — it is just a shallow,
+uninteresting way to "win" a toy benchmark once, after which no further improvement is possible
+and the benchmark is correctly saturated. Real published autonomous-research systems share this
+property; it was not treated as in-scope for this fix, which was specifically about the fitness
+NUMBER always being true, not about detecting a scientifically uninteresting way of reaching it.

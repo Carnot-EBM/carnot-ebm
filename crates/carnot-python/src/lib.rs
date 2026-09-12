@@ -15,6 +15,7 @@ mod fixed_cardinality;
 mod kv260;
 mod mode_jump;
 mod one_axis_tempering;
+mod packed_belief;
 mod pipeline;
 mod s2kan;
 mod safety_net;
@@ -472,6 +473,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Persistent fixed-cardinality pair-swap sampler
     fixed_cardinality::register_fixed_cardinality_module(m)?;
+
+    // Persistent lossless packed-belief controller
+    packed_belief::register_packed_belief_module(m)?;
 
     // Compact Safety-Net router ABI
     safety_net::register_safety_net_module(m)?;

@@ -13637,3 +13637,42 @@ SHALL name the failed check, upstream, field, expected value, and observed value
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7228 and SCENARIO-CL-7228-* | Planned: independent row reduction, packed and reference cold replay, transaction attacks, future-label isolation, learned-state deletion, wrapper, and terminal artifact. | Planned: RED-first precondition, metric, cold, transaction, causality, isolation, history, terminal, command, and new-module coverage tests. |
+
+## REQ-CL-7230: Native Lossless Belief Semantics
+
+Carnot SHALL preserve the Exp7226 packed controller's survivor, vote, update,
+empty-reset, rollback, majority, tie, abstention, and disagreement-energy
+semantics in the compiled Rust boundary. The native controller SHALL keep its
+state across calls. It SHALL accept query and update inputs as contiguous
+batches. It SHALL expose a deterministic semantic checkpoint that contains
+survivor masks, vote counts, epochs, and version without target labels or
+hidden parameters.
+
+The parity study SHALL use Exp7226 when `belief_compiler_ready_score` equals
+one. It SHALL not require positive later learning value. It SHALL authenticate
+the producer and reject quarantine before it reads the gate. Small-domain
+checks SHALL exhaust every input for empty, singleton, and pair survivor sets.
+Twenty fixed larger update and reload sequences SHALL compare native and
+Python decisions, energies, reset behavior, and semantic state bytes. At least
+one checkpoint SHALL restore and continue in a second process that loads the
+exact selected extension.
+
+### SCENARIO-CL-7230-PARITY: Native State Preserves The Packed Vote
+
+- GIVEN every supported family and each tested small survivor subset
+- WHEN Python and native controllers evaluate every finite-domain input
+- THEN decisions, ties, abstentions, disagreement, and both label energies match
+- AND batched support updates and empty resets produce identical semantic bytes.
+
+### SCENARIO-CL-7230-RESTORE: Native State Survives A Process Boundary
+
+- GIVEN a checkpoint from a completed fixed update sequence
+- WHEN a fresh process loads the selected compiled extension and restores it
+- THEN its semantic bytes and later query results match the first process
+- AND rollback restores the exact previous semantic bytes.
+
+## Implementation Status (REQ-CL-7230)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7230 and SCENARIO-CL-7230-* | Planned: scoped Rust packed-belief module, PyO3 registration, experiment controller, and thin wrapper. | Planned: RED-first exhaustive parity, fixed sequence, process restore, artifact, and scoped coverage tests. |

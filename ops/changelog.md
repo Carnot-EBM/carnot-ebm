@@ -1,5 +1,36 @@
 # Carnot — Changelog
 
+## 2026-09-12 — Independently-measured fitness for the autoresearch loop (REQ-AUTO-021)
+
+- Closes CRITICAL finding 1 from the Fable 5.1 review for real (the prior
+  entry mitigated only the worse half — a no-op or made-up benchmark could
+  no longer commit, but a self-reported number for a real benchmark still
+  could).
+- New `python/carnot/autoresearch/toy_benchmarks.py`: real DoubleWell/
+  Rosenbrock potential functions and `recompute_final_energy`, which never
+  raises and returns `None` on any unscoreable claim.
+- Hypothesis contract changed: `AUTORESEARCH_SYSTEM_PROMPT` asks for a
+  `final_state`, not a self-reported `final_energy`. `_verified_execute_
+  hypothesis` + `_energy_verification_patch` intercept the sandbox's
+  returned metrics and recompute the real energy before the evaluator ever
+  sees a number — implemented as a request-scoped substitution of
+  `orchestrator.execute_hypothesis`, so `orchestrator.py`/`evaluator.py`/
+  `sandbox.py` and their existing tests are untouched.
+- Verified, not just asserted: the adversarial review's exact reproduction
+  now runs end-to-end (real sandbox, real evaluator, real commit-or-not)
+  and produces zero commits; confirmed the regression test actually catches
+  the bug by removing the fix and watching it fail with a real fabricated
+  commit, then restoring it.
+- Real dry run against live codex/gpt-6-astra: a genuine Gauss–Newton
+  optimizer with a tridiagonal solve and Armijo backtracking, converging
+  both benchmarks to their true minimum; the committed energy was the
+  harness's own recomputation, not a self-report.
+- 16 new tests for `toy_benchmarks.py`, 9 more in
+  `test_autoresearch_conductor_round.py` (32 total there), 308 across the
+  full `test_autoresearch_*` suite, ruff/mypy clean. `REQ-AUTO-021` added
+  to `openspec/capabilities/autoresearch/spec.md`. Feature stays
+  default-off.
+
 ## 2026-09-12 — Fable 5.1 adversarial review of the autoresearch wiring: 3 CRITICAL fixed
 
 - Reviewed by a fresh Fable 5.1 agent with zero shared context, per operator

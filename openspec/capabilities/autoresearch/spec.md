@@ -2352,6 +2352,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-014 | N/A | Implemented | Integration |
 | REQ-AUTO-019 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python |
 | REQ-AUTO-020 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python (shared test file with REQ-AUTO-019) |
+| REQ-AUTO-021 | N/A | Implemented (`python/carnot/autoresearch/toy_benchmarks.py`, `scripts/autoresearch_conductor_round.py`) | 16 Python (`test_autoresearch_toy_benchmarks.py`) + shared conductor-round test file |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3670,21 +3671,16 @@ for this REQ (see `docs/research-notes/avo-adaptation-for-local-generator-
 there), as is a verifier-ensemble-AUROC target (no reusable scoring harness
 exists yet).
 
-**STANDING LIMITATION (adversarial review 2026-09-12, finding 1, NOT yet
-fixed).** The energy `final_energy` compared against the baseline is
+**Fitness is independently measured, not self-reported (fixed 2026-09-12 by
+REQ-AUTO-021).** The energy compared against the baseline was originally
 SELF-REPORTED by the hypothesis's own `run()` return value
-(`sandbox.py:run_in_sandbox` takes it verbatim); nothing independently
-recomputes it from a real potential function. "Keep only if it beats the
-incumbent" therefore currently means "keep only if the hypothesis CLAIMS to
-beat the incumbent". `run_round` mitigates the worst consequence by
-committing only benchmark names the evaluator placed in
-`entry.eval_improvements` (a no-op `{}` return or a made-up benchmark name
-can no longer reach a commit), but a fabricated number for a real,
-pre-existing benchmark name still passes through untouched. This REQ SHALL
-NOT be described as a mechanically ungameable fitness gate until a future
-increment makes the sandbox recompute energy independently of the
-hypothesis's own claim. `CARNOT_AUTORESEARCH_UNATTENDED=1` should not be
-enabled in the belief that it currently is one.
+(`sandbox.py:run_in_sandbox` took it verbatim) -- an adversarial review found
+"keep only if it beats the incumbent" therefore meant "keep only if the
+hypothesis CLAIMS to beat the incumbent". REQ-AUTO-021 closes this properly:
+the hypothesis contract now returns a `final_state`, never a bare energy
+number, and trusted harness code (not the sandboxed hypothesis) recomputes
+the energy from that state via a real potential function. See REQ-AUTO-021
+for the full mechanism and its own scenarios.
 
 #### SCENARIO-AUTO-019-A: A bounded round runs unattended and is non-fatal when codex is unavailable
 
@@ -3766,6 +3762,77 @@ commit is made, and the repository's commit count is unchanged.
 **Then** `ops/.autoresearch_baselines.json` and
 `ops/.autoresearch_experiment_log.json` exist on disk (or are updated) but
 are never `git add`-ed or committed by this round.
+
+
+### REQ-AUTO-021: Independently-Measured Fitness for the Toy Benchmarks
+
+**Origin:** 2026-09-12 adversarial review (Fable 5.1), finding 1, followed by
+an operator directive: "build the real energy function fix." The review
+reproduced that `run_round`'s fitness gate trusted a hypothesis's own
+self-reported `final_energy` verbatim -- `def run(d): return {'double_well':
+{'final_energy': -999999.0}}` was accepted and committed as if it were a
+real result. `orchestrator.py`'s own docstring states the design intent this
+violated: "the energy function is the objective judge (can't be gamed by an
+LLM)". For the two toy benchmarks (REQ-AUTO-019), no such judge existed.
+
+The system SHALL provide real, deterministic potential functions for
+`double_well` (`E(x) = sum_i (x_i^2 - 1)^2`) and `rosenbrock`
+(`E(x) = sum_i [100*(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]`) in
+`python/carnot/autoresearch/toy_benchmarks.py`, and a
+`recompute_final_energy(benchmark_name, final_state)` function that computes
+the true energy from a state the hypothesis reports having reached, never
+raising -- returning `None` on any unscoreable input (unknown benchmark
+name, missing/malformed/non-finite state, an oversized state) rather than a
+value that could itself leak information back to the hypothesis.
+
+The autoresearch conductor round (REQ-AUTO-019) SHALL change the hypothesis
+contract to require a `final_state` (the point the procedure converged to)
+instead of a self-reported `final_energy`, and SHALL make every sandboxed
+hypothesis execution's returned metrics pass through
+`recompute_final_energy` BEFORE the evaluator (REQ-AUTO-005) ever sees them
+-- discarding any self-reported `final_energy` entirely and replacing it
+with the independently recomputed value, or removing the key altogether when
+recomputation is not possible. This interception SHALL be implemented
+without modifying `orchestrator.py`, `evaluator.py`, or `sandbox.py`
+(REQ-AUTO-002 through REQ-AUTO-010's shared, independently-tested contract)
+-- a request-scoped substitution of the `execute_hypothesis` name
+`orchestrator.py` calls, active only for the duration of one autoresearch
+round, is sufficient and keeps every existing accept/reject/circuit-breaker
+test in those shared modules meaningful and unmodified.
+
+A benchmark name `recompute_final_energy` does not recognize (including any
+name an LLM invents) SHALL never receive a `final_energy` value, so it can
+never register as an improvement or a regression under REQ-AUTO-005's
+evaluation.
+
+#### SCENARIO-AUTO-021-A: A fabricated energy claim is never committed
+
+**Given** a hypothesis `def run(d): return {'double_well': {'final_energy':
+-999999.0}}` (a `final_energy` with no `final_state`)
+**When** a bounded round runs it through the real sandbox and evaluator,
+with nothing mocked below the hypothesis generator
+**Then** the hypothesis is still sandboxed successfully, but its
+`final_energy` claim is discarded before evaluation; no lineage commit is
+made and the repository's commit count is unchanged.
+
+#### SCENARIO-AUTO-021-B: A real state recomputes to the true energy
+
+**Given** a hypothesis that returns `{'double_well': {'final_state': [1.0,
+1.0]}}`
+**When** the round evaluates it
+**Then** the committed record's `final_energy` is exactly `0.0` (the true
+global minimum of the double-well potential at that state), never a
+value the hypothesis chose.
+
+#### SCENARIO-AUTO-021-C: An unscoreable claim is dropped, not treated as zero or as failure
+
+**Given** any of: an unknown benchmark name, a missing `final_state`, a
+non-numeric or non-finite state value, or a state longer than the supported
+dimension
+**When** `recompute_final_energy` is called
+**Then** it returns `None` without raising, and the corresponding
+`final_energy` key is absent from the recomputed metrics passed to the
+evaluator.
 
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks

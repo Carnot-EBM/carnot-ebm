@@ -283,3 +283,62 @@ quarantined input, or an inflated speed claim fails closed
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7202 and SCENARIO-RUSTPY-7202-* | Implemented (`python/carnot/experiment_7202_v634_slice_cost_quality.py`, `scripts/experiments/experiment_7202_v634_slice_cost_quality.py`, `results/experiment_7202_v634_slice_cost_quality.json`) | Implemented (`tests/python/test_experiment_7202_v634_slice_cost_quality.py`; frozen roster, exact law, controls, real boundaries, quality insufficiency, gate recomputation, artifact attacks, and blocked paths) |
+
+### REQ-RUSTPY-7230: Persistent Packed-Belief PyO3 Boundary
+
+Carnot SHALL expose the REQ-CL-7230 packed survivor and vote core through the
+existing `carnot-python` PyO3 crate. The boundary SHALL use a persistent native
+object. Query and update methods SHALL consume contiguous NumPy arrays in
+batches. The implementation SHALL stay scoped to packed state operations and
+SHALL not port the experiment harness.
+
+The executable SHALL build only `carnot-python` in a task-specific target. It
+SHALL bind PyO3 to the executing interpreter with the Exp7217 recipe. It SHALL
+load the copied extension by its complete interpreter suffix. The identity
+receipt SHALL include the interpreter, Python ABI, build flags, loaded path,
+binary hash, linker view, and native class and method names. A Python fallback
+or an unverified stale binary SHALL not count as native evidence.
+
+After separated warmup, the study SHALL measure batches one, 32, and 256 on
+identical sealed operation traces. Each cell SHALL have ten paired repetitions.
+A fixed seed SHALL randomize arm order. End-to-end time SHALL include input
+marshaling, queries, update, vote refresh, commit or checkpoint, and output
+consumption. Native kernel time MAY appear only as a secondary metric. The
+measurement SHALL stop after 300 seconds instead of adding repetitions.
+
+`native_belief_ready_score` SHALL equal one only after zero parity mismatch and
+cross-process restore. `native_cost_value_score` SHALL equal one only when
+parity error is zero and every batch cell's paired speed-ratio lower CI95 is
+above one. `nfr_01_10x_met` SHALL separately require every lower bound to be at
+least ten. The result SHALL preserve the prior failed sampler NFR-01 history.
+It SHALL state that performance alone does not inherit scientific learning
+value.
+
+The task SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, both substrate
+fields to `cpu_exact_solver_or_simulator`, and `execution_venue=host` after
+native execution. A missing unchanged external prerequisite SHALL instead use
+`blocked_no_run`, a row-free blocked artifact, and an exact failed gate row.
+The terminal artifact SHALL contain all Exp7230 required fields, full parity
+and cost rows, sample counts, source hashes, fixed seeds, measured duration,
+and a reproducibility checksum. It SHALL be written atomically only after cold
+validation.
+
+### SCENARIO-RUSTPY-7230-BINDING: The Selected Binary Is Actual Evidence
+
+**Given** the executing interpreter and changed packed-belief Rust source
+**When** the task-specific build and fresh import complete
+**Then** the receipt identifies the exact loaded extension and its hash
+**And** the native class executes without a Python fallback.
+
+### SCENARIO-RUSTPY-7230-COST: Paired End-To-End Cost Gates Value
+
+**Given** identical sealed traces for batches one, 32, and 256
+**When** both arms run ten times in fixed randomized order after warmup
+**Then** every boundary cost and full denominator remains in `cost_rows`
+**And** speed value and NFR-01 derive only from paired lower confidence bounds.
+
+## Implementation Status (REQ-RUSTPY-7230)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7230 and SCENARIO-RUSTPY-7230-* | Planned: persistent packed-belief Rust core, PyO3 batch boundary, interpreter-bound build, and measured artifact. | Planned: RED-first compiled identity, exhaustive parity, fixed sequence, cross-process restore, cost-gate, validator, and command tests. |

@@ -302,7 +302,99 @@ class TestCodexGenerateHypotheses:
         assert failures and failures[0]["description"] == "codex_call_failed"
 
 
+class TestRecomputeMetrics:
+    """Unit tests for the REQ-AUTO-021 fix to adversarial review finding 1."""
+
+    def test_self_reported_final_energy_is_replaced_with_the_real_one(self) -> None:
+        out = acr._recompute_metrics(
+            {"double_well": {"final_energy": -999999.0, "final_state": [1.0, 1.0]}}
+        )
+        assert out["double_well"]["final_energy"] == 0.0
+
+    def test_missing_final_state_drops_final_energy_entirely(self) -> None:
+        out = acr._recompute_metrics({"double_well": {"final_energy": -999.0}})
+        assert "final_energy" not in out["double_well"]
+
+    def test_unknown_benchmark_name_never_gets_a_final_energy(self) -> None:
+        out = acr._recompute_metrics({"made_up_bench": {"final_energy": 123.0}})
+        assert "final_energy" not in out["made_up_bench"]
+
+    def test_other_fields_survive_untouched(self) -> None:
+        out = acr._recompute_metrics(
+            {
+                "double_well": {
+                    "final_energy": -999.0,
+                    "final_state": [1.0, 1.0],
+                    "wall_clock_seconds": 1.2,
+                }
+            }
+        )
+        assert out["double_well"]["wall_clock_seconds"] == 1.2
+
+
+class TestVerifiedExecuteHypothesis:
+    def test_a_fabricated_energy_with_no_state_never_reaches_the_evaluator(self) -> None:
+        """The exact shape of the original adversarial-review reproduction,
+        run through the REAL sandbox (not mocked) end to end."""
+        code = "def run(d): return {'double_well': {'final_energy': -999999.0}}"
+        result = acr._verified_execute_hypothesis(code, {"dim": 2})
+        assert result.success is True
+        assert "final_energy" not in result.metrics["double_well"]
+
+    def test_a_real_state_recomputes_correctly_through_the_real_sandbox(self) -> None:
+        code = "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}"
+        result = acr._verified_execute_hypothesis(code, {"dim": 2})
+        assert result.success is True
+        assert result.metrics["double_well"]["final_energy"] == 0.0
+
+    def test_sandbox_failure_passes_through_unmodified(self) -> None:
+        code = "def run(d): raise ValueError('boom')"
+        result = acr._verified_execute_hypothesis(code, {"dim": 2})
+        assert result.success is False
+
+
+class TestEnergyVerificationPatch:
+    def test_patches_and_restores_the_orchestrator_module(self) -> None:
+        original = acr._orchestrator_module.execute_hypothesis
+        with acr._energy_verification_patch():
+            assert acr._orchestrator_module.execute_hypothesis is acr._verified_execute_hypothesis
+        assert acr._orchestrator_module.execute_hypothesis is original
+
+
 class TestRunRound:
+    def test_fabricated_energy_claim_is_never_committed_end_to_end(self, tmp_path: Path) -> None:
+        """The definitive close of adversarial review CRITICAL finding 1,
+        reproduced exactly as the reviewer reported it, run through the real
+        run_round -> real sandbox -> real evaluator -> real commit-or-not
+        pipeline, no mocking below codex_generate_hypotheses."""
+        _init_repo(tmp_path)
+
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+            return [
+                (
+                    "claims an impossible energy",
+                    "def run(d): return {'double_well': {'final_energy': -999999.0}}",
+                )
+            ]
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+        ):
+            rc = acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=3,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        assert rc == 0
+        log = subprocess.run(
+            ["git", "log", "--oneline"], cwd=tmp_path, capture_output=True, text=True, check=True
+        ).stdout
+        assert log.count("\n") == 1  # only the seed commit -- the fabricated claim never landed
+        assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
+
     def test_codex_unavailable_is_non_fatal(self, tmp_path: Path) -> None:
         with patch.object(acr, "codex_available", return_value=False):
             rc = acr.run_round(
@@ -320,8 +412,12 @@ class TestRunRound:
 
         def fake_generator(_model, _timeout, _baselines, _failures, iteration):
             if iteration == 0:
-                return [("better", "def run(d): return {'double_well': {'final_energy': -6.0}}")]
-            return [("worse", "def run(d): return {'double_well': {'final_energy': 5.0}}")]
+                # double_well_energy([1.0, 1.0]) == 0.0, beats baseline 0.05
+                return [
+                    ("better", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
+                ]
+            # double_well_energy([0.0, 0.0]) == 2.0, worse than the new baseline 0.0
+            return [("worse", "def run(d): return {'double_well': {'final_state': [0.0, 0.0]}}")]
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -417,8 +513,17 @@ class TestRunRound:
 
         def fake_generator(_model, _timeout, _baselines, _failures, iteration):
             if iteration == 0:
-                return [("first win", "def run(d): return {'double_well': {'final_energy': -6.0}}")]
-            return [("second win", "def run(d): return {'double_well': {'final_energy': -7.0}}")]
+                # double_well_energy([1.1, 1.0]) == 0.04410000000000008, beats baseline 0.05
+                return [
+                    (
+                        "first win",
+                        "def run(d): return {'double_well': {'final_state': [1.1, 1.0]}}",
+                    )
+                ]
+            # double_well_energy([1.0, 1.0]) == 0.0, beats the new baseline 0.0441...
+            return [
+                ("second win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
+            ]
 
         with (
             patch.object(acr, "codex_available", return_value=True),
@@ -438,10 +543,10 @@ class TestRunRound:
             text=True,
             check=True,
         ).stdout
-        # first accepted hypothesis: baseline 0.05 -> -6.0
-        assert "0.05 -> -6.0" in log
-        # second accepted hypothesis: baseline -6.0 (not the round-final -7.0) -> -7.0
-        assert "-6.0 -> -7.0" in log
+        # first accepted hypothesis: baseline 0.05 -> its own real recomputed energy
+        assert "0.05 -> 0.04410000000000008" in log
+        # second accepted hypothesis: baseline 0.0441... (not some other value) -> 0.0
+        assert "0.04410000000000008 -> 0.0" in log
 
 
 class TestSeedBaselines:

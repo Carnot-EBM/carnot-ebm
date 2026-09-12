@@ -16431,3 +16431,17 @@ while re-reading the code after the codex switch: `call_codex` used `--cd PROJEC
 `--dangerously-bypass-approvals-and-sandbox`, which is genuinely agentic — now points at a
 disposable temp directory instead. 88/88 autoresearch tests pass. Full account, credited
 findings, and what remains open in `ops/known-issues.md`.
+
+
+## 2026-09-12 — CRITICAL finding 1 closed for real: independently-measured fitness (REQ-AUTO-021)
+
+New `python/carnot/autoresearch/toy_benchmarks.py`: real DoubleWell/Rosenbrock potential
+functions. The hypothesis contract now returns a `final_state`, never a self-reported
+`final_energy`; a context-manager patch (`_energy_verification_patch`) makes every sandboxed
+run's metrics pass through an independent recomputation before the evaluator sees them, without
+modifying `orchestrator.py`/`evaluator.py`/`sandbox.py`. The exact adversarial-review
+reproduction now runs end-to-end and correctly produces zero commits; confirmed by temporarily
+removing the fix and watching the test fail with a real fabricated commit, then restoring it.
+Real dry run against live codex/gpt-6-astra: the model wrote a genuine Gauss–Newton optimizer,
+converged both benchmarks to their true minimum, and the committed energy was the harness's own
+recomputation, not a self-report. 308/308 autoresearch tests, ruff/mypy clean. Still default-off.

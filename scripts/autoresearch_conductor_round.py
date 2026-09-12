@@ -10,26 +10,25 @@ round of that loop, and when a hypothesis wins, persist it as its own git
 commit carrying its score -- the one piece the orchestrator itself does not
 do (it only updates an in-memory baseline and appends to a JSON log).
 
-**STANDING LIMITATION, not yet fixed (adversarial review 2026-09-12, finding
-1): the fitness score is SELF-REPORTED, not independently measured.**
-`sandbox.py:run_in_sandbox` takes the hypothesis's `run(benchmark_data)`
-return value verbatim as `metrics`; `evaluator.py` compares whatever
-`final_energy` the hypothesis chose to report against the baseline. Nothing
-in this pipeline independently recomputes an energy from a real DoubleWell/
-Rosenbrock potential. So "keep only if it beats the incumbent" is currently
-"keep only if the hypothesis CLAIMS to beat the incumbent" -- a
-`def run(d): return {'double_well': {'final_energy': -999999.0}}` is
-accepted and committed exactly as if it were a real result. This was
-mitigated, not solved: `run_round` now commits only benchmarks the evaluator
-placed in `eval_improvements` (closing the worse half -- a no-op `{}` or a
-made-up benchmark name used to be committed too, see finding 1's second
-half), but a self-reported number for a REAL benchmark name still passes
-through untouched. Blast radius is limited today (DoubleWell/Rosenbrock are
-throwaway toy benchmarks with no downstream consumer -- nothing else in the
-project reads `ops/autoresearch_discoveries/`), but do not enable
-`CARNOT_AUTORESEARCH_UNATTENDED=1` believing this is a mechanically
-ungameable AVO-style fitness gate. It is not, until a real benchmark
-computes energy independently of the hypothesis's own claim.
+**Fitness is independently measured, not self-reported (REQ-AUTO-021, fixed
+2026-09-12).** Adversarial review found the original wiring trusted a
+hypothesis's own `final_energy` claim verbatim (`sandbox.py:run_in_sandbox`
+took the `run(benchmark_data)` return value as-is; `evaluator.py` compared
+whatever number was in it). A `def run(d): return {'double_well':
+{'final_energy': -999999.0}}` was accepted and committed as if it were real.
+Fixed properly, not just mitigated: the hypothesis contract now asks for a
+`final_state` (the point it converged to), never a bare energy number
+(`AUTORESEARCH_SYSTEM_PROMPT` below); `_energy_verification_patch` makes
+every sandboxed run go through `_verified_execute_hypothesis`, which
+discards any self-reported `final_energy` and recomputes it from
+`final_state` via `toy_benchmarks.py`'s real DoubleWell/Rosenbrock potential
+functions -- code the hypothesis never touches and cannot influence except
+by actually finding a lower-energy state. A benchmark name this module
+cannot score (including anything an LLM invents) never gets a `final_energy`
+at all, so it can never register as an improvement. See
+`test_fabricated_energy_claim_is_never_committed_end_to_end` for the exact
+reproduction from the adversarial review, now passing through the real
+pipeline with nothing mocked below `codex_generate_hypotheses`.
 
 **How it is invoked.** Exactly like the milestone-close audits already wired
 into `research_step()` (`pages_adversarial_audit.py`, `verifier_authenticity_
@@ -48,9 +47,9 @@ try next, not the ARC live agent's own inference-latency-bound generation
 that IS local-first by contract. `call_codex()` below mirrors the exact
 subprocess pattern the sibling audit scripts already use
 (`pages_adversarial_audit.py:call_codex`), reusing `hypothesis_generator.py`'s
-existing `DEFAULT_SYSTEM_PROMPT` / `_build_user_prompt` / `_extract_hypotheses`
-for the prompt and parsing -- only the transport (a codex subprocess instead
-of a raw OpenAI-compatible HTTP call) changed. This is the project's own
+`_build_user_prompt` / `_extract_hypotheses` for the context/parsing halves,
+but its own `AUTORESEARCH_SYSTEM_PROMPT` (below) for the contract itself --
+see REQ-AUTO-021 for why. This is the project's own
 internal R&D tooling talking to a closed-weight model, the same as every
 other autonomous conductor role; it is not a Carnot CAPABILITY (the thing
 `python/carnot/verify`/`pipeline`/`samplers` ship to users), so the
@@ -109,19 +108,126 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "python"))
 
+from carnot.autoresearch import orchestrator as _orchestrator_module  # noqa: E402
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics  # noqa: E402
 from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker  # noqa: E402
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog  # noqa: E402
 from carnot.autoresearch.hypothesis_generator import (  # noqa: E402
-    DEFAULT_SYSTEM_PROMPT,
     _build_user_prompt,
     _extract_hypotheses,
 )
 from carnot.autoresearch.orchestrator import AutoresearchConfig, run_loop_with_generator  # noqa: E402
+from carnot.autoresearch.sandbox import SandboxConfig, SandboxResult, execute_hypothesis  # noqa: E402
+from carnot.autoresearch.toy_benchmarks import (  # noqa: E402
+    BENCHMARK_ENERGY_FUNCTIONS,
+    recompute_final_energy,
+)
 
 DEFAULT_BENCHMARK_DATA: dict[str, Any] = {"dim": 2}
 DEFAULT_MODEL = os.environ.get("CARNOT_AUTORESEARCH_MODEL", "gpt-6-astra")
 DEFAULT_CODEX_TIMEOUT_S = 300
+
+# REQ-AUTO-021: unlike hypothesis_generator.DEFAULT_SYSTEM_PROMPT (which asks
+# for a self-reported final_energy -- the exact self-report gap adversarial
+# review 2026-09-12 finding 1 exploited), this prompt asks for a final_state
+# and tells the hypothesis its own final_energy claim, if any, is IGNORED.
+# The real energy is recomputed by trusted harness code from final_state via
+# toy_benchmarks.py, never by the sandboxed hypothesis.
+AUTORESEARCH_SYSTEM_PROMPT = """\
+You are proposing an optimization procedure for a numerical benchmark in the \
+Carnot autoresearch pipeline. Two benchmarks exist, each over `dim` real-valued \
+coordinates (see the current baseline context for `dim`):
+
+- double_well: E(x) = sum_i (x_i^2 - 1)^2. Global minimum E=0 at every \
+coordinate equal to +1 or -1.
+- rosenbrock: E(x) = sum_i [100*(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]. Global \
+minimum E=0 at every coordinate equal to 1. Needs at least 2 dimensions.
+
+Write a Python function `run(benchmark_data) -> dict` that runs an actual \
+optimization procedure (gradient descent, random search, simulated annealing, \
+anything real) starting from `benchmark_data["dim"]` coordinates, and returns:
+
+    {"double_well": {"final_state": [x0, x1, ...], "wall_clock_seconds": ...}}
+
+or the equivalent under "rosenbrock". `final_state` is a plain list of floats,\
+ the point your procedure converged to.
+
+IMPORTANT: do NOT return "final_energy" -- it will be IGNORED. The harness \
+independently recomputes the true energy from your `final_state` using the \
+real formula above, so there is no way to claim a result you did not actually \
+reach. Only your `final_state` and how you found it matter. Do NOT hardcode \
+the analytic minimum (e.g. returning [1, 1, ...] without deriving it) -- the \
+research value is in the procedure, not the coordinates."""
+
+
+def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
+    """The one seam between the sandbox and the evaluator (REQ-AUTO-021).
+
+    For each benchmark this module has a real potential function for, drop
+    whatever `final_energy` the hypothesis self-reported and replace it with
+    `recompute_final_energy(name, final_state)` -- None (dropped entirely) if
+    `final_state` is missing or malformed, which the evaluator already
+    treats as "not measured" (`evaluator.py`: `if bench_energy is None:
+    continue`). A benchmark name this module does not know how to score
+    (including anything an LLM made up) never gets a `final_energy` at all,
+    so it can never register as an improvement or a regression.
+    """
+    verified: dict[str, Any] = {}
+    for name, bench_metrics in raw_metrics.items():
+        if not isinstance(bench_metrics, dict):
+            continue
+        entry = {k: v for k, v in bench_metrics.items() if k != "final_energy"}
+        if name in BENCHMARK_ENERGY_FUNCTIONS:
+            energy = recompute_final_energy(name, bench_metrics.get("final_state"))
+            if energy is not None:
+                entry["final_energy"] = energy
+        verified[name] = entry
+    return verified
+
+
+def _verified_execute_hypothesis(
+    hypothesis_code: str,
+    benchmark_data: dict[str, Any],
+    config: SandboxConfig | None = None,
+    docker_config: Any = None,
+) -> SandboxResult:
+    """Drop-in replacement for sandbox.execute_hypothesis: same sandbox, same
+    isolation, but the returned metrics have been through `_recompute_metrics`
+    before the evaluator ever sees them."""
+    result = execute_hypothesis(hypothesis_code, benchmark_data, config, docker_config)
+    if not result.success:
+        return result
+    return SandboxResult(
+        success=result.success,
+        metrics=_recompute_metrics(result.metrics),
+        stdout=result.stdout,
+        stderr=result.stderr,
+        error=result.error,
+        wall_clock_seconds=result.wall_clock_seconds,
+        timed_out=result.timed_out,
+    )
+
+
+class _energy_verification_patch:
+    """Context manager: for its duration, run_loop_with_generator's internal
+    calls to `execute_hypothesis` go through `_verified_execute_hypothesis`
+    instead. orchestrator.py binds `execute_hypothesis` into its OWN module
+    namespace at import time (`from ...sandbox import ... execute_hypothesis`),
+    so patching that name on the orchestrator module -- not on sandbox.py,
+    which nothing here calls directly -- is what actually takes effect.
+
+    This is the whole fix for REQ-AUTO-021: it reuses run_loop_with_generator's
+    existing, already-tested accept/reject/circuit-breaker/logging logic
+    completely unmodified, and only replaces the one step that read a
+    self-reported number instead of an independently-verified one.
+    """
+
+    def __enter__(self) -> None:
+        self._original = _orchestrator_module.execute_hypothesis
+        _orchestrator_module.execute_hypothesis = _verified_execute_hypothesis
+
+    def __exit__(self, *exc_info: object) -> None:
+        _orchestrator_module.execute_hypothesis = self._original
 
 
 def seed_baselines() -> BaselineRecord:
@@ -218,11 +324,12 @@ def codex_generate_hypotheses(
     iteration: int,
 ) -> list[tuple[str, str]]:
     """The `generator` callback `run_loop_with_generator` expects. Reuses
-    hypothesis_generator.py's own prompt-building and response-parsing --
-    only the transport (codex subprocess vs. a raw HTTP client) differs."""
-    prompt = (
-        f"{DEFAULT_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
-    )
+    hypothesis_generator.py's own user-prompt-building and response-parsing,
+    but AUTORESEARCH_SYSTEM_PROMPT (REQ-AUTO-021), not hypothesis_generator's
+    own DEFAULT_SYSTEM_PROMPT -- the two ask for a different return contract
+    (final_state vs. a self-reported final_energy) and only ours is actually
+    verified downstream by _energy_verification_patch."""
+    prompt = f"{AUTORESEARCH_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
     ok, output = call_codex(prompt, model, timeout)
     if not ok:
         recent_failures.append({"description": "codex_call_failed", "reason": output})
@@ -374,9 +481,13 @@ def run_round(
         max_consecutive_failures=10,
         constitution_checker=checker,
     )
-    result = run_loop_with_generator(
-        generator, baselines, DEFAULT_BENCHMARK_DATA, config, experiment_log
-    )
+    # REQ-AUTO-021: for the duration of the loop, every sandboxed hypothesis's
+    # metrics are recomputed from its final_state through a real potential
+    # function before the evaluator sees them -- see _energy_verification_patch.
+    with _energy_verification_patch():
+        result = run_loop_with_generator(
+            generator, baselines, DEFAULT_BENCHMARK_DATA, config, experiment_log
+        )
 
     # Adversarial review 2026-09-12, findings 1/3/5: only commit benchmarks the
     # EVALUATOR itself measured as a real improvement (entry.eval_improvements),
