@@ -13798,3 +13798,131 @@ an exact two-key dictionary containing `principle` and `value` may be unwrapped.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7240 and SCENARIO-CL-7240-* | Implemented: `python/carnot/experiment_7240_v637_recurrence_fixture.py` provides the bounded archived-mask controller, separated 32-stream fixture, six-arm panel, checkpoint, and atomic artifact builder; `scripts/experiments/experiment_7240_v637_recurrence_fixture.py` is the thin wrapper. | `tests/python/test_experiment_7240_v637_recurrence_fixture.py` covers preconditions, exact principle unwrapping, delayed contradiction, archive cap, validation, shuffled nomination, stream separation, all six arms, restart, rollback, cold validation, blocked output, command delegation, and 100-percent new-code line coverage. |
+
+## REQ-CL-7241: Prospective Learning Value From Validated Archive Reuse
+
+Carnot SHALL evaluate the authenticated Exp7240 recurrence fixture without
+changing production defaults. It SHALL replay all 32 frozen streams, 1,024
+events, and six arms. This produces 196,608 prospective event-and-arm rows.
+Each prediction and query receipt SHALL exist before its evaluator label is
+released. Evaluator labels, drift patterns, regimes, seeds, and boundaries
+SHALL remain outside controller inputs.
+
+The replay SHALL retain measured costs and source hashes for prediction,
+query, delayed delivery, validation, archive changes, and state writes. It
+SHALL retain complete decision rows and all final active and archived state
+bytes. It SHALL summarize one row per independent stream and arm. Each row
+SHALL report future error, false accepts, abstention, recurrence error,
+archive-hit validity, later changed decisions, and operation costs. An
+abstention SHALL count as an error in every full-denominator efficacy metric.
+
+The validation-selected archive arm SHALL be compared with frozen warmup,
+destructive learning, reset and relearn, and shuffled nomination. Stale reuse
+SHALL remain a safety negative control. Paired confidence intervals SHALL use
+the 32 independent stream seeds. They SHALL use 10,000 frozen bootstrap draws.
+Correlated events SHALL not increase the independent sample size.
+
+`recurrence_learning_value_score` SHALL equal one only when every frozen gate
+passes. The upper 95-percent confidence bound for future-error difference
+SHALL be below zero against frozen warmup and reset and relearn. The upper
+bound for recurrence-error difference SHALL be below zero against destructive
+learning and shuffled nomination. Recurrence-error increase against frozen
+warmup SHALL be no more than 0.02. The upper bound for false-accept difference
+SHALL be no more than zero against frozen warmup and reset and relearn. The
+run SHALL also show a valid archive reactivation, a later changed decision,
+and zero pre-release decision differences.
+
+Every gate SHALL retain its expected value, actual value, and pass state. No
+changed output or no positive-control headroom SHALL produce an inconclusive
+terminal null. It SHALL not retire the family. A failed efficacy gate after a
+complete replay SHALL also produce a terminal null. `recurrence_run_complete_score`
+SHALL equal one only when all 196,608 scheduled outcomes are accounted for.
+
+The terminal artifact SHALL use run date `20260912`. It SHALL bind the task
+identity, Exp7240 artifact, public streams, release schedule, private evaluator,
+raw rows, state manifest, operation receipts, source files, and checkpoints to
+exact hashes. It SHALL reject quarantined evidence even when a numeric upstream
+gate passes. Only a dictionary with exactly the keys `principle` and `value`
+may be unwrapped.
+
+The run SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, and all current
+invocation counts to zero. A completed CPU replay SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` for the
+execution venue. A missing external prerequisite SHALL use `blocked_no_run`
+and produce a row-free blocked artifact. Historical evidence and synthetic
+negative receipts SHALL live in hashed sidecars, not current invocation fields.
+
+The artifact SHALL report actual lookup and update p50 and p95, serialized
+state bytes, total CPU time, and the measured gap to the 100-times hardware
+target. It SHALL not treat the target as an observed result. The evaluator is
+also the correctness authority, so the artifact SHALL set
+`verifier_is_oracle=true`.
+
+### SCENARIO-CL-7241-PRECONDITIONS: Exact Fixture Evidence Or Block
+
+- GIVEN the V637 roadmap identity and declared Exp7240 deliverables
+- WHEN requirements, imports, writable paths, hashes, checksums, and quarantine are checked
+- THEN only the exact complete upstream fixture can enter replay
+- AND an external failure produces a row-free terminal blocked artifact.
+
+### SCENARIO-CL-7241-CHRONOLOGY: Decisions Precede Authority Release
+
+- GIVEN public events, query choices, delayed schedules, and private labels
+- WHEN each arm predicts and requests feedback
+- THEN prediction and query receipts are sealed before authority access
+- AND a commit can change only a later decision.
+
+### SCENARIO-CL-7241-PANEL: All Frozen Units And Arms Run
+
+- GIVEN 32 independent stream seeds and the six-arm contract
+- WHEN the CPU panel runs once under the frozen stopping rule
+- THEN exactly 196,608 event-and-arm outcomes are retained
+- AND stale reuse remains a separate safety negative control.
+
+### SCENARIO-CL-7241-METRICS: Prospective Outcomes Use Full Denominators
+
+- GIVEN one later released label for each pre-release prediction
+- WHEN stream-and-arm metrics are reduced
+- THEN future, recurrence, false-accept, abstention, archive, and decision-change outcomes are retained
+- AND every abstention contributes to full-denominator error.
+
+### SCENARIO-CL-7241-BOOTSTRAP: Streams Are The Independent Units
+
+- GIVEN paired metrics for all 32 stream seeds
+- WHEN each frozen comparison receives 10,000 bootstrap draws
+- THEN intervals resample complete paired streams
+- AND event count does not enlarge the independent sample size.
+
+### SCENARIO-CL-7241-GATES: Every Frozen Criterion Remains Independent
+
+- GIVEN paired confidence intervals, recurrence tolerance, and causal counts
+- WHEN learning value is scored
+- THEN each criterion retains its threshold, actual value, and pass state
+- AND learning value equals one only when every criterion passes.
+
+### SCENARIO-CL-7241-NULL: Missing Headroom Is Inconclusive
+
+- GIVEN no later decision change or no effective positive-control separation
+- WHEN the complete panel is classified
+- THEN the verdict is an inconclusive terminal null
+- AND it does not retire the constraint family.
+
+### SCENARIO-CL-7241-STATE: Exact Memory Bytes Remain Auditable
+
+- GIVEN active masks, archived masks, certificates, and durable checkpoints
+- WHEN archive changes and state writes complete
+- THEN before and after bytes and hashes remain in the state manifest
+- AND rejected updates plus rollback leave the parent bytes unchanged.
+
+### SCENARIO-CL-7241-TERMINAL: Completion And Efficacy Stay Separate
+
+- GIVEN all scheduled outcomes and validation receipts are accounted for
+- WHEN the artifact is cold-validated and atomically written
+- THEN run completion can equal one even when learning value equals zero
+- AND the terminal verdict cannot claim live LLM or natural-language transfer evidence.
+
+## Implementation Status (REQ-CL-7241)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7241 and SCENARIO-CL-7241-* | Implemented: `python/carnot/experiment_7241_v637_recurrence_learning.py` authenticates and replays Exp7240, retains measured operation receipts and state bytes, computes paired bootstrap gates, and builds the terminal artifact; `scripts/experiments/experiment_7241_v637_recurrence_learning.py` is the thin wrapper. | `tests/python/test_experiment_7241_v637_recurrence_learning.py` covers preconditions, quarantine, chronology, six arms, full-denominator metrics, paired bootstrap, independent gates, E2E rejection, restore, rollback, blocked output, cold validation, command delegation, and 100-percent new-code line coverage. |

@@ -280,3 +280,13 @@ CHECK_TIMED_OUT
 
 - Kaggle said recent queue-capacity backups have cleared. A finished/scored submission still displayed as “queued” is a UI-status glitch; its score remains valid. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/739674)
 
+## 2026-09-12 13:19 UTC -- NEW
+
+- ARC Prize reported GPT-6 Astra scoring 62.7% on ARC-AGI-3 Semi-Private with its Standard harness and 99.9% with a Provider Adapter harness. ARC will now label both harness types separately on its benchmark leaderboard. This was a separate benchmark evaluation, not a Kaggle submission. [ARC Prize announcement](https://arcprize.org/blog/astra)
+
+- Kaggle leaderboard update: Tufa Labs now leads with 11.04%; NVARC3 improved from 7.69%/third to 8.40%/second; Third Intelligence is third at 8.21%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- The competition host clarified that private scores are calculated during each submission’s original run and selected final submissions will not be rerun. Each run evaluates both hidden datasets; only the public half is displayed during the competition. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- Kaggle analyzed 500 failed submissions: roughly one-third had no notebook-visible traceable error, while almost 20% required a GPU that had not been enabled. [Official Kaggle post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
