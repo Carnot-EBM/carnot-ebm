@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unattended autoresearch mutation round for the conductor (REQ-AUTO-019/017).
+"""Unattended autoresearch mutation round for the conductor (REQ-AUTO-019/020).
 
 **What this closes.** `python/carnot/autoresearch/` (REQ-AUTO-001..015) already
 implements the whole AVO-style loop -- an LLM proposes a hypothesis, the
@@ -46,7 +46,7 @@ above. `ops/autoresearch_conductor_report.md` IS tracked, matching every
 sibling audit's report file; it is picked up by the conductor's own regular
 end-of-step commit, not committed by this script.
 
-Spec: REQ-AUTO-019, REQ-AUTO-020, SCENARIO-AUTO-016-*, SCENARIO-AUTO-017-*
+Spec: REQ-AUTO-019, REQ-AUTO-020, SCENARIO-AUTO-019-*, SCENARIO-AUTO-020-*
 """
 
 from __future__ import annotations
