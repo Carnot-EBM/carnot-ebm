@@ -69814,3 +69814,112 @@ cost receive separate verdict classes
 **When** the validator reloads its bytes
 **Then** unchanged inputs pass validation
 **And** a changed roster, claim, source hash, action, gate, or checksum fails.
+
+## V637 Capstone Evidence Matrix
+
+### REQ-REPORT-7245: Preserve thirteen V637 tasks without converting execution into science
+
+The system SHALL write `results/experiment_7245_v637_capstone.json` from the
+frozen V637 Markdown and YAML contract in `results/raw/experiment_7233/`. It
+SHALL require exactly thirteen ordered contract rows from exp7233 through
+exp7245. The final row SHALL describe the capstone without a recursive
+self-hash. Contract rows, scientific claim rows, and injected classifier
+fixtures SHALL remain separate.
+
+The system SHALL authenticate every producer artifact and its claimed raw
+inputs before it promotes a metric. It SHALL independently recompute promoted
+metrics from per-unit rows or named producer receipts. It SHALL reject each
+structured quarantine flag and exclusion-manifest match even when a numeric
+gate passes. It SHALL preserve paths and SHA-256 values for rejected evidence.
+It SHALL unwrap only a mapping that contains both `principle` and `value`.
+
+The system SHALL classify four questions independently: source fidelity and
+verification value; prospective recurrence learning; actual scored-policy
+model use with local configuration differences; and complete native deployment
+cost. Mention readiness, exact conformance, local dry runs, causal fixture
+checks, and board graduation SHALL remain narrower outcomes. A learner tested
+on synthetic executable constraints SHALL not establish improved LLM
+verification. V637 evidence SHALL not rehabilitate the four quarantined V636
+artifacts.
+
+The system SHALL give each contract task one action from `continue`, `retire`,
+or `needs_changed_prerequisite`. It SHALL name the next mechanism or exact
+external condition. It SHALL apply `retire_if_same_verdict` only when the
+current row has the exact prior verdict. It SHALL not broaden retirement to a
+task family. It SHALL not start a sampler rerun, parser-volume collection,
+publication, upload, submission, or production-default change.
+
+The capstone SHALL set `capstone_complete_score=1` only after all thirteen
+matrix rows and all derived records are internally consistent. This score SHALL
+mean that the evidence matrix completed. It SHALL not mean scientific success.
+Complete negative science SHALL use `null`. External absence SHALL use
+`blocked`. `partial` SHALL describe only unfinished capstone work. The system
+SHALL reconcile planned and executed status for each row.
+
+The capstone SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, `execution_venue=host`, and current
+invocation counters of zero. Historical model receipts and negative fixtures
+SHALL remain in referenced sidecars or producer artifacts. The capstone SHALL
+record its actual hostname, UTC timestamps, and monotonic duration without
+padding.
+
+The terminal artifact SHALL contain every field and exact field principle from
+the exp7245 task contract. Its validator SHALL reload the artifact and
+recompute the contract, evidence classifications, accepted claims, source
+hashes, branch actions, publication-gate shape, and reproducibility checksum.
+
+#### SCENARIO-REPORT-7245-CONTRACT: Frozen plans preserve thirteen rows
+
+**Given** the frozen V637 Markdown and YAML sources
+**When** the capstone parses both contracts
+**Then** exactly thirteen ordered IDs, titles, deliverables, and gates agree
+**And** the self-row has no recursive artifact hash.
+
+#### SCENARIO-REPORT-7245-INTAKE: Quarantine stays distinct from gate state
+
+**Given** completed, blocked, quarantined, and narrow producer artifacts
+**When** the capstone builds its evidence matrix
+**Then** all producer paths and hashes remain visible
+**And** quarantined evidence cannot support a promoted claim or downstream gate.
+
+#### SCENARIO-REPORT-7245-CLAIMS: Authentic producer rows support promotion
+
+**Given** producer unit rows, raw sidecars, and declared result fields
+**When** the capstone recomputes its claim ledger
+**Then** every promoted value matches authenticated evidence
+**And** quarantined or absent evidence abstains without an invented value.
+
+#### SCENARIO-REPORT-7245-SCIENCE: Four authority questions stay independent
+
+**Given** mention, recurrence, scored-policy, native-cost, and board evidence
+**When** the capstone classifies milestone findings
+**Then** the four scientific questions receive separate values and verdicts
+**And** readiness, fixture, conformance, and graduation results stay narrower.
+
+#### SCENARIO-REPORT-7245-DECISIONS: Exact prior verdicts control retirement
+
+**Given** all task rows and their prior-failure entries
+**When** the capstone creates branch decisions
+**Then** every task gets one closed action and one next condition
+**And** only an exact repeated verdict can activate its retirement signal.
+
+#### SCENARIO-REPORT-7245-BLOCKED: Complete scope can retain external blocks
+
+**Given** all thirteen matrix rows and an unavailable source-value branch
+**When** aggregation finishes
+**Then** status is complete and `capstone_complete_score` is one
+**And** the top-level blocked verdict names the failed upstream gate.
+
+#### SCENARIO-REPORT-7245-ARTIFACT: Reloaded validation detects mutation
+
+**Given** a terminal V637 capstone artifact
+**When** the validator reloads the file and current sources
+**Then** unchanged evidence passes validation
+**And** a changed roster, claim, hash, action, gate, class, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7245)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7245 and SCENARIO-REPORT-7245-* | Implemented: Exp7245 aggregation module, thin entrypoint, and terminal artifact | Verified by focused RED/GREEN tests, scoped coverage, full Python tests, artifact replay, adversarial verification, row consistency, spec coverage, and aggregation E2E |
