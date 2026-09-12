@@ -16349,3 +16349,52 @@ cases passed; schema, prior failures, exclusion rules, seven gate declarations,
 existing paths, scoped spec traceability, Ruff and contract parity passed. The
 active research-roadmap.yaml and scripts/research_conductor.py are unchanged.
 These experiments have not run; nothing was pushed or published.
+
+
+## 2026-09-11/12 — Autoresearch pipeline wired into the unattended conductor loop
+
+Operator directive: "allow Carnot to pursue and try things on its own during
+conductor loops and not require my involvement." `python/carnot/autoresearch/`
+already implemented the full AVO-style mutation loop (propose, sandbox, 3-gate
+evaluate, circuit breaker) since 2026-04 but `scripts/research_conductor.py`
+never called any of it. New: `scripts/autoresearch_conductor_round.py`, a
+milestone-close step (sibling to the existing adversarial audits) gated by
+`CARNOT_AUTORESEARCH_UNATTENDED=1` (default off). Runs one bounded round of
+`run_loop_with_generator` against a locally-served OpenAI-compatible LLM
+endpoint (never cloud, per Decentralization-Respecting Design Constraints),
+targeting the existing DoubleWell/Rosenbrock benchmarks. Every accepted
+hypothesis is persisted as its own git commit under
+`ops/autoresearch_discoveries/<benchmark>/<experiment_id>.json`, scoped
+`git add` (never `-A`) — AVO's "commit per version with its score", adapted.
+REQ-AUTO-019/020.
+
+Found and fixed a real pre-existing gap while building this: neither
+`run_loop_with_generator` nor `run_loop_with_skills` (the two LLM-driven loop
+variants) ever consulted the `constitution_checker`, unlike `run_loop`. An
+unattended round — the only caller that matters for this work — would have
+silently ignored a configured safety policy. Fixed in both, with regression
+tests (`tests/python/test_autoresearch_constitution.py`).
+
+Real end-to-end dry run: started vLLM against `RedHatAI/Qwen3.8-27B-INT4` on
+GPU 1, ran the script against it for real. The model spent its whole reply on
+Qwen3 "thinking" text and never reached a `def run(...)` code block, so the
+round correctly reported zero hypotheses and committed nothing — honest
+non-fabrication, not a wiring bug. `hypothesis_generator.py`'s prompt does not
+disable thinking mode (no `chat_template_kwargs: {"enable_thinking": False}`,
+unlike the ARC tool loop's own grammar-mode calls) — real, verified follow-on
+gap, recorded in `ops/known-issues.md`, not fixed in this pass.
+
+11 new tests (`test_autoresearch_conductor_round.py`) plus 2 new regression
+tests for the constitution fix; full `test_autoresearch_*` suite (272 tests)
+still green. Explicitly out of scope: free-form edits to arbitrary repo files
+(the sandbox executes an isolated snippet, not a live diff), the ARC live
+agent as a target (already rejected in `docs/research-notes/avo-adaptation-
+for-local-generator-2026-08-21.md` Part 3), and a verifier-ensemble-AUROC
+target (no reusable harness exists yet).
+
+Mid-build incident: the edit to `scripts/research_conductor.py` (the actual
+wiring call site) was silently reverted once by the file's own self-edit
+protection mechanism before it was committed. Recovered from the rescue patch
+it wrote to `ops/.conductor_selfedit_rescue/`, reapplied, and committed
+immediately and alone this time. See `ops/known-issues.md` for the full
+account.

@@ -1,5 +1,51 @@
 # Carnot — Changelog
 
+## 2026-09-11/12 — Wire autoresearch into the unattended conductor loop (REQ-AUTO-019/020)
+
+- Operator directive: let Carnot try things on its own during conductor loops,
+  no operator involvement, in the real AVO shape (agent proposes, mechanical
+  benchmark scores, keep only if it wins, persist a scored lineage).
+- `python/carnot/autoresearch/` already implemented this whole loop
+  (REQ-AUTO-001..015, built 2026-04); `scripts/research_conductor.py` never
+  called it. New `scripts/autoresearch_conductor_round.py` closes that gap: a
+  milestone-close step, sibling to the existing adversarial audits, gated by
+  `CARNOT_AUTORESEARCH_UNATTENDED=1` (default off).
+- Runs one bounded `run_loop_with_generator` round against a locally-served
+  OpenAI-compatible endpoint (never cloud) targeting the existing
+  DoubleWell/Rosenbrock benchmarks. An accepted hypothesis is persisted as its
+  own git commit under `ops/autoresearch_discoveries/<benchmark>/
+  <experiment_id>.json`, a scoped `git add` (never `-A`), commit message
+  carrying the before/after score.
+- Fixed a real pre-existing safety gap found while building this:
+  `run_loop_with_generator` and `run_loop_with_skills` never consulted the
+  `constitution_checker`, unlike `run_loop` — an unattended round would have
+  silently ignored a configured safety policy. Fixed both, with regression
+  tests.
+- Real end-to-end dry run against a live local vLLM server
+  (`RedHatAI/Qwen3.8-27B-INT4`, GPU 1): the round ran for real, the model's
+  reply never reached a parseable hypothesis (spent its budget on Qwen3
+  thinking text), and the round correctly reported zero hypotheses and
+  committed nothing rather than fabricating a result. Follow-on gap recorded
+  in `ops/known-issues.md`, not fixed in this pass.
+- New tests: 11 in `test_autoresearch_conductor_round.py`, 2 constitution
+  regression tests; full `test_autoresearch_*` suite (272 tests) green. Ruff,
+  ruff-format, and mypy clean on every touched file.
+- Spec: `openspec/capabilities/autoresearch/spec.md` gained REQ-AUTO-019/020
+  (fresh numbers — REQ-AUTO-016/017 were already used by two unrelated,
+  earlier entries in the same file; a real ID collision this session avoided
+  rather than introduced). Also fixed two stale Implementation Status rows
+  (REQ-AUTO-006/007 said "Not Started" while `rollback.py`/`transpile.py`
+  were both implemented and tested).
+- Mid-build incident, recorded in full in `ops/known-issues.md`: the wiring
+  edit to `scripts/research_conductor.py` was silently reverted once by that
+  file's own self-edit protection mechanism before it reached a commit.
+  Recovered from the rescue patch under `ops/.conductor_selfedit_rescue/`,
+  reapplied, verified, and committed alone immediately.
+- Explicitly out of scope, named rather than silently skipped: free-form
+  edits to arbitrary repo files, the ARC live agent as a target (already
+  rejected 2026-08-21 for stated reasons), a verifier-ensemble-AUROC target
+  (no reusable harness exists yet).
+
 ## 2026-09-11 — Repair Exp7223 evidence accounting (REQ-VERIFY-7223)
 
 - Derive and retain `usable_calls` from successful parse-valid canary calls,
