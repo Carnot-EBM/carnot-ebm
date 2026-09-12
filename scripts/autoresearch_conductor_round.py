@@ -14,10 +14,28 @@ do (it only updates an in-memory baseline and appends to a JSON log).
 into `research_step()` (`pages_adversarial_audit.py`, `verifier_authenticity_
 audit.py`, etc.): a subprocess launched via `_run_audit_with_receipt`, gated
 by `CARNOT_AUTORESEARCH_UNATTENDED=1` (default off), writing a receipt file
-the caller checks for freshness. If the LLM endpoint is unreachable, or the
+the caller checks for freshness. If the `codex` CLI is unavailable, or the
 hypothesis generator's home-grown constitution forbids the run, this writes
 a clean non-fatal receipt and exits 0 -- the milestone-close path is never
 blocked by this step, matching the existing audits' own contract.
+
+**Hypothesis generator: codex CLI, model gpt-6-astra (2026-09-12 operator
+directive).** The mutation-operator's "propose a hypothesis" role is the same
+category of task as the planner/retro/audit tiers this project already runs
+via `codex exec` (never a locally-served model) -- an agent deciding what to
+try next, not the ARC live agent's own inference-latency-bound generation
+that IS local-first by contract. `call_codex()` below mirrors the exact
+subprocess pattern the sibling audit scripts already use
+(`pages_adversarial_audit.py:call_codex`), reusing `hypothesis_generator.py`'s
+existing `DEFAULT_SYSTEM_PROMPT` / `_build_user_prompt` / `_extract_hypotheses`
+for the prompt and parsing -- only the transport (a codex subprocess instead
+of a raw OpenAI-compatible HTTP call) changed. This is the project's own
+internal R&D tooling talking to a closed-weight model, the same as every
+other autonomous conductor role; it is not a Carnot CAPABILITY (the thing
+`python/carnot/verify`/`pipeline`/`samplers` ship to users), so the
+Decentralization-Respecting Design Constraints' local-first mandate (which
+targets shipped capabilities) does not bind it, any more than it binds the
+planner's own codex calls.
 
 **Fitness target #1.** The synthetic DoubleWell/Rosenbrock energy benchmarks
 from `scripts/demo_autoresearch.py:create_initial_baselines()` -- cheap,
@@ -54,10 +72,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
-import urllib.error
-import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -69,15 +86,15 @@ from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics  # no
 from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker  # noqa: E402
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog  # noqa: E402
 from carnot.autoresearch.hypothesis_generator import (  # noqa: E402
-    GeneratorConfig,
-    generate_hypotheses_batch,
+    DEFAULT_SYSTEM_PROMPT,
+    _build_user_prompt,
+    _extract_hypotheses,
 )
 from carnot.autoresearch.orchestrator import AutoresearchConfig, run_loop_with_generator  # noqa: E402
 
 DEFAULT_BENCHMARK_DATA: dict[str, Any] = {"dim": 2}
-
-DEFAULT_API_BASE = os.environ.get("CARNOT_AUTORESEARCH_API_BASE", "http://127.0.0.1:8712/v1")
-DEFAULT_MODEL = os.environ.get("CARNOT_AUTORESEARCH_MODEL", "m")
+DEFAULT_MODEL = os.environ.get("CARNOT_AUTORESEARCH_MODEL", "gpt-6-astra")
+DEFAULT_CODEX_TIMEOUT_S = 300
 
 
 def seed_baselines() -> BaselineRecord:
@@ -111,14 +128,63 @@ def load_experiment_log(log_cache: Path) -> ExperimentLog:
     return ExperimentLog.load(log_cache)
 
 
-def endpoint_reachable(api_base: str, timeout: float = 5.0) -> bool:
-    """A local llama.cpp/vLLM OpenAI-compatible server exposes GET /v1/models."""
-    url = api_base.rstrip("/") + "/models"
+def codex_available() -> bool:
+    """Precondition check (Pre-Launch Preconditions Discipline pattern)."""
+    return shutil.which("codex") is not None
+
+
+def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
+    """One codex exec call. Mirrors pages_adversarial_audit.py:call_codex and
+    scripts/research_conductor.py's own `_build_agent_command` codex branch --
+    same flags, same stdin-piped-prompt shape, same '-' terminator. Deliberately
+    a plain text-completion call (no repo tool access): the hypothesis is a
+    sandboxed snippet, never an agentic edit to real files.
+    """
     try:
-        with urllib.request.urlopen(url, timeout=timeout):  # noqa: S310
-            return True
-    except (urllib.error.URLError, TimeoutError, ValueError):
-        return False
+        proc = subprocess.run(
+            [
+                "codex",
+                "exec",
+                "--dangerously-bypass-approvals-and-sandbox",
+                "--color",
+                "never",
+                "--model",
+                model,
+                "--cd",
+                str(PROJECT_ROOT),
+                "--ephemeral",
+                "-",
+            ],
+            input=prompt,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return False, str(exc)
+
+
+def codex_generate_hypotheses(
+    model: str,
+    timeout: int,
+    baselines: BaselineRecord,
+    recent_failures: list[dict[str, Any]],
+    iteration: int,
+) -> list[tuple[str, str]]:
+    """The `generator` callback `run_loop_with_generator` expects. Reuses
+    hypothesis_generator.py's own prompt-building and response-parsing --
+    only the transport (codex subprocess vs. a raw HTTP client) differs."""
+    prompt = f"{DEFAULT_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
+    ok, output = call_codex(prompt, model, timeout)
+    if not ok:
+        recent_failures.append({"description": "codex_call_failed", "reason": output})
+        return []
+    return _extract_hypotheses(output)
 
 
 def _git(project_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
