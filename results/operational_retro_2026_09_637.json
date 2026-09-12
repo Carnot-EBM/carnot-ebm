@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.637",
+  "generated_at": "2026-09-12T17:26:19Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 34.3,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Local scored-stack ARC selfparse dry run",
+      "duration_minutes": 24.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Native archive-memory parity and complete cost measurement",
+      "duration_minutes": 4.85,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prospective continuous learning with validated archive reuse",
+      "duration_minutes": 1.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Feedback-validated archive memory prototype and recurrence stream",
+      "duration_minutes": 1.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V637 source and execution contract receipt",
+      "duration_minutes": 1.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 34.3 minutes, and 4 were compute-bound. Local scored-stack ARC selfparse dry run was the longest listed task at 24.76 minutes. The evidence records no compute-bound GPU-idle fault, but it does not provide a causal phase breakdown or parallel-model dispatch data.",
+  "bottlenecks_identified": [
+    "Local scored-stack ARC selfparse dry run was the longest listed task at 24.76 minutes; no data available this milestone explains which phase caused that duration.",
+    "Execution-aligned phase, GPU, model-count, and runner-choice telemetry was unavailable, so compute efficiency and parallel-dispatch eligibility could not be audited."
+  ],
+  "improvements_suggested": [
+    "Add task-scoped phase timers and periodic GPU samples from compute-bound task start through completion.",
+    "Add checkpoint and reusable preparation caches to the scored-stack ARC path, then measure each phase before setting a runtime gate.",
+    "Emit model-count, runner-choice, and DualGPURunner-eligibility receipts before compute launch; select DualGPURunner only when at least two models load in parallel.",
+    "Schedule independent synthesis-only work concurrently with the compute-bound critical path when task dependencies allow."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the scored-stack ARC path with phase timers and compute-window GPU telemetry.",
+    "Checkpoint the scored-stack ARC path and cache unchanged model and input preparation work.",
+    "Record model concurrency and runner selection at launch, with DualGPURunner reserved for parallel multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing data is sufficient to rank the critical path but not to diagnose its cause. The reported GPU snapshot and absent concurrency receipt do not support a compute-window efficiency verdict, a missed DualGPURunner claim, or a measured savings estimate."
+}
