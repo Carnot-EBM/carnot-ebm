@@ -7,10 +7,10 @@
 
 | Verdict | Count |
 |---|---|
-| `AUTHENTIC` | 13 |
+| `AUTHENTIC` | 12 |
 | `HONEST_HEURISTIC` | 4 |
 | `DISHONEST_NAMING` | 1 |
-| `ADVERSARIAL_GAMING` | 1 |
+| `ADVERSARIAL_GAMING` | 2 |
 | `CANNOT_DETERMINE` | 1 |
 | `UNKNOWN` | 0 |
 | `OUTRIGHT_FAKE` | 0 |
@@ -18,6 +18,7 @@
 ### FLAGGED — operator action recommended
 - `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
 - `python/carnot/verify/beaver_lite.py` — **DISHONEST_NAMING**
+- `python/carnot/verify/beaver_prefix_bound_contracts.py` — **ADVERSARIAL_GAMING**
 
 ---
 
@@ -31,10 +32,10 @@ Scanned 20 verifier file(s) with codex as the hostile reviewer.
 CANNOT_DETERMINE
 
 ## CLAIMS
-“Verifiable reasoning: constraints as energy terms + landscape certification.” No paper, named model, live-inference, learned-feature, or compute-substrate claim appears.
+No claim about a paper, model, or compute substrate. “Verifiable reasoning: constraints as energy terms + landscape certification” is only a package-level description.
 
 ## IMPLEMENTATION_REALITY
-This file is a package initializer that imports and re-exports verifier implementations. It performs no verification, model invocation, text-statistical scoring, or certification itself; the actual behavior resides in the imported modules.
+This file is an import-and-export aggregator. It performs no verification, model invocation, scoring, or text-statistical analysis.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -46,7 +47,7 @@ none
 KEEP
 
 ## RATIONALE
-There is no paper-branded algorithmic claim here to falsify, and no scoring code that could fake one. The duplicated `ConformalCalibrationVerifier` imports are sloppy, but not evidence of verifier fraud; the imported modules must be audited individually.
+This is not a verifier implementation, so its authenticity and production-ensemble suitability cannot be audited from this source. The repeated `ConformalCalibrationVerifier` imports are sloppy, but they neither substantiate fraud nor reveal how any exported verifier actually works.
 
 
 ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
@@ -57,12 +58,10 @@ There is no paper-branded algorithmic claim here to falsify, and no scoring code
 AUTHENTIC
 
 ## CLAIMS
-“The v14 rerun proved the local GGUF path was real.”  
-“Run llama.cpp with grammar-constrained verifier decisions.”  
-“Check that this Python can see CUDA and llama.cpp GPU offload.”
+“The v14 rerun proved the local GGUF path was real”; “the raw model text did not honor the strict verifier-output contract”; “adds the Exp 3286 calibrated policy around it”; “records a repair-gate-ready artifact only when coverage is non-trivial and exact-authority scoring still finds zero false accepts.” Function docstrings additionally claim: “Run llama.cpp with grammar-constrained verifier decisions” and “Check that this Python can see CUDA and llama.cpp GPU offload.”
 
 ## IMPLEMENTATION_REALITY
-The default runner instantiates `llama_cpp.Llama` from a resolved GGUF, requests full GPU offload, and invokes `create_chat_completion` for every evaluation row with a constrained `ACCEPT|REJECT|ABSTAIN` grammar. It also probes PyTorch CUDA, llama.cpp GPU-offload support, and NVIDIA memory telemetry.
+The default runner genuinely loads a local GGUF through `llama_cpp.Llama`, requests GPU offload with `n_gpu_layers=-1`, and invokes `create_chat_completion` for every evaluation row using a three-decision grammar. It then strictly parses those model outputs, calculates error/abstention/coverage metrics, checks CUDA and GPU-memory evidence, and gates artifact readiness.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -74,7 +73,7 @@ none
 KEEP
 
 ## RATIONALE
-This is real local model inference, not regex or text-statistical theater; the string parsing only interprets the model’s constrained output. The injectable runner and hardware probes are test seams, while the production defaults invoke llama.cpp and require cached models, CUDA availability, recorded model usage, nonzero coverage, and a GPU-memory threshold.
+This is not regex masquerading as a model verifier: there is an explicit model load and live per-row inference. There is no sleep-padding, score-capping, random-feature classification, or named adversarial-check dodge; failures and total abstention prevent readiness.
 
 
 ## python/carnot/verify/adaptive_conformal_calibration.py
@@ -85,12 +84,10 @@ This is real local model inference, not regex or text-statistical theater; the s
 HONEST_HEURISTIC
 
 ## CLAIMS
-“Compute a lightweight ACSE-style semantic entropy proxy.”  
-“ACSE uses semantic dispersion over multiple generations.”  
-“Run prompt-adaptive conformal calibration and return AUROC statistics.”
+“Compute a lightweight ACSE-style semantic entropy proxy.” “ACSE uses semantic dispersion over multiple generations.” “Run prompt-adaptive conformal calibration and return AUROC statistics.”
 
 ## IMPLEMENTATION_REALITY
-The code invokes no model and performs no semantic comparison across generations. It applies lexical prompt classification, NumPy variance over supplied token logprobs and verifier scores, existing score calibration, Fisher combination, and scikit-learn AUROC evaluation.
+The code performs lexical prompt classification, variance calculations over supplied token logprobs and verifier scores, group-wise calibration, Fisher combination, and sklearn AUROC evaluation. It invokes no model; all model-derived scores and logprobs must be supplied by the caller.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -102,7 +99,7 @@ none
 KEEP
 
 ## RATIONALE
-The alleged “ACSE entropy” is merely variance arithmetic, not semantic entropy, but the docstring explicitly admits that fixed rows replace fresh generations and identifies the two proxy signals used. The naming consistently includes “proxy,” and there is no sleep-padding, score-capping, fabricated random feature generation, or adversarial-check token dodging.
+The alleged ACSE component is plainly labeled “lightweight” and “ACSE-style,” and the docstring explicitly admits that it substitutes two locally available variance signals for fresh multi-generation semantic dispersion. The implementation does not pretend to perform model inference, and its calibration claims match the actual sklearn-based computation.
 
 
 ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
@@ -113,10 +110,10 @@ The alleged “ACSE entropy” is merely variance arithmetic, not semantic entro
 AUTHENTIC
 
 ## CLAIMS
-“The policy is a deterministic scheduler over evidence that already exists in the repo.” It “decides how much checking a future verifier pass should spend per row” and “never lets an EBM score, LLM response, or receipt become answer authority.”
+“The policy is a deterministic scheduler over evidence that already exists in the repo.” It also explicitly limits its scope: “it never lets an EBM score, LLM response, or receipt become answer authority.”
 
 ## IMPLEMENTATION_REALITY
-The code reads checked-in JSON artifacts, extracts deterministic features, and routes rows through a fixed rule table. It invokes no model, performs no live inference, and explicitly records zero new model or verifier-scoring calls.
+The code reads checked-in JSON artifacts, extracts deterministic features, applies a fixed rule table, and writes a policy-simulation artifact. It invokes no model and imports no ML, inference, or API libraries.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -128,7 +125,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation does exactly what the docstring claims: offline deterministic scheduling, not model-based verification. It contains no fabricated paper attribution, hidden heuristic masquerading as learned inference, or adversarial-check gaming. It is not itself an AUROC-producing verifier and should not be presented as one.
+The implementation does exactly what the docstring claims: offline deterministic routing over existing evidence. It makes no bogus paper, learned-model, or live-inference claim, and explicitly records zero model and verifier-scoring calls. There is no sleep-padding, score-capping, random-data fabrication, or adversarial-check token dodging.
 
 
 ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
@@ -139,10 +136,10 @@ The implementation does exactly what the docstring claims: offline deterministic
 AUTHENTIC
 
 ## CLAIMS
-No paper, model, kernel, learned-feature, GPU, or live-inference claim. The module docstring only states: “Exp 3643 additive second-pair-of-eyes remeasurement.”
+No paper, model, or specialized compute claim. The module only claims: “Exp 3643 additive second-pair-of-eyes remeasurement.” It explicitly describes its substrate as “scores cached corpora; no LLM load.”
 
 ## IMPLEMENTATION_REALITY
-The code loads cached experiment artifacts, delegates score generation to Exp 3642, and computes fixed-FPR thresholds, conditional catch rates, McNemar significance, AUROC, and fusion metrics. It performs no live model invocation and explicitly identifies its substrate as cached-corpus scoring with “no LLM load.”
+The code loads cached experiment artifacts, obtains detector scores through the Exp 3642 scoring module, and computes fixed-FPR recall, conditional catch rates, McNemar significance, calibrated fusion AUROC, and reproducibility metadata. It performs no live model invocation, exactly as disclosed.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -154,7 +151,7 @@ none
 KEEP
 
 ## RATIONALE
-This is openly a remeasurement module, not a counterfeit model-backed verifier. There is no sleep-padding, score-capping, random feature generation, or named adversarial-check dodge; its duration is actual elapsed time, and its statistical operations match the stated purpose.
+This is plainly a statistical remeasurement module, not a counterfeit neural verifier. It makes no paper-derived or model-backed claim, does not sleep-pad or cap scores, and calculates duration from actual elapsed time.
 
 
 ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
@@ -165,10 +162,10 @@ This is openly a remeasurement module, not a counterfeit model-backed verifier. 
 AUTHENTIC
 
 ## CLAIMS
-“This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete.”
+“This module is a gate audit, not a verifier rerun.” It “reads the checked-in .292 evidence chain” and distinguishes exact-replay evidence from “live-inference claims whose authenticity evidence is incomplete.”
 
 ## IMPLEMENTATION_REALITY
-The code reads local JSON and documentation artifacts, computes checksums, classifies evidence gaps, and builds a corrigendum. It invokes no model and explicitly declares that it performs no live inference.
+The code reads checked-in JSON and repository files, computes checksums, audits evidence metadata, and blocks unsupported downstream claims. It invokes no model and explicitly reports `executes_models=False` and `no_live_llm_inference=True`.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -180,7 +177,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation does exactly what the docstring claims: evidence aggregation and auditing, not model-based verification. It must not contribute an AUROC score because it produces no predictions, but there is no deceptive naming or adversarial-check gaming here.
+The implementation does exactly what the docstring claims: evidence aggregation and authenticity auditing, not inference. Its `duration_s` uses actual elapsed time; there is no sleep-padding, score-capping, random classification, or adversarial-check evasion. It is not a scoring verifier and therefore should audit ensemble evidence, not contribute an AUROC score.
 
 
 ## python/carnot/verify/and_composition_verifier.py
@@ -191,10 +188,10 @@ The implementation does exactly what the docstring claims: evidence aggregation 
 HONEST_HEURISTIC
 
 ## CLAIMS
-“Advisory k=5 verifier-adapter harness.” “The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer.” “A future headline verifier must wire real trained/live verification substrates.” The SOSKAN adapter further claims it “uses text-feature extraction to produce energy” and “then scores with the model.”
+“Advisory k=5 verifier-adapter harness.” “The default SOSKAN adapter is neutral until trained, SemEnergy uses its proxy scorer.” “SOSKANEnergyV3 requires a feature vector in [-1, 1]^3.” “This helper is headline-ineligible until a real trained/live verification substrate replaces the current advisory defaults.”
 
 ## IMPLEMENTATION_REALITY
-The harness invokes Carnot verifier classes, including `SOSKANEnergyV3`, which can actually be trained and queried through `fit()` and `energy()`. However, its default SOSKAN path returns a constant `0.5`, SemEnergy is explicitly a proxy, and the other adapters’ authenticity cannot be established from this file alone.
+The harness invokes three external Carnot verifier classes, a SemEnergy proxy, and `SOSKANEnergyV3`; the SOSKAN model is actually trained and evaluated only after `fit()` or `fit_from_corpus()`, while the default returns a constant 0.5. Its SOSKAN inputs are three crude text statistics: length, numeric-token density, and vocabulary richness.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -206,7 +203,7 @@ none
 KEEP
 
 ## RATIONALE
-The module bluntly admits that its default configuration is advisory, proxy-based, untrained, fail-open, and ineligible for headline results. It must not contribute to production AUROC claims; additionally, calling untrained `0.5` “neutral” is technically sloppy because the strict `energy < 0.5` check makes it a failing vote, but that defect is not hidden model fraud.
+The code is bluntly honest that the default ensemble is advisory, proxy-backed, untrained, fail-open, and forbidden from headline results. It does not pretend that its text statistics are learned embeddings or a paper-faithful method, and it explicitly sets `HEADLINE_ELIGIBLE = False`; keep it quarantined from production AUROC claims.
 
 
 ## python/carnot/verify/arc_gap1_autopyverifier_pilot.py
@@ -217,13 +214,10 @@ The module bluntly admits that its default configuration is advisory, proxy-base
 HONEST_HEURISTIC
 
 ## CLAIMS
-“AutoPyVerifier-inspired GAP-1 set search for ARC orientation.”  
-“This module deliberately borrows only the cheap set-search idea from AutoPyVerifier.”  
-“It does not synthesize verifier code with an LLM.”  
-“Instead, a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
+“AutoPyVerifier-inspired GAP-1 set search for ARC orientation.” The docstring immediately limits that claim: “This module deliberately borrows only the cheap set-search idea from AutoPyVerifier. It does not synthesize verifier code with an LLM.” It instead claims “a small deterministic library of spatial discriminators is searched over a cached ARC square-transpose distractor pool.”
 
 ## IMPLEMENTATION_REALITY
-The code performs deterministic exhaustive subset search over hand-authored grid statistics such as adjacency counts, quadrant histograms, centroids, borders, and run lengths. It invokes no model framework, API, learned embedding, or live inference system.
+The code performs deterministic subset search over hand-authored grid-statistical features such as adjacency counts, quadrant histograms, centroids, borders, and run profiles. It invokes no model and imports no ML framework or inference client.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -235,7 +229,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation is a cheap heuristic inspired by one part of AutoPyVerifier, and the docstring states that limitation bluntly. Randomness is seeded and used to construct distractors and splits, not to fabricate classifier features or evade audit checks; there is no sleep-padding, score-capping, or named-check dodging.
+The implementation matches the narrowly stated method: cheap deterministic discriminator search over cached candidates. The docstring explicitly disclaims LLM synthesis and does not pretend these handcrafted statistics are the full AutoPyVerifier method. Seeded randomness constructs distractors and splits data; it does not fabricate classifier features or pad runtime.
 
 
 ## python/carnot/verify/arc_gap1_registry_promotion_decision.py
@@ -246,10 +240,10 @@ The implementation is a cheap heuristic inspired by one part of AutoPyVerifier, 
 AUTHENTIC
 
 ## CLAIMS
-None. The docstring explicitly limits the module to being “intentionally evidence-only” and claims only that it reads an existing artifact and makes a registry-promotion decision.
+“This module is intentionally evidence-only. It reads the existing Exp 5209 hardening artifact, parses the upstream gate from `gap1_hardened_positive.value`, and decides whether the GAP-1 set verifier is ready to become a frozen registry entry.”
 
 ## IMPLEMENTATION_REALITY
-The code reads JSON and registry/document files, validates deterministic gate and stability fields, writes a decision artifact, and optionally updates an operations document. It invokes no model and performs no LLM-output scoring.
+The code reads JSON and registry text, validates gate, leakage, and subset-stability fields, then emits a deterministic promotion-decision artifact. It invokes no model and does not claim to do so.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -261,7 +255,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation matches the narrow evidence-processing behavior stated in the docstring. This is not a learned verifier and must not be presented as one or included in verifier AUROC calculations, but the module itself makes no fraudulent paper, model, or compute claim.
+The evidence-only behavior is explicitly disclosed and accurately implemented; this is not regex masquerading as a learned verifier. However, `_decision()` can never return `"promoted"`—even when every checked gate passes—so the promotion path is dead and should be treated as a correctness bug, not an authenticity fraud. This administrative module does not generate verifier scores and therefore should not itself contribute to headline AUROC numbers.
 
 
 ## python/carnot/verify/arc_gap1_set_search_holdout_hardening.py
@@ -272,10 +266,10 @@ The implementation matches the narrow evidence-processing behavior stated in the
 AUTHENTIC
 
 ## CLAIMS
-No paper, learned model, GPU, or live-inference claim. The docstring explicitly claims reuse of a “cached ARC square-transpose candidate pool and exact deterministic discriminator library” with grouped train/held-out selection.
+“This hardening pass reuses Exp 5205's cached ARC square-transpose candidate pool and exact deterministic discriminator library.” It also explicitly states the substrate has “no live LLM inference.”
 
 ## IMPLEMENTATION_REALITY
-The code reconstructs cached candidate scores through the imported pilot module, performs deterministic subset search, grouped holdout evaluation, confidence-interval calculation, leakage checks, and artifact generation. It makes no model invocation, consistent with its explicitly cached evaluation substrate.
+The code evaluates deterministic discriminators from `arc_gap1_autopyverifier_pilot` against cached ARC candidate pools, performs grouped holdout subset selection, and computes pass@2 statistics and confidence intervals. It invokes no neural model, GPU framework, or external inference API—and does not claim to.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -287,7 +281,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation performs the holdout-hardening experiment the docstring describes and makes no false claim of implementing a paper or learned verifier. `random.Random` is used solely for seeded group splitting, not fabricated features; there is no sleep-padding, score-capping, or named adversarial-check dodge.
+The implementation matches its narrow claim: this is a deterministic holdout-hardening experiment over cached candidates, not a disguised paper implementation or fake learned verifier. The seeded randomness only partitions task groups; it does not fabricate classifier features or scores. The artifact explicitly says “no live LLM inference” and “do_not_promote_to_registry_here,” so it should not itself contribute to headline production-ensemble AUROC.
 
 
 ## python/carnot/verify/arc_gap1_stability_freeze_or_retire.py
@@ -298,10 +292,10 @@ The implementation performs the holdout-hardening experiment the docstring descr
 AUTHENTIC
 
 ## CLAIMS
-“This module makes the final stability decision for the current GAP-1 registry promotion path.” It claims only deterministic artifact processing: “It reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.” No paper, model, learned-feature, GPU, or live-inference claim appears.
+No paper, model, GPU, live-inference, learned-feature, or kernel-method claims. The docstring accurately says it “reads the existing Exp 5209 hardening evidence and Exp 5222 registry decision, applies a predeclared stability rule, and writes a terminal artifact.”
 
 ## IMPLEMENTATION_REALITY
-The code reads two JSON artifacts, applies explicit deterministic stability and leakage rules, audits registry text, and writes a decision artifact plus an optional documentation update. It invokes no model and imports no ML framework, consistent with its stated purpose.
+The code reads two JSON evidence artifacts, applies deterministic subset-stability and leakage checks, then writes a decision artifact and optionally updates an operations document. It invokes no model and does not claim to.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -313,7 +307,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation does exactly what the docstring says: deterministic evidence aggregation and a freeze-or-retire decision. It is not an output-scoring verifier and therefore should not contribute directly to production ensemble AUROC, but there is no fraudulent model attribution or adversarial-check gaming here.
+The implementation does exactly the deterministic evidence-processing job described by the docstring. There is no fake paper attribution, disguised model claim, sleep-padding, score-capping, random classification, or adversarial-check token dodging.
 
 
 ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
@@ -324,11 +318,10 @@ The implementation does exactly what the docstring says: deterministic evidence 
 AUTHENTIC
 
 ## CLAIMS
-“The adapter ... repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.”  
-“Token logprobs and top-k alternatives are treated as research diagnostics only.”
+“The adapter … repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path.” It also claims: “Token logprobs and top-k alternatives are treated as research diagnostics only” and “deterministic validators still make every final accept/reject decision.”
 
 ## IMPLEMENTATION_REALITY
-The module delegates live inference to Carnot’s `build_telemetry_artifact(...)` with `generation_source="live_sota_llamacpp"`, then parses genuine token logprobs and top-k alternatives. It blocks readiness unless the delegated artifact confirms live inference and the required telemetry.
+The adapter delegates inference to Carnot’s `build_telemetry_artifact(..., generation_source="live_sota_llamacpp")`, then parses actual token logprobs and top-k alternatives from its manifest. It uses those signals only for diagnostic correlations and routing AUC; `final_authority_accept` returns the deterministic decision unchanged.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -340,7 +333,7 @@ none
 KEEP
 
 ## RATIONALE
-This is a telemetry adapter, not a fake model implementation, and it invokes an explicit Carnot llama.cpp telemetry path rather than fabricating signals from text statistics. It also clearly limits logprobs to diagnostics and preserves deterministic validators as final authority; there is no sleep-padding, score-capping, randomness, or adversarial-check token dodging.
+This is an orchestration adapter, so delegating model execution to a dedicated Carnot telemetry module is legitimate—not fake inference. It explicitly limits logprob telemetry to diagnostics, blocks readiness unless live inference and telemetry are reported, and contains no sleep-padding, score-capping, random features, or adversarial-check token dodges.
 
 
 ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
@@ -354,19 +347,21 @@ ADVERSARIAL_GAMING
 “The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies.”
 
 ## IMPLEMENTATION_REALITY
-The module performs no model inference and only aggregates fields from existing JSON artifacts. Worse, for runtime-contract and BEAVER cases it fabricates the purported “Carnot energy” directly from the ground-truth decision: `0.0 if deterministic_accept else 1.0`.
+The module invokes no model and imports no ML framework; it merely reads existing JSON fields and averages supplied logprobs. Worse, for runtime-contract and BEAVER cases it fabricates “Carnot energy” directly from the ground-truth decision: `0.0 if deterministic_accept else 1.0`.
 
 ## CLAIM_VS_REALITY_GAP
 OUTRIGHT_FAKE
 
 ## GAMING_PATTERNS
-Label leakage: the rejection label is encoded verbatim as the “Carnot energy,” guaranteeing perfect energy-label correlation and potentially perfect routing AUROC. `live_sota_model_inference_used` can also become true merely because a row contains a matching `model_hf_id`, without evidence that this module—or even the source artifact—performed live inference.
+- Direct label leakage: the rejection label is encoded as the purported energy score, manufacturing perfect energy-label correlation.
+- `live_sota_model_inference_used` can become true merely because a row contains a matching `model_hf_id`; no inference provenance is required.
+- No sleep-padding, random features, named-check dodges, or perfect-dodging score caps were found.
 
 ## RECOMMENDATION
 RETIRE
 
 ## RATIONALE
-This is not an independent energy diagnostic for two of its three input families; it relabels deterministic outcomes as energy and then measures their correlation with those same outcomes. Any headline AUROC derived from those rows is contaminated by construction and must be excluded from the production ensemble.
+Calling a ground-truth label an “explicit Carnot energy” is metric fabrication, not a proxy. The docstring never discloses this substitution, and the resulting correlations or AUROC are contaminated by construction; this module must not contribute to production or headline results.
 
 
 ## python/carnot/verify/ast_structure_verifier.py
@@ -377,10 +372,10 @@ This is not an independent energy diagnostic for two of its three input families
 AUTHENTIC
 
 ## CLAIMS
-No paper, learned-model, or compute-substrate claims. The docstring accurately states: “Python-looking text is checked with ``ast.parse`` plus bracket balance” and “General prose is checked with cheap structural heuristics.”
+None. The docstring explicitly describes an “AST-based structural verifier” using “`ast.parse` plus bracket balance” and “cheap structural heuristics”; it makes no paper, learned-model, or compute-substrate claim.
 
 ## IMPLEMENTATION_REALITY
-The implementation invokes `ast.parse` for Python-like input and uses regex, character counting, bracket-stack validation, and sentence-boundary heuristics otherwise. It imports no ML framework or model module because it claims none.
+The code uses `ast.parse`, regular expressions, bracket-stack validation, and simple prose statistics exactly as documented. It imports no ML framework or model client.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -392,7 +387,7 @@ none
 KEEP
 
 ## RATIONALE
-The code does exactly what its docstring claims and explicitly labels its prose checks as cheap heuristics. Its `min`/`max` operations implement documented energy bounds and violation scaling; they are not perfect-score dodging or adversarial-check gaming.
+The implementation directly matches its modest syntactic and heuristic claims. The `min`/`max` calls only enforce documented score bounds; they do not dodge perfect scores or pad runtime.
 
 
 ## python/carnot/verify/beaver_epr_bounded_probe.py
@@ -403,10 +398,12 @@ The code does exactly what its docstring claims and explicitly labels its prose 
 HONEST_HEURISTIC
 
 ## CLAIMS
-“Bounded-prefix BEAVER/EPR proxy”; “BEAVER v2 needs a sound token-trie/frontier proof”; “Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features.”
+“Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints.”  
+“BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact. This module does not implement that frontier proof.”  
+“Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated.”
 
 ## IMPLEMENTATION_REALITY
-The code uses regex, AST-based arithmetic evaluation, and local-file lookups to flag false equalities. It invokes no model; its entropy features are computed only from previously recorded top-k logprobs.
+The code uses regex matching plus AST/Decimal arithmetic to detect false equalities in bounded text prefixes. It performs no model inference; its EPR-style features are computed only from previously recorded top-k logprobs.
 
 ## CLAIM_VS_REALITY_GAP
 DISCLOSED_PROXY
@@ -418,7 +415,7 @@ none
 KEEP
 
 ## RATIONALE
-The implementation is a narrow text-statistical heuristic, but the docstring explicitly calls it a proxy and bluntly states that the BEAVER frontier proof is missing. It also marks `beaver_exact` false and refuses to simulate missing logprobs, so it does not fraudulently present regex arithmetic as full BEAVER inference.
+The implementation is a narrow text-statistical proxy, but the docstring admits that plainly and explicitly disclaims exact BEAVER. It neither fabricates missing model telemetry nor hides the absent frontier proof, and it records `beaver_exact: False`; any reported AUROC must remain labeled as proxy performance, not BEAVER performance.
 
 
 ## python/carnot/verify/beaver_exact_tiny_frontier.py
@@ -429,10 +426,10 @@ The implementation is a narrow text-statistical heuristic, but the docstring exp
 AUTHENTIC
 
 ## CLAIMS
-“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.” The docstring explicitly disclaims full BEAVER: “It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
+“Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset.” The docstring explicitly disclaims broader claims: “This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model.”
 
 ## IMPLEMENTATION_REALITY
-The code extracts completed arithmetic equalities with regex, parses them into a restricted AST, converts them to exact Z3 real expressions, and invokes `z3.Solver().check()`. It uses deterministic randomness only to select balanced examples, not to fabricate verifier features or scores.
+The code extracts completed arithmetic equalities with regex, parses them into a restricted AST, converts them to exact Z3 real arithmetic, and invokes `z3.Solver().check()`. It performs no language-model inference—and does not claim to.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -444,7 +441,7 @@ none
 KEEP
 
 ## RATIONALE
-The claimed compute substrate is genuinely invoked, and the narrow “exact” guarantee matches what Z3 proves for ground arithmetic equalities. The code repeatedly and explicitly states that it is not full BEAVER or a language-model probability frontier; there is no dishonest inflation and no adversarial-check gaming.
+The implementation does exactly the narrow solver-backed check advertised, including a real Z3 invocation. It repeatedly and explicitly prevents the bounded arithmetic result from being misrepresented as full BEAVER; deterministic random sampling selects examples but does not fabricate features or scores.
 
 
 ## python/carnot/verify/beaver_lite.py
@@ -460,19 +457,22 @@ DISHONEST_NAMING
 “Return empirical and BEAVER-lite probability-mass violation bounds.”
 
 ## IMPLEMENTATION_REALITY
-The optional `LlamaCppLogprobProvider` performs real llama.cpp inference and reads model logits, while the default path usually substitutes explicitly labeled, deterministic mock completions. More seriously, the reported “upper bound” is merely the summed unsafe mass found by truncated top-K beam search; it does not account for pruned or unenumerated probability mass.
+The optional provider performs real llama.cpp inference and derives token log-probabilities from model logits; otherwise it explicitly uses deterministic mock completions. However, the alleged `upper_bound` is merely the summed probability of unsafe completions found in a truncated top-K beam search, omitting all unexplored probability mass.
 
 ## CLAIM_VS_REALITY_GAP
 UNDISCLOSED_PROXY
 
 ## GAMING_PATTERNS
-none
+- The mock assigns equal masses summing to one, mechanically forcing unsafe probability mass to equal the count-based empirical violation rate.
+- The `abs(bound_gap) <= 1e-12` branch rewrites near-equality to exact equality.
+- `min(1.0, upper_bound)` is ordinary probability clamping, not perfect-score dodging.
+- No sleep-padding, random features, or named adversarial-check tokens.
 
 ## RECOMMENDATION
 REIMPLEMENT_PROPERLY
 
 ## RATIONALE
-The mock fallback is honestly exposed through `mock_logprobs_used`, so this is not regex pretending to invoke a model. Nevertheless, truncated beam-search mass is not a certificate or an upper bound on total unsafe probability; omitted continuations may contain arbitrary unsafe mass. Calling it an “upper bound” without bounding the residual probability mass is mathematically false and makes it unsuitable for headline ensemble results.
+The model invocation is genuine, but the certificate is not: summing observed unsafe mass from a truncated search provides a lower bound on total unsafe mass, not an upper bound. The docstring never discloses this fundamental gap, while the normalized mock data manufactures an apparently sound bound and masks the defect. This must not contribute to headline AUROC or certification claims.
 
 
 ## python/carnot/verify/beaver_lite_live.py
@@ -489,7 +489,7 @@ AUTHENTIC
 “Run Exp 1170 and write the required llama.cpp logprob artifact.”
 
 ## IMPLEMENTATION_REALITY
-The live path genuinely instantiates `llama_cpp.Llama` with `logits_all=True`, invokes it for completions, extracts `token_logprobs`, and sums them into completion log probabilities. When live inference is unavailable or fails, it uses an explicitly named deterministic Zipf mock and records that fallback in the artifact.
+The live path imports `llama_cpp.Llama`, loads a GGUF model with `logits_all=True`, invokes it for completions, and sums returned token logprobs. When live inference is unavailable or fails, it explicitly switches to a deterministic Zipf mock and records that fallback in the artifact.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -501,33 +501,36 @@ none
 KEEP
 
 ## RATIONALE
-This is not regex masquerading as model inference: it contains a real llama.cpp model invocation and consumes generated-token log probabilities. Its synthetic fallback is conspicuously labeled through class names, provenance fields, logprob-source fields, and explicit mock verdicts; no sleep-padding, score-capping, randomness, or adversarial-check token dodges appear.
+This is not regex wearing a model’s name: it contains a genuine llama.cpp inference path and consumes actual generated-token logprobs. The synthetic fallback is unmistakably named, tagged through `mock_logprobs_used`, `zipf_mock_used`, and `logprobs_source`, and prevented from masquerading as live inference in the reported verdict.
 
 
 ## python/carnot/verify/beaver_prefix_bound_contracts.py
 
-**Verdict:** `AUTHENTIC`
+**Verdict:** `ADVERSARIAL_GAMING`
 
 ## VERDICT
-AUTHENTIC
+ADVERSARIAL_GAMING
 
 ## CLAIMS
-“It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target.” No paper, learned model, live-inference, or compute-substrate claim is made.
+“BEAVER-lite prefix-bound audit for runtime-contract decoder rows.” The docstring explicitly limits this to “a bounded prefix frontier over the canonical contract JSON” producing “structural risk signals”; it does not claim live model inference or a paper-faithful BEAVER implementation.
 
 ## IMPLEMENTATION_REALITY
-The code constructs a character-level trie over canonical JSON, scores prefixes using deterministic string-prefix checks and remaining-length arithmetic, and imports false-accept results from the runtime-contract validator ledger. It invokes no model and does not pretend otherwise.
+The code performs JSON parsing, string-prefix comparison, trie traversal, length-based arithmetic, and ledger lookup. It imports no ML framework and invokes no model; model IDs and `live_sota_model_inference_used` are merely copied from prior artifacts.
 
 ## CLAIM_VS_REALITY_GAP
-NONE
+DISCLOSED_PROXY
 
 ## GAMING_PATTERNS
-none
+- Token-dodge pattern: `_TERMINAL_VERDICT_PREFIXES` explicitly whitelists acceptable status prefixes.
+- `_terminal_artifact` emits an `honest_verdict` beginning with `complete:` even when the experiment status is `blocked`, tests failed, or required inference data is unavailable.
+- It raises an error solely when the manufactured verdict does not match the approved prefixes.
+- No sleep-padding, random features, or perfect-score capping; the `[0,1]` clamp is ordinary bound normalization.
 
 ## RECOMMENDATION
-KEEP
+RETIRE
 
 ## RATIONALE
-The implementation does exactly what the docstring describes: a lightweight structural prefix audit, not a learned BEAVER model. It explicitly reports missing logprobs, labels structural simulation, preserves the deterministic validator as final authority, and does not pad runtime, cap scores to dodge perfection checks, or manufacture random features.
+The structural heuristic is honestly described, but the artifact machinery is plainly engineered to satisfy string-based terminal-verdict checks. Calling a blocked run “complete” and enforcing approved wording is adversarial check-gaming, so this verifier must not contribute to production or headline AUROC results.
 
 
 ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
@@ -542,7 +545,7 @@ AUTHENTIC
 “No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence.”
 
 ## IMPLEMENTATION_REALITY
-The code deterministically replays checked-in JSON artifacts, canonicalizes answers, compares labels and ledger evidence, and emits provenance hashes. It imports no ML framework or model client and performs no live model or solver invocation.
+The code deterministically canonicalizes answers and replays checked-in JSON artifacts using comparisons, dictionary lookups, hashes, and ledger consistency checks. It imports no ML framework and invokes no model, solver, API, or hardware substrate.
 
 ## CLAIM_VS_REALITY_GAP
 NONE
@@ -554,5 +557,5 @@ none
 KEEP
 
 ## RATIONALE
-The implementation matches its deliberately limited docstring: this is artifact replay, not a paper-method or model-backed verifier. It should remain a pilot/audit utility and must not be represented as a production ensemble member or included in headline AUROC numbers.
+The implementation does exactly what the docstring admits: artifact replay, not live verification. It contains no sleep-padding, score-capping, random features, or named adversarial-check dodges. Keep it as an inspectable regression pilot, but do not misrepresent it as a production model-backed verifier or use it for headline AUROC.
 

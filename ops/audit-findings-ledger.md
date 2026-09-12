@@ -152,3 +152,5 @@ of truth, not this line.)
 | 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_evidence_scope | SILENT_NON_FIRING | OPEN | |
 | 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_methodology_claims_live_inference | SILENT_NON_FIRING | OPEN | |
 | 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_identity_claims_live_inference | SILENT_NON_FIRING | OPEN | |
+| 2026-09-12 | qa_layer_authenticity_audit | adversarial_verify.py::_substrate_declares_deterministic_non_live | SILENT_NON_FIRING | OPEN | |
+| 2026-09-12 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_current_task_inference_claim | REAL_BUG | OPEN | |
