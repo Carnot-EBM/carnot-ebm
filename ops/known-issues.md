@@ -26155,3 +26155,56 @@ loop, not to closing this gap.
 submission attempt using the current `selfparse`-on-vLLM configuration, to confirm the 08-28 fix
 actually resolves the 08-21 failure. 21 days of silence on the real submission path is itself a
 finding worth acting on before the November deadline, independent of whether the fix is correct.
+
+## 2026-09-11 (later same day): selfparse-on-vLLM CONFIRMED — real code path, real request, real parse
+
+Direct answer to "confirm selfparse works against the vLLM backend."
+
+**The two backends do NOT share a transport, and this matters.** There are two separate vLLM
+code paths in `arc_executable_world_model.py`:
+
+- `_vllm_raw_completion` (line ~7338) — used ONLY by the world model's own raw generate/induce
+  calls (line ~8096, ~8306). POSTs to `/v1/completions`, reshapes vLLM's reply into llama.cpp's
+  flat `{"content": ..., "stop_type": ..., "timings": {...}}` contract.
+- `_post_chat` in `arc_induction_tool_loop.py` (line 377) — used by the tool loop, the ONLY
+  thing selfparse touches. This ALWAYS POSTs to `/v1/chat/completions`, on BOTH backends. It
+  never calls `_vllm_raw_completion`. So the flat-vs-nested response-shape mismatch that looked
+  like a real risk (`arc_induction_tool_loop.py` reads `raw["choices"][0]["message"]["content"]`,
+  `_vllm_raw_completion` returns no `choices` key) is not reachable — that function is never in
+  the tool loop's call graph. No fix was needed because there was nothing to fix.
+
+**Real test run, not a read of the source alone.** Launched vLLM 0.29.0 (isolated
+`.venv-vllm-trial`) against the already-downloaded `RedHatAI/Qwen3.8-27B-INT4` on GPU 1, with
+the EXACT flags `_ensure_vllm_server` uses in production (no `--enable-auto-tool-choice`, no
+`--tool-call-parser` — selfparse is designed to need neither), minus only `--kv-cache-dtype
+fp8` (Blackwell-tuned, dropped for this Ampere card; that flag has no bearing on transport
+shape) and with `--enforce-eager --max-num-seqs 1` for local memory headroom. Sent the literal
+payload shape `_post_chat` builds under `selfparse=True`: `messages` with the tool schemas
+rendered as prompt TEXT via `render_tool_schemas_for_prompt` (no `tools`/`tool_choice` keys at
+all), plus `cache_prompt: true` and `thinking_budget_tokens: 3072` — both llama.cpp-specific
+fields with no vLLM meaning, sent unconditionally by `_post_chat` regardless of backend and
+never previously checked against vLLM's request validation.
+
+Result: HTTP 200. vLLM's OpenAI server silently ignores both unrecognized fields (no 400, no
+422 — confirmed empirically, not assumed). The response came back in the standard nested
+`choices[0].message.content` shape `_record_turn` and the tool loop both expect. `tool_calls`
+came back empty (expected — no `tools` field was sent, so the server has nothing to lift), and
+the model emitted its native Qwen3 XML directly into `content`:
+`<tool_call><function=diff_grids><parameter=t>0</parameter></function></tool_call>`. Ran the
+REAL `parse_xml_tool_calls()` (from `arc_induction_tools.py`, not a reimplementation) against
+that exact content: `n_blocks=1, n_unparsed=0`, parsed call
+`{"name": "diff_grids", "arguments": "{\"t\": 0}"}` — a correct, real extraction.
+
+**Conclusion: selfparse works against the vLLM backend, unmodified, today.** No code
+incompatibility exists between the two. This closes the open question raised by the freshness
+check two entries above ("the fix has never been confirmed against the vLLM backend, which is
+a different raw-completions code path" — that framing was itself imprecise: the tool loop was
+never on the raw-completions path to begin with).
+
+**What this does NOT close.** The freshness check's actual finding stands unchanged: the last
+real Kaggle submission (2026-08-21) ERRORED, and no real (or dry-run) resubmission has verified
+the fix end-to-end on the scored stack since 08-28. This session's test confirms the MECHANISM
+is sound in isolation; it is not a substitute for a real resubmission attempt. That remains the
+open MANDATORY-NEXT-MILESTONE item.
+
+GPU 1 confirmed idle (4 MiB) after the vLLM process was killed; no artifacts left running.
