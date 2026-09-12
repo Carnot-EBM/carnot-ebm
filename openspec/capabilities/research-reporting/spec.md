@@ -69568,3 +69568,114 @@ and gate summary
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7191 and SCENARIO-REPORT-7191-* | Planned: Exp7191 aggregation entrypoint and terminal artifact | Planned: focused RED tests, scoped coverage, full Python tests, artifact validation, adversarial verification, row consistency, spec coverage, and aggregation E2E |
+## V636 Capstone Evidence Matrix
+
+### REQ-REPORT-7232: Preserve the complete V636 roster and independent findings
+
+The system SHALL write `results/experiment_7232_v636_capstone.json` from the
+frozen V636 Markdown and YAML contract in `results/raw/experiment_7219/`. It
+SHALL require exactly fourteen ordered contract rows from exp7219 through
+exp7232. The task-contract rows SHALL remain separate from numeric claim rows.
+
+The system SHALL read every existing V636 terminal artifact and freeze its
+exact SHA-256. It SHALL prefer the declared deliverable and MAY use only the
+canonical conductor block derived from the full task ID. It SHALL represent a
+legitimate cascade block without requiring a result file for the skipped
+sibling. The capstone self-row SHALL report complete scope while its scientific
+classification remains independent.
+
+The system SHALL authenticate each producer before it promotes a claim. It
+SHALL reject a structured quarantine flag or exclusion-manifest match even
+when a named readiness field equals its expected value. It SHALL unwrap only a
+mapping that contains both `principle` and `value`. A canary, transport receipt,
+oracle upper bound, exact parity check, or native receipt SHALL not become a
+semantic or learning-value claim.
+
+The system SHALL recompute promoted numeric claims from producer rows or named
+retained receipts. Each claim row SHALL include `unit_id`, `arm`, `seed`,
+`metric`, `metric_value`, `error`, and `abstention`. A quarantined, missing, or
+cascade-blocked source SHALL produce an abstaining claim row or no promotion.
+It SHALL never supply an invented value.
+
+The system SHALL classify these four questions independently: held-out source
+fidelity and value, prospective memory utility, live adapter-withheld progress
+with useful model validity, and matched deployment cost. It SHALL keep vLLM
+parser readiness, cumulative induction volume, finite-law parity, native
+parity, and native speed as narrower findings. It SHALL retain the V633 and
+V634 semantic nulls when it reports later grammar or executor readiness.
+
+The system SHALL give every contract row one action from `continue`, `retire`,
+or `needs_changed_prerequisite`. Each action SHALL state the next experiment or
+the exact external condition. It SHALL preserve each task's exact
+`prior_failures` record and apply `retire_if_same_verdict` only to the matching
+failure. It SHALL not modify the exclusion manifest or conductor.
+
+The capstone SHALL set `capstone_complete_score=1` after all fourteen matrix
+rows and all claim recomputations are complete. Missing or retired external
+evidence that prevents a scientific conclusion SHALL produce
+`verdict_class=blocked` and an exact `gate_check_summary`. It SHALL not produce
+`partial` for that condition. Complete negative evidence SHALL remain `null`,
+and quarantined evidence SHALL remain `disqualified`.
+
+The capstone SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. It SHALL
+record the actual hostname, UTC timestamps, and monotonic duration without
+padding. It SHALL run the unchanged G1-G4 publication gate and SHALL not publish
+or submit any material.
+
+The terminal artifact SHALL contain every required field and exact field
+principle from the exp7232 task contract. Its validator SHALL reload the file
+and recompute the roster, accepted claims, source hashes, branch actions,
+publication-gate shape, and reproducibility checksum.
+
+#### SCENARIO-REPORT-7232-CONTRACT: Frozen plans preserve fourteen rows
+
+**Given** the frozen V636 Markdown and YAML sources
+**When** the capstone parses both contracts
+**Then** exactly fourteen ordered IDs, titles, deliverables, and gates agree
+**And** task-contract rows remain separate from numeric claim rows.
+
+#### SCENARIO-REPORT-7232-INTAKE: Quarantine and cascade blocks fail closed
+
+**Given** declared artifacts, conductor blocks, quarantined artifacts, and a
+legitimately skipped downstream task
+**When** the capstone loads evidence
+**Then** only authenticated terminal bytes can support promoted claims
+**And** the skipped task receives a blocked matrix row without an invented file.
+
+#### SCENARIO-REPORT-7232-CLAIMS: Producer rows support every promotion
+
+**Given** authenticated producer rows and declared headline fields
+**When** the capstone recomputes the claim ledger
+**Then** each promoted number matches its source rows or retained receipt
+**And** quarantined or unavailable evidence abstains.
+
+#### SCENARIO-REPORT-7232-SCIENCE: Four scientific questions stay independent
+
+**Given** source, memory, ARC, native, sampler, and board evidence
+**When** the capstone classifies scientific outcomes
+**Then** source fidelity, memory utility, useful live progress, and deployment
+cost receive separate verdict classes
+**And** readiness, count, parity, and speed receipts remain narrower claims.
+
+#### SCENARIO-REPORT-7232-DECISIONS: Exact retirement signals remain scoped
+
+**Given** each contract row and its prior-failure records
+**When** the capstone issues branch decisions
+**Then** each row has one closed action and a concrete next condition
+**And** exact repeated verdicts apply their own retirement signal only.
+
+#### SCENARIO-REPORT-7232-BLOCKED: Complete scope can contain blocked science
+
+**Given** all fourteen matrix slots and an unavailable held-out source audit
+**When** aggregation finishes
+**Then** status is complete and the capstone score is one
+**And** the verdict is blocked with the failed upstream gate diagnosis.
+
+#### SCENARIO-REPORT-7232-ARTIFACT: Reloaded validation detects mutation
+
+**Given** a terminal capstone artifact
+**When** the validator reloads its bytes
+**Then** unchanged inputs pass validation
+**And** a changed roster, claim, source hash, action, gate, or checksum fails.
