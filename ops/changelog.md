@@ -19893,3 +19893,4 @@ timed alternative is available.
 - 2026-09-12: Local scored-stack ARC selfparse dry run (⚠️ Research Finding) — honest_verdict=complete_null_no_policy_consumed_world_model; results/experiment_7234_v637_arc_scored_dryrun.json
 - 2026-09-12: Independent ARC dry-run reachability and authority audit (⚠️ Blocked) — honest_verdict=blocked_upstream_not_quarantined; results/experiment_7235_v637_arc_path_audit.json
 - 2026-09-12: Public mention compiler and sealed semantic fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_mention_fixture_ready_oracle_control_no_generalization_claim; results/experiment_7236_v637_mention_fixture.json
+- 2026-09-12: Bounded Qwen3.8 mention-grounding canary (⚠️ Research Finding) — honest_verdict=complete_circular_positive_mention_canary_ready_scale_gate_only; results/experiment_7237_v637_mention_canary.json
