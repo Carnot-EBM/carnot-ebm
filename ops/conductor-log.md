@@ -17817,3 +17817,5 @@ code |
 | 2026-09-12 09:46 UTC | Qwen3.8 held-out mention-grounding capture | OK | 92 passed, 1 warning in 9.61s |
 | 2026-09-12 11:10 UTC | Independent mention fidelity and verification-valu | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: "inference |
 | 2026-09-12 11:33 UTC | Independent mention fidelity and verification-valu | OK | 91 passed, 1 warning in 11.03s |
+| 2026-09-12 12:56 UTC | Feedback-validated archive memory prototype and re | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: nd(("execution |
+| 2026-09-12 12:58 UTC | Conductor re-exec: fresh committed source | OK | 099b909818d8 -> 050b29b80fae; argv preserved |

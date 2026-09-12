@@ -13676,3 +13676,125 @@ exact selected extension.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7230 and SCENARIO-CL-7230-* | Planned: scoped Rust packed-belief module, PyO3 registration, experiment controller, and thin wrapper. | Planned: RED-first exhaustive parity, fixed sequence, process restore, artifact, and scoped coverage tests. |
+
+## REQ-CL-7240: Feedback-Validated Bounded Archive Recurrence Fixture
+
+Carnot SHALL provide one opt-in controller over the existing packed finite
+hypothesis state. The controller SHALL keep one active state and at most four
+immutable archived survivor-mask states. When released feedback contradicts
+the active state, it SHALL archive the active bytes before a reset. Inactive
+hypotheses SHALL not be globally deleted. Archive nomination and reactivation
+SHALL use released feedback only and SHALL not read stream names, event
+numbers, generator seeds, regime names, boundaries, or evaluator sidecars.
+
+The controller SHALL validate nominated archives against a rolling window of
+the most recent 16 released witnesses. It SHALL reactivate only a candidate
+with at least eight applicable witnesses and zero contradictions. It SHALL
+choose deterministically by validation loss and then creation order. A shuffled
+nomination arm SHALL use the same archive content, nomination count, observable
+feedback, query budget, and final validation gate as the validated arm.
+
+Every prediction SHALL read a frozen state before current feedback is
+released. A release commit SHALL affect only later events. Delayed
+contradictions SHALL not cause same-event correction, hindsight certificates,
+or replay of labels that were not accessible to the controller. Durable state
+SHALL preserve exact active and archived bytes across restart. A failed or
+rolled-back commit SHALL restore the exact parent bytes and hash.
+
+The fixture SHALL seal 32 streams of 1,024 events. The first 128 events in each
+stream SHALL be warmup. The pending feedback capacity SHALL be four, the query
+ceiling SHALL be 128 per stream, and delays SHALL come from zero, four, 16, and
+32. All adaptive arms SHALL use the existing query acquisition. The authority
+SHALL vary A-B-A recurrence, A-B-C unseen drift, gradual drift, and unchanged-
+input label drift while keeping regimes and boundaries outside public bytes.
+At least one A-B-A recurrence SHALL preserve identical public-input moments so
+moment lookup alone cannot identify the returning constraint state.
+
+The fixture SHALL prototype six arms: `frozen_warmup`,
+`destructive_packed_learner`, `reset_relearn_no_archive`,
+`unvalidated_stale_archive_reuse`, `validation_selected_archive`, and
+`shuffled_nomination_validated`. Rows SHALL retain one independent stream and
+arm, full prospective error and abstention denominators, and intended versus
+actual query counts. Completion SHALL not assert that any science gate passed
+by construction.
+
+`recurrence_fixture_ready_score` SHALL equal one only when the sealed stream
+contract, controller operations, delayed-feedback chronology, archive cap,
+positive controls, authority isolation, restart retention, and byte-exact
+rollback all pass. The exact finite evaluator is also the correctness authority,
+so a ready fixture SHALL use `verifier_is_oracle=true` and
+`verdict_class=circular_positive`. It SHALL set `MODEL_SPECS=[]`,
+`model_invoked=false`, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. A missing external prerequisite SHALL instead produce
+a row-free `blocked_no_run` artifact with the exact failed gate receipt.
+
+The terminal artifact SHALL use run date `20260912` and bind the experiment ID,
+milestone, source code, public manifest, private authority, release schedule,
+raw rows, and checkpoint bytes to hashes. It SHALL retain all required V637
+artifact fields, a predeclared sample-size budget and seeds, a reproducibility
+checksum, every acceptance gate, the controller and arm contracts, measured
+CPU state bytes, and the future Rust SIMD and FPGA BRAM operation mapping. Only
+an exact two-key dictionary containing `principle` and `value` may be unwrapped.
+
+### SCENARIO-CL-7240-PRECONDITIONS: Exact Upstream Evidence Or Block
+
+- GIVEN the V637 roadmap identity and exact Exp7227 artifact and raw receipts
+- WHEN requirements, imports, writable paths, hashes, and quarantine are checked
+- THEN only authenticated evidence can start stream generation
+- AND an external failure produces a row-free blocked artifact.
+
+### SCENARIO-CL-7240-ARCHIVE: Contradiction Preserves Bounded Past State
+
+- GIVEN an active survivor mask and released contradictory feedback
+- WHEN the post-prediction transaction resets the active state
+- THEN the prior active bytes enter an immutable archive before reset
+- AND deterministic eviction keeps at most four archived states.
+
+### SCENARIO-CL-7240-VALIDATION: Released Witnesses Gate Reactivation
+
+- GIVEN archived candidates and the rolling 16-release window
+- WHEN candidates are nominated for reuse
+- THEN fewer than eight applicable witnesses or any contradiction rejects reuse
+- AND ties use validation loss followed by creation order.
+
+### SCENARIO-CL-7240-CHRONOLOGY: Current Feedback Is Future-Only
+
+- GIVEN a prediction from frozen state and feedback released for that event
+- WHEN a transaction archives, resets, or reactivates state
+- THEN the recorded prediction and certificate remain unchanged
+- AND the new state can affect only a later event.
+
+### SCENARIO-CL-7240-STREAMS: Sealed Regimes Stay Outside Public Bytes
+
+- GIVEN 32 frozen streams with four evaluator-owned drift patterns
+- WHEN public, release, and private authority files are sealed
+- THEN every count, delay, warmup, capacity, and query limit matches the contract
+- AND identical-moment recurrence exposes no boundary or regime identity.
+
+### SCENARIO-CL-7240-ARMS: Six Controls Share Observable Budgets
+
+- GIVEN the six preregistered arms on one public stream
+- WHEN adaptive query acquisition and delayed delivery run
+- THEN all adaptive arms receive the same selected releases and query ceiling
+- AND shuffled nomination changes order without changing the final validation gate.
+
+### SCENARIO-CL-7240-TRANSACTION: Restart And Rollback Preserve Hashes
+
+- GIVEN a committed archive transition and its durable checkpoint
+- WHEN a fresh controller restores it and the transition is rolled back
+- THEN restart retains identical active and archive bytes
+- AND rollback restores the exact parent state hash and later prediction.
+
+### SCENARIO-CL-7240-TERMINAL: Readiness Is Infrastructure Evidence
+
+- GIVEN all sealed-stream, positive-control, isolation, and transaction checks pass
+- WHEN the terminal artifact is cold-validated and atomically written
+- THEN `recurrence_fixture_ready_score` equals one
+- AND the circular-positive verdict claims fixture readiness, not learning efficacy.
+
+## Implementation Status (REQ-CL-7240)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7240 and SCENARIO-CL-7240-* | Implemented: `python/carnot/experiment_7240_v637_recurrence_fixture.py` provides the bounded archived-mask controller, separated 32-stream fixture, six-arm panel, checkpoint, and atomic artifact builder; `scripts/experiments/experiment_7240_v637_recurrence_fixture.py` is the thin wrapper. | `tests/python/test_experiment_7240_v637_recurrence_fixture.py` covers preconditions, exact principle unwrapping, delayed contradiction, archive cap, validation, shuffled nomination, stream separation, all six arms, restart, rollback, cold validation, blocked output, command delegation, and 100-percent new-code line coverage. |
