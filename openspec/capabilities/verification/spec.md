@@ -41453,3 +41453,123 @@ process identity, CUDA receipt, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7237 and SCENARIO-VERIFY-7237-* | Implemented (`python/carnot/experiment_7237_v637_mention_canary.py`; `scripts/experiments/experiment_7237_v637_mention_canary.py`) | Focused tests (`tests/python/test_experiment_7237_v637_mention_canary.py`) plus live producer/reducer replay |
+
+### REQ-VERIFY-7238: Held-Out Mention Capture SHALL Preserve Every Scheduled Outcome
+
+Exp7238 SHALL authenticate the exact V637 Exp7236 fixture artifact, public
+manifest, private authority manifest, and Exp7237 canary artifact. It SHALL run
+only when both readiness scores equal one. It SHALL reject structured or
+manifest quarantine even when those numeric scores pass. It SHALL unwrap a
+mapping only when that mapping contains both `principle` and `value`.
+
+The workflow SHALL freeze exactly 64 independent held-out questions. It SHALL
+balance 16 questions in each fixture condition. It SHALL not inspect hidden
+labels before it freezes the sample and request schedule. It SHALL randomize
+the order of the paired `mention_pointer` and
+`explicit_schema_offset_control` arms for each question before inference.
+
+Each question SHALL use two separate source and claim requests for the pointer
+arm and two for the explicit-offset arm. Each question SHALL also use one
+`direct_judge` request that receives the public source and claim together. The
+direct judge SHALL predict only the final decision. It SHALL not act as an
+energy reranker. The representation arms SHALL retain the 384 source plus 128
+claim output-token caps. The direct judge SHALL use one matched 512-token cap.
+The fixed schedule SHALL therefore contain 320 requests and 192 comparison
+rows. All requests SHALL use temperature zero, top-k one, fixed seeds, and no
+retry.
+
+The runner SHALL use `unsloth/Qwen3.8-27B-GGUF` at `Q4_K_M`. It SHALL resolve
+the cached file with `cached_current_model()`. It SHALL use one task-owned
+native llama.cpp server with the GGUF embedded tokenizer and chat template. It
+SHALL set `CARNOT_FORCE_LIVE=1`. It SHALL use a 240-second startup cap, a
+90-second request cap, and a 3000-second total inference cap. It SHALL report a
+feasibility projection from measured Exp7237 timing before it starts the held-
+out run.
+
+The runner SHALL checkpoint after every attempted request. It SHALL resume only
+missing schedule rows when the model, settings, input, and schedule hashes
+match. It SHALL never regenerate a completed malformed, unknown, truncated,
+timed-out, or otherwise unusable response. Every attempted request SHALL have
+one terminal row. A timeout or transport error SHALL remain censored evidence
+on the fixed denominator.
+
+Missing prerequisites before invocation SHALL produce `blocked_no_run`. An
+interrupted task-owned run SHALL remain in a resumable checkpoint and use the
+`partial` verdict class. A complete quality failure SHALL produce a terminal
+`null` artifact. Actual CUDA corpus generation SHALL use
+`inference_substrate=live_llm_inference`,
+`inference_substrate_class=model_full_generation`, and
+`inference_mode=live_gpu`. The runner SHALL retain the model hash, native
+binary, process ID and start tick, GPU UUID, exact request and response bytes,
+actual parameters, token counts, finish reasons, wall times, invocation counts,
+and teardown receipt.
+
+The independent reducer SHALL retain one row per unit and arm. It SHALL score
+representation validity, source relation fidelity, claim relation fidelity,
+final decision correctness, abstention, and missing-output penalties. It SHALL
+also retain per-call prompt tokens, completion tokens, elapsed time, timeout
+state, and terminal state. It SHALL compute readiness from all 64 fixed units,
+not only valid responses. `mention_capture_complete_score` SHALL be one only
+when all 320 scheduled requests have authentic terminal outcomes. Execution
+completeness SHALL not imply a positive scientific verdict.
+
+The terminal artifact SHALL contain `schema`, `status`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `execution_host`, `duration_s`,
+`MODEL_SPECS`, `model_invoked`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acceptance_gate_results`, `inference_mode`, `runner_receipt`,
+`raw_request_manifest`, `phase_spans`, `mention_capture_complete_score`,
+`capture_manifest_path`, `paired_unit_rows`, and `decoding_cost_rows`.
+`field_principles` SHALL contain the requested exact principle for every listed
+field. The capture manifest SHALL be
+`results/raw/experiment_7238/manifest.json` and SHALL bind every raw request to
+one sealed public held-out unit.
+
+The runner SHALL print and flush every numbered phase boundary. It SHALL print
+before and after model loads, generations, benchmarks, validations, and long
+subprocesses. A truthful heartbeat SHALL report completed work and monotonic
+elapsed time at least every 60 seconds. No output gap SHALL reach 600 seconds.
+
+#### SCENARIO-VERIFY-7238-SCHEDULE: Sixty-Four Held-Out Units Freeze 320 Blind Calls
+
+**Given** the authenticated and balanced Exp7236 held-out split
+**When** the Exp7238 schedule is frozen before authority scoring
+**Then** it contains 64 units, 320 calls, and 192 unit-arm rows
+**And** paired representation arm order is randomized from the fixed seed.
+
+#### SCENARIO-VERIFY-7238-PRESERVATION: Bad Responses Stay On The Fixed Denominator
+
+**Given** malformed, unknown, truncated, timed-out, and usable model responses
+**When** the capture stores terminal outcomes and the reducer scores them
+**Then** every attempted call remains in the raw manifest and cost rows
+**And** missing or unusable outputs receive penalties without sample removal.
+
+#### SCENARIO-VERIFY-7238-BASELINE: Direct Judgment Uses One Matched Public Request
+
+**Given** one public source and claim pair
+**When** the `direct_judge` baseline runs
+**Then** it receives no private authority field and uses a 512-token cap
+**And** it returns a direct decision rather than an external-text reranker score.
+
+#### SCENARIO-VERIFY-7238-RESUME: Matching Evidence Resumes Only Missing Calls
+
+**Given** a partial checkpoint with authentic terminal rows
+**When** its model, settings, input, and schedule hashes match the frozen run
+**Then** the runner invokes only schedule calls not present in the checkpoint
+**And** a completed bad response is never regenerated.
+
+#### SCENARIO-VERIFY-7238-ARTIFACT: Cold Replay Rejects Capture Drift
+
+**Given** a complete or externally blocked Exp7238 artifact
+**When** a source hash, request byte, response byte, schedule row, cost row,
+process identity, CUDA receipt, verdict, count, or checksum changes
+**Then** cold validation rejects the artifact
+**And** every block names the check, upstream, artifact field, expected, and observed value.
+
+## Implementation Status (REQ-VERIFY-7238)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7238 and SCENARIO-VERIFY-7238-* | Implemented (`python/carnot/experiment_7238_v637_mention_capture.py`; `scripts/experiments/experiment_7238_v637_mention_capture.py`) | Focused tests (`tests/python/test_experiment_7238_v637_mention_capture.py`); live capture blocked by authenticated Exp7237 quarantine |

@@ -1877,3 +1877,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['INFERENCE_PROVENANCE_CONTRADICTION', 'SUBSTRATE_CLASS_MISMATCH'] on a non-negative verdict
 - artifact: results/experiment_7234_v637_arc_scored_dryrun.json
+
+## experiment_7237_v637_mention_canary.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
+- artifact: results/experiment_7237_v637_mention_canary.json

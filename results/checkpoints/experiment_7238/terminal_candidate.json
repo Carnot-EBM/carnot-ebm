@@ -1,0 +1,599 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "acceptance_gate_results": [],
+  "capture_manifest_path": "results/raw/experiment_7238/manifest.json",
+  "completeness_receipt": {},
+  "decoding_cost_rows": [],
+  "duration_s": 0.11264534806832671,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "feasibility_projection": {},
+  "field_principles": {
+    "MODEL_SPECS": "Models actually invoked; [] for tasks with no LLM.",
+    "acceptance_gate_results": "Preserve each frozen criterion, actual value and pass/fail independently of task completion.",
+    "capture_manifest_path": "results/raw/experiment_7238/manifest.json binds every raw call to a sealed public unit.",
+    "decoding_cost_rows": "Per arm/unit prompt tokens, completion tokens, elapsed time and timeout status.",
+    "duration_s": "Measured monotonic elapsed work; record phase spans separately.",
+    "execution_host": "Actual hostname, distinct from execution_venue.",
+    "execution_venue": "Top-level orchestration is host; board rows name kv260, gatemate or polarfire.",
+    "field_principles": "Keep ordinary values at top level; put their explanations in this map.",
+    "gate_check_summary": "Every blocked_* verdict names check, upstream, artifact_field, expected and observed value.",
+    "honest_verdict": "Completed findings start complete_ or complete:. External absence starts blocked_. Failed acceptance forbids positive.",
+    "inference_mode": "live_gpu only after actual CUDA work.",
+    "inference_substrate": "Use the recognized literal for the operation actually executed.",
+    "inference_substrate_class": "Actual class determines the duration floor; never pad duration or relabel to pass.",
+    "mention_capture_complete_score": "All 320 scheduled outcomes accounted for; bad or timed-out outputs are not removed.",
+    "model_invoked": "Current task execution only; historical sources and injected fixtures are separate.",
+    "paired_unit_rows": "64 independent questions, three arms, final response provenance and missing-output penalties.",
+    "phase_spans": "Measured model load, generation, scoring and validation times.",
+    "preconditions_checked": "Observed paths, resources, model identity and upstream checks before expensive work.",
+    "random_seed": "Freeze seeds and schedules before observing evaluation labels.",
+    "raw_request_manifest": "Exact model, prompt, parameters and response hashes for every call.",
+    "reproducibility_checksum": "Hash the exact settings, inputs and raw rows supporting the result.",
+    "rows": "Every comparison retains one row per independent unit and arm, with errors and abstentions.",
+    "run_date": "Use 20260912; retain actual UTC start and end timestamps.",
+    "runner_receipt": "Task-owned invocation identity and actual transport counts, not copied upstream receipts.",
+    "sample_size_budget": "Predeclared independent units, attempted/completed/censored units, and stopping rule.",
+    "schema": "Version the artifact and bind experiment_id and milestone to this task.",
+    "source_artifact_hashes": "Hash source code, public inputs, private evaluator inputs and raw output files.",
+    "status": "Terminal complete or blocked only; unfinished work uses a separate checkpoint path.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. External incompleteness is blocked.",
+    "verifier_is_oracle": "True when the verification authority also defines correctness; separate code is insufficient independence."
+  },
+  "frozen_capture_settings": {
+    "arms": [
+      "mention_pointer",
+      "explicit_schema_offset_control",
+      "direct_judge"
+    ],
+    "direct_prompt_sha256": "sha256:143bdabceba253e07660f8f20e4f0f3aaba3721cb9cadf2813b0c51fab6d1e2b",
+    "direct_token_budget": 512,
+    "explicit_prompt_sha256": "sha256:e95d44e3edb905f909e45d2eee2af072f9e1a4b0b7529c289015f53e168584e4",
+    "inference_deadline_s": 3000.0,
+    "model": {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    },
+    "model_load_cap_s": 240.0,
+    "paired_arm_orders": [
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "mention_pointer",
+        "explicit_schema_offset_control"
+      ],
+      [
+        "explicit_schema_offset_control",
+        "mention_pointer"
+      ]
+    ],
+    "pointer_prompt_sha256": "sha256:e6e1196e69909cdcb95f1f70630e9ad4d83d30689bb5309193bd99abf4770e19",
+    "representation_token_budgets": {
+      "claim": 128,
+      "source": 384
+    },
+    "request_cap_s": 90.0,
+    "retry_malformed": false,
+    "seed_base": 7238001,
+    "temperature": 0.0,
+    "top_k": 1
+  },
+  "gate_check_summary": {
+    "expected_value": false,
+    "failed_check": "structured_quarantine",
+    "field": "flagged_adversarial|quarantined|fabricated",
+    "observed_value": true,
+    "passed": false,
+    "upstream": "experiment_7236_and_7237"
+  },
+  "gpu_receipts": {},
+  "honest_verdict": "blocked_exp7238_structured_quarantine",
+  "inference_mode": "not_run",
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "mention_capture_complete_score": 0,
+  "model_identity_receipt": {},
+  "model_invoked": false,
+  "paired_unit_rows": [],
+  "phase_spans": [
+    {
+      "duration_s": 0.1061070051509887,
+      "name": "preconditions_and_v637_authentication",
+      "phase": 1
+    },
+    {
+      "duration_s": 1.8831342458724976e-06,
+      "name": "cold_artifact_validation",
+      "phase": 8
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "run_date",
+      "expected_value": "20260912",
+      "field": "run_date",
+      "observed_value": "20260912",
+      "passed": true,
+      "upstream": null
+    },
+    {
+      "check": "required_source_bytes",
+      "expected_value": {
+        "adversarial_tool": true,
+        "authority": true,
+        "entrypoint": true,
+        "exclusion": true,
+        "manifest": true,
+        "module": true,
+        "public": true,
+        "row_lint_tool": true,
+        "spec": true,
+        "spec_coverage_tool": true,
+        "spec_has_req": true,
+        "tests": true,
+        "upstream": true
+      },
+      "field": "required_paths",
+      "observed_value": {
+        "adversarial_tool": true,
+        "authority": true,
+        "entrypoint": true,
+        "exclusion": true,
+        "manifest": true,
+        "module": true,
+        "public": true,
+        "row_lint_tool": true,
+        "spec": true,
+        "spec_coverage_tool": true,
+        "spec_has_req": true,
+        "tests": true,
+        "upstream": true
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "writable_output_storage",
+      "expected_value": {
+        "checkpoint_dir": true,
+        "raw_dir": true,
+        "result_parent": true
+      },
+      "field": "output_paths",
+      "observed_value": {
+        "checkpoint_dir": true,
+        "raw_dir": true,
+        "result_parent": true
+      },
+      "passed": true,
+      "upstream": "host_filesystem"
+    },
+    {
+      "check": "exact_upstream_bytes",
+      "expected_value": {
+        "authority_manifest": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc",
+        "canary_artifact": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+        "fixture_artifact": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+        "public_manifest": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d"
+      },
+      "field": "artifact_and_manifest_bytes",
+      "observed_value": {
+        "authority_manifest": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc",
+        "canary_artifact": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+        "fixture_artifact": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+        "public_manifest": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d"
+      },
+      "passed": true,
+      "upstream": "experiment_7236_and_7237"
+    },
+    {
+      "check": "structured_quarantine",
+      "expected_value": false,
+      "field": "flagged_adversarial|quarantined|fabricated",
+      "observed_value": true,
+      "passed": false,
+      "upstream": "experiment_7236_and_7237"
+    },
+    {
+      "check": "exclusion_manifest",
+      "expected_value": false,
+      "field": "experiment_ids",
+      "observed_value": false,
+      "passed": true,
+      "upstream": "experiment_7236_and_7237"
+    },
+    {
+      "check": "fixture_gate_fields",
+      "expected_value": {
+        "authority_manifest_path": "results/raw/experiment_7236/authority_manifest.json",
+        "mention_fixture_ready_score": 1,
+        "public_manifest_path": "results/raw/experiment_7236/public_manifest.json",
+        "run_date": "20260912",
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "field": "terminal_fields",
+      "observed_value": {
+        "authority_manifest_path": "results/raw/experiment_7236/authority_manifest.json",
+        "mention_fixture_ready_score": 1,
+        "public_manifest_path": "results/raw/experiment_7236/public_manifest.json",
+        "run_date": "20260912",
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "passed": true,
+      "upstream": "experiment_7236"
+    },
+    {
+      "check": "pointer_calibration_gate_fields",
+      "expected_value": {
+        "honest_verdict": "complete_circular_positive_mention_canary_ready_scale_gate_only",
+        "inference_mode": "live_gpu",
+        "inference_substrate": "live_llm_inference",
+        "inference_substrate_class": "model_bounded_generation",
+        "mention_canary_ready_score": 1,
+        "run_date": "20260912",
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "field": "terminal_fields",
+      "observed_value": {
+        "honest_verdict": "complete_circular_positive_mention_canary_ready_scale_gate_only",
+        "inference_mode": "live_gpu",
+        "inference_substrate": "live_llm_inference",
+        "inference_substrate_class": "model_bounded_generation",
+        "mention_canary_ready_score": 1,
+        "run_date": "20260912",
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "passed": true,
+      "upstream": "experiment_7237"
+    },
+    {
+      "check": "upstream_authentication",
+      "expected_value": {
+        "experiment_7236_checksum": true,
+        "experiment_7237_declared_checksum": true,
+        "experiment_7237_exact_file_hash": true
+      },
+      "field": "reproducibility_checksum",
+      "observed_value": {
+        "experiment_7236_checksum": true,
+        "experiment_7237_declared_checksum": true,
+        "experiment_7237_exact_file_hash": true
+      },
+      "passed": true,
+      "upstream": "experiment_7236_and_7237"
+    },
+    {
+      "check": "manifest_authentication",
+      "expected_value": {
+        "authority_schema": "carnot.exp7236.private_authority.v1",
+        "authority_units": 72,
+        "public_schema": "carnot.exp7236.public_mentions.v1",
+        "public_units": 72
+      },
+      "field": "manifest_schema_and_counts",
+      "observed_value": {
+        "authority_schema": "carnot.exp7236.private_authority.v1",
+        "authority_units": 72,
+        "public_schema": "carnot.exp7236.public_mentions.v1",
+        "public_units": 72
+      },
+      "passed": true,
+      "upstream": "experiment_7236"
+    }
+  ],
+  "random_seed": 7238001,
+  "raw_request_manifest": {},
+  "raw_rows": [],
+  "reproducibility_checksum": "sha256:6721d18ae8e6e7c7944e3b0941828f0f6b91d0bddf389c05deebf7189eac00eb",
+  "rows": [],
+  "run_date": "20260912",
+  "runner_receipt": {},
+  "sample_size_budget": {
+    "attempted_calls": 0,
+    "censored_calls": 320,
+    "completed_comparison_rows": 0,
+    "planned_arms": 3,
+    "planned_calls": 320,
+    "planned_comparison_rows": 192,
+    "planned_independent_units": 64,
+    "stopping_rule": "attempt each fixed call once within 3000 seconds; preserve every terminal outcome and never retry malformed output",
+    "terminal_outcomes": 0,
+    "transport_completed_calls": 0,
+    "unattempted_calls": 320
+  },
+  "schedule": [],
+  "schema": {
+    "experiment_id": "exp7238-mention-capture",
+    "milestone": "2026.09.637",
+    "name": "carnot.experiment_7238_v637_mention_capture",
+    "version": 1
+  },
+  "selection_receipt": {},
+  "source_artifact_hashes": {
+    "agents": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "authority_manifest": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc",
+    "canary_artifact": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+    "claude": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "codex": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "e2e_test_plan": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "entrypoint": "sha256:07dc1b591e24b053f5b7711819e558eef3143d972389a22aea11397657b15bf0",
+    "exclusion_manifest": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "experiment_template": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "fixture_artifact": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+    "focused_tests": "sha256:1870a33ada98e345a8ccacadccda118c7987d50d95ccfd2c70274b2292c0f6d8",
+    "llama_server_supervisor": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "mention_canary": "sha256:7a1737cc424f77f3042b436dd0eeec1000f48745e2ffa6259db3d5bb6fc1feeb",
+    "mention_fixture": "sha256:a402b4d155e1d326d65a41d95c0f24f55235aad1bbc0d446a6782ab2701d1d8f",
+    "module": "sha256:37da164eb9255640e716fdac116a9bcf4c6bcb29760e2fece8bd6da2363bf7f1",
+    "public_manifest": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d",
+    "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research_references": "sha256:6f2f4afcc7351a3be54166729aa3593539f4337dfad1dded3ab54d93434139de",
+    "sota_models": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "v634_capture": "sha256:c126efe1007d6ea0d3a0c33bf174319972041d565142d1ee3e5c809c69308e89",
+    "v636_canary": "sha256:a3d6ce6fa4db5b876e6b7e617dfa40e865a757474a69d93fea4879f709921865",
+    "verification_spec": "sha256:c43a4352168350babdaa6e22ab1969a69b868edd35a92ef7799178cf5c1ee076"
+  },
+  "status": "blocked",
+  "timestamps": {
+    "completed_at_utc": "2026-09-12T09:41:50Z",
+    "started_at_utc": "2026-09-12T09:41:50Z"
+  },
+  "validation_command_rows": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
