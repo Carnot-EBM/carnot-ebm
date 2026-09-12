@@ -356,6 +356,17 @@ def test_scenario_ising_7244_gatemate_positive_receipt_validates(
     assert experiment.validate_artifact(artifact) == []
 
 
+def test_req_ising_7244_reducer_rejects_malformed_operator_receipt(
+    tmp_path: Path,
+) -> None:
+    """REQ-ISING-7244: an unauthenticated operator receipt cannot authorize a row."""
+
+    artifact = experiment.build_artifact(ROOT, experiment.ExperimentPaths.under(tmp_path))
+    artifact["operator_state_receipt"] = {"exists": False}
+    artifact["reproducibility_checksum"] = experiment.artifact_checksum(artifact)
+    assert "operator_state_receipt" in experiment.validate_artifact(artifact)
+
+
 def test_req_ising_7244_error_routes_do_not_publish_invalid_data(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

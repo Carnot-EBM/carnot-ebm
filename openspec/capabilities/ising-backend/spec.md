@@ -1429,7 +1429,7 @@ keeps board CPU execution separate from FPGA fabric execution.
   It SHALL validate and atomically write the terminal artifact to
   `results/experiment_7244_v637_board_disposition.json`.
 
-**Implementation status:** Planned (Exp7244)
+**Implementation status:** Implemented and verified (Exp7244)
 
 ### SCENARIO-ISING-7244-PREFLIGHT
 
