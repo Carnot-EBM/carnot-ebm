@@ -6759,3 +6759,10 @@ The critical path for milestone .250:
 - theme: reconstructed execution concentrated elapsed time in two live ARC compute sessions without phase or dispatch attribution
 - key result: honest operational negative — the duration leaders are known, but no data available this milestone explains their phase cost, establishes compute-window GPU efficiency, or identifies a parallel multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.636
+
+- exp_range: no data available this milestone
+- theme: one live ARC compute session dominated reconstructed timing while phase, accelerator, and dispatch attribution remained incomplete
+- key result: honest operational negative — the critical path is known, but no data available this milestone explains its phase cost, establishes compute-window GPU efficiency, or identifies a parallel multi-model runner miss
+- acceptance: no data available this milestone

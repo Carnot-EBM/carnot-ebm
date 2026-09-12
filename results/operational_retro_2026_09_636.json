@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.636",
+  "generated_at": "2026-09-12T03:03:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 35.6,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC adapter-withheld cumulative discovery session",
+      "duration_minutes": 31.76,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V636 source delta and exact execution contract",
+      "duration_minutes": 0.96,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bounded local vLLM Qwen3 XML tool-parser canary",
+      "duration_minutes": 0.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Continuous self-learning with lossless delayed-feedback memory",
+      "duration_minutes": 0.53,
+      "compute_bound": false
+    },
+    {
+      "experiment": "KV260 GateMate and PolarFire evidence continuity",
+      "duration_minutes": 0.41,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 35.6 minutes, including 5 compute-bound experiments. The 31.76-minute Live ARC adapter-withheld cumulative discovery session dominated elapsed time. The locked compute-task GPU-idle flag is false, but the supplied snapshot does not establish utilization efficiency during compute execution.",
+  "bottlenecks_identified": [
+    "The listed compute-bound duration leaders were Live ARC adapter-withheld cumulative discovery session at 31.76 minutes, V636 source delta and exact execution contract at 0.96 minutes, and Bounded local vLLM Qwen3 XML tool-parser canary at 0.9 minutes. No phase-level data is available to explain why.",
+    "The disk-mtime reconstruction lacks task-correlated phase, accelerator, model-count, and runner-selection telemetry. This prevents a causal efficiency diagnosis."
+  ],
+  "improvements_suggested": [
+    "Add per-phase timers and checkpoint receipts to live ARC sessions so long paths can be isolated and resumed.",
+    "Capture GPU utilization inside each compute-bound task window and attach the samples to its experiment artifact.",
+    "Record active model count and runner selection at dispatch. Use DualGPURunner only when more than one model runs in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument and checkpoint each phase of the Live ARC session.",
+    "Add task-window GPU telemetry to every compute-bound experiment artifact.",
+    "Add model-count and runner-selection receipts to compute dispatch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The locked GPU-idle indicator does not flag a compute-task idle event, but the snapshot does not determine in-window efficiency. No data available this milestone establishes a parallel multi-model task or a missed DualGPURunner dispatch. A nonzero savings estimate would be invented because no phase timings, matched rerun, or task-aligned GPU trace is available."
+}
