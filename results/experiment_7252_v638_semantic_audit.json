@@ -1,0 +1,453 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "supported_pointer_semantic_fidelity",
+      "evaluated": false,
+      "expected": ">=0.80",
+      "expected_value": 0.8,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    },
+    {
+      "criterion": "pointer_coverage",
+      "evaluated": false,
+      "expected": ">=0.50",
+      "expected_value": 0.5,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    },
+    {
+      "criterion": "fidelity_delta_over_offset_ci95_lower",
+      "evaluated": false,
+      "expected": ">0",
+      "expected_value": 0.0,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    },
+    {
+      "criterion": "selective_error_delta_over_direct_ci95_upper",
+      "evaluated": false,
+      "expected": "<0",
+      "expected_value": 0.0,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    },
+    {
+      "criterion": "contradiction_control_false_accepts",
+      "evaluated": false,
+      "expected": "==0",
+      "expected_value": 0,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    },
+    {
+      "criterion": "unknown_unsupported_distinction_preserved",
+      "evaluated": false,
+      "expected": "==true",
+      "expected_value": true,
+      "observed": null,
+      "passed": false,
+      "principle": "Do not infer semantic value from an unavailable upstream capture."
+    }
+  ],
+  "current_invocation_counts": {
+    "generations": 0,
+    "model_invocations": 0,
+    "model_loads": 0
+  },
+  "duration_s": 0.0120613609906286,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7252-semantic-audit",
+  "field_principles": {
+    "MODEL_SPECS": "Name only models this invocation may execute; source-model history lives in hashed sidecars.",
+    "acceptance_gate_results": "For each frozen criterion record expected, observed and passed, plus its principle.",
+    "current_invocation_counts": "Keep current model load, generation, and invocation counts separate from source history.",
+    "duration_s": "Measure monotonic elapsed time for this invocation, with disjoint phase spans and no invented time.",
+    "execution_host": "Record the real hostname separately from the closed venue vocabulary.",
+    "execution_venue": "Use host for orchestration; actual board receipts separately name kv260, gatemate or polarfire.",
+    "experiment_id": "Bind the ordinary experiment identifier used by roadmap consumers.",
+    "field_principles": "Store explanations here while leaving ordinary values at top level for consumers.",
+    "gate_check_summary": "For every blocked_* verdict name the upstream, exact field or check, observed and expected values.",
+    "honest_verdict": "Use complete_* for terminal measured findings and blocked_* for absent external prerequisites.",
+    "inference_substrate": "Describe the compute actually performed with a recognized literal.",
+    "inference_substrate_class": "Use the closed compute class and its duration floor; never sleep or relabel to pass.",
+    "milestone": "Bind the ordinary milestone identifier used by roadmap consumers.",
+    "model_invoked": "Derive from actual current calls, not usable-answer count or a nested control arm.",
+    "mutation_rows": "Name each adversarial change, expected failure and observed checker response.",
+    "paired_interval_rows": "Retain sampling unit, group count, statistic and paired interval for every comparison.",
+    "phase_spans": "Keep measured phase work separate from total duration.",
+    "preconditions_checked": "Record exact observed inputs, resource ownership, hashes and failed checks before expensive work.",
+    "random_seed": "Freeze seeds before seeing outcomes so replay cannot select favorable runs.",
+    "reproducibility_checksum": "Bind source code, input manifests, configuration and raw rows to the result.",
+    "rows": "Retain every unit, arm, seed, metric, error, abstention and censoring state; aggregates must be recomputable.",
+    "run_date": "Use 20260912 and retain actual UTC start and end timestamps.",
+    "sample_size_budget": "State planned, attempted, completed and censored independent units and the fixed stopping rule.",
+    "schema": "Version this artifact; also emit experiment_id and milestone as ordinary top-level values.",
+    "semantic_audit_complete_score": "One means the independent audit ran completely, even when value is null.",
+    "semantic_value_score": "One requires all preregistered source-fidelity, coverage, safety and matched-control value gates.",
+    "source_artifact_hashes": "Authenticate input bytes and preserve quarantine; readiness alone is insufficient.",
+    "status": "A terminal artifact records complete or blocked; unfinished work belongs in a separate checkpoint.",
+    "timestamps": "Record real UTC start and completion observations.",
+    "validation_receipts": "Record actual command, exit code and log hash; no skipped, weakened, deleted or reverted tests.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; a failed scientific acceptance gate forbids positive. External incompleteness is blocked, not retryable partial.",
+    "verifier_is_oracle": "Expose exact-oracle use; oracle conformance cannot become learned verification evidence."
+  },
+  "gate_check_summary": {
+    "artifact_field": "mention_capture_complete_score",
+    "expected_value": 1,
+    "failed_check": "upstream_capture_ready",
+    "observed_value": "missing_artifact",
+    "passed": false,
+    "upstream": "experiment_7251_v638_mention_heldout"
+  },
+  "honest_verdict": "blocked_exp7252_missing_upstream_artifact",
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "milestone": "2026.09.638",
+  "model_invoked": false,
+  "mutation_rows": [],
+  "paired_interval_rows": [],
+  "phase_spans": [
+    {
+      "duration_s": 0.005236669909209013,
+      "name": "preconditions_and_upstream_authentication",
+      "phase": 1
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "check": "run_date",
+      "expected_value": "20260912",
+      "observed_value": "20260912",
+      "passed": true,
+      "upstream": null
+    },
+    {
+      "artifact_field": "mention_capture_complete_score",
+      "check": "upstream_capture_ready",
+      "expected_value": 1,
+      "observed_value": "missing_artifact",
+      "passed": false,
+      "upstream": "experiment_7251_v638_mention_heldout"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "passed": true,
+      "upstream": "agents"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "passed": true,
+      "upstream": "claude"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "passed": true,
+      "upstream": "codex"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "passed": true,
+      "upstream": "research_program"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "passed": true,
+      "upstream": "research_roadmap"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "passed": true,
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "passed": true,
+      "upstream": "e2e_test_plan"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "passed": true,
+      "upstream": "verification_spec"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7239_v637_semantic_audit.py",
+      "passed": true,
+      "upstream": "prior_audit_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7236_v637_mention_fixture.py",
+      "passed": true,
+      "upstream": "mention_fixture_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7239_v637_semantic_audit.json",
+      "passed": true,
+      "upstream": "prior_audit_artifact"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "passed": true,
+      "upstream": "row_consistency_lint"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "passed": true,
+      "upstream": "adversarial_verifier"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7252_v638_semantic_audit.py",
+      "passed": true,
+      "upstream": "module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7252_v638_semantic_audit.py",
+      "passed": true,
+      "upstream": "entrypoint"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7252_v638_semantic_audit.py",
+      "passed": true,
+      "upstream": "focused_tests"
+    },
+    {
+      "artifact_field": "REQ-VERIFY-7252",
+      "check": "driving_spec",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "artifact_field": "experiment_7239_v637_semantic_audit",
+      "check": "required_imports",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot"
+    },
+    {
+      "artifact_field": "parent",
+      "check": "output_destination",
+      "expected_value": "writable_directory",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7252",
+      "passed": true,
+      "upstream": "checkpoint"
+    },
+    {
+      "artifact_field": "parent",
+      "check": "output_destination",
+      "expected_value": "writable_directory",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "passed": true,
+      "upstream": "result"
+    },
+    {
+      "artifact_field": "flagged_adversarial|quarantined|fabricated",
+      "check": "structured_quarantine",
+      "expected_value": false,
+      "observed_value": "not_observed_missing_artifact",
+      "passed": false,
+      "upstream": "experiment_7251_v638_mention_heldout"
+    }
+  ],
+  "random_seed": 7252001,
+  "reproducibility_checksum": "sha256:621a1c5ea15e8bfdddecb41f5bc0e1e649014bc8332d47def2976b08ac6d6994",
+  "rows": [],
+  "run_date": "20260912",
+  "sample_size_budget": {
+    "attempted_independent_units": 0,
+    "censored_independent_units": 64,
+    "completed_independent_units": 0,
+    "planned_arms": 3,
+    "planned_bootstrap_resamples": 10000,
+    "planned_comparison_rows": 192,
+    "planned_independent_units": 64,
+    "stopping_rule": "audit all 64 paired groups once or stop at the first external Exp7251 block"
+  },
+  "schema": {
+    "experiment_id": "exp7252-semantic-audit",
+    "milestone": "2026.09.638",
+    "name": "carnot.experiment_7252_v638_semantic_audit",
+    "version": 1
+  },
+  "semantic_audit_complete_score": 0,
+  "semantic_value_score": 0,
+  "source_artifact_hashes": {
+    "adversarial_verifier": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:1ec91490bceb3b161f51cc54e6b035fab6ec8d6eb5f8833e5b3bcd16890f60a6"
+    },
+    "agents": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "capture": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7251_v638_mention_heldout.json",
+      "sha256": "missing"
+    },
+    "claude": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+    },
+    "codex": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "e2e_test_plan": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+    },
+    "entrypoint": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7252_v638_semantic_audit.py",
+      "sha256": "sha256:15b4c7a305988b91a51e91b21a1de3f47a1f50b486f9b140e7a2b7ee0b9f191c"
+    },
+    "exclusion_manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "focused_tests": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7252_v638_semantic_audit.py",
+      "sha256": "sha256:d99efc0a5ce3566b62f90151042ed9ce4541db45ec2105ac02ec74c2ed7a6dd2"
+    },
+    "mention_fixture_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7236_v637_mention_fixture.py",
+      "sha256": "sha256:a402b4d155e1d326d65a41d95c0f24f55235aad1bbc0d446a6782ab2701d1d8f"
+    },
+    "module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7252_v638_semantic_audit.py",
+      "sha256": "sha256:0eaaa5d0556a04aea697afe40f149fbc32182b347a0488d4b2ad973d2a638a55"
+    },
+    "prior_audit_artifact": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7239_v637_semantic_audit.json",
+      "sha256": "sha256:40311ed3438b800e22b97d4bd2820e41183fc0e055a7a0ff22a047e3c3523269"
+    },
+    "prior_audit_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7239_v637_semantic_audit.py",
+      "sha256": "sha256:3d2dfbcbec3d1fbe8ef4087592480060982587f371cd846e9e25fd041f925492"
+    },
+    "research_program": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research_roadmap": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "sha256": "sha256:dfb346d0094c0553cf0afab09b8bb2f1504f5f24fe135e6ea68e90671146c274"
+    },
+    "row_consistency_lint": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    "verification_spec": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:d6fe5173e9b0b286f9714c206807317eae7d76074001cfcb5ccac677f0e172f6"
+    }
+  },
+  "status": "blocked",
+  "timestamps": {
+    "completed_at_utc": "2026-09-12T21:58:43.503936+00:00",
+    "started_at_utc": "2026-09-12T21:58:43.491906+00:00"
+  },
+  "validation_receipts": [
+    {
+      "classification": "passed_18_tests_100_percent_branch_coverage",
+      "command": "COVERAGE_FILE=/tmp/.coverage-exp7252-final PYTHONPATH=python .venv/bin/python -m coverage run --branch -m pytest --override-ini addopts='' -n 0 tests/python/test_experiment_7252_v638_semantic_audit.py -q --basetemp=/tmp/pytest-exp7252-final-cov && COVERAGE_FILE=/tmp/.coverage-exp7252-final .venv/bin/python -m coverage report --include='*/python/carnot/experiment_7252_v638_semantic_audit.py' -m --fail-under=100",
+      "exit_code": 0,
+      "log_sha256": "sha256:ad6e75c6a611da02a9aab709d3544ef8b58a14c59fe520c63e3b7fc6fee60474"
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/ruff check python/carnot/experiment_7252_v638_semantic_audit.py scripts/experiments/experiment_7252_v638_semantic_audit.py tests/python/test_experiment_7252_v638_semantic_audit.py && .venv/bin/ruff format --check python/carnot/experiment_7252_v638_semantic_audit.py scripts/experiments/experiment_7252_v638_semantic_audit.py tests/python/test_experiment_7252_v638_semantic_audit.py",
+      "exit_code": 0,
+      "log_sha256": "sha256:c6486b51f483249343d4a4bdb91c41be31f0bdc28887b2f4cd4800e174f8bd6b"
+    },
+    {
+      "classification": "passed",
+      "command": "PYTHONPATH=python .venv/bin/mypy python/carnot/experiment_7252_v638_semantic_audit.py",
+      "exit_code": 0,
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23"
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7252_v638_semantic_audit.py",
+      "exit_code": 0,
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867"
+    },
+    {
+      "classification": "passed_blocked_fresh_process_replay",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python .venv/bin/python -u -c 'from carnot.experiment_7252_v638_semantic_audit import replay_terminal_artifact; replay_terminal_artifact()'",
+      "exit_code": 0,
+      "log_sha256": "sha256:63fc59455d9f6347502f3d7f64007c8ae8f43e8bf13db3fdf8e80cdbffed51f9"
+    },
+    {
+      "classification": "passed_zero_flags",
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_7252_v638_semantic_audit.json --json",
+      "exit_code": 0,
+      "log_sha256": "sha256:e01c26695c19381f89bf15387cd3a0c0d8066870a76469253fdffef516c10fb3"
+    },
+    {
+      "classification": "passed_expected_blocked_skip",
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_7252_v638_semantic_audit.json",
+      "exit_code": 0,
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

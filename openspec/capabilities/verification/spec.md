@@ -41706,3 +41706,63 @@ artifact and only with the declared receipt schema.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7239 and SCENARIO-VERIFY-7239-* | Implemented (`python/carnot/experiment_7239_v637_semantic_audit.py`; `scripts/experiments/experiment_7239_v637_semantic_audit.py`) | Focused tests (`tests/python/test_experiment_7239_v637_semantic_audit.py`) |
+
+### REQ-VERIFY-7252: V638 Semantic Audit SHALL Authenticate The Held-Out Capture
+
+Exp7252 SHALL read the exact Exp7251 deliverable from the V638 roadmap. It
+SHALL authenticate the artifact bytes, every declared source and raw hash, and
+all quarantine markers before it reads a producer aggregate. It SHALL require
+`mention_capture_complete_score=1`. A missing or quarantined input SHALL
+produce one terminal `blocked` artifact. The artifact SHALL name the failed
+upstream, field, expected value, and observed value. It SHALL not rerun Exp7251
+or invent a row.
+
+The task SHALL use `MODEL_SPECS=[]` and `model_invoked=false`. All current
+model load, generation, and invocation counters SHALL be zero. A pre-replay
+external block SHALL use `blocked_no_run` for both substrate fields. A complete
+CPU replay SHALL use `cpu_exact_solver_or_simulator` for both substrate fields.
+The execution venue SHALL be `host`.
+
+For an authentic complete input, the audit SHALL reconstruct all 64 paired
+groups from retained raw bytes. It SHALL verify source bindings, mention
+offsets, relation direction, evaluator isolation, and full denominators. It
+SHALL preserve failed, unknown, and unsupported outcomes. It SHALL run 10,000
+paired group-bootstrap draws for source-fidelity and selective-error deltas
+against the direct and offset arms at common coverage.
+
+Promotion SHALL require pointer semantic fidelity of at least 0.80 on supported
+cases and coverage of at least 0.50. It SHALL also require a positive lower
+CI95 fidelity difference over offsets and a negative upper CI95 selective-error
+difference over direct. All predefined contradiction controls SHALL have zero
+false accepts. Unknown and unsupported outcomes SHALL remain distinct. A
+failed value gate or no headroom SHALL produce a `null` result.
+
+The audit SHALL apply support deletion, relation reversal, mention-ID
+permutation, and source/claim authority-swap mutations. It SHALL reconstruct
+the terminal artifact in a fresh process. Aggregate, offset, identity, and
+leakage mutations SHALL fail cold validation. Oracle control conformance SHALL
+use `circular_positive`; it SHALL not headline learned correctness.
+
+The terminal artifact SHALL include all fields listed by the Exp7252 roadmap.
+`semantic_audit_complete_score` SHALL equal one only after a complete
+independent replay. `semantic_value_score` SHALL equal one only when all frozen
+value gates pass. A blocked input SHALL keep both scores at zero and SHALL use
+`verdict_class=blocked`, not `partial`. The runner SHALL write provisional work
+only below `results/checkpoints/` and SHALL atomically write the terminal result
+after cold validation.
+
+#### SCENARIO-VERIFY-7252-BLOCK: A Missing Exp7251 Capture Produces Evidence
+
+**Given** the exact roadmap path for Exp7251 does not exist
+**When** the unconditional Exp7252 audit runs
+**Then** it writes one valid terminal blocked artifact
+**And** `gate_check_summary` names `mention_capture_complete_score`, expected
+one, and observed `missing_artifact`.
+
+#### SCENARIO-VERIFY-7252-REPLAY: Cold Validation Rejects Blocked Evidence Drift
+
+**Given** a terminal blocked Exp7252 artifact
+**When** its source hash, gate summary, current invocation count, verdict,
+score, or checksum changes
+**Then** cold validation rejects the artifact
+**And** replay performs no model call and does not create producer rows.
