@@ -1,0 +1,121 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaad precedes Caaaae.",
+          "role": "user"
+        }
+      ],
+      "seed": 7237009,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "explicit_schema_offset_control",
+    "call_id": "sha256:5f12cddf2146b5875e3f92b488465f741ac053ef23307a2b012d68432165c303",
+    "call_order": 8,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 10,
+    "cuda_offload_confirmed": true,
+    "errors": [
+      "explicit_unknown",
+      "response_bytes_mismatch"
+    ],
+    "explicit_unknown": true,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "latency_s": 0.6514493101276457,
+    "lease_id": "lease:fefb47c99d834b06078972e6339acbddbe3724fcc6ac90affa189e2d14fb5f50",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaad precedes Caaaae.",
+    "prompt_sha256": "sha256:fc9fbc86f92cc022952ea98bfe20d5792fe9ea17e07d963ff9e39534f8daa19e",
+    "prompt_tokens": 107,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJzZW50ZW5jZV9pbmRleFxcXCI6XCIgc2VudGVuY2UgXCIsXFxcInN1YmplY3Rfc3RhcnRcXFwiOlwiIG9mZnNldCBcIixcXFwic3ViamVjdF9lbmRcXFwiOlwiIG9mZnNldCBcIixcXFwicHJlZGljYXRlXFxcIjpcIiBwcmVkaWNhdGUgXCIsXFxcIm9iamVjdF9zdGFydFxcXCI6XCIgb2Zmc2V0IFwiLFxcXCJvYmplY3RfZW5kXFxcIjpcIiBvZmZzZXQgXCIsXFxcInBvbGFyaXR5XFxcIjpcIiBwb2xhcml0eSBcIn1cIlxuc2VudGVuY2UgOjo9IFwiMFwiIHwgbm9uemVybyBkaWdpdHNcbm9mZnNldCA6Oj0gXCIwXCIgfCBub256ZXJvIGRpZ2l0c1xucHJlZGljYXRlIDo6PSBcIlxcXCJwcmVjZWRlc1xcXCJcIiB8IFwiXFxcInN0YXJ0cyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJlbmRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcIm9jY3VycyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJmb2xsb3dzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGFmdGVyXFxcIlwiIHwgXCJcXFwiZW5kcyBhZnRlclxcXCJcIiB8IFwiXFxcIm9jY3VycyBhZnRlclxcXCJcIlxucG9sYXJpdHkgOjo9IFwiXFxcInBvc2l0aXZlXFxcIlwiIHwgXCJcXFwibmVnYXRpdmVcXFwiXCJcbm5vbnplcm8gOjo9IFsxLTldXG5kaWdpdHMgOjo9IFswLTldKlxuIiwibWF4X3Rva2VucyI6Mzg0LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCBhbGwgc3RhdGVkIHJlbGF0aW9ucyBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgSlNPTiBvYmplY3Qgd2l0aCBrZXlzIG91dGNvbWUgYW5kIHJlbGF0aW9ucy4gRWFjaCByZWxhdGlvbiBtdXN0IHVzZSBzZW50ZW5jZV9pbmRleCwgc3ViamVjdF9zdGFydCwgc3ViamVjdF9lbmQsIHByZWRpY2F0ZSwgb2JqZWN0X3N0YXJ0LCBvYmplY3RfZW5kLCBhbmQgcG9sYXJpdHkuIE9mZnNldHMgYXJlIGhhbGYtb3BlbiBVVEYtOCBieXRlIG9mZnNldHMuIFJldHVybiB1bmtub3duIHdpdGggYW4gZW1wdHkgbGlzdCB3aGVuIG5vIGV4YWN0IHJlbGF0aW9uIGlzIGF2YWlsYWJsZS5cblNPVVJDRTpcbkNhYWFhZCBwcmVjZWRlcyBDYWFhYWUuIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyMzcwMDksInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwidW5rbm93blwiLFwicmVsYXRpb25zXCI6W119In19XSwiY3JlYXRlZCI6MTc4OTIwMTkzOSwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjoxMCwicHJvbXB0X3Rva2VucyI6MTA3LCJ0b3RhbF90b2tlbnMiOjExNywicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1lRzd5Q1dYSDgwdkhSaVZBR2xabUdlWjM1ZVQ4UHB4TiIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjEwNywicHJvbXB0X21zIjoyMjUuNDk4LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoyLjEwNzQ1Nzk0MzkyNTIzMzcsInByb21wdF9wZXJfc2Vjb25kIjo0NzQuNTA1MzE3MTIwMzI5MiwicHJlZGljdGVkX24iOjEwLCJwcmVkaWN0ZWRfbXMiOjI2NS4xMjIsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI2LjUxMjIsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozNy43MTg0ODQzMjA0MjYwNjR9fQ==",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:2c2aae4e5739fced5f857792aa54893e394d04b9dae937ceacb8e50bbfab8db7",
+    "response_bytes_match": false,
+    "response_bytes_sha256": "sha256:b68f917b8b2dc1cea391fc9ab26852dad9b85523549affea7f7c99fe34c1830b",
+    "seed": 7237009,
+    "seed_join_valid": true,
+    "server_pid": 2711642,
+    "server_pid_start_ticks": 149362220,
+    "terminal_state": "transport_error",
+    "transmitted_seed": 7237009,
+    "transport_complete": false,
+    "truncated": false,
+    "unit_id": "u-a214b611eea40320112b",
+    "usable": false
+  },
+  "schedule": {
+    "arm": "explicit_schema_offset_control",
+    "call_id": "sha256:5f12cddf2146b5875e3f92b488465f741ac053ef23307a2b012d68432165c303",
+    "call_order": 8,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7237009,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-a214b611eea40320112b-original-source",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-a214b611eea40320112b-original-source",
+          "mention_id": "m000",
+          "surface_text": "Caaaad"
+        },
+        {
+          "byte_end": 22,
+          "byte_start": 16,
+          "document_id": "u-a214b611eea40320112b-original-source",
+          "mention_id": "m001",
+          "surface_text": "Caaaae"
+        }
+      ],
+      "text": "Caaaad precedes Caaaae."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:dba6215a5b7f835cef125b3bdfc5d9abdc015f533ef46a7f62890d6b61dacd08",
+    "input_text": "Caaaad precedes Caaaae.",
+    "model_input": {
+      "mentions": null,
+      "text": "Caaaad precedes Caaaae."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaad precedes Caaaae.",
+    "prompt_sha256": "sha256:fc9fbc86f92cc022952ea98bfe20d5792fe9ea17e07d963ff9e39534f8daa19e",
+    "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+    "request_timeout_s": 90.0,
+    "seed": 7237009,
+    "unit_id": "u-a214b611eea40320112b"
+  }
+}

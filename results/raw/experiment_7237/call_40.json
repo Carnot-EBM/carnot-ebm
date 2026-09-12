@@ -1,0 +1,203 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaas\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaat\"},{\"byte_end\":30,\"byte_start\":24,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Caaaat\"},{\"byte_end\":46,\"byte_start\":40,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Caaaau\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 7237041,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "mention_pointer",
+    "call_id": "sha256:55c549a980654124ea8b3e60e70df835c06973cc3745eb35a87c7a0b4d57bdcc",
+    "call_order": 40,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 22,
+          "object_start": 16,
+          "object_surface": "Caaaat",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "relation_end": 23,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 6,
+          "subject_start": 0,
+          "subject_surface": "Caaaas"
+        },
+        {
+          "object_end": 46,
+          "object_start": 40,
+          "object_surface": "Caaaau",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "relation_end": 47,
+          "relation_start": 24,
+          "sentence_index": 1,
+          "subject_end": 30,
+          "subject_start": 24,
+          "subject_surface": "Caaaat"
+        }
+      ]
+    },
+    "completion_tokens": 62,
+    "cuda_offload_confirmed": true,
+    "errors": [
+      "response_bytes_mismatch"
+    ],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "latency_s": 2.1478659270796925,
+    "lease_id": "lease:fefb47c99d834b06078972e6339acbddbe3724fcc6ac90affa189e2d14fb5f50",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "subject_pointer": "m000"
+        },
+        {
+          "object_pointer": "m003",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "subject_pointer": "m002"
+        }
+      ]
+    },
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaas\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaat\"},{\"byte_end\":30,\"byte_start\":24,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Caaaat\"},{\"byte_end\":46,\"byte_start\":40,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Caaaau\"}]",
+    "prompt_sha256": "sha256:f26fac23357846aa7e3a1582b7257d86dcd820dd35b62009d2835550801e046c",
+    "prompt_tokens": 316,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"precedes\",\"subject_pointer\":\"m000\"},{\"object_pointer\":\"m003\",\"polarity\":\"positive\",\"predicate\":\"precedes\",\"subject_pointer\":\"m002\"}]}",
+    "raw_completion_sha256": "sha256:00486fb9de55b16c9857246f74816fae1758da71c8e27f3bdd9c334fa4e7703f",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJvYmplY3RfcG9pbnRlclxcXCI6XCIgcG9pbnRlciBcIixcXFwicG9sYXJpdHlcXFwiOlwiIHBvbGFyaXR5IFwiLFxcXCJwcmVkaWNhdGVcXFwiOlwiIHByZWRpY2F0ZSBcIixcXFwic3ViamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwifVwiXG5wb2ludGVyIDo6PSBcIlxcXCJtMDAwXFxcIlwiIHwgXCJcXFwibTAwMVxcXCJcIiB8IFwiXFxcIm0wMDJcXFwiXCIgfCBcIlxcXCJtMDAzXFxcIlwiXG5wcmVkaWNhdGUgOjo9IFwiXFxcInByZWNlZGVzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImVuZHMgYmVmb3JlXFxcIlwiIHwgXCJcXFwib2NjdXJzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImZvbGxvd3NcXFwiXCIgfCBcIlxcXCJzdGFydHMgYWZ0ZXJcXFwiXCIgfCBcIlxcXCJlbmRzIGFmdGVyXFxcIlwiIHwgXCJcXFwib2NjdXJzIGFmdGVyXFxcIlwiXG5wb2xhcml0eSA6Oj0gXCJcXFwicG9zaXRpdmVcXFwiXCIgfCBcIlxcXCJuZWdhdGl2ZVxcXCJcIlxuIiwibWF4X3Rva2VucyI6Mzg0LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCBhbGwgc3RhdGVkIHJlbGF0aW9ucyBmcm9tIHRoZSBzb3VyY2UuIFNlbGVjdCBzdWJqZWN0X3BvaW50ZXIgYW5kIG9iamVjdF9wb2ludGVyIG9ubHkgZnJvbSB0aGUgcHVibGljIG1lbnRpb24gdGFibGUuIFByZWRpY3QgcHJlZGljYXRlIGFuZCBwb2xhcml0eS4gUmV0dXJuIG9uZSBKU09OIG9iamVjdCB3aXRoIG91dGNvbWUgYW5kIHJlbGF0aW9ucywgb3IgdW5rbm93biB3aXRoIGFuIGVtcHR5IGxpc3QuXG5TT1VSQ0U6XG5DYWFhYXMgcHJlY2VkZXMgQ2FhYWF0LiBDYWFhYXQgcHJlY2VkZXMgQ2FhYWF1LlxuUFVCTElDX01FTlRJT05fVEFCTEU6XG5be1wiYnl0ZV9lbmRcIjo2LFwiYnl0ZV9zdGFydFwiOjAsXCJkb2N1bWVudF9pZFwiOlwidS05MjMyZDViZGEwMDBhM2I4YzA3YS1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDBcIixcInN1cmZhY2VfdGV4dFwiOlwiQ2FhYWFzXCJ9LHtcImJ5dGVfZW5kXCI6MjIsXCJieXRlX3N0YXJ0XCI6MTYsXCJkb2N1bWVudF9pZFwiOlwidS05MjMyZDViZGEwMDBhM2I4YzA3YS1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDFcIixcInN1cmZhY2VfdGV4dFwiOlwiQ2FhYWF0XCJ9LHtcImJ5dGVfZW5kXCI6MzAsXCJieXRlX3N0YXJ0XCI6MjQsXCJkb2N1bWVudF9pZFwiOlwidS05MjMyZDViZGEwMDBhM2I4YzA3YS1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDJcIixcInN1cmZhY2VfdGV4dFwiOlwiQ2FhYWF0XCJ9LHtcImJ5dGVfZW5kXCI6NDYsXCJieXRlX3N0YXJ0XCI6NDAsXCJkb2N1bWVudF9pZFwiOlwidS05MjMyZDViZGEwMDBhM2I4YzA3YS1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDNcIixcInN1cmZhY2VfdGV4dFwiOlwiQ2FhYWF1XCJ9XSIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3MjM3MDQxLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInByZWNlZGVzXCIsXCJzdWJqZWN0X3BvaW50ZXJcIjpcIm0wMDBcIn0se1wib2JqZWN0X3BvaW50ZXJcIjpcIm0wMDNcIixcInBvbGFyaXR5XCI6XCJwb3NpdGl2ZVwiLFwicHJlZGljYXRlXCI6XCJwcmVjZWRlc1wiLFwic3ViamVjdF9wb2ludGVyXCI6XCJtMDAyXCJ9XX0ifX1dLCJjcmVhdGVkIjoxNzg5MjAxOTcyLCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjYyLCJwcm9tcHRfdG9rZW5zIjozMTYsInRvdGFsX3Rva2VucyI6Mzc4LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLU9QQmtOWlpWd0ZqSzJ1Y1pQVXlEOUxLVk1wd0NKRXZuIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6MzE2LCJwcm9tcHRfbXMiOjQ1Ni43OTYsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNDQ1NTU2OTYyMDI1MzE2NCwicHJvbXB0X3Blcl9zZWNvbmQiOjY5MS43NzQ4ODQxOTMzODE4LCJwcmVkaWN0ZWRfbiI6NjIsInByZWRpY3RlZF9tcyI6MTUzNS40MDMsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI0Ljc2NDU2NDUxNjEyOTAzLCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6NDAuMzgwMjc4MDExNzAxMTY1fX0=",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:ec9ea474fcecc606fcfbb120c555ef3bddff5cfcf6679faaf3eca82906788114",
+    "response_bytes_match": false,
+    "response_bytes_sha256": "sha256:d072513b3fafb8837329cbcdfd7af2b308eb90b3e608324f7740f97565e134a1",
+    "seed": 7237041,
+    "seed_join_valid": true,
+    "server_pid": 2711642,
+    "server_pid_start_ticks": 149362220,
+    "terminal_state": "transport_error",
+    "transmitted_seed": 7237041,
+    "transport_complete": false,
+    "truncated": false,
+    "unit_id": "u-9232d5bda000a3b8c07a",
+    "usable": false
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:55c549a980654124ea8b3e60e70df835c06973cc3745eb35a87c7a0b4d57bdcc",
+    "call_order": 40,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7237041,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-9232d5bda000a3b8c07a-original-source",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m000",
+          "surface_text": "Caaaas"
+        },
+        {
+          "byte_end": 22,
+          "byte_start": 16,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m001",
+          "surface_text": "Caaaat"
+        },
+        {
+          "byte_end": 30,
+          "byte_start": 24,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m002",
+          "surface_text": "Caaaat"
+        },
+        {
+          "byte_end": 46,
+          "byte_start": 40,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m003",
+          "surface_text": "Caaaau"
+        }
+      ],
+      "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "input_sha256": "sha256:ef9c12bcbf9faa198078cafe1fa3004332a8047359be979790d62c8c6bee18c1",
+    "input_text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau.",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m000",
+          "surface_text": "Caaaas"
+        },
+        {
+          "byte_end": 22,
+          "byte_start": 16,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m001",
+          "surface_text": "Caaaat"
+        },
+        {
+          "byte_end": 30,
+          "byte_start": 24,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m002",
+          "surface_text": "Caaaat"
+        },
+        {
+          "byte_end": 46,
+          "byte_start": 40,
+          "document_id": "u-9232d5bda000a3b8c07a-original-source",
+          "mention_id": "m003",
+          "surface_text": "Caaaau"
+        }
+      ],
+      "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaas\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaat\"},{\"byte_end\":30,\"byte_start\":24,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Caaaat\"},{\"byte_end\":46,\"byte_start\":40,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Caaaau\"}]",
+    "prompt_sha256": "sha256:f26fac23357846aa7e3a1582b7257d86dcd820dd35b62009d2835550801e046c",
+    "reference_grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "request_timeout_s": 90.0,
+    "seed": 7237041,
+    "unit_id": "u-9232d5bda000a3b8c07a"
+  }
+}

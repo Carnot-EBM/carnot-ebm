@@ -41348,3 +41348,108 @@ support fail or abstain as predeclared.
 criterion, verdict, or checksum changes
 **Then** cold validation rejects the artifact
 **And** every block names the exact check, upstream, field, expected, and observed value.
+
+### REQ-VERIFY-7237: Mention Canary SHALL Gate Held-Out Capture On Syntax And Semantics
+
+Exp7237 SHALL authenticate the exact Exp7236 terminal artifact, public manifest,
+and private authority manifest. It SHALL reject structured quarantine even when
+`mention_fixture_ready_score` is one. It SHALL unwrap only mappings that contain
+exactly `principle` and `value`.
+
+The canary SHALL freeze eight calibration units, three representation arms, and
+separate source and claim calls. This produces 48 scheduled requests. Each arm
+SHALL use the same original public variant, temperature zero, top-k one, fixed
+seeds, and no retry. Source calls SHALL use 384 output tokens. Claim calls SHALL
+use 128 output tokens. Model requests SHALL contain no private authority field.
+
+The treatment SHALL expose stable public mention IDs and their exact public
+spans. The two controls SHALL require numeric UTF-8 byte offsets. The
+`original_offset` arm SHALL use the prior prompt. The
+`explicit_schema_offset_control` arm SHALL add explicit field instructions.
+Every arm SHALL allow an explicit `unknown` response. A returned and parse-valid
+unknown SHALL count as syntax success, abstention, and not source-fidelity
+usability.
+
+The runner SHALL use `unsloth/Qwen3.8-27B-GGUF` at `Q4_K_M`. It SHALL resolve
+the cached file with `cached_current_model()`. It SHALL use the GGUF embedded
+tokenizer and chat template with one task-owned native llama.cpp server. It
+SHALL set `CARNOT_FORCE_LIVE=1`. It SHALL use a 240-second load cap, a 90-second
+request cap, and an 1800-second inference deadline. It SHALL checkpoint after
+every request and SHALL not regenerate a completed malformed response.
+
+Before invocation, missing external resources SHALL produce `blocked_no_run`.
+After any authentic model response, `model_invoked` SHALL remain true. Actual
+CUDA generation SHALL use `inference_substrate=live_llm_inference`,
+`inference_substrate_class=model_bounded_generation`, and
+`inference_mode=live_gpu`. The runner SHALL retain the model hash, native
+binary, process ID and start tick, GPU UUID, exact request and response bytes,
+actual settings, token counts, finish reasons, call times, and teardown receipt.
+
+The reducer SHALL report offset validity, mention resolution, source relation
+fidelity, claim relation fidelity, complete decision correctness, and abstention
+separately for each unit and arm. `mention_canary_ready_score` SHALL be one only
+when all provenance checks pass, at least seven pointer units have usable source
+and claim calls, at least six pointer decisions are fully correct, and the
+supported/reversed negative-control panel has no false accept. Offset arms SHALL
+not unlock the held-out capture. A ready result SHALL remain
+`circular_positive` because the private authority also defines correctness. A
+completed failed readiness gate SHALL be a terminal `null`.
+
+The terminal artifact SHALL contain `schema`, `status`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `execution_host`, `duration_s`,
+`MODEL_SPECS`, `model_invoked`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acceptance_gate_results`, `inference_mode`, `runner_receipt`,
+`raw_request_manifest`, `phase_spans`, `mention_canary_ready_score`,
+`transport_completed_calls`, `usable_calls`, `per_unit_semantics`, and
+`frozen_capture_settings`. `field_principles` SHALL contain the requested exact
+principle for each listed field.
+
+The runner SHALL print and flush every numbered phase boundary. It SHALL print
+before and after model loads, generations, benchmarks, validation, and long
+subprocesses. A heartbeat SHALL report real completed work and monotonic elapsed
+time at least every 60 seconds. No output gap SHALL reach 600 seconds.
+
+#### SCENARIO-VERIFY-7237-SCHEDULE: Public Inputs Freeze Forty-Eight Blind Calls
+
+**Given** the authenticated Exp7236 calibration split
+**When** the canary builds its schedule
+**Then** it creates eight units times three arms times two separate calls
+**And** exact prompt bytes contain no evaluator label, evaluator seed, or gold relation.
+
+#### SCENARIO-VERIFY-7237-USABILITY: Unknown Is Valid Syntax But Not Fidelity
+
+**Given** a returned parse-valid explicit unknown response
+**When** the reducer classifies transport, syntax, and semantic usability
+**Then** transport and parse counts include the response
+**And** usable source or claim fidelity does not include it.
+
+#### SCENARIO-VERIFY-7237-SEMANTICS: Pointers Must Preserve Relations And Decisions
+
+**Given** complete source and claim replies for all three arms
+**When** the independent reducer resolves their representations
+**Then** it reports representation, relation, decision, and abstention outcomes separately
+**And** only the pointer treatment can satisfy the capture-readiness gate.
+
+#### SCENARIO-VERIFY-7237-PROVENANCE: Invocation And CUDA Evidence Stay Distinct
+
+**Given** one task-owned native server and a fixed request
+**When** transport returns a response that is semantically unusable
+**Then** the invocation receipt still records completed transport and model identity
+**And** the artifact does not convert the quality failure into `blocked_no_run`.
+
+#### SCENARIO-VERIFY-7237-ARTIFACT: Cold Replay Rejects Evidence Drift
+
+**Given** a terminal complete or externally blocked canary artifact
+**When** a source hash, request byte, response byte, setting, row, threshold,
+process identity, CUDA receipt, verdict, or checksum changes
+**Then** cold validation rejects the artifact
+**And** a blocked verdict names the check, upstream, field, expected, and observed value.
+
+## Implementation Status (REQ-VERIFY-7237)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7237 and SCENARIO-VERIFY-7237-* | Implemented (`python/carnot/experiment_7237_v637_mention_canary.py`; `scripts/experiments/experiment_7237_v637_mention_canary.py`) | Focused tests (`tests/python/test_experiment_7237_v637_mention_canary.py`) plus live producer/reducer replay |

@@ -1344,10 +1344,12 @@ def _collect_preflight(
     """Check exact sources, native tools, cache, and idle GPUs without mutation."""
 
     settings = dict(contract or {})
+    expected_run_date = str(settings.get("run_date", RUN_DATE))
     upstream_path = Path(settings.get("upstream_path", UPSTREAM_PATH))
     public_path = Path(settings.get("public_path", PUBLIC_PATH))
     authority_path = Path(settings.get("authority_path", AUTHORITY_PATH))
     manifest_path = Path(settings.get("manifest_path", FIXTURE_MANIFEST_PATH))
+    spec_path = Path(settings.get("spec_path", SPEC_PATH))
     module_path = Path(settings.get("module_path", MODULE_PATH))
     wrapper_path = Path(settings.get("wrapper_path", WRAPPER_PATH))
     test_path = Path(settings.get("test_path", TEST_PATH))
@@ -1371,7 +1373,12 @@ def _collect_preflight(
 
     record(
         gate_row(
-            "run_date", RUN_DATE, run_date, run_date == RUN_DATE, upstream=None, field="run_date"
+            "run_date",
+            expected_run_date,
+            run_date,
+            run_date == expected_run_date,
+            upstream=None,
+            field="run_date",
         )
     )
     required = {
@@ -1380,7 +1387,7 @@ def _collect_preflight(
         "authority": root / authority_path,
         "manifest": root / manifest_path,
         "exclusion": root / EXCLUSION_PATH,
-        "spec": root / SPEC_PATH,
+        "spec": root / spec_path,
         "module": root / module_path,
         "entrypoint": root / wrapper_path,
         "tests": root / test_path,
@@ -1928,6 +1935,7 @@ def _live_capture(
     prefill_s = 0.0
     generation_s = 0.0
     parsing_s = 0.0
+    completion_builder = context.get("completion_builder", build_completion_row)
     try:
         with _phase_span(spans, 5, "task_owned_lease_and_model_load"):
             snapshots.append(shipped_runtime._gpu_snapshot("before_model_load", phase=5))
@@ -2016,7 +2024,7 @@ def _live_capture(
                     "gpu_sample_sha256": sha256_json(sample) if sample else None,
                 }
                 parse_started = time.monotonic()
-                row = build_completion_row(sealed, response, resource)
+                row = completion_builder(sealed, response, resource)
                 parsing_s += time.monotonic() - parse_started
                 timings = dict(response.get("raw_response", {}).get("timings") or {})
                 prefill_s += float(timings.get("prompt_ms", 0.0) or 0.0) / 1000.0
