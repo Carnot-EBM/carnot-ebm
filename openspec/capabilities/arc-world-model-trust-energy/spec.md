@@ -31817,3 +31817,100 @@ public-game progress SHALL remain separate findings.
 
 Implementation status: specified 2026-09-11. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## REQ-ARC-WMTE-7234: Run the current scored ARC policy locally through selfparse
+
+Experiment 7234 SHALL run one metadata-selected public game through the current
+submission policy construction and episode lifecycle. The local wrapper SHALL use
+`make_carnot_agent`, `E3AgentPolicy`, public frames, available actions, and the policy's
+own transitions. It SHALL not provide a `GameAdapter`, registry content, game source,
+ground-truth state, solved trajectories, or banked solutions to the policy. The wrapper
+SHALL not run the kernel installer, contact Kaggle, submit, publish, or change a
+production default.
+
+The run SHALL freeze one seed before interaction. Each available backend SHALL receive
+the same 256-action limit and unchanged induction-token cap. The primary backend SHALL
+resolve `unsloth/Qwen3.8-27B-GGUF` `Q4_K_M` only through
+`cached_current_model()`. It SHALL use native llama.cpp, the GGUF tokenizer and chat
+template, `CARNOT_FORCE_LIVE=1`, and the production selfparse route. The experiment MAY
+also run the cached `RedHatAI/Qwen3.8-27B-INT4` with `.venv-vllm-trial`. It SHALL use the
+same production `_post_chat` request and XML parser route. The GGUF SHALL not use vLLM's
+unsupported `qwen3_5` GGUF loader.
+
+Each backend SHALL have a 240-second startup cap and a 1500-second total cap. The two
+sessions SHALL run sequentially. Total model runtime SHALL not exceed 3300 seconds. Each
+server and GPU lease SHALL be task-owned. Cleanup SHALL signal only owned process groups.
+The runner SHALL record the model hash, native binary, process ID and start tick, GPU
+UUID, exact request and response bytes, seed, parameters, token counts, finish reason,
+and measured wall times. It SHALL keep raw generation and selfparse chat endpoints
+separate.
+
+The result SHALL retain immutable action rows and induction rows. It SHALL record actual
+tool dispatch, engine writes, policy consumption, valid-engine count, non-identity
+predictions, held-future accuracy, trust acceptance, model-planned actions, progress,
+and cost. `local_scored_path_ready_score` SHALL equal one only if one session records
+tool dispatch, a generated engine, and later policy consumption. Zero valid engines is a
+complete null capability result.
+
+`scored_dryrun_complete_score` SHALL equal one after both backend dispositions exist. A
+missing comparator is an explicit external block on its row and does not invalidate a
+completed primary session. A prerequisite failure before any invocation SHALL use
+`blocked_no_run`. Actual load-only, canary-only, and agent generation SHALL use their
+corresponding substrate classes and duration floors. Only observed task-owned CUDA work
+permits `inference_mode=live_gpu`.
+
+The artifact SHALL include every roadmap-required top-level field. Every top-level field
+SHALL have one entry in `field_principles`. Ordinary values SHALL remain ordinary values;
+only a mapping with both `principle` and `value` MAY be unwrapped. The artifact SHALL make
+no hidden-leaderboard, competition-equivalence, cross-backend efficacy, or new-solve
+claim. A novel level MAY receive credit only after a registry precheck and live replay
+through the shipped reproduction gate.
+
+### SCENARIO-ARC-WMTE-7234-PREFLIGHT
+
+- GIVEN an upstream artifact or contract field is quarantined
+- WHEN Exp7234 evaluates preconditions
+- THEN it rejects that evidence before consuming its numeric gate
+- AND it records the check, upstream, artifact field, expected value, and observed value.
+
+### SCENARIO-ARC-WMTE-7234-FACTORY
+
+- GIVEN a locally disposable competition `Agent` base
+- WHEN the dry run builds a policy
+- THEN `make_carnot_agent` constructs the submitted `E3AgentPolicy` configuration
+- AND the policy receives no game adapter, source, registry, or banked solution.
+
+### SCENARIO-ARC-WMTE-7234-TRANSPORT
+
+- GIVEN either live backend reaches induction
+- WHEN selfparse emits a tool call
+- THEN `_post_chat` sends `/v1/chat/completions`
+- AND the shipped XML parser, dispatcher, engine writer, and policy consume that call in order
+- AND `/v1/completions` remains a separately logged raw-generation endpoint.
+
+### SCENARIO-ARC-WMTE-7234-COMPARATOR-BLOCK
+
+- GIVEN the primary GGUF session has a terminal disposition
+- AND the cached INT4 comparator or its isolated vLLM runtime is absent
+- WHEN the artifact is built
+- THEN the comparator row records an external block
+- AND `scored_dryrun_complete_score` equals one.
+
+### SCENARIO-ARC-WMTE-7234-TERMINAL-NULL
+
+- GIVEN both backend dispositions are recorded
+- AND no engine reaches dispatch, write, and policy consumption
+- WHEN the terminal artifact is validated
+- THEN its status is complete and its verdict class is null
+- AND `local_scored_path_ready_score` equals zero.
+
+### SCENARIO-ARC-WMTE-7234-RECEIPTS
+
+- GIVEN a completed model call and environment session
+- WHEN the artifact is reduced
+- THEN request hashes, response hashes, action rows, induction rows, engine receipts, and
+  CUDA ownership agree with their raw files
+- AND every comparison row retains unit, arm, seed, metric, error, and abstention.
+
+Implementation status: specified 2026-09-12. The conductor owns later status,
+changelog, and traceability reconciliation.
