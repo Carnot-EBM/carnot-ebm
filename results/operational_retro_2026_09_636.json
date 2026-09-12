@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.636",
-  "generated_at": "2026-09-12T03:03:08Z",
+  "generated_at": "2026-09-12T04:14:21Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 35.6,
   "experiments_completed": 12,
@@ -36,21 +36,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "The milestone completed 12 experiments in 35.6 minutes, including 5 compute-bound experiments. The 31.76-minute Live ARC adapter-withheld cumulative discovery session dominated elapsed time. The locked compute-task GPU-idle flag is false, but the supplied snapshot does not establish utilization efficiency during compute execution.",
+  "summary": "The milestone completed 12 experiments in 35.6 minutes, including 5 compute-bound tasks. The 31.76-minute Live ARC adapter-withheld cumulative discovery session defined the critical path; no data available this milestone explains its internal delay, establishes compute-bound GPU idleness, or documents a missed eligible DualGPURunner dispatch.",
   "bottlenecks_identified": [
-    "The listed compute-bound duration leaders were Live ARC adapter-withheld cumulative discovery session at 31.76 minutes, V636 source delta and exact execution contract at 0.96 minutes, and Bounded local vLLM Qwen3 XML tool-parser canary at 0.9 minutes. No phase-level data is available to explain why.",
-    "The disk-mtime reconstruction lacks task-correlated phase, accelerator, model-count, and runner-selection telemetry. This prevents a causal efficiency diagnosis."
+    "The compute-bound duration leaders in the supplied ranking were Live ARC adapter-withheld cumulative discovery session at 31.76 minutes, V636 source delta and exact execution contract at 0.96 minutes, and Bounded local vLLM Qwen3 XML tool-parser canary at 0.9 minutes; no data available this milestone identifies their responsible internal phases.",
+    "The Live ARC adapter-withheld cumulative discovery session concentrated 31.76 minutes of the 35.6-minute milestone window in one compute-bound path.",
+    "The disk-mtime reconstruction has no task-owned phase boundaries or progress receipts, so it ranks the critical path without explaining why it was slow.",
+    "Task-window GPU, process, model-concurrency, and runner-selection attribution is absent, preventing a definitive accelerator-efficiency or dispatch diagnosis."
   ],
   "improvements_suggested": [
-    "Add per-phase timers and checkpoint receipts to live ARC sessions so long paths can be isolated and resumed.",
-    "Capture GPU utilization inside each compute-bound task window and attach the samples to its experiment artifact.",
-    "Record active model count and runner selection at dispatch. Use DualGPURunner only when more than one model runs in parallel."
+    "Add task-owned phase timers and progress checkpoints to the Live ARC path so its dominant phase can be bounded, cached, or resumed.",
+    "Capture GPU samples inside each compute-bound task window with process and model attribution rather than relying on an uncorrelated monitor snapshot.",
+    "Emit model-concurrency and runner-selection receipts at dispatch, and select DualGPURunner only for declared parallel multi-model work."
   ],
   "top_3_highest_leverage_actions": [
-    "Instrument and checkpoint each phase of the Live ARC session.",
-    "Add task-window GPU telemetry to every compute-bound experiment artifact.",
-    "Add model-count and runner-selection receipts to compute dispatch."
+    "Instrument and checkpoint every phase of the Live ARC compute path.",
+    "Attach task-correlated GPU and process telemetry to every compute-bound artifact.",
+    "Record model concurrency and runner choice for every compute dispatch."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The locked GPU-idle indicator does not flag a compute-task idle event, but the snapshot does not determine in-window efficiency. No data available this milestone establishes a parallel multi-model task or a missed DualGPURunner dispatch. A nonzero savings estimate would be invented because no phase timings, matched rerun, or task-aligned GPU trace is available."
+  "meta_reflection": "The disk-mtime fallback is sufficient to rank durations but not to explain the critical path. The 0% GPU snapshot, together with the locked false task-idle flag, does not establish inefficient compute execution, and no data available this milestone shows a parallel multi-model launch. A nonzero savings estimate would exceed the evidence, so the estimate remains 0 until a measured counterfactual exists."
 }
