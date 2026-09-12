@@ -26551,3 +26551,21 @@ uninteresting way to "win" a toy benchmark once, after which no further improvem
 and the benchmark is correctly saturated. Real published autonomous-research systems share this
 property; it was not treated as in-scope for this fix, which was specifically about the fitness
 NUMBER always being true, not about detecting a scientifically uninteresting way of reaching it.
+
+## 2026-09-12: autoresearch mutation round ACTIVATED — no longer default-off
+
+Operator confirmed via explicit prompt ("Yes, restart now") after being told exactly what it
+takes: a new systemd drop-in,
+`~/.config/systemd/user/carnot-conductor.service.d/100-autoresearch-unattended-20260912.conf`,
+sets `CARNOT_AUTORESEARCH_UNATTENDED=1`. `systemctl --user daemon-reload` +
+`systemctl --user restart carnot-conductor`; verified live via
+`/proc/<MainPID>/environ`. This is the first time this session's autoresearch work runs as
+part of the actual unattended loop rather than a manual dry run.
+
+From this point on, every milestone-close will run one bounded autoresearch round
+(max_iterations=5) against DoubleWell/Rosenbrock via `codex exec --model gpt-6-astra`,
+independently-scored (REQ-AUTO-021), and may produce real git commits under
+`ops/autoresearch_discoveries/` with no operator or outer-loop session present. Watch
+`ops/autoresearch_conductor_report.md` (rewritten each round) for what actually happened. To
+disable: delete the drop-in file and restart the conductor, or
+`systemctl --user set-environment CARNOT_AUTORESEARCH_UNATTENDED=0` for an immediate override.
