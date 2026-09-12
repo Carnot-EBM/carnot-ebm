@@ -11,6 +11,7 @@ REQ-ARC-WMTE-4712, SCENARIO-ARC-WMTE-4712-LIVE-REINDUCTION-WIRING.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import hashlib
 import inspect
 import os
 from pathlib import Path, PurePath
@@ -1296,6 +1297,7 @@ def _tool_loop_refactor(
     *,
     previous_level_complete_grid: np.ndarray | None = None,
     hud_mask: Any = None,
+    transition_witness_enabled: bool = False,
 ) -> tuple[bool, str, dict[str, Any]] | None:
     """Run ONE refinement round through the tool loop, seeded with the engine on disk.
 
@@ -1312,23 +1314,56 @@ def _tool_loop_refactor(
         return None
     if not all(hasattr(proposer, attr) for attr in _TOOL_LOOP_PROPOSER_ATTRS):
         return None
+    witness_payload: dict[str, Any] | None = None
+    witness_instruction = ""
+    if transition_witness_enabled:
+        from carnot.agentic.arc_induction_tools import _exec_candidate
+        from carnot.agentic.arc_transition_witness_exp7248 import (
+            build_transition_witness,
+            render_transition_witness,
+        )
+
+        seed_engine, _seed_error = _exec_candidate(seed, "engine")
+        if seed_engine is not None:
+            witness_payload = build_transition_witness(list(corpus), seed_engine)
+            if witness_payload["available"] and witness_payload["mismatches"]:
+                witness_instruction = render_transition_witness(witness_payload)
     try:
         from carnot.agentic.arc_induction_tool_loop import induce_with_tool_loop
     except Exception:  # pragma: no cover - import failure degrades to the shipped path
         return None
     try:
+        loop_kwargs: dict[str, Any] = {
+            "previous_level_complete_grid": previous_level_complete_grid,
+            "seed_engine_code": seed,
+            "hud_mask": hud_mask,
+        }
+        if witness_instruction:
+            loop_kwargs["extra_user_instruction"] = witness_instruction
         ok, message = induce_with_tool_loop(
             proposer,
             game,
             list(corpus),
             int(cell),
-            previous_level_complete_grid=previous_level_complete_grid,
-            seed_engine_code=seed,
-            hud_mask=hud_mask,
+            **loop_kwargs,
         )
     except Exception as exc:  # noqa: BLE001 - a loop bug must not take down refinement
         ok, message = False, f"tool loop raised {type(exc).__name__}: {exc}"
     stats = dict(getattr(proposer, "last_tool_loop_stats", None) or {})
+    if transition_witness_enabled:
+        from carnot.agentic.arc_transition_witness_exp7248 import canonical_witness_bytes
+
+        stats["transition_witness"] = {
+            "enabled": True,
+            "available": bool(witness_payload and witness_payload.get("available")),
+            "delivered": bool(witness_instruction),
+            "payload_sha256": (
+                "sha256:"
+                + hashlib.sha256(canonical_witness_bytes(witness_payload)).hexdigest()
+                if witness_payload is not None
+                else None
+            ),
+        }
     return bool(ok), str(message), stats
 
 
@@ -1607,6 +1642,7 @@ def execute_bounded_llm_reinduction(
     # Default None keeps every existing caller byte-identical.
     hud_mask: Any = None,
     induction_memory: Any = None,
+    transition_witness_enabled: bool = False,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -1746,6 +1782,7 @@ def execute_bounded_llm_reinduction(
                     int(cell),
                     previous_level_complete_grid=previous_level_complete_grid,
                     hud_mask=hud_mask,
+                    transition_witness_enabled=transition_witness_enabled,
                 )
                 if attempt is not None:
                     ok, message, tool_stats = attempt

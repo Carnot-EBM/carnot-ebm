@@ -1,0 +1,148 @@
+{
+  "expected_reduction": {
+    "arc_witness_ready_score": 1,
+    "completed_units": 9,
+    "gates": {
+      "default_parity": true,
+      "disconnect_negative_control": true,
+      "leakage": true,
+      "runtime_delivery": true,
+      "scripted_transport_panel": true
+    }
+  },
+  "independent_reduction": {
+    "arc_witness_ready_score": 1,
+    "completed_units": 9,
+    "gates": {
+      "default_parity": true,
+      "disconnect_negative_control": true,
+      "leakage": true,
+      "runtime_delivery": true,
+      "scripted_transport_panel": true
+    }
+  },
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "identity_on_changed_transition",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "identity_changed"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "valid_no_change_identity",
+      "observed": 1,
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "identity_unchanged"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "changed_coordinate_set_mismatch",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "wrong_direction"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "missing_observed_change_coordinates",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "missing_effect"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "malformed_output",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "malformed_output"
+    },
+    {
+      "abstention": false,
+      "accepted_by_existing_policy_gate": true,
+      "arm": "witness_enabled",
+      "censored": false,
+      "delivered_witness_sha256": "sha256:84a414cff7c9b52e8d44d37937fbdd1cf739b87eaf4055b30bf3040d72d73b1a",
+      "error": null,
+      "generated_witness_sha256": "sha256:84a414cff7c9b52e8d44d37937fbdd1cf739b87eaf4055b30bf3040d72d73b1a",
+      "heldout_accuracy": 1.0,
+      "metric": "exact_payload_and_policy_acceptance",
+      "passed": true,
+      "planned": true,
+      "refinement_action": "refactor_tool_loop",
+      "seed": 724820260912,
+      "unit": "runtime_delivery"
+    },
+    {
+      "abstention": false,
+      "action_equal": true,
+      "arm": "default_vs_explicit_disabled",
+      "censored": false,
+      "default_action": [
+        {
+          "action": 1,
+          "data": null
+        }
+      ],
+      "default_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+      "disabled_action": [
+        {
+          "action": 1,
+          "data": null
+        }
+      ],
+      "disabled_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+      "error": null,
+      "metric": "request_and_action_equality",
+      "passed": true,
+      "request_bytes_equal": true,
+      "seed": 724820260912,
+      "unit": "default_parity"
+    },
+    {
+      "abstention": false,
+      "agent_observation_history_only": true,
+      "arm": "witness_enabled",
+      "censored": false,
+      "error": null,
+      "forbidden_keys_present": [],
+      "metric": "agent_owned_transition_fields",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "leakage"
+    },
+    {
+      "abstention": false,
+      "arm": "negative_control",
+      "caught": true,
+      "censored": false,
+      "error": null,
+      "metric": "adapter_disconnect_detected",
+      "mutation": "drop delivered_witness_sha256 from runtime_delivery",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "disconnect_mutation"
+    }
+  ],
+  "schema": "carnot.exp7248.raw_conformance_rows.v1"
+}

@@ -31915,6 +31915,62 @@ through the shipped reproduction gate.
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
+
+The scored `E3AgentPolicy` refinement path SHALL support an optional transition
+witness. The option SHALL be off by default. When it is off, the HTTP request bytes
+and selected policy action SHALL remain unchanged.
+
+The witness SHALL use only transitions that the agent observed. It SHALL not read a
+game adapter, game source, offline search result, evaluator label, solved path, or
+registry entry. Each mismatch SHALL contain the action, a hash of the pre-action
+frame, observed changed coordinates, predicted changed coordinates, and a typed
+mismatch. The adapter SHALL retain at most eight mismatches. It SHALL select diverse
+mismatch and action groups with deterministic tie-breaking.
+
+An identity prediction SHALL be wrong only when the observed transition changed. An
+identity prediction for an unchanged observation SHALL remain correct. An observation
+with no change SHALL remain a valid observation. A corpus with no changed transition
+SHALL report the witness as unavailable. It SHALL not report positive readiness from
+empty changed-transition evidence. The witness SHALL not change the trust threshold or
+supply replacement engine code. The model SHALL still write its own engine.
+
+The selfparse CEGIS round SHALL put the exact generated witness in the next refinement
+request. A generated engine that passes the existing verifier SHALL continue through
+the existing trust and policy gates. The prototype SHALL record only mechanism
+conformance. It SHALL not claim a game solve or efficacy.
+
+### SCENARIO-ARC-WMTE-7248-TYPED-WITNESSES
+
+- GIVEN agent-owned changed and unchanged transitions
+- WHEN identity, wrong-direction, missing-effect, correct no-change, and malformed
+  engines are evaluated
+- THEN each failing changed transition has a deterministic typed witness
+- AND the correct no-change identity observation is retained without an identity error.
+
+### SCENARIO-ARC-WMTE-7248-RUNTIME-DELIVERY
+
+- GIVEN selfparse CEGIS and the witness option are enabled on `E3AgentPolicy`
+- WHEN the first engine fails the existing transition verifier
+- THEN the next refinement request contains the exact witness bytes
+- AND an accepted replacement engine reaches the existing policy gate.
+
+### SCENARIO-ARC-WMTE-7248-DEFAULT-PARITY
+
+- GIVEN the same scripted observation and model response sequence
+- WHEN the witness option is absent or disabled
+- THEN the refinement request bytes and selected action equal the prior path.
+
+### SCENARIO-ARC-WMTE-7248-NEGATIVE-CONTROLS
+
+- GIVEN a corpus with no changed transition
+- WHEN an identity engine is evaluated
+- THEN the witness is unavailable and readiness stays zero
+- AND a mutation that disconnects witness delivery fails the runtime conformance test.
+
+Implementation status: specified 2026-09-12. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7235: Audit saved scored-path world-model use without an LLM
 
 Experiment 7235 SHALL read Experiment 7234 only from

@@ -1,0 +1,1357 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "scripted_transport_panel",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Readiness requires this frozen runtime conformance property."
+    },
+    {
+      "criterion": "runtime_delivery",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Readiness requires this frozen runtime conformance property."
+    },
+    {
+      "criterion": "default_parity",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Readiness requires this frozen runtime conformance property."
+    },
+    {
+      "criterion": "leakage",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Readiness requires this frozen runtime conformance property."
+    },
+    {
+      "criterion": "disconnect_negative_control",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Readiness requires this frozen runtime conformance property."
+    },
+    {
+      "criterion": "independent_reducer_agreement",
+      "expected": {
+        "arc_witness_ready_score": 1,
+        "completed_units": 9,
+        "gates": {
+          "default_parity": true,
+          "disconnect_negative_control": true,
+          "leakage": true,
+          "runtime_delivery": true,
+          "scripted_transport_panel": true
+        }
+      },
+      "observed": {
+        "arc_witness_ready_score": 1,
+        "completed_units": 9,
+        "gates": {
+          "default_parity": true,
+          "disconnect_negative_control": true,
+          "leakage": true,
+          "runtime_delivery": true,
+          "scripted_transport_panel": true
+        }
+      },
+      "passed": true,
+      "principle": "An independently written raw-row reducer must reproduce the score."
+    },
+    {
+      "criterion": "no_current_llm_invocation",
+      "expected": {
+        "MODEL_SPECS": [],
+        "calls": 0,
+        "model_invoked": false
+      },
+      "observed": {
+        "MODEL_SPECS": [],
+        "calls": 0,
+        "model_invoked": false
+      },
+      "passed": true,
+      "principle": "Scripted transport fixtures are conformance evidence, not live discovery."
+    },
+    {
+      "criterion": "existing_policy_gate_preserved",
+      "expected": {
+        "accepted": true,
+        "heldout_threshold": 1.0
+      },
+      "observed": {
+        "accepted": true,
+        "heldout_threshold": 1.0
+      },
+      "passed": true,
+      "principle": "The adapter adds diagnosis only; it does not change trust or supply replacement code."
+    },
+    {
+      "criterion": "validation:focused_pytest",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:new_code_coverage_run",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:new_code_coverage_report",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:ruff_check",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:ruff_format",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:changed_module_mypy",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:scoped_spec_coverage",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:full_python_suite",
+      "expected": 0,
+      "observed": 124,
+      "passed": false,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:E2E-009",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:E2E-010",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:induction_disabled_offline_smoke",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:independent_raw_row_reducer",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:git_status_test_integrity",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The post-test worktree is recorded so test deletion or reversion is visible."
+    },
+    {
+      "criterion": "validation:adversarial_verify",
+      "expected": 0,
+      "observed": 1,
+      "passed": false,
+      "principle": "The named required validation must complete without suppressed flags."
+    },
+    {
+      "criterion": "validation:verdict_row_consistency_lint",
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "The named required validation must complete without suppressed flags."
+    }
+  ],
+  "arc_witness_ready_score": 0,
+  "baseline_failures": [
+    "full_python_suite"
+  ],
+  "completed_at_utc": "2026-09-12T21:40:43.206384+00:00",
+  "current_model_counters": {
+    "generations_completed": 0,
+    "generations_failed": 0,
+    "generations_started": 0,
+    "loads_completed": 0,
+    "loads_started": 0
+  },
+  "default_parity_receipt": {
+    "action_equal": true,
+    "default_action": [
+      {
+        "action": 1,
+        "data": null
+      }
+    ],
+    "default_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+    "disabled_action": [
+      {
+        "action": 1,
+        "data": null
+      }
+    ],
+    "disabled_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+    "request_bytes_equal": true
+  },
+  "duration_s": 2465.388303,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7248-arc-witness",
+  "field_principles": {
+    "MODEL_SPECS": "Name only models this invocation may execute; source-model history lives in hashed sidecars.",
+    "acceptance_gate_results": "For each frozen criterion record expected, observed and passed, plus its principle.",
+    "arc_witness_ready_score": "One means the runtime feedback path is reachable and conforms; it makes no efficacy claim.",
+    "baseline_failures": "The baseline_failures value is stored directly so this mechanism receipt remains auditable.",
+    "completed_at_utc": "The completed_at_utc value is stored directly so this mechanism receipt remains auditable.",
+    "current_model_counters": "The current_model_counters value is stored directly so this mechanism receipt remains auditable.",
+    "default_parity_receipt": "The disabled prototype preserves the existing scored request and action behavior.",
+    "duration_s": "Measure monotonic elapsed time for this invocation, with disjoint phase spans and no invented time.",
+    "execution_host": "Record the real hostname separately from the closed venue vocabulary.",
+    "execution_venue": "Use host for orchestration; actual board receipts separately name kv260, gatemate or polarfire.",
+    "experiment_id": "The experiment_id value is stored directly so this mechanism receipt remains auditable.",
+    "field_principles": "Store explanations here while leaving ordinary values at top level for consumers.",
+    "gate_check_summary": "For every blocked_* verdict name the upstream, exact field or check, observed and expected values.",
+    "generation_attempts": "The generation_attempts value is stored directly so this mechanism receipt remains auditable.",
+    "generations_completed": "The generations_completed value is stored directly so this mechanism receipt remains auditable.",
+    "generations_failed": "The generations_failed value is stored directly so this mechanism receipt remains auditable.",
+    "historical_and_negative_fixture_sidecar": "The historical_and_negative_fixture_sidecar value is stored directly so this mechanism receipt remains auditable.",
+    "honest_verdict": "Use complete_* for terminal measured findings and blocked_* for absent external prerequisites.",
+    "inference_substrate": "Describe the compute actually performed with a recognized literal.",
+    "inference_substrate_class": "Use the closed compute class and its duration floor; never sleep or relabel to pass.",
+    "milestone": "The milestone value is stored directly so this mechanism receipt remains auditable.",
+    "model_invoked": "Derive from actual current calls, not usable-answer count or a nested control arm.",
+    "model_load_attempts": "The model_load_attempts value is stored directly so this mechanism receipt remains auditable.",
+    "model_loads_completed": "The model_loads_completed value is stored directly so this mechanism receipt remains auditable.",
+    "oracle_scope": "The oracle_scope value is stored directly so this mechanism receipt remains auditable.",
+    "phase_spans": "The phase_spans value is stored directly so this mechanism receipt remains auditable.",
+    "policy_changes": "The policy_changes value is stored directly so this mechanism receipt remains auditable.",
+    "preconditions_checked": "Record exact observed inputs, resource ownership, hashes and failed checks before expensive work.",
+    "random_seed": "Freeze seeds before seeing outcomes so replay cannot select favorable runs.",
+    "reproducibility_checksum": "Bind source code, input manifests, configuration and raw rows to the result.",
+    "rows": "Retain every unit, arm, seed, metric, error, abstention and censoring state; aggregates must be recomputable.",
+    "run_date": "Use 20260912 and retain actual UTC start and end timestamps.",
+    "sample_size_budget": "State planned, attempted, completed and censored independent units and the fixed stopping rule.",
+    "schema": "Version this artifact; also emit experiment_id and milestone as ordinary top-level values.",
+    "solve_claim": "The solve_claim value is stored directly so this mechanism receipt remains auditable.",
+    "solve_provenance": "Use development_proxy for scripted conformance; no game-level solve is claimed.",
+    "source_artifact_hashes": "Authenticate input bytes and preserve quarantine; readiness alone is insufficient.",
+    "started_at_utc": "The started_at_utc value is stored directly so this mechanism receipt remains auditable.",
+    "status": "A terminal artifact records complete or blocked; unfinished work belongs in a separate checkpoint.",
+    "uploads_or_external_messages": "The uploads_or_external_messages value is stored directly so this mechanism receipt remains auditable.",
+    "validation_receipts": "Record actual command, exit code and log hash; no skipped, weakened, deleted or reverted tests.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; a failed scientific acceptance gate forbids positive. External incompleteness is blocked, not retryable partial.",
+    "verifier_is_oracle": "Expose exact-oracle use; oracle conformance cannot become learned verification evidence.",
+    "witness_rows": "Expose observed transition anchors and payload hashes, including legitimate no-change cases."
+  },
+  "gate_check_summary": [],
+  "generation_attempts": 0,
+  "generations_completed": 0,
+  "generations_failed": 0,
+  "historical_and_negative_fixture_sidecar": {
+    "current_invocation_model_receipt": false,
+    "path": "results/checkpoints/experiment_7248_v638_arc_witness_sidecar.json",
+    "sha256": "sha256:97dba6e82565317fa39b45e81e9574036d887c64418a7844d5c0f411edea4062"
+  },
+  "honest_verdict": "complete_null_runtime_witness_acceptance_gate_failed",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "milestone": "2026.09.638",
+  "model_invoked": false,
+  "model_load_attempts": 0,
+  "model_loads_completed": 0,
+  "oracle_scope": "Exact scripted transition and request-byte conformance only.",
+  "phase_spans": [
+    {
+      "duration_s": 0.005552,
+      "end_offset_s": 0.005605,
+      "phase": "preflight",
+      "start_offset_s": 5.3e-05
+    },
+    {
+      "duration_s": 1.421219,
+      "end_offset_s": 1.426844,
+      "phase": "cpu_conformance",
+      "start_offset_s": 0.005626
+    },
+    {
+      "duration_s": 2463.954177,
+      "end_offset_s": 2465.388285,
+      "phase": "validation",
+      "start_offset_s": 1.434108
+    },
+    {
+      "duration_s": 1e-05,
+      "end_offset_s": 2465.388301,
+      "phase": "artifact_assembly",
+      "start_offset_s": 2465.388291
+    }
+  ],
+  "policy_changes": {
+    "production_default_changed": false,
+    "replacement_code_supplied_by_adapter": false,
+    "trust_threshold_changed": false
+  },
+  "preconditions_checked": {
+    "checked_at_utc": "2026-09-12T20:59:37.823613+00:00",
+    "checks": [
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "AGENTS.md",
+          "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "CLAUDE.md",
+          "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "CODEX.md",
+          "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "research-program.md",
+          "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "ops/exclusion_manifest.yaml",
+          "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "ops/e2e-test-plan.md",
+          "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_competition_agent.py",
+          "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_induction_tool_loop.py",
+          "sha256": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_induction_tools.py",
+          "sha256": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_world_model_trust_energy.py",
+          "sha256": "sha256:b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_eval_provenance.py",
+          "sha256": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_llm_reinduction.py",
+          "sha256": "sha256:5d5b15ed0a8796bcfdc8600ef4f81c24ff4d0264ef3e32625a5abfc560987e86"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/agentic/arc_transition_witness_exp7248.py",
+          "sha256": "sha256:78d00691b14b7f5535fbe857e6dc98458a18747bc23d05421d35aa6be8d5a937"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "python/carnot/experiment_7248_v638_arc_witness.py",
+          "sha256": "sha256:305cfc992d6643820f6b6f8eaa79e944ca6f0707c95f7be6ee00006a965faf3a"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "tests/python/test_arc_induction_state_persistence.py",
+          "sha256": "sha256:566dbf6f4f2a2b8b71df4bfa96ac79cb82ffd3fd1053eafc649751f9d0346a64"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "tests/python/test_arc_tool_grammar_transport.py",
+          "sha256": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "tests/python/test_experiment_7248_v638_arc_witness.py",
+          "sha256": "sha256:bb18dc3c7d2c8892c19c7eba1e5230660552db05334636026f8a5f940ce203f2"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "results/experiment_7234_v637_arc_scored_dryrun.json",
+          "sha256": "sha256:1660cbb8ca9f605a95c0e2244dc0e8b8289d4c12e509c8b72b77d38c15406a37"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "ops/arc_solve_registry.yaml",
+          "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+          "sha256": "sha256:4b8416687e6965222583ac189c7e5e06d8ed307de2525be6d206fa99247feea8"
+        },
+        "passed": true
+      },
+      {
+        "check": "required_readable_input",
+        "expected": "regular readable file",
+        "observed": {
+          "exists": true,
+          "owner_uid": 1000,
+          "path": "scripts/experiments/experiment_7248_v638_arc_witness.py",
+          "sha256": "sha256:66ad120bad001fb32cad3e65d9c47338a9bf8c1a0e5ed1056a8ddc52ff330ffd"
+        },
+        "passed": true
+      },
+      {
+        "check": "driving_requirement",
+        "expected": "present before implementation measurement",
+        "field": "REQ-ARC-WMTE-7248",
+        "observed": "present",
+        "passed": true,
+        "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+      },
+      {
+        "check": "quarantine_state",
+        "expected": "not quarantined",
+        "field": "exp7248",
+        "observed": "not listed",
+        "passed": true,
+        "upstream": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "check": "writable_output_directory",
+        "expected": "existing writable directory",
+        "observed": "writable",
+        "owner_uid": 1000,
+        "passed": true,
+        "path": "results"
+      },
+      {
+        "check": "writable_output_directory",
+        "expected": "existing writable directory",
+        "observed": "writable",
+        "owner_uid": 1000,
+        "passed": true,
+        "path": "results/checkpoints"
+      }
+    ],
+    "failed_checks": [],
+    "imports": {
+      "arc_executable_world_model": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_executable_world_model.py",
+      "arc_llm_reinduction": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_llm_reinduction.py"
+    },
+    "process_uid": 1000,
+    "repository_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "resource_ownership": "host process owns CPU fixtures and agent observation history"
+  },
+  "random_seed": 724820260912,
+  "reproducibility_checksum": "sha256:4b2a758eaa097efcb8a8aa353d591d5d39fe50e4e73f1d3553d46461d47f87d1",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "identity_on_changed_transition",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "identity_changed"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "valid_no_change_identity",
+      "observed": 1,
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "identity_unchanged"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "changed_coordinate_set_mismatch",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "wrong_direction"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "missing_observed_change_coordinates",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "missing_effect"
+    },
+    {
+      "abstention": false,
+      "arm": "typed_cpu_fixture",
+      "censored": false,
+      "error": null,
+      "metric": "typed_mismatch",
+      "observed": "malformed_output",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "malformed_output"
+    },
+    {
+      "abstention": false,
+      "accepted_by_existing_policy_gate": true,
+      "arm": "witness_enabled",
+      "censored": false,
+      "delivered_witness_sha256": "sha256:84a414cff7c9b52e8d44d37937fbdd1cf739b87eaf4055b30bf3040d72d73b1a",
+      "error": null,
+      "generated_witness_sha256": "sha256:84a414cff7c9b52e8d44d37937fbdd1cf739b87eaf4055b30bf3040d72d73b1a",
+      "heldout_accuracy": 1.0,
+      "metric": "exact_payload_and_policy_acceptance",
+      "passed": true,
+      "planned": true,
+      "refinement_action": "refactor_tool_loop",
+      "seed": 724820260912,
+      "unit": "runtime_delivery"
+    },
+    {
+      "abstention": false,
+      "action_equal": true,
+      "arm": "default_vs_explicit_disabled",
+      "censored": false,
+      "default_action": [
+        {
+          "action": 1,
+          "data": null
+        }
+      ],
+      "default_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+      "disabled_action": [
+        {
+          "action": 1,
+          "data": null
+        }
+      ],
+      "disabled_request_sha256": "sha256:e410fa11724203e9f296c75df9a8d6762127d0c758846ee636a5c9e24d47a2a7",
+      "error": null,
+      "metric": "request_and_action_equality",
+      "passed": true,
+      "request_bytes_equal": true,
+      "seed": 724820260912,
+      "unit": "default_parity"
+    },
+    {
+      "abstention": false,
+      "agent_observation_history_only": true,
+      "arm": "witness_enabled",
+      "censored": false,
+      "error": null,
+      "forbidden_keys_present": [],
+      "metric": "agent_owned_transition_fields",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "leakage"
+    },
+    {
+      "abstention": false,
+      "arm": "negative_control",
+      "caught": true,
+      "censored": false,
+      "error": null,
+      "metric": "adapter_disconnect_detected",
+      "mutation": "drop delivered_witness_sha256 from runtime_delivery",
+      "passed": true,
+      "seed": 724820260912,
+      "unit": "disconnect_mutation"
+    }
+  ],
+  "run_date": "20260912",
+  "sample_size_budget": {
+    "attempted_independent_units": 9,
+    "censored_independent_units": 0,
+    "completed_independent_units": 9,
+    "fixed_stopping_rule": "Run each frozen CPU fixture and control exactly once; do not stop on outcome.",
+    "planned_independent_units": 9
+  },
+  "schema": "carnot.experiment_7248.arc_transition_witness.v1",
+  "solve_claim": {
+    "game_level_solve_claimed": false,
+    "known_game_replayed": false,
+    "official_score_claimed": false,
+    "result_scope": "mechanism_prototype"
+  },
+  "solve_provenance": "development_proxy",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:4b8416687e6965222583ac189c7e5e06d8ed307de2525be6d206fa99247feea8",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+    "python/carnot/agentic/arc_induction_tools.py": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
+    "python/carnot/agentic/arc_llm_reinduction.py": "sha256:5d5b15ed0a8796bcfdc8600ef4f81c24ff4d0264ef3e32625a5abfc560987e86",
+    "python/carnot/agentic/arc_transition_witness_exp7248.py": "sha256:78d00691b14b7f5535fbe857e6dc98458a18747bc23d05421d35aa6be8d5a937",
+    "python/carnot/agentic/arc_world_model_trust_energy.py": "sha256:b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
+    "python/carnot/experiment_7248_v638_arc_witness.py": "sha256:305cfc992d6643820f6b6f8eaa79e944ca6f0707c95f7be6ee00006a965faf3a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/checkpoints/experiment_7248_v638_arc_witness_raw_rows.json": "sha256:8e910e78f53353724127c0b93ca265d43e16b9257a9c0cbcc2af9f20e16edcda",
+    "results/checkpoints/experiment_7248_v638_arc_witness_sidecar.json": "sha256:97dba6e82565317fa39b45e81e9574036d887c64418a7844d5c0f411edea4062",
+    "results/experiment_7234_v637_arc_scored_dryrun.json": "sha256:1660cbb8ca9f605a95c0e2244dc0e8b8289d4c12e509c8b72b77d38c15406a37",
+    "scripts/experiments/experiment_7248_v638_arc_witness.py": "sha256:66ad120bad001fb32cad3e65d9c47338a9bf8c1a0e5ed1056a8ddc52ff330ffd",
+    "tests/python/test_arc_induction_state_persistence.py": "sha256:566dbf6f4f2a2b8b71df4bfa96ac79cb82ffd3fd1053eafc649751f9d0346a64",
+    "tests/python/test_arc_tool_grammar_transport.py": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704",
+    "tests/python/test_experiment_7248_v638_arc_witness.py": "sha256:bb18dc3c7d2c8892c19c7eba1e5230660552db05334636026f8a5f940ce203f2"
+  },
+  "started_at_utc": "2026-09-12T20:59:37.818094+00:00",
+  "status": "complete",
+  "uploads_or_external_messages": false,
+  "validation_receipts": [
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_7248_v638_arc_witness.py -q --no-cov -n 0 --basetemp=/tmp/exp7248-v638-focused",
+      "duration_s": 5.18215,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:df24c21e89e11dc464ab42323332fb5cd3e6c2dd5e9ed6daad7f98a69335c6e6",
+      "name": "focused_pytest",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 8 items\n\ntests/python/test_experiment_7248_v638_arc_witness.py ........           [100%]\n\n============================== 8 passed in 3.15s ===============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7248-v638.coverage '--include=*/arc_transition_witness_exp7248.py' -m pytest -o addopts= tests/python/test_experiment_7248_v638_arc_witness.py -q -n 0 --basetemp=/tmp/exp7248-v638-coverage",
+      "duration_s": 8.236568,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:a5403d98a7e7260c132fc922500d3478cb1fdd3c1a09b66635669026d0ea4e3b",
+      "name": "new_code_coverage_run",
+      "output_tail": "........                                                                 [100%]\n8 passed in 5.08s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7248-v638.coverage '--include=*/arc_transition_witness_exp7248.py' --show-missing --fail-under=100",
+      "duration_s": 0.069255,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:e84d4d96d203e4b2b0667167aa4485a103f986552915bafac9d048ea68abd23f",
+      "name": "new_code_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/agentic/arc_transition_witness_exp7248.py     114      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       114      0   100%\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/agentic/arc_transition_witness_exp7248.py python/carnot/experiment_7248_v638_arc_witness.py python/carnot/agentic/arc_llm_reinduction.py python/carnot/agentic/arc_competition_agent.py scripts/experiments/experiment_7248_v638_arc_witness.py tests/python/test_experiment_7248_v638_arc_witness.py",
+      "duration_s": 0.010405,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/agentic/arc_transition_witness_exp7248.py python/carnot/experiment_7248_v638_arc_witness.py scripts/experiments/experiment_7248_v638_arc_witness.py tests/python/test_experiment_7248_v638_arc_witness.py",
+      "duration_s": 0.010744,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:177f260a5645724013185e4b140c7045cc39e56c0c97b120f5cb23599f85f0de",
+      "name": "ruff_format",
+      "output_tail": "4 files already formatted\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/agentic/arc_transition_witness_exp7248.py python/carnot/experiment_7248_v638_arc_witness.py python/carnot/agentic/arc_llm_reinduction.py python/carnot/agentic/arc_competition_agent.py",
+      "duration_s": 23.536377,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:2c351be2d1372b0ed603cb295d6e6cf711fe0b394d2e8776de2aca205e30704e",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 4 source files\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7248_v638_arc_witness.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py",
+      "duration_s": 0.01791,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": true,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "duration_s": 2400.03408,
+      "exit_code": 124,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:9f97494c30ffc926b52f20ae862f21ffdcb17813ad88da23f51cbe6981dc1e9b",
+      "name": "full_python_suite",
+      "output_tail": "......F.....F....F.............F........F........... [ 47%]\n.FF........F..............F.F.FFF....F.F.F.F.F..FFFFF.FFF..F...F........ [ 47%]\n..........................F........................F.FFFFFF.FFFFFFFF..F. [ 47%]\n..........................................F......................F...... [ 47%]\n.................................F.......F.............................. [ 48%]\n.FF....................F......FE...............F.FFF...............FF... [ 48%]\n............F.F......F..............................F................... [ 48%]\n......................F..FFFFFFFF.FFFFFFF............................... [ 48%]\n............................F................F..........F...F........... [ 48%]\n..............F......................................................... [ 48%]\n........................................................................ [ 48%]\n.......................F.....F.....F.........................F.......... [ 48%]\n..............................FFFFFFF....................F.F............ [ 48%]\n.......................................F............................F... [ 49%]\n........................................................................ [ 49%]\n........................................................................ [ 49%]\n..........................................................F............. [ 49%]\n........................................................................ [ 49%]\n...............F........................................................ [ 49%]\n........................................................................ [ 49%]\n...............................F........................................ [ 49%]\n........................F............................................... [ 49%]\n....................F................................................... [ 50%]\n........................................................................ [ 50%]\n........................................................................ [ 50%]\n...............F........................................................ [ 50%]\n........................................................................ [ 50%]\n.........F.............................................................. [ 50%]\n......F.........................................F....................... [ 50%]\n........................................................................ [ 50%]\n.........................................F.............................. [ 50%]\n......................................................F................. [ 51%]\n.........................................F............F................. [ 51%]\n........................................................................ [ 51%]\n...F.................................................................... [ 51%]\n........................................................................ [ 51%]\n.F...................................................................... [ 51%]\n................................F....................................... [ 51%]\n.........................................F.............................. [ 51%]\n..............................................F......................... [ 51%]\n..........................................F............................. [ 52%]\n.............................sss........................................ [ 52%]\n........................................................................ [ 52%]\n............FFFFFF...................................................... [ 52%]\n..............F...F.F...........FFF.F................................... [ 52%]\n....................................................................F... [ 52%]\n........................................................................ [ 52%]\n.......................................................F................ [ 52%]\n......................F................FF.F......F.................F..FF [ 52%]\n...............................................F....F................... [ 53%]\n...........FFF......",
+      "passed": false,
+      "timed_out": true
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_induction_state_persistence.py -q --no-cov -n 0 --basetemp=/tmp/exp7248-v638-e2e009",
+      "duration_s": 11.943631,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:b6ac3d84d0214592d4cb922dbbcd7609fa68a1e570bae20d9fa9dec7e980baa4",
+      "name": "E2E-009",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 40 items\n\ntests/python/test_arc_induction_state_persistence.py ................... [ 47%]\n.....................                                                    [100%]\n\n============================== 40 passed in 8.88s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_tool_grammar_transport.py -q --no-cov -n 0 --basetemp=/tmp/exp7248-v638-e2e010",
+      "duration_s": 10.22857,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:250cb6203392cdd3c6d7e3425435ecfc9767e05a60fcb3679a618fd0cf6387a6",
+      "name": "E2E-010",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 50 items\n\ntests/python/test_arc_tool_grammar_transport.py ........................ [ 48%]\n..........................                                               [100%]\n\n============================== 50 passed in 7.28s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/usr/bin/env CARNOT_ARC_DISABLE_INDUCTION=1 PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7248-v638-offline-smoke.json",
+      "duration_s": 3.265803,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:3508ad797e8a4cda41e8304771cc007fef327b587dc9755e3fecc332028cc6a2",
+      "name": "induction_disabled_offline_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-12 17:40:40 | INFO | Created new scorecard: f402b8c5-3228-4ee1-ad73-f3b47d3ce17e\n2026-09-12 17:40:40 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-12 17:40:40 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7248-v638-offline-smoke.json\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7248_v638_arc_witness.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7248_v638_arc_witness_raw_rows.json",
+      "duration_s": 0.679327,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:30900c30bf5cdca4a18de351a058ad385f242a09038429bb82e995f90bd7ef52",
+      "name": "independent_raw_row_reducer",
+      "output_tail": "{\"arc_witness_ready_score\": 1, \"completed_units\": 9, \"gates\": {\"default_parity\": true, \"disconnect_negative_control\": true, \"leakage\": true, \"runtime_delivery\": true, \"scripted_transport_panel\": true}}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "git status --short",
+      "duration_s": 0.061663,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:a11fd7eb116a50d80e44774c1ca4d31e2f0df3cd4820373e088d2990f98dc623",
+      "name": "git_status_test_integrity",
+      "output_tail": " M openspec/capabilities/arc-world-model-trust-energy/spec.md\n M python/carnot/agentic/arc_competition_agent.py\n M python/carnot/agentic/arc_llm_reinduction.py\n M results/experiment_1822_rtl_synth.log\n?? python/carnot/agentic/arc_transition_witness_exp7248.py\n?? python/carnot/experiment_7248_v638_arc_witness.py\n?? results/checkpoints/experiment_7248_v638_arc_witness.json\n?? results/checkpoints/experiment_7248_v638_arc_witness_raw_rows.json\n?? results/checkpoints/experiment_7248_v638_arc_witness_sidecar.json\n?? scripts/experiments/experiment_7248_v638_arc_witness.py\n?? tests/python/test_experiment_7248_v638_arc_witness.py\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7248_v638_arc_witness.json",
+      "duration_s": 0.616095,
+      "exit_code": 1,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:45d2d0cb0409055e47b502523a1f896789efe63d44ef6c761253a577dfc65911",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7248-arc-witness () -- 1 flag(s)\n  - CRITICAL NONTERMINAL_DECLARED_ARTIFACT  declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7248_v638_arc_witness.json; classification=partial; reason=partial marker present\n\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7248_v638_arc_witness.json",
+      "duration_s": 0.02619,
+      "exit_code": 0,
+      "log_scope": "captured combined-output tail returned by streaming subprocess helper",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_lint",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true,
+  "witness_rows": [
+    {
+      "available": true,
+      "mismatches": [
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:0cd534591e833e31d6abf20e9fd3fe06cba0f81ee3edc3761ad92f80a2b2fc25",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:31e3dde4b2fcce6e87842a948016604233433a2bddd191a077122bc9da012975",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:508f8f44a5a428e908ce3c8bc70de7de01dff1c63d5f8e61e47d9e06a6df6ded",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:5269ea43aa4757fbb813137372ee98749e921234cfe706243b9a7f8bf4f9681b",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:7a6f8413e2812af3abc33db7c1a0f3ea0d69af586a20c4dc64fa77927eda7102",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:817f29dc6e60b4864a0688a99a7282a0271cc8246714e14e5559485a3ff8e844",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:951a83a4955a64f84a0828240047df1cb6a2f54b7e2ec03d3fca1e286d58fb5b",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        },
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "pre_frame_hash": "sha256:a5044d103221c682bbaab5246ad9016ef03ce6d46c783e11bd936e39ab19b5f1",
+          "predicted_changed_coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "typed_mismatch": "wrong_values_at_observed_coordinates"
+        }
+      ],
+      "payload_sha256": "sha256:84a414cff7c9b52e8d44d37937fbdd1cf739b87eaf4055b30bf3040d72d73b1a",
+      "unit": "changed_transition_witness",
+      "valid_no_change_observations": []
+    },
+    {
+      "available": true,
+      "mismatches": [
+        {
+          "action": {
+            "action": 1,
+            "data": null
+          },
+          "observed_changed_coordinates": [
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "pre_frame_hash": "sha256:c26a1dcb2fd4dc8d819e2cd61b422764082b604155b46ff831474b6081f7624d",
+          "predicted_changed_coordinates": [],
+          "typed_mismatch": "identity_on_changed_transition"
+        }
+      ],
+      "payload_sha256": "sha256:c5a52de423842970bf6d0174959c2ae8d1d00fdd7a57eb5ff2a3f195f2d50ead",
+      "unit": "legitimate_no_change_observation",
+      "valid_no_change_observations": [
+        {
+          "action": {
+            "action": 2,
+            "data": null
+          },
+          "observation_type": "valid_no_change_identity",
+          "observed_changed_coordinates": [],
+          "pre_frame_hash": "sha256:4f91f2cd4854f10caf180d29d39a4c0642b762af4ac19e34f7adce330944c140",
+          "predicted_changed_coordinates": []
+        }
+      ]
+    }
+  ]
+}

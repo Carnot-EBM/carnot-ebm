@@ -7601,6 +7601,12 @@ class E3AgentPolicy:
         )
         if self._induction_memory.enabled:
             kwargs["induction_memory"] = self._induction_memory
+        # REQ-ARC-WMTE-7248: only the scored policy owns the runtime opt-in. The
+        # absent flag adds no keyword, so default request construction stays exact.
+        from carnot.agentic.arc_transition_witness_exp7248 import witness_feedback_enabled
+
+        if witness_feedback_enabled():
+            kwargs["transition_witness_enabled"] = True
         outcome = execute_bounded_llm_reinduction(**kwargs)
         if not self.think_arm_fallback_enabled:
             attempt["think_arm_fallback"] = {"enabled": False}
