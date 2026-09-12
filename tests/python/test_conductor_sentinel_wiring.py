@@ -53,6 +53,59 @@ def test_milestone_close_invokes_ledger_with_receipt():
     assert "AUDIT_LEDGER_STATE" in source
 
 
+def test_autoresearch_round_runs_on_both_milestone_close_paths():
+    """2026-09-12 operator directive: "We want auto research to always run
+    regardless of prestaged roadmap." The pre-staged-roadmap fast path
+    (`if NEXT_ROADMAP_FILE.exists():`) used to `return` before ever reaching
+    the audit chain that held the only call to `_run_autoresearch_round` --
+    and most milestone transitions in this project take that fast path, so
+    autoresearch almost never fired in production. It must now be called
+    from both the fast path AND the audit-chain (`else`) path, and the fast
+    path's call must land before it archives the current milestone (the
+    autoresearch round should evaluate the milestone that is about to close,
+    not one already archived)."""
+    source = _code_only(inspect.getsource(rc.research_step))
+    assert source.count("_run_autoresearch_round(dry_run)") == 2
+
+    fast_path_idx = source.index("if NEXT_ROADMAP_FILE.exists():")
+    archive_idx = source.index("_archive_current_milestone(push=push)")
+    first_call_idx = source.index("_run_autoresearch_round(dry_run)")
+    assert fast_path_idx < first_call_idx < archive_idx
+
+
+class TestRunAutoresearchRound:
+    def test_calls_the_script_when_enabled(self, monkeypatch):
+        monkeypatch.setenv("CARNOT_AUTORESEARCH_UNATTENDED", "1")
+        calls = []
+        monkeypatch.setattr(rc, "_run_audit_with_receipt", lambda *a, **kw: calls.append((a, kw)))
+
+        rc._run_autoresearch_round(dry_run=False)
+
+        assert len(calls) == 1
+        args, kwargs = calls[0]
+        assert args[0] == "autoresearch-conductor-round"
+        assert "autoresearch_conductor_round.py" in args[1][-1]
+        assert kwargs["receipt"] == rc.PROJECT_ROOT / "ops" / "autoresearch_conductor_report.md"
+
+    def test_skips_when_env_var_unset(self, monkeypatch):
+        monkeypatch.delenv("CARNOT_AUTORESEARCH_UNATTENDED", raising=False)
+        calls = []
+        monkeypatch.setattr(rc, "_run_audit_with_receipt", lambda *a, **kw: calls.append((a, kw)))
+
+        rc._run_autoresearch_round(dry_run=False)
+
+        assert calls == []
+
+    def test_skips_in_dry_run_even_when_enabled(self, monkeypatch):
+        monkeypatch.setenv("CARNOT_AUTORESEARCH_UNATTENDED", "1")
+        calls = []
+        monkeypatch.setattr(rc, "_run_audit_with_receipt", lambda *a, **kw: calls.append((a, kw)))
+
+        rc._run_autoresearch_round(dry_run=True)
+
+        assert calls == []
+
+
 def test_sentinel_state_file_is_rewritten_on_a_clean_scan(tmp_path):
     """The receipt contract end-to-end: a scan with zero findings still
     rewrites the state file, so _run_audit_with_receipt sees a fresh mtime.

@@ -6208,6 +6208,45 @@ def _run_audit_with_receipt(
     return ok
 
 
+def _run_autoresearch_round(dry_run: bool) -> None:
+    """Autoresearch mutation round (REQ-AUTO-019/020/021, 2026-09-11/12
+    operator directives: "allow Carnot to pursue and try things on its own
+    during conductor loops... not require my involvement", then "We want
+    auto research to always run regardless of prestaged roadmap"). The full
+    AVO-style loop -- codex proposes a hypothesis, the sandbox runs it, an
+    independently-recomputed energy scores it against the current baseline
+    (REQ-AUTO-021 -- never a self-reported number), a winner gets its own
+    scoped git commit carrying its score -- already exists at
+    python/carnot/autoresearch/ (built 2026-04, never wired anywhere before
+    this session). Default OFF (CARNOT_AUTORESEARCH_UNATTENDED=1 to enable)
+    so this does not silently start spending codex calls on every milestone
+    close until an operator opts in. Non-fatal: an unavailable `codex`
+    binary writes a clean receipt and this step is skipped, same contract as
+    every audit above.
+
+    Called from BOTH milestone-close paths in research_step() -- the
+    audit-chain path (no pre-staged roadmap) AND the pre-staged-roadmap fast
+    path (archive+activate). The fast path used to skip this entirely
+    because it returns before reaching the audit chain below; the operator
+    directive above is explicit that pre-staging must not silently mean
+    "autoresearch never runs" -- most milestone transitions in practice take
+    the fast path (per the outer-loop's own dashboard-status finding
+    2026-09-12), so leaving it fast-path-only would have meant it almost
+    never fired in production.
+    """
+    if not dry_run and os.environ.get("CARNOT_AUTORESEARCH_UNATTENDED") == "1":
+        logger.info("Running autoresearch mutation round...")
+        _run_audit_with_receipt(
+            "autoresearch-conductor-round",
+            [
+                sys.executable,
+                str(PROJECT_ROOT / "scripts" / "autoresearch_conductor_round.py"),
+            ],
+            receipt=PROJECT_ROOT / "ops" / "autoresearch_conductor_report.md",
+            timeout=1800,
+        )
+
+
 def research_step(
     push: bool = True,
     dry_run: bool = False,
@@ -6275,6 +6314,13 @@ def research_step(
             if _activation_refusal_parked():
                 logger.info("Milestone transition parked for operator attention — idling")
                 return False
+            # Runs here too, not just the no-pre-staged-roadmap branch below
+            # (2026-09-12 operator directive: "We want auto research to
+            # always run regardless of prestaged roadmap") -- this fast path
+            # is how MOST milestone transitions actually happen in this
+            # project, so autoresearch-only-on-the-slow-path meant it almost
+            # never fired. See _run_autoresearch_round's own docstring.
+            _run_autoresearch_round(dry_run)
             # A next roadmap is ready — archive current and activate it
             logger.info("Found research-roadmap-next.yaml — transitioning milestones")
             _archive_current_milestone(push=push)
@@ -6619,29 +6665,10 @@ def research_step(
                     timeout=300,
                 )
 
-            # Autoresearch mutation round (REQ-AUTO-019/020, 2026-09-11 operator
-            # directive: "allow Carnot to pursue and try things on its own during
-            # conductor loops... not require my involvement"). The full AVO-style
-            # loop -- LLM proposes a hypothesis, sandbox runs it, the existing
-            # 3-gate evaluator scores it against the current baseline, a winner
-            # gets its own git commit carrying its score -- already exists at
-            # python/carnot/autoresearch/ (built 2026-04, never wired anywhere).
-            # Default OFF (CARNOT_AUTORESEARCH_UNATTENDED=1 to enable) so this
-            # does not silently start spending a live LLM endpoint on every
-            # milestone close until an operator opts in. Non-fatal: an
-            # unreachable endpoint writes a clean receipt and this step is
-            # skipped, same contract as every audit above.
-            if not dry_run and os.environ.get("CARNOT_AUTORESEARCH_UNATTENDED") == "1":
-                logger.info("Running autoresearch mutation round...")
-                _run_audit_with_receipt(
-                    "autoresearch-conductor-round",
-                    [
-                        sys.executable,
-                        str(PROJECT_ROOT / "scripts" / "autoresearch_conductor_round.py"),
-                    ],
-                    receipt=PROJECT_ROOT / "ops" / "autoresearch_conductor_report.md",
-                    timeout=1800,
-                )
+            # Autoresearch mutation round -- see _run_autoresearch_round's own
+            # docstring. Also called from the pre-staged-roadmap fast path
+            # above, per the 2026-09-12 "always run" operator directive.
+            _run_autoresearch_round(dry_run)
 
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
