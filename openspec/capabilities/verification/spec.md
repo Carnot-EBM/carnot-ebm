@@ -41573,3 +41573,128 @@ process identity, CUDA receipt, verdict, count, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7238 and SCENARIO-VERIFY-7238-* | Implemented (`python/carnot/experiment_7238_v637_mention_capture.py`; `scripts/experiments/experiment_7238_v637_mention_capture.py`) | Focused tests (`tests/python/test_experiment_7238_v637_mention_capture.py`); live capture blocked by authenticated Exp7237 quarantine |
+
+### REQ-VERIFY-7239: Semantic Audit SHALL Separate Extraction, Execution, And Decision Value
+
+Exp7239 SHALL authenticate the exact V637 Exp7236 fixture, Exp7237 canary,
+Exp7238 capture, public manifest, private authority manifest, and available raw
+manifests. It SHALL reject structured or exclusion-manifest quarantine before
+it considers a numeric readiness score. It SHALL unwrap only mappings that
+contain both `principle` and `value`.
+
+The audit is unconditional. A missing or gated capture SHALL produce a terminal
+`blocked` artifact. The artifact SHALL name the first failing upstream check,
+path, field, expected value, and observed value. It SHALL preserve authenticated
+calibration counts, their source paths, and their hashes as historical
+observations. It SHALL mark those observations as ineligible for promotion.
+It SHALL not invoke a model or create a replacement corpus.
+
+When an authentic complete capture is available, the audit SHALL cold-replay
+all raw source and claim outputs through the shipped mention resolver and typed
+executor. It SHALL join private labels only after prediction replay. It SHALL
+retain source fidelity, claim fidelity, coverage, false accepts, unconditional
+decision error, selective risk, and decoding cost as separate measurements.
+Malformed and unknown predictions SHALL count as errors for unconditional
+accuracy. Selective risk SHALL use only non-abstaining predictions and SHALL
+retain its denominator.
+
+The audit SHALL use exactly 64 base questions as independent paired units. It
+SHALL not count calls, mention spans, or surface twins as independent units.
+It SHALL freeze 10,000 paired bootstrap draws before reading evaluation labels.
+It SHALL report two-sided percentile CI95 rows for pointer-minus-offset and
+pointer-minus-direct error and false-accept differences. It SHALL not make a
+sub-percentage-point claim from this sample.
+
+The audit SHALL test mention-ID permutation, surface renaming, relation
+reversal, joint-support deletion, and authority-file access denial. It SHALL
+recompute a gold-relation upper bound and a non-degenerate positive control.
+A missing oracle-minus-control gap SHALL be `no_headroom` and SHALL make the
+comparison uninformative. It SHALL not treat no headroom as evidence that a
+verifier family failed.
+
+`semantic_value_score` SHALL equal one only when all of these criteria pass:
+
+- pointer source fidelity is at least 0.80;
+- pointer coverage is at least 0.75;
+- the upper paired CI95 for pointer-minus-offset decision error is below zero;
+- the upper paired CI95 for pointer-minus-direct decision error is below zero;
+- both paired false-accept difference upper CI95 values are at most zero; and
+- the positive control is non-degenerate and every authority-boundary control passes.
+
+The audit SHALL set `verifier_is_oracle=true`. A passing value result SHALL use
+`circular_positive`. It SHALL not claim a learned-verifier moat or broad factual
+verification. A complete fixed-criteria failure SHALL use `null` and identify
+the failed extraction, execution, decision, or headroom layer. A blocked input
+SHALL keep `semantic_audit_complete_score=0`; this does not make the terminal
+blocked disposition partial.
+
+The task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host` only after CPU replay starts. A pre-replay external block
+SHALL use `blocked_no_run` for both substrate fields. Current model-load,
+generation, and invocation counters SHALL stay zero. Historical invocation
+receipts and synthetic test controls SHALL not appear as current runner work.
+
+The terminal artifact SHALL contain `schema`, `status`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `execution_host`, `duration_s`,
+`MODEL_SPECS`, `model_invoked`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acceptance_gate_results`, `semantic_audit_complete_score`,
+`semantic_value_score`, `paired_comparison_rows`, `authority_boundary`, and
+`positive_control_results`. `field_principles` SHALL contain the requested
+exact principle for every listed field.
+
+The runner SHALL write provisional state only below `results/checkpoints/`.
+It SHALL print and flush every numbered phase boundary. It SHALL print before
+and after each long benchmark, validation, or subprocess. A truthful heartbeat
+SHALL report completed units and monotonic elapsed time at least every 60
+seconds during long loops. The terminal result SHALL use an atomic write only
+after cold validation.
+
+#### SCENARIO-VERIFY-7239-BLOCK: Quarantine Produces A Terminal Explanation
+
+**Given** exact fixture and canary bytes with a passing numeric readiness score
+**And** the canary has a structured quarantine marker
+**When** the unconditional audit checks the capture chain
+**Then** it records `structured_quarantine` as the first failed upstream field
+**And** it writes a blocked artifact with no current model or CPU replay claim.
+
+#### SCENARIO-VERIFY-7239-REPLAY: Authentic Rows Keep The Full Denominator
+
+**Given** an authentic complete capture with 64 base questions and three arms
+**When** the audit cold-replays extraction and exact execution before labels
+**Then** it retains 192 paired comparison rows and all malformed or unknown errors
+**And** it reports coverage and selective risk separately from unconditional error.
+
+#### SCENARIO-VERIFY-7239-BOOTSTRAP: Base Questions Define Paired Uncertainty
+
+**Given** complete paired rows for pointer, offset, and direct arms
+**When** the fixed 10,000-draw bootstrap runs
+**Then** each draw resamples 64 base questions with all arms kept together
+**And** two-sided CI95 rows cover error and false-accept differences.
+
+#### SCENARIO-VERIFY-7239-CONTROLS: Semantic And Authority Attacks Must Bite
+
+**Given** mention-ID permutation, surface rename, reversal, support deletion,
+and denied authority access controls
+**When** the audit recomputes decisions and the oracle upper bound
+**Then** identity-preserving changes preserve valid decisions
+**And** semantic deletion or reversal changes decisions while authority bytes
+never enter the model-side replay.
+
+#### SCENARIO-VERIFY-7239-ARTIFACT: Cold Validation Rejects Drift
+
+**Given** a terminal complete or blocked semantic-audit artifact
+**When** a required field, upstream hash, row, denominator, interval, control,
+gate result, verdict, or checksum changes
+**Then** cold validation rejects the artifact
+**And** a blocked artifact retains the exact first failure and zero value score.
+
+## Implementation Status (REQ-VERIFY-7239)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7239 and SCENARIO-VERIFY-7239-* | Planned (`python/carnot/experiment_7239_v637_semantic_audit.py`; `scripts/experiments/experiment_7239_v637_semantic_audit.py`) | Planned (`tests/python/test_experiment_7239_v637_semantic_audit.py`) |
