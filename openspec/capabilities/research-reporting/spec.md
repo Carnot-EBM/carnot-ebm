@@ -348,6 +348,141 @@ change
 `tests/python/test_experiment_7219_v636_source_contract.py`. The terminal
 receipt is `results/experiment_7219_v636_source_contract.json`.
 
+### REQ-REPORT-7233: V637 source and execution contract receipt
+
+Exp7233 SHALL select only a roadmap whose milestone is `2026.09.637`. It SHALL
+prefer `research-roadmap.yaml` after activation. It SHALL use
+`research-roadmap-next.yaml` only when the active roadmap does not match. It
+SHALL freeze the selected YAML bytes and the independent V637 Markdown design
+bytes under `results/raw/experiment_7233/`. It SHALL not edit either roadmap,
+`research-complete.yaml`, or `scripts/research_conductor.py`.
+
+Exp7233 SHALL parse the Markdown contract table and YAML tasks independently.
+It SHALL compare exactly thirteen ordered task IDs, titles, deliverables, and
+structured gates. The IDs SHALL be `exp7233` through `exp7245` in contract
+order. Every gate SHALL point to an earlier producer. The producer SHALL
+declare the identical top-level field in its `REQUIRED ARTIFACT FIELDS` block.
+No scientific task SHALL depend on the Exp7233 receipt. A readable contract
+mismatch SHALL produce a terminal `disqualified` receipt.
+
+Exp7233 SHALL run the shipped roadmap schema, exclusion, prior-failure,
+prompt-path, and gate-declaration checks. It SHALL use private temporary files
+to exercise `evaluate_gates` for every V637 gate. Each gate SHALL have passing,
+failed, absent-field, and absent-file cases. It SHALL preserve each actual
+result and shall not modify the gate evaluator. A separate intake check SHALL
+reject quarantined evidence before it reads a passing field.
+
+The intake check SHALL unwrap only a mapping that contains both `principle`
+and `value`. It SHALL preserve other mappings. It SHALL authenticate the exact
+V636 receipt and four quarantined V636 counterexamples by path and SHA-256.
+Those records SHALL remain historical sources. They SHALL not become current
+invocation evidence. Exp7233 SHALL record both the planning-time archive lag
+and the archive state observed during execution.
+
+Exp7233 SHALL exercise the unchanged adversarial verifier on isolated JSON
+fixtures. The fixtures SHALL include aggregation, bounded generation, full
+generation, model load without generation, and contradictory invocation
+claims. It SHALL write the fixtures and verifier reports to a referenced,
+hashed sidecar. Historical artifact details SHALL use a separate sidecar
+section. The main receipt SHALL not place either fixture class under a current
+runner receipt or model invocation field. The sidecar SHALL record the known
+unresolved classifier limitation without changing the classifier.
+
+Exp7233 SHALL recheck no more than three primary records from the dated V637
+source refresh. Each row SHALL include the primary URL, retrieval date,
+planning version, observed version, access outcome, change decision, and
+adoption limit. An access failure and a no-delta result SHALL remain explicit.
+A source version change SHALL not become a Carnot result.
+
+The terminal artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host` after
+aggregation occurs. It SHALL keep current invocation counters at zero. A block
+before qualifying work SHALL use `blocked_no_run` for both substrate fields.
+It SHALL measure monotonic duration without delay padding.
+
+The terminal artifact SHALL contain `schema`, `status`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `execution_host`, `duration_s`,
+`MODEL_SPECS`, `model_invoked`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acceptance_gate_results`, `source_contract_complete_score`, `contract_rows`,
+`gate_replay_rows`, `source_method_rows`, and `classifier_receipt_path`.
+`field_principles` SHALL preserve the exact principles from the V637 task.
+
+`source_contract_complete_score` SHALL equal one only when all thirteen
+contract rows, all gate replays, the classifier sidecar, the source rows, and
+the required validation receipts are complete. It states structural receipt
+completion only. It SHALL not state scientific value.
+
+#### SCENARIO-REPORT-7233-PARITY: Independent V637 sources agree
+
+**Given** separate V637 Markdown and YAML bytes
+**When** Exp7233 parses both sources
+**Then** thirteen ordered IDs, titles, deliverables, and structured gates
+agree exactly.
+
+#### SCENARIO-REPORT-7233-PREFLIGHT: Milestone authority fails closed
+
+**Given** active and staged roadmap candidates
+**When** Exp7233 selects the execution authority
+**Then** it selects only milestone `2026.09.637` and records an exact block
+when neither candidate qualifies.
+
+#### SCENARIO-REPORT-7233-GATES: Every V637 gate gets four real replays
+
+**Given** the five V637 gate declarations
+**When** the real gate evaluator reads temporary inputs
+**Then** all twenty passing, failed, absent-field, and absent-file outcomes
+match the expected pattern.
+
+#### SCENARIO-REPORT-7233-QUARANTINE: Authentication precedes field use
+
+**Given** a quarantined artifact whose structured field passes
+**When** Exp7233 checks it
+**Then** the receipt rejects the artifact and retains its path and hash.
+
+#### SCENARIO-REPORT-7233-WRAPPERS: Only principle records unwrap
+
+**Given** a `{principle, value}` wrapper and an ordinary mapping
+**When** Exp7233 normalizes gate evidence
+**Then** it unwraps the wrapper and preserves the ordinary mapping.
+
+#### SCENARIO-REPORT-7233-CLASSIFIER: Invocation fixtures stay isolated
+
+**Given** four valid substrate shapes, contradictory mutations, and V636
+quarantine history
+**When** the unchanged adversarial verifier runs
+**Then** valid rows and detected contradictions remain in a hashed sidecar
+without changing the current task's no-model declaration.
+
+#### SCENARIO-REPORT-7233-SOURCES: Version checks retain access limits
+
+**Given** direct primary access or a bounded access failure
+**When** Exp7233 checks at most three V637 records
+**Then** each row records its observed version, delta state, and adoption limit.
+
+#### SCENARIO-REPORT-7233-ARTIFACT: Stored evidence is recomputed
+
+**Given** a terminal receipt and its sidecar
+**When** a required field, row, hash, score, lifecycle value, or checksum changes
+**Then** the artifact validator rejects the modified receipt.
+
+#### SCENARIO-REPORT-7233-VALIDATION: Scoped checks retain exact outcomes
+
+**Given** the completed checkpoint
+**When** Exp7233 runs focused tests, coverage, Ruff, mypy, spec coverage,
+artifact validation, adversarial verification, and row consistency
+**Then** each command receipt retains its exact command, elapsed time, output,
+and exit code.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7233_v637_contract.py`,
+`scripts/experiments/experiment_7233_v637_contract.py`,
+`tests/python/test_experiment_7233_v637_contract.py`, and
+`results/experiment_7233_v637_contract.json`.
+
 ### REQ-REPORT-7204: V634 Evidence Matrix And Branch Decisions
 
 Exp7204 SHALL load the frozen V634 YAML contract from

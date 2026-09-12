@@ -1,0 +1,520 @@
+{
+  "historical_source_rows": [
+    {
+      "accepted_for_evidence": true,
+      "checked_field": "source_contract_complete_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "quarantined": false,
+      "source_path": "results/experiment_7219_v636_source_contract.json",
+      "source_sha256": "sha256:a9f6b2cf9586b83f29c2129789abf9a3296411fd69be942f0533a22aae32c8b7",
+      "verifier_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7219_v636_source_contract.json",
+        "exp_id": "exp7219-source-contract",
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_v636_source_contract_exact_agreement",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    },
+    {
+      "accepted_for_evidence": false,
+      "checked_field": "flagged_adversarial",
+      "expected_value": true,
+      "observed_value": true,
+      "quarantined": true,
+      "source_path": "results/experiment_7223_v636_span_canary.json",
+      "source_sha256": "sha256:4876bced7c4595087a6dfa3de9cf5b8cca443b4396344059458c6290f1b6b5fb",
+      "verifier_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7223_v636_span_canary.json",
+        "exp_id": null,
+        "flag_count": 3,
+        "flags": [
+          {
+            "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=1, negative_evidence_count=2. The duration check fails closed until the invocation scope agrees.",
+            "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+            "severity": "critical"
+          },
+          {
+            "detail": "duration_s=23.586890106089413 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_null_span_canary_not_ready_no_held_out_value_claim",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    },
+    {
+      "accepted_for_evidence": false,
+      "checked_field": "flagged_adversarial",
+      "expected_value": true,
+      "observed_value": true,
+      "quarantined": true,
+      "source_path": "results/experiment_7228_v636_belief_cold_audit.json",
+      "source_sha256": "sha256:9ba66b80dcd221f34bd452737c4ac151b0e4c11cf16b73ccfe407aaaa17988e3",
+      "verifier_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7228_v636_belief_cold_audit.json",
+        "exp_id": 7228,
+        "flag_count": 3,
+        "flags": [
+          {
+            "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='cpu_exact_solver_or_simulator', live_evidence_count=4, negative_evidence_count=5. The duration check fails closed until the invocation scope agrees.",
+            "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+            "severity": "critical"
+          },
+          {
+            "detail": "duration_s=24.183157029096037 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "inference_substrate_class=cpu_exact_solver_or_simulator says no model was loaded, but typed invocation evidence says one ran (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_null: belief audit completed and producer learning value was null",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    },
+    {
+      "accepted_for_evidence": false,
+      "checked_field": "flagged_adversarial",
+      "expected_value": true,
+      "observed_value": true,
+      "quarantined": true,
+      "source_path": "results/experiment_7230_v636_native_belief.json",
+      "source_sha256": "sha256:dd49b1bb5a61898ee3d5a7f177b5ef1ec1e2c4c42c21e88ed6ec2e40777cbe03",
+      "verifier_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7230_v636_native_belief.json",
+        "exp_id": 7230,
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "verdict_class=positive but verifier_is_oracle=True: a circular (verifier==oracle) result must declare circular_positive so the circularity travels WITH the claim into capstones and headline aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness Discipline'.",
+            "kind": "VERDICT_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete: native packed belief matched the Python reference and restored across ",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    },
+    {
+      "accepted_for_evidence": false,
+      "checked_field": "flagged_adversarial",
+      "expected_value": true,
+      "observed_value": true,
+      "quarantined": true,
+      "source_path": "results/experiment_7232_v636_capstone.json",
+      "source_sha256": "sha256:fd2dea36a4e999f2d198680fba8d2f1b6ac71c1e5794286fbb70c54768c3ebf4",
+      "verifier_report": {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7232_v636_capstone.json",
+        "exp_id": "exp7232-capstone",
+        "flag_count": 1,
+        "flags": [
+          {
+            "detail": "inference_substrate_class=aggregation says no model was loaded, but typed invocation evidence says one ran (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "blocked_external: V636 matrix is complete; held-out source fidelity remains bloc",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    }
+  ],
+  "isolated_fixture_reports": [
+    {
+      "case": "aggregation",
+      "critical_flag_count": 0,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [],
+        "duration_s": 0.1,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_class": "aggregation",
+        "model_invoked": false,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [],
+      "verifier_report": {
+        "artifact": "isolated:aggregation",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    },
+    {
+      "case": "bounded_generation",
+      "critical_flag_count": 0,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [
+          {
+            "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+            "quantization": "Q4_K_M"
+          }
+        ],
+        "duration_s": 10.5,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "inference_substrate_class": "model_bounded_generation",
+        "model_invoked": true,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [],
+      "verifier_report": {
+        "artifact": "isolated:bounded_generation",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    },
+    {
+      "case": "full_generation",
+      "critical_flag_count": 0,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [
+          {
+            "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+            "quantization": "Q4_K_M"
+          }
+        ],
+        "duration_s": 60.5,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "live_llm_inference",
+        "inference_substrate_class": "model_full_generation",
+        "model_invoked": true,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [],
+      "verifier_report": {
+        "artifact": "isolated:full_generation",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    },
+    {
+      "case": "load_only",
+      "critical_flag_count": 0,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [
+          {
+            "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+            "quantization": "Q4_K_M"
+          }
+        ],
+        "duration_s": 2.5,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "live_llm_embedding_extraction",
+        "inference_substrate_class": "model_load_no_generation",
+        "model_invoked": true,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [],
+      "verifier_report": {
+        "artifact": "isolated:load_only",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    },
+    {
+      "case": "aggregation_with_live_claim",
+      "critical_flag_count": 3,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [
+          {
+            "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+            "quantization": "Q4_K_M"
+          }
+        ],
+        "duration_s": 0.1,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_class": "aggregation",
+        "model_invoked": true,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [
+        "INFERENCE_PROVENANCE_CONTRADICTION",
+        "DURATION_TOO_SHORT",
+        "SUBSTRATE_CLASS_MISMATCH"
+      ],
+      "verifier_report": {
+        "artifact": "isolated:aggregation_with_live_claim",
+        "exp_id": null,
+        "flag_count": 3,
+        "flags": [
+          {
+            "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='aggregation_from_upstream_artifacts', live_evidence_count=1, negative_evidence_count=0. The duration check fails closed until the invocation scope agrees.",
+            "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+            "severity": "critical"
+          },
+          {
+            "detail": "duration_s=0.1 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "inference_substrate_class=aggregation says no model was loaded, but typed invocation evidence says one ran (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    },
+    {
+      "case": "bounded_with_negative_claim",
+      "critical_flag_count": 2,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [],
+        "duration_s": 10.5,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "live_llm_inference_local_gguf_sota",
+        "inference_substrate_class": "model_bounded_generation",
+        "model_invoked": false,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [
+        "INFERENCE_PROVENANCE_CONTRADICTION",
+        "SUBSTRATE_CLASS_MISMATCH"
+      ],
+      "verifier_report": {
+        "artifact": "isolated:bounded_with_negative_claim",
+        "exp_id": null,
+        "flag_count": 3,
+        "flags": [
+          {
+            "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference_local_gguf_sota', live_evidence_count=0, negative_evidence_count=1. The duration check fails closed until the invocation scope agrees.",
+            "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+            "severity": "critical"
+          },
+          {
+            "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    },
+    {
+      "case": "nested_expected_value_scope",
+      "critical_flag_count": 3,
+      "current_task_fixture": false,
+      "fixture": {
+        "MODEL_SPECS": [],
+        "duration_s": 0.1,
+        "execution_venue": "host",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "inference_substrate_class": "aggregation",
+        "model_invoked": false,
+        "preconditions_checked": [
+          {
+            "available": true,
+            "resource": "synthetic_fixture"
+          },
+          {
+            "check": "historical invocation shape",
+            "expected_value": {
+              "model_invoked": true
+            },
+            "observed_value": {
+              "model_invoked": true
+            }
+          }
+        ],
+        "random_seed": 723320260912,
+        "reproducibility_checksum": "sha256:synthetic-classifier-fixture",
+        "run_date": "20260912",
+        "schema": "carnot.exp7233.classifier_fixture.v1",
+        "status": "complete",
+        "verdict_class": "positive",
+        "verifier_is_oracle": false
+      },
+      "flag_kinds": [
+        "INFERENCE_PROVENANCE_CONTRADICTION",
+        "DURATION_TOO_SHORT",
+        "SUBSTRATE_CLASS_MISMATCH"
+      ],
+      "verifier_report": {
+        "artifact": "isolated:nested_expected_value_scope",
+        "exp_id": null,
+        "flag_count": 3,
+        "flags": [
+          {
+            "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='aggregation_from_upstream_artifacts', live_evidence_count=2, negative_evidence_count=1. The duration check fails closed until the invocation scope agrees.",
+            "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+            "severity": "critical"
+          },
+          {
+            "detail": "duration_s=0.1 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "inference_substrate_class=aggregation says no model was loaded, but typed invocation evidence says one ran (['model_invoked']). Contradictory.",
+            "kind": "SUBSTRATE_CLASS_MISMATCH",
+            "severity": "critical"
+          }
+        ],
+        "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+        "honest_verdict": "complete_positive_classifier_fixture",
+        "loaded": true,
+        "max_severity": 2,
+        "title": ""
+      }
+    }
+  ],
+  "run_date": "20260912",
+  "schema": "carnot.exp7233.classifier_receipts.v1",
+  "unresolved_classifier_problem": {
+    "action": "Record the limitation here; do not change the shared classifier in this task.",
+    "case": "nested_expected_value_scope",
+    "finding": "Typed model_invoked values inside generic expected_value and observed_value mappings are attributed to the current task.",
+    "impact": "Aggregation and CPU audit artifacts can receive false invocation contradictions unless historical and synthetic receipts stay in a recognized sidecar scope.",
+    "status": "unresolved"
+  }
+}

@@ -1,0 +1,2814 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "contract_exact",
+      "expected_value": 13,
+      "observed_value": 13,
+      "passed": true
+    },
+    {
+      "criterion": "gate_replays",
+      "expected_value": 20,
+      "observed_value": 20,
+      "passed": true
+    },
+    {
+      "criterion": "classifier_sidecar",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "criterion": "source_rechecks",
+      "expected_value": 3,
+      "observed_value": 3,
+      "passed": true
+    },
+    {
+      "criterion": "receipt_is_advisory",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true
+    },
+    {
+      "criterion": "raw_contract_hashes",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "criterion": "source_hashes",
+      "expected_value": "all present",
+      "observed_value": "all present",
+      "passed": true
+    },
+    {
+      "criterion": "validation_receipts",
+      "expected_value": [
+        "roadmap_schema",
+        "exclusion_manifest",
+        "prior_failure",
+        "prompt_paths",
+        "gate_declarations",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "artifact",
+        "adversarial",
+        "row_consistency"
+      ],
+      "observed_value": [
+        "roadmap_schema",
+        "exclusion_manifest",
+        "prior_failure",
+        "prompt_paths",
+        "gate_declarations",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "artifact",
+        "adversarial",
+        "row_consistency"
+      ],
+      "passed": false
+    }
+  ],
+  "activation_files_modified": false,
+  "archive_lag_row": {
+    "archive_latest_milestone_at_execution": "2026.09.636",
+    "execution_archive_lag_observed": false,
+    "planning_archive_lag_observed": true,
+    "planning_refresh_archive_latest_milestone": "2026.09.635",
+    "research_complete_rewritten": false,
+    "v636_terminal_artifacts_observed": true
+  },
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7233_v637_contract.json",
+  "classifier_receipt_path": "results/raw/experiment_7233/classifier-receipts.json",
+  "classifier_receipt_sha256": "sha256:1ddf4aac14bc760c015d2714fb4c3b526f3e0dc53447016c2ef9c61774c27e46",
+  "classifier_receipt_summary": {
+    "contradictory_fixtures_detected": 3,
+    "fixture_count": 7,
+    "historical_source_count": 5,
+    "quarantined_sources_rejected": 4,
+    "unresolved_problem_recorded": true,
+    "valid_fixture_critical_flags": 0
+  },
+  "completed_at_utc": "2026-09-12T05:59:47.999929+00:00",
+  "contract_authorities": [
+    "openspec/change-proposals/research-roadmap-v637.md",
+    "research-roadmap.yaml"
+  ],
+  "contract_rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7233_v637_contract.json",
+        "gates": [],
+        "id": "exp7233-contract",
+        "order": 1,
+        "title": "V637 source and execution contract receipt"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7233-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7233_v637_contract.json",
+        "gates": [],
+        "id": "exp7233-contract",
+        "order": 1,
+        "title": "V637 source and execution contract receipt"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+        "gates": [],
+        "id": "exp7234-arc-scored-dryrun",
+        "order": 2,
+        "title": "Local scored-stack ARC selfparse dry run"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7234-arc-scored-dryrun",
+      "yaml": {
+        "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+        "gates": [],
+        "id": "exp7234-arc-scored-dryrun",
+        "order": 2,
+        "title": "Local scored-stack ARC selfparse dry run"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+        "gates": [],
+        "id": "exp7235-arc-path-audit",
+        "order": 3,
+        "title": "Independent ARC dry-run reachability and authority audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7235-arc-path-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+        "gates": [],
+        "id": "exp7235-arc-path-audit",
+        "order": 3,
+        "title": "Independent ARC dry-run reachability and authority audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+        "gates": [],
+        "id": "exp7236-mention-fixture",
+        "order": 4,
+        "title": "Public mention compiler and sealed semantic fixture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7236-mention-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+        "gates": [],
+        "id": "exp7236-mention-fixture",
+        "order": 4,
+        "title": "Public mention compiler and sealed semantic fixture"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7237_v637_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7237-mention-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 mention-grounding canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7237-mention-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7237_v637_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7237-mention-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 mention-grounding canary"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7238_v637_mention_capture.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7237-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7238-mention-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention-grounding capture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7238-mention-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7238_v637_mention_capture.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7237-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7238-mention-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention-grounding capture"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+        "gates": [],
+        "id": "exp7239-semantic-audit",
+        "order": 7,
+        "title": "Independent mention fidelity and verification-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7239-semantic-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+        "gates": [],
+        "id": "exp7239-semantic-audit",
+        "order": 7,
+        "title": "Independent mention fidelity and verification-value audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+        "gates": [],
+        "id": "exp7240-recurrence-fixture",
+        "order": 8,
+        "title": "Feedback-validated archive memory prototype and recurrence stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7240-recurrence-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+        "gates": [],
+        "id": "exp7240-recurrence-fixture",
+        "order": 8,
+        "title": "Feedback-validated archive memory prototype and recurrence stream"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7241-recurrence-learning",
+        "order": 9,
+        "title": "Prospective continuous learning with validated archive reuse"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7241-recurrence-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7241-recurrence-learning",
+        "order": 9,
+        "title": "Prospective continuous learning with validated archive reuse"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+        "gates": [],
+        "id": "exp7242-recurrence-audit",
+        "order": 10,
+        "title": "Cold recurrence-memory causality and safety audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7242-recurrence-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+        "gates": [],
+        "id": "exp7242-recurrence-audit",
+        "order": 10,
+        "title": "Cold recurrence-memory causality and safety audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7243_v637_native_memory.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7243-native-memory",
+        "order": 11,
+        "title": "Native archive-memory parity and complete cost measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7243-native-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7243_v637_native_memory.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7243-native-memory",
+        "order": 11,
+        "title": "Native archive-memory parity and complete cost measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7244_v637_board_disposition.json",
+        "gates": [],
+        "id": "exp7244-board-disposition",
+        "order": 12,
+        "title": "GateMate changed-state review and graduated-board disposition"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7244-board-disposition",
+      "yaml": {
+        "deliverable": "results/experiment_7244_v637_board_disposition.json",
+        "gates": [],
+        "id": "exp7244-board-disposition",
+        "order": 12,
+        "title": "GateMate changed-state review and graduated-board disposition"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7245_v637_capstone.json",
+        "gates": [],
+        "id": "exp7245-capstone",
+        "order": 13,
+        "title": "V637 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7245-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7245_v637_capstone.json",
+        "gates": [],
+        "id": "exp7245-capstone",
+        "order": 13,
+        "title": "V637 independent evidence matrix and branch decisions"
+      }
+    }
+  ],
+  "duration_s": 66.028715,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "expected_id_order": [
+    "exp7233-contract",
+    "exp7234-arc-scored-dryrun",
+    "exp7235-arc-path-audit",
+    "exp7236-mention-fixture",
+    "exp7237-mention-canary",
+    "exp7238-mention-capture",
+    "exp7239-semantic-audit",
+    "exp7240-recurrence-fixture",
+    "exp7241-recurrence-learning",
+    "exp7242-recurrence-audit",
+    "exp7243-native-memory",
+    "exp7244-board-disposition",
+    "exp7245-capstone"
+  ],
+  "expected_task_count": 13,
+  "experiment_id": "exp7233-contract",
+  "field_principles": {
+    "MODEL_SPECS": "Models actually invoked; [] for tasks with no LLM.",
+    "acceptance_gate_results": "Preserve each frozen criterion, actual value and pass/fail independently of task completion.",
+    "activation_files_modified": "This field keeps one V637 contract fact auditable.",
+    "archive_lag_row": "This field keeps one V637 contract fact auditable.",
+    "checkpoint_path": "This field keeps one V637 contract fact auditable.",
+    "classifier_receipt_path": "Hashed sidecar preserves injected negative fixtures outside current invocation fields.",
+    "classifier_receipt_sha256": "This field keeps one V637 contract fact auditable.",
+    "classifier_receipt_summary": "This field keeps one V637 contract fact auditable.",
+    "completed_at_utc": "This field keeps one V637 contract fact auditable.",
+    "contract_authorities": "This field keeps one V637 contract fact auditable.",
+    "contract_rows": "Independently parsed task order, title, deliverable and exact structured gates.",
+    "duration_s": "Measured monotonic elapsed work; record phase spans separately.",
+    "execution_host": "Actual hostname, distinct from execution_venue.",
+    "execution_venue": "Top-level orchestration is host; board rows name kv260, gatemate or polarfire.",
+    "expected_id_order": "This field keeps one V637 contract fact auditable.",
+    "expected_task_count": "This field keeps one V637 contract fact auditable.",
+    "experiment_id": "This field keeps one V637 contract fact auditable.",
+    "field_principles": "Keep ordinary values at top level; put their explanations in this map.",
+    "gate_check_summary": "Every blocked_* verdict names check, upstream, artifact_field, expected and observed value.",
+    "gate_producer_rows": "This field keeps one V637 contract fact auditable.",
+    "gate_replay_rows": "Real evaluate_gates outcomes for positive and negative temporary cases.",
+    "honest_verdict": "Completed findings start complete_ or complete:. External absence starts blocked_. Failed acceptance forbids positive.",
+    "inference_substrate": "Use the recognized literal for the operation actually executed.",
+    "inference_substrate_class": "Actual class determines the duration floor; never pad duration or relabel to pass.",
+    "markdown_id_order": "This field keeps one V637 contract fact auditable.",
+    "markdown_milestone": "This field keeps one V637 contract fact auditable.",
+    "markdown_task_rows": "This field keeps one V637 contract fact auditable.",
+    "milestone": "This field keeps one V637 contract fact auditable.",
+    "model_generation_count": "This field keeps one V637 contract fact auditable.",
+    "model_invocation_count": "This field keeps one V637 contract fact auditable.",
+    "model_invoked": "Current task execution only; historical sources and injected fixtures are separate.",
+    "model_load_count": "This field keeps one V637 contract fact auditable.",
+    "observed_id_order": "This field keeps one V637 contract fact auditable.",
+    "observed_task_count": "This field keeps one V637 contract fact auditable.",
+    "phase_spans": "This field keeps one V637 contract fact auditable.",
+    "preconditions_checked": "Observed paths, resources, model identity and upstream checks before expensive work.",
+    "prior_failure_rows": "This field keeps one V637 contract fact auditable.",
+    "publication_or_submission_performed": "This field keeps one V637 contract fact auditable.",
+    "random_seed": "Freeze seeds and schedules before observing evaluation labels.",
+    "raw_source_rows": "This field keeps one V637 contract fact auditable.",
+    "receipt_dependency_rows": "This field keeps one V637 contract fact auditable.",
+    "reproducibility_checksum": "Hash the exact settings, inputs and raw rows supporting the result.",
+    "rows": "Every comparison retains one row per independent unit and arm, with errors and abstentions.",
+    "run_date": "Use 20260912; retain actual UTC start and end timestamps.",
+    "sample_size_budget": "Predeclared independent units, attempted/completed/censored units, and stopping rule.",
+    "schema": "Version the artifact and bind experiment_id and milestone to this task.",
+    "scientific_value_claimed": "This field keeps one V637 contract fact auditable.",
+    "source_artifact_hashes": "Hash source code, public inputs, private evaluator inputs and raw output files.",
+    "source_contract_complete_score": "One only after all thirteen contract records and validation receipts are complete.",
+    "source_method_rows": "Primary URL, retrieved date, version and adoption limit.",
+    "started_at_utc": "This field keeps one V637 contract fact auditable.",
+    "status": "Terminal complete or blocked only; unfinished work uses a separate checkpoint path.",
+    "validation_command_rows": "This field keeps one V637 contract fact auditable.",
+    "validation_required": "This field keeps one V637 contract fact auditable.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. External incompleteness is blocked.",
+    "verifier_is_oracle": "True when the verification authority also defines correctness; separate code is insufficient independence.",
+    "yaml_authority_path": "This field keeps one V637 contract fact auditable.",
+    "yaml_milestone": "This field keeps one V637 contract fact auditable.",
+    "yaml_task_rows": "This field keeps one V637 contract fact auditable."
+  },
+  "gate_check_summary": {
+    "artifact_field": "validation_receipts",
+    "expected_value": [
+      "roadmap_schema",
+      "exclusion_manifest",
+      "prior_failure",
+      "prompt_paths",
+      "gate_declarations",
+      "focused_tests",
+      "focused_coverage",
+      "ruff_check",
+      "ruff_format",
+      "mypy",
+      "scoped_spec_coverage",
+      "artifact",
+      "adversarial",
+      "row_consistency"
+    ],
+    "failed_check": "acceptance:validation_receipts",
+    "observed_value": [
+      "roadmap_schema",
+      "exclusion_manifest",
+      "prior_failure",
+      "prompt_paths",
+      "gate_declarations",
+      "focused_tests",
+      "focused_coverage",
+      "ruff_check",
+      "ruff_format",
+      "mypy",
+      "scoped_spec_coverage",
+      "artifact",
+      "adversarial",
+      "row_consistency"
+    ],
+    "passed": false,
+    "upstream": null
+  },
+  "gate_producer_rows": [
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7237-mention-canary",
+      "field": "mention_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7236-mention-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7238-mention-capture",
+      "field": "mention_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7236-mention-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7238-mention-capture",
+      "field": "mention_canary_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7237-mention-canary",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7241-recurrence-learning",
+      "field": "recurrence_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7240-recurrence-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7243-native-memory",
+      "field": "recurrence_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7240-recurrence-fixture",
+      "value": 1
+    }
+  ],
+  "gate_replay_rows": [
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "passing",
+      "consumer": "exp7237-mention-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_0_passing/experiment_7236_gate_fixture.json",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "failed",
+      "consumer": "exp7237-mention-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_0_failed/experiment_7236_gate_fixture.json",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7237-mention-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_0_absent_field/experiment_7236_gate_fixture.json",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'mention_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7237-mention-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7236-mention-fixture'",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "passing",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_1_passing/experiment_7236_gate_fixture.json",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "failed",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_1_failed/experiment_7236_gate_fixture.json",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_1_absent_field/experiment_7236_gate_fixture.json",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'mention_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_fixture_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7236-mention-fixture'",
+      "research_result": false,
+      "upstream": "exp7236-mention-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "passing",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_2_passing/experiment_7237_gate_fixture.json",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7237-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "failed",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_2_failed/experiment_7237_gate_fixture.json",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7237-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_2_absent_field/experiment_7237_gate_fixture.json",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'mention_canary_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7237-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7238-mention-capture",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7237-mention-canary'",
+      "research_result": false,
+      "upstream": "exp7237-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "passing",
+      "consumer": "exp7241-recurrence-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_3_passing/experiment_7240_gate_fixture.json",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "failed",
+      "consumer": "exp7241-recurrence-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_3_failed/experiment_7240_gate_fixture.json",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7241-recurrence-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_3_absent_field/experiment_7240_gate_fixture.json",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'recurrence_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7241-recurrence-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7240-recurrence-fixture'",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "passing",
+      "consumer": "exp7243-native-memory",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_4_passing/experiment_7240_gate_fixture.json",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "failed",
+      "consumer": "exp7243-native-memory",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_4_failed/experiment_7240_gate_fixture.json",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7243-native-memory",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7233-gates-pfdg4x6a/edge_4_absent_field/experiment_7240_gate_fixture.json",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'recurrence_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "recurrence_fixture_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7243-native-memory",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7240-recurrence-fixture'",
+      "research_result": false,
+      "upstream": "exp7240-recurrence-fixture",
+      "validation_input": true
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v637_source_contract_incomplete_or_mismatched",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "markdown_id_order": [
+    "exp7233-contract",
+    "exp7234-arc-scored-dryrun",
+    "exp7235-arc-path-audit",
+    "exp7236-mention-fixture",
+    "exp7237-mention-canary",
+    "exp7238-mention-capture",
+    "exp7239-semantic-audit",
+    "exp7240-recurrence-fixture",
+    "exp7241-recurrence-learning",
+    "exp7242-recurrence-audit",
+    "exp7243-native-memory",
+    "exp7244-board-disposition",
+    "exp7245-capstone"
+  ],
+  "markdown_milestone": "2026.09.637",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7233_v637_contract.json",
+      "gates": [],
+      "id": "exp7233-contract",
+      "order": 1,
+      "title": "V637 source and execution contract receipt"
+    },
+    {
+      "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+      "gates": [],
+      "id": "exp7234-arc-scored-dryrun",
+      "order": 2,
+      "title": "Local scored-stack ARC selfparse dry run"
+    },
+    {
+      "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+      "gates": [],
+      "id": "exp7235-arc-path-audit",
+      "order": 3,
+      "title": "Independent ARC dry-run reachability and authority audit"
+    },
+    {
+      "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+      "gates": [],
+      "id": "exp7236-mention-fixture",
+      "order": 4,
+      "title": "Public mention compiler and sealed semantic fixture"
+    },
+    {
+      "deliverable": "results/experiment_7237_v637_mention_canary.json",
+      "gates": [
+        {
+          "artifact_field": "mention_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7236-mention-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7237-mention-canary",
+      "order": 5,
+      "title": "Bounded Qwen3.8 mention-grounding canary"
+    },
+    {
+      "deliverable": "results/experiment_7238_v637_mention_capture.json",
+      "gates": [
+        {
+          "artifact_field": "mention_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7236-mention-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "mention_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7237-mention-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7238-mention-capture",
+      "order": 6,
+      "title": "Qwen3.8 held-out mention-grounding capture"
+    },
+    {
+      "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+      "gates": [],
+      "id": "exp7239-semantic-audit",
+      "order": 7,
+      "title": "Independent mention fidelity and verification-value audit"
+    },
+    {
+      "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+      "gates": [],
+      "id": "exp7240-recurrence-fixture",
+      "order": 8,
+      "title": "Feedback-validated archive memory prototype and recurrence stream"
+    },
+    {
+      "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+      "gates": [
+        {
+          "artifact_field": "recurrence_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7240-recurrence-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7241-recurrence-learning",
+      "order": 9,
+      "title": "Prospective continuous learning with validated archive reuse"
+    },
+    {
+      "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+      "gates": [],
+      "id": "exp7242-recurrence-audit",
+      "order": 10,
+      "title": "Cold recurrence-memory causality and safety audit"
+    },
+    {
+      "deliverable": "results/experiment_7243_v637_native_memory.json",
+      "gates": [
+        {
+          "artifact_field": "recurrence_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7240-recurrence-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7243-native-memory",
+      "order": 11,
+      "title": "Native archive-memory parity and complete cost measurement"
+    },
+    {
+      "deliverable": "results/experiment_7244_v637_board_disposition.json",
+      "gates": [],
+      "id": "exp7244-board-disposition",
+      "order": 12,
+      "title": "GateMate changed-state review and graduated-board disposition"
+    },
+    {
+      "deliverable": "results/experiment_7245_v637_capstone.json",
+      "gates": [],
+      "id": "exp7245-capstone",
+      "order": 13,
+      "title": "V637 independent evidence matrix and branch decisions"
+    }
+  ],
+  "milestone": "2026.09.637",
+  "model_generation_count": 0,
+  "model_invocation_count": 0,
+  "model_invoked": false,
+  "model_load_count": 0,
+  "observed_id_order": [
+    "exp7233-contract",
+    "exp7234-arc-scored-dryrun",
+    "exp7235-arc-path-audit",
+    "exp7236-mention-fixture",
+    "exp7237-mention-canary",
+    "exp7238-mention-capture",
+    "exp7239-semantic-audit",
+    "exp7240-recurrence-fixture",
+    "exp7241-recurrence-learning",
+    "exp7242-recurrence-audit",
+    "exp7243-native-memory",
+    "exp7244-board-disposition",
+    "exp7245-capstone"
+  ],
+  "observed_task_count": 13,
+  "phase_spans": [
+    {
+      "detail": "preconditions",
+      "duration_s": 3.485528,
+      "phase": 0
+    },
+    {
+      "detail": "progress and checkpoint policy",
+      "duration_s": 2e-06,
+      "phase": 1
+    },
+    {
+      "detail": "no-model aggregation declaration",
+      "duration_s": 2e-06,
+      "phase": 2
+    },
+    {
+      "detail": "contract freeze and independent parse",
+      "duration_s": 0.001694,
+      "phase": 3
+    },
+    {
+      "detail": "schema and gate replay",
+      "duration_s": 0.001926,
+      "phase": 4
+    },
+    {
+      "detail": "classifier sidecar",
+      "duration_s": 0.473354,
+      "phase": 5
+    },
+    {
+      "detail": "primary source recheck",
+      "duration_s": 0.248555,
+      "phase": 6
+    },
+    {
+      "detail": "validation subprocess receipts stored",
+      "duration_s": 61.804934,
+      "phase": 7
+    },
+    {
+      "detail": "terminal validation before atomic write",
+      "duration_s": 0.000183,
+      "phase": 8
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap.yaml",
+      "expected_value": "2026.09.637",
+      "field": "milestone",
+      "observed_value": "2026.09.637",
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": false,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap-next.yaml",
+      "expected_value": "2026.09.637",
+      "field": "milestone",
+      "observed_value": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "path": "research-roadmap-next.yaml",
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "yaml_authority",
+      "expected_value": "one roadmap with milestone 2026.09.637",
+      "field": "milestone",
+      "observed_value": "research-roadmap.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml|research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 1165,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 311988,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 2396,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 28560,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 3407291,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-complete.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 5022596,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 56173,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8197,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-v637.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 5283,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v637.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-v637.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 4102313,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 9371,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/conductor_gates.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 29979,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/conductor_gates.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/conductor_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 10078,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8053,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 29604,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/harness_consumer_checks.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 11765,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 327321,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 18650,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/check_spec_coverage.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 6306,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7219_v636_source_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 53938,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7219_v636_source_contract.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7219_v636_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7219_v636_source_contract.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 119476,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7219_v636_source_contract.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7219_v636_source_contract.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7223_v636_span_canary.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 260945,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7223_v636_span_canary.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7223_v636_span_canary.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7228_v636_belief_cold_audit.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 373446,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7228_v636_belief_cold_audit.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7228_v636_belief_cold_audit.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7230_v636_native_belief.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 3143496,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7230_v636_native_belief.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7230_v636_native_belief.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7232_v636_capstone.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 221502,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7232_v636_capstone.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7232_v636_capstone.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7233_v637_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 63503,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7233_v637_contract.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7233_v637_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/experiments/experiment_7233_v637_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 194,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7233_v637_contract.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7233_v637_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:tests/python/test_experiment_7233_v637_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 19632,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7233",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7233",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "planning_source_table",
+      "expected_value": "dated V637 refresh with all three selected primary records",
+      "field": "V637-PLANNER-REFRESH-20260912",
+      "observed_value": "available",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "python_tool",
+      "expected_value": "executable_file",
+      "field": "tool",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "result_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "raw_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7233",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7233"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "checkpoint_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "execution_metadata",
+      "expected_value": {
+        "execution_venue": [
+          "gatemate",
+          "host",
+          "kv260",
+          "polarfire"
+        ],
+        "hostname": "nonempty"
+      },
+      "field": "execution_venue|execution_host",
+      "observed_value": {
+        "execution_host": "icbfl1",
+        "execution_venue": "host"
+      },
+      "path": "host",
+      "upstream": "local_execution_environment"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "task_upstream_gates",
+      "expected_value": [],
+      "field": "gated_on",
+      "observed_value": [],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "upstream": "exp7233-contract"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_hashes",
+      "expected_value": "sha256_for_every_required_input",
+      "field": "sha256",
+      "observed_value": {},
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "required_imports",
+      "expected_value": "all imports loaded",
+      "field": "imports",
+      "observed_value": "all imports loaded",
+      "path": "python_runtime",
+      "upstream": "yaml|adversarial_verify|conductor_gates|roadmap_schema"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "historical_authentication:results/experiment_7219_v636_source_contract.json",
+      "expected_value": 1,
+      "field": "source_contract_complete_score",
+      "observed_value": {
+        "accepted_for_evidence": true,
+        "artifact_field": "source_contract_complete_score",
+        "quarantined": false,
+        "sha256": "sha256:a9f6b2cf9586b83f29c2129789abf9a3296411fd69be942f0533a22aae32c8b7",
+        "value_matches": true
+      },
+      "path": "results/experiment_7219_v636_source_contract.json",
+      "upstream": "results/experiment_7219_v636_source_contract.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "historical_authentication:results/experiment_7223_v636_span_canary.json",
+      "expected_value": true,
+      "field": "flagged_adversarial",
+      "observed_value": {
+        "accepted_for_evidence": false,
+        "artifact_field": "flagged_adversarial",
+        "quarantined": true,
+        "sha256": "sha256:4876bced7c4595087a6dfa3de9cf5b8cca443b4396344059458c6290f1b6b5fb",
+        "value_matches": true
+      },
+      "path": "results/experiment_7223_v636_span_canary.json",
+      "upstream": "results/experiment_7223_v636_span_canary.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "historical_authentication:results/experiment_7228_v636_belief_cold_audit.json",
+      "expected_value": true,
+      "field": "flagged_adversarial",
+      "observed_value": {
+        "accepted_for_evidence": false,
+        "artifact_field": "flagged_adversarial",
+        "quarantined": true,
+        "sha256": "sha256:9ba66b80dcd221f34bd452737c4ac151b0e4c11cf16b73ccfe407aaaa17988e3",
+        "value_matches": true
+      },
+      "path": "results/experiment_7228_v636_belief_cold_audit.json",
+      "upstream": "results/experiment_7228_v636_belief_cold_audit.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "historical_authentication:results/experiment_7230_v636_native_belief.json",
+      "expected_value": true,
+      "field": "flagged_adversarial",
+      "observed_value": {
+        "accepted_for_evidence": false,
+        "artifact_field": "flagged_adversarial",
+        "quarantined": true,
+        "sha256": "sha256:dd49b1bb5a61898ee3d5a7f177b5ef1ec1e2c4c42c21e88ed6ec2e40777cbe03",
+        "value_matches": true
+      },
+      "path": "results/experiment_7230_v636_native_belief.json",
+      "upstream": "results/experiment_7230_v636_native_belief.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "historical_authentication:results/experiment_7232_v636_capstone.json",
+      "expected_value": true,
+      "field": "flagged_adversarial",
+      "observed_value": {
+        "accepted_for_evidence": false,
+        "artifact_field": "flagged_adversarial",
+        "quarantined": true,
+        "sha256": "sha256:fd2dea36a4e999f2d198680fba8d2f1b6ac71c1e5794286fbb70c54768c3ebf4",
+        "value_matches": true
+      },
+      "path": "results/experiment_7232_v636_capstone.json",
+      "upstream": "results/experiment_7232_v636_capstone.json"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7234-arc-scored-dryrun"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7236-mention-fixture"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7237-mention-canary"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7238-mention-capture"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7239-semantic-audit"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7240-recurrence-fixture"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7241-recurrence-learning"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7242-recurrence-audit"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7243-native-memory"
+    },
+    {
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "mapping": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "passed": true,
+      "prior_index": 0,
+      "task_id": "exp7245-capstone"
+    }
+  ],
+  "publication_or_submission_performed": false,
+  "random_seed": 723320260912,
+  "raw_source_rows": [
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7233/research-roadmap-v637.md",
+      "raw_sha256": "sha256:539f6fd14eb459eee317393e820768712cc5a527ae2e4cb03cc2a79658d24059",
+      "source_path": "openspec/change-proposals/research-roadmap-v637.md",
+      "source_sha256": "sha256:539f6fd14eb459eee317393e820768712cc5a527ae2e4cb03cc2a79658d24059",
+      "source_type": "markdown"
+    },
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7233/selected-roadmap.yaml",
+      "raw_sha256": "sha256:5983775ba9b1ba80e8a4f0f70355cda6b37e540c73da41d7a3cd394c08ef7218",
+      "source_path": "research-roadmap.yaml",
+      "source_sha256": "sha256:5983775ba9b1ba80e8a4f0f70355cda6b37e540c73da41d7a3cd394c08ef7218",
+      "source_type": "yaml"
+    }
+  ],
+  "receipt_dependency_rows": [
+    {
+      "expected_consumers": [],
+      "observed_consumers": [],
+      "passed": true,
+      "upstream": "exp7233-contract"
+    }
+  ],
+  "reproducibility_checksum": "sha256:dc83d12a88e57726588202d295192e165099fe4f05e9ec7d8ed9c9f7b50e5681",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7233_v637_contract.json",
+        "gates": [],
+        "id": "exp7233-contract",
+        "order": 1,
+        "title": "V637 source and execution contract receipt"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7233-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7233_v637_contract.json",
+        "gates": [],
+        "id": "exp7233-contract",
+        "order": 1,
+        "title": "V637 source and execution contract receipt"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+        "gates": [],
+        "id": "exp7234-arc-scored-dryrun",
+        "order": 2,
+        "title": "Local scored-stack ARC selfparse dry run"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7234-arc-scored-dryrun",
+      "yaml": {
+        "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+        "gates": [],
+        "id": "exp7234-arc-scored-dryrun",
+        "order": 2,
+        "title": "Local scored-stack ARC selfparse dry run"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+        "gates": [],
+        "id": "exp7235-arc-path-audit",
+        "order": 3,
+        "title": "Independent ARC dry-run reachability and authority audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7235-arc-path-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+        "gates": [],
+        "id": "exp7235-arc-path-audit",
+        "order": 3,
+        "title": "Independent ARC dry-run reachability and authority audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+        "gates": [],
+        "id": "exp7236-mention-fixture",
+        "order": 4,
+        "title": "Public mention compiler and sealed semantic fixture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7236-mention-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+        "gates": [],
+        "id": "exp7236-mention-fixture",
+        "order": 4,
+        "title": "Public mention compiler and sealed semantic fixture"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7237_v637_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7237-mention-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 mention-grounding canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7237-mention-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7237_v637_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7237-mention-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 mention-grounding canary"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7238_v637_mention_capture.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7237-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7238-mention-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention-grounding capture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7238-mention-capture",
+      "yaml": {
+        "deliverable": "results/experiment_7238_v637_mention_capture.json",
+        "gates": [
+          {
+            "artifact_field": "mention_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7236-mention-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7237-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7238-mention-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention-grounding capture"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+        "gates": [],
+        "id": "exp7239-semantic-audit",
+        "order": 7,
+        "title": "Independent mention fidelity and verification-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7239-semantic-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+        "gates": [],
+        "id": "exp7239-semantic-audit",
+        "order": 7,
+        "title": "Independent mention fidelity and verification-value audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+        "gates": [],
+        "id": "exp7240-recurrence-fixture",
+        "order": 8,
+        "title": "Feedback-validated archive memory prototype and recurrence stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7240-recurrence-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+        "gates": [],
+        "id": "exp7240-recurrence-fixture",
+        "order": 8,
+        "title": "Feedback-validated archive memory prototype and recurrence stream"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7241-recurrence-learning",
+        "order": 9,
+        "title": "Prospective continuous learning with validated archive reuse"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7241-recurrence-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7241-recurrence-learning",
+        "order": 9,
+        "title": "Prospective continuous learning with validated archive reuse"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+        "gates": [],
+        "id": "exp7242-recurrence-audit",
+        "order": 10,
+        "title": "Cold recurrence-memory causality and safety audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7242-recurrence-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+        "gates": [],
+        "id": "exp7242-recurrence-audit",
+        "order": 10,
+        "title": "Cold recurrence-memory causality and safety audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7243_v637_native_memory.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7243-native-memory",
+        "order": 11,
+        "title": "Native archive-memory parity and complete cost measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7243-native-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7243_v637_native_memory.json",
+        "gates": [
+          {
+            "artifact_field": "recurrence_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7240-recurrence-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7243-native-memory",
+        "order": 11,
+        "title": "Native archive-memory parity and complete cost measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7244_v637_board_disposition.json",
+        "gates": [],
+        "id": "exp7244-board-disposition",
+        "order": 12,
+        "title": "GateMate changed-state review and graduated-board disposition"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7244-board-disposition",
+      "yaml": {
+        "deliverable": "results/experiment_7244_v637_board_disposition.json",
+        "gates": [],
+        "id": "exp7244-board-disposition",
+        "order": 12,
+        "title": "GateMate changed-state review and graduated-board disposition"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "title": true
+      },
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7245_v637_capstone.json",
+        "gates": [],
+        "id": "exp7245-capstone",
+        "order": 13,
+        "title": "V637 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": true,
+      "seed": 723320260912,
+      "unit_id": "exp7245-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7245_v637_capstone.json",
+        "gates": [],
+        "id": "exp7245-capstone",
+        "order": 13,
+        "title": "V637 independent evidence matrix and branch decisions"
+      }
+    }
+  ],
+  "run_date": "20260912",
+  "sample_size_budget": {
+    "contract_rows": {
+      "attempted": 13,
+      "censored": 0,
+      "completed": 13,
+      "independent_units": 13,
+      "planned": 13
+    },
+    "gate_replays": {
+      "attempted": 20,
+      "censored": 0,
+      "completed": 20,
+      "independent_units": 20,
+      "planned": 20
+    },
+    "source_records": {
+      "attempted": 3,
+      "censored": 0,
+      "completed": 3,
+      "independent_units": 3,
+      "planned": 3
+    },
+    "stopping_rule": "Stop after thirteen contract rows, four replays per gate, seven classifier fixtures, five historical sources, and three source rechecks."
+  },
+  "schema": "carnot.exp7233.v637_contract.v1",
+  "scientific_value_claimed": false,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:d96725cb437ced3ee1cae1572195070f1e518e3937f81acbc58dd4676c303fee",
+    "openspec/change-proposals/research-roadmap-v637.md": "sha256:539f6fd14eb459eee317393e820768712cc5a527ae2e4cb03cc2a79658d24059",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7219_v636_source_contract.py": "sha256:b4b1b2580ad1507a858b4f3d5633606c19c02852070ba5a3fdffe7233794d238",
+    "python/carnot/experiment_7233_v637_contract.py": "sha256:2010fe71f9b1d1b8f89b42ce8c34def6a05dc6a98f1af43c35513b316a68a85a",
+    "research-complete.yaml": "sha256:6b594d11401a00f6eaf4394b212f56e3d7a5897e9d1b1dece971e5df526d887a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:6f2f4afcc7351a3be54166729aa3593539f4337dfad1dded3ab54d93434139de",
+    "research-roadmap.yaml": "sha256:5983775ba9b1ba80e8a4f0f70355cda6b37e540c73da41d7a3cd394c08ef7218",
+    "results/experiment_7219_v636_source_contract.json": "sha256:a9f6b2cf9586b83f29c2129789abf9a3296411fd69be942f0533a22aae32c8b7",
+    "results/experiment_7223_v636_span_canary.json": "sha256:4876bced7c4595087a6dfa3de9cf5b8cca443b4396344059458c6290f1b6b5fb",
+    "results/experiment_7228_v636_belief_cold_audit.json": "sha256:9ba66b80dcd221f34bd452737c4ac151b0e4c11cf16b73ccfe407aaaa17988e3",
+    "results/experiment_7230_v636_native_belief.json": "sha256:dd49b1bb5a61898ee3d5a7f177b5ef1ec1e2c4c42c21e88ed6ec2e40777cbe03",
+    "results/experiment_7232_v636_capstone.json": "sha256:fd2dea36a4e999f2d198680fba8d2f1b6ac71c1e5794286fbb70c54768c3ebf4",
+    "results/raw/experiment_7233/classifier-receipts.json": "sha256:1ddf4aac14bc760c015d2714fb4c3b526f3e0dc53447016c2ef9c61774c27e46",
+    "results/raw/experiment_7233/research-roadmap-v637.md": "sha256:539f6fd14eb459eee317393e820768712cc5a527ae2e4cb03cc2a79658d24059",
+    "results/raw/experiment_7233/selected-roadmap.yaml": "sha256:5983775ba9b1ba80e8a4f0f70355cda6b37e540c73da41d7a3cd394c08ef7218",
+    "scripts/adversarial_verify.py": "sha256:1ec91490bceb3b161f51cc54e6b035fab6ec8d6eb5f8833e5b3bcd16890f60a6",
+    "scripts/audit_roadmap_gates.py": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7233_v637_contract.py": "sha256:03eaf1faa8d27f3884cd46677c7003894c22683906eeb9e4ea3c4128b951899d",
+    "scripts/harness_consumer_checks.py": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7233_v637_contract.py": "sha256:7b843fd2f2033c817d484958d70a6f1721108d4cc4cf3157a194bde087c0e676"
+  },
+  "source_contract_complete_score": 0,
+  "source_method_rows": [
+    {
+      "access_error": null,
+      "access_outcome": "http_200",
+      "adoption_limit": "A bounded specialist pool motivates archived hypotheses; moment retrieval is not sufficient for label-conditional drift.",
+      "carnot_result_claimed": false,
+      "execution_time_version_changed": false,
+      "observed_title": "[2506.14790] Continuous Evolution Pool: Taming Recurring Concept Drift in Online Time Series Forecasting",
+      "observed_version": "v3",
+      "planning_version": "v3",
+      "planning_version_date": "2026-08-18",
+      "recheck_outcome": "no_delta",
+      "retrieval_date": "2026-09-12",
+      "source_id": "arxiv:2506.14790",
+      "target_task": "exp7240-recurrence-fixture",
+      "title": "Continuous Evolution Pool",
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2506.14790"
+    },
+    {
+      "access_error": null,
+      "access_outcome": "http_200",
+      "adoption_limit": "Visual-class memory results motivate reset and stale-memory controls; they do not establish Carnot learning value.",
+      "carnot_result_claimed": false,
+      "execution_time_version_changed": true,
+      "observed_title": "[2507.02310] Holistic Continual Learning under Concept Drift with Adaptive Memory Realignment",
+      "observed_version": "v2",
+      "planning_version": "v1",
+      "planning_version_date": "2025-07-03",
+      "recheck_outcome": "version_changed_review_required",
+      "retrieval_date": "2026-09-12",
+      "source_id": "arxiv:2507.02310",
+      "target_task": "exp7241-recurrence-learning",
+      "title": "Holistic Continual Learning under Concept Drift with Adaptive Memory Realignment",
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2507.02310"
+    },
+    {
+      "access_error": null,
+      "access_outcome": "http_200",
+      "adoption_limit": "Public mention identifiers reduce offset burden; correct execution does not establish source semantics.",
+      "carnot_result_claimed": false,
+      "execution_time_version_changed": false,
+      "observed_title": "[2609.05025] Leveraging Low-Level Symbolic Competences for Unsupervised Grounding in Hallucination Detection",
+      "observed_version": "v1",
+      "planning_version": "v1",
+      "planning_version_date": "2026-09-04",
+      "recheck_outcome": "no_delta",
+      "retrieval_date": "2026-09-12",
+      "source_id": "arxiv:2609.05025",
+      "target_task": "exp7236-mention-fixture",
+      "title": "Leveraging Low-Level Symbolic Competences for Unsupervised Grounding in Hallucination Detection",
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2609.05025"
+    }
+  ],
+  "started_at_utc": "2026-09-12T05:58:41.972979+00:00",
+  "status": "complete",
+  "validation_command_rows": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/scripts'\"'\"');from roadmap_schema import Roadmap;Roadmap.model_validate(yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text()))'",
+      "duration_s": 0.104719,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "roadmap_schema",
+      "output": "",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 11.34194,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "exclusion_manifest",
+      "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.590016,
+      "exit_code": 1,
+      "failure_scope": "changed_scope_or_baseline",
+      "name": "prior_failure",
+      "output": "\n[PRIOR FAILURE VIOLATIONS] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n  VIOLATION: Task 'exp7233-contract' ('V637 source and execution contract receipt') matches archived experiments ['exp6528-v565-source-model-method-contract', 'exp6729-v587-activation-evidence-contract', 'exp7179-contract-receipt', 'exp7192-source-contract', 'exp7205-source-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope\n  VIOLATION: Task 'exp7244-board-disposition' ('GateMate changed-state review and graduated-board disposition') matches archived experiments ['exp6121-gatemate-changed-state-gate-v530', 'exp6199-gatemate-terminal-action-audit-v537', 'exp6525-gatemate-changed-state-continuity', 'exp6559-gatemate-changed-state-continuity', 'exp7146-gatemate-changed-state-continuity'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope\n\nTotal violations: 2\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.053371,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "prompt_paths",
+      "output": "  invented paths: 0\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.608866,
+      "exit_code": 1,
+      "failure_scope": "changed_scope_or_baseline",
+      "name": "gate_declarations",
+      "output": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [\n    \"PRIOR_FAILURES_COVERAGE exp7233-contract: title matches prior tasks ['exp5838-v520-source-delta-ingestion', 'exp6413-authenticated-sota-gguf-execution-receipts', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp7235-arc-path-audit: title matches prior tasks ['exp5740-arc-game-blind-primitive-causal-audit', 'exp5791-arc-sota-independent-hypothesis-panel', 'exp5791-arc-sota-independent-hypothesis-panel', 'exp5791-arc-sota-independent-hypothesis-panel', 'exp5791-arc-sota-independent-hypothesis-panel'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp7244-board-disposition: title matches prior tasks ['exp5794-hardware-terminal-action-receipt', 'exp5794-hardware-terminal-action-receipt', 'exp5794-hardware-terminal-action-receipt', 'exp5794-hardware-terminal-action-receipt', 'exp5794-hardware-terminal-action-receipt'] but prior_failures is missing or empty\"\n  ],\n  \"honest_verdict\": \"prior_failures_gaps_found\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 5,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 13,\n  \"n_prior_failures_missing\": 3,\n  \"n_tasks_audited\": 13,\n  \"roadmap_gate_audit_passed\": false,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/.coverage-exp7233-v637 '--include=*/experiment_7233_v637_contract.py' -m pytest --no-cov -n 0 --basetemp=/tmp/exp7233-v637-focused-pytest /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py -q",
+      "duration_s": 41.632404,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "focused_tests",
+      "output": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 12 items\n\ntests/python/test_experiment_7233_v637_contract.py ............          [100%]\n\n============================= 12 passed in 39.33s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/.coverage-exp7233-v637 '--include=*/experiment_7233_v637_contract.py' --show-missing --fail-under=100",
+      "duration_s": 0.084881,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "focused_coverage",
+      "output": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7233_v637_contract.py     534      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              534      0   100%\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7233_v637_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7233_v637_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py",
+      "duration_s": 0.01216,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "ruff_check",
+      "output": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7233_v637_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7233_v637_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py",
+      "duration_s": 0.010148,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "ruff_format",
+      "output": "3 files already formatted\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7233_v637_contract.py",
+      "duration_s": 0.101216,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "mypy",
+      "output": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7233_v637_contract.py",
+      "duration_s": 0.03047,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "scoped_spec_coverage",
+      "output": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7233_v637_contract import validate_artifact;root=pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot'\"'\"');errors=validate_artifact(json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7233_v637_contract.json'\"'\"').read_text()),root=root);print(errors);sys.exit(bool(errors))'",
+      "duration_s": 0.583997,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "artifact",
+      "output": "[]\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7233_v637_contract.json",
+      "duration_s": 0.5446,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "adversarial",
+      "output": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7233_v637_contract.json",
+      "duration_s": 0.045215,
+      "exit_code": 0,
+      "failure_scope": null,
+      "name": "row_consistency",
+      "output": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "validation_required": true,
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false,
+  "yaml_authority_path": "research-roadmap.yaml",
+  "yaml_milestone": "2026.09.637",
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7233_v637_contract.json",
+      "gates": [],
+      "id": "exp7233-contract",
+      "order": 1,
+      "title": "V637 source and execution contract receipt"
+    },
+    {
+      "deliverable": "results/experiment_7234_v637_arc_scored_dryrun.json",
+      "gates": [],
+      "id": "exp7234-arc-scored-dryrun",
+      "order": 2,
+      "title": "Local scored-stack ARC selfparse dry run"
+    },
+    {
+      "deliverable": "results/experiment_7235_v637_arc_path_audit.json",
+      "gates": [],
+      "id": "exp7235-arc-path-audit",
+      "order": 3,
+      "title": "Independent ARC dry-run reachability and authority audit"
+    },
+    {
+      "deliverable": "results/experiment_7236_v637_mention_fixture.json",
+      "gates": [],
+      "id": "exp7236-mention-fixture",
+      "order": 4,
+      "title": "Public mention compiler and sealed semantic fixture"
+    },
+    {
+      "deliverable": "results/experiment_7237_v637_mention_canary.json",
+      "gates": [
+        {
+          "artifact_field": "mention_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7236-mention-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7237-mention-canary",
+      "order": 5,
+      "title": "Bounded Qwen3.8 mention-grounding canary"
+    },
+    {
+      "deliverable": "results/experiment_7238_v637_mention_capture.json",
+      "gates": [
+        {
+          "artifact_field": "mention_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7236-mention-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "mention_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7237-mention-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7238-mention-capture",
+      "order": 6,
+      "title": "Qwen3.8 held-out mention-grounding capture"
+    },
+    {
+      "deliverable": "results/experiment_7239_v637_semantic_audit.json",
+      "gates": [],
+      "id": "exp7239-semantic-audit",
+      "order": 7,
+      "title": "Independent mention fidelity and verification-value audit"
+    },
+    {
+      "deliverable": "results/experiment_7240_v637_recurrence_fixture.json",
+      "gates": [],
+      "id": "exp7240-recurrence-fixture",
+      "order": 8,
+      "title": "Feedback-validated archive memory prototype and recurrence stream"
+    },
+    {
+      "deliverable": "results/experiment_7241_v637_recurrence_learning.json",
+      "gates": [
+        {
+          "artifact_field": "recurrence_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7240-recurrence-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7241-recurrence-learning",
+      "order": 9,
+      "title": "Prospective continuous learning with validated archive reuse"
+    },
+    {
+      "deliverable": "results/experiment_7242_v637_recurrence_audit.json",
+      "gates": [],
+      "id": "exp7242-recurrence-audit",
+      "order": 10,
+      "title": "Cold recurrence-memory causality and safety audit"
+    },
+    {
+      "deliverable": "results/experiment_7243_v637_native_memory.json",
+      "gates": [
+        {
+          "artifact_field": "recurrence_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7240-recurrence-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7243-native-memory",
+      "order": 11,
+      "title": "Native archive-memory parity and complete cost measurement"
+    },
+    {
+      "deliverable": "results/experiment_7244_v637_board_disposition.json",
+      "gates": [],
+      "id": "exp7244-board-disposition",
+      "order": 12,
+      "title": "GateMate changed-state review and graduated-board disposition"
+    },
+    {
+      "deliverable": "results/experiment_7245_v637_capstone.json",
+      "gates": [],
+      "id": "exp7245-capstone",
+      "order": 13,
+      "title": "V637 independent evidence matrix and branch decisions"
+    }
+  ]
+}
