@@ -31914,3 +31914,93 @@ through the shipped reproduction gate.
 
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## REQ-ARC-WMTE-7235: Audit saved scored-path world-model use without an LLM
+
+Experiment 7235 SHALL read Experiment 7234 only from
+`results/experiment_7234_v637_arc_scored_dryrun.json`. It SHALL reject that
+artifact before field consumption when the artifact is absent, unreadable, or
+quarantined. Such a failure SHALL produce a terminal blocked audit with the
+failed check, upstream path, artifact field, expected value, and observed value.
+It SHALL not invoke a model to replace missing evidence.
+
+The audit SHALL authenticate each referenced request, response, engine,
+transition, environment, factory, policy, action, and raw-session path against
+its recorded hash. It SHALL replay the saved backend session through the current
+Exp7234 reducer. It SHALL also confirm that the submitted factory remains
+reachable, that `E3AgentPolicy` is the constructed policy, that the adapter and
+banked solution inputs were withheld, and that the archived policy and factory
+hashes match current source. It SHALL not read game source or use an adapter.
+
+Each archived engine SHALL be imported from its authenticated evidence path.
+The audit SHALL score it with the current `WorldModelVerifier` on chronological
+same-session transitions whose indices are greater than every transition in the
+engine's saved induction snapshot. The audit SHALL report one row per engine,
+future transition, and control arm. Controls SHALL include a no-op engine and a
+fixed-seed shuffled-action replay. These rows are clustered by session and SHALL
+not support an independent-game generalization claim. An engine with no saved
+future labels SHALL remain visible as censored evidence.
+
+Receipt admission SHALL require matching session identity, request hash, engine
+hash, transition snapshot hash, and induction action index. It SHALL require a
+non-identity engine and direct evidence that a later policy action consumed the
+same engine. A parsed tool without an engine, an identity engine, an engine that
+the policy never consumed, and a stale session hash SHALL each fail admission.
+Historical producer details and synthetic negative receipts SHALL live in
+referenced sidecars. They SHALL not appear as current model calls or current
+runner invocations.
+
+The task SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=cpu_exact_solver_or_simulator`, and
+`inference_substrate_class=cpu_exact_solver_or_simulator` when replay executes.
+It SHALL use `blocked_no_run` for both substrate fields only when the exact
+upstream prerequisite is absent or rejected before replay. The task SHALL use
+`execution_venue=host`, measure elapsed time without sleeps, and keep current
+invocation counters at zero.
+
+`arc_path_audit_complete_score` SHALL equal one after complete authentic replay,
+including a supported null result. The broader efficacy finding SHALL remain
+null when no useful model action or progress is observed. The audit SHALL retain
+all local-versus-scored differences and keep GGUF and optional native-vLLM
+dispositions separate. It SHALL retire the completed ten-induction transport
+question and SHALL not schedule another collection. A reusable mechanism gap
+may be added to `ops/verifier_gaps.md` only when real audited rows support it.
+
+### SCENARIO-ARC-WMTE-7235-UPSTREAM-BLOCK
+
+- GIVEN the exact Exp7234 artifact is absent or quarantined
+- WHEN Exp7235 checks preconditions
+- THEN it writes a terminal blocked audit with `blocked_no_run`
+- AND it performs no engine replay and invokes no model.
+
+### SCENARIO-ARC-WMTE-7235-AUTHENTIC-REPLAY
+
+- GIVEN the exact Exp7234 artifact and its referenced raw files are authentic
+- WHEN Exp7235 replays the current producer reducer and independent audit reducer
+- THEN request hashes, engine hashes, transition hashes, action indices, factory
+  identity, backend identity, and adapter withholding agree
+- AND `arc_path_audit_complete_score` equals one even when efficacy is null.
+
+### SCENARIO-ARC-WMTE-7235-FUTURE-CONTROLS
+
+- GIVEN an archived engine with later transitions in the same saved session
+- WHEN the current verifier evaluates the chronological future rows
+- THEN the artifact reports engine, no-op, and shuffled-action rows separately
+- AND it labels the session as one clustered unit without a cross-game claim.
+
+### SCENARIO-ARC-WMTE-7235-NEGATIVE-RECEIPTS
+
+- GIVEN synthetic receipts for parsed-only, identity, never-consumed, and stale-session cases
+- WHEN the independent reducer validates them
+- THEN all four are rejected with distinct reasons
+- AND the sidecar hash binds the attacks without adding model invocation evidence.
+
+### SCENARIO-ARC-WMTE-7235-NONCLAIM
+
+- GIVEN no audited engine changed a selected action or produced progress
+- WHEN the terminal artifact is classified
+- THEN `verdict_class` is `null`, the efficacy claim is null, and solve provenance
+  remains the authenticated producer authority without a new solve claim.
+
+Implementation status: specified 2026-09-12. The conductor owns later status,
+changelog, and traceability reconciliation.

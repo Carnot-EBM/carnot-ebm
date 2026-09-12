@@ -1,0 +1,600 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "actual_value": false,
+      "criterion": "authentic_replay_complete",
+      "passed": false
+    },
+    {
+      "actual_value": false,
+      "criterion": "useful_prediction_consumed_by_policy",
+      "passed": false
+    },
+    {
+      "actual_value": false,
+      "criterion": "observed_progress",
+      "passed": false
+    }
+  ],
+  "arc_path_audit_complete_score": 0,
+  "audit_rows": [],
+  "backend_dispositions": [],
+  "duration_s": 0.010764285922050476,
+  "ended_at_utc": "2026-09-12T07:43:46+00:00",
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": 7235,
+  "factory_reachability_receipt": {},
+  "field_principles": {
+    "MODEL_SPECS": "Models actually invoked; [] for tasks with no LLM.",
+    "acceptance_gate_results": "Preserve each frozen criterion, actual value and pass/fail independently of task completion.",
+    "arc_path_audit_complete_score": "Complete independently checked provenance, reachability and backend-difference matrix.",
+    "audit_rows": "Per transition, tool, and action evidence keeps source hashes, useful prediction, and policy use separate.",
+    "backend_dispositions": "GGUF and optional native-vLLM outcomes remain separate.",
+    "duration_s": "Measured monotonic elapsed work; record phase spans separately.",
+    "ended_at_utc": "Retain the actual UTC terminal construction time.",
+    "execution_host": "Actual hostname, distinct from execution_venue.",
+    "execution_venue": "Top-level orchestration is host; board rows name kv260, gatemate or polarfire.",
+    "experiment_id": "Bind this receipt to Experiment 7235.",
+    "factory_reachability_receipt": "A live construction proves the current factory still reaches E3AgentPolicy without an adapter.",
+    "field_principles": "Keep ordinary values at top level; put their explanations in this map.",
+    "game_source_access_receipt": "The audit records its input allowlist and never opens executable game source.",
+    "gate_check_summary": "Every blocked_* verdict names check, upstream, artifact_field, expected and observed value.",
+    "honest_verdict": "Completed findings start complete_ or complete:. External absence starts blocked_. Failed acceptance forbids positive.",
+    "independent_game_generalization_claimed": "Correlated frames from one session cannot establish cross-game generalization.",
+    "inference_substrate": "Use the recognized literal for the operation actually executed.",
+    "inference_substrate_class": "Actual class determines the duration floor; never pad duration or relabel to pass.",
+    "local_versus_scored_differences": "Preserve every producer-recorded difference from the scored competition runtime.",
+    "milestone": "Bind this receipt to milestone 2026.09.637.",
+    "model_invoked": "Current task execution only; historical sources and injected fixtures are separate.",
+    "new_solve_claimed": "An audit of a known public session does not create a new solve.",
+    "next_mechanism_condition": "A concrete observed blocker or completion; no invented tool demand.",
+    "phase_spans": "Measured preflight, replay, scoring, and validation spans.",
+    "preconditions_checked": "Observed paths, resources, model identity and upstream checks before expensive work.",
+    "random_seed": "Freeze seeds and schedules before observing evaluation labels.",
+    "reducer_replay": "The saved session must reduce the same way under the currently shipped producer reducer.",
+    "reproducibility_checksum": "Hash the exact settings, inputs and raw rows supporting the result.",
+    "rows": "Every comparison retains one row per independent unit and arm, with errors and abstentions.",
+    "run_date": "Use 20260912; retain actual UTC start and end timestamps.",
+    "runner_receipt": "Current CPU audit counters only; historical producer execution lives in a sidecar.",
+    "sample_size_budget": "Predeclared independent units, attempted/completed/censored units, and stopping rule.",
+    "schema": "Version the artifact and bind experiment_id and milestone to this task.",
+    "sidecar_receipts": "Hashes retain historical invocation facts and synthetic attacks outside current invocation fields.",
+    "solve_provenance": "Preserve the producer authority for any audited solve; never upgrade a development proxy.",
+    "source_artifact_hashes": "Hash source code, public inputs, private evaluator inputs and raw output files.",
+    "started_at_utc": "Retain the actual UTC audit start.",
+    "status": "Terminal complete or blocked only; unfinished work uses a separate checkpoint path.",
+    "transport_validation_question_retired": "The completed ten-induction collection is not scheduled again.",
+    "validation_receipts": "Retain exact validation commands, exit states, and unrelated baseline failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. External incompleteness is blocked.",
+    "verifier_is_oracle": "True when the verification authority also defines correctness; separate code is insufficient independence.",
+    "world_model_efficacy_claim": "Remain null unless a useful prediction changed policy action and produced progress."
+  },
+  "game_source_access_receipt": {
+    "adapter_used": false,
+    "game_source_read": false
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "AGENTS.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "CLAUDE.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "CODEX.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "research-program.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "research-references.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "ops/exclusion_manifest.yaml",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "ops/e2e-test-plan.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "python/carnot/agentic/arc_eval_provenance.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_eval_provenance.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "python/carnot/agentic/arc_competition_agent.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "python/carnot/agentic/arc_induction_tool_loop.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_induction_tool_loop.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "python/carnot/agentic/arc_tool_gap_receipt.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_tool_gap_receipt.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "scripts/arc_loop_solve.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "ops/arc_solve_registry.yaml",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "results/experiment_7221_v636_arc_session.json",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7221_v636_arc_session.json"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "python/carnot/experiment_7235_v637_arc_path_audit.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7235_v637_arc_path_audit.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "scripts/experiments/experiment_7235_v637_arc_path_audit.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7235_v637_arc_path_audit.py"
+      },
+      {
+        "check": "required_source",
+        "expected_value": true,
+        "field": "tests/python/test_experiment_7235_v637_arc_path_audit.py",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7235_v637_arc_path_audit.py"
+      },
+      {
+        "check": "raw_path_writable",
+        "expected_value": true,
+        "field": "writable",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7235"
+      },
+      {
+        "check": "checkpoint_path_writable",
+        "expected_value": true,
+        "field": "writable",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7235_v637_arc_path_audit"
+      },
+      {
+        "check": "current_reducer_import",
+        "expected_value": true,
+        "field": "reduce_backend_session",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "carnot.experiment_7234_v637_arc_scored_dryrun"
+      },
+      {
+        "check": "current_verifier_import",
+        "expected_value": true,
+        "field": "WorldModelVerifier",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "carnot.agentic.arc_executable_world_model"
+      },
+      {
+        "check": "exact_upstream_present",
+        "expected_value": true,
+        "field": "path",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7234_v637_arc_scored_dryrun.json"
+      },
+      {
+        "check": "upstream_not_quarantined",
+        "expected_value": false,
+        "field": "flagged_adversarial",
+        "observed_value": true,
+        "passed": false,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7234_v637_arc_scored_dryrun.json"
+      }
+    ],
+    "expected_value": false,
+    "failed_check": "upstream_not_quarantined",
+    "field": "flagged_adversarial",
+    "observed_value": true,
+    "passed": false,
+    "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7234_v637_arc_scored_dryrun.json"
+  },
+  "honest_verdict": "blocked_upstream_not_quarantined",
+  "independent_game_generalization_claimed": false,
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "local_versus_scored_differences": {},
+  "milestone": "2026.09.637",
+  "model_invoked": false,
+  "new_solve_claimed": false,
+  "next_mechanism_condition": "Record the consumed engine SHA-256 on each policy-visible action and preserve later full-grid transitions; do not collect another ten inductions.",
+  "phase_spans": [
+    {
+      "duration_s": 0.01029378199018538,
+      "phase": "preconditions"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "AGENTS.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "CLAUDE.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "CODEX.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "research-program.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "research-references.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "ops/exclusion_manifest.yaml",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "ops/e2e-test-plan.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "python/carnot/agentic/arc_eval_provenance.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_eval_provenance.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "python/carnot/agentic/arc_competition_agent.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "python/carnot/agentic/arc_induction_tool_loop.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_induction_tool_loop.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "python/carnot/agentic/arc_tool_gap_receipt.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_tool_gap_receipt.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "scripts/arc_loop_solve.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "ops/arc_solve_registry.yaml",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "results/experiment_7221_v636_arc_session.json",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7221_v636_arc_session.json"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "python/carnot/experiment_7235_v637_arc_path_audit.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7235_v637_arc_path_audit.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "scripts/experiments/experiment_7235_v637_arc_path_audit.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7235_v637_arc_path_audit.py"
+    },
+    {
+      "check": "required_source",
+      "expected_value": true,
+      "field": "tests/python/test_experiment_7235_v637_arc_path_audit.py",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7235_v637_arc_path_audit.py"
+    },
+    {
+      "check": "raw_path_writable",
+      "expected_value": true,
+      "field": "writable",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7235"
+    },
+    {
+      "check": "checkpoint_path_writable",
+      "expected_value": true,
+      "field": "writable",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7235_v637_arc_path_audit"
+    },
+    {
+      "check": "current_reducer_import",
+      "expected_value": true,
+      "field": "reduce_backend_session",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "carnot.experiment_7234_v637_arc_scored_dryrun"
+    },
+    {
+      "check": "current_verifier_import",
+      "expected_value": true,
+      "field": "WorldModelVerifier",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "carnot.agentic.arc_executable_world_model"
+    },
+    {
+      "check": "exact_upstream_present",
+      "expected_value": true,
+      "field": "path",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7234_v637_arc_scored_dryrun.json"
+    },
+    {
+      "check": "upstream_not_quarantined",
+      "expected_value": false,
+      "field": "flagged_adversarial",
+      "observed_value": true,
+      "passed": false,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7234_v637_arc_scored_dryrun.json"
+    }
+  ],
+  "random_seed": 7235001,
+  "reducer_replay": {},
+  "reproducibility_checksum": "sha256:23e17a2876a23c7152de6d54b09dfa31331b1cbc5bfd3a07429c2a15747d7a21",
+  "rows": [],
+  "run_date": "20260912",
+  "runner_receipt": {
+    "engine_replay_executed": false,
+    "model_completion_count": 0,
+    "model_error_count": 0,
+    "model_request_count": 0,
+    "runner": "local_cpu_independent_receipt_reducer"
+  },
+  "sample_size_budget": {
+    "archived_engine_count": 0,
+    "attempted_units": 0,
+    "censored_engine_count": 0,
+    "censored_units": 1,
+    "cluster_count": 0,
+    "cluster_definition": "one Exp7234 backend game session; frames are correlated",
+    "completed_units": 0,
+    "planned_independent_units": 1,
+    "stopping_rule": "audit every authenticated archived engine once; do not collect more inductions"
+  },
+  "schema": "carnot.experiment_7235.v637_arc_path_audit.v1",
+  "sidecar_receipts": {},
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7235_v637_arc_path_audit/validation_receipts.json": "sha256:2dc7d916a85176ca490acc9404827873ae64fe13ca7831ce246b9d2a4336e13d",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:42c7a406ecd11a83541aa9c64d887614e3d07da989a3e4ebb41af2c6d3b6ac75",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+    "python/carnot/agentic/arc_tool_gap_receipt.py": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+    "python/carnot/experiment_7235_v637_arc_path_audit.py": "sha256:a5cc181f95dadf6d6a167c977ce27c5b0261d759672e09b52bbfb9871e1b2414",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:6f2f4afcc7351a3be54166729aa3593539f4337dfad1dded3ab54d93434139de",
+    "results/experiment_7221_v636_arc_session.json": "sha256:1c09dc454142b57201efa0da2d0af09b789bafdb90986d6257171472d93f03a9",
+    "results/experiment_7234_v637_arc_scored_dryrun.json": "sha256:1660cbb8ca9f605a95c0e2244dc0e8b8289d4c12e509c8b72b77d38c15406a37",
+    "scripts/arc_loop_solve.py": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
+    "scripts/experiments/experiment_7235_v637_arc_path_audit.py": "sha256:36984b585cbaab93a13127a178f297e1a7bc293515a6c399dff61819149ca3ca",
+    "tests/python/test_experiment_7235_v637_arc_path_audit.py": "sha256:9affdb90851acb2674810b55cad5b7d7ca8431b20cbf580cfb0b0dd5d527c9bc"
+  },
+  "started_at_utc": "2026-09-12T07:43:46+00:00",
+  "status": "blocked",
+  "transport_validation_question_retired": true,
+  "validation_receipts": [
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot-exp7235-final-coverage.data PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/coverage run --source=python/carnot -m pytest tests/python/test_experiment_7235_v637_arc_path_audit.py -q -n 0 --no-cov --basetemp=/tmp/carnot-exp7235-final-focused",
+      "exit_code": 0,
+      "outcome": "21 passed"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot-exp7235-final-coverage.data .venv/bin/coverage report --include=*/experiment_7235_v637_arc_path_audit.py --fail-under=100",
+      "exit_code": 0,
+      "outcome": "415 statements, 0 missed, 100%"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/ruff check python/carnot/experiment_7235_v637_arc_path_audit.py scripts/experiments/experiment_7235_v637_arc_path_audit.py tests/python/test_experiment_7235_v637_arc_path_audit.py",
+      "exit_code": 0,
+      "outcome": "All checks passed"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/ruff format --check python/carnot/experiment_7235_v637_arc_path_audit.py scripts/experiments/experiment_7235_v637_arc_path_audit.py tests/python/test_experiment_7235_v637_arc_path_audit.py",
+      "exit_code": 0,
+      "outcome": "3 files already formatted"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/mypy python/carnot/experiment_7235_v637_arc_path_audit.py scripts/experiments/experiment_7235_v637_arc_path_audit.py tests/python/test_experiment_7235_v637_arc_path_audit.py",
+      "exit_code": 0,
+      "outcome": "Success: no issues found in 3 source files"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7235_v637_arc_path_audit.py",
+      "exit_code": 0,
+      "outcome": "OK: All tests reference specification requirements"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q --basetemp=/tmp/carnot-exp7235-full-pytest",
+      "exit_code": 2,
+      "outcome": "unrelated baseline failed and was interrupted at 13% after 341.42s: 66 failed, 8491 passed, 7 skipped, 66 collection errors; representative pre-existing collection error KeyError unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_7235_v637_arc_path_audit.py --date 20260912",
+      "exit_code": 0,
+      "outcome": "blocked_upstream_not_quarantined"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/python -u scripts/experiments/experiment_7235_v637_arc_path_audit.py --validate results/experiment_7235_v637_arc_path_audit.json",
+      "exit_code": 0,
+      "outcome": "cold validation passed"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/python scripts/adversarial_verify.py results/experiment_7235_v637_arc_path_audit.json",
+      "exit_code": 0,
+      "outcome": "Scanned 1 artifact; 0 flagged"
+    },
+    {
+      "command": "PYTHONPATH=python .venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_7235_v637_arc_path_audit.json",
+      "exit_code": 0,
+      "outcome": "0 blocking findings; blocked artifact has no admitted per-unit rows"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true,
+  "world_model_efficacy_claim": null
+}
