@@ -41647,6 +41647,11 @@ The terminal artifact SHALL contain `schema`, `status`, `run_date`,
 `positive_control_results`. `field_principles` SHALL contain the requested
 exact principle for every listed field.
 
+The audit SHALL accept validation receipts only after the scientific artifact
+passes cold validation. Each receipt SHALL contain the exact command, exit
+code, classification, and summary. Attaching receipts SHALL preserve all
+scientific fields and refresh the reproducibility checksum.
+
 The runner SHALL write provisional state only below `results/checkpoints/`.
 It SHALL print and flush every numbered phase boundary. It SHALL print before
 and after each long benchmark, validation, or subprocess. A truthful heartbeat
@@ -41693,8 +41698,11 @@ gate result, verdict, or checksum changes
 **Then** cold validation rejects the artifact
 **And** a blocked artifact retains the exact first failure and zero value score.
 
+**And** validation receipts can be attached only to a cold-valid source
+artifact and only with the declared receipt schema.
+
 ## Implementation Status (REQ-VERIFY-7239)
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-VERIFY-7239 and SCENARIO-VERIFY-7239-* | Planned (`python/carnot/experiment_7239_v637_semantic_audit.py`; `scripts/experiments/experiment_7239_v637_semantic_audit.py`) | Planned (`tests/python/test_experiment_7239_v637_semantic_audit.py`) |
+| REQ-VERIFY-7239 and SCENARIO-VERIFY-7239-* | Implemented (`python/carnot/experiment_7239_v637_semantic_audit.py`; `scripts/experiments/experiment_7239_v637_semantic_audit.py`) | Focused tests (`tests/python/test_experiment_7239_v637_semantic_audit.py`) |

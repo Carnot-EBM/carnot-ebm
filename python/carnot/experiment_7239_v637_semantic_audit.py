@@ -1145,6 +1145,24 @@ def validate_artifact(value: object, root: Path | None = None) -> list[str]:
     return list(dict.fromkeys(errors))
 
 
+def attach_validation_receipts(
+    artifact: Mapping[str, Any],
+    rows: Sequence[Mapping[str, Any]],
+    root: Path | None = None,
+) -> JsonDict:
+    """Attach observed command results only to a cold-valid artifact."""
+
+    if validate_artifact(artifact, root):
+        raise ValueError("validation_receipt_source_artifact")
+    required = {"command", "exit_code", "classification", "summary"}
+    if any(set(row) != required for row in rows):
+        raise ValueError("validation_receipt_schema")
+    value = deepcopy(dict(artifact))
+    value["validation_command_rows"] = deepcopy(list(rows))
+    value["reproducibility_checksum"] = artifact_checksum(value)
+    return value
+
+
 def run_experiment(
     root: Path | None = None,
     run_date: str = RUN_DATE,

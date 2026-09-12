@@ -152,6 +152,31 @@ def test_scenario_verify_7239_block_preserves_calibration(tmp_path: Path) -> Non
     assert exp.replay_terminal_artifact(REPO, output_root=tmp_path) == artifact
 
 
+def test_scenario_verify_7239_artifact_attaches_validation_receipts(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7239-ARTIFACT attaches only exact observed receipts."""
+
+    artifact = exp.run_experiment(REPO, exp.RUN_DATE, output_root=tmp_path)
+    receipts = [
+        {
+            "command": "pytest focused",
+            "exit_code": 0,
+            "classification": "passed",
+            "summary": "10 passed",
+        }
+    ]
+    attached = exp.attach_validation_receipts(artifact, receipts)
+    assert attached["validation_command_rows"] == receipts
+    for key, value in artifact.items():
+        if key not in {"validation_command_rows", "reproducibility_checksum"}:
+            assert attached[key] == value
+    assert exp.validate_artifact(attached, REPO) == []
+
+    with pytest.raises(ValueError, match="validation_receipt_source_artifact"):
+        exp.attach_validation_receipts({**artifact, "status": "running"}, receipts)
+    with pytest.raises(ValueError, match="validation_receipt_schema"):
+        exp.attach_validation_receipts(artifact, [{"command": "missing fields"}])
+
+
 def test_scenario_verify_7239_replay_metrics_keep_invalid_rows() -> None:
     """SCENARIO-VERIFY-7239-REPLAY keeps all errors and selective risk separate."""
 

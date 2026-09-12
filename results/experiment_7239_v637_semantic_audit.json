@@ -1,0 +1,752 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "actual_value": null,
+      "criterion": "source_fidelity_at_least_0_80",
+      "evaluated": false,
+      "expected_value": 0.8,
+      "layer": "extraction",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "coverage_at_least_0_75",
+      "evaluated": false,
+      "expected_value": 0.75,
+      "layer": "extraction",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "pointer_vs_offset_error_ci95_upper_below_zero",
+      "evaluated": false,
+      "expected_value": "<0",
+      "layer": "decision",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "pointer_vs_offset_false_accept_ci95_upper_at_most_zero",
+      "evaluated": false,
+      "expected_value": "<=0",
+      "layer": "decision",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "pointer_vs_direct_error_ci95_upper_below_zero",
+      "evaluated": false,
+      "expected_value": "<0",
+      "layer": "decision",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "pointer_vs_direct_false_accept_ci95_upper_at_most_zero",
+      "evaluated": false,
+      "expected_value": "<=0",
+      "layer": "decision",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "positive_control_nondegenerate",
+      "evaluated": false,
+      "expected_value": true,
+      "layer": "headroom",
+      "passed": false
+    },
+    {
+      "actual_value": null,
+      "criterion": "authority_boundary_controls",
+      "evaluated": false,
+      "expected_value": true,
+      "layer": "execution",
+      "passed": false
+    }
+  ],
+  "arm_metrics": {},
+  "authority_boundary": {
+    "extracted_graph": {
+      "authority_fields_used_during_prediction": 0,
+      "source": "capture_source_and_claim_outputs"
+    },
+    "gold_source_graph": {
+      "model_visible": false,
+      "path": "results/raw/experiment_7236/authority_manifest.json",
+      "sha256": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc"
+    },
+    "independent_labels": {
+      "defines_correctness": true,
+      "joined_after_prediction": true,
+      "path": "results/raw/experiment_7236/authority_manifest.json"
+    },
+    "verifier_is_oracle": true
+  },
+  "calibration_observations": {
+    "arms": {
+      "explicit_schema_offset_control": {
+        "claim_fidelity_count": 0,
+        "covered_count": 0,
+        "decision_correct_count": 2,
+        "false_accept_count": 0,
+        "fully_correct_count": 0,
+        "source_fidelity_count": 0,
+        "units": 8
+      },
+      "mention_pointer": {
+        "claim_fidelity_count": 8,
+        "covered_count": 6,
+        "decision_correct_count": 8,
+        "false_accept_count": 0,
+        "fully_correct_count": 8,
+        "source_fidelity_count": 8,
+        "units": 8
+      },
+      "original_offset": {
+        "claim_fidelity_count": 0,
+        "covered_count": 0,
+        "decision_correct_count": 2,
+        "false_accept_count": 0,
+        "fully_correct_count": 0,
+        "source_fidelity_count": 0,
+        "units": 8
+      }
+    },
+    "eligible_for_promotion": false,
+    "numeric_ready_score": 1,
+    "observed_paths_exist": true,
+    "quarantine_observed": true,
+    "raw_manifest": "results/raw/experiment_7237/raw_request_manifest.json",
+    "raw_manifest_sha256": "sha256:50bcf999ccfb3b6d3c5bbfd60b09de68f860b83f6b70d1cd2ed23b38a9ad72d7",
+    "source_artifact": "results/experiment_7237_v637_mention_canary.json",
+    "source_artifact_sha256": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+    "transport_completed_calls": 48
+  },
+  "cost_metrics": {},
+  "current_invocation_counts": {
+    "generations": 0,
+    "model_invocations": 0,
+    "model_loads": 0
+  },
+  "duration_s": 0.1620682398788631,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "failed_layer": "capture_authentication",
+  "field_principles": {
+    "MODEL_SPECS": "Models actually invoked; [] for tasks with no LLM.",
+    "acceptance_gate_results": "Preserve each frozen criterion, actual value and pass/fail independently of task completion.",
+    "arm_metrics": "Keep fidelity, coverage, unconditional error, selective risk, and false accepts separate.",
+    "authority_boundary": "Gold source graph, extracted graph and independent labels identified separately.",
+    "calibration_observations": "Keep quarantined calibration evidence as diagnosis with paths and hashes, never as promoted value evidence.",
+    "cost_metrics": "Report decoding tokens, elapsed time, timeouts, and transport separately from accuracy.",
+    "current_invocation_counts": "Current model loads, generations, and invocations stay zero.",
+    "duration_s": "Measured monotonic elapsed work; record phase spans separately.",
+    "execution_host": "Actual hostname, distinct from execution_venue.",
+    "execution_venue": "Top-level orchestration is host; board rows name kv260, gatemate or polarfire.",
+    "failed_layer": "Name extraction, execution, decision, or headroom before branch disposition.",
+    "field_principles": "Keep ordinary values at top level; put their explanations in this map.",
+    "gate_check_summary": "Every blocked_* verdict names check, upstream, artifact_field, expected and observed value.",
+    "honest_verdict": "Completed findings start complete_ or complete:. External absence starts blocked_. Failed acceptance forbids positive.",
+    "inference_substrate": "Use the recognized literal for the operation actually executed.",
+    "inference_substrate_class": "Actual class determines the duration floor; never pad duration or relabel to pass.",
+    "model_invoked": "Current task execution only; historical sources and injected fixtures are separate.",
+    "paired_comparison_rows": "Per base question and arm metrics; no hidden filtering of invalid outputs.",
+    "paired_interval_rows": "Use 64 base questions and 10000 frozen paired bootstrap draws for CI95.",
+    "phase_spans": "Keep measured phase work separate from total monotonic duration.",
+    "positive_control_results": "Oracle headroom and effective interventions, including no-headroom diagnoses.",
+    "preconditions_checked": "Observed paths, resources, model identity and upstream checks before expensive work.",
+    "random_seed": "Freeze seeds and schedules before observing evaluation labels.",
+    "reproducibility_checksum": "Hash the exact settings, inputs and raw rows supporting the result.",
+    "rows": "Every comparison retains one row per independent unit and arm, with errors and abstentions.",
+    "run_date": "Use 20260912; retain actual UTC start and end timestamps.",
+    "sample_size_budget": "Predeclared independent units, attempted/completed/censored units, and stopping rule.",
+    "schema": "Version the artifact and bind experiment_id and milestone to this task.",
+    "semantic_audit_complete_score": "All available authentic held-out rows reduced; blocked input remains a terminal blocked disposition.",
+    "semantic_value_score": "All predeclared fidelity, coverage, paired error and false-accept criteria met.",
+    "source_artifact_hashes": "Hash source code, public inputs, private evaluator inputs and raw output files.",
+    "status": "Terminal complete or blocked only; unfinished work uses a separate checkpoint path.",
+    "timestamps": "Record actual UTC observations for task start and terminal completion.",
+    "upstream_disposition": "Name the exact capture-chain state that permits or blocks held-out replay.",
+    "validation_command_rows": "Retain exact observed validation commands without changing scientific rows.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. External incompleteness is blocked.",
+    "verifier_is_oracle": "True when the verification authority also defines correctness; separate code is insufficient independence."
+  },
+  "gate_check_summary": {
+    "artifact_field": "flagged_adversarial|quarantined|fabricated",
+    "expected_value": false,
+    "failed_check": "structured_quarantine",
+    "observed_value": true,
+    "passed": false,
+    "upstream": "experiment_7237"
+  },
+  "honest_verdict": "blocked_exp7239_structured_quarantine",
+  "inference_substrate": "blocked_no_run",
+  "inference_substrate_class": "blocked_no_run",
+  "model_invoked": false,
+  "paired_comparison_rows": [],
+  "paired_interval_rows": [],
+  "phase_spans": [
+    {
+      "duration_s": 0.12387499609030783,
+      "name": "preconditions_and_upstream_authentication",
+      "phase": 1
+    },
+    {
+      "duration_s": 0.0006975368596613407,
+      "name": "calibration_diagnosis",
+      "phase": 2
+    }
+  ],
+  "positive_control_results": {
+    "authority_boundary_passed": null,
+    "non_degenerate": null,
+    "reason": "structured_quarantine",
+    "status": "not_run_external_block"
+  },
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "check": "run_date",
+      "expected_value": "20260912",
+      "observed_value": "20260912",
+      "passed": true,
+      "upstream": null
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "passed": true,
+      "upstream": "agents"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "passed": true,
+      "upstream": "claude"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "passed": true,
+      "upstream": "codex"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "passed": true,
+      "upstream": "research_program"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "passed": true,
+      "upstream": "research_references"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "passed": true,
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "passed": true,
+      "upstream": "e2e_test_plan"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7197_v634_grounding_value_audit.py",
+      "passed": true,
+      "upstream": "grounding_audit_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7222_v636_span_fixture.py",
+      "passed": true,
+      "upstream": "span_fixture_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "passed": true,
+      "upstream": "row_consistency_lint"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "passed": true,
+      "upstream": "adversarial_verifier"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_gaps.md",
+      "passed": true,
+      "upstream": "verifier_gaps"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "passed": true,
+      "upstream": "verification_spec"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7236_v637_mention_fixture.py",
+      "passed": true,
+      "upstream": "fixture_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7237_v637_mention_canary.py",
+      "passed": true,
+      "upstream": "canary_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7238_v637_mention_capture.py",
+      "passed": true,
+      "upstream": "capture_module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7236_v637_mention_fixture.json",
+      "passed": true,
+      "upstream": "fixture"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7237_v637_mention_canary.json",
+      "passed": true,
+      "upstream": "canary"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7238_v637_mention_capture.json",
+      "passed": true,
+      "upstream": "capture"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7236/public_manifest.json",
+      "passed": true,
+      "upstream": "public"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7236/authority_manifest.json",
+      "passed": true,
+      "upstream": "authority"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7237/raw_request_manifest.json",
+      "passed": true,
+      "upstream": "canary_manifest"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7239_v637_semantic_audit.py",
+      "passed": true,
+      "upstream": "module"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7239_v637_semantic_audit.py",
+      "passed": true,
+      "upstream": "entrypoint"
+    },
+    {
+      "artifact_field": "path",
+      "check": "required_source",
+      "expected_value": "readable_file",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7239_v637_semantic_audit.py",
+      "passed": true,
+      "upstream": "focused_tests"
+    },
+    {
+      "artifact_field": "REQ-VERIFY-7239",
+      "check": "driving_spec",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "artifact_field": "mention_resolver|typed_executor|capture_reducer",
+      "check": "required_imports",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot"
+    },
+    {
+      "artifact_field": "parent",
+      "check": "output_destination",
+      "expected_value": "writable_directory",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7239",
+      "passed": true,
+      "upstream": "checkpoint"
+    },
+    {
+      "artifact_field": "parent",
+      "check": "output_destination",
+      "expected_value": "writable_directory",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "passed": true,
+      "upstream": "result"
+    },
+    {
+      "artifact_field": "artifact_and_manifest_bytes",
+      "check": "exact_upstream_bytes",
+      "expected_value": {
+        "authority": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc",
+        "canary": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+        "canary_manifest": "sha256:50bcf999ccfb3b6d3c5bbfd60b09de68f860b83f6b70d1cd2ed23b38a9ad72d7",
+        "capture": "sha256:b91102c32462728266a43214b79bc07e77baf3ca73776cf96fc83ae47f855f3c",
+        "fixture": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+        "public": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d"
+      },
+      "observed_value": {
+        "authority": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc",
+        "canary": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+        "canary_manifest": "sha256:50bcf999ccfb3b6d3c5bbfd60b09de68f860b83f6b70d1cd2ed23b38a9ad72d7",
+        "capture": "sha256:b91102c32462728266a43214b79bc07e77baf3ca73776cf96fc83ae47f855f3c",
+        "fixture": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+        "public": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d"
+      },
+      "passed": true,
+      "upstream": "experiment_7236_through_7238"
+    },
+    {
+      "artifact_field": "flagged_adversarial|quarantined|fabricated",
+      "check": "structured_quarantine",
+      "expected_value": false,
+      "observed_value": true,
+      "passed": false,
+      "upstream": "experiment_7237"
+    },
+    {
+      "artifact_field": "experiment_ids",
+      "check": "exclusion_manifest",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "status|mention_fixture_ready_score",
+      "check": "fixture_gate_fields",
+      "expected_value": {
+        "mention_fixture_ready_score": 1,
+        "status": "complete"
+      },
+      "observed_value": {
+        "mention_fixture_ready_score": 1,
+        "status": "complete"
+      },
+      "passed": true,
+      "upstream": "experiment_7236"
+    },
+    {
+      "artifact_field": "status|mention_canary_ready_score",
+      "check": "canary_gate_fields",
+      "expected_value": {
+        "mention_canary_ready_score": 1,
+        "status": "complete"
+      },
+      "observed_value": {
+        "mention_canary_ready_score": 1,
+        "status": "complete"
+      },
+      "passed": true,
+      "upstream": "experiment_7237"
+    },
+    {
+      "artifact_field": "status|mention_capture_complete_score",
+      "check": "capture_gate_fields",
+      "expected_value": {
+        "mention_capture_complete_score": 1,
+        "status": "complete"
+      },
+      "observed_value": {
+        "mention_capture_complete_score": 0,
+        "status": "blocked"
+      },
+      "passed": false,
+      "upstream": "experiment_7238"
+    },
+    {
+      "artifact_field": "capture_manifest_path|gate_check_summary",
+      "check": "capture_manifest_or_block_receipt",
+      "expected_value": "authentic_manifest_or_structured_quarantine_block",
+      "observed_value": {
+        "blocked_capture_receipt": true,
+        "manifest_present": false
+      },
+      "passed": true,
+      "upstream": "experiment_7238"
+    }
+  ],
+  "random_seed": 7239001,
+  "reproducibility_checksum": "sha256:0716e85d941a96ec629058c04546118e71b8c2411737ea0373cb28b32fda14e6",
+  "rows": [],
+  "run_date": "20260912",
+  "sample_size_budget": {
+    "attempted_independent_units": 0,
+    "bootstrap_draws": 10000,
+    "censored_independent_units": 64,
+    "completed_comparison_rows": 0,
+    "completed_independent_units": 0,
+    "planned_arms": 3,
+    "planned_comparison_rows": 192,
+    "planned_independent_units": 64,
+    "stopping_rule": "reduce all 64 authentic held-out bases once or stop at the first external capture-chain block"
+  },
+  "schema": {
+    "experiment_id": "exp7239-semantic-audit",
+    "milestone": "2026.09.637",
+    "name": "carnot.experiment_7239_v637_semantic_audit",
+    "version": 1
+  },
+  "semantic_audit_complete_score": 0,
+  "semantic_value_score": 0,
+  "source_artifact_hashes": {
+    "adversarial_verifier": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "sha256": "sha256:1ec91490bceb3b161f51cc54e6b035fab6ec8d6eb5f8833e5b3bcd16890f60a6"
+    },
+    "agents": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "authority": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7236/authority_manifest.json",
+      "sha256": "sha256:7b19fdec3833f09805b210f51231365581269ec084dc09820e1b8b7f67c74edc"
+    },
+    "canary": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7237_v637_mention_canary.json",
+      "sha256": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75"
+    },
+    "canary_manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7237/raw_request_manifest.json",
+      "sha256": "sha256:50bcf999ccfb3b6d3c5bbfd60b09de68f860b83f6b70d1cd2ed23b38a9ad72d7"
+    },
+    "canary_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7237_v637_mention_canary.py",
+      "sha256": "sha256:7a1737cc424f77f3042b436dd0eeec1000f48745e2ffa6259db3d5bb6fc1feeb"
+    },
+    "capture": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7238_v637_mention_capture.json",
+      "sha256": "sha256:b91102c32462728266a43214b79bc07e77baf3ca73776cf96fc83ae47f855f3c"
+    },
+    "capture_manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7238/manifest.json",
+      "sha256": "missing"
+    },
+    "capture_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7238_v637_mention_capture.py",
+      "sha256": "sha256:37da164eb9255640e716fdac116a9bcf4c6bcb29760e2fece8bd6da2363bf7f1"
+    },
+    "claude": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+    },
+    "codex": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "e2e_test_plan": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+    },
+    "entrypoint": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7239_v637_semantic_audit.py",
+      "sha256": "sha256:4f7a1b1a11ccbc8524794426b5c6c242fe464a907cd3de22e1237a962b8a796f"
+    },
+    "exclusion_manifest": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "fixture": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7236_v637_mention_fixture.json",
+      "sha256": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3"
+    },
+    "fixture_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7236_v637_mention_fixture.py",
+      "sha256": "sha256:a402b4d155e1d326d65a41d95c0f24f55235aad1bbc0d446a6782ab2701d1d8f"
+    },
+    "focused_tests": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7239_v637_semantic_audit.py",
+      "sha256": "sha256:0d7ef52921ec02a2dea9aabaac80b6acee67f680fdce59dd4fd1407b8de6b722"
+    },
+    "grounding_audit_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7197_v634_grounding_value_audit.py",
+      "sha256": "sha256:fcba5cfaeda3683afa4d24ba33c4320c33bb5a58cee38ae7df2122e72ee42a13"
+    },
+    "module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7239_v637_semantic_audit.py",
+      "sha256": "sha256:3d2dfbcbec3d1fbe8ef4087592480060982587f371cd846e9e25fd041f925492"
+    },
+    "public": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7236/public_manifest.json",
+      "sha256": "sha256:b6a11618b77431d6e6d80b449662ffe1845e6c0193097eae8bc95d388171019d"
+    },
+    "research_program": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research_references": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "sha256": "sha256:6f2f4afcc7351a3be54166729aa3593539f4337dfad1dded3ab54d93434139de"
+    },
+    "row_consistency_lint": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    "span_fixture_module": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7222_v636_span_fixture.py",
+      "sha256": "sha256:338345b46db3dde4bdf282e3b0604d143dab0d3ac34aa5d77a55feb8b2449d58"
+    },
+    "verification_spec": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "sha256": "sha256:b66d94d1c60b49b174ec299a0ecc8f2dc621406e9eb669da937f660a696b6fcf"
+    },
+    "verifier_gaps": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_gaps.md",
+      "sha256": "sha256:93c4db18ac34fd2303e4d02ba1b65f4c70d2ab10f15afb2c630318fb3ad557e6"
+    }
+  },
+  "status": "blocked",
+  "timestamps": {
+    "completed_at_utc": "2026-09-12T11:17:48.731500+00:00",
+    "started_at_utc": "2026-09-12T11:17:48.569470+00:00"
+  },
+  "upstream_disposition": {
+    "action": "retire_same_verdict_lineage",
+    "continue_or_retire": "retire",
+    "failure": {
+      "artifact_field": "flagged_adversarial|quarantined|fabricated",
+      "expected_value": false,
+      "failed_check": "structured_quarantine",
+      "observed_value": true,
+      "passed": false,
+      "upstream": "experiment_7237"
+    },
+    "first_failed_layer": "capture_authentication"
+  },
+  "validation_command_rows": [
+    {
+      "classification": "passed_blocked_as_required",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/python -u scripts/experiments/experiment_7239_v637_semantic_audit.py --date 20260912",
+      "exit_code": 0,
+      "summary": "Exact producer authenticated the V637 chain, rejected Exp7237 flagged_adversarial=true, invoked no model or CPU replay, and wrote blocked_no_run."
+    },
+    {
+      "classification": "passed",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/python -m coverage run -m pytest --override-ini addopts='' -n0 tests/python/test_experiment_7239_v637_semantic_audit.py -q --basetemp=/tmp/pytest-exp7239-cov && .venv/bin/python -m coverage report --include='*/python/carnot/experiment_7239_v637_semantic_audit.py' -m --fail-under=100",
+      "exit_code": 0,
+      "summary": "10 passed; 494/494 statements; 100% scoped coverage."
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/ruff check python/carnot/experiment_7239_v637_semantic_audit.py scripts/experiments/experiment_7239_v637_semantic_audit.py tests/python/test_experiment_7239_v637_semantic_audit.py",
+      "exit_code": 0,
+      "summary": "All checks passed."
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7239_v637_semantic_audit.py scripts/experiments/experiment_7239_v637_semantic_audit.py tests/python/test_experiment_7239_v637_semantic_audit.py",
+      "exit_code": 0,
+      "summary": "Three files already formatted."
+    },
+    {
+      "classification": "passed",
+      "command": "PYTHONPATH=python .venv/bin/mypy python/carnot/experiment_7239_v637_semantic_audit.py",
+      "exit_code": 0,
+      "summary": "Success: no issues found in one source file."
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7239_v637_semantic_audit.py",
+      "exit_code": 0,
+      "summary": "All affected tests reference specification requirements."
+    },
+    {
+      "classification": "unrelated_baseline_failures_and_interrupted",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q",
+      "exit_code": 2,
+      "summary": "Stopped at 28% after a definitive broad failure state: 232 failed, 18512 passed, 45 skipped, 123 warnings, and 66 errors in 656.35s. Examples include stale Qwen3.6 registry IDs, legacy artifact drift, and tracked-result rewrites."
+    },
+    {
+      "classification": "passed_blocked_replay",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python JAX_PLATFORMS=cpu .venv/bin/python -u -c 'from carnot.experiment_7239_v637_semantic_audit import replay_terminal_artifact; replay_terminal_artifact()'",
+      "exit_code": 0,
+      "summary": "Independent reducer authenticated the same structured quarantine and regenerated zero model calls."
+    },
+    {
+      "classification": "passed",
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_7239_v637_semantic_audit.json --json",
+      "exit_code": 0,
+      "summary": "flag_count=0 and flagged_count=0."
+    },
+    {
+      "classification": "passed_with_expected_blocked_skip",
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_7239_v637_semantic_audit.json",
+      "exit_code": 0,
+      "summary": "checked 0, skipped 1 because blocked_no_run produced no per-unit rows, unreadable 0."
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
