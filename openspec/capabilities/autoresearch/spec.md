@@ -2353,6 +2353,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-019 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python |
 | REQ-AUTO-020 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python (shared test file with REQ-AUTO-019) |
 | REQ-AUTO-021 | N/A | Implemented (`python/carnot/autoresearch/toy_benchmarks.py`, `scripts/autoresearch_conductor_round.py`) | 16 Python (`test_autoresearch_toy_benchmarks.py`) + shared conductor-round test file |
+| REQ-AUTO-022 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 2 Python (shared conductor-round test file) |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3834,6 +3835,55 @@ dimension
 `final_energy` key is absent from the recomputed metrics passed to the
 evaluator.
 
+
+### REQ-AUTO-022: Persisted Generator-Failure Diagnostics
+
+**Origin:** 2026-09-12 known-issues entry, filed the same day REQ-AUTO-019's
+"always run" fix went live: the round fired for real twice in production and
+both times finished with zero iterations, but the receipt
+(`ops/autoresearch_conductor_report.md`) carried no diagnostic for *why*.
+`codex_generate_hypotheses` and `fable_generate_hypotheses` each append a
+`{"description": ..., "reason": ...}` entry to a `recent_failures` list on
+failure, but that list was only ever read back INTO the next iteration's
+prompt (so the next generator call sees what went wrong) -- never read OUT
+into the receipt. The operator could see a round produced nothing, but not
+whether codex timed out, returned a non-zero exit, or crashed with an
+`OSError`, without re-running by hand.
+
+The system SHALL capture the same `recent_failures` list object
+`orchestrator.run_loop_with_generator` passes to the round's `generator`
+callback on every iteration (the orchestrator creates this list once, outside
+the loop, and clears it only when a hypothesis is accepted -- so for a round
+that never accepts anything, the object holds every failure the round saw).
+When that captured list is non-empty at the end of the round,
+`ops/autoresearch_conductor_report.md` SHALL include a `## Generator failure
+reasons` section listing each entry's `description` and `reason` (the raw
+`call_codex`/`call_fable` failure string -- a timeout message, an exit code
+plus truncated stderr, or an `OSError`), each `reason` capped at 300
+characters so a large stderr blob cannot make the receipt unreadable.
+
+This requirement adds no new generator behavior and does not change
+`orchestrator.py`, `evaluator.py`, or `sandbox.py` -- it only threads an
+already-computed diagnostic from an in-memory list to the receipt file that
+already exists per REQ-AUTO-019.
+
+#### SCENARIO-AUTO-022-A: Both generators failing leaves a reason in the receipt
+
+**Given** a round where `call_codex` fails with `"codex exit 1: some stderr"`
+and the Fable fallback then also fails with `"claude exit 1: some other
+stderr"`
+**When** the round completes with `iterations == 0`
+**Then** the receipt's `## Generator failure reasons` section contains both
+`codex_call_failed: codex exit 1: some stderr` and `fable_call_failed: claude
+exit 1: some other stderr`, in the order the failures occurred.
+
+#### SCENARIO-AUTO-022-B: A clean round with no failures omits the section
+
+**Given** a round where the first generator call returns a usable hypothesis
+on iteration 0
+**When** the round completes
+**Then** the receipt contains no `## Generator failure reasons` section,
+since `recent_failures` never received an entry.
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

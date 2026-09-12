@@ -26650,3 +26650,30 @@ gradient/Hessian derivations for both benchmarks, not a placeholder. 38/38 tests
 ruff/mypy clean.
 
 - [AUTO-QUARANTINE 2026-09-12T20:28:58Z] tests/python/test_experiment_7240_v637_recurrence_fixture.py moved to tests/python/quarantine/ after 3 consecutive pre-test gate failures (poison-test cascade guard). The experiment script is unaffected; the TEST setup is broken. Fix the test and move it back to tests/python/ to restore its regression coverage.
+
+## 2026-09-12 (later still): the "no diagnostic in the receipt" gap closed — REQ-AUTO-022
+
+The 2026-09-12 "two-for-two zero-iteration production fires" entry named a second, un-fixed
+gap alongside the retry-on-empty-iteration-0 one: `codex_generate_hypotheses` and
+`fable_generate_hypotheses` both appended a `{"description": ..., "reason": ...}` entry to a
+`recent_failures` list on failure, but that list only ever fed the NEXT iteration's prompt --
+never the receipt. Both real production fires (18:28:38 UTC and 18:48:44 UTC) left the operator
+with "both generators failed" and no way to tell timeout from non-zero-exit from a crash,
+short of re-running by hand.
+
+**The fix.** `run_round`'s `generator` closure now captures the same `recent_failures` list
+object `orchestrator.run_loop_with_generator` passes it every iteration (the orchestrator
+creates the list once, outside the loop, and only clears it on an accepted hypothesis -- so a
+round that never accepts anything keeps every failure). When that captured list is non-empty
+at the end of the round, `ops/autoresearch_conductor_report.md` now gets a `## Generator
+failure reasons` section: one line per entry, `description: reason` (reason capped at 300
+chars). Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-022. Two new tests in
+`tests/python/test_autoresearch_conductor_round.py` (`test_both_generators_failing_leaves_
+reasons_in_the_receipt` -- real `call_codex`/`call_fable`, only `subprocess.run` mocked, so the
+failure path is exercised for real, not the composed `generate_hypotheses_with_fallback` mock
+the other `TestRunRound` tests use; `test_a_clean_round_omits_the_failure_reasons_section`).
+40/40 in the file, ruff/mypy clean.
+
+Next time both generators fail in production, the receipt will name the actual `call_codex`/
+`call_fable` exit code or exception string instead of just "both failed" -- closes this gap.
+The retry-on-iteration-0 gap (the OTHER half of that entry) is still open; not addressed here.

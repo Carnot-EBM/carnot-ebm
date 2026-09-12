@@ -553,12 +553,20 @@ def run_round(
     energy_before = {name: metrics.final_energy for name, metrics in baselines.benchmarks.items()}
 
     fable_fallback_iterations: list[int] = []
+    # REQ-AUTO-022: orchestrator.py owns one `recent_failures` list for the
+    # whole loop (cleared only on an accepted hypothesis) and hands it to
+    # `generator` by reference every iteration -- capturing that same
+    # reference here means the list still holds every unclear failure once
+    # the loop ends, so the receipt can say WHY a round produced nothing.
+    captured_failures: list[dict[str, Any]] = []
 
     def generator(
         cur_baselines: BaselineRecord,
         recent_failures: list[dict[str, Any]],
         iteration: int,
     ) -> list[tuple[str, str]]:
+        nonlocal captured_failures
+        captured_failures = recent_failures
         return generate_hypotheses_with_fallback(
             model,
             codex_timeout,
@@ -631,6 +639,19 @@ def run_round(
             "codex returned nothing on the first call, Fable 5.1 fallback also "
             "produced nothing usable -- both generators failed this round."
         )
+    if captured_failures:
+        # REQ-AUTO-022: the diagnostic the 2026-09-12 known-issues entry
+        # named as missing -- WHY a generator returned nothing, not just
+        # THAT it did. `reason` is the raw call_codex/call_fable failure
+        # string (a timeout message, a non-zero exit + truncated stderr, or
+        # an OSError) -- capped so a runaway stderr blob cannot blow up the
+        # receipt.
+        report_lines.append("")
+        report_lines.append("## Generator failure reasons")
+        for fail in captured_failures:
+            desc = fail.get("description", "unknown")
+            reason = str(fail.get("reason", ""))[:300]
+            report_lines.append(f"- {desc}: {reason}")
     if committed:
         report_lines.append("## Committed lineage")
         for exp_id, bench, sha in committed:

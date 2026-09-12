@@ -16471,3 +16471,10 @@ Caught a real bug before shipping — the first version hung the test suite hitt
 because existing tests mocked the wrong function. Verified end to end, nothing mocked: forced
 codex to fail, Fable produced a genuine damped-Newton optimizer in 168s. 38/38 tests, ruff/mypy
 clean. Full account in `ops/known-issues.md`.
+
+## 2026-09-12 (later): autoresearch failure diagnostics (REQ-AUTO-022)
+
+Working: when a round's codex+Fable both fail, `ops/autoresearch_conductor_report.md` now
+names why (raw failure string per generator), not just that it happened. Closes the
+"no diagnostic in the receipt" gap named in the two-for-two zero-iteration entry above.
+Next: the retry-on-iteration-0 orchestrator gap is still open (that entry's other half).

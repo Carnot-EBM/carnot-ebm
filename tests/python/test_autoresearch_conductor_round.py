@@ -498,6 +498,65 @@ class TestRunRound:
         assert log.count("\n") == 1  # only the seed commit -- the fabricated claim never landed
         assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
 
+    def test_both_generators_failing_leaves_reasons_in_the_receipt(self, tmp_path: Path) -> None:
+        """REQ-AUTO-022 / SCENARIO-AUTO-022-A. Real call_codex/call_fable
+        (only subprocess.run is faked), so recent_failures is populated the
+        same way a genuine timeout or non-zero exit would populate it."""
+        _init_repo(tmp_path)
+
+        def fake_run(argv, **kwargs):
+            if argv[0] == "codex":
+                return subprocess.CompletedProcess(argv, 1, stdout="", stderr="some stderr")
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr="some other stderr")
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr.subprocess, "run", side_effect=fake_run),
+        ):
+            rc = acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=1,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        assert rc == 0
+        receipt = (tmp_path / "receipt.md").read_text()
+        assert "## Generator failure reasons" in receipt
+        assert "codex_call_failed: codex exit 1: some stderr" in receipt
+        assert "fable_call_failed: claude exit 1: some other stderr" in receipt
+
+    def test_a_clean_round_omits_the_failure_reasons_section(self, tmp_path: Path) -> None:
+        """REQ-AUTO-022 / SCENARIO-AUTO-022-B."""
+        _init_repo(tmp_path)
+
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
+            return [
+                ("clean win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
+            ]
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
+        ):
+            acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=1,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        receipt = (tmp_path / "receipt.md").read_text()
+        assert "## Generator failure reasons" not in receipt
+
     def test_codex_unavailable_is_non_fatal(self, tmp_path: Path) -> None:
         with patch.object(acr, "codex_available", return_value=False):
             rc = acr.run_round(
