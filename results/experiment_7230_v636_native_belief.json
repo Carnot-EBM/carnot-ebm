@@ -257366,5 +257366,19 @@
   "started_at_utc": "2026-09-12T01:46:39.593104+00:00",
   "status": "complete",
   "verdict_class": "positive",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-12T02:05:19Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "VERDICT_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "verdict_class=positive but verifier_is_oracle=True: a circular (verifier==oracle) result must declare circular_positive so the circularity travels WITH the claim into capstones and headline aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness Discipline'."
+    }
+  ]
 }
