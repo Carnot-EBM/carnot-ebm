@@ -17834,3 +17834,6 @@ code |
 | 2026-09-12 20:29 UTC | Unify duration-floor selection with authenticated  | SKIP | Pre-tests failing, self-heal failed: > assert exp7240.gate_summary(checks)["passed"] is True |
 | 2026-09-12 21:45 UTC | Typed transition witnesses for live world-model re | OK | 177 passed, 1 warning in 12.55s |
 | 2026-09-12 21:47 UTC | Conductor re-exec: fresh committed source | OK | 050b29b80fae -> d0833c91b3f7; argv preserved |
+| 2026-09-12 21:48 UTC | Live ARC adapter-withheld transition-witness compa | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7248-arc-witness.arc_witness_ready_score (actual=0 == expected=1) |
+| 2026-09-12 21:50 UTC | Authenticated bounded Qwen3.8 mention canary | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7247-duration-class) |
+| 2026-09-12 21:50 UTC | Qwen3.8 held-out mention source-fidelity measureme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7250-mention-canary) |
