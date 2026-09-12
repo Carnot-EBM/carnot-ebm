@@ -1371,3 +1371,94 @@ topology, power, and speed unknown.
 **Complete disposition receipt:** Given three terminal board rows, Exp7231
 SHALL emit `board_continuity_complete_score=1` even when GateMate or PolarFire
 is blocked. Completion SHALL not imply hardware performance or fabric sampling.
+
+### REQ-ISING-7244
+
+**The V637 board-disposition review MUST authenticate the latest three-board
+evidence without issuing a board operation.**
+
+**Rationale:**
+Exp7231 retained a successful PolarFire CPU dispatch transcript and preserved
+KV260 graduation. GateMate still has no operator-authored physical-state change
+after Exp6559. Repeating either completed smoke would add no evidence. The next
+receipt must identify each board's exact state and next prerequisite while it
+keeps board CPU execution separate from FPGA fabric execution.
+
+**Acceptance criteria:**
+- The production implementation SHALL be
+  `python/carnot/experiment_7244_v637_board_disposition.py`. The executable
+  entrypoint SHALL be
+  `scripts/experiments/experiment_7244_v637_board_disposition.py`.
+- Preconditions SHALL bind nonempty source bytes, `REQ-ISING-7244`, the exact
+  V637 roadmap task, required imports, and writable checkpoint and result
+  paths. They SHALL reject quarantined inputs before they read acceptance
+  values. Only a dictionary with exactly `principle` and `value` keys MAY be
+  unwrapped.
+- The review SHALL use aggregation only. It SHALL set `MODEL_SPECS=[]`,
+  `model_invoked=false`, `inference_substrate=aggregation_from_upstream_artifacts`,
+  `inference_substrate_class=aggregation`, and `execution_venue=host`.
+- `board_rows` SHALL contain one terminal row for KV260, GateMate, and
+  PolarFire. Each row SHALL record its authenticated source path, date, hash,
+  criterion, observed state, disposition, and exact next prerequisite.
+- The KV260 row SHALL require both successful synthesis and its board-level
+  programmable-logic latency transcript. It SHALL preserve graduation. A later
+  KV260 task SHALL use only `ssh kria` as its access precondition.
+- The PolarFire row SHALL authenticate the Exp7231 raw transcript, binary hash,
+  input hash, output hash, and successful CPU dispatch. It SHALL state that this
+  receipt is not FPGA sampling. The review SHALL not repeat the smoke.
+- The GateMate search SHALL accept only an operator-authored physical-state
+  receipt after Exp6559. It SHALL record the timestamp, changed cable, port, or
+  power condition, and evidence hash. If no receipt exists, it SHALL record the
+  explicit absence and `blocked_inherited_no_new_physical_state` at board-row
+  scope.
+- `hardware_operations_issued` SHALL be empty. The review SHALL issue no JTAG,
+  USB reset, flash, power, device-storage, or board-access command.
+- The review SHALL use the V637 memory footprint when it is available and
+  authenticated. Missing footprint data SHALL not block board dispositions.
+  `operation_map` SHALL separate measured CPU/Rust archive-mask, validation,
+  and lookup work from prospective FPGA BRAM and TSU roles. Device topology,
+  bandwidth, power, and latency SHALL remain unknown. Degree-16 connectivity
+  SHALL not establish device fit.
+- `board_disposition_complete_score` SHALL equal one when all three board rows
+  and exact next conditions are present. A GateMate board-row block SHALL not
+  block the completed review.
+- Every board row SHALL contain `unit_id`, `arm`, `seed`, `metric`, `error`,
+  and `abstention`. The sample budget SHALL preserve planned, attempted,
+  completed, censored, and independent-unit counts.
+- The producer SHALL write provisional state only under `results/checkpoints/`.
+  It SHALL validate and atomically write the terminal artifact to
+  `results/experiment_7244_v637_board_disposition.json`.
+
+**Implementation status:** Planned (Exp7244)
+
+### SCENARIO-ISING-7244-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine signal, invalid upstream hash, malformed wrapper, or
+unwritable output, Exp7244 SHALL stop before disposition aggregation. It SHALL
+emit the exact failed gate and no board row or hardware operation.
+
+### SCENARIO-ISING-7244-BOARDS
+
+**Independent board evidence:** Given authenticated Exp3709 and Exp7231 bytes,
+Exp7244 SHALL preserve KV260 graduation and PolarFire CPU dispatch separately.
+It SHALL not claim that the PolarFire transcript sampled programmable logic.
+
+### SCENARIO-ISING-7244-GATEMATE
+
+**Physical-state boundary:** Given no operator-authored GateMate physical-state
+receipt after Exp6559, Exp7244 SHALL record explicit absence and zero hardware
+commands. A later receipt SHALL only authorize a named future task.
+
+### SCENARIO-ISING-7244-PLACEMENT
+
+**Measured and prospective placement:** Given an authenticated V637 memory
+receipt, Exp7244 SHALL retain its measured sizes. It SHALL leave FPGA and TSU
+topology, bandwidth, power, and latency unknown.
+
+### SCENARIO-ISING-7244-ARTIFACT
+
+**Terminal read-only receipt:** Given three terminal board rows, Exp7244 SHALL
+emit `board_disposition_complete_score=1` with an empty hardware-operation
+list. The GateMate row MAY remain blocked while the top-level review is
+complete.
