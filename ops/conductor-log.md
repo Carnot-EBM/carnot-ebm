@@ -17814,3 +17814,4 @@ code |
 | 2026-09-12 07:46 UTC | Independent ARC dry-run reachability and authority | OK | 102 passed, 1 warning in 9.29s |
 | 2026-09-12 08:08 UTC | Public mention compiler and sealed semantic fixtur | OK | 97 passed, 1 warning in 13.10s |
 | 2026-09-12 08:43 UTC | Bounded Qwen3.8 mention-grounding canary | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clean success, excluded from headline / capstone. 117 passed, 1 warning in 8.72s |
+| 2026-09-12 09:46 UTC | Qwen3.8 held-out mention-grounding capture | OK | 92 passed, 1 warning in 9.61s |
