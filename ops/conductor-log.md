@@ -17839,3 +17839,4 @@ code |
 | 2026-09-12 21:50 UTC | Qwen3.8 held-out mention source-fidelity measureme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7250-mention-canary) |
 | 2026-09-12 22:03 UTC | Independent source semantics and matched-coverage  | OK | 99 passed, 1 warning in 7.49s |
 | 2026-09-12 22:46 UTC | Coverage-based archive admission and effective mem | OK | 110 passed, 1 warning in 22.16s |
+| 2026-09-12 23:32 UTC | Prospective continuous self-learning with bounded  | OK | 91 passed, 1 warning in 38.01s |
