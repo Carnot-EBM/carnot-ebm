@@ -11,107 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 3 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 4 |
 
-## experiment_7224_span_capture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked gate check, not a measurement result or comparative claim.
-
-## WAS THAT CHECKED
-No; execution stopped at `conductor_pre_gate` because an upstream gate failed.
-
-## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_field": "span_canary_ready_score"`, `"failed_observed": 0`, `"failed_expected": 1`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7226_v636_belief_compiler.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The packed belief compiler matches the circular finite reference within the tested finite domain, without claiming learning benefit or runtime acceleration.
-
-## WHAT WOULD REFUTE IT
-Any nonzero prediction, query, energy, replay, or fresh-stream error; a failed parity or mutation check; or a state that does not match after reload would falsify the scoped equivalence claim.
-
-## WAS THAT CHECKED
-Yes. The parity rows exercised prediction, query, energy, and delayed replay behavior; the stream rows checked fresh-stream readiness; mutation rows tested boundary failures; and state reload was checked. These checks could have produced mismatches or failures, although they do not establish value beyond the oracle.
-
-## EVIDENCE
-`"honest_verdict": "complete: packed belief compiler matches the circular finite reference; no learning or speed claim"`; `"verdict_class": "circular_positive"`; `"verifier_is_oracle": true`; `"mismatch_count": 0`; `"passed": true`; `"error": 0`; `"abstention": 0`; `"reload_match": true`; `"stream_conformance_errors": []`; `"learning_efficacy_claimed": false`; `"runtime_acceleration_claimed": false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7227_v636_belief_learning.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Packed online memory did not pass every fixed prospective learning gate.
-
-## WHAT WOULD REFUTE IT
-All fixed prospective learning gates passing, including the recurrence-error requirement, would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The acceptance-gate results show that efficacy failed specifically because the recurrence-error requirement failed, while the other efficacy checks passed. The serious reference-online comparator also tied the packed method exactly, leaving no evidence of added value. Oracle reuse would invalidate a positive value claim, but it does not invalidate this reported null.
-
-## EVIDENCE
-`honest_verdict`: `complete_null: packed online memory did not pass every fixed prospective learning gate`; `learning_value_passed`: `false`; `efficacy`: `passed`: `false`; `recurrence_error_increase_lte_0_02`: `false`; `future_error_upper_ci95_lt_zero`: `true`; `false_accept_upper_ci95_lte_zero`: `true`; `comparison_id`: `packed_online_memory_vs_reference_online_version_space`; `future_error_delta`: `estimate`: `0.0`; `false_accept_delta`: `estimate`: `0.0`; `recurrence_error_increase`: `estimate`: `0.0`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7228_v636_belief_cold_audit.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7229_v636_rare_event_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The read-only audit completely classified the upstream failures, preserved the failed Exp7216 gate, and determined that the fixed rare-event accuracy target exceeds the stated budget.
-
-## WHAT WOULD REFUTE IT
-Any original failed criterion remaining unclassified, any changed or passing Exp7216 gate value, or every fixed probe satisfying the accuracy requirements within the 40,000,000-transition-per-graph-arm budget would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The artifact checks classification completeness in `failure_classification`, compares expected and observed upstream gate fields in `gate_check_summary`, and evaluates the fixed observables against the declared accuracy target and budget in `next_measurement_envelope`. The oracle reuse does not establish independent verifier value, but the headline makes no such value claim.
-
-## EVIDENCE
-`"classified_failed_criteria": 142`, `"failed_criteria": 142`, `"unclassified_failed_criteria": 0`, `"down_up_value_score": 0`, `"primary_gate.passed": false`, `"unchanged": true`, `"observables_fixed_before_new_chain": true`, `"max_pooled_transitions_per_graph_arm": 40000000`, `"worst_probe_iid_effective_sample_lower_bound": 169703912`, `"feasible_at_budget": false`, `"verdict_class": "null"`, `"verifier_is_oracle": true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7230_v636_native_belief.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7231_v636_board_continuity.json
+## experiment_7238_v637_mention_capture.json
 
 **NO_CLAIM**
 
@@ -122,17 +25,167 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or method-value claim is made; contradictory authentication, dispatch, or board-state rows would invalidate the continuity receipt, but would not refute an absent performance claim.
+No comparative claim is made; the administrative blocked-no-run record would be contradicted by completed model calls or comparison rows.
 
 ## WAS THAT CHECKED
-Yes. Per-board rows report authentication, terminal status, abstention, and dispatch outcomes, including the blocked GateMate disposition.
+No scientific refutation was attempted because the experiment was blocked before inference; this is explicitly recorded.
 
 ## EVIDENCE
-`aggregation_from_upstream_artifacts`; `new_performance_claimed`: `false`; `hardware_performance_claimed`: `false`; `programmable_logic_sampling_claimed`: `false`; `graduated_preserved`; `blocked_inherited_no_new_physical_state`; `terminal_cpu_dispatch_raw_transcript_retained`
+`"honest_verdict": "blocked_exp7238_structured_quarantine"`; `"status": "blocked"`; `"inference_mode": "not_run"`; `"inference_substrate": "blocked_no_run"`; `"model_invoked": false`; `"attempted_calls": 0`; `"completed_comparison_rows": 0`; `"paired_unit_rows": []`; `"rows": []`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7232_v636_capstone.json
+## experiment_7239_v637_semantic_audit.json
 
-**SKIPPED_ALREADY_FLAGGED**
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact reports a blocked, no-run disposition rather than a comparative or value claim.
+
+## WAS THAT CHECKED
+No. No comparison was attempted: all 64 units were censored, the comparison rows are empty, and every acceptance criterion was unevaluated.
+
+## EVIDENCE
+`"honest_verdict": "blocked_exp7239_structured_quarantine"`; `"inference_substrate": "blocked_no_run"`; `"status": "blocked"`; `"attempted_independent_units": 0`; `"completed_independent_units": 0`; `"censored_independent_units": 64`; `"paired_comparison_rows": []`; `"rows": []`; `"evaluated": false`; `"eligible_for_promotion": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7240_v637_recurrence_fixture.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+The recurrence fixture, controller, and positive controls are runnable.
+
+## WHAT WOULD REFUTE IT
+A failed positive control, incomplete execution, malformed arm rows, or failed acceptance gate would refute the narrow readiness claim; comparative efficacy would require a separate non-oracle evaluation against a serious baseline.
+
+## WAS THAT CHECKED
+Yes for runnability: completion, six-arm row count, acceptance gates, and positive controls were checked. No scientific efficacy or added-value claim was tested.
+
+## EVIDENCE
+`"complete_circular_positive: recurrence fixture, controller, and positive controls are runnable"`, `"science_efficacy"`, `"not_scored_by_fixture"`, `"pass": null`, `"failed_count": 0`, `"passed_count": 6`, `"status": "complete"`, `"verdict_class": "circular_positive"`, `"verifier_is_oracle": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7241_v637_recurrence_learning.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Validated archive reuse did not pass every frozen learning gate.
+
+## WHAT WOULD REFUTE IT
+All frozen learning gates passing, with the recurrence-learning value score equal to one.
+
+## WAS THAT CHECKED
+Yes, in `acceptance_gate_results` and `recurrence_learning_value_score`; several gates failed, including comparisons against the serious reset baseline and the shuffled control.
+
+## EVIDENCE
+`honest_verdict`: `complete_null: validated archive reuse did not pass every frozen learning gate`; `recurrence_learning_value_score`: `0`; `future_error_vs_reset_upper_ci95_lt_zero`: `pass`: `false`; `false_accept_vs_reset_upper_ci95_lte_zero`: `pass`: `false`; `recurrence_error_increase_vs_frozen_lte_0_02`: `pass`: `false`; `recurrence_error_vs_shuffled_upper_ci95_lt_zero`: `estimate`: `0.0`, `pass`: `false`; `verdict_class`: `null`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7242_v637_recurrence_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The recurrence audit completed, but the method did not satisfy every promotion criterion.
+
+## WHAT WOULD REFUTE IT
+A promotion score of 1 with every acceptance gate passing—including superiority to reset/relearn and shuffled controls and recurrence-error increase versus frozen at or below 0.02—would refute the null claim.
+
+## WAS THAT CHECKED
+Yes. The acceptance gates directly tested those conditions, including the serious reset/relearn baseline; multiple gates failed, so the potential refutation was given a real chance but did not occur. The oracle limitation does not invalidate this null claim because no positive added-value claim is made.
+
+## EVIDENCE
+`honest_verdict`: `complete_null: recurrence audit completed but promotion criteria did not all pass`; `recurrence_promotion_score`: `0`; `false_accept_vs_reset_upper_ci95_lte_zero`: `pass`: `false`; `future_error_vs_reset_upper_ci95_lt_zero`: `pass`: `false`; `recurrence_error_increase_vs_frozen_lte_0_02`: `actual`: `0.09228515625`, `pass`: `false`; `recurrence_error_vs_shuffled_upper_ci95_lt_zero`: `estimate`: `0.0`, `ci95`: `[0.0, 0.0]`, `pass`: `false`; `verdict_class`: `null`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7243_v637_native_memory.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The native implementation achieved exact oracle parity, but failed the batch-one full-event cost gate against the Python reference.
+
+## WHAT WOULD REFUTE IT
+Any scheduled Python/native parity mismatch would refute exact parity; a batch-one lower CI95 above 1 would refute the claim that the cost gate failed.
+
+## WAS THAT CHECKED
+Yes. Parity was checked across 32 completed independent streams with mismatch counts, and batch-one cost was compared against the Python reference using 30 paired blocks. The oracle limits parity to an execution-equivalence claim, but the artifact makes no positive verifier-value claim.
+
+## EVIDENCE
+`honest_verdict` = `complete_null: exact oracle parity passed but batch-one full-event cost gate failed`; `verifier_is_oracle` = `true`; `native_execution_and_exact_fresh_parity` has `actual` = `1`, `expected` = `1`, `pass` = `true`; `batch_one_total_event_lower_ci95` has `actual` = `0.3632253505817759`, `expected` = `>1`, `pass` = `false`; `arm` = `python_reference`; `arm` = `native_pyo3`; `paired_blocks` = `30`; `independent_stream_units_completed` = `32`; `independent_stream_units_censored` = `0`; `native_archive_cost_value_score` = `0`; `verdict_class` = `null`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7244_v637_board_disposition.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: this is a read-only disposition receipt, not a comparative claim about a method’s value.
+
+## WAS THAT CHECKED
+No comparative refutation was applicable; the artifact checked only disposition completeness, source authentication, and exact next conditions.
+
+## EVIDENCE
+`inference_substrate`: `aggregation_from_upstream_artifacts`; `hardware_operations_issued_count`: `0`; `board_disposition_complete_score`: `1`; `model_invocation_count`: `0`; `verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7245_v637_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V637 thirteen-task matrix is complete, while mention science is blocked, recurrence learning and native-cost value are null, and scored-policy evidence is disqualified.
+
+## WHAT WOULD REFUTE IT
+An incomplete task matrix, unquarantined evidence establishing mention value or authenticated scored-policy use, recurrence learning passing its reset, recurrence, and shuffled-control gates, or full batch-one native event cost meeting the 10× target would refute the corresponding headline finding.
+
+## WAS THAT CHECKED
+Yes. The artifact checks all thirteen task slots, explicitly tests and fails overall claim agreement, applies quarantine and promotion flags to scored-policy and mention evidence, and records failed value outcomes for recurrence learning and native cost. The oracle-linked recurrence and native checks support null findings, not claims of verifier-added value.
+
+## EVIDENCE
+`"honest_verdict": "blocked_external_source_value: V637 matrix is complete; mention science remains blocked, recurrence and native cost are null, and scored-policy evidence is disqualified"`; `"criterion": "thirteen_task_matrix_complete"`; `"actual_value": 13`; `"passed": true`; `"criterion": "all_recomputed_claims_match"`; `"actual_value": false`; `"passed": false`; `"source_quarantined": true`; `"value": null`; `"verdict_class": "disqualified"`; `"The complete learner failed reset, recurrence, and shuffled-control gates."`; `"Exact parity completed, but full batch-one event cost was slower than Python."`; `"accepted_for_promoted_evidence": false`; `"promoted": false`; `"error": "quarantined_upstream"`; `"complete": false`; `"full batch-one native event cost did not meet the 10x target"`
+
+## RECOMMENDATION
+KEEP

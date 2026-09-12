@@ -44071,3 +44071,98 @@ promoted from the prior summary. New evidence must separate current invocation
 receipts from historical sources and injected negative fixtures. The later
 autoresearch fitness correction in `ops/changelog.md` already recomputes toy
 benchmark energy independently. Repeating that repair would add no new research.
+
+<!-- V638-PLANNER-REFRESH-20260912-START -->
+## V638 planning research refresh — 2026-09-12
+
+This pass was recorded before writing V638 experiments. It covers all eight
+requested arXiv topics and all six secondary channels. External results remain
+external evidence; local adaptations below are hypotheses.
+
+### New leads
+
+| Primary source | Supported finding | Carnot use and limit |
+|---|---|---|
+| [ContCore: Memory-Bounded Continuation of Greedy Sampling](https://arxiv.org/abs/2608.15277), 15 August 2026; record says accepted at BMVC 2026 | Repeated greedy expansion and consolidation preserves representative coresets within fixed memory. Experiments concern continual visual anomaly detection. The [full method](https://arxiv.org/html/2608.15277v1) and [author code](https://github.com/jungyg/ContCore) were checked. | Test coverage-based admission and eviction of finite constraint hypotheses using signatures on released witnesses. This discrete adaptation does not reproduce visual anomaly detection. Its coreset bound does not establish safety under label drift; retain separate fresh-feedback reactivation. |
+| [SemLoc](https://arxiv.org/abs/2603.29109), 31 March 2026 | Typed program anchors connect inferred properties to runtime checks. Counterfactual checks help distinguish causal violations. | Test transition-level mismatch witnesses in ARC's existing engine-refinement feedback. Code must come from the agent's observed transitions. Game source, hand-built models, and evaluator labels stay outside the loop. |
+| [Polynomial KANs for Game of Life Dynamics](https://arxiv.org/abs/2606.23587), 22 June 2026 | Matching activation structure to a cellular automaton reduces the network size needed to learn local dynamics. | Defer a KAN trial until useful live transition data exists. Known automaton rules do not establish hidden-game transfer. |
+| [Kolmogorov–Arnold stability for discontinuous functions](https://arxiv.org/abs/2609.07240), 7 September 2026 | Studies representation stability under hidden-layer reparameterization. | Monitor only. The abstract supplies no tested Carnot training recipe or latency benefit. |
+
+### Rechecked methods and stop conditions
+
+- [Projectional Decoding](https://arxiv.org/abs/2605.30054), 28 May 2026,
+  maintains a partial graph for semantic validation. Preserve the distinction
+  between syntax and source fidelity; reuse the existing mention compiler.
+- [Grounding under Incomplete Graph Evidence](https://arxiv.org/abs/2606.30247),
+  29 June 2026, distinguishes contradiction from absent support. Keep explicit
+  unknowns, direction-change mutants, and source-removal controls.
+- [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), 19 July
+  2026, reports sensitivity to equivalent formula surfaces. Retain independent
+  source families and paired renaming; SAT cost is not LLM headroom.
+- [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476),
+  25 June 2026, separates aligned, constant, random, shuffled, and oracle
+  effects. Its deployable path fails a stored-value gate. Adopt the causal
+  control, without assuming memory helps.
+- [SparseKAN](https://arxiv.org/abs/2608.00859), 1 August 2026, physically
+  compacts its representation. The [author code](https://github.com/OSU-STARLAB/SparseKAN)
+  was checked. Remove actual repeated representation transfer before expecting
+  speedup; its KAN/FPGA numbers do not transfer to a Rust controller.
+- [T-SKM-Net](https://arxiv.org/abs/2512.10461) and
+  [PAL](https://arxiv.org/abs/2503.19466) start with encoded constraints and do
+  not solve source extraction. Defer these neural constraint layers.
+- [ETS](https://arxiv.org/abs/2601.21484), revised 19 May 2026 and marked
+  accepted at ICML 2026, estimates energy terms by online Monte Carlo. Defer
+  decoding work until source fidelity and matched-cost value exist.
+- [FPGA Ising Decomposition](https://arxiv.org/abs/2602.15985), 17 February
+  2026, moves decomposition beside a custom solver to reduce host overhead.
+  Measure complete event cost. Carnot's boards do not inherit its architecture.
+- [EBT](https://arxiv.org/abs/2507.02092), 2 July 2025, and
+  [ARM–EBM](https://arxiv.org/abs/2512.15605), revised 25 May 2026, remain
+  foundation references. Learned compatibility and function-space equivalence
+  are not certificates of semantic truth. External-text scorer retirement stays.
+
+### Secondary-source coverage
+
+| Channel | Observed result |
+|---|---|
+| OpenReview | Searched NeurIPS/ICML/ICLR EBM records and read an [EBT submission PDF](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf). Hosting does not establish acceptance. |
+| Semantic Scholar | Both Graph API requests returned HTTP 200: [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=100) returned 35 records; [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100) returned eight. Neither included a next page. These are returned records, not guaranteed exhaustive citation totals. Solver-Hard and Distributional EBMs recur; primary records supply method claims. |
+| Hugging Face | The [verification feed](https://huggingface.co/papers?q=verification) resolved to the 11 September 2026 daily page. No method was selected from ranking alone. |
+| GitHub | Opened [weekly Python trending](https://github.com/trending/python?since=weekly); extraction did not establish a relevant new ranked repository. ContCore and SparseKAN were checked through author links. No dependency was installed. |
+| Extropic | Opened [writing](https://extropic.ai/writing) and [Z1T](https://extropic.ai/writing/z1t). The index exposes navigation only; Z1T describes mixed digital/probabilistic execution. No later dated update or new local TSU access was established. Vendor estimates are not board measurements. |
+| Logical Intelligence | Opened the [home page](https://logicalintelligence.com/) and [Kona architecture](https://logicalintelligence.com/kona-ebms-energy-based-models). The reviewed pages supply no compatible local weights or reproducible Carnot integration. |
+
+### Local evidence that determines adoption
+
+V637 has thirteen terminal artifacts; the completion archive currently ends at
+V636. Preserve this lag. The unchanged adversarial checker reproduced two
+different failures. Exp7237 declares `model_bounded_generation` and records
+59.466359 seconds, but the older duration path still applies 60 seconds from
+`live_llm_inference`. Its numeric readiness is one and its quarantine remains.
+Exp7234 mixes real llama.cpp calls and a non-invoked vLLM arm; nested invocation
+flags trigger contradiction. Neither diagnosis rehabilitates old science or
+warrants time padding.
+
+Exp7241's recurrence error increase was 0.092285 against the frozen 0.02 bound.
+It failed reset and shuffled comparisons. `_nominate` shuffles enumeration but
+then chooses from all eligible candidates by `(validation_loss, creation_order)`,
+canceling the order intervention. `_append_archive` evicts by age. A changed
+admission experiment needs a demonstrably effective shuffled control and a
+coverage-based retention arm against FIFO, with unchanged safety criteria.
+
+Exp7243 passed native parity but its complete batch-one cost lower bound was
+0.363225 times Python throughput. The Python archive wrapper repeatedly
+reconstructs and serializes the native active controller. Test ownership of the
+whole event state in a persistent native object. Retain equivalent validation
+and durability costs; a kernel-only sweep would miss the measured cause.
+
+The ARC local arm wrote one valid engine but recorded zero non-identity
+predictions, trust acceptance, model-planned actions, and levels. Syntax success
+cannot be an efficacy gate. Typed transition mismatches are a testable input to
+runtime refinement; useful prediction and policy consumption need separate rows.
+
+KV260 is graduated for synthesis and latency. PolarFire is graduated for
+hash-matched CPU dispatch, which is not FPGA sampling. GateMate still lacks a
+later operator physical-state receipt after Exp6559. Keep its next condition
+visible without repeating an unchanged hardware probe.
+<!-- V638-PLANNER-REFRESH-20260912-END -->
