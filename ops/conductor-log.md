@@ -17832,3 +17832,5 @@ code |
 | 2026-09-12 20:22 UTC | Unify duration-floor selection with authenticated  | SKIP | Pre-tests failing, self-heal failed: > assert exp7240.gate_summary(checks)["passed"] is True |
 | 2026-09-12 20:26 UTC | Unify duration-floor selection with authenticated  | SKIP | Pre-tests failing, self-heal failed: > assert exp7240.gate_summary(checks)["passed"] is True |
 | 2026-09-12 20:29 UTC | Unify duration-floor selection with authenticated  | SKIP | Pre-tests failing, self-heal failed: > assert exp7240.gate_summary(checks)["passed"] is True |
+| 2026-09-12 21:45 UTC | Typed transition witnesses for live world-model re | OK | 177 passed, 1 warning in 12.55s |
+| 2026-09-12 21:47 UTC | Conductor re-exec: fresh committed source | OK | 050b29b80fae -> d0833c91b3f7; argv preserved |

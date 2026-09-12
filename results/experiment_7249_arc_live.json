@@ -1,0 +1,51 @@
+{
+  "experiment": 7249,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-12",
+  "started_at": "2026-09-12T21:47:29.887081+00:00",
+  "finished_at": "2026-09-12T21:47:29.887081+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Live ARC adapter-withheld transition-witness comparison",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7248-arc-witness",
+  "failed_field": "arc_witness_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7248_v638_arc_witness.json",
+  "failed_evidence_sha256": "sha256:094760e1d7baf1609339bf122a9c11d74ed970d5d7ae87fc95a791ca7ce84d1b",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7248-arc-witness",
+    "failed_field": "arc_witness_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7248_v638_arc_witness.json",
+    "failed_evidence_sha256": "sha256:094760e1d7baf1609339bf122a9c11d74ed970d5d7ae87fc95a791ca7ce84d1b"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7248-arc-witness.arc_witness_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7248-arc-witness",
+      "artifact_field": "arc_witness_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7248_v638_arc_witness.json",
+      "artifact_sha256": "sha256:094760e1d7baf1609339bf122a9c11d74ed970d5d7ae87fc95a791ca7ce84d1b"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
