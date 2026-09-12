@@ -26648,3 +26648,5 @@ log recorded iteration 0, and Fable 5.1 produced a genuine, substantive hypothes
 Hessian solve, energy-monotone step acceptance, and 8 Rosenbrock restarts -- real, correct
 gradient/Hessian derivations for both benchmarks, not a placeholder. 38/38 tests (10 new),
 ruff/mypy clean.
+
+- [AUTO-QUARANTINE 2026-09-12T20:28:58Z] tests/python/test_experiment_7240_v637_recurrence_fixture.py moved to tests/python/quarantine/ after 3 consecutive pre-test gate failures (poison-test cascade guard). The experiment script is unaffected; the TEST setup is broken. Fix the test and move it back to tests/python/ to restore its regression coverage.
