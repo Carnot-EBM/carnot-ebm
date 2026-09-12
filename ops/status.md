@@ -16398,3 +16398,15 @@ protection mechanism before it was committed. Recovered from the rescue patch
 it wrote to `ops/.conductor_selfedit_rescue/`, reapplied, and committed
 immediately and alone this time. See `ops/known-issues.md` for the full
 account.
+
+
+## 2026-09-12 — Autoresearch hypothesis generator switched to codex/gpt-6-astra
+
+Operator directive corrected the design above: the generator now calls `codex exec --model
+gpt-6-astra` (mirroring `pages_adversarial_audit.py:call_codex`), not a locally-served
+OpenAI-compatible endpoint. Verified this cannot affect the ARC live agent's own AVO
+adaptation on Kaggle: zero cross-imports between `scripts/autoresearch_conductor_round.py`
+and any `arc_*` live-agent module, and the Kaggle kernel entrypoint imports neither
+`research_conductor.py` nor `autoresearch_conductor_round.py`. Real dry run against a live
+`codex-cli 0.153.4`: 2 iterations, 2 accepted, 4 real scoped commits in a scratch repo. Tests
+17/17, spec REQ-AUTO-019 updated in place. Full account in `ops/known-issues.md`.

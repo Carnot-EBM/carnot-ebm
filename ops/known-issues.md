@@ -26326,3 +26326,59 @@ harness exists yet); any daily $/token spend ceiling (none exists anywhere in th
 today — the bounded `max_iterations` + circuit breaker + once-per-milestone cadence caps this
 increment's cost per cycle, but a genuine multi-round-per-day unattended posture would want
 one).
+
+## 2026-09-12 (same day, later): hypothesis generator switched to codex/gpt-6-astra
+
+Operator directive: "The AVO-shaped loop should be gpt-6-astra based." This corrects the design
+decision recorded above (which pointed the generator at a locally-served OpenAI-compatible
+endpoint). Reasoning, and why this is NOT a Decentralization-Respecting Design Constraints
+violation: the mutation-operator's "propose a hypothesis" role is the same category of task as
+the planner/retro/audit tiers `scripts/research_conductor.py` already runs via `codex exec`
+(gpt-5.6-sol, and gpt-6-astra for the planner specifically since a 2026-09-09 operator
+directive) -- an agent deciding what to try next, not a Carnot CAPABILITY the local-first
+mandate protects.
+
+**What changed.** `scripts/autoresearch_conductor_round.py`'s generator no longer uses
+`hypothesis_generator.generate_hypotheses_batch` (an OpenAI-SDK HTTP client against
+`GeneratorConfig.api_base`). New `call_codex()` mirrors `pages_adversarial_audit.py:call_codex`
+and `research_conductor.py`'s own `_build_agent_command` codex branch exactly: `codex exec
+--dangerously-bypass-approvals-and-sandbox --color never --model gpt-6-astra --cd <root>
+--ephemeral -`, prompt piped via stdin. `codex_generate_hypotheses()` reuses
+`hypothesis_generator.py`'s own `DEFAULT_SYSTEM_PROMPT` / `_build_user_prompt` /
+`_extract_hypotheses` for the prompt and parsing -- only the transport changed. The
+`endpoint_reachable()` HTTP health check was replaced with `codex_available()` (a
+`shutil.which("codex")` precondition, matching the Pre-Launch Preconditions Discipline
+pattern), and `--api-base` was dropped from the CLI in favor of `--model` (default
+`gpt-6-astra`) and `--codex-timeout`.
+
+**Verified this does not touch the Kaggle-deployed live agent's own AVO adaptation.** The
+operator asked directly whether this breaks the ARC live agent's AVO loop when it runs on
+Kaggle, where the only available model is the local Qwen3.8-27B. Checked, not assumed: grepped
+both directions for cross-imports between `scripts/autoresearch_conductor_round.py` /
+`python/carnot/autoresearch/` and `arc_competition_agent.py` / `arc_trajectory_supervisor.py` /
+`arc_induction_tool_loop.py` -- zero hits either way. Also confirmed `scripts/kaggle/kernel/
+main.py` (the actual Kaggle submission entrypoint) imports nothing from either
+`scripts/research_conductor.py` or `scripts/autoresearch_conductor_round.py`, and
+`kernel-metadata.json` packages only `main.py`. These are two structurally separate systems:
+this REQ's conductor-side mutation loop never ships to Kaggle, and the ARC live agent's own
+AVO adaptation (the `TrajectorySupervisor` per CLAUDE.md's "AVO-Method Adoption for the Live
+Agent") stays exactly as it was, pinned to the local model, untouched by this change.
+
+**Real verification, not assumed.** `codex --version` confirmed `codex-cli 0.153.4` installed
+and on `PATH` in this environment. Ran a real dry run (`run_round(model="gpt-6-astra",
+max_iterations=2, project_root=<scratch git repo>)`, never the real project tree): 2
+iterations, 2 accepted, 4 real git commits landed in the scratch repo (2 per accepted
+hypothesis -- an accepted entry that reports metrics for both `double_well` and `rosenbrock`
+gets one lineage commit per benchmark, which is correct behavior, not a bug). 17 tests in
+`test_autoresearch_conductor_round.py` (up from 11 -- added `TestCodexAvailable`,
+`TestCallCodex`, `TestCodexGenerateHypotheses`), full `test_autoresearch_*` suite green, ruff
+and mypy clean. `openspec/capabilities/autoresearch/spec.md`'s REQ-AUTO-019 updated to match
+(the local-endpoint text was from the same session, not yet a shipped/relied-upon historical
+claim, so edited in place rather than append-only-corrected).
+
+Mid-edit, this session's edit to `scripts/autoresearch_conductor_round.py` and its test file
+were swept (correctly, content-intact, verified by grep before trusting it) into a concurrent
+`[conductor] Checkpoint: preserve uncommitted work from interrupted run` commit
+(`4fd4f77e99`) rather than lost outright this time -- the `research_conductor.py` self-edit
+rescue mechanism from the earlier entry above was not needed here since this edit was not to
+`research_conductor.py` itself.

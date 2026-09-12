@@ -3626,17 +3626,40 @@ REQ-AUTO-015 already specify and implement that entire loop; nothing in
 at milestone-close, as a sibling step to the existing adversarial audits
 (`pages_adversarial_audit.py`, `verifier_authenticity_audit.py`, etc.),
 gated by `CARNOT_AUTORESEARCH_UNATTENDED=1` (default off). The round SHALL
-use `run_loop_with_generator` (REQ-AUTO-003) against an LLM hypothesis
-generator (`hypothesis_generator.py`, REQ-AUTO-003) pointed at a
-LOCALLY-served OpenAI-compatible endpoint (`GeneratorConfig.api_base`) --
-never a cloud API, per the project's Decentralization-Respecting Design
-Constraints. The round SHALL be bounded (a small `max_iterations`, the
-existing `max_consecutive_failures` circuit breaker) and SHALL pass a
+use `run_loop_with_generator` (REQ-AUTO-003) against a hypothesis generator
+invoked via the `codex` CLI (`scripts/autoresearch_conductor_round.py:
+call_codex`, mirroring `pages_adversarial_audit.py:call_codex` and
+`scripts/research_conductor.py`'s own `_build_agent_command` codex branch --
+same flags, prompt piped via stdin), model `gpt-6-astra` (2026-09-12
+operator directive; supersedes an earlier draft of this REQ that specified a
+locally-served OpenAI-compatible endpoint via `hypothesis_generator.py`'s
+`GeneratorConfig` -- see the Decentralization note below for why the model
+choice differs from `hypothesis_generator.py`'s own docstring, which still
+describes the HTTP path as a generic, reusable option). The round SHALL be
+bounded (a small `max_iterations`, the existing `max_consecutive_failures`
+circuit breaker, a per-call codex timeout) and SHALL pass a
 `ConstitutionChecker` (REQ-AUTO-015) so every sandbox execution and every
 file-system action it takes is gated by the existing three-tier policy. If
-the configured endpoint is unreachable, the round SHALL write a clean,
-non-fatal receipt and exit 0 rather than blocking milestone-close -- the
-same contract every sibling audit already has.
+the `codex` CLI is unavailable (`codex_available()`, a `shutil.which`
+precondition check per the project's Pre-Launch Preconditions Discipline),
+the round SHALL write a clean, non-fatal receipt and exit 0 rather than
+blocking milestone-close -- the same contract every sibling audit already
+has.
+
+**Decentralization note.** This generator choice is the project's own
+internal R&D tooling calling a closed-weight model via `codex exec` --
+architecturally the same category as the planner/retro/audit tiers
+`scripts/research_conductor.py` already runs on codex, never a locally-served
+model. It is NOT a Carnot CAPABILITY (the thing `python/carnot/verify`/
+`pipeline`/`samplers` ship to users), so the Decentralization-Respecting
+Design Constraints' local-first mandate (which targets shipped capabilities)
+does not bind it, any more than it binds the planner's own codex calls. This
+mutation loop is also architecturally separate from, and never runs as part
+of, the ARC live agent's own Kaggle-submitted code path (`scripts/kaggle/
+kernel/main.py`, `arc_competition_agent.py`) -- confirmed by grep, zero
+cross-imports in either direction -- so this REQ's model choice has no
+bearing on the scored submission, which stays pinned to the local
+Qwen3.8-27B model regardless of what this REQ does.
 
 The fitness target for the first integration SHALL be the existing
 DoubleWell/Rosenbrock energy benchmarks (`scripts/demo_autoresearch.py:
@@ -3647,9 +3670,9 @@ for this REQ (see `docs/research-notes/avo-adaptation-for-local-generator-
 there), as is a verifier-ensemble-AUROC target (no reusable scoring harness
 exists yet).
 
-#### SCENARIO-AUTO-019-A: A bounded round runs unattended and is non-fatal on a dead endpoint
+#### SCENARIO-AUTO-019-A: A bounded round runs unattended and is non-fatal when codex is unavailable
 
-**Given** `CARNOT_AUTORESEARCH_UNATTENDED=1` and an unreachable LLM endpoint
+**Given** `CARNOT_AUTORESEARCH_UNATTENDED=1` and no `codex` binary on `PATH`
 **When** the conductor reaches milestone-close
 **Then** `scripts/autoresearch_conductor_round.py` runs, writes a receipt
 containing `BLOCKED`, and returns exit code 0 -- milestone-close proceeds

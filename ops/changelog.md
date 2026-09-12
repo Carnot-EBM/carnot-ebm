@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-09-12 — Autoresearch generator switched to codex/gpt-6-astra (REQ-AUTO-019)
+
+- Operator directive corrected the prior design: the hypothesis generator now
+  calls `codex exec --model gpt-6-astra` via a new `call_codex()` (mirroring
+  `pages_adversarial_audit.py:call_codex`), not a locally-served
+  OpenAI-compatible endpoint. `codex_available()` (`shutil.which`) replaces
+  the old `endpoint_reachable()` HTTP check.
+- Verified, not assumed: zero cross-imports between
+  `scripts/autoresearch_conductor_round.py` and any `arc_*` live-agent module
+  in either direction; the Kaggle kernel entrypoint imports neither
+  `research_conductor.py` nor `autoresearch_conductor_round.py`. This change
+  cannot affect the ARC live agent's own AVO adaptation on Kaggle, which
+  stays pinned to the local Qwen3.8-27B model.
+- Real dry run against a live `codex-cli 0.153.4`: 2 iterations, 2 accepted,
+  4 real scoped commits in a scratch repo (2 per accepted hypothesis when it
+  reports both benchmarks — correct, not a bug).
+- Tests: 17/17 in `test_autoresearch_conductor_round.py` (added
+  `TestCodexAvailable`, `TestCallCodex`, `TestCodexGenerateHypotheses`). Full
+  `test_autoresearch_*` suite, ruff, mypy clean. `REQ-AUTO-019` in
+  `openspec/capabilities/autoresearch/spec.md` updated in place.
+
 ## 2026-09-11/12 — Wire autoresearch into the unattended conductor loop (REQ-AUTO-019/020)
 
 - Operator directive: let Carnot try things on its own during conductor loops,
