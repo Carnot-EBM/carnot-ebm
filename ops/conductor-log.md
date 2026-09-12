@@ -17813,3 +17813,4 @@ code |
 | 2026-09-12 07:08 UTC | Local scored-stack ARC selfparse dry run | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.21s |
 | 2026-09-12 07:46 UTC | Independent ARC dry-run reachability and authority | OK | 102 passed, 1 warning in 9.29s |
 | 2026-09-12 08:08 UTC | Public mention compiler and sealed semantic fixtur | OK | 97 passed, 1 warning in 13.10s |
+| 2026-09-12 08:43 UTC | Bounded Qwen3.8 mention-grounding canary | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clean success, excluded from headline / capstone. 117 passed, 1 warning in 8.72s |
