@@ -17789,3 +17789,14 @@ code |
 | 2026-09-11 23:25 UTC | Qwen3.8 held-out source-span grounding measurement | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp7223-span-canary.span_canary_ready_score (actual=0 == expected=1) |
 | 2026-09-11 23:27 UTC | Independent source fidelity and verifier-value aud | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7224-span-capture) |
 | 2026-09-11 23:51 UTC | Lossless hypothesis-memory compiler and fresh stre | OK | 101 passed, 2 warnings in 15.65s |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7028_v616_active_contract_preflight.json age-week 1: OPEN 7 days: CLA |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7029_v616_sota_scope_audit.json age-week 1: OPEN 7 days: CLAIM_OVERST |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | eval_run_consumer_field_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on ev |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7203_v634_hardware_correction.json age-week 0: OPEN 1 days: CLAIM_OVE |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 0: OPEN 1 days: SIL |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7215_v635_down_up_prototype.json age-week 0: OPEN 1 days: CLAIM_OVERS |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 0: OPEN 1 days: SILENT_NON_FI |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 0: OPEN 1 days: SILENT_NON |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 0: OPEN 1 day |
+| 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 0: OPEN 1 days:  |
+| 2026-09-12 00:19 UTC | Continuous self-learning with lossless delayed-fee | OK | 86 passed, 1 warning in 17.24s |
