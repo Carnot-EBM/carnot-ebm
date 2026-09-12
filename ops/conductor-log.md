@@ -17800,3 +17800,4 @@ code |
 | 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 0: OPEN 1 day |
 | 2026-09-12 00:19 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 0: OPEN 1 days:  |
 | 2026-09-12 00:19 UTC | Continuous self-learning with lossless delayed-fee | OK | 86 passed, 1 warning in 17.24s |
+| 2026-09-12 00:47 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260912T004700Z.patch |

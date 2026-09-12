@@ -13503,3 +13503,137 @@ upstream, field, expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7227 and SCENARIO-CL-7227-* | Planned: matched chronological replay over the sealed Exp7226 streams, thin wrapper, decision-row checkpoint, and terminal artifact. | Planned: RED-first chronology, parity, causality, gate, schema, command, and 100-percent new-module coverage tests. |
+
+## REQ-CL-7228: Independent Packed-Belief Cold And Causal Audit
+
+Carnot SHALL audit Exp7227 when `belief_run_complete_score` equals one. It
+SHALL NOT require a positive learning result. Before reading outcome rows, the
+audit SHALL authenticate the producer artifact, decision rows, packed-state
+checkpoint, and every immutable stream receipt. It SHALL reject missing
+denominators, changed hashes, malformed principle wrappers, and quarantine
+evidence. Only a dictionary with exactly `principle` and `value` keys SHALL be
+unwrapped.
+
+The audit SHALL independently reduce all 102,400 producer decision rows into
+100 stream-arm rows. Each row SHALL retain its complete event denominator,
+error, false-accept, abstention, recurrence, query, release, and pending counts.
+The audit SHALL rebuild the three fixed stream-bootstrap comparisons and the 20
+scheduled feedback-deletion rows. It SHALL NOT call the producer reducers.
+
+For each of the 20 streams, a fresh isolated process SHALL load serialized
+packed memory and a separately restored reference controller. It SHALL compare
+state identity, prediction, disagreement energy, cached votes, and the next
+released update. A fixed delayed correction SHALL reject before its release
+boundary and apply at that boundary. The audit SHALL also replay a stale-parent
+commit, corrupt survivor mask, duplicate release, and exact rollback. Each
+rejection SHALL preserve the expected bytes, state hash, and later decisions.
+Rollback SHALL restore the exact parent bytes and later decisions.
+
+The audit SHALL shift hidden future labels while it keeps released history and
+public input fixed. Predictions before release SHALL remain unchanged. A
+process access policy SHALL deny the future authority sidecar. The artifact
+SHALL report the policy, process identity, denied open observation, source
+hashes, and public-only input hash. An asserted boolean alone SHALL not satisfy
+this boundary.
+
+The audit SHALL remove learned packed state on a read-only controller copy. It
+SHALL record changed public decisions and prospective error effects after labels
+join only for scoring. It SHALL also recompute the producer's scheduled
+feedback-deletion effects from immutable rows. The audit SHALL perform no model
+fit, threshold change, parameter adjustment, or model-weight update.
+
+`belief_audit_complete_score` SHALL equal one only when all independent metric,
+cold reload, parity, attack, rollback, causality, grounding, and isolation
+checks complete. `belief_promotion_score` SHALL equal one only when the producer
+has `belief_learning_value_score=1` and all fresh-process and causal checks
+pass. A producer value of zero SHALL produce a complete null. It SHALL not
+produce a partial result or promotion. The known V635 refinement and audit
+nulls SHALL remain explicit historical receipts.
+
+The terminal artifact SHALL use run date `20260912`. It SHALL set
+`MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host` after replay. A blocked run SHALL use `blocked_no_run`
+for both substrate fields. The actual hostname SHALL stay in `execution_host`.
+The audit SHALL record monotonic duration and actual UTC timestamps. It SHALL
+leave pipeline defaults and publication unchanged.
+
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`started_at_utc`, `completed_at_utc`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`execution_host`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`MODEL_SPECS`, `model_invoked`, `belief_audit_complete_score`,
+`belief_promotion_score`, `cold_reload_rows`, `rollback_rows`,
+`causal_control_rows`, `metric_recomputation_rows`,
+`comparison_recomputation_rows`, `deletion_recomputation_rows`,
+`source_grounding_rows`, `runtime_isolation_receipt`, `checkpoint_receipt`,
+`producer_gate_receipt`, `v635_history_receipt`, `audit_errors`,
+`no_model_weight_mutation`, `no_fitting_or_parameter_adjustment`,
+`certificate_published`, and `default_pipeline_modified`. Missing or changed
+external evidence SHALL create a row-free blocked artifact. Its gate summary
+SHALL name the failed check, upstream, field, expected value, and observed value.
+
+### SCENARIO-CL-7228-PRECONDITIONS: Complete Authenticated Producer Or Block
+
+- GIVEN the Exp7228 identity and exact Exp7227 artifact and raw receipts
+- WHEN the audit checks requirements, imports, outputs, hashes, fields, and quarantine
+- THEN Exp7227 completeness permits the run even when its learning value is zero
+- AND any external failure creates a diagnostic row-free blocked artifact.
+
+### SCENARIO-CL-7228-RECOMPUTATION: Immutable Event Rows Own All Metrics
+
+- GIVEN all 102,400 per-event producer rows and full denominators
+- WHEN the independent reducer rebuilds stream rows, intervals, and deletion effects
+- THEN all 100 aggregates, three comparisons, and 20 deletions match
+- AND stored producer outcome fields cannot hide a row-level contradiction.
+
+### SCENARIO-CL-7228-COLD: Packed And Reference State Reload Separately
+
+- GIVEN one serialized packed state and reference state for each stream
+- WHEN a fresh process loads both and replays public probes
+- THEN predictions, energies, survivor votes, and the next update match
+- AND actual state hashes and process identities remain in the receipt.
+
+### SCENARIO-CL-7228-TRANSACTIONS: Boundary Attacks Preserve Exact State
+
+- GIVEN delayed, stale-parent, corrupt-mask, duplicate, and rollback probes
+- WHEN each probe reaches the packed transaction boundary
+- THEN premature or invalid changes reject without state drift
+- AND rollback restores exact parent bytes, hash, and later decisions.
+
+### SCENARIO-CL-7228-CAUSAL: Learned-State Removal Uses Later Scoring
+
+- GIVEN the same public probes with learned packed state and empty packed state
+- WHEN both controllers decide before labels join for scoring
+- THEN changed decisions and prospective error effects are retained per stream
+- AND scheduled feedback-deletion effects match the producer rows.
+
+### SCENARIO-CL-7228-ISOLATION: Future Authority Cannot Enter A Decision
+
+- GIVEN baseline and shifted hidden future-label sidecars
+- WHEN isolated fresh processes replay identical public bytes
+- THEN their predictions remain equal before release
+- AND the recorded file policy denies both sidecars inside those processes.
+
+### SCENARIO-CL-7228-HISTORY: Prior Nulls Remain Null Evidence
+
+- GIVEN the V635 refinement value and cold-audit promotion scores are zero
+- WHEN the V636 audit records its producer and historical receipts
+- THEN both V635 nulls remain explicit and unmodified
+- AND no readiness, parity, or audit-completion score promotes them.
+
+### SCENARIO-CL-7228-TERMINAL: Complete Producer Null Stays Complete Null
+
+- GIVEN all owned audit checks pass and Exp7227 learning value equals zero
+- WHEN terminal scores and verdict are derived
+- THEN `belief_audit_complete_score` equals one
+- AND `belief_promotion_score` equals zero with a complete null verdict.
+
+## Implementation Status (REQ-CL-7228)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7228 and SCENARIO-CL-7228-* | Planned: independent row reduction, packed and reference cold replay, transaction attacks, future-label isolation, learned-state deletion, wrapper, and terminal artifact. | Planned: RED-first precondition, metric, cold, transaction, causality, isolation, history, terminal, command, and new-module coverage tests. |

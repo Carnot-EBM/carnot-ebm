@@ -421,6 +421,32 @@ def run_loop_with_generator(
             exp_id = f"llm-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{iteration:03d}"
             logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
 
+            # --- Constitution check (REQ-AUTO-015) ---
+            # run_loop already gates run_sandbox this way; this generator-driven
+            # variant is the one an unattended loop actually calls, so the same
+            # gate must be here too, not just on the static-list sibling.
+            if config.constitution_checker is not None:
+                verdict = config.constitution_checker.check("run_sandbox")
+                if verdict.category == ActionCategory.FORBIDDEN:
+                    logger.error(
+                        "Constitution: sandbox execution FORBIDDEN for %s — %s",
+                        exp_id,
+                        verdict.reason,
+                    )
+                    result.rejected += 1
+                    result.iterations += 1
+                    recent_failures.append({"description": desc, "reason": verdict.reason})
+                    continue
+                if verdict.category != ActionCategory.ALLOWED:
+                    logger.warning(
+                        "Constitution: sandbox execution requires approval for %s — "
+                        "skipping (REQUIRES_APPROVAL not auto-handled here).",
+                        exp_id,
+                    )
+                    result.pending_review += 1
+                    result.iterations += 1
+                    continue
+
             # Sandbox execution
             sandbox_result = execute_hypothesis(code, benchmark_data, config.sandbox_config)
 
@@ -611,6 +637,30 @@ def run_loop_with_skills(
 
             exp_id = f"skill-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{iteration:03d}"
             logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
+
+            # --- Constitution check (REQ-AUTO-015) ---
+            # Same gate as run_loop / run_loop_with_generator (see there for why).
+            if config.constitution_checker is not None:
+                verdict = config.constitution_checker.check("run_sandbox")
+                if verdict.category == ActionCategory.FORBIDDEN:
+                    logger.error(
+                        "Constitution: sandbox execution FORBIDDEN for %s — %s",
+                        exp_id,
+                        verdict.reason,
+                    )
+                    result.rejected += 1
+                    result.iterations += 1
+                    recent_failures.append({"description": desc, "reason": verdict.reason})
+                    continue
+                if verdict.category != ActionCategory.ALLOWED:
+                    logger.warning(
+                        "Constitution: sandbox execution requires approval for %s — "
+                        "skipping (REQUIRES_APPROVAL not auto-handled here).",
+                        exp_id,
+                    )
+                    result.pending_review += 1
+                    result.iterations += 1
+                    continue
 
             sandbox_result = execute_hypothesis(code, benchmark_data, config.sandbox_config)
             eval_result = evaluate_hypothesis(

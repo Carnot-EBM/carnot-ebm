@@ -1,0 +1,35 @@
+diff --git a/scripts/research_conductor.py b/scripts/research_conductor.py
+index 48cb9b7942..af1f2083b8 100644
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -6619,6 +6619,30 @@ def research_step(
+                     timeout=300,
+                 )
+ 
++            # Autoresearch mutation round (REQ-AUTO-016/017, 2026-09-11 operator
++            # directive: "allow Carnot to pursue and try things on its own during
++            # conductor loops... not require my involvement"). The full AVO-style
++            # loop -- LLM proposes a hypothesis, sandbox runs it, the existing
++            # 3-gate evaluator scores it against the current baseline, a winner
++            # gets its own git commit carrying its score -- already exists at
++            # python/carnot/autoresearch/ (built 2026-04, never wired anywhere).
++            # Default OFF (CARNOT_AUTORESEARCH_UNATTENDED=1 to enable) so this
++            # does not silently start spending a live LLM endpoint on every
++            # milestone close until an operator opts in. Non-fatal: an
++            # unreachable endpoint writes a clean receipt and this step is
++            # skipped, same contract as every audit above.
++            if not dry_run and os.environ.get("CARNOT_AUTORESEARCH_UNATTENDED") == "1":
++                logger.info("Running autoresearch mutation round...")
++                _run_audit_with_receipt(
++                    "autoresearch-conductor-round",
++                    [
++                        sys.executable,
++                        str(PROJECT_ROOT / "scripts" / "autoresearch_conductor_round.py"),
++                    ],
++                    receipt=PROJECT_ROOT / "ops" / "autoresearch_conductor_report.md",
++                    timeout=1800,
++                )
++
+             logger.info("No research-roadmap-next.yaml — launching planning agent")
+             if dry_run:
+                 logger.info("[DRY RUN] Would launch planning agent for next milestone")

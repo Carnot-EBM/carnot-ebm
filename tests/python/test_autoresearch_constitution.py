@@ -532,3 +532,83 @@ def test_orchestrator_run_loop_respects_constitution_checker() -> None:
     assert result.accepted == 0
     assert result.rejected == 1
     assert result.iterations == 1
+
+
+def test_orchestrator_run_loop_with_generator_respects_constitution_checker() -> None:
+    """run_loop_with_generator must gate run_sandbox exactly like run_loop does.
+
+    Regression test: this generator-driven variant is the one an unattended
+    conductor loop actually calls (it needs no pre-built hypothesis list), and
+    it had no constitution check at all before this fix — a locked-down
+    checker was silently ignored and the sandbox ran anyway.
+
+    Spec: REQ-AUTO-015, SCENARIO-AUTO-015-006
+    """
+    from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
+    from carnot.autoresearch.orchestrator import AutoresearchConfig, run_loop_with_generator
+
+    locked_checker = ConstitutionChecker(
+        allowed=(),
+        forbidden=(r"run_sandbox",),
+        requires_approval=(),
+    )
+
+    baselines = BaselineRecord(version="test")
+    baselines.benchmarks["bench"] = BenchmarkMetrics(
+        benchmark_name="bench",
+        final_energy=-5.0,
+        convergence_steps=100,
+        wall_clock_seconds=1.0,
+        peak_memory_mb=50.0,
+    )
+
+    def generator(_baselines, _recent_failures, iteration):
+        if iteration > 0:
+            return []
+        return [("good hyp", "def run(d): return {'bench': {'final_energy': -6.0}}")]
+
+    config = AutoresearchConfig(max_iterations=5, constitution_checker=locked_checker)
+    result = run_loop_with_generator(generator, baselines, {}, config)
+
+    assert result.accepted == 0
+    assert result.rejected == 1
+    assert result.iterations == 1
+
+
+def test_orchestrator_run_loop_with_skills_respects_constitution_checker() -> None:
+    """run_loop_with_skills must gate run_sandbox exactly like run_loop does.
+
+    Same regression as the run_loop_with_generator test above, for the
+    Trace2Skill-enabled loop variant.
+
+    Spec: REQ-AUTO-015, SCENARIO-AUTO-015-006
+    """
+    from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
+    from carnot.autoresearch.orchestrator import AutoresearchConfig, run_loop_with_skills
+
+    locked_checker = ConstitutionChecker(
+        allowed=(),
+        forbidden=(r"run_sandbox",),
+        requires_approval=(),
+    )
+
+    baselines = BaselineRecord(version="test")
+    baselines.benchmarks["bench"] = BenchmarkMetrics(
+        benchmark_name="bench",
+        final_energy=-5.0,
+        convergence_steps=100,
+        wall_clock_seconds=1.0,
+        peak_memory_mb=50.0,
+    )
+
+    def generator(_baselines, _recent_failures, iteration):
+        if iteration > 0:
+            return []
+        return [("good hyp", "def run(d): return {'bench': {'final_energy': -6.0}}")]
+
+    config = AutoresearchConfig(max_iterations=5, constitution_checker=locked_checker)
+    result = run_loop_with_skills(generator, baselines, {}, config)
+
+    assert result.accepted == 0
+    assert result.rejected == 1
+    assert result.iterations == 1

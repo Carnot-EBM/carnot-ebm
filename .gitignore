@@ -351,3 +351,11 @@ ops/.audit_findings_ledger_state.json
 ops/.conductor_reexec_state.json
 ops/.run_sentinel_state.json
 ops/.stop_authority_state.json
+
+# Autoresearch conductor round (REQ-AUTO-016/017): a fast-resume cache and the
+# full audit trail of every hypothesis tried, accepted or not. Same reasoning
+# as the siblings above -- local per-machine state, not the research record.
+# The durable record is the git-committed lineage under
+# ops/autoresearch_discoveries/ (one commit per accepted hypothesis, tracked).
+ops/.autoresearch_baselines.json
+ops/.autoresearch_experiment_log.json

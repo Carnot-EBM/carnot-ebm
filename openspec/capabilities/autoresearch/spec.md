@@ -2341,8 +2341,8 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-003 | Not Started | Implemented | Integration |
 | REQ-AUTO-004 | Not Started | Implemented | 13 + 21 Python |
 | REQ-AUTO-005 | Not Started | Implemented | 7 Python |
-| REQ-AUTO-006 | Not Started | Not Started | Not Started |
-| REQ-AUTO-007 | Not Started | Not Started | Not Started |
+| REQ-AUTO-006 | Not Started | Implemented (`transpile.py`) | 15 Python (fixed 2026-09-11 -- this row said "Not Started" across the board while `generate_test_vectors`/`validate_conformance`/`validate_performance` were implemented and exported from `carnot.autoresearch.__init__`; the Rust-transpilation-automation half of the REQ is genuinely not started, only the Python validation side is) |
+| REQ-AUTO-007 | N/A | Implemented (`rollback.py`) | 9 Python (fixed 2026-09-11, same drift as REQ-AUTO-006's row) |
 | REQ-AUTO-008 | Not Started | Implemented | 5 Python |
 | REQ-AUTO-009 | Not Started | Implemented | 4 Python |
 | REQ-AUTO-010 | Not Started | Not Started | Not Started |
@@ -2350,6 +2350,8 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-012 | N/A | Implemented | 11+ Python |
 | REQ-AUTO-013 | N/A | Implemented | 9+ Python |
 | REQ-AUTO-014 | N/A | Implemented | Integration |
+| REQ-AUTO-019 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python |
+| REQ-AUTO-020 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python (shared test file with REQ-AUTO-019) |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3608,6 +3610,123 @@ does not recommend any verification relaxation.
 rate at most 0.2, frame-violating recall 1.0, `conductor_unmodified=true`,
 `integration_proposal_emitted=true`, upstream artifact provenance, no live-model
 markers, and a terminal verdict that records recommend-only wiring readiness.
+
+
+### REQ-AUTO-019: Unattended Conductor Integration
+
+**Origin:** 2026-09-11 operator directive: "I mostly want to allow Carnot to
+pursue and try things on its own during conductor loops and not require my
+involvement," refined to specifically the real AVO-style mutation-operator
+loop (agent proposes a change, a mechanical benchmark scores it, keep only
+if it beats the incumbent, persist a scored lineage). REQ-AUTO-001 through
+REQ-AUTO-015 already specify and implement that entire loop; nothing in
+`scripts/research_conductor.py` ever called any of it.
+
+`scripts/research_conductor.py` SHALL invoke one bounded autoresearch round
+at milestone-close, as a sibling step to the existing adversarial audits
+(`pages_adversarial_audit.py`, `verifier_authenticity_audit.py`, etc.),
+gated by `CARNOT_AUTORESEARCH_UNATTENDED=1` (default off). The round SHALL
+use `run_loop_with_generator` (REQ-AUTO-003) against an LLM hypothesis
+generator (`hypothesis_generator.py`, REQ-AUTO-003) pointed at a
+LOCALLY-served OpenAI-compatible endpoint (`GeneratorConfig.api_base`) --
+never a cloud API, per the project's Decentralization-Respecting Design
+Constraints. The round SHALL be bounded (a small `max_iterations`, the
+existing `max_consecutive_failures` circuit breaker) and SHALL pass a
+`ConstitutionChecker` (REQ-AUTO-015) so every sandbox execution and every
+file-system action it takes is gated by the existing three-tier policy. If
+the configured endpoint is unreachable, the round SHALL write a clean,
+non-fatal receipt and exit 0 rather than blocking milestone-close -- the
+same contract every sibling audit already has.
+
+The fitness target for the first integration SHALL be the existing
+DoubleWell/Rosenbrock energy benchmarks (`scripts/demo_autoresearch.py:
+create_initial_baselines`) -- cheap, deterministic, no live LLM inference
+needed to SCORE a candidate. The ARC live agent is explicitly OUT of scope
+for this REQ (see `docs/research-notes/avo-adaptation-for-local-generator-
+2026-08-21.md` Part 3 for why an evolutionary mutation loop was rejected
+there), as is a verifier-ensemble-AUROC target (no reusable scoring harness
+exists yet).
+
+#### SCENARIO-AUTO-019-A: A bounded round runs unattended and is non-fatal on a dead endpoint
+
+**Given** `CARNOT_AUTORESEARCH_UNATTENDED=1` and an unreachable LLM endpoint
+**When** the conductor reaches milestone-close
+**Then** `scripts/autoresearch_conductor_round.py` runs, writes a receipt
+containing `BLOCKED`, and returns exit code 0 -- milestone-close proceeds
+to the planning step exactly as if the step had not run.
+
+**Given** `CARNOT_AUTORESEARCH_UNATTENDED` unset (the default)
+**When** the conductor reaches milestone-close
+**Then** the autoresearch round is never invoked.
+
+#### SCENARIO-AUTO-019-B: The generator-driven loop respects the constitution exactly like the static-list loop
+
+**Given** a `ConstitutionChecker` configured to forbid `run_sandbox`, and an
+`AutoresearchConfig` carrying it, passed to `run_loop_with_generator`
+**When** the generator proposes a hypothesis
+**Then** the hypothesis is rejected before the sandbox executes, exactly as
+`run_loop` (REQ-AUTO-003) already behaves -- this closes a real gap found
+while building this REQ: `run_loop_with_generator` and `run_loop_with_skills`
+(REQ-AUTO-011) had no constitution check at all before this fix, so an
+unattended run (the only caller that matters for this REQ) silently ignored
+a configured `constitution_checker`.
+
+
+### REQ-AUTO-020: Git-Committed Lineage Per Accepted Hypothesis
+
+**Origin:** same 2026-09-11 directive as REQ-AUTO-019. AVO's own mechanism
+(`docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md` Part
+1) persists "a git commit per version with its score" -- the orchestrator
+(REQ-AUTO-002, REQ-AUTO-008) only updates an in-memory `BaselineRecord` and
+appends to a JSON `ExperimentLog`; neither is a durable, git-visible record.
+
+When an unattended round (REQ-AUTO-019) accepts a hypothesis, the system
+SHALL persist it as a self-contained JSON record under
+`ops/autoresearch_discoveries/<benchmark_name>/<experiment_id>.json`
+(hypothesis code, description, sandbox metrics, eval verdict/reason, and the
+baseline's `final_energy` immediately before and after acceptance), and
+SHALL commit that ONE file via an explicit `git add <path>` -- never
+`git add -A` and never sweeping any other file -- with a commit message
+naming the benchmark, the experiment id, and the before/after score. A
+commit that a pre-commit hook or `git commit` itself refuses SHALL be
+treated as "accepted by the evaluator, not persisted to lineage" -- it MUST
+NOT retroactively change the round's accepted/rejected counts, and MUST NOT
+leave a partially-staged file behind (a failed commit attempt SHALL reset
+the file out of the index).
+
+The record SHALL be a JSON sidecar rather than a live, importable `.py`
+module: raw LLM-generated hypothesis code is not expected to satisfy this
+repository's strict ruff/mypy pre-commit gates, and the lineage's purpose is
+an audit trail (like a `results/*.json` artifact), not a shippable module.
+The fast-resume caches this round reads and writes
+(`ops/.autoresearch_baselines.json`, `ops/.autoresearch_experiment_log.json`)
+are local, gitignored state, not part of this durable record.
+
+#### SCENARIO-AUTO-020-A: An accepted hypothesis lands as its own scoped commit
+
+**Given** a hypothesis that improves on the current `double_well` baseline
+**When** the round accepts it
+**Then** exactly one new file,
+`ops/autoresearch_discoveries/double_well/<experiment_id>.json`, is
+committed; `git show --stat` on that commit names no other path; and the
+commit message contains the benchmark name, the experiment id, and both the
+before and after `final_energy` values.
+
+#### SCENARIO-AUTO-020-B: A constitution-forbidden action never reaches git
+
+**Given** a `ConstitutionChecker` that forbids `create_file:ops/
+autoresearch_discoveries/...` or forbids `git_commit`
+**When** an otherwise-accepted hypothesis would be persisted
+**Then** no file is written under `ops/autoresearch_discoveries/`, no
+commit is made, and the repository's commit count is unchanged.
+
+#### SCENARIO-AUTO-020-C: Local caches never enter git status as staged or committed
+
+**Given** a completed round, whether or not any hypothesis was accepted
+**When** the round finishes
+**Then** `ops/.autoresearch_baselines.json` and
+`ops/.autoresearch_experiment_log.json` exist on disk (or are updated) but
+are never `git add`-ed or committed by this round.
 
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
