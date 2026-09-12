@@ -464,7 +464,15 @@ class TestRunRound:
         pipeline, no mocking below codex_generate_hypotheses."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
             return [
                 (
                     "claims an impossible energy",
@@ -505,7 +513,15 @@ class TestRunRound:
     def test_bounded_run_commits_only_accepted_winners(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
             if iteration == 0:
                 # double_well_energy([1.0, 1.0]) == 0.0, beats baseline 0.05
                 return [
@@ -536,7 +552,15 @@ class TestRunRound:
     def test_baseline_and_log_caches_stay_local_not_committed(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
             return []  # no hypotheses -> loop stops immediately, nothing accepted
 
         with (
@@ -573,7 +597,15 @@ class TestRunRound:
         committed."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
             if iteration == 0:
                 return [("no-op", "def run(d): return {}")]
             return [
@@ -606,7 +638,15 @@ class TestRunRound:
         be after the WHOLE round finished."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            _fallback_log=None,
+            _fable_timeout=None,
+        ):
             if iteration == 0:
                 # double_well_energy([1.1, 1.0]) == 0.04410000000000008, beats baseline 0.05
                 return [

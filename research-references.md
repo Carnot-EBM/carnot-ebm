@@ -44166,3 +44166,19 @@ hash-matched CPU dispatch, which is not FPGA sampling. GateMate still lacks a
 later operator physical-state receipt after Exp6559. Keep its next condition
 visible without repeating an unchanged hardware probe.
 <!-- V638-PLANNER-REFRESH-20260912-END -->
+
+<!-- EXP7246-V638-SOURCE-INGESTION-20260912-START -->
+## Exp7246 bounded V638 source recheck — 2026-09-12
+
+The execution made three sequential primary-record requests. ContCore,
+SemLoc, and SparseKAN each returned HTTP 200 and remained at arXiv v1.
+The execution also made two sequential Semantic Scholar requests. EBT returned
+35 citation records. ARM–EBM returned eight. Neither response had a next page.
+These counts are returned records, not exhaustive citation totals.
+
+The seven method groups are ContCore, SemLoc, grounding, retrieval control,
+SparseKAN, EBT, and ARM–EBM. Exp7246 maps each group to a task, cost, falsifying
+control, and retired overlap. No model ran. No external result became a Carnot
+result. The selected roadmap references a Markdown design that still declares
+V636. Exp7246 preserves that source delta as a structural disqualification.
+<!-- EXP7246-V638-SOURCE-INGESTION-20260912-END -->

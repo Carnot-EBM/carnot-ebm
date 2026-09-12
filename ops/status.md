@@ -16459,3 +16459,15 @@ with one existing warning; the focused suite passes 13 tests and covers all
 754 Exp7243 statements. No test was skipped,
 weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
 modified.
+
+
+## 2026-09-12 — Fable 5.1 fallback for zero-hypothesis autoresearch rounds
+
+Operator directive after both real production autoresearch fires got `iterations=0`: fall back
+to Fable 5.1 when codex returns nothing. Shipped `call_fable`/`fable_generate_hypotheses`/
+`generate_hypotheses_with_fallback` (codex first, same prompt to Fable only if codex fails),
+with its own 600s timeout budget (measured: `--effort max` genuinely needs more than 100s).
+Caught a real bug before shipping — the first version hung the test suite hitting a live model
+because existing tests mocked the wrong function. Verified end to end, nothing mocked: forced
+codex to fail, Fable produced a genuine damped-Newton optimizer in 168s. 38/38 tests, ruff/mypy
+clean. Full account in `ops/known-issues.md`.

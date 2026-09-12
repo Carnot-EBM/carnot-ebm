@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-09-12 — Fable 5.1 fallback when codex returns zero hypotheses
+
+- Operator directive, prompted by both real production autoresearch fires
+  getting `iterations=0`: follow up a zero-hypothesis codex call with a
+  Fable 5.1 attempt at the same question.
+- New `call_fable()` (`claude --model fable --effort max --print`, a
+  stateless completion, no agentic repo access), `fable_generate_hypotheses()`
+  (same shared prompt as codex), `generate_hypotheses_with_fallback()`
+  (codex first, Fable only on empty, records which iterations fell back).
+- Real bug caught pre-ship: the first version hung the test suite past 120s
+  because existing tests mocked `codex_generate_hypotheses` directly, so the
+  real (unmocked) Fable path fired a live `claude` call. Fixed by patching
+  `generate_hypotheses_with_fallback` instead; added dedicated fallback
+  tests.
+- Measured, not guessed: Fable at `--effort max` needs a separate, longer
+  timeout (`DEFAULT_FABLE_TIMEOUT_S = 600`, `--fable-timeout` flag) —
+  100s wasn't enough for a real task even though a trivial prompt returned
+  in 15-30s.
+- Verified end to end with nothing mocked: forced codex to fail, watched
+  Fable produce a genuine LM-damped Newton optimizer (exact tridiagonal
+  Hessian, 8 Rosenbrock restarts) in 168s. 38/38 tests (10 new), ruff/mypy
+  clean.
+
 ## 2026-09-12 — Independently-measured fitness for the autoresearch loop (REQ-AUTO-021)
 
 - Closes CRITICAL finding 1 from the Fable 5.1 review for real (the prior

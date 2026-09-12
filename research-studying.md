@@ -5762,3 +5762,15 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Guardrail: source ingestion only. No model, product, hardware, or ARC oracle ran.
 - Reference ledger: unchanged because the V559 planner refresh already records the source delta.
 <!-- EXP6483-V559-LATENT-ENERGY-SOTA-INGESTION-END -->
+
+<!-- EXP7246-V638-SOURCE-INGESTION-20260912-START -->
+## 2026-09-12 Exp7246 V638 source ingestion — INGESTED
+
+- Ingested methods: ContCore, SemLoc, grounding, retrieval control, SparseKAN,
+  EBT, and ARM–EBM.
+- Rechecked records: arXiv 2608.15277 v1, 2603.29109 v1, and 2608.00859 v1.
+- Citation access: EBT returned 35 records; ARM–EBM returned eight. Neither had
+  a next page.
+- Boundary: this is an advisory source map. It makes no science claim and
+  activates no task.
+<!-- EXP7246-V638-SOURCE-INGESTION-20260912-END -->

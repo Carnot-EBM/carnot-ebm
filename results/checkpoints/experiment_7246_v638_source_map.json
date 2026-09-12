@@ -1,0 +1,3137 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "contract_exact",
+      "expected_value": "14 matching exp7246-through-exp7259 rows",
+      "observed_value": [
+        "exp7246-source-map",
+        "exp7247-duration-class",
+        "exp7248-arc-witness",
+        "exp7249-arc-live",
+        "exp7250-mention-canary",
+        "exp7251-mention-heldout",
+        "exp7252-semantic-audit",
+        "exp7253-coverage-memory",
+        "exp7254-coverage-learning",
+        "exp7255-coverage-audit",
+        "exp7256-native-controller",
+        "exp7257-native-cost",
+        "exp7258-board-state",
+        "exp7259-capstone"
+      ],
+      "passed": false,
+      "principle": "Independent Markdown and YAML values must agree; readable disagreement is disqualifying."
+    },
+    {
+      "criterion": "gate_replays",
+      "expected_value": 20,
+      "observed_value": 20,
+      "passed": true,
+      "principle": "Each real edge must distinguish zero from missing fields and files."
+    },
+    {
+      "criterion": "source_methods",
+      "expected_value": 7,
+      "observed_value": 7,
+      "passed": true,
+      "principle": "Bounded ingestion must map every requested method to cost and a falsifying control."
+    },
+    {
+      "criterion": "request_budget",
+      "expected_value": "3 primary plus 2 citation requests",
+      "observed_value": [
+        "primary_record",
+        "primary_record",
+        "primary_record",
+        "citation_endpoint",
+        "citation_endpoint"
+      ],
+      "passed": true,
+      "principle": "Access failures stay visible and cannot cause extra requests."
+    },
+    {
+      "criterion": "raw_authority_hashes",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true,
+      "principle": "The exact Markdown and YAML bytes must survive the freeze unchanged."
+    },
+    {
+      "criterion": "evidence_sidecars",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Historical models and negative fixtures must stay outside current invocation fields."
+    },
+    {
+      "criterion": "source_hashes",
+      "expected_value": "all present",
+      "observed_value": "all present",
+      "passed": true,
+      "principle": "Every consumed local input and sidecar must have an exact hash."
+    },
+    {
+      "criterion": "archive_observed",
+      "expected_value": "2026.09.637 observed without rewrite",
+      "observed_value": {
+        "archive_advanced_since_prompt": true,
+        "observed_latest_milestone": "2026.09.637",
+        "prompt_expected_latest_milestone": "2026.09.636",
+        "research_complete_rewritten": false
+      },
+      "passed": true,
+      "principle": "The receipt records the actual archive state and does not modify it."
+    },
+    {
+      "criterion": "validation_receipts",
+      "expected_value": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_declarations",
+        "arc_floor",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "full_python_suite",
+        "independent_reducer",
+        "adversarial",
+        "row_consistency"
+      ],
+      "observed_value": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_declarations",
+        "arc_floor",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "full_python_suite",
+        "independent_reducer",
+        "adversarial",
+        "row_consistency"
+      ],
+      "passed": false,
+      "principle": "All scoped checks and the single required full Python suite must retain exact outcomes."
+    }
+  ],
+  "activation_files_modified": false,
+  "archive_lag_row": {
+    "archive_advanced_since_prompt": true,
+    "observed_latest_milestone": "2026.09.637",
+    "prompt_expected_latest_milestone": "2026.09.636",
+    "research_complete_rewritten": false
+  },
+  "baseline_failures": [
+    {
+      "baseline_failure": true,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "duration_s": 1200.018237,
+      "exit_code": 124,
+      "log_sha256": "sha256:7615fbadbd1a9db6801af9402e9c418bb350da33ca33a4a3ffcf751dcfa3e672",
+      "name": "full_python_suite",
+      "passed": false,
+      "stderr_tail": "",
+      "stdout_tail": "..... [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n.............................................F...F...................... [ 40%]\n...................F.................................................... [ 40%]\n.....................................................F....F............. [ 40%]\n........................................................................ [ 40%]\n..........................................F....F........................ [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 41%]\n.....................FF.FF............F................................. [ 41%]\n.........................FFFF..............F.....F...................... [ 41%]\n.............F..F..............................F........................ [ 41%]\n........................................................................ [ 41%]\n...................F.................................................... [ 41%]\n.......................................F...................F............ [ 41%]\n........................................................................ [ 41%]\n......F.F..........F.................................................... [ 41%]\n........................................................................ [ 41%]\n................................................................FF...... [ 42%]\n......F.F...F.............F............................................. [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 42%]\n....................................................sss................. [ 42%]\n...........................................................sssssssssssss [ 42%]\nss...................................................................... [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 43%]\n....................................................s................... [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n...............................F........................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n......................s.............F...........................FFFF.... [ 44%]\n....................FFF.........................................F....FF. [ 44%]\n...................................................sssssssssssF..FF..... [ 44%]\n...FF.................................F................................. [ 44%]\n..............................................F..........F.............. [ 45%]\n........................F...FF..........FF........F........F............ [ 45%]\n.............FF.F......F.........F...................................FF. [ 45%]\n.........FF........F......F......F...................................... [ 45%]\n.............................F............................F........",
+      "timed_out": true
+    }
+  ],
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7246_v638_source_map.json",
+  "completed_at_utc": "2026-09-12T20:15:34.980261+00:00",
+  "contract_rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7219_v636_source_contract.json",
+        "gates": [],
+        "id": "exp7219-source-contract",
+        "order": 1,
+        "title": "V636 source delta and exact execution contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7246-source-map",
+      "yaml": {
+        "deliverable": "results/experiment_7246_v638_source_map.json",
+        "gates": [],
+        "id": "exp7246-source-map",
+        "order": 1,
+        "title": "V638 source ingestion and sealed execution map"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7220_v636_xml_canary.json",
+        "gates": [],
+        "id": "exp7220-xml-canary",
+        "order": 2,
+        "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7247-duration-class",
+      "yaml": {
+        "deliverable": "results/experiment_7247_v638_duration_class.json",
+        "gates": [],
+        "id": "exp7247-duration-class",
+        "order": 2,
+        "title": "Unify duration-floor selection with authenticated substrate classes"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7221_v636_arc_session.json",
+        "gates": [],
+        "id": "exp7221-arc-session",
+        "order": 3,
+        "title": "Live ARC adapter-withheld cumulative discovery session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7248-arc-witness",
+      "yaml": {
+        "deliverable": "results/experiment_7248_v638_arc_witness.json",
+        "gates": [],
+        "id": "exp7248-arc-witness",
+        "order": 3,
+        "title": "Typed transition witnesses for live world-model refinement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7222_v636_span_fixture.json",
+        "gates": [],
+        "id": "exp7222-span-fixture",
+        "order": 4,
+        "title": "Recognized-substrate source-span fixture qualification"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7249-arc-live",
+      "yaml": {
+        "deliverable": "results/experiment_7249_v638_arc_live.json",
+        "gates": [
+          {
+            "artifact_field": "arc_witness_ready_score",
+            "op": "==",
+            "upstream": "exp7248-arc-witness",
+            "value": 1
+          }
+        ],
+        "id": "exp7249-arc-live",
+        "order": 4,
+        "title": "Live ARC adapter-withheld transition-witness comparison"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7223_v636_span_canary.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7223-span-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 source-span semantic canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7250-mention-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7250_v638_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "substrate_contract_ready_score",
+            "op": "==",
+            "upstream": "exp7247-duration-class",
+            "value": 1
+          }
+        ],
+        "id": "exp7250-mention-canary",
+        "order": 5,
+        "title": "Authenticated bounded Qwen3.8 mention canary"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7224_v636_span_capture.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "span_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7223-span-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7224-span-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out source-span grounding measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7251-mention-heldout",
+      "yaml": {
+        "deliverable": "results/experiment_7251_v638_mention_heldout.json",
+        "gates": [
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7250-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7251-mention-heldout",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention source-fidelity measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+        "gates": [
+          {
+            "artifact_field": "span_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7224-span-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7225-semantics-audit",
+        "order": 7,
+        "title": "Independent source fidelity and verifier-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7252-semantic-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7252_v638_semantic_audit.json",
+        "gates": [],
+        "id": "exp7252-semantic-audit",
+        "order": 7,
+        "title": "Independent source semantics and matched-coverage audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+        "gates": [],
+        "id": "exp7226-belief-compiler",
+        "order": 8,
+        "title": "Lossless hypothesis-memory compiler and fresh stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7253-coverage-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7253_v638_coverage_memory.json",
+        "gates": [],
+        "id": "exp7253-coverage-memory",
+        "order": 8,
+        "title": "Coverage-based archive admission and effective memory controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7227_v636_belief_learning.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7227-belief-learning",
+        "order": 9,
+        "title": "Continuous self-learning with lossless delayed-feedback memory"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7254-coverage-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7254_v638_coverage_learning.json",
+        "gates": [
+          {
+            "artifact_field": "coverage_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7253-coverage-memory",
+            "value": 1
+          }
+        ],
+        "id": "exp7254-coverage-learning",
+        "order": 9,
+        "title": "Prospective continuous self-learning with bounded coverage memory"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "belief_run_complete_score",
+            "op": "==",
+            "upstream": "exp7227-belief-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7228-belief-cold-audit",
+        "order": 10,
+        "title": "Cold hypothesis-memory causality and rollback audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7255-coverage-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7255_v638_coverage_audit.json",
+        "gates": [],
+        "id": "exp7255-coverage-audit",
+        "order": 10,
+        "title": "Cold memory causality retention and rollback audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+        "gates": [],
+        "id": "exp7229-rare-event-audit",
+        "order": 11,
+        "title": "Fixed-cardinality rare-event observability audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7256-native-controller",
+      "yaml": {
+        "deliverable": "results/experiment_7256_v638_native_controller.json",
+        "gates": [],
+        "id": "exp7256-native-controller",
+        "order": 11,
+        "title": "Persistent native ownership of the whole archive controller"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7230_v636_native_belief.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7230-native-belief",
+        "order": 12,
+        "title": "Native lossless constraint-memory parity and amortized cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7257-native-cost",
+      "yaml": {
+        "deliverable": "results/experiment_7257_v638_native_cost.json",
+        "gates": [
+          {
+            "artifact_field": "native_controller_ready_score",
+            "op": "==",
+            "upstream": "exp7256-native-controller",
+            "value": 1
+          }
+        ],
+        "id": "exp7257-native-cost",
+        "order": 12,
+        "title": "Matched durable event cost for the persistent controller"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7231_v636_board_continuity.json",
+        "gates": [],
+        "id": "exp7231-board-continuity",
+        "order": 13,
+        "title": "KV260 GateMate and PolarFire evidence continuity"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7258-board-state",
+      "yaml": {
+        "deliverable": "results/experiment_7258_v638_board_state.json",
+        "gates": [],
+        "id": "exp7258-board-state",
+        "order": 13,
+        "title": "GateMate physical-state condition and graduated-board record"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7232_v636_capstone.json",
+        "gates": [],
+        "id": "exp7232-capstone",
+        "order": 14,
+        "title": "V636 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7259-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7259_v638_capstone.json",
+        "gates": [],
+        "id": "exp7259-capstone",
+        "order": 14,
+        "title": "V638 independent evidence matrix and next-branch decisions"
+      }
+    }
+  ],
+  "duration_s": 1272.874342,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "expected_id_order": [
+    "exp7246-source-map",
+    "exp7247-duration-class",
+    "exp7248-arc-witness",
+    "exp7249-arc-live",
+    "exp7250-mention-canary",
+    "exp7251-mention-heldout",
+    "exp7252-semantic-audit",
+    "exp7253-coverage-memory",
+    "exp7254-coverage-learning",
+    "exp7255-coverage-audit",
+    "exp7256-native-controller",
+    "exp7257-native-cost",
+    "exp7258-board-state",
+    "exp7259-capstone"
+  ],
+  "experiment_id": "exp7246-source-map",
+  "field_principles": {
+    "MODEL_SPECS": "Name only models this invocation may execute; source-model history lives in hashed sidecars.",
+    "acceptance_gate_results": "For each frozen criterion record expected, observed and passed, plus its principle.",
+    "activation_files_modified": "This field keeps one V638 source-map fact auditable.",
+    "archive_lag_row": "This field keeps one V638 source-map fact auditable.",
+    "baseline_failures": "This field keeps one V638 source-map fact auditable.",
+    "checkpoint_path": "This field keeps one V638 source-map fact auditable.",
+    "completed_at_utc": "This field keeps one V638 source-map fact auditable.",
+    "contract_rows": "Exactly fourteen entries bind independent Markdown and YAML bytes.",
+    "duration_s": "Measure monotonic elapsed time for this invocation, with disjoint phase spans and no invented time.",
+    "execution_host": "Record the real hostname separately from the closed venue vocabulary.",
+    "execution_venue": "Use host for orchestration; actual board receipts separately name kv260, gatemate or polarfire.",
+    "expected_id_order": "This field keeps one V638 source-map fact auditable.",
+    "experiment_id": "This field keeps one V638 source-map fact auditable.",
+    "field_principles": "Store explanations here while leaving ordinary values at top level for consumers.",
+    "gate_check_summary": "For every blocked_* verdict name the upstream, exact field or check, observed and expected values.",
+    "gate_producer_rows": "This field keeps one V638 source-map fact auditable.",
+    "gate_replay_rows": "Every edge must distinguish a genuine failed metric from missing producer fields.",
+    "honest_verdict": "Use complete_* for terminal measured findings and blocked_* for absent external prerequisites.",
+    "inference_substrate": "Describe the compute actually performed with a recognized literal.",
+    "inference_substrate_class": "Use the closed compute class and its duration floor; never sleep or relabel to pass.",
+    "markdown_id_order": "This field keeps one V638 source-map fact auditable.",
+    "markdown_milestone": "This field keeps one V638 source-map fact auditable.",
+    "markdown_task_rows": "This field keeps one V638 source-map fact auditable.",
+    "milestone": "This field keeps one V638 source-map fact auditable.",
+    "model_generation_count": "This field keeps one V638 source-map fact auditable.",
+    "model_invocation_count": "This field keeps one V638 source-map fact auditable.",
+    "model_invoked": "Derive from actual current calls, not usable-answer count or a nested control arm.",
+    "model_load_count": "This field keeps one V638 source-map fact auditable.",
+    "observed_id_order": "This field keeps one V638 source-map fact auditable.",
+    "phase_spans": "This field keeps one V638 source-map fact auditable.",
+    "preconditions_checked": "Record exact observed inputs, resource ownership, hashes and failed checks before expensive work.",
+    "publication_or_submission_performed": "This field keeps one V638 source-map fact auditable.",
+    "random_seed": "Freeze seeds before seeing outcomes so replay cannot select favorable runs.",
+    "raw_source_rows": "This field keeps one V638 source-map fact auditable.",
+    "receipt_dependency_rows": "This field keeps one V638 source-map fact auditable.",
+    "reproducibility_checksum": "Bind source code, input manifests, configuration and raw rows to the result.",
+    "rows": "Retain every unit, arm, seed, metric, error, abstention and censoring state; aggregates must be recomputable.",
+    "run_date": "Use 20260912 and retain actual UTC start and end timestamps.",
+    "sample_size_budget": "State planned, attempted, completed and censored independent units and the fixed stopping rule.",
+    "schema": "Version this artifact; also emit experiment_id and milestone as ordinary top-level values.",
+    "scientific_value_claimed": "This field keeps one V638 source-map fact auditable.",
+    "sidecar_receipts": "This field keeps one V638 source-map fact auditable.",
+    "source_access_rows": "This field keeps one V638 source-map fact auditable.",
+    "source_artifact_hashes": "Authenticate input bytes and preserve quarantine; readiness alone is insufficient.",
+    "source_ingestion_complete_score": "One means the bounded ingestion and execution map completed; it does not certify science.",
+    "source_method_rows": "Record primary URLs, dates, access outcome, prior mention and specific adopted or deferred method.",
+    "started_at_utc": "This field keeps one V638 source-map fact auditable.",
+    "status": "A terminal artifact records complete or blocked; unfinished work belongs in a separate checkpoint.",
+    "validation_receipts": "Record actual command, exit code and log hash; no skipped, weakened, deleted or reverted tests.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; a failed scientific acceptance gate forbids positive. External incompleteness is blocked, not retryable partial.",
+    "verifier_is_oracle": "Expose exact-oracle use; oracle conformance cannot become learned verification evidence.",
+    "yaml_authority_path": "This field keeps one V638 source-map fact auditable.",
+    "yaml_milestone": "This field keeps one V638 source-map fact auditable.",
+    "yaml_task_rows": "This field keeps one V638 source-map fact auditable."
+  },
+  "gate_check_summary": {
+    "expected_value": "2026.09.638",
+    "failed_check": "markdown_milestone",
+    "field": "milestone",
+    "observed_value": "2026.09.636",
+    "passed": false,
+    "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+  },
+  "gate_producer_rows": [
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7249-arc-live",
+      "field": "arc_witness_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7248-arc-witness",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7250-mention-canary",
+      "field": "substrate_contract_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7247-duration-class",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7251-mention-heldout",
+      "field": "mention_canary_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7250-mention-canary",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7254-coverage-learning",
+      "field": "coverage_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7253-coverage-memory",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7257-native-cost",
+      "field": "native_controller_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7256-native-controller",
+      "value": 1
+    }
+  ],
+  "gate_replay_rows": [
+    {
+      "artifact_field": "arc_witness_ready_score",
+      "case": "passing",
+      "consumer": "exp7249-arc-live",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_0_passing/experiment_7248_gate_fixture.json",
+      "fixture_payload": {
+        "arc_witness_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:557a898e9d03ae7829917ccc4321a4dc0754fcf8ea951c7470205e6acf19ce53",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7248-arc-witness",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_witness_ready_score",
+      "case": "zero",
+      "consumer": "exp7249-arc-live",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_0_failed/experiment_7248_gate_fixture.json",
+      "fixture_payload": {
+        "arc_witness_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:242759b16da92e16a2ca974a145d392a34cd586ed8f986b046af16edc1619092",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7248-arc-witness",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_witness_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7249-arc-live",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_0_absent_field/experiment_7248_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'arc_witness_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7248-arc-witness",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_witness_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7249-arc-live",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7248-arc-witness'",
+      "research_result": false,
+      "upstream": "exp7248-arc-witness",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "substrate_contract_ready_score",
+      "case": "passing",
+      "consumer": "exp7250-mention-canary",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_1_passing/experiment_7247_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete",
+        "substrate_contract_ready_score": 1
+      },
+      "fixture_sha256": "sha256:374e54e20301636a807fda5705d72e33a2915386ff612faee50d57d70f537656",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7247-duration-class",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "substrate_contract_ready_score",
+      "case": "zero",
+      "consumer": "exp7250-mention-canary",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_1_failed/experiment_7247_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete",
+        "substrate_contract_ready_score": 0
+      },
+      "fixture_sha256": "sha256:3f76cc4b364fa09d8108d751e7fc561a7ae43bb593a27a011da86764faaf03f7",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7247-duration-class",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "substrate_contract_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7250-mention-canary",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_1_absent_field/experiment_7247_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'substrate_contract_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7247-duration-class",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "substrate_contract_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7250-mention-canary",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7247-duration-class'",
+      "research_result": false,
+      "upstream": "exp7247-duration-class",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "passing",
+      "consumer": "exp7251-mention-heldout",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_2_passing/experiment_7250_gate_fixture.json",
+      "fixture_payload": {
+        "mention_canary_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:2a294bc3aaf3761ba354b6f841947f53b93fe24b00eb0fff7a89601c7f85d476",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7250-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "zero",
+      "consumer": "exp7251-mention-heldout",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_2_failed/experiment_7250_gate_fixture.json",
+      "fixture_payload": {
+        "mention_canary_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:9b158390a9b5b1353814f974ee223daf1d694f59a139f6b476e74603c5034e66",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7250-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7251-mention-heldout",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_2_absent_field/experiment_7250_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'mention_canary_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7250-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "mention_canary_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7251-mention-heldout",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7250-mention-canary'",
+      "research_result": false,
+      "upstream": "exp7250-mention-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "coverage_fixture_ready_score",
+      "case": "passing",
+      "consumer": "exp7254-coverage-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_3_passing/experiment_7253_gate_fixture.json",
+      "fixture_payload": {
+        "coverage_fixture_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:94ee7872b7b2d33e1d1210c446e37bdacdb66b96864fa9a16361f26c06397699",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7253-coverage-memory",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "coverage_fixture_ready_score",
+      "case": "zero",
+      "consumer": "exp7254-coverage-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_3_failed/experiment_7253_gate_fixture.json",
+      "fixture_payload": {
+        "coverage_fixture_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:9fcdf3010c88eb788d466fa98b7136ae46e6661c0b158a6c8fc2f34412befb45",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7253-coverage-memory",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "coverage_fixture_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7254-coverage-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_3_absent_field/experiment_7253_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'coverage_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7253-coverage-memory",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "coverage_fixture_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7254-coverage-learning",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7253-coverage-memory'",
+      "research_result": false,
+      "upstream": "exp7253-coverage-memory",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "native_controller_ready_score",
+      "case": "passing",
+      "consumer": "exp7257-native-cost",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_4_passing/experiment_7256_gate_fixture.json",
+      "fixture_payload": {
+        "native_controller_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:bc26ae68e68be44d85e5fb74413be28f2d2187d855ea8d0bac4c1a84d68929a3",
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7256-native-controller",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "native_controller_ready_score",
+      "case": "zero",
+      "consumer": "exp7257-native-cost",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_4_failed/experiment_7256_gate_fixture.json",
+      "fixture_payload": {
+        "native_controller_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:6e2cc9da5c57de97b8995ea05ba83f20ff057be6ee022d912ab05b7597bd4beb",
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7256-native-controller",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "native_controller_ready_score",
+      "case": "absent_field",
+      "consumer": "exp7257-native-cost",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7246-gates-7pwg96mw/edge_4_absent_field/experiment_7256_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'native_controller_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7256-native-controller",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "native_controller_ready_score",
+      "case": "absent_file",
+      "consumer": "exp7257-native-cost",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7256-native-controller'",
+      "research_result": false,
+      "upstream": "exp7256-native-controller",
+      "validation_input": true
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v638_plan_contract_incomplete_or_mismatched",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "markdown_id_order": [
+    "exp7219-source-contract",
+    "exp7220-xml-canary",
+    "exp7221-arc-session",
+    "exp7222-span-fixture",
+    "exp7223-span-canary",
+    "exp7224-span-capture",
+    "exp7225-semantics-audit",
+    "exp7226-belief-compiler",
+    "exp7227-belief-learning",
+    "exp7228-belief-cold-audit",
+    "exp7229-rare-event-audit",
+    "exp7230-native-belief",
+    "exp7231-board-continuity",
+    "exp7232-capstone"
+  ],
+  "markdown_milestone": "2026.09.636",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7219_v636_source_contract.json",
+      "gates": [],
+      "id": "exp7219-source-contract",
+      "order": 1,
+      "title": "V636 source delta and exact execution contract"
+    },
+    {
+      "deliverable": "results/experiment_7220_v636_xml_canary.json",
+      "gates": [],
+      "id": "exp7220-xml-canary",
+      "order": 2,
+      "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+    },
+    {
+      "deliverable": "results/experiment_7221_v636_arc_session.json",
+      "gates": [],
+      "id": "exp7221-arc-session",
+      "order": 3,
+      "title": "Live ARC adapter-withheld cumulative discovery session"
+    },
+    {
+      "deliverable": "results/experiment_7222_v636_span_fixture.json",
+      "gates": [],
+      "id": "exp7222-span-fixture",
+      "order": 4,
+      "title": "Recognized-substrate source-span fixture qualification"
+    },
+    {
+      "deliverable": "results/experiment_7223_v636_span_canary.json",
+      "gates": [
+        {
+          "artifact_field": "span_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7222-span-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7223-span-canary",
+      "order": 5,
+      "title": "Bounded Qwen3.8 source-span semantic canary"
+    },
+    {
+      "deliverable": "results/experiment_7224_v636_span_capture.json",
+      "gates": [
+        {
+          "artifact_field": "span_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7222-span-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "span_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7223-span-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7224-span-capture",
+      "order": 6,
+      "title": "Qwen3.8 held-out source-span grounding measurement"
+    },
+    {
+      "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+      "gates": [
+        {
+          "artifact_field": "span_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7224-span-capture",
+          "value": 1
+        }
+      ],
+      "id": "exp7225-semantics-audit",
+      "order": 7,
+      "title": "Independent source fidelity and verifier-value audit"
+    },
+    {
+      "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+      "gates": [],
+      "id": "exp7226-belief-compiler",
+      "order": 8,
+      "title": "Lossless hypothesis-memory compiler and fresh stream"
+    },
+    {
+      "deliverable": "results/experiment_7227_v636_belief_learning.json",
+      "gates": [
+        {
+          "artifact_field": "belief_compiler_ready_score",
+          "op": "==",
+          "upstream": "exp7226-belief-compiler",
+          "value": 1
+        }
+      ],
+      "id": "exp7227-belief-learning",
+      "order": 9,
+      "title": "Continuous self-learning with lossless delayed-feedback memory"
+    },
+    {
+      "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "belief_run_complete_score",
+          "op": "==",
+          "upstream": "exp7227-belief-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7228-belief-cold-audit",
+      "order": 10,
+      "title": "Cold hypothesis-memory causality and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+      "gates": [],
+      "id": "exp7229-rare-event-audit",
+      "order": 11,
+      "title": "Fixed-cardinality rare-event observability audit"
+    },
+    {
+      "deliverable": "results/experiment_7230_v636_native_belief.json",
+      "gates": [
+        {
+          "artifact_field": "belief_compiler_ready_score",
+          "op": "==",
+          "upstream": "exp7226-belief-compiler",
+          "value": 1
+        }
+      ],
+      "id": "exp7230-native-belief",
+      "order": 12,
+      "title": "Native lossless constraint-memory parity and amortized cost"
+    },
+    {
+      "deliverable": "results/experiment_7231_v636_board_continuity.json",
+      "gates": [],
+      "id": "exp7231-board-continuity",
+      "order": 13,
+      "title": "KV260 GateMate and PolarFire evidence continuity"
+    },
+    {
+      "deliverable": "results/experiment_7232_v636_capstone.json",
+      "gates": [],
+      "id": "exp7232-capstone",
+      "order": 14,
+      "title": "V636 independent evidence matrix and branch decisions"
+    }
+  ],
+  "milestone": "2026.09.638",
+  "model_generation_count": 0,
+  "model_invocation_count": 0,
+  "model_invoked": false,
+  "model_load_count": 0,
+  "observed_id_order": [
+    "exp7246-source-map",
+    "exp7247-duration-class",
+    "exp7248-arc-witness",
+    "exp7249-arc-live",
+    "exp7250-mention-canary",
+    "exp7251-mention-heldout",
+    "exp7252-semantic-audit",
+    "exp7253-coverage-memory",
+    "exp7254-coverage-learning",
+    "exp7255-coverage-audit",
+    "exp7256-native-controller",
+    "exp7257-native-cost",
+    "exp7258-board-state",
+    "exp7259-capstone"
+  ],
+  "phase_spans": [
+    {
+      "detail": "preconditions",
+      "duration_s": 3.997669,
+      "end_elapsed_s": 3.997669,
+      "phase": 0,
+      "start_elapsed_s": 0.0
+    },
+    {
+      "detail": "no-model declaration",
+      "duration_s": 3e-06,
+      "end_elapsed_s": 3.998478,
+      "phase": 1,
+      "start_elapsed_s": 3.998475
+    },
+    {
+      "detail": "authority freeze and contract parse",
+      "duration_s": 0.002267,
+      "end_elapsed_s": 4.001227,
+      "phase": 2,
+      "start_elapsed_s": 3.998959
+    },
+    {
+      "detail": "schema and real gate replay",
+      "duration_s": 0.002133,
+      "end_elapsed_s": 4.004564,
+      "phase": 3,
+      "start_elapsed_s": 4.002432
+    },
+    {
+      "detail": "bounded source ingestion",
+      "duration_s": 1.070361,
+      "end_elapsed_s": 5.076276,
+      "phase": 4,
+      "start_elapsed_s": 4.005916
+    },
+    {
+      "detail": "isolated evidence sidecars",
+      "duration_s": 0.265834,
+      "end_elapsed_s": 5.344253,
+      "phase": 5,
+      "start_elapsed_s": 5.078419
+    },
+    {
+      "detail": "validation subprocesses",
+      "duration_s": 1267.475805,
+      "end_elapsed_s": 1272.821541,
+      "phase": 6,
+      "start_elapsed_s": 5.345736
+    },
+    {
+      "detail": "terminal derivation",
+      "duration_s": 7.5e-05,
+      "end_elapsed_s": 1272.823143,
+      "phase": 7,
+      "start_elapsed_s": 1272.823068
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap.yaml",
+      "expected_value": "2026.09.638",
+      "field": "milestone",
+      "observed_value": "2026.09.638",
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": false,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap-next.yaml",
+      "expected_value": "2026.09.638",
+      "field": "milestone",
+      "observed_value": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "path": "research-roadmap-next.yaml",
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "yaml_authority",
+      "expected_value": "2026.09.638",
+      "field": "milestone",
+      "observed_value": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml|research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 1165,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 311988,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 2396,
+      "upstream": "CODEX.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 28560,
+      "upstream": "research-program.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 56173,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8197,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 3416543,
+      "upstream": "research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-studying.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 402694,
+      "upstream": "research-studying.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-complete.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 5025169,
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 152940,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 20215,
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 9371,
+      "upstream": "scripts/roadmap_schema.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/conductor_gates.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 29979,
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 10078,
+      "upstream": "scripts/audit_roadmap_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8053,
+      "upstream": "scripts/validate_prior_failures.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 29604,
+      "upstream": "scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/harness_consumer_checks.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 11765,
+      "upstream": "scripts/harness_consumer_checks.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/arc_levelup_guarantee_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 12206,
+      "upstream": "scripts/arc_levelup_guarantee_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 327321,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 18650,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/check_spec_coverage.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 6306,
+      "upstream": "scripts/check_spec_coverage.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 4114254,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7233_v637_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 63503,
+      "upstream": "python/carnot/experiment_7233_v637_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7246_v638_source_map.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 70931,
+      "upstream": "python/carnot/experiment_7246_v638_source_map.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/experiments/experiment_7246_v638_source_map.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 200,
+      "upstream": "scripts/experiments/experiment_7246_v638_source_map.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:tests/python/test_experiment_7246_v638_source_map.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 21727,
+      "upstream": "tests/python/test_experiment_7246_v638_source_map.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7246",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7246",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "design_authority",
+      "expected_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "field": "milestone_doc",
+      "observed_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7233_v637_contract.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:efbe124370d5c5bb9c029a53a4f5787330d89c39b81bdd822b4767e4ecc57806",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7233_v637_contract.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7234_v637_arc_scored_dryrun.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": true,
+        "sha256": "sha256:1660cbb8ca9f605a95c0e2244dc0e8b8289d4c12e509c8b72b77d38c15406a37",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7234_v637_arc_scored_dryrun.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7235_v637_arc_path_audit.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:6a2dfc76239c2e15b29c8271dbea045e9a85c27c18b2ef09dec20b4b21c54525",
+        "status": "blocked"
+      },
+      "upstream": "results/experiment_7235_v637_arc_path_audit.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7236_v637_mention_fixture.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7236_v637_mention_fixture.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7237_v637_mention_canary.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": true,
+        "sha256": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7237_v637_mention_canary.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7238_v637_mention_capture.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:b91102c32462728266a43214b79bc07e77baf3ca73776cf96fc83ae47f855f3c",
+        "status": "blocked"
+      },
+      "upstream": "results/experiment_7238_v637_mention_capture.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7239_v637_semantic_audit.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:40311ed3438b800e22b97d4bd2820e41183fc0e055a7a0ff22a047e3c3523269",
+        "status": "blocked"
+      },
+      "upstream": "results/experiment_7239_v637_semantic_audit.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7240_v637_recurrence_fixture.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:0f12abc839f3d70006698ebaa5169f12ab1cae9dc7526c6d124078ec7a6baf74",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7240_v637_recurrence_fixture.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7241_v637_recurrence_learning.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:ebf779e3b79a07c82300758efb4392fd9c90cda833609bfd7c2cf105ba4710ce",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7241_v637_recurrence_learning.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7242_v637_recurrence_audit.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:738ac5a3c2eea092b69f42a317ad34af8cf3a037bc8d251cac80aea51f4f8b6b",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7242_v637_recurrence_audit.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7243_v637_native_memory.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:afb3c70b90d73d184fe00f25f776fe5b28bbd5de1eb4f0a472e2aa3a0ed10926",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7243_v637_native_memory.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7244_v637_board_disposition.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7244_v637_board_disposition.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v637_terminal:results/experiment_7245_v637_capstone.json",
+      "expected_value": "complete|blocked",
+      "field": "status",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:fddf26a7c7a646e416b6deb09bcab863d51654533925ea58c23e39373d92ec7f",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7245_v637_capstone.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "required_imports",
+      "expected_value": "loaded",
+      "field": "imports",
+      "observed_value": "loaded",
+      "upstream": "roadmap_schema|conductor_gates|prior_contract_helpers"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "task_upstream_gates",
+      "expected_value": [],
+      "field": "gated_on",
+      "observed_value": [],
+      "upstream": "exp7246-source-map"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "result_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "raw_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7246"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "checkpoint_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_hashes",
+      "expected_value": "all required hashes present",
+      "field": "sha256",
+      "observed_value": [],
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot"
+    }
+  ],
+  "publication_or_submission_performed": false,
+  "random_seed": 724620260912,
+  "raw_source_rows": [
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7246/v638-design.md",
+      "raw_sha256": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+      "source_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "source_sha256": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+      "source_type": "markdown"
+    },
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7246/selected-roadmap.yaml",
+      "raw_sha256": "sha256:dfb346d0094c0553cf0afab09b8bb2f1504f5f24fe135e6ea68e90671146c274",
+      "source_path": "research-roadmap.yaml",
+      "source_sha256": "sha256:dfb346d0094c0553cf0afab09b8bb2f1504f5f24fe135e6ea68e90671146c274",
+      "source_type": "yaml"
+    }
+  ],
+  "receipt_dependency_rows": [
+    {
+      "expected_consumers": [],
+      "observed_consumers": [],
+      "passed": true,
+      "upstream": "exp7246-source-map"
+    }
+  ],
+  "reproducibility_checksum": "sha256:3496af5ff33e0d52ac4b6ed232490b7b466df2415c85a2ef59daa027a3f7eefa",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7219_v636_source_contract.json",
+        "gates": [],
+        "id": "exp7219-source-contract",
+        "order": 1,
+        "title": "V636 source delta and exact execution contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7246-source-map",
+      "yaml": {
+        "deliverable": "results/experiment_7246_v638_source_map.json",
+        "gates": [],
+        "id": "exp7246-source-map",
+        "order": 1,
+        "title": "V638 source ingestion and sealed execution map"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7220_v636_xml_canary.json",
+        "gates": [],
+        "id": "exp7220-xml-canary",
+        "order": 2,
+        "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7247-duration-class",
+      "yaml": {
+        "deliverable": "results/experiment_7247_v638_duration_class.json",
+        "gates": [],
+        "id": "exp7247-duration-class",
+        "order": 2,
+        "title": "Unify duration-floor selection with authenticated substrate classes"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7221_v636_arc_session.json",
+        "gates": [],
+        "id": "exp7221-arc-session",
+        "order": 3,
+        "title": "Live ARC adapter-withheld cumulative discovery session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7248-arc-witness",
+      "yaml": {
+        "deliverable": "results/experiment_7248_v638_arc_witness.json",
+        "gates": [],
+        "id": "exp7248-arc-witness",
+        "order": 3,
+        "title": "Typed transition witnesses for live world-model refinement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7222_v636_span_fixture.json",
+        "gates": [],
+        "id": "exp7222-span-fixture",
+        "order": 4,
+        "title": "Recognized-substrate source-span fixture qualification"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7249-arc-live",
+      "yaml": {
+        "deliverable": "results/experiment_7249_v638_arc_live.json",
+        "gates": [
+          {
+            "artifact_field": "arc_witness_ready_score",
+            "op": "==",
+            "upstream": "exp7248-arc-witness",
+            "value": 1
+          }
+        ],
+        "id": "exp7249-arc-live",
+        "order": 4,
+        "title": "Live ARC adapter-withheld transition-witness comparison"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7223_v636_span_canary.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7223-span-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 source-span semantic canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7250-mention-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7250_v638_mention_canary.json",
+        "gates": [
+          {
+            "artifact_field": "substrate_contract_ready_score",
+            "op": "==",
+            "upstream": "exp7247-duration-class",
+            "value": 1
+          }
+        ],
+        "id": "exp7250-mention-canary",
+        "order": 5,
+        "title": "Authenticated bounded Qwen3.8 mention canary"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7224_v636_span_capture.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "span_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7223-span-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7224-span-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out source-span grounding measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7251-mention-heldout",
+      "yaml": {
+        "deliverable": "results/experiment_7251_v638_mention_heldout.json",
+        "gates": [
+          {
+            "artifact_field": "mention_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7250-mention-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7251-mention-heldout",
+        "order": 6,
+        "title": "Qwen3.8 held-out mention source-fidelity measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+        "gates": [
+          {
+            "artifact_field": "span_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7224-span-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7225-semantics-audit",
+        "order": 7,
+        "title": "Independent source fidelity and verifier-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7252-semantic-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7252_v638_semantic_audit.json",
+        "gates": [],
+        "id": "exp7252-semantic-audit",
+        "order": 7,
+        "title": "Independent source semantics and matched-coverage audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+        "gates": [],
+        "id": "exp7226-belief-compiler",
+        "order": 8,
+        "title": "Lossless hypothesis-memory compiler and fresh stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7253-coverage-memory",
+      "yaml": {
+        "deliverable": "results/experiment_7253_v638_coverage_memory.json",
+        "gates": [],
+        "id": "exp7253-coverage-memory",
+        "order": 8,
+        "title": "Coverage-based archive admission and effective memory controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7227_v636_belief_learning.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7227-belief-learning",
+        "order": 9,
+        "title": "Continuous self-learning with lossless delayed-feedback memory"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7254-coverage-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7254_v638_coverage_learning.json",
+        "gates": [
+          {
+            "artifact_field": "coverage_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7253-coverage-memory",
+            "value": 1
+          }
+        ],
+        "id": "exp7254-coverage-learning",
+        "order": 9,
+        "title": "Prospective continuous self-learning with bounded coverage memory"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "belief_run_complete_score",
+            "op": "==",
+            "upstream": "exp7227-belief-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7228-belief-cold-audit",
+        "order": 10,
+        "title": "Cold hypothesis-memory causality and rollback audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7255-coverage-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7255_v638_coverage_audit.json",
+        "gates": [],
+        "id": "exp7255-coverage-audit",
+        "order": 10,
+        "title": "Cold memory causality retention and rollback audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+        "gates": [],
+        "id": "exp7229-rare-event-audit",
+        "order": 11,
+        "title": "Fixed-cardinality rare-event observability audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7256-native-controller",
+      "yaml": {
+        "deliverable": "results/experiment_7256_v638_native_controller.json",
+        "gates": [],
+        "id": "exp7256-native-controller",
+        "order": 11,
+        "title": "Persistent native ownership of the whole archive controller"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7230_v636_native_belief.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7230-native-belief",
+        "order": 12,
+        "title": "Native lossless constraint-memory parity and amortized cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7257-native-cost",
+      "yaml": {
+        "deliverable": "results/experiment_7257_v638_native_cost.json",
+        "gates": [
+          {
+            "artifact_field": "native_controller_ready_score",
+            "op": "==",
+            "upstream": "exp7256-native-controller",
+            "value": 1
+          }
+        ],
+        "id": "exp7257-native-cost",
+        "order": 12,
+        "title": "Matched durable event cost for the persistent controller"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7231_v636_board_continuity.json",
+        "gates": [],
+        "id": "exp7231-board-continuity",
+        "order": 13,
+        "title": "KV260 GateMate and PolarFire evidence continuity"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7258-board-state",
+      "yaml": {
+        "deliverable": "results/experiment_7258_v638_board_state.json",
+        "gates": [],
+        "id": "exp7258-board-state",
+        "order": 13,
+        "title": "GateMate physical-state condition and graduated-board record"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7232_v636_capstone.json",
+        "gates": [],
+        "id": "exp7232-capstone",
+        "order": 14,
+        "title": "V636 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 724620260912,
+      "unit_id": "exp7259-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7259_v638_capstone.json",
+        "gates": [],
+        "id": "exp7259-capstone",
+        "order": 14,
+        "title": "V638 independent evidence matrix and next-branch decisions"
+      }
+    }
+  ],
+  "run_date": "20260912",
+  "sample_size_budget": {
+    "contract_rows": {
+      "attempted": 14,
+      "censored": 0,
+      "completed": 14,
+      "independent_units": 14,
+      "planned": 14
+    },
+    "gate_replays": {
+      "attempted": 20,
+      "censored": 0,
+      "completed": 20,
+      "independent_units": 20,
+      "planned": 20
+    },
+    "network_requests": {
+      "attempted": 5,
+      "censored": 0,
+      "completed": 5,
+      "independent_units": 5,
+      "planned": 5
+    },
+    "source_methods": {
+      "attempted": 7,
+      "censored": 0,
+      "completed": 7,
+      "independent_units": 7,
+      "planned": 7
+    },
+    "stopping_rule": "Stop after fourteen contract rows, four cases per gate edge, seven method mappings, and exactly five bounded requests."
+  },
+  "schema": "carnot.exp7246.v638_source_map.v1",
+  "scientific_value_claimed": false,
+  "sidecar_receipts": {
+    "history": {
+      "path": "results/raw/experiment_7246/historical-model-receipts.json",
+      "sha256": "sha256:3bc7d4d1a3f18a0d37fb14265248a52774a3b5cc126202978283fbb37361107f"
+    },
+    "negative_fixtures": {
+      "path": "results/raw/experiment_7246/negative-gate-fixtures.json",
+      "sha256": "sha256:e512f2159700559ffd140ce28ffeb81eac40fb9453fca42bc6bde6b4aea0f781"
+    },
+    "source_access": {
+      "path": "results/raw/experiment_7246/source-access-receipts.json",
+      "sha256": "sha256:8dc859f45be52c32cae67933f15c366c826c78a88c57de92929773c22a78165d"
+    }
+  },
+  "source_access_rows": [
+    {
+      "access_id": "contcore",
+      "access_status": "http_success",
+      "error": null,
+      "expected_version": "v1",
+      "kind": "primary_record",
+      "observed_version": "v1",
+      "response_sha256": "sha256:448382140ed3aecee3f956e38928b890ae503bbc51a2b267a3574232b35fd98c",
+      "retrieval_date": "2026-09-12",
+      "source_delta": "no_delta",
+      "status_code": 200,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2608.15277"
+    },
+    {
+      "access_id": "semloc",
+      "access_status": "http_success",
+      "error": null,
+      "expected_version": "v1",
+      "kind": "primary_record",
+      "observed_version": "v1",
+      "response_sha256": "sha256:011de12b4639cbf75bc0b0eb0021c9ccb15f801e95a1a22ae12ef2f6ad7b0419",
+      "retrieval_date": "2026-09-12",
+      "source_delta": "no_delta",
+      "status_code": 200,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2603.29109"
+    },
+    {
+      "access_id": "sparsekan",
+      "access_status": "http_success",
+      "error": null,
+      "expected_version": "v1",
+      "kind": "primary_record",
+      "observed_version": "v1",
+      "response_sha256": "sha256:a1e0da3cf948f7d9e1caa13ef2db7b8288aa73d1eca9cd7631e84b9943834894",
+      "retrieval_date": "2026-09-12",
+      "source_delta": "no_delta",
+      "status_code": 200,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2608.00859"
+    },
+    {
+      "access_id": "ebt_citations",
+      "access_status": "http_success",
+      "error": null,
+      "expected_count": 35,
+      "kind": "citation_endpoint",
+      "next_page": null,
+      "observed_count": 35,
+      "response_sha256": "sha256:c48b26c1721b2263d709ba9ede2f29a4a767ef0e226910e16e999b3fdb784bca",
+      "retrieval_date": "2026-09-12",
+      "source_delta": "no_delta",
+      "status_code": 200,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=100"
+    },
+    {
+      "access_id": "arm_ebm_citations",
+      "access_status": "http_success",
+      "error": null,
+      "expected_count": 8,
+      "kind": "citation_endpoint",
+      "next_page": null,
+      "observed_count": 8,
+      "response_sha256": "sha256:0ab6b2c953972ed09dccf56a9c54ac0075978bea80aae398367442a6a27291be",
+      "retrieval_date": "2026-09-12",
+      "source_delta": "no_delta",
+      "status_code": 200,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100"
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:77c3168b01265e393583d7f64c37ec8710ab51a10ff0216ebae94ed2924cd4dc",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7233_v637_contract.py": "sha256:2010fe71f9b1d1b8f89b42ce8c34def6a05dc6a98f1af43c35513b316a68a85a",
+    "python/carnot/experiment_7246_v638_source_map.py": "sha256:8a5a89dcbc9b9dccb8418ea866f7289da2eae98a848fca5da30ec2b20b4141e9",
+    "research-complete.yaml": "sha256:18a20306c352a03808e6525bbaf0ed1c5a707de6475af6871bbc387750e86dd1",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:9dd81667975895d4e3e73c17d92b5625d74ca5670740c5cbb192da482fd7db38",
+    "research-roadmap.yaml": "sha256:dfb346d0094c0553cf0afab09b8bb2f1504f5f24fe135e6ea68e90671146c274",
+    "research-studying.md": "sha256:e6927023fe44f5b35b02ebbddf2c3d0063ed3c86bec10c859761ff0f4baeb5ad",
+    "results/experiment_7233_v637_contract.json": "sha256:efbe124370d5c5bb9c029a53a4f5787330d89c39b81bdd822b4767e4ecc57806",
+    "results/experiment_7234_v637_arc_scored_dryrun.json": "sha256:1660cbb8ca9f605a95c0e2244dc0e8b8289d4c12e509c8b72b77d38c15406a37",
+    "results/experiment_7235_v637_arc_path_audit.json": "sha256:6a2dfc76239c2e15b29c8271dbea045e9a85c27c18b2ef09dec20b4b21c54525",
+    "results/experiment_7236_v637_mention_fixture.json": "sha256:b5604654dcefe5755479137c930f0ff5266b4c064aa6701f5c72fd4dec8620e3",
+    "results/experiment_7237_v637_mention_canary.json": "sha256:e4944826d783d3bfc319899fd1bdd683e4fa36a6efe8aa053b22971bee7a5d75",
+    "results/experiment_7238_v637_mention_capture.json": "sha256:b91102c32462728266a43214b79bc07e77baf3ca73776cf96fc83ae47f855f3c",
+    "results/experiment_7239_v637_semantic_audit.json": "sha256:40311ed3438b800e22b97d4bd2820e41183fc0e055a7a0ff22a047e3c3523269",
+    "results/experiment_7240_v637_recurrence_fixture.json": "sha256:0f12abc839f3d70006698ebaa5169f12ab1cae9dc7526c6d124078ec7a6baf74",
+    "results/experiment_7241_v637_recurrence_learning.json": "sha256:ebf779e3b79a07c82300758efb4392fd9c90cda833609bfd7c2cf105ba4710ce",
+    "results/experiment_7242_v637_recurrence_audit.json": "sha256:738ac5a3c2eea092b69f42a317ad34af8cf3a037bc8d251cac80aea51f4f8b6b",
+    "results/experiment_7243_v637_native_memory.json": "sha256:afb3c70b90d73d184fe00f25f776fe5b28bbd5de1eb4f0a472e2aa3a0ed10926",
+    "results/experiment_7244_v637_board_disposition.json": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+    "results/experiment_7245_v637_capstone.json": "sha256:fddf26a7c7a646e416b6deb09bcab863d51654533925ea58c23e39373d92ec7f",
+    "results/raw/experiment_7246/historical-model-receipts.json": "sha256:3bc7d4d1a3f18a0d37fb14265248a52774a3b5cc126202978283fbb37361107f",
+    "results/raw/experiment_7246/negative-gate-fixtures.json": "sha256:e512f2159700559ffd140ce28ffeb81eac40fb9453fca42bc6bde6b4aea0f781",
+    "results/raw/experiment_7246/selected-roadmap.yaml": "sha256:dfb346d0094c0553cf0afab09b8bb2f1504f5f24fe135e6ea68e90671146c274",
+    "results/raw/experiment_7246/source-access-receipts.json": "sha256:8dc859f45be52c32cae67933f15c366c826c78a88c57de92929773c22a78165d",
+    "results/raw/experiment_7246/v638-design.md": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+    "scripts/adversarial_verify.py": "sha256:1ec91490bceb3b161f51cc54e6b035fab6ec8d6eb5f8833e5b3bcd16890f60a6",
+    "scripts/arc_levelup_guarantee_lint.py": "sha256:1d18d6520331e8d55fd16ddeffd557f646de129b58e68f7da251cdd08f1be3d0",
+    "scripts/audit_roadmap_gates.py": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7246_v638_source_map.py": "sha256:84ad5ea2c1f954fe58cf3aa02a4d1e23cae3a0f150b88cb7949d88935ba99168",
+    "scripts/harness_consumer_checks.py": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7246_v638_source_map.py": "sha256:d4af3edf7321d35f0cdf73e9106357a9376774b5bb47876cd1d1b85a592f9787"
+  },
+  "source_ingestion_complete_score": 0,
+  "source_method_rows": [
+    {
+      "access_receipt_id": "contcore",
+      "access_status": "http_success",
+      "adopted_or_deferred": "adopt coverage-based admission and eviction over released witness signatures",
+      "falsifying_control": "matched reset and stale-memory controls with future labels withheld",
+      "implementation_cost": "medium: bounded signature index, eviction policy, and replay controls",
+      "method_id": "contcore",
+      "primary_url": "https://arxiv.org/abs/2608.15277",
+      "prior_mention": "research-references.md:V638-PLANNER-REFRESH-20260912",
+      "retired_overlap": "does not reopen the V637 lossy committed-predicate implementation",
+      "source_date": "2026-08-15",
+      "source_delta": "no_delta",
+      "target_tasks": [
+        "exp7253-coverage-memory",
+        "exp7254-coverage-learning"
+      ]
+    },
+    {
+      "access_receipt_id": "semloc",
+      "access_status": "http_success",
+      "adopted_or_deferred": "adopt typed transition anchors and counterfactual mismatch witnesses",
+      "falsifying_control": "withhold the witness while preserving actions, budgets, and observed transitions",
+      "implementation_cost": "medium: typed witness schema over the existing ARC feedback path",
+      "method_id": "semloc",
+      "primary_url": "https://arxiv.org/abs/2603.29109",
+      "prior_mention": "research-references.md and research-studying.md",
+      "retired_overlap": "does not expose game source or repeat the disallowed engine receipt",
+      "source_date": "2026-03-31",
+      "source_delta": "no_delta",
+      "target_tasks": [
+        "exp7248-arc-witness",
+        "exp7249-arc-live"
+      ]
+    },
+    {
+      "access_status": "ingested_from_authenticated_v638_refresh",
+      "adopted_or_deferred": "adopt explicit unknown, source removal, and direction-change controls",
+      "falsifying_control": "paired source removal, direction reversal, and identifier renaming",
+      "implementation_cost": "low: reuse the shipped mention compiler and independent labels",
+      "method_id": "grounding",
+      "primary_url": "https://arxiv.org/abs/2605.30054",
+      "prior_mention": "research-references.md:V638-PLANNER-REFRESH-20260912",
+      "retired_overlap": "keeps external-text scorers and self-certified extraction retired",
+      "source_date": "2026-05-28",
+      "source_delta": "not_rechecked_in_bounded_execution",
+      "target_tasks": [
+        "exp7250-mention-canary",
+        "exp7251-mention-heldout",
+        "exp7252-semantic-audit"
+      ]
+    },
+    {
+      "access_status": "ingested_from_authenticated_v638_refresh",
+      "adopted_or_deferred": "adopt aligned, constant, random, shuffled, and oracle memory controls",
+      "falsifying_control": "shuffled and feedback-withheld memory at matched lookup cost",
+      "implementation_cost": "low: controller-only arms over one frozen event stream",
+      "method_id": "retrieval_control",
+      "primary_url": "https://arxiv.org/abs/2606.26476",
+      "prior_mention": "research-references.md:V638-PLANNER-REFRESH-20260912",
+      "retired_overlap": "does not revive the stored-value-gate failure as a positive result",
+      "source_date": "2026-06-25",
+      "source_delta": "not_rechecked_in_bounded_execution",
+      "target_tasks": [
+        "exp7254-coverage-learning",
+        "exp7255-coverage-audit"
+      ]
+    },
+    {
+      "access_receipt_id": "sparsekan",
+      "access_status": "http_success",
+      "adopted_or_deferred": "adopt physical compaction and complete transfer-cost accounting; defer a KAN model",
+      "falsifying_control": "masked-only storage and host-round-trip baselines",
+      "implementation_cost": "medium: persistent native ownership and durable event timing",
+      "method_id": "sparsekan",
+      "primary_url": "https://arxiv.org/abs/2608.00859",
+      "prior_mention": "research-references.md:V638-PLANNER-REFRESH-20260912",
+      "retired_overlap": "does not transfer SparseKAN FPGA gains to the Rust controller",
+      "source_date": "2026-08-01",
+      "source_delta": "no_delta",
+      "target_tasks": [
+        "exp7256-native-controller",
+        "exp7257-native-cost"
+      ]
+    },
+    {
+      "access_receipt_id": "ebt_citations",
+      "access_status": "http_success",
+      "adopted_or_deferred": "retain as architecture context; defer learned energy claims",
+      "falsifying_control": "oracle-distinct semantic labels and matched direct baselines",
+      "implementation_cost": "none in V638: citation and boundary review only",
+      "method_id": "ebt",
+      "primary_url": "https://arxiv.org/abs/2507.02092",
+      "prior_mention": "research-references.md foundation anchor",
+      "retired_overlap": "external-text energy scoring remains retired",
+      "source_date": "2025-07-02",
+      "source_delta": "no_delta",
+      "target_tasks": [
+        "exp7259-capstone"
+      ]
+    },
+    {
+      "access_receipt_id": "arm_ebm_citations",
+      "access_status": "http_success",
+      "adopted_or_deferred": "retain the function-space relation as context; defer learned verifier claims",
+      "falsifying_control": "same-generator direct decision and shuffled-source controls",
+      "implementation_cost": "none in V638: citation and boundary review only",
+      "method_id": "arm_ebm",
+      "primary_url": "https://arxiv.org/abs/2512.15605",
+      "prior_mention": "research-references.md foundation anchor",
+      "retired_overlap": "ARM equivalence cannot reopen self-certified verification",
+      "source_date": "2026-05-25",
+      "source_delta": "no_delta",
+      "target_tasks": [
+        "exp7259-capstone"
+      ]
+    }
+  ],
+  "started_at_utc": "2026-09-12T19:54:22.157088+00:00",
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/scripts'\"'\"');from roadmap_schema import Roadmap;Roadmap.model_validate(yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text()))'",
+      "duration_s": 0.108849,
+      "exit_code": 0,
+      "log_sha256": "sha256:6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "name": "roadmap_schema",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.731002,
+      "exit_code": 0,
+      "log_sha256": "sha256:a091d0eeb8359175cac1957f49ba331feecd70a62ed8b36688b7b5a13e3cc7c4",
+      "name": "prior_failure",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 12.041537,
+      "exit_code": 0,
+      "log_sha256": "sha256:02d43b47d6b6dcea4b9bc34c9c30d38d1b29c13166a05e4afa87d77866ddae58",
+      "name": "exclusion_manifest",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.077574,
+      "exit_code": 0,
+      "log_sha256": "sha256:b1011a0257f1a304c074d0247b45e93df534c46f1b64290bf56db3f3e0b1669c",
+      "name": "prompt_paths",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "  invented paths: 0\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.815096,
+      "exit_code": 0,
+      "log_sha256": "sha256:f62a8118f1ed13e8ef6127e328e12adcddf72a2168a41a9278251bfe4ac71af8",
+      "name": "gate_declarations",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 5,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_levelup_guarantee_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml --min 1",
+      "duration_s": 0.218845,
+      "exit_code": 0,
+      "log_sha256": "sha256:7e0f424ed57cf7602305dfe2c0f9888a3402e4434f8541c2c3a407f9ea39cf75",
+      "name": "arc_floor",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "RETIRED: all 25 public survey games show full_game_clear: true in ops/arc_solve_registry.yaml (183/183 known levels). The level-up-attempt requirement is moot -- there is no remaining unsolved public level to attempt. Per the 2026-07-17 operator directive, roadmaps are no longer required to propose public-game solve tasks. Passing without checking task content.\nOK (soft): 1 generalization-testing-floor task(s) detected this roadmap.\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/.coverage-exp7246-v638 '--include=*/experiment_7246_v638_source_map.py' -m pytest -o addopts= --basetemp=/tmp/exp7246-v638-focused-pytest /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7246_v638_source_map.py -q",
+      "duration_s": 45.548477,
+      "exit_code": 0,
+      "log_sha256": "sha256:6174ae9faa81c8974802334f619b58605cfa4a0a2b9757c3b5bea762fc8efa86",
+      "name": "focused_tests",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "...........                                                              [100%]\n11 passed in 43.20s\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/.coverage-exp7246-v638 '--include=*/experiment_7246_v638_source_map.py' --show-missing --fail-under=100",
+      "duration_s": 0.096307,
+      "exit_code": 0,
+      "log_sha256": "sha256:4dbf1d57f04710150c8c1b04a5d799219d6bf88a2cc1c169c24c609eb983f1dc",
+      "name": "focused_coverage",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "Name                                               Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------\npython/carnot/experiment_7246_v638_source_map.py     573      0   100%\n--------------------------------------------------------------------------------\nTOTAL                                                573      0   100%\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7246_v638_source_map.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7246_v638_source_map.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7246_v638_source_map.py",
+      "duration_s": 0.016252,
+      "exit_code": 0,
+      "log_sha256": "sha256:2be13028d76a92ecac62100ae8f7c5a7ea4e6cb2e925599b36f5266e73d2cb4e",
+      "name": "ruff_check",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "All checks passed!\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7246_v638_source_map.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7246_v638_source_map.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7246_v638_source_map.py",
+      "duration_s": 0.015655,
+      "exit_code": 0,
+      "log_sha256": "sha256:3e7410093d4254fdc8b3825973c7745f23f5aafb66ec36440287f699dbdab399",
+      "name": "ruff_format",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "3 files already formatted\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7246_v638_source_map.py",
+      "duration_s": 0.175634,
+      "exit_code": 0,
+      "log_sha256": "sha256:55f13e3fb157f733350eec122a3edbf231bc0cc20dd9e8d9fdd016bfa803264a",
+      "name": "mypy",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7246_v638_source_map.py",
+      "duration_s": 0.016963,
+      "exit_code": 0,
+      "log_sha256": "sha256:51d6e451ab3f983d05029ad583a425d740b3fa26530067c295ae979eccc316ce",
+      "name": "scoped_spec_coverage",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "OK: All tests reference specification requirements.\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": true,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "duration_s": 1200.018237,
+      "exit_code": 124,
+      "log_sha256": "sha256:7615fbadbd1a9db6801af9402e9c418bb350da33ca33a4a3ffcf751dcfa3e672",
+      "name": "full_python_suite",
+      "passed": false,
+      "stderr_tail": "",
+      "stdout_tail": "..... [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 40%]\n.............................................F...F...................... [ 40%]\n...................F.................................................... [ 40%]\n.....................................................F....F............. [ 40%]\n........................................................................ [ 40%]\n..........................................F....F........................ [ 40%]\n........................................................................ [ 40%]\n........................................................................ [ 41%]\n.....................FF.FF............F................................. [ 41%]\n.........................FFFF..............F.....F...................... [ 41%]\n.............F..F..............................F........................ [ 41%]\n........................................................................ [ 41%]\n...................F.................................................... [ 41%]\n.......................................F...................F............ [ 41%]\n........................................................................ [ 41%]\n......F.F..........F.................................................... [ 41%]\n........................................................................ [ 41%]\n................................................................FF...... [ 42%]\n......F.F...F.............F............................................. [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 42%]\n....................................................sss................. [ 42%]\n...........................................................sssssssssssss [ 42%]\nss...................................................................... [ 42%]\n........................................................................ [ 42%]\n........................................................................ [ 43%]\n....................................................s................... [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n...............................F........................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 43%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n........................................................................ [ 44%]\n......................s.............F...........................FFFF.... [ 44%]\n....................FFF.........................................F....FF. [ 44%]\n...................................................sssssssssssF..FF..... [ 44%]\n...FF.................................F................................. [ 44%]\n..............................................F..........F.............. [ 45%]\n........................F...FF..........FF........F........F............ [ 45%]\n.............FF.F......F.........F...................................FF. [ 45%]\n.........FF........F......F......F...................................... [ 45%]\n.............................F............................F........",
+      "timed_out": true
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7246_v638_source_map import independent_reduce;errors=independent_reduce(json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7246_v638_source_map.json'\"'\"').read_text()));print(errors);sys.exit(bool(errors))'",
+      "duration_s": 0.814936,
+      "exit_code": 0,
+      "log_sha256": "sha256:32b591172e8e01cb9579709cbc195d9502b7587d7b54001ab9ce8c14944cf9c5",
+      "name": "independent_reducer",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "[]\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7246_v638_source_map.json",
+      "duration_s": 0.667525,
+      "exit_code": 0,
+      "log_sha256": "sha256:56a85a39ccc5a670757272062d7201b014f6826263565f438c973758b6111dd2",
+      "name": "adversarial",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7246_v638_source_map.json",
+      "duration_s": 0.044848,
+      "exit_code": 0,
+      "log_sha256": "sha256:8c3727ffbbd68426fd7e401647d43b6307717c717204721c4a9a1b8332a67ddb",
+      "name": "row_consistency",
+      "passed": true,
+      "stderr_tail": "",
+      "stdout_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false,
+  "yaml_authority_path": "research-roadmap.yaml",
+  "yaml_milestone": "2026.09.638",
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7246_v638_source_map.json",
+      "gates": [],
+      "id": "exp7246-source-map",
+      "order": 1,
+      "title": "V638 source ingestion and sealed execution map"
+    },
+    {
+      "deliverable": "results/experiment_7247_v638_duration_class.json",
+      "gates": [],
+      "id": "exp7247-duration-class",
+      "order": 2,
+      "title": "Unify duration-floor selection with authenticated substrate classes"
+    },
+    {
+      "deliverable": "results/experiment_7248_v638_arc_witness.json",
+      "gates": [],
+      "id": "exp7248-arc-witness",
+      "order": 3,
+      "title": "Typed transition witnesses for live world-model refinement"
+    },
+    {
+      "deliverable": "results/experiment_7249_v638_arc_live.json",
+      "gates": [
+        {
+          "artifact_field": "arc_witness_ready_score",
+          "op": "==",
+          "upstream": "exp7248-arc-witness",
+          "value": 1
+        }
+      ],
+      "id": "exp7249-arc-live",
+      "order": 4,
+      "title": "Live ARC adapter-withheld transition-witness comparison"
+    },
+    {
+      "deliverable": "results/experiment_7250_v638_mention_canary.json",
+      "gates": [
+        {
+          "artifact_field": "substrate_contract_ready_score",
+          "op": "==",
+          "upstream": "exp7247-duration-class",
+          "value": 1
+        }
+      ],
+      "id": "exp7250-mention-canary",
+      "order": 5,
+      "title": "Authenticated bounded Qwen3.8 mention canary"
+    },
+    {
+      "deliverable": "results/experiment_7251_v638_mention_heldout.json",
+      "gates": [
+        {
+          "artifact_field": "mention_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7250-mention-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7251-mention-heldout",
+      "order": 6,
+      "title": "Qwen3.8 held-out mention source-fidelity measurement"
+    },
+    {
+      "deliverable": "results/experiment_7252_v638_semantic_audit.json",
+      "gates": [],
+      "id": "exp7252-semantic-audit",
+      "order": 7,
+      "title": "Independent source semantics and matched-coverage audit"
+    },
+    {
+      "deliverable": "results/experiment_7253_v638_coverage_memory.json",
+      "gates": [],
+      "id": "exp7253-coverage-memory",
+      "order": 8,
+      "title": "Coverage-based archive admission and effective memory controls"
+    },
+    {
+      "deliverable": "results/experiment_7254_v638_coverage_learning.json",
+      "gates": [
+        {
+          "artifact_field": "coverage_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7253-coverage-memory",
+          "value": 1
+        }
+      ],
+      "id": "exp7254-coverage-learning",
+      "order": 9,
+      "title": "Prospective continuous self-learning with bounded coverage memory"
+    },
+    {
+      "deliverable": "results/experiment_7255_v638_coverage_audit.json",
+      "gates": [],
+      "id": "exp7255-coverage-audit",
+      "order": 10,
+      "title": "Cold memory causality retention and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7256_v638_native_controller.json",
+      "gates": [],
+      "id": "exp7256-native-controller",
+      "order": 11,
+      "title": "Persistent native ownership of the whole archive controller"
+    },
+    {
+      "deliverable": "results/experiment_7257_v638_native_cost.json",
+      "gates": [
+        {
+          "artifact_field": "native_controller_ready_score",
+          "op": "==",
+          "upstream": "exp7256-native-controller",
+          "value": 1
+        }
+      ],
+      "id": "exp7257-native-cost",
+      "order": 12,
+      "title": "Matched durable event cost for the persistent controller"
+    },
+    {
+      "deliverable": "results/experiment_7258_v638_board_state.json",
+      "gates": [],
+      "id": "exp7258-board-state",
+      "order": 13,
+      "title": "GateMate physical-state condition and graduated-board record"
+    },
+    {
+      "deliverable": "results/experiment_7259_v638_capstone.json",
+      "gates": [],
+      "id": "exp7259-capstone",
+      "order": 14,
+      "title": "V638 independent evidence matrix and next-branch decisions"
+    }
+  ]
+}

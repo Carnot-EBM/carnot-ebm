@@ -1,5 +1,119 @@
 # Research Reporting Capability Specification
 
+## V638 source ingestion and sealed execution map — 2026-09-12
+
+**Status:** Implemented. No V638 scientific result is claimed.
+
+### REQ-REPORT-7246: V638 source ingestion and execution map
+
+Exp7246 SHALL select only a roadmap whose milestone is `2026.09.638`. It SHALL
+use the active roadmap after activation. It SHALL use `research-roadmap-next.yaml`
+only when the active roadmap does not match. It SHALL freeze the selected YAML
+bytes and the bytes at the selected roadmap's `milestone_doc` path. It SHALL
+not edit either roadmap, `research-complete.yaml`, or
+`scripts/research_conductor.py`.
+
+Exp7246 SHALL parse the Markdown task table and YAML tasks independently. It
+SHALL compare exactly fourteen ordered IDs, titles, deliverables, and structured
+gates. The IDs SHALL be `exp7246` through `exp7259`. Every gate SHALL point to
+an earlier producer. The producer SHALL declare the exact top-level field in
+its `REQUIRED ARTIFACT FIELDS` block. A readable contract mismatch SHALL
+produce a terminal `disqualified` receipt. The receipt is advisory. No science
+task SHALL depend on its score.
+
+Exp7246 SHALL run the shipped roadmap schema, prior-failure, exclusion,
+prompt-path, gate-declaration, and ARC-floor checks. It SHALL exercise the real
+`evaluate_gates` function for every V638 edge. Each edge SHALL have passing,
+zero, absent-field, and absent-file cases. The rows SHALL distinguish a failed
+metric from missing producer evidence. The task SHALL use temporary files and
+SHALL not change the gate evaluator.
+
+Exp7246 SHALL ingest ContCore, SemLoc, grounding, retrieval-control, SparseKAN,
+EBT, and ARM–EBM methods from the dated V638 refresh. Each method row SHALL
+record its primary URL, source date, access outcome, prior mention, adopted or
+deferred method, target tasks, implementation cost, falsifying control, and
+retired overlap. It SHALL recheck at most three primary records and two citation
+endpoints. Access failure SHALL remain explicit. External claims SHALL not
+become Carnot results.
+
+The task SHALL preserve V637 model history and negative fixtures in hashed
+sidecars. It SHALL authenticate all source artifacts and preserve quarantine.
+Quarantined evidence SHALL not authorize readiness. It SHALL record the archive
+state observed during execution without changing the archive.
+
+The terminal artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, and
+zero current model invocation, load, and generation counters. Completed work
+SHALL use `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. It SHALL
+record the actual hostname separately. A missing external prerequisite SHALL
+use a terminal `blocked` verdict with an exact `gate_check_summary`. A readable
+structural failure SHALL use `disqualified`. The task SHALL measure monotonic
+duration without padding.
+
+The terminal artifact SHALL contain `schema`, `experiment_id`, `milestone`,
+`status`, `run_date`, `started_at_utc`, `completed_at_utc`, `field_principles`,
+`preconditions_checked`, `MODEL_SPECS`, `model_invoked`, current model counters,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`execution_host`, `duration_s`, `phase_spans`, `random_seed`,
+`reproducibility_checksum`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `acceptance_gate_results`, `gate_check_summary`,
+`verifier_is_oracle`, `honest_verdict`, `verdict_class`,
+`validation_receipts`, `source_ingestion_complete_score`, `source_method_rows`,
+`contract_rows`, and `gate_replay_rows`. `field_principles` SHALL preserve the
+exact principles from the V638 task.
+
+`source_ingestion_complete_score` SHALL equal one only when the bounded source
+ingestion, task mapping, frozen-byte checks, gate replays, sidecars, and required
+validation receipts complete. The score does not certify scientific value. A
+contract mismatch SHALL keep this score at zero.
+
+#### SCENARIO-REPORT-7246-CONTRACT: Independent sources fail closed
+
+**Given** separate selected YAML and referenced Markdown bytes
+**When** Exp7246 parses both sources
+**Then** it records exactly fourteen V638 comparison rows and disqualifies any
+milestone, order, title, path, or gate mismatch.
+
+#### SCENARIO-REPORT-7246-GATES: Every edge gets four real replays
+
+**Given** the five V638 structured gate declarations
+**When** the real gate evaluator reads private validation artifacts
+**Then** passing, zero, absent-field, and absent-file outcomes are retained for
+every edge with distinct missing-evidence diagnostics.
+
+#### SCENARIO-REPORT-7246-SOURCES: Bounded methods stay falsifiable
+
+**Given** the dated V638 research refresh and bounded network access
+**When** Exp7246 ingests the seven requested method groups
+**Then** every row retains cost, control, retired overlap, access, and a specific
+adoption or deferral without claiming local validation.
+
+#### SCENARIO-REPORT-7246-SIDECARS: Historical evidence stays isolated
+
+**Given** V637 model history, quarantined artifacts, and negative fixtures
+**When** Exp7246 records provenance
+**Then** hashed sidecars keep that evidence outside current model counters and
+quarantined rows remain rejected.
+
+#### SCENARIO-REPORT-7246-ARTIFACT: Stored evidence is recomputed
+
+**Given** a terminal Exp7246 artifact and its sidecars
+**When** a required field, row, score, hash, lifecycle value, or checksum changes
+**Then** the artifact validator rejects the modified receipt.
+
+#### SCENARIO-REPORT-7246-VALIDATION: Scoped checks retain exact outcomes
+
+**Given** the completed checkpoint
+**When** Exp7246 runs focused tests, scoped coverage, Ruff, mypy, spec coverage,
+the independent reducer, adversarial verification, and row consistency
+**Then** every validation receipt records the command, exit code, and log hash.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7246_v638_source_map.py`,
+`scripts/experiments/experiment_7246_v638_source_map.py`, and
+`tests/python/test_experiment_7246_v638_source_map.py`. The terminal receipt is
+`results/experiment_7246_v638_source_map.json`.
+
 ## V634 planning contract — 2026-09-10
 
 **Status:** Planned; no V634 experiment result is claimed.

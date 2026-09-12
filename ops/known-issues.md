@@ -26606,3 +26606,45 @@ of times before treating iteration 0 as terminal, since a real optimization hypo
 useless work lost to one bad call; (2) persist `recent_failures`/the raw `call_codex` failure
 reason into the receipt so a future zero-iteration round is diagnosable without re-running
 manually.
+
+## 2026-09-12 (later still): Fable 5.1 fallback shipped, both candidate fixes above closed together
+
+Operator directive: "If the codex run returns zero hypothesis, I want to follow up with a
+Fable 5.1 run to see if it finds anything." This closes candidate fix (1) from the entry above
+directly, and (2) as a side effect (the receipt now records which iterations needed the
+fallback).
+
+**What shipped.** New `call_fable()` (mirrors `pages_adversarial_audit.py:call_claude` -- a
+stateless `claude --model fable --effort max --print <prompt>` completion, verified via
+`claude --help` that `fable` is a documented first-class `--model` alias; no
+`--dangerously-skip-permissions`, so unlike `call_codex` there is no agentic repo access to
+restrict). New `fable_generate_hypotheses()` asks Fable the *exact same* prompt
+(`_hypothesis_prompt`, shared with codex) so the two are a fair comparison. New
+`generate_hypotheses_with_fallback()` composes them: codex first, Fable only if codex returns
+nothing, and records which iterations needed the fallback in a list the receipt now reports
+(`fable_fallback_iterations: [...]`) -- directly answering "why did this round get zero
+iterations" without re-running by hand, which the prior entry named as an open gap.
+
+**Real bug caught building this, before it shipped.** The first version of the wiring hung the
+test suite past 120s: existing tests mocked `codex_generate_hypotheses` to return `[]`, and the
+REAL (unmocked) `fable_generate_hypotheses` then shelled out to a genuine `claude` CLI call with
+no patch in place -- exactly the kind of thing that would have made a routine test run silently
+spend minutes hitting a live model. Fixed by re-pointing those tests at
+`generate_hypotheses_with_fallback` (the function `run_round` actually calls) instead of the
+lower-level `codex_generate_hypotheses`, and added dedicated tests for the fallback logic itself
+(`TestCallFable`, `TestGenerateHypothesesWithFallback`) that mock both generators explicitly.
+
+**Real timeout finding, measured not guessed.** `claude --model fable --effort max` took over
+100s and did not return for a trivial forced-failure test at that budget; a plain "reply OK"
+prompt returned in 15-30s, so this is genuinely slower reasoning at max effort on a real task,
+not a bug. Gave Fable its own `DEFAULT_FABLE_TIMEOUT_S = 600` (`--fable-timeout` CLI flag),
+separate from codex's 300s, since the overall round has an 1800s outer timeout and headroom to
+spare -- this only fires on the rare fallback path.
+
+**Verified for real, end to end, nothing mocked below the CLI.** Forced `codex_generate_
+hypotheses` to fail (an invalid model name), confirmed the real `fable_fallback_iterations`
+log recorded iteration 0, and Fable 5.1 produced a genuine, substantive hypothesis in 167.9s
+(well inside the 600s budget): an LM-damped Newton optimizer with an exact O(dim) tridiagonal
+Hessian solve, energy-monotone step acceptance, and 8 Rosenbrock restarts -- real, correct
+gradient/Hessian derivations for both benchmarks, not a placeholder. 38/38 tests (10 new),
+ruff/mypy clean.
