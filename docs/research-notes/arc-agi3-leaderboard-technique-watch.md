@@ -328,3 +328,11 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Fine-tune Carnot’s local generator exclusively on verifier-confirmed solved prefixes from mechanics-diverse synthetic games, avoiding imitation of failed search tails.
 
+## 2026-09-12 13:37 UTC -- NEW
+
+- **NVARC3 — newly attributable NVIDIA DreamTeam lineage; exact current-submission linkage is unproven.** Team members Elad Sarafian and Gal Kaplun coauthored an open-source six-agent system built around three executable artifacts: observation/rendering, transition/history simulation, and reusable policies. Before each live action it commits a prediction; afterward it computes field-level errors, replays recent transitions, and routes counterexamples to the artifact’s responsible agent. The leader gates imagined rollouts on retrodiction reliability, falling back to information-seeking probes when the world model is immature. Confident action sequences can execute with lightweight per-step observer/simulator checks and early interruption. The paper reports 38.4% average public-demo RHAE and 31% fewer environment actions than its matched baseline. However, the published configuration uses hosted GPT-5.5 and Claude Opus 4.8 models, so it cannot establish what powers NVARC3’s offline Kaggle submission. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [repository](https://github.com/NVIDIA/dream-team), [paper](https://arxiv.org/abs/2605.09650), [published configuration](https://github.com/NVIDIA/dream-team/blob/main/runs/arc_agi_3/configs/offline_focused.yaml)
+
+  **Classification: (b) GENERAL-PURPOSE.** The published competition path operates on API observations; no public-game source reading or per-game hardcoding was found.
+
+  **POSSIBLE CARNOT LEVER:** Gate search on recent field-level retrodiction accuracy—when an executable model is insufficiently validated, issue an information-gathering probe and route its precise errors only to the responsible observation, transition, or policy component.
+

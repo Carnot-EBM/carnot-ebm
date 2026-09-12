@@ -19897,3 +19897,4 @@ timed alternative is available.
 - 2026-09-12: Qwen3.8 held-out mention-grounding capture (⚠️ Blocked) — honest_verdict=blocked_exp7238_structured_quarantine; results/experiment_7238_v637_mention_capture.json
 - 2026-09-12: Independent mention fidelity and verification-value audit (⚠️ Blocked) — honest_verdict=blocked_exp7239_structured_quarantine; results/experiment_7239_v637_semantic_audit.json
 - 2026-09-12: Feedback-validated archive memory prototype and recurrence stream (⚠️ Research Finding) — honest_verdict=complete_circular_positive: recurrence fixture, controller, and positive controls are runnable; results/experiment_7240_v637_recurrence_fixture.json
+- 2026-09-12: Prospective continuous learning with validated archive reuse (⚠️ Research Finding) — honest_verdict=complete_null: validated archive reuse did not pass every frozen learning gate; results/experiment_7241_v637_recurrence_learning.json
