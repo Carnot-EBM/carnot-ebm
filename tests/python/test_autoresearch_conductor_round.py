@@ -302,6 +302,101 @@ class TestCodexGenerateHypotheses:
         assert failures and failures[0]["description"] == "codex_call_failed"
 
 
+class TestCallFable:
+    def test_argv_uses_the_documented_fable_model_alias(self) -> None:
+        """2026-09-12 operator directive: follow up a zero-hypothesis codex
+        round with a Fable 5.1 attempt. `claude --help` documents 'fable' as
+        a first-class --model alias -- verify the exact call shape, and that
+        it is a stateless --print completion, never an agentic session (no
+        --dangerously-skip-permissions, unlike call_codex's bypass flag)."""
+        captured = {}
+
+        def fake_run(argv, **kwargs):
+            captured["argv"] = argv
+            return subprocess.CompletedProcess(argv, 0, stdout="ok", stderr="")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_fable("hello", 60)
+
+        assert ok is True
+        assert out == "ok"
+        argv = captured["argv"]
+        assert argv[0] == "claude"
+        assert "--model" in argv and argv[argv.index("--model") + 1] == "fable"
+        assert "--print" in argv and argv[argv.index("--print") + 1] == "hello"
+        assert "--dangerously-skip-permissions" not in argv
+
+    def test_nonzero_exit_is_reported_not_raised(self) -> None:
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr="boom")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_fable("hello", 60)
+        assert ok is False
+        assert "boom" in out
+
+    def test_timeout_is_reported_not_raised(self) -> None:
+        def fake_run(argv, **kwargs):
+            raise subprocess.TimeoutExpired(cmd=argv, timeout=kwargs.get("timeout", 60))
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_fable("hello", 60)
+        assert ok is False
+
+
+class TestGenerateHypothesesWithFallback:
+    def test_codex_success_never_calls_fable(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        fable_calls = []
+        with (
+            patch.object(acr, "codex_generate_hypotheses", return_value=[("d", "code")]),
+            patch.object(
+                acr,
+                "fable_generate_hypotheses",
+                side_effect=lambda *a, **kw: fable_calls.append(1) or [],
+            ),
+        ):
+            log: list[int] = []
+            hyps = acr.generate_hypotheses_with_fallback(
+                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+            )
+        assert hyps == [("d", "code")]
+        assert fable_calls == []
+        assert log == []
+
+    def test_codex_empty_falls_back_to_fable_and_records_the_iteration(self) -> None:
+        """The exact scenario the operator asked for: codex returns nothing,
+        Fable gets a real attempt at the same question before the round
+        gives up on this iteration."""
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        with (
+            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
+            patch.object(acr, "fable_generate_hypotheses", return_value=[("fable-found", "code")]),
+        ):
+            log: list[int] = []
+            hyps = acr.generate_hypotheses_with_fallback(
+                "gpt-6-astra", 60, BaselineRecord(), [], 3, log
+            )
+        assert hyps == [("fable-found", "code")]
+        assert log == [3]
+
+    def test_both_generators_empty_returns_empty(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        with (
+            patch.object(acr, "codex_generate_hypotheses", return_value=[]),
+            patch.object(acr, "fable_generate_hypotheses", return_value=[]),
+        ):
+            log: list[int] = []
+            hyps = acr.generate_hypotheses_with_fallback(
+                "gpt-6-astra", 60, BaselineRecord(), [], 0, log
+            )
+        assert hyps == []
+        assert log == [0]  # the attempt is still recorded even though it also failed
+
+
 class TestRecomputeMetrics:
     """Unit tests for the REQ-AUTO-021 fix to adversarial review finding 1."""
 
@@ -369,7 +464,7 @@ class TestRunRound:
         pipeline, no mocking below codex_generate_hypotheses."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
             return [
                 (
                     "claims an impossible energy",
@@ -379,7 +474,7 @@ class TestRunRound:
 
         with (
             patch.object(acr, "codex_available", return_value=True),
-            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
         ):
             rc = acr.run_round(
                 model="gpt-6-astra",
@@ -410,7 +505,7 @@ class TestRunRound:
     def test_bounded_run_commits_only_accepted_winners(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
             if iteration == 0:
                 # double_well_energy([1.0, 1.0]) == 0.0, beats baseline 0.05
                 return [
@@ -421,7 +516,7 @@ class TestRunRound:
 
         with (
             patch.object(acr, "codex_available", return_value=True),
-            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
         ):
             rc = acr.run_round(
                 model="gpt-6-astra",
@@ -441,12 +536,12 @@ class TestRunRound:
     def test_baseline_and_log_caches_stay_local_not_committed(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
             return []  # no hypotheses -> loop stops immediately, nothing accepted
 
         with (
             patch.object(acr, "codex_available", return_value=True),
-            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
         ):
             acr.run_round(
                 model="gpt-6-astra",
@@ -478,7 +573,7 @@ class TestRunRound:
         committed."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
             if iteration == 0:
                 return [("no-op", "def run(d): return {}")]
             return [
@@ -490,7 +585,7 @@ class TestRunRound:
 
         with (
             patch.object(acr, "codex_available", return_value=True),
-            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
         ):
             acr.run_round(
                 model="gpt-6-astra",
@@ -511,7 +606,7 @@ class TestRunRound:
         be after the WHOLE round finished."""
         _init_repo(tmp_path)
 
-        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration, _fallback_log=None, _fable_timeout=None):
             if iteration == 0:
                 # double_well_energy([1.1, 1.0]) == 0.04410000000000008, beats baseline 0.05
                 return [
@@ -527,7 +622,7 @@ class TestRunRound:
 
         with (
             patch.object(acr, "codex_available", return_value=True),
-            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
         ):
             acr.run_round(
                 model="gpt-6-astra",

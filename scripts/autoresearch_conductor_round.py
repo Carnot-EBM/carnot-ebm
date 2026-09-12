@@ -126,6 +126,14 @@ from carnot.autoresearch.toy_benchmarks import (  # noqa: E402
 DEFAULT_BENCHMARK_DATA: dict[str, Any] = {"dim": 2}
 DEFAULT_MODEL = os.environ.get("CARNOT_AUTORESEARCH_MODEL", "gpt-6-astra")
 DEFAULT_CODEX_TIMEOUT_S = 300
+# Measured 2026-09-12: `claude --model fable --effort max` genuinely needs
+# more than 100s for a substantive coding response (a trivial "reply OK"
+# prompt returns in ~15-30s; the real autoresearch hypothesis prompt timed
+# out at 100s). This is slower reasoning at max effort, not a bug -- give it
+# real headroom rather than reusing codex's budget. The overall round has an
+# 1800s outer timeout (_run_audit_with_receipt) and this only fires on the
+# rare fallback path, so there is room.
+DEFAULT_FABLE_TIMEOUT_S = 600
 
 # REQ-AUTO-021: unlike hypothesis_generator.DEFAULT_SYSTEM_PROMPT (which asks
 # for a self-reported final_energy -- the exact self-report gap adversarial
@@ -316,6 +324,14 @@ def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
         return False, str(exc)
 
 
+def _hypothesis_prompt(
+    baselines: BaselineRecord, recent_failures: list[dict[str, Any]], iteration: int
+) -> str:
+    """Shared prompt for both generators -- codex and its Fable fallback get
+    asked the exact same question, so a comparison between them is fair."""
+    return f"{AUTORESEARCH_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
+
+
 def codex_generate_hypotheses(
     model: str,
     timeout: int,
@@ -323,18 +339,86 @@ def codex_generate_hypotheses(
     recent_failures: list[dict[str, Any]],
     iteration: int,
 ) -> list[tuple[str, str]]:
-    """The `generator` callback `run_loop_with_generator` expects. Reuses
-    hypothesis_generator.py's own user-prompt-building and response-parsing,
-    but AUTORESEARCH_SYSTEM_PROMPT (REQ-AUTO-021), not hypothesis_generator's
-    own DEFAULT_SYSTEM_PROMPT -- the two ask for a different return contract
-    (final_state vs. a self-reported final_energy) and only ours is actually
-    verified downstream by _energy_verification_patch."""
-    prompt = f"{AUTORESEARCH_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
+    """The primary generator. Reuses hypothesis_generator.py's own
+    user-prompt-building and response-parsing, but AUTORESEARCH_SYSTEM_PROMPT
+    (REQ-AUTO-021), not hypothesis_generator's own DEFAULT_SYSTEM_PROMPT --
+    the two ask for a different return contract (final_state vs. a
+    self-reported final_energy) and only ours is actually verified downstream
+    by _energy_verification_patch."""
+    prompt = _hypothesis_prompt(baselines, recent_failures, iteration)
     ok, output = call_codex(prompt, model, timeout)
     if not ok:
         recent_failures.append({"description": "codex_call_failed", "reason": output})
         return []
     return _extract_hypotheses(output)
+
+
+def call_fable(prompt: str, timeout: int) -> tuple[bool, str]:
+    """Second-opinion generator (2026-09-12 operator directive: "If the codex
+    run returns zero hypothesis, I want to follow up with a Fable 5.1 run to
+    see if it finds anything"). Mirrors pages_adversarial_audit.py:call_claude
+    -- a stateless `claude --print` completion, not an agentic session (no
+    --dangerously-skip-permissions, so unlike call_codex there is no repo
+    tool access to restrict in the first place). `claude --help` documents
+    'fable' as a first-class --model alias directly.
+    """
+    try:
+        proc = subprocess.run(
+            ["claude", "--model", "fable", "--effort", "max", "--print", prompt],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+            cwd=PROJECT_ROOT,
+        )
+        if proc.returncode != 0:
+            return False, f"claude exit {proc.returncode}: {proc.stderr[:200]}"
+        return True, proc.stdout
+    except (subprocess.TimeoutExpired, OSError) as exc:
+        return False, str(exc)
+
+
+def fable_generate_hypotheses(
+    timeout: int,
+    baselines: BaselineRecord,
+    recent_failures: list[dict[str, Any]],
+    iteration: int,
+) -> list[tuple[str, str]]:
+    """Same question as codex_generate_hypotheses, same parsing, different
+    model -- called only when codex returned nothing first."""
+    prompt = _hypothesis_prompt(baselines, recent_failures, iteration)
+    ok, output = call_fable(prompt, timeout)
+    if not ok:
+        recent_failures.append({"description": "fable_call_failed", "reason": output})
+        return []
+    return _extract_hypotheses(output)
+
+
+def generate_hypotheses_with_fallback(
+    model: str,
+    timeout: int,
+    baselines: BaselineRecord,
+    recent_failures: list[dict[str, Any]],
+    iteration: int,
+    fallback_log: list[int],
+    fable_timeout: int = DEFAULT_FABLE_TIMEOUT_S,
+) -> list[tuple[str, str]]:
+    """codex first; if it returns nothing, ask Fable 5.1 the same question
+    before giving up on this iteration. Also the fix for the OTHER half of
+    the 2026-09-12 known-issues finding: run_loop_with_generator stops the
+    WHOLE round on one empty generator call, so a transient codex failure
+    used to end a 5-iteration round at iteration 0 with no second attempt at
+    all -- this gives every iteration a real second attempt before it can
+    do that. `fallback_log` records which iterations needed the fallback,
+    for the receipt (the other known-issues gap: no diagnostic was kept for
+    why a round produced zero hypotheses). `fable_timeout` is deliberately
+    separate from `timeout` (codex's budget) -- see DEFAULT_FABLE_TIMEOUT_S.
+    """
+    hyps = codex_generate_hypotheses(model, timeout, baselines, recent_failures, iteration)
+    if hyps:
+        return hyps
+    fallback_log.append(iteration)
+    return fable_generate_hypotheses(fable_timeout, baselines, recent_failures, iteration)
 
 
 def _git(project_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -434,6 +518,7 @@ def run_round(
     model: str,
     max_iterations: int,
     codex_timeout: int = DEFAULT_CODEX_TIMEOUT_S,
+    fable_timeout: int = DEFAULT_FABLE_TIMEOUT_S,
     project_root: Path = PROJECT_ROOT,
     baseline_cache: Path | None = None,
     log_cache: Path | None = None,
@@ -467,13 +552,21 @@ def run_round(
     before_count = len(experiment_log.entries)
     energy_before = {name: metrics.final_energy for name, metrics in baselines.benchmarks.items()}
 
+    fable_fallback_iterations: list[int] = []
+
     def generator(
         cur_baselines: BaselineRecord,
         recent_failures: list[dict[str, Any]],
         iteration: int,
     ) -> list[tuple[str, str]]:
-        return codex_generate_hypotheses(
-            model, codex_timeout, cur_baselines, recent_failures, iteration
+        return generate_hypotheses_with_fallback(
+            model,
+            codex_timeout,
+            cur_baselines,
+            recent_failures,
+            iteration,
+            fable_fallback_iterations,
+            fable_timeout,
         )
 
     config = AutoresearchConfig(
@@ -530,8 +623,14 @@ def run_round(
         f"- rejected: {result.rejected}",
         f"- pending_review: {result.pending_review}",
         f"- circuit_breaker_tripped: {result.circuit_breaker_tripped}",
+        f"- fable_fallback_iterations: {fable_fallback_iterations or 'none'}",
         "",
     ]
+    if fable_fallback_iterations and result.iterations == 0:
+        report_lines.append(
+            "codex returned nothing on the first call, Fable 5.1 fallback also "
+            "produced nothing usable -- both generators failed this round."
+        )
     if committed:
         report_lines.append("## Committed lineage")
         for exp_id, bench, sha in committed:
@@ -552,9 +651,13 @@ def main() -> int:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--max-iterations", type=int, default=5)
     parser.add_argument("--codex-timeout", type=int, default=DEFAULT_CODEX_TIMEOUT_S)
+    parser.add_argument("--fable-timeout", type=int, default=DEFAULT_FABLE_TIMEOUT_S)
     args = parser.parse_args()
     return run_round(
-        model=args.model, max_iterations=args.max_iterations, codex_timeout=args.codex_timeout
+        model=args.model,
+        max_iterations=args.max_iterations,
+        codex_timeout=args.codex_timeout,
+        fable_timeout=args.fable_timeout,
     )
 
 
