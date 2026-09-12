@@ -25,7 +25,7 @@ import random
 import re
 import socket
 import time
-from typing import Any
+from typing import Any, Protocol
 
 from carnot import experiment_7199_v634_bounded_acquisition as exp7199
 from carnot import experiment_7213_v635_refinement_learning as exp7213
@@ -549,9 +549,31 @@ def _prediction_from_masks(masks: Mapping[str, Any], witness: Mapping[str, Any])
     return "accept" if accepts > mask.bit_count() / 2 else "reject"
 
 
-def _active_contradiction(
-    controller: exp7226.PackedBeliefController, release: Mapping[str, Any]
-) -> bool:
+class ActiveBeliefState(Protocol):
+    """The subset of PackedBeliefController's interface ArchivedBeliefController
+    actually relies on. exp7243's NativeArchiveController overrides
+    _active_from_state/_active_from_masks to return NativePackedActive instead
+    of exp7226.PackedBeliefController -- a deliberately unrelated class (a Rust-
+    backed implementation, different constructor, different internal state),
+    never meant to nominally subclass it. Both structurally satisfy this
+    Protocol, so mypy's structural typing (not inheritance) is what makes the
+    override valid: fixes a real, already-committed mypy error without
+    changing runtime behavior in either file."""
+
+    def state_hash(self) -> str: ...
+    def state_dict(self) -> JsonDict: ...
+    def family_state(self, family: str) -> JsonDict: ...
+    def commit_batch(
+        self,
+        releases: Sequence[Mapping[str, Any]],
+        *,
+        current_cycle: int,
+        expected_parent_hash: str,
+        state_path: Path | None = None,
+    ) -> JsonDict: ...
+
+
+def _active_contradiction(controller: ActiveBeliefState, release: Mapping[str, Any]) -> bool:
     """Return true only when every active hypothesis conflicts with a release."""
 
     family = str(release["family_id"])
@@ -702,12 +724,12 @@ class ArchivedBeliefController:
 
         return self._active_from_state(self._state["active"])
 
-    def _active_from_state(self, value: Mapping[str, Any]) -> exp7226.PackedBeliefController:
+    def _active_from_state(self, value: Mapping[str, Any]) -> ActiveBeliefState:
         """Create the packed backend while archive policy stays in this class."""
 
         return exp7226.PackedBeliefController.from_state(value)
 
-    def _active_from_masks(self, masks: Mapping[str, Any]) -> exp7226.PackedBeliefController:
+    def _active_from_masks(self, masks: Mapping[str, Any]) -> ActiveBeliefState:
         """Restore one nominated archive through the selected packed backend."""
 
         return _controller_from_masks(masks)
