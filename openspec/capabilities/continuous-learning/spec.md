@@ -13926,3 +13926,104 @@ also the correctness authority, so the artifact SHALL set
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7241 and SCENARIO-CL-7241-* | Implemented: `python/carnot/experiment_7241_v637_recurrence_learning.py` authenticates and replays Exp7240, retains measured operation receipts and state bytes, computes paired bootstrap gates, and builds the terminal artifact; `scripts/experiments/experiment_7241_v637_recurrence_learning.py` is the thin wrapper. | `tests/python/test_experiment_7241_v637_recurrence_learning.py` covers preconditions, quarantine, chronology, six arms, full-denominator metrics, paired bootstrap, independent gates, E2E rejection, restore, rollback, blocked output, cold validation, command delegation, and 100-percent new-code line coverage. |
+
+## REQ-CL-7242: Independent Cold Audit Of Recurrence Memory
+
+Carnot SHALL audit Exp7240 and Exp7241 from their declared V637 deliverables.
+It SHALL authenticate both artifacts, every declared raw input, and every
+checkpoint before replay. It SHALL reject quarantined evidence even when a
+numeric gate passes. It SHALL unwrap only dictionaries that contain both
+`principle` and `value`.
+
+A fresh process SHALL reduce all six arms from raw prediction-before-release
+rows. The reducer SHALL join authority feedback by request index. It SHALL
+reject premature labels, duplicate feedback credit, seed-hash mismatches, and
+archive choices that use a hidden regime. It SHALL recompute the frozen paired
+seed criteria without reading producer aggregates. It SHALL retain the
+identical-input label-drift and shuffled-candidate controls.
+
+The audit SHALL withhold selected committed updates and prove that changes
+start after each commit. A fresh process SHALL restore each final checkpoint.
+The restored process SHALL compare actions, energies, active hashes, and archive
+hashes byte-for-byte. Stale archives, a full pending queue, out-of-order
+delivery, and corrupt certificates SHALL be rejected. Each rejected replay
+SHALL preserve the complete parent state.
+
+`recurrence_audit_complete_score` SHALL equal one only after the full cold
+reduction and all audit-owned checks finish. `recurrence_promotion_score` SHALL
+equal one only when the independently recomputed science gates and all
+causality, isolation, restore, and rollback checks pass. A failed science gate
+after complete audit work SHALL produce a terminal null. A missing external
+input SHALL produce a row-free terminal blocked artifact. It SHALL never
+produce partial for an external absence.
+
+The terminal artifact SHALL use run date `20260912`. It SHALL bind the task,
+both upstream artifacts, public and private stream files, raw rows, checkpoints,
+mutation receipts, and source code to exact hashes. Historical Exp7228 details
+and synthetic negative receipts SHALL remain in a separate hashed sidecar. They
+SHALL not enter current invocation provenance.
+
+The run SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, and all current
+invocation counts to zero. A completed replay SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` for the
+execution venue. A blocked run SHALL use `blocked_no_run`. The evaluator also
+defines correctness, so exact-oracle conformance SHALL use
+`verifier_is_oracle=true` and a circular-positive class only when promotion
+passes. The audit SHALL claim no model-weight update, cross-domain transfer,
+hardware speedup, production-default change, or publication.
+
+### SCENARIO-CL-7242-PRECONDITIONS: Both V637 Producers Or Block
+
+- GIVEN the declared Exp7240 and Exp7241 deliverables and their raw receipts
+- WHEN identity, hash, checksum, quarantine, imports, and writable paths are checked
+- THEN only exact complete evidence can enter the reducer
+- AND an external failure produces a row-free blocked artifact with the exact failed check.
+
+### SCENARIO-CL-7242-REDUCTION: Raw Rows Define Every Metric
+
+- GIVEN all 196,608 prediction-before-release rows across six arms
+- WHEN a fresh process rebuilds the 192 independent seed-and-arm summaries
+- THEN it joins labels by request index and ignores producer aggregate values
+- AND it recomputes every frozen paired-seed criterion.
+
+### SCENARIO-CL-7242-CHRONOLOGY: Authority Cannot Affect Its Prediction
+
+- GIVEN delayed feedback and a frozen pre-release decision
+- WHEN release chronology and update withholding are audited
+- THEN no label receives premature or duplicate credit
+- AND a committed update can change only a later action.
+
+### SCENARIO-CL-7242-CONTROLS: Drift And Shuffle Remain Distinct
+
+- GIVEN identical-input label drift and shuffled archive nomination
+- WHEN the audit compares their raw outcomes
+- THEN both controls retain their independent denominators
+- AND no hidden regime field can select an archive.
+
+### SCENARIO-CL-7242-RESTORE: Fresh State Is Byte-Exact
+
+- GIVEN each final active state and bounded archive checkpoint
+- WHEN a fresh process restores the checkpoint
+- THEN actions, energies, active hashes, and archive hashes match
+- AND the process uses no private authority input.
+
+### SCENARIO-CL-7242-MUTATIONS: Unsafe Replay Preserves Parent State
+
+- GIVEN stale archives, a full queue, out-of-order delivery, and corrupt certificates
+- WHEN each invalid transaction is attempted
+- THEN every transaction is rejected with a named reason
+- AND every parent byte and hash remains unchanged.
+
+### SCENARIO-CL-7242-PROVENANCE: Old Audit Evidence Stays Separate
+
+- GIVEN the quarantined Exp7228 history and task-owned negative fixtures
+- WHEN provenance is sealed
+- THEN their paths and hashes live only in the mutation sidecar
+- AND current model and runner invocation fields remain empty.
+
+### SCENARIO-CL-7242-TERMINAL: Completion And Promotion Stay Separate
+
+- GIVEN all independent reductions and safety checks
+- WHEN terminal scores are derived and the artifact is atomically written
+- THEN audit completion can equal one while promotion equals zero
+- AND only reproduced science plus every safety check can promote.
