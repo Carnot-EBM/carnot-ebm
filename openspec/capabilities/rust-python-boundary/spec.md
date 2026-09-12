@@ -342,3 +342,42 @@ validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7230 and SCENARIO-RUSTPY-7230-* | Planned: persistent packed-belief Rust core, PyO3 batch boundary, interpreter-bound build, and measured artifact. | Planned: RED-first compiled identity, exhaustive parity, fixed sequence, cross-process restore, cost-gate, validator, and command tests. |
+
+### REQ-RUSTPY-7243: Existing Packed Kernel In Archive Workload
+
+Carnot SHALL reuse the shipped `RustPackedBeliefController` for Exp7243. The
+archive policy SHALL stay in the same Python controller for both measurement
+arms. Only active packed prediction, energy, update, and state conversion MAY
+cross the PyO3 boundary. A fallback object that imitates the native module
+SHALL fail provenance validation.
+
+The interpreter-bound build SHALL use the current interpreter and the Exp7217
+recipe. The receipt SHALL bind the command, Python ABI, module path, extension
+origin, binary hash, linker view, and native methods. Fresh-process restore and
+delayed-update continuation SHALL load those same bytes.
+
+The paired benchmark SHALL include every host and binding operation needed by
+one archive-controller event. It SHALL retain per-component timing, total
+timing, arm order, batch size, archive capacity, block number, trace hash, and
+state hash. The native kernel timer SHALL be secondary and SHALL not replace
+total event cost.
+
+### SCENARIO-RUSTPY-7243-BINDING: Native Identity Is Executed Evidence
+
+**Given** the current interpreter and the existing packed-belief source
+**When** the task-specific extension loads in the parent and fresh process
+**Then** both receipts identify the exact binary and public native API
+**And** no Python fallback can satisfy native readiness.
+
+### SCENARIO-RUSTPY-7243-PAIRED-COST: Full Boundary Cost Sets The Gate
+
+**Given** matched archive traces and interleaved arm order
+**When** all 30 paired blocks run for each capacity and batch cell
+**Then** total event cost includes dispatch through restore
+**And** batch-one lower CI95 alone gates native archive cost value.
+
+## Implementation Status (REQ-RUSTPY-7243)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7243 and SCENARIO-RUSTPY-7243-* | Implemented: Exp7243 reuses `RustPackedBeliefController` for active packed operations inside the unchanged Python archive policy and binds parent/fresh-process receipts to the selected extension bytes. | `tests/python/test_experiment_7243_v637_native_memory.py` exercises compiled identity, no-fallback parity, fresh continuation, full-boundary paired costs, cold validation, and native-install failure cleanup with 754/754 scoped statements. |

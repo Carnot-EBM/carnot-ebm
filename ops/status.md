@@ -16445,3 +16445,17 @@ removing the fix and watching the test fail with a real fabricated commit, then 
 Real dry run against live codex/gpt-6-astra: the model wrote a genuine Gauss–Newton optimizer,
 converged both benchmarks to their true minimum, and the committed energy was the harness's own
 recomputation, not a self-report. 308/308 autoresearch tests, ruff/mypy clean. Still default-off.
+
+## 2026-09-12 — Exp7243 native archive validation repaired
+
+The native archive controller and cost study are implemented. Malformed cost
+rows now fail closed through `validate_artifact` rather than escaping as an
+`AttributeError`. Defensive coverage includes invalid source manifests,
+interpreter-bound build failures, temporary-file cleanup, durable active-state
+writes, archive reactivation, and long-cost heartbeat output. The regenerated
+artifact passed native readiness and retained an honest cost-value null at a
+0.363225 batch-one lower bound. The exact conductor subset passes 104 tests
+with one existing warning; the focused suite passes 13 tests and covers all
+754 Exp7243 statements. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified.

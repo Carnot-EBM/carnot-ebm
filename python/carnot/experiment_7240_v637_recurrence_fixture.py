@@ -700,12 +700,42 @@ class ArchivedBeliefController:
     def _active(self) -> exp7226.PackedBeliefController:
         """Restore the active packed state through its existing validator."""
 
-        return exp7226.PackedBeliefController.from_state(self._state["active"])
+        return self._active_from_state(self._state["active"])
+
+    def _active_from_state(self, value: Mapping[str, Any]) -> exp7226.PackedBeliefController:
+        """Create the packed backend while archive policy stays in this class."""
+
+        return exp7226.PackedBeliefController.from_state(value)
+
+    def _active_from_masks(self, masks: Mapping[str, Any]) -> exp7226.PackedBeliefController:
+        """Restore one nominated archive through the selected packed backend."""
+
+        return _controller_from_masks(masks)
+
+    def _validate_live_state(self, value: Mapping[str, Any]) -> None:
+        """Validate archive bytes independently from the selected packed backend."""
+
+        ArchivedBeliefController.from_state(value)
+
+    def _admit_state(self, value: Mapping[str, Any]) -> ArchivedBeliefController:
+        """Create the next controller without changing archive selection semantics."""
+
+        return type(self).from_state(value)
+
+    def _load_durable_state(self, path: Path) -> ArchivedBeliefController:
+        """Load durable bytes through the backend-aware controller constructor."""
+
+        return type(self).load(path)
 
     def predict(self, public_event: Mapping[str, Any]) -> tuple[str, float]:
         """Read the frozen active state without changing any controller byte."""
 
         return self._active().predict(public_event)
+
+    def energy(self, label: str, public_event: Mapping[str, Any]) -> JsonDict:
+        """Read active disagreement energy through the selected packed backend."""
+
+        return self._active().energy(label, public_event)
 
     def select_request(
         self,
@@ -816,12 +846,12 @@ class ArchivedBeliefController:
         if expected_parent_hash != parent_hash:
             raise ArchiveCommitRejected("stale_parent")
         try:
-            type(self).from_state(self._state)
+            self._validate_live_state(self._state)
         except ValueError as error:
             raise ArchiveCommitRejected("corrupt_live_state") from error
         if state_path is not None and state_path.exists():
             try:
-                durable_hash = type(self).load(state_path).state_hash()
+                durable_hash = self._load_durable_state(state_path).state_hash()
             except (OSError, ValueError, json.JSONDecodeError) as error:
                 raise ArchiveCommitRejected("corrupt_durable_state") from error
             if durable_hash != parent_hash:
@@ -842,7 +872,7 @@ class ArchivedBeliefController:
         candidate = deepcopy(self._state)
         operations: list[JsonDict] = []
         for release in normalized:
-            active = exp7226.PackedBeliefController.from_state(candidate["active"])
+            active = self._active_from_state(candidate["active"])
             before_active_hash = active.state_hash()
             contradiction = _active_contradiction(active, release)
             archived_id = self._append_archive(candidate, active) if contradiction else None
@@ -888,7 +918,7 @@ class ArchivedBeliefController:
                     "candidates": [],
                 }
             if reactivated is not None:
-                active = _controller_from_masks(reactivated["survivor_masks"])
+                active = self._active_from_masks(reactivated["survivor_masks"])
                 candidate["archives"] = [
                     row
                     for row in candidate["archives"]
@@ -915,7 +945,7 @@ class ArchivedBeliefController:
             )
         candidate["version"] = int(candidate["version"]) + 1
         candidate["parent_hash"] = parent_hash
-        admitted = type(self).from_state(candidate)
+        admitted = self._admit_state(candidate)
         new_bytes = admitted.state_bytes()
         receipt = {
             "parent_hash": parent_hash,

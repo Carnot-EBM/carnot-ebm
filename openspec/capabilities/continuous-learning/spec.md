@@ -14027,3 +14027,77 @@ hardware speedup, production-default change, or publication.
 - WHEN terminal scores are derived and the artifact is atomically written
 - THEN audit completion can equal one while promotion equals zero
 - AND only reproduced science plus every safety check can promote.
+
+## REQ-CL-7243: Native Archive Controller Conformance And Cost
+
+Carnot SHALL measure the Exp7240 validation-selected archive controller with
+the existing native packed-belief kernel. The Python and native arms SHALL use
+the same 32 stream seeds, validation decisions, state transitions, archive
+selection code, and delayed releases. The native arm SHALL execute the real
+PyO3 `RustPackedBeliefController`; a Python substitute SHALL not count.
+
+The study SHALL compare predictions, energies, query choices, active state,
+archive state, and complete controller hashes. It SHALL restore native state in
+a fresh interpreter and continue delayed updates. Exact parity uses
+`verifier_is_oracle=true`, so a passing result SHALL use `circular_positive`.
+
+The cost study SHALL run 30 paired interleaved blocks for every combination of
+archive capacities 1, 2, and 4 and batch sizes 1, 16, and 128. Each row SHALL
+charge Python dispatch, binding conversion, archive nomination, validation,
+lookup, update, serialization, and restore. Cold import and build costs SHALL
+remain separate. The artifact SHALL report their amortization break-even.
+
+`native_archive_ready_score` SHALL equal one only after real native execution,
+zero scheduled parity mismatches, exact fresh-process restore, and exact
+delayed-update continuation. `native_archive_cost_value_score` SHALL equal one
+only when readiness passes and the lower paired 95-percent confidence bound
+for batch-one total event speedup exceeds one. NFR-01 at 10 times and the
+research-program target at 100 times SHALL remain separate measured lower-bound
+gates.
+
+The executable SHALL authenticate the V637 task, Exp7240 artifact and sidecars,
+the Exp7217 interpreter recipe, and the quarantined Exp7230 history before
+native work. It SHALL reject quarantined evidence before reading a numeric
+gate. It SHALL unwrap only dictionaries containing exactly `principle` and
+`value`. A missing external prerequisite SHALL yield a row-free `blocked_no_run`
+artifact with an exact failed check.
+
+The task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counters, both substrate fields set to
+`cpu_exact_solver_or_simulator` after execution, and `execution_venue=host`.
+Historical and synthetic evidence SHALL remain in hashed sidecars. The task
+SHALL preserve Exp7230 unchanged and SHALL not change production defaults.
+
+### SCENARIO-CL-7243-PARITY: Both Arms Share One Archive Controller
+
+- GIVEN the same streams, feedback schedule, controller policy, and initial state
+- WHEN the Python and native packed active states process all scheduled units
+- THEN predictions, energies, queries, transitions, and archive hashes match exactly
+- AND the exact match is classified as circular evidence.
+
+### SCENARIO-CL-7243-RESTORE: Fresh Native Continuation Is Exact
+
+- GIVEN serialized active and archive state with pending delayed releases
+- WHEN a fresh interpreter restores the native state and continues updates
+- THEN its predictions, energies, queries, and final state hash match Python
+- AND the receipt identifies the exact loaded extension bytes.
+
+### SCENARIO-CL-7243-COST: Complete Batch-One Cost Gates Value
+
+- GIVEN 30 paired blocks across three capacities and three batch sizes
+- WHEN both arms perform the complete archive event boundary
+- THEN component and total costs remain in every arm row
+- AND only the batch-one paired lower confidence bound can set cost value.
+
+### SCENARIO-CL-7243-TERMINAL: Performance And Oracle Limits Stay Visible
+
+- GIVEN exact parity and measured full-boundary costs
+- WHEN the validator derives readiness, value, 10-times, and 100-times gates
+- THEN every gate retains its threshold, actual value, and pass state
+- AND a failed cost gate is null while a passing oracle result is circular-positive.
+
+## Implementation Status (REQ-CL-7243)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7243 and SCENARIO-CL-7243-* | Implemented: `python/carnot/experiment_7243_v637_native_memory.py` keeps the Exp7240 archive policy shared while executing active packed state through the real interpreter-bound PyO3 kernel; it records exact parity, fresh-process continuation, paired full-boundary costs, and a terminal artifact. | `tests/python/test_experiment_7243_v637_native_memory.py` covers authenticated preconditions, native/archive parity, fresh restore, cost gates, malformed-row validation, failed build and atomic cleanup, orchestration, and CLI paths with 754/754 scoped statements. |

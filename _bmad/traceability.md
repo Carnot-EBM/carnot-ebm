@@ -2822,3 +2822,15 @@ existing-path, gate declaration, placeholder and Markdown/YAML parity checks
 pass. No experiment implementation or model/board run occurred during planning.
 New implementation requirements and failing tests remain part of each future
 task; no proposed capability is marked implemented by this handoff.
+
+## Exp7243 native archive controller — 2026-09-12
+
+REQ-CL-7243, REQ-RUSTPY-7243, and their SCENARIO-* requirements map to
+`python/carnot/experiment_7243_v637_native_memory.py`, the Exp7240 backend seam,
+the thin executable wrapper, and
+`tests/python/test_experiment_7243_v637_native_memory.py`. The shared archive
+policy executes active prediction, energy, update, serialization, and restore
+through the real interpreter-bound `RustPackedBeliefController`. The cold
+validator now rejects non-mapping cost rows as malformed evidence instead of
+raising an uncaught attribute error. The conductor-equivalent selection passes
+104 tests, and the Exp7243 module has 754/754 scoped statement coverage.
