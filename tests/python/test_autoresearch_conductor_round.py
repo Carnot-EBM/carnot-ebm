@@ -121,6 +121,109 @@ class TestCommitAcceptedHypothesis:
         ).stdout
         assert log.count("\n") == 1
 
+    def test_does_not_sweep_a_pre_staged_unrelated_file(self, tmp_path: Path) -> None:
+        """Regression for adversarial review 2026-09-12 finding 2: a bare
+        `git commit -m` commits the WHOLE index, not just the one added path.
+        Reproduced by staging an unrelated file first."""
+        _init_repo(tmp_path)
+        (tmp_path / "unrelated_in_flight.py").write_text("# someone else's work\n")
+        subprocess.run(["git", "add", "unrelated_in_flight.py"], cwd=tmp_path, check=True)
+        checker = ConstitutionChecker()
+        entry = _make_entry()
+
+        sha = acr.commit_accepted_hypothesis(
+            checker, entry, "double_well", 0.05, -6.0, project_root=tmp_path
+        )
+
+        assert sha is not None
+        show = subprocess.run(
+            ["git", "show", "--stat", "--format=", sha],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        changed = [
+            line.strip().split("|")[0].strip() for line in show.stdout.splitlines() if "|" in line
+        ]
+        assert changed == ["ops/autoresearch_discoveries/double_well/auto-001.json"]
+        # the unrelated file must still be staged, untouched by this commit
+        status = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        assert "unrelated_in_flight.py" in status
+
+    def test_rejects_a_path_traversal_benchmark_name(self, tmp_path: Path) -> None:
+        """Regression for finding 3: benchmark_name is LLM-controlled data
+        flowing into a filesystem path with no sanitization."""
+        _init_repo(tmp_path)
+        checker = ConstitutionChecker()
+        entry = _make_entry()
+
+        sha = acr.commit_accepted_hypothesis(
+            checker,
+            entry,
+            "../../tests/injected",
+            0.05,
+            -6.0,
+            project_root=tmp_path,
+        )
+
+        assert sha is None
+        assert not (tmp_path / "tests" / "injected").exists()
+        log = subprocess.run(
+            ["git", "log", "--oneline"], cwd=tmp_path, capture_output=True, text=True, check=True
+        ).stdout
+        assert log.count("\n") == 1
+
+    def test_non_json_serializable_metric_does_not_raise(self, tmp_path: Path) -> None:
+        """Regression for finding 4: a numpy/jax scalar in the metrics dict
+        used to crash json.dumps before any receipt could be written."""
+        _init_repo(tmp_path)
+        checker = ConstitutionChecker()
+
+        class NotJsonable:
+            pass
+
+        entry = _make_entry()
+        entry.sandbox_metrics = {"double_well": {"final_energy": NotJsonable()}}
+
+        sha = acr.commit_accepted_hypothesis(
+            checker, entry, "double_well", 0.05, -6.0, project_root=tmp_path
+        )
+
+        assert sha is None  # did not raise
+        assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
+
+    def test_failed_commit_leaves_no_untracked_residue(self, tmp_path: Path) -> None:
+        """Regression for finding 6: a refused commit used to only unstage
+        the file, leaving it untracked on disk for a later `git add -A` to
+        sweep into someone else's commit."""
+        _init_repo(tmp_path)
+        checker = ConstitutionChecker()
+        entry = _make_entry()
+
+        def fake_git(project_root, *args, check=False):
+            if args and args[0] == "commit":
+                return subprocess.CompletedProcess(args, 1, stdout="", stderr="hook refused")
+            return subprocess.run(
+                ["git", *args], cwd=project_root, check=check, capture_output=True, text=True
+            )
+
+        with patch.object(acr, "_git", side_effect=fake_git):
+            sha = acr.commit_accepted_hypothesis(
+                checker, entry, "double_well", 0.05, -6.0, project_root=tmp_path
+            )
+
+        assert sha is None
+        assert not (
+            tmp_path / "ops" / "autoresearch_discoveries" / "double_well" / "auto-001.json"
+        ).exists()
+
 
 class TestCodexAvailable:
     def test_returns_false_when_not_on_path(self) -> None:
@@ -271,6 +374,74 @@ class TestRunRound:
             ["git", "log", "--oneline"], cwd=tmp_path, capture_output=True, text=True, check=True
         ).stdout
         assert log.count("\n") == 1  # only the seed commit
+
+    def test_a_no_op_and_a_made_up_benchmark_are_never_committed(self, tmp_path: Path) -> None:
+        """Regression for finding 1: PASS means 'no regression', not 'genuine
+        improvement' -- an empty dict and an unknown benchmark name both used
+        to reach a git commit. Only entry.eval_improvements should ever be
+        committed."""
+        _init_repo(tmp_path)
+
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+            if iteration == 0:
+                return [("no-op", "def run(d): return {}")]
+            return [
+                (
+                    "made up benchmark",
+                    "def run(d): return {'made_up_bench': {'final_energy': 123.0}}",
+                )
+            ]
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+        ):
+            acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=2,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        log = subprocess.run(
+            ["git", "log", "--oneline"], cwd=tmp_path, capture_output=True, text=True, check=True
+        ).stdout
+        assert log.count("\n") == 1  # only the seed commit -- neither reached a commit
+        assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
+
+    def test_commit_message_score_is_per_hypothesis_not_round_final(self, tmp_path: Path) -> None:
+        """Regression for finding 5: the commit's before/after score must be
+        this hypothesis's own numbers, not whatever the baseline happened to
+        be after the WHOLE round finished."""
+        _init_repo(tmp_path)
+
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
+            if iteration == 0:
+                return [("first win", "def run(d): return {'double_well': {'final_energy': -6.0}}")]
+            return [("second win", "def run(d): return {'double_well': {'final_energy': -7.0}}")]
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
+        ):
+            acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=2,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        log = subprocess.run(
+            ["git", "log", "--format=%s%n%b", "--reverse"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        # first accepted hypothesis: baseline 0.05 -> -6.0
+        assert "0.05 -> -6.0" in log
+        # second accepted hypothesis: baseline -6.0 (not the round-final -7.0) -> -7.0
+        assert "-6.0 -> -7.0" in log
 
 
 class TestSeedBaselines:

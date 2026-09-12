@@ -16410,3 +16410,24 @@ and any `arc_*` live-agent module, and the Kaggle kernel entrypoint imports neit
 `research_conductor.py` nor `autoresearch_conductor_round.py`. Real dry run against a live
 `codex-cli 0.153.4`: 2 iterations, 2 accepted, 4 real scoped commits in a scratch repo. Tests
 17/17, spec REQ-AUTO-019 updated in place. Full account in `ops/known-issues.md`.
+
+
+## 2026-09-12 — Fable 5.1 adversarial review: 3 CRITICAL, 4 REAL_BUG found and fixed
+
+A fresh Fable 5.1 review (zero shared context) reproduced, in throwaway git repos, that the
+fitness gate was self-reported not measured (a hypothesis could claim any energy and be
+believed), a bare `git commit -m` commits the whole index not the one added path (a pre-staged
+unrelated file landed inside the autoresearch commit), and an LLM-controlled benchmark name
+reached a path-traversal write outside the intended directory. All three, plus four more
+REAL_BUG findings (a non-serializable metric crashing before the receipt, the commit message
+carrying the wrong hypothesis's score, a failed commit leaving untracked residue, a missing
+corrupt-cache fallback), are fixed with regression tests verified to fail without the fix.
+
+The underlying self-reported-fitness gap is NOT fully fixed — mitigated (no-op and made-up
+benchmarks can no longer reach a commit) but a real benchmark's number is still trusted as
+reported. Documented loudly in the script docstring and the spec: this must not be enabled
+believing it is a mechanically ungameable AVO-style gate. Also fixed, found independently
+while re-reading the code after the codex switch: `call_codex` used `--cd PROJECT_ROOT` with
+`--dangerously-bypass-approvals-and-sandbox`, which is genuinely agentic — now points at a
+disposable temp directory instead. 88/88 autoresearch tests pass. Full account, credited
+findings, and what remains open in `ops/known-issues.md`.

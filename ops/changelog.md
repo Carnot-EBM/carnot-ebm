@@ -1,5 +1,43 @@
 # Carnot — Changelog
 
+## 2026-09-12 — Fable 5.1 adversarial review of the autoresearch wiring: 3 CRITICAL fixed
+
+- Reviewed by a fresh Fable 5.1 agent with zero shared context, per operator
+  request. Every CRITICAL finding was independently reproduced by running
+  the real code in throwaway git repos, not just argued from reading.
+- CRITICAL 1: the fitness score was self-reported by the hypothesis's own
+  code, never independently measured, and PASS-on-no-regression let an
+  empty `{}` return and a made-up benchmark name both get "accepted" and
+  committed. Mitigated: `run_round` now commits only benchmarks in
+  `entry.eval_improvements`. Not fully fixed — a real benchmark's
+  self-reported number is still trusted; documented as a standing
+  limitation in the script and REQ-AUTO-019, with an explicit "do not
+  enable believing this is ungameable" warning.
+- CRITICAL 2: `git commit -m` commits the whole index, not the one added
+  path — a pre-staged unrelated file landed inside the autoresearch commit
+  in reproduction. Fixed with a pathspec on the commit itself
+  (`git commit -m ... -- <path>`), verified empirically before relying on
+  it.
+- CRITICAL 3: an LLM-controlled benchmark name reached a path-traversal
+  write (`../../tests/injected/...`) past the constitution's
+  `re.search`-based check. Fixed with an explicit name allowlist regex,
+  reinforced by the CRITICAL-1 fix (only pre-existing baseline names can
+  ever reach `eval_improvements`).
+- REAL_BUG 4-7: a non-JSON-serializable metric crashing before the receipt,
+  the commit message carrying a later hypothesis's score instead of its
+  own, a refused commit leaving an untracked file for a later `git add -A`
+  to sweep in, and a missing corrupt-cache fallback on the experiment log.
+  All fixed.
+- Also fixed, found independently while re-reading `call_codex` after the
+  codex/gpt-6-astra switch: it ran with `--cd PROJECT_ROOT` and
+  `--dangerously-bypass-approvals-and-sandbox`, which is genuinely agentic
+  — the docstring's "no repo tool access" claim was false. Now runs against
+  a disposable `tempfile.TemporaryDirectory`.
+- 6 new regression tests, each verified to fail when its fix is reverted
+  (spot-checked live, not just written and trusted). 88/88 across the full
+  `test_autoresearch_*` suite, ruff and mypy clean. Full account in
+  `ops/known-issues.md`.
+
 ## 2026-09-12 — Autoresearch generator switched to codex/gpt-6-astra (REQ-AUTO-019)
 
 - Operator directive corrected the prior design: the hypothesis generator now

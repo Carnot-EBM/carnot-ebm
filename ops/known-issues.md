@@ -26382,3 +26382,117 @@ were swept (correctly, content-intact, verified by grep before trusting it) into
 (`4fd4f77e99`) rather than lost outright this time -- the `research_conductor.py` self-edit
 rescue mechanism from the earlier entry above was not needed here since this edit was not to
 `research_conductor.py` itself.
+
+## 2026-09-12 (same day, later still): Fable 5.1 adversarial review found 3 CRITICAL, 4 REAL_BUG
+
+Operator directive: "spawn a Fable (5.1) adversarial review of the AVO-shaped wiring and
+implementation." A fresh Fable 5.1 agent, zero shared context, re-derived every finding from
+raw source and reproduced every CRITICAL by running the real code in throwaway git repos. This
+is exactly the kind of review this project's own culture calls for (CLAUDE.md "Spawn an
+adversarial sub-agent to review non-trivial changes"), and it worked: it found real bugs this
+session's own testing had missed.
+
+**CRITICAL 1 -- the fitness score is self-reported, not measured.** `sandbox.py:
+run_in_sandbox` takes the hypothesis's `run(benchmark_data)` return value verbatim;
+`evaluator.py` compares whatever `final_energy` the hypothesis chose to report against the
+baseline -- nothing recomputes it independently. Reproduced: `return {'double_well':
+{'final_energy': -999.0}}` was accepted and committed. Worse, PASS means "no regression", so
+an empty `{}` return and a made-up unknown-benchmark name were BOTH "accepted" and committed
+(reproduced: 4/4 accepted, 4 commits, including a fabricated `made_up_bench`). **Fixed the
+worse half, not the underlying gap**: `run_round`'s commit loop now iterates
+`entry.eval_improvements` (what the evaluator itself measured as a real improvement) instead
+of every key in `entry.sandbox_metrics` -- a no-op or a made-up benchmark can no longer reach
+a commit. The underlying self-report problem for a REAL benchmark name is NOT fixed (would
+need an independent energy recomputation, a real design task, not a wiring fix) -- documented
+prominently in the script's own docstring and in `REQ-AUTO-019` as a standing limitation, with
+an explicit statement that this must not be read as a mechanically ungameable fitness gate.
+Blast radius today is low (DoubleWell/Rosenbrock have no downstream consumer), but this is the
+reason `CARNOT_AUTORESEARCH_UNATTENDED` should stay off.
+
+**CRITICAL 2 -- `git commit -m` commits the WHOLE index, not the one added path.** Reproduced:
+a pre-staged unrelated file landed inside the `[autoresearch]` commit. This directly
+contradicted the script's own docstring, the spec, AND the prior known-issues entry, all of
+which claimed this was structurally impossible -- it was not; `git add <path>` scopes the
+stage, but a bare `git commit -m` commits everything staged, from anywhere. Fixed: `git commit
+-m <message> -- <path>` (a pathspec on the commit itself, verified empirically in a scratch
+repo before trusting it). `test_commits_a_scoped_single_path` (the existing test) passed
+vacuously because its fixture index was always clean; added
+`test_does_not_sweep_a_pre_staged_unrelated_file`, which pre-stages an unrelated file and
+fails without the fix (verified by reverting the fix and re-running).
+
+**CRITICAL 3 -- path traversal via LLM-controlled `benchmark_name`.** Metric dict keys are
+whatever the hypothesis's code returned; `run_round` used to iterate them straight into
+`ops/autoresearch_discoveries/<name>/`; `ConstitutionChecker.check` uses `re.search` so
+`create_file:ops/autoresearch_discoveries/../../tests/injected/x.json` matched the ALLOWED
+`create_file:ops/` pattern. Reproduced: a file written and COMMITTED at
+`tests/injected/auto-001.json`. Fixed two ways: (1) `commit_accepted_hypothesis` now rejects
+any `benchmark_name` not matching `^[A-Za-z0-9_-]+$` outright; (2) restricting commits to
+`entry.eval_improvements` (the CRITICAL-1 fix) means `benchmark_name` can now only ever be a
+name already present in the pre-seeded baseline record, since the evaluator can only place a
+PRE-EXISTING baseline name into `improvements`/`regressions` -- an LLM-invented key is
+structurally invisible to that list. Both fixes are defense-in-depth on their own; kept both
+rather than relying on either alone.
+
+**REAL_BUG 4 -- a non-JSON-serializable metric crashed after acceptance, before the
+receipt.** `json.dumps(record)` had no error handling; a numpy/jax scalar in the metrics dict
+raised `TypeError` with no receipt written and the round's log lost. Fixed: `json.dumps`
+wrapped, returns `None` (not committed) on failure rather than raising.
+
+**REAL_BUG 5 -- the commit-message score was round-final, not per-hypothesis.**
+`energy_before` was captured once before the whole loop; `after` was read from
+`result.final_baselines` once after the whole loop finished -- so an early accepted
+hypothesis's commit got stamped with a LATER hypothesis's number. Reproduced: an
+iteration-0 no-op got labeled with iteration-3's score. Fixed: `energy_before` is now a
+running dict updated after each committed hypothesis using that entry's OWN
+`sandbox_metrics` value as "after", so each commit's before/after is genuinely that
+hypothesis's own delta.
+
+**REAL_BUG 6 -- a refused commit left the JSON file on disk, untracked.** The old code only
+ran `git reset HEAD -- <path>` on commit failure, unstaging but not deleting the file --
+exactly the residue a LATER conductor `git add -A` checkpoint sweep would pick up
+(`incident_conductor_git_add_A_determination_drops`, and this session's own two sweeps are a
+live demonstration of how readily that happens here). Fixed: also `unlink(missing_ok=True)`
+on both the add-failure and commit-failure paths, so a refused write leaves nothing behind.
+
+**REAL_BUG 7 -- `load_experiment_log` had no corrupt-cache fallback**, unlike
+`load_baselines`. A malformed `ops/.autoresearch_experiment_log.json` raised before any
+receipt could be written. Fixed with the same try/except-and-fall-back-to-fresh pattern
+`load_baselines` already used.
+
+**Also caught and fixed, found while re-reading `call_codex` after the generator switch (not
+in Fable's report, since the codex-transport rewrite landed mid-review):** the codex call used
+`--cd PROJECT_ROOT`, and `--dangerously-bypass-approvals-and-sandbox` is exactly what it says
+-- codex exec is agentic, and that flag removes both the approval gate and the sandbox. The
+script's own docstring claimed "no repo tool access", which was false as long as `--cd`
+pointed at the real checkout. Fixed: `--cd` now points at a fresh `tempfile.TemporaryDirectory`
+per call, deleted immediately after, so even a codex session that decided to explore its cwd
+can reach nothing but an empty scratch directory.
+
+**MINOR, not fixed, recorded for a future pass:** (a) the constitution-FORBIDDEN branch in
+`run_loop`/`run_loop_with_generator`/`run_loop_with_skills` never appends an `ExperimentEntry`,
+so `consecutive_failures()` never rises and the circuit breaker cannot trip on repeated
+constitution refusals -- a pre-existing, shared weakness across all three loop variants, not
+introduced by this session's work; (b) this is the first conductor-adjacent commit path that
+runs pre-commit hooks for real (the conductor's own commits use `--no-verify`), and pre-commit
+stashes unstaged changes in the shared checkout during hook execution -- the stash-window race
+this project's own memory already names as a hazard applies here too, and a kill on the
+`_run_audit_with_receipt` 1800s timeout during a `git commit` could in principle orphan a hook
+process or leave `.git/index.lock`; neither was reproduced, both are plausible from reading the
+code, recorded rather than chased further this session.
+
+**Builder claims Fable verified independently (stated for completeness, not because they were
+in doubt):** the milestone-close wiring is reachable and correctly gated by `dry_run` + the env
+var; no `git add -A`/`.` appears anywhere in the script; the REQ-AUTO-019/020 numbering has no
+collision; the `research_conductor.py` self-edit-revert incident is real (Fable found the exact
+mechanism: `git diff --name-only` + rescue-patch + `git checkout --`, not a re-exec as this
+session's own known-issues entry had guessed -- corrected here). Fable could NOT verify the
+earlier local-vLLM dry run's claim (no artifacts remained by review time) and said so plainly
+rather than assuming either way -- exactly the right call.
+
+**Verification of the fixes.** 6 new regression tests, each written directly from Fable's
+reproduction steps, each verified to actually fail when its corresponding fix is reverted
+(spot-checked live for the path-traversal fix by reverting it, confirming the test failed with
+a real commit SHA instead of `None`, then restoring the fix and confirming green again --
+mutation-proof discipline, not just a new assertion added and trusted). 23/23 in
+`test_autoresearch_conductor_round.py`, 88/88 across the full autoresearch suite, ruff and mypy
+clean.

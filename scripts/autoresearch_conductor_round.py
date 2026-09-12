@@ -10,6 +10,27 @@ round of that loop, and when a hypothesis wins, persist it as its own git
 commit carrying its score -- the one piece the orchestrator itself does not
 do (it only updates an in-memory baseline and appends to a JSON log).
 
+**STANDING LIMITATION, not yet fixed (adversarial review 2026-09-12, finding
+1): the fitness score is SELF-REPORTED, not independently measured.**
+`sandbox.py:run_in_sandbox` takes the hypothesis's `run(benchmark_data)`
+return value verbatim as `metrics`; `evaluator.py` compares whatever
+`final_energy` the hypothesis chose to report against the baseline. Nothing
+in this pipeline independently recomputes an energy from a real DoubleWell/
+Rosenbrock potential. So "keep only if it beats the incumbent" is currently
+"keep only if the hypothesis CLAIMS to beat the incumbent" -- a
+`def run(d): return {'double_well': {'final_energy': -999999.0}}` is
+accepted and committed exactly as if it were a real result. This was
+mitigated, not solved: `run_round` now commits only benchmarks the evaluator
+placed in `eval_improvements` (closing the worse half -- a no-op `{}` or a
+made-up benchmark name used to be committed too, see finding 1's second
+half), but a self-reported number for a REAL benchmark name still passes
+through untouched. Blast radius is limited today (DoubleWell/Rosenbrock are
+throwaway toy benchmarks with no downstream consumer -- nothing else in the
+project reads `ops/autoresearch_discoveries/`), but do not enable
+`CARNOT_AUTORESEARCH_UNATTENDED=1` believing this is a mechanically
+ungameable AVO-style fitness gate. It is not, until a real benchmark
+computes energy independently of the hypothesis's own claim.
+
 **How it is invoked.** Exactly like the milestone-close audits already wired
 into `research_step()` (`pages_adversarial_audit.py`, `verifier_authenticity_
 audit.py`, etc.): a subprocess launched via `_run_audit_with_receipt`, gated
@@ -51,11 +72,15 @@ before/after baseline) rather than a live `.py` module. This sidesteps
 ruff/mypy strict-mode friction on raw LLM-generated snippets entirely: the
 record does not need to satisfy production code-quality gates to be a valid,
 readable audit trail, any more than a results/*.json artifact does. Each
-accepted hypothesis lands as its own commit, `git add`-ing only that one
-file -- never `-A` -- so this can never sweep unrelated in-flight work into
-its commit (the exact collision class `harness_integrity_lint.py` exists to
-catch; scoping to one explicit path avoids the class outright rather than
-needing that guard).
+accepted hypothesis lands as its own commit: `git add`-ing only that one
+file (never `-A`) AND `git commit -- <path>` (a pathspec, not a bare flag),
+so this can never sweep unrelated in-flight work into its commit -- the
+exact collision class `harness_integrity_lint.py` exists to catch, and the
+exact bug an adversarial review reproduced 2026-09-12 against an earlier
+version of this function that added the path but committed with a bare
+`git commit -m` (which commits the WHOLE index, not what was just added).
+Scoping BOTH the add and the commit avoids the class outright rather than
+needing that guard.
 
 **Local state, not the research record.** `ops/.autoresearch_baselines.json`
 and `ops/.autoresearch_experiment_log.json` are gitignored fast-resume
@@ -72,9 +97,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -125,7 +152,13 @@ def load_baselines(baseline_cache: Path) -> BaselineRecord:
 
 
 def load_experiment_log(log_cache: Path) -> ExperimentLog:
-    return ExperimentLog.load(log_cache)
+    try:
+        return ExperimentLog.load(log_cache)
+    except (OSError, json.JSONDecodeError, TypeError):
+        # Same fail-toward-fresh-state as load_baselines above (adversarial
+        # review 2026-09-12, finding 7: ExperimentLog.load has no try/except
+        # of its own, so a corrupt cache raised before any receipt was written).
+        return ExperimentLog()
 
 
 def codex_available() -> bool:
@@ -136,32 +169,40 @@ def codex_available() -> bool:
 def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
     """One codex exec call. Mirrors pages_adversarial_audit.py:call_codex and
     scripts/research_conductor.py's own `_build_agent_command` codex branch --
-    same flags, same stdin-piped-prompt shape, same '-' terminator. Deliberately
-    a plain text-completion call (no repo tool access): the hypothesis is a
-    sandboxed snippet, never an agentic edit to real files.
+    same flags, same stdin-piped-prompt shape, same '-' terminator.
+
+    `--cd` points at a FRESH, EMPTY scratch directory, never `PROJECT_ROOT`
+    (adversarial review 2026-09-12: `--dangerously-bypass-approvals-and-
+    sandbox` is what it says -- codex exec is agentic and this flag removes
+    both the approval gate and the sandbox, so a docstring claiming "no repo
+    tool access" was false as long as `--cd` pointed at the real checkout.
+    The task here is a plain text-completion ask; it needs no repo access at
+    all, so give it none -- even a codex session that decided to explore its
+    cwd can only reach an empty temp dir that is deleted right after).
     """
     try:
-        proc = subprocess.run(
-            [
-                "codex",
-                "exec",
-                "--dangerously-bypass-approvals-and-sandbox",
-                "--color",
-                "never",
-                "--model",
-                model,
-                "--cd",
-                str(PROJECT_ROOT),
-                "--ephemeral",
-                "-",
-            ],
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            check=False,
-            cwd=PROJECT_ROOT,
-        )
+        with tempfile.TemporaryDirectory(prefix="autoresearch-codex-") as scratch_dir:
+            proc = subprocess.run(
+                [
+                    "codex",
+                    "exec",
+                    "--dangerously-bypass-approvals-and-sandbox",
+                    "--color",
+                    "never",
+                    "--model",
+                    model,
+                    "--cd",
+                    scratch_dir,
+                    "--ephemeral",
+                    "-",
+                ],
+                input=prompt,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=False,
+                cwd=scratch_dir,
+            )
         if proc.returncode != 0:
             return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
         return True, proc.stdout
@@ -195,6 +236,9 @@ def _git(project_root: Path, *args: str, check: bool = True) -> subprocess.Compl
     )
 
 
+_SAFE_BENCHMARK_NAME = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
 def commit_accepted_hypothesis(
     checker: ConstitutionChecker,
     entry: ExperimentEntry,
@@ -207,10 +251,19 @@ def commit_accepted_hypothesis(
     """Persist one accepted hypothesis as its own scoped git commit.
 
     AVO's "git commit per version with its score", adapted: the record is a
-    JSON sidecar (see module docstring for why), and the git add is an
-    explicit single path, never `-A`. Returns the new commit SHA, or None if
-    the constitution forbade it or the commit did not apply cleanly.
+    JSON sidecar (see module docstring for why). Returns the new commit SHA,
+    or None if the name is unsafe, the constitution forbade it, or the write/
+    add/commit did not apply cleanly -- in every None case, no file is left
+    behind (adversarial review 2026-09-12, findings 3/4/6: `benchmark_name`
+    is LLM-controlled data flowing into a filesystem path and a
+    `ConstitutionChecker.check()` call that only `re.search`-matches, so an
+    unsanitized name is a path-traversal vector; a non-JSON-serializable
+    metric must not crash before the receipt is written; a failed commit
+    must not leave an untracked file for a later `git add -A` to sweep in).
     """
+    if not _SAFE_BENCHMARK_NAME.match(benchmark_name):
+        return None
+
     rel_dir = Path("ops") / "autoresearch_discoveries" / benchmark_name
     rel_path = rel_dir / f"{entry.id}.json"
 
@@ -221,7 +274,6 @@ def commit_accepted_hypothesis(
     if commit_verdict.category != ActionCategory.ALLOWED:
         return None
 
-    (project_root / rel_dir).mkdir(parents=True, exist_ok=True)
     record = {
         "id": entry.id,
         "timestamp": entry.timestamp,
@@ -234,10 +286,18 @@ def commit_accepted_hypothesis(
         "baseline_final_energy_before": baseline_before,
         "baseline_final_energy_after": baseline_after,
     }
-    (project_root / rel_path).write_text(json.dumps(record, indent=2) + "\n")
+    try:
+        serialized = json.dumps(record, indent=2) + "\n"
+    except TypeError:
+        return None  # e.g. a numpy/jax scalar the hypothesis returned -- not our bug to crash on
+
+    abs_path = project_root / rel_path
+    abs_path.parent.mkdir(parents=True, exist_ok=True)
+    abs_path.write_text(serialized)
 
     add = _git(project_root, "add", rel_path.as_posix(), check=False)
     if add.returncode != 0:
+        abs_path.unlink(missing_ok=True)
         return None
 
     message = (
@@ -249,9 +309,15 @@ def commit_accepted_hypothesis(
         "call_codex), accepted by the existing 3-gate evaluator\n"
         "(REQ-AUTO-005), persisted per REQ-AUTO-019/REQ-AUTO-020.\n"
     )
-    commit = _git(project_root, "commit", "-m", message, check=False)
+    # -- <path> (a pathspec, not a bare flag) scopes the commit to ONLY this
+    # file even if something else is already staged in the index -- a bare
+    # `git commit -m` commits the WHOLE index, which is the exact bug an
+    # adversarial review reproduced 2026-09-12 (a pre-staged unrelated file
+    # landed inside this commit).
+    commit = _git(project_root, "commit", "-m", message, "--", rel_path.as_posix(), check=False)
     if commit.returncode != 0:
         _git(project_root, "reset", "HEAD", "--", rel_path.as_posix(), check=False)
+        abs_path.unlink(missing_ok=True)
         return None
     return _git(project_root, "rev-parse", "HEAD").stdout.strip()
 
@@ -312,22 +378,36 @@ def run_round(
         generator, baselines, DEFAULT_BENCHMARK_DATA, config, experiment_log
     )
 
+    # Adversarial review 2026-09-12, findings 1/3/5: only commit benchmarks the
+    # EVALUATOR itself measured as a real improvement (entry.eval_improvements),
+    # never every key the hypothesis's return dict happened to contain -- that
+    # was accepting a no-op ({}), an unknown made-up benchmark name (which is
+    # also how an LLM-controlled string reached a filesystem path), and
+    # crediting a hypothesis with a benchmark it never actually improved.
+    # `energy_before` tracks the running per-benchmark value as of just BEFORE
+    # each entry, updated after processing it -- the round-final baseline
+    # (checked once, after the whole loop) was wrongly stamped onto every
+    # entry's commit message regardless of which iteration produced it.
     new_entries = experiment_log.entries[before_count:]
     committed: list[tuple[str, str, str]] = []
     for entry in new_entries:
         if entry.outcome != "accepted":
             continue
-        for bench_name in entry.sandbox_metrics:
-            after = result.final_baselines.benchmarks.get(bench_name)
+        for bench_name in entry.eval_improvements:
+            after_metrics = entry.sandbox_metrics.get(bench_name, {})
+            after_energy = (
+                after_metrics.get("final_energy") if isinstance(after_metrics, dict) else None
+            )
             sha = commit_accepted_hypothesis(
                 checker,
                 entry,
                 bench_name,
                 energy_before.get(bench_name),
-                after.final_energy if after else None,
+                after_energy,
                 project_root=project_root,
             )
             if sha:
+                energy_before[bench_name] = after_energy
                 committed.append((entry.id, bench_name, sha))
 
     result.final_baselines.save(baseline_cache)

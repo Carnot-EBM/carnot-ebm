@@ -3670,6 +3670,22 @@ for this REQ (see `docs/research-notes/avo-adaptation-for-local-generator-
 there), as is a verifier-ensemble-AUROC target (no reusable scoring harness
 exists yet).
 
+**STANDING LIMITATION (adversarial review 2026-09-12, finding 1, NOT yet
+fixed).** The energy `final_energy` compared against the baseline is
+SELF-REPORTED by the hypothesis's own `run()` return value
+(`sandbox.py:run_in_sandbox` takes it verbatim); nothing independently
+recomputes it from a real potential function. "Keep only if it beats the
+incumbent" therefore currently means "keep only if the hypothesis CLAIMS to
+beat the incumbent". `run_round` mitigates the worst consequence by
+committing only benchmark names the evaluator placed in
+`entry.eval_improvements` (a no-op `{}` return or a made-up benchmark name
+can no longer reach a commit), but a fabricated number for a real,
+pre-existing benchmark name still passes through untouched. This REQ SHALL
+NOT be described as a mechanically ungameable fitness gate until a future
+increment makes the sandbox recompute energy independently of the
+hypothesis's own claim. `CARNOT_AUTORESEARCH_UNATTENDED=1` should not be
+enabled in the belief that it currently is one.
+
 #### SCENARIO-AUTO-019-A: A bounded round runs unattended and is non-fatal when codex is unavailable
 
 **Given** `CARNOT_AUTORESEARCH_UNATTENDED=1` and no `codex` binary on `PATH`
