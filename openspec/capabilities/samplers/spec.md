@@ -5521,3 +5521,84 @@ an invalid terminal state fail closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7189 and SCENARIO-SAMPLER-7189-* | Implemented (`crates/carnot-samplers/src/fixed_cardinality.rs`, `crates/carnot-samplers/src/bin/fixed-cardinality-bridge.rs`, `python/carnot/experiment_7189_v633_rust_slice_parity.py`, `scripts/experiments/experiment_7189_v633_rust_slice_parity.py`, `results/experiment_7189_v633_rust_slice_parity.json`) | Implemented (`crates/carnot-samplers/tests/fixed_cardinality.rs`, `tests/python/test_experiment_7189_v633_rust_slice_parity.py`; compiled replay, independent distributions, serialized E2E, throughput accounting, artifact attacks, CLI paths, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-7229: Fixed-Cardinality Rare-Event Audit
+
+Carnot SHALL provide a read-only audit of the authenticated Exp7216 quality
+artifact and trace archive. The audit SHALL aggregate existing evidence only.
+It SHALL not run a sampler, enumerate a new law, invoke an LLM, or change the
+failed Exp7216 acceptance gate.
+
+- REQ-SAMPLER-7229-PREFLIGHT: The audit SHALL validate the Exp7216 artifact
+  with its shipped producer validator. It SHALL verify the artifact checksum,
+  every row hash, the trace byte count, trace hash, trace record count, exact
+  authority roster, primary gate, roadmap contract, and output access. An
+  artifact or manifest quarantine flag SHALL block all evidence consumption.
+  Only a dictionary with exactly `principle` and `value` keys SHALL unwrap.
+- REQ-SAMPLER-7229-OBSERVABLES: For every Exp7216 graph, arm, and prespecified
+  energy or occupancy probe, the audit SHALL retain the post-warmup sample
+  count, exact mean and variance, observed mean, per-chain ESS values, split
+  R-hat, and their computability. Occupancy rows SHALL also retain visit count,
+  occupancy-change count, exact probability, and expected visits `N*p`.
+- REQ-SAMPLER-7229-IID-REFERENCE: An occupancy row MAY report `(1-p)^N` as an
+  IID zero-hit reference. Each such value SHALL be marked as non-certifying for
+  a correlated Markov chain. A positive exact probability with no observed
+  visit SHALL remain nondegenerate and SHALL not receive a fabricated ESS.
+- REQ-SAMPLER-7229-CHECKS: The audit SHALL compare exact energy moments and
+  observable definitions with the producer summaries. It SHALL verify the
+  recorded transition-cost rules and the primary `n=32`, `k=2` construction
+  with `C(32,2)=496` states. It SHALL classify each failed mean, ESS, or R-hat
+  criterion as `actual_bias`, `insufficient_transitions`,
+  `unobserved_rare_probe`, `missing_bytes`, or `unresolved`.
+- REQ-SAMPLER-7229-GATE: The audit SHALL preserve `down_up_value_score=0`, the
+  complete original primary gate, every failed criterion, and the upstream
+  null verdict. Audit completion SHALL not promote sampler quality or change a
+  throughput claim.
+- REQ-SAMPLER-7229-NEXT: Before any later chain runs, the artifact SHALL fix a
+  rare-event accuracy target, a finite compute budget, and a stop rule. It
+  SHALL retire the quality claim at that budget when the target is infeasible.
+- REQ-SAMPLER-7229-ARTIFACT: The executable SHALL atomically write
+  `results/experiment_7229_v636_rare_event_audit.json`. A complete artifact
+  SHALL use `aggregation_from_upstream_artifacts` for `inference_substrate`,
+  `aggregation` for `inference_substrate_class`, an empty `MODEL_SPECS`, and
+  `model_invoked=false`. `rare_event_audit_complete_score` SHALL equal one only
+  after the full authenticated evidence matrix and all audit checks complete.
+
+#### SCENARIO-SAMPLER-7229-ZERO-HIT: Positive Rare Mass Stays Nondegenerate
+
+**Given** an exact occupancy probability above zero and a retained trace with
+no visits
+**When** the audit reconstructs that occupancy probe
+**Then** expected visits and the IID zero-hit reference remain visible
+**And** ESS and split R-hat remain null when the source diagnostics are null
+**And** the failure is `unobserved_rare_probe`, not structural degeneracy.
+
+#### SCENARIO-SAMPLER-7229-TRACE: Archive Rows Reconstruct Producer Summaries
+
+**Given** the authenticated Exp7216 quality trace records and exact rows
+**When** post-warmup occupancy values are reconstructed from state indices
+**Then** sample counts and observed means equal the producer quality summaries
+**And** missing, duplicate, out-of-range, or hash-mismatched records fail closed.
+
+#### SCENARIO-SAMPLER-7229-GATE: Read-Only Diagnosis Preserves The Null
+
+**Given** the failed Exp7216 primary gate
+**When** all mean, ESS, R-hat, cost, and construction checks complete
+**Then** the exact failed gate remains byte-for-byte equal as JSON data
+**And** `down_up_value_score` stays zero
+**And** no new sampler, speed, hardware, or paper claim is emitted.
+
+#### SCENARIO-SAMPLER-7229-ARTIFACT: Tampering Fails Closed
+
+**Given** a complete or externally blocked Exp7229 artifact
+**When** the validator recomputes row coverage, hashes, classifications, gate
+preservation, substrate declarations, sample budgets, and checksum
+**Then** consistent evidence passes
+**And** a dropped rare probe, favorable null ESS, changed upstream gate,
+unlabeled IID claim, or invalid terminal state fails closed.
+
+## Implementation Status (REQ-SAMPLER-7229)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7229 and SCENARIO-SAMPLER-7229-* | Implemented (`python/carnot/experiment_7229_v636_rare_event_audit.py`, `scripts/experiments/experiment_7229_v636_rare_event_audit.py`, `results/experiment_7229_v636_rare_event_audit.json`) | Implemented (`tests/python/test_experiment_7229_v636_rare_event_audit.py`; authenticated replay reduction, zero-hit nondegeneracy, failure classification, cost and construction checks, gate preservation, artifact attacks, CLI paths, and scoped coverage) |
