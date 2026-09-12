@@ -1249,3 +1249,125 @@ PolarFire dispatch uncertainty. It SHALL issue no board operation.
 terminal board dispositions, the study SHALL emit a complete atomic host
 artifact with both readiness scores equal to one. Per-board blocks SHALL remain
 visible and SHALL not change the native-host score.
+
+### REQ-ISING-7231
+
+**The V636 board-continuity audit MUST preserve authenticated KV260 and
+GateMate state and recover one bounded PolarFire CPU-dispatch transcript when
+the deployed workload is available.**
+
+**Rationale:**
+Exp7217 preserved KV260 graduation, GateMate's unchanged physical-state block,
+and PolarFire CPU-dispatch uncertainty. The PolarFire result retained output
+values but not the raw dispatch bytes. A read-only audit can close that evidence
+gap without treating SSH CPU work as programmable-logic sampling. The compact
+controller contract also supplies a small deployment footprint. It does not
+supply topology, power, or speed evidence.
+
+**Acceptance criteria:**
+- The production implementation SHALL be
+  `python/carnot/experiment_7231_v636_board_continuity.py`. The executable
+  entrypoint SHALL be
+  `scripts/experiments/experiment_7231_v636_board_continuity.py`.
+- The entrypoint SHALL print and flush before preconditions and at every
+  numbered phase boundary. It SHALL print before and after the bounded SSH
+  subprocess, final validation, and atomic terminal write.
+- Preconditions SHALL bind nonempty cited source bytes, `REQ-ISING-7231`, the
+  exact V636 roadmap task, required imports, SSH availability, and writable
+  raw, checkpoint, and result destinations.
+- The Exp7217 board receipt and available compact-controller contract SHALL
+  pass their shipped validators. Artifact or exclusion-manifest quarantine
+  signals SHALL reject an upstream before any gate value is consumed. Only a
+  dictionary with exactly `principle` and `value` keys MAY be unwrapped.
+- A failed unchanged repository precondition SHALL produce one terminal
+  blocked artifact. Its `gate_check_summary` SHALL name the failed check,
+  upstream, field, expected value, and observed value. It SHALL contain no
+  board command or fabricated row.
+- `board_rows` SHALL contain one terminal row for KV260, GateMate, and
+  PolarFire. Each row SHALL record the independently selected latest
+  authenticated receipt, receipt date and hash, exact observation, terminal
+  criterion, disposition, execution venue, processor class, and next
+  prerequisite.
+- The KV260 row SHALL preserve the transcript-supported graduation and the
+  exact criterion `board-level programmable-logic latency transcript and
+  successful KV260 synthesis`. This task SHALL issue no KV260 command. Any
+  future KV260 access SHALL use `ssh kria`; host storage discovery is forbidden.
+- GateMate access SHALL require an operator-authored physical-state receipt
+  newer than Exp6559. Without it, the row SHALL use
+  `blocked_inherited_no_new_physical_state` and record zero JTAG, reset, flash,
+  cable, and power commands. A valid new receipt SHALL authorize only a named
+  later action; this task SHALL still issue no GateMate command.
+- The PolarFire audit SHALL issue at most one SSH command. It SHALL use a
+  10-second connection timeout and a 60-second remote workload timeout. The
+  remote shell SHALL execute only the already deployed `/usr/bin/carnot`
+  binary when it is executable. It SHALL not install, upload, flash, or change
+  persistent configuration.
+- A PolarFire attempt SHALL retain local raw stdout and stderr, transport exit
+  code and timing, executed binary hash, fixed input hash, returned output
+  hash, and local hash verification. A missing transport or deployed workload
+  SHALL produce an exact blocked PolarFire row. It SHALL not invent a dispatch
+  result.
+- The top-level `execution_venue` SHALL be `host`. A completed remote smoke
+  SHALL identify `polarfire` as its child venue and `cpu` as its processor.
+  It SHALL set programmable-logic sampling false.
+- `operation_map` SHALL record the current compact controller's memory-table
+  footprint and separate host, board CPU, FPGA, and TSU placement. Topology
+  fit, device power, and device speed SHALL remain unknown.
+- `board_continuity_complete_score` SHALL equal one when all three terminal
+  board dispositions are recorded. A blocked board row SHALL not reduce this
+  receipt-completeness score.
+- The artifact SHALL set `MODEL_SPECS=[]` and `model_invoked=false`. A
+  completed PolarFire CPU smoke SHALL use `cpu_exact_solver_or_simulator` for
+  both substrate fields. Historical aggregation without a new smoke SHALL use
+  `aggregation`. A precondition block before qualifying work SHALL use
+  `blocked_no_run`.
+- Every row SHALL contain `unit_id`, `arm`, `seed`, `metric`, `error`, and
+  `abstention`. `sample_size_budget` SHALL retain planned, attempted,
+  completed, censored, and independent-unit counts.
+- The terminal artifact SHALL contain every V636 task-contract field. It SHALL
+  be validated independently and written atomically to
+  `results/experiment_7231_v636_board_continuity.json`. Raw dispatch evidence
+  SHALL stay under `results/raw/experiment_7231/`. Running state SHALL stay
+  under `results/checkpoints/`.
+
+**Implementation status:** Implemented and verified (Exp7231)
+
+### SCENARIO-ISING-7231-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing cited source, changed
+roadmap identity, failed producer validation, quarantine signal, malformed
+wrapper, or unwritable output, Exp7231 SHALL stop before board access and emit
+the exact failed gate.
+
+### SCENARIO-ISING-7231-BOARDS
+
+**Independent board continuity:** Given the newest authenticated receipt for
+each board, Exp7231 SHALL preserve KV260's exact graduation criterion, compare
+GateMate with Exp6559, and keep PolarFire CPU evidence separate from fabric
+sampling.
+
+### SCENARIO-ISING-7231-GATEMATE
+
+**Physical-state boundary:** Given no operator-authored GateMate state change
+after Exp6559, Exp7231 SHALL issue no GateMate command. Given a newer valid
+receipt, it SHALL only record the next action for a later task.
+
+### SCENARIO-ISING-7231-POLARFIRE
+
+**Bounded deployed-workload smoke:** Given reachable `ssh polarfire` and an
+executable `/usr/bin/carnot`, Exp7231 SHALL run the existing binary once within
+60 seconds and retain verified raw bytes and hashes. Given either prerequisite
+is missing, the PolarFire row SHALL remain blocked without upload or install.
+
+### SCENARIO-ISING-7231-PLACEMENT
+
+**Separated deployment map:** Given an authenticated compact-controller
+contract, Exp7231 SHALL retain its byte and bit footprint. It SHALL label
+measured CPU work and unmeasured FPGA or TSU paths separately. It SHALL leave
+topology, power, and speed unknown.
+
+### SCENARIO-ISING-7231-ARTIFACT
+
+**Complete disposition receipt:** Given three terminal board rows, Exp7231
+SHALL emit `board_continuity_complete_score=1` even when GateMate or PolarFire
+is blocked. Completion SHALL not imply hardware performance or fabric sampling.
