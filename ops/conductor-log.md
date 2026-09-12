@@ -17837,3 +17837,4 @@ code |
 | 2026-09-12 21:48 UTC | Live ARC adapter-withheld transition-witness compa | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7248-arc-witness.arc_witness_ready_score (actual=0 == expected=1) |
 | 2026-09-12 21:50 UTC | Authenticated bounded Qwen3.8 mention canary | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7247-duration-class) |
 | 2026-09-12 21:50 UTC | Qwen3.8 held-out mention source-fidelity measureme | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7250-mention-canary) |
+| 2026-09-12 22:03 UTC | Independent source semantics and matched-coverage  | OK | 99 passed, 1 warning in 7.49s |
