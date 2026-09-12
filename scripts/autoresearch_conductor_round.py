@@ -179,7 +179,9 @@ def codex_generate_hypotheses(
     """The `generator` callback `run_loop_with_generator` expects. Reuses
     hypothesis_generator.py's own prompt-building and response-parsing --
     only the transport (codex subprocess vs. a raw HTTP client) differs."""
-    prompt = f"{DEFAULT_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
+    prompt = (
+        f"{DEFAULT_SYSTEM_PROMPT}\n\n{_build_user_prompt(baselines, recent_failures, iteration)}"
+    )
     ok, output = call_codex(prompt, model, timeout)
     if not ok:
         recent_failures.append({"description": "codex_call_failed", "reason": output})
@@ -243,8 +245,8 @@ def commit_accepted_hypothesis(
         f"(final_energy {baseline_before} -> {baseline_after})\n\n"
         f"{entry.hypothesis_description}\n\n"
         "Autonomous mutation round -- no operator or outer-loop session\n"
-        "involved in this commit. Hypothesis proposed by the configured\n"
-        "local generator model, accepted by the existing 3-gate evaluator\n"
+        "involved in this commit. Hypothesis proposed via codex exec (see\n"
+        "call_codex), accepted by the existing 3-gate evaluator\n"
         "(REQ-AUTO-005), persisted per REQ-AUTO-019/REQ-AUTO-020.\n"
     )
     commit = _git(project_root, "commit", "-m", message, check=False)
@@ -256,9 +258,9 @@ def commit_accepted_hypothesis(
 
 def run_round(
     *,
-    api_base: str,
     model: str,
     max_iterations: int,
+    codex_timeout: int = DEFAULT_CODEX_TIMEOUT_S,
     project_root: Path = PROJECT_ROOT,
     baseline_cache: Path | None = None,
     log_cache: Path | None = None,
@@ -275,16 +277,15 @@ def run_round(
         "# Autoresearch conductor round",
         "",
         f"- started: {started.isoformat()}",
-        f"- api_base: {api_base}",
         f"- model: {model}",
         f"- max_iterations: {max_iterations}",
         "",
     ]
 
-    if not endpoint_reachable(api_base):
-        report_lines.append(f"BLOCKED: LLM endpoint `{api_base}` unreachable. No round run.")
+    if not codex_available():
+        report_lines.append("BLOCKED: `codex` CLI not found on PATH. No round run.")
         receipt_path.write_text("\n".join(report_lines) + "\n")
-        print("blocked_llm_endpoint_unreachable")
+        print("blocked_codex_unavailable")
         return 0
 
     checker = ConstitutionChecker()
@@ -293,15 +294,13 @@ def run_round(
     before_count = len(experiment_log.entries)
     energy_before = {name: metrics.final_energy for name, metrics in baselines.benchmarks.items()}
 
-    gen_config = GeneratorConfig(api_base=api_base, model=model)
-
     def generator(
         cur_baselines: BaselineRecord,
         recent_failures: list[dict[str, Any]],
         iteration: int,
     ) -> list[tuple[str, str]]:
-        return generate_hypotheses_batch(
-            gen_config, cur_baselines, recent_failures, iteration, count=1
+        return codex_generate_hypotheses(
+            model, codex_timeout, cur_baselines, recent_failures, iteration
         )
 
     config = AutoresearchConfig(
@@ -359,11 +358,13 @@ def run_round(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--api-base", default=DEFAULT_API_BASE)
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--max-iterations", type=int, default=5)
+    parser.add_argument("--codex-timeout", type=int, default=DEFAULT_CODEX_TIMEOUT_S)
     args = parser.parse_args()
-    return run_round(api_base=args.api_base, model=args.model, max_iterations=args.max_iterations)
+    return run_round(
+        model=args.model, max_iterations=args.max_iterations, codex_timeout=args.codex_timeout
+    )
 
 
 if __name__ == "__main__":

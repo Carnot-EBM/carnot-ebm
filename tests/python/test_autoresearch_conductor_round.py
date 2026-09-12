@@ -122,21 +122,92 @@ class TestCommitAcceptedHypothesis:
         assert log.count("\n") == 1
 
 
-class TestEndpointReachable:
-    def test_unreachable_returns_false(self) -> None:
-        # Nothing listens on this port in a test environment.
-        assert acr.endpoint_reachable("http://127.0.0.1:1", timeout=0.5) is False
+class TestCodexAvailable:
+    def test_returns_false_when_not_on_path(self) -> None:
+        with patch.object(acr.shutil, "which", return_value=None):
+            assert acr.codex_available() is False
+
+    def test_returns_true_when_on_path(self) -> None:
+        with patch.object(acr.shutil, "which", return_value="/usr/bin/codex"):
+            assert acr.codex_available() is True
+
+
+class TestCallCodex:
+    def test_argv_matches_the_conductors_own_codex_pattern(self) -> None:
+        """Same flags/shape as _build_agent_command's codex branch and
+        pages_adversarial_audit.py's call_codex -- prompt piped via stdin,
+        terminated with a bare '-', no repo tool access implied."""
+        captured = {}
+
+        def fake_run(argv, **kwargs):
+            captured["argv"] = argv
+            captured["input"] = kwargs.get("input")
+            return subprocess.CompletedProcess(argv, 0, stdout="ok", stderr="")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
+
+        assert ok is True
+        assert out == "ok"
+        argv = captured["argv"]
+        assert argv[:3] == ["codex", "exec", "--dangerously-bypass-approvals-and-sandbox"]
+        assert "--model" in argv and argv[argv.index("--model") + 1] == "gpt-6-astra"
+        assert argv[-1] == "-"
+        assert captured["input"] == "hello"
+
+    def test_nonzero_exit_is_reported_not_raised(self) -> None:
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr="boom")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
+        assert ok is False
+        assert "boom" in out
+
+    def test_timeout_is_reported_not_raised(self) -> None:
+        def fake_run(argv, **kwargs):
+            raise subprocess.TimeoutExpired(cmd=argv, timeout=kwargs.get("timeout", 60))
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
+        assert ok is False
+
+
+class TestCodexGenerateHypotheses:
+    def test_extracts_hypotheses_from_a_real_shaped_response(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        response = (
+            "Try a smaller step size.\n\n"
+            "```python\n"
+            "def run(benchmark_data):\n"
+            "    return {'double_well': {'final_energy': -6.0}}\n"
+            "```\n"
+        )
+        with patch.object(acr, "call_codex", return_value=(True, response)):
+            hyps = acr.codex_generate_hypotheses("gpt-6-astra", 60, BaselineRecord(), [], 0)
+        assert len(hyps) == 1
+        assert "def run(benchmark_data)" in hyps[0][1]
+
+    def test_failed_call_returns_empty_and_records_the_failure(self) -> None:
+        from carnot.autoresearch.baselines import BaselineRecord
+
+        failures: list[dict] = []
+        with patch.object(acr, "call_codex", return_value=(False, "codex exit 1")):
+            hyps = acr.codex_generate_hypotheses("gpt-6-astra", 60, BaselineRecord(), failures, 0)
+        assert hyps == []
+        assert failures and failures[0]["description"] == "codex_call_failed"
 
 
 class TestRunRound:
-    def test_unreachable_endpoint_is_non_fatal(self, tmp_path: Path) -> None:
-        rc = acr.run_round(
-            api_base="http://127.0.0.1:1",
-            model="m",
-            max_iterations=5,
-            project_root=tmp_path,
-            receipt_path=tmp_path / "receipt.md",
-        )
+    def test_codex_unavailable_is_non_fatal(self, tmp_path: Path) -> None:
+        with patch.object(acr, "codex_available", return_value=False):
+            rc = acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=5,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
         assert rc == 0
         receipt = (tmp_path / "receipt.md").read_text()
         assert "BLOCKED" in receipt
@@ -144,18 +215,17 @@ class TestRunRound:
     def test_bounded_run_commits_only_accepted_winners(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_cfg, _baselines, _failures, iteration, count=1):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
             if iteration == 0:
                 return [("better", "def run(d): return {'double_well': {'final_energy': -6.0}}")]
             return [("worse", "def run(d): return {'double_well': {'final_energy': 5.0}}")]
 
         with (
-            patch.object(acr, "endpoint_reachable", return_value=True),
-            patch.object(acr, "generate_hypotheses_batch", side_effect=fake_generator),
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
         ):
             rc = acr.run_round(
-                api_base="http://127.0.0.1:9999",
-                model="m",
+                model="gpt-6-astra",
                 max_iterations=2,
                 project_root=tmp_path,
                 receipt_path=tmp_path / "receipt.md",
@@ -172,16 +242,15 @@ class TestRunRound:
     def test_baseline_and_log_caches_stay_local_not_committed(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
 
-        def fake_generator(_cfg, _baselines, _failures, iteration, count=1):
+        def fake_generator(_model, _timeout, _baselines, _failures, iteration):
             return []  # no hypotheses -> loop stops immediately, nothing accepted
 
         with (
-            patch.object(acr, "endpoint_reachable", return_value=True),
-            patch.object(acr, "generate_hypotheses_batch", side_effect=fake_generator),
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "codex_generate_hypotheses", side_effect=fake_generator),
         ):
             acr.run_round(
-                api_base="http://127.0.0.1:9999",
-                model="m",
+                model="gpt-6-astra",
                 max_iterations=2,
                 project_root=tmp_path,
                 receipt_path=tmp_path / "receipt.md",

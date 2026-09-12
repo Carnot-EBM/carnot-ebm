@@ -17803,3 +17803,4 @@ code |
 | 2026-09-12 00:47 UTC | Conductor self-edit reverted | WARN | working-tree edit to research_conductor.py reverted; diff at 20260912T004700Z.patch |
 | 2026-09-12 00:49 UTC | Cold hypothesis-memory causality and rollback audi | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 166 passed, 1 warning in 12.85s |
 | 2026-09-12 00:51 UTC | Conductor re-exec: fresh committed source | OK | b63b1c0b763f -> 099b909818d8; argv preserved |
+| 2026-09-12 01:26 UTC | Fixed-cardinality rare-event observability audit | OK | 96 passed, 1 warning in 28.64s |
