@@ -17805,3 +17805,4 @@ code |
 | 2026-09-12 00:51 UTC | Conductor re-exec: fresh committed source | OK | b63b1c0b763f -> 099b909818d8; argv preserved |
 | 2026-09-12 01:26 UTC | Fixed-cardinality rare-event observability audit | OK | 96 passed, 1 warning in 28.64s |
 | 2026-09-12 02:05 UTC | Native lossless constraint-memory parity and amort | FLAGGED | adversarial_verify CRITICAL: VERDICT_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 139 passed, 1 warning in 11.45s |
+| 2026-09-12 02:28 UTC | KV260 GateMate and PolarFire evidence continuity | OK | 102 passed, 1 warning in 7.33s |
