@@ -44025,3 +44025,49 @@ dispatch transcript. GateMate still requires a later physical-state receipt.
 No new board flash, sampler quality sweep or purchase follows from this refresh.
 
 <!-- V637-PLANNER-REFRESH-20260912-END -->
+
+### V637 independent source recheck — 2026-09-12
+
+This second check precedes the new experiment design. It preserves the earlier
+refresh above. Primary records confirm the grounding, CEP, AMR, ChopChop,
+premise-sufficiency, SparseKAN, high-magnetization, EBT, ARM–EBM and ETS leads.
+The local adaptations remain hypotheses. Their papers do not establish Carnot results.
+
+Two additional controls merit adoption:
+
+- [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476),
+  25 June 2026, separates useful retrieval alignment from a constant bias and
+  random initialization. Its deployable route fails a stored-value quality
+  gate. Use a shuffled archive-selection control when testing recurring
+  constraint memory. Preserve the same archive contents and feedback budget.
+  This adapts an ablation method; it does not reproduce diffusion reasoning.
+- [A computational phase transition for learning-to-sample from Ising models](https://arxiv.org/abs/2605.24752),
+  23 May 2026, distinguishes parameter recovery from efficient sampling under
+  explicit spectral and computational assumptions. A learned energy or exact
+  transition law alone cannot certify tractable mixing. This supports retaining
+  Exp7229's fixed-budget retirement, not another sampler sweep.
+
+The search covered all eight requested arXiv areas. Neural-constraint results
+included [T-SKM-Net](https://arxiv.org/abs/2512.10461) and
+[PAL](https://arxiv.org/abs/2503.19466). Both start with encoded constraints.
+[ETS](https://arxiv.org/abs/2601.21484) concerns energy-guided inference;
+it does not remove the need to measure source semantics. Defer these mechanisms
+until the corresponding input and sampling prerequisites are demonstrated.
+
+The secondary-channel recheck had these results:
+
+| Channel | Observed result and use |
+|---|---|
+| OpenReview | Searched ICLR/ICML 2026 and NeurIPS 2025 EBM records. Checked [EBT](https://openreview.net/pdf?id=ZBj3Qp1bYg), [energy-shaped projections](https://openreview.net/forum?noteId=saOUZ7cICb), and [Energy Matching](https://openreview.net/pdf?id=WYSCCw7mCe). Workshop and submission results retain their stated venue status. No local performance claim follows. |
+| Semantic Scholar | Re-requested both citation endpoints. EBT returned HTTP 429. ARM–EBM returned HTTP 200 with eight records and no next page. The list includes [Distributional EBMs](https://arxiv.org/abs/2605.18871), already filed above. These are returned records, not exhaustive citation totals. |
+| Hugging Face | The [verification feed](https://huggingface.co/papers?q=verification) exposed verification-planning and synthetic-verifier leads. Discovery entries alone do not justify a new experiment or relaxation of acceptance criteria. |
+| GitHub | Opened [weekly Python trending](https://github.com/trending/python?since=weekly) and the [SparseKAN implementation](https://github.com/OSU-STARLAB/SparseKAN). Physical compaction remains the relevant cost-measurement lesson. No trending rank or repository result is treated as scientific validation. |
+| Extropic | Rechecked [writing](https://extropic.ai/writing) and [Z1T](https://extropic.ai/writing/z1t). The latter describes degree-16 connectivity and mixed probabilistic/digital execution. Actual graph placement and host-transfer cost still need measurement. No new local TSU access was established. |
+| Logical Intelligence | Rechecked [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models). Its constraint-evaluation architecture remains relevant. The checked page supplies no reproducible local execution package. |
+
+The current local evidence imposes two further limits. Live adversarial rechecks
+still quarantine Exp7223, Exp7228, Exp7230 and Exp7232. Their claims cannot be
+promoted from the prior summary. New evidence must separate current invocation
+receipts from historical sources and injected negative fixtures. The later
+autoresearch fitness correction in `ops/changelog.md` already recomputes toy
+benchmark energy independently. Repeating that repair would add no new research.
