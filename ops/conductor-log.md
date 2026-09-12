@@ -17829,3 +17829,4 @@ code |
 | 2026-09-12 18:46 UTC | Plan milestone 2026.09.638 | OK | 14 tasks proposed |
 | 2026-09-12 18:55 UTC | Milestone 2026.09.638 activated | OK | 14 tasks queued |
 | 2026-09-12 20:19 UTC | V638 source ingestion and sealed execution map | OK | 130 passed, 1 warning in 29.04s |
+| 2026-09-12 20:22 UTC | Unify duration-floor selection with authenticated  | SKIP | Pre-tests failing, self-heal failed: > assert exp7240.gate_summary(checks)["passed"] is True |

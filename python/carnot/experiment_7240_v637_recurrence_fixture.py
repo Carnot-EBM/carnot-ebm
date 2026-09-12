@@ -512,7 +512,7 @@ def collect_preconditions(
     return checks, hashes, upstream
 
 
-def _survivor_masks(controller: exp7226.PackedBeliefController) -> dict[str, int]:
+def _survivor_masks(controller: ActiveBeliefState) -> dict[str, int]:
     """Project an active packed state down to its immutable survivor masks."""
 
     return {family: int(controller.family_state(family)["survivor_mask"]) for family in FAMILIES}
@@ -769,7 +769,7 @@ class ArchivedBeliefController:
         return self._active().select_request(block, tie_ranks)
 
     @staticmethod
-    def _append_archive(state: JsonDict, active: exp7226.PackedBeliefController) -> str | None:
+    def _append_archive(state: JsonDict, active: ActiveBeliefState) -> str | None:
         """Append new immutable masks and evict the oldest state at the fixed cap."""
 
         if int(state["archive_cap"]) == 0:
