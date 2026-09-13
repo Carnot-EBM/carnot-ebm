@@ -17865,3 +17865,4 @@ code |
 | 2026-09-13 10:04 UTC | Repair authenticated compute floors and isolate th | OK | 118 passed, 1 warning in 180.53s (0:03:00) |
 | 2026-09-13 10:26 UTC | Qualify shipped ARC transition witnesses through t | OK | 104 passed, 1 warning in 10.99s |
 | 2026-09-13 11:24 UTC | Live ARC adapter-withheld transition-witness compa | OK | 94 passed, 1 warning in 7.27s |
+| 2026-09-13 11:46 UTC | Bounded Qwen3.8 mention extraction with authentica | OK | 90 passed, 1 warning in 7.72s |
