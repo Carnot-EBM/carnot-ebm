@@ -14639,3 +14639,127 @@ row-free terminal blocked artifact with an exact `gate_check_summary`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7267 and SCENARIO-CL-7267-* | Implemented: `python/carnot/experiment_7267_v639_recognition_prototype.py` provides the stable released-witness basis, active disagreement controller, two-stratum stream sealer, eight-arm fixture, diagnosis reducer, controls, and artifact builder. The script entrypoint remains thin. | Verified: RED-first basis, query, diagnosis, isolation, panel, transaction, terminal, command, and defensive tests pass with 902 of 902 scoped statements covered. |
+
+## REQ-CL-7268: Prospective Learning With Autonomous Change Recognition
+
+Carnot SHALL authenticate the sealed Exp7267 artifact before measurement. The
+artifact SHALL have `recognition_fixture_ready_score=1`. Its controller code,
+recognition contract, stream manifest, public events, release schedule, and
+private authority bytes SHALL match their declared hashes. A missing, changed,
+or quarantined prerequisite SHALL produce a row-free terminal blocked artifact.
+The artifact SHALL name the failed check in `gate_check_summary`.
+
+The learning run SHALL replay all eight frozen Exp7267 arms on all 24 sealed
+prospective streams. All arms SHALL receive the same event order and label
+delay. Each prediction SHALL be sealed before due feedback is released. Every
+queried label SHALL count against the fixed limit of 128 labels per stream-arm.
+The run SHALL retain exactly 196,608 event-arm rows. It SHALL retain query,
+addition and deactivation, nomination, validation, commit, and reactivation
+receipts. A supplied-change diagnostic MAY exist only as separate oracle rows.
+
+The run SHALL use both twelve-stream strata in the overall result. It SHALL not
+remove the overlapping stratum. It SHALL retain frozen, reset, active
+recognition, random-query recognition, shuffled association, previous coverage,
+full version-space memory, and feedback-withheld results. It SHALL report the
+full-memory comparator separately. It SHALL not claim superiority over full
+memory unless the full-memory paired confidence interval supports that claim.
+
+The reducer SHALL use streams as independent units. It SHALL report future
+error, false accepts, coverage, recurrence error, recurrence recovery delay,
+retained constraints, and event cost. Cost rows SHALL include lookup, query,
+update, validation, memory bytes, durable commit, and full event p50 and p95.
+The reducer SHALL bootstrap whole streams with 10,000 fixed-seed resamples.
+
+The frozen primary value gates SHALL require all of these conditions:
+
+- The active-minus-reset future-error CI95 upper bound is less than zero.
+- The active-minus-reset false-accept CI95 upper bound is at most zero.
+- The active-minus-random recurrence-error CI95 upper bound is less than zero.
+- The active-minus-shuffled recurrence-error CI95 upper bound is less than zero.
+- The active-minus-frozen recurrence-error degradation is at most 0.02.
+- At least one prospective query selection differs and a later prediction changes.
+- No prediction changes before its requesting feedback release.
+- No query or memory limit is exceeded.
+
+`recognition_run_complete_score` SHALL equal one when all stream-arm units have
+a complete or censored accounting and the raw evidence passes cold reduction.
+`recognition_value_score` SHALL equal one only when every frozen value gate
+passes. A completed run with any failed value gate SHALL be a terminal null.
+The run SHALL not expand its stream count or label budget after a null result.
+
+The E2E control SHALL process delayed feedback through an atomic durable commit.
+It SHALL make a later prediction, cold-load the durable state, and prove reload
+parity. It SHALL reject premature, duplicate, and stale writes without changing
+state bytes. Measurement SHALL stop within 1,800 seconds. It SHALL checkpoint
+after each stream and preserve unfinished units outside the terminal artifact.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All current model load, generation, and answer counters
+SHALL be zero. CPU replay SHALL declare `cpu_exact_solver_or_simulator` for both
+substrate fields and `host` for the execution venue. A read-only reducer SHALL
+declare `aggregation_from_upstream_artifacts` and class `aggregation`. The exact
+evaluator SHALL set `verifier_is_oracle=true`. The controller SHALL not mutate
+model weights. The result SHALL set `continuous_self_learning_task=true` only
+for online constraint-state updates.
+
+### SCENARIO-CL-7268-PRECONDITIONS: The Sealed Prototype Is Exact Or Blocked
+
+- GIVEN the active Exp7268 task and the sealed Exp7267 evidence
+- WHEN code, contract, stream, readiness, quarantine, and output checks run
+- THEN only exact ready evidence can start the prospective replay
+- AND an external failure produces a row-free blocked artifact.
+
+### SCENARIO-CL-7268-PREQUENTIAL: Prediction Precedes Delayed Feedback
+
+- GIVEN identical public events and release schedules for all eight arms
+- WHEN each event enters the online replay
+- THEN each arm seals its prediction before any due feedback commit
+- AND each queried label counts once against the 128-label ceiling.
+
+### SCENARIO-CL-7268-ROWS: Complete Evidence Retains Lifecycle Receipts
+
+- GIVEN 24 streams, eight arms, and 1,024 events per stream
+- WHEN the run completes without censoring
+- THEN exactly 196,608 event-arm rows exist
+- AND query, update, nomination, validation, commit, and reactivation receipts remain auditable.
+
+### SCENARIO-CL-7268-METRICS: Both Strata And Full Memory Stay Visible
+
+- GIVEN separated and overlapping recurrence streams
+- WHEN stream-paired metrics are reduced
+- THEN the overall rows include both strata and preserve stratum rows
+- AND the full-memory comparator has its own performance and paired interval.
+
+### SCENARIO-CL-7268-BOOTSTRAP: Frozen Gates Resample Whole Streams
+
+- GIVEN stream-paired error and safety rates
+- WHEN 10,000 fixed-seed bootstrap draws form each CI95
+- THEN no event is treated as an independent statistical unit
+- AND every frozen primary gate retains its expected, observed, and pass value.
+
+### SCENARIO-CL-7268-COST: Event And Durable Costs Are Measured
+
+- GIVEN the complete CPU event loop and durable E2E commit
+- WHEN costs are reduced
+- THEN lookup, query, update, validation, memory, durable commit, and full event costs exist
+- AND full event cost includes measured p50 and p95 values.
+
+### SCENARIO-CL-7268-E2E: Durable Restart Preserves Online State
+
+- GIVEN a sealed prediction and delayed released feedback
+- WHEN commit, later prediction, cold restart, rejection, and rollback run
+- THEN only later predictions can observe committed state
+- AND durable and in-memory bytes remain consistent.
+
+### SCENARIO-CL-7268-TERMINAL: Completion Is Separate From Value
+
+- GIVEN a fixed complete run and all validation evidence
+- WHEN the frozen primary gates are scored
+- THEN completion can equal one while value equals zero
+- AND a failed scientific gate produces a complete null, never a partial result.
+
+## Implementation Status (REQ-CL-7268)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7268 and SCENARIO-CL-7268-* | Implemented: `python/carnot/experiment_7268_v639_recognition_learning.py` authenticates the sealed prototype, checkpoints each eight-arm stream replay, retains lifecycle and cost receipts, bootstraps paired streams, and keeps completion separate from value. The script entrypoint remains thin. | Verified: RED-first seal, chronology, receipt, metric, bootstrap, cost, E2E, terminal, defensive, and command tests pass with 654 of 654 scoped statements covered. |

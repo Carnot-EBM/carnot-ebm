@@ -290,3 +290,7 @@ CHECK_TIMED_OUT
 
 - Kaggle analyzed 500 failed submissions: roughly one-third had no notebook-visible traceable error, while almost 20% required a GPU that had not been enabled. [Official Kaggle post](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
 
+## 2026-09-13 13:13 UTC -- NEW
+
+Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intelligence to fourth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
