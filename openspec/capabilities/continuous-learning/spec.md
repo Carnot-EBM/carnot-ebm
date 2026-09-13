@@ -15325,3 +15325,120 @@ execution venue SHALL be `host`. The exact semantic reference SHALL set
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7284 and SCENARIO-CL-7284-* | Planned: opt-in host wrapper over the shipped native controller, fixed group benchmark, real-disk crash matrix, cold reducer, and atomic terminal artifact. | Pending RED-first tests and implementation. |
+
+## REQ-CL-7285: Qualified Acknowledgment Commit Frontier
+
+Carnot SHALL authenticate the complete Exp7284 host group-commit prototype
+before this measurement starts. The prototype SHALL have exact serial parity,
+durable acknowledgment safety, and `commit_protocol_ready_score=1`. A missing,
+changed, retired, quarantined, or incomplete external prerequisite SHALL
+produce row-free terminal blocked evidence. The block SHALL name the upstream,
+exact failed field or check, observed value, and expected value in
+`gate_check_summary`. Same-milestone Exp7285 paths are outputs, not existing
+prerequisites.
+
+The measurement SHALL freeze three arrival conditions. Interactive dependent
+queries SHALL force one flush per event. Steady independent events SHALL use a
+fixed interarrival schedule. Bursts SHALL contain 16 events. Each condition
+SHALL compare maximum group sizes one, four, and sixteen. Groups four and
+sixteen SHALL wait at most 10 ms. The study SHALL use 20 paired seeds and 128
+events for every condition and arm. Each seed SHALL use identical input events,
+the same state schema, validation, filesystem, file sync, and directory sync
+calls. Arm order SHALL be randomized from the seed before outcomes are known.
+
+Timing SHALL start at event submission. Every seed, condition, and arm SHALL
+retain queue wait, serialization, validation, file sync, directory sync,
+acknowledgment latency, dependent-query visibility latency, elapsed duration,
+throughput, peak memory, lost events, unacknowledged events, errors,
+abstentions, and censoring. Exclusive component rows SHALL reconcile to the
+measured commit work. A timed-out trial SHALL keep its whole declared event
+population. Unfinished events SHALL have explicit censored dispositions and
+incomplete intervals. No row can be dropped from a timed-out trial.
+
+The measurement SHALL finish within 900 seconds. A cold reducer SHALL rebuild
+all per-seed metrics and paired intervals from saved raw rows. It SHALL rerun
+the protocol failure controls on a tiny real-disk population. The E2E SHALL run
+a real arrival stream through the bounded queue, validated durable commit,
+acknowledgment, and cold state restore. Independent reduction SHALL follow.
+Crash, loss, restore, parity, component, or population failures SHALL fail the
+applicable gates.
+
+The primary bounded deployment value SHALL require all of these conditions:
+
+- No acknowledged event is lost.
+- Every final state has exact serial-reference parity.
+- The lower paired 95 percent confidence bound for burst throughput is above
+  1.5x for at least one grouped arm versus size one.
+- Steady-arrival p95 acknowledgment latency is at most 50 ms for the selected
+  grouped arm.
+
+Interactive forced flush SHALL be a mandatory no-amortization control. Carnot
+SHALL report its measured cost and SHALL not claim an interactive improvement.
+The result SHALL report measured speedup, the NFR-01 10x target, the 100x
+target, and infeasibility separately. It SHALL make no board, TSU, device, or
+same-semantics interactive acceleration claim. A complete frontier with no
+passing point SHALL use a complete null verdict, not partial.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All current model load, generation, inference, and
+usable-answer counters SHALL be zero. CPU measurement and replay SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. The cold reducer
+SHALL use `aggregation_from_upstream_artifacts` and class `aggregation`.
+Execution SHALL use `execution_venue=host`. The serial reference SHALL set
+`verifier_is_oracle=true`. A favorable value result SHALL therefore use
+`verdict_class=circular_positive`, never `positive`.
+
+### SCENARIO-CL-7285-PRECONDITIONS: Prototype Evidence Is Exact Or Work Blocks
+
+- GIVEN the declared Exp7284 artifact, source bytes, exclusions, and outputs
+- WHEN hashes, status, readiness, quarantine, retirement, and ownership are checked
+- THEN only exact complete protocol evidence can start the measurement
+- AND any external failure produces terminal blocked evidence with no rows.
+
+### SCENARIO-CL-7285-POPULATION: Every Fixed Trial Keeps All Events
+
+- GIVEN three conditions, three arms, 20 paired seeds, and 128 events
+- WHEN a trial completes or reaches its time bound
+- THEN every declared event has a measured or explicit censored disposition
+- AND arm order and identical per-seed inputs remain independently checkable.
+
+### SCENARIO-CL-7285-COSTS: Heterogeneous Boundary Costs Are Complete
+
+- GIVEN an accepted event and its durable acknowledgment group
+- WHEN work crosses validation, serialization, file sync, and directory sync
+- THEN queue and all four work components are retained without omission
+- AND exclusive component totals reconcile to measured commit work.
+
+### SCENARIO-CL-7285-VISIBILITY: Submission Through Query Visibility Is Timed
+
+- GIVEN interactive, steady, and burst arrivals
+- WHEN each event receives durable acknowledgment or a dependent query reads it
+- THEN acknowledgment timing starts at submission and includes queue wait
+- AND interactive queries force flush and report no amortization claim.
+
+### SCENARIO-CL-7285-E2E: Arrival To Cold Restore Preserves Durable State
+
+- GIVEN a tiny real arrival stream and each fixed group arm
+- WHEN queueing, validation, durable commit, acknowledgment, and cold restore run
+- THEN acknowledged events survive exactly once and final state matches serial order
+- AND the independent cold reducer reproduces the saved measurements.
+
+### SCENARIO-CL-7285-GATES: Completion And Deployment Value Stay Separate
+
+- GIVEN the full cold-reduced frontier and failure controls
+- WHEN durability, parity, burst CI95, and steady p95 gates are evaluated
+- THEN `commit_cost_complete_score=1` records a complete measured frontier
+- AND `commit_cost_value_score=1` only when all fixed deployment gates pass.
+
+### SCENARIO-CL-7285-CLAIMS: Targets And Boundaries Stay Explicit
+
+- GIVEN a measured host acknowledgment speedup
+- WHEN the acceleration envelope and verdict are written
+- THEN measured, 10x, and 100x outcomes and infeasibility are separate
+- AND no interactive, board, TSU, or production-default claim is made.
+
+## Implementation Status (REQ-CL-7285)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7285 and SCENARIO-CL-7285-* | Implemented: fixed paired frontier, complete event and cost rows, real-disk E2E restore, cold reduction, failure controls, and atomic terminal evidence. | `tests/python/test_experiment_7285_v640_commit_frontier.py`; focused pytest and scoped 100% coverage. |
