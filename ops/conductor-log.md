@@ -17882,3 +17882,4 @@ code |
 | 2026-09-13 19:01 UTC | Repair live ARC identity handoff without relaxing  | OK | 124 passed, 1 warning in 14.82s |
 | 2026-09-13 19:28 UTC | Bounded Qwen3.8 comparator transport qualification | OK | 97 passed, 1 warning in 7.94s |
 | 2026-09-13 19:58 UTC | Fresh Qwen3.8 source comparison with valid equal-b | OK | 87 passed, 1 warning in 8.91s |
+| 2026-09-13 20:25 UTC | Independent source fidelity and matched-coverage v | OK | 122 passed, 1 warning in 13.89s |
