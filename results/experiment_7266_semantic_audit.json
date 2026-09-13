@@ -1,0 +1,51 @@
+{
+  "experiment": 7266,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-13",
+  "started_at": "2026-09-13T12:26:28.592794+00:00",
+  "finished_at": "2026-09-13T12:26:28.592794+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Independent source semantics and matched-coverage value audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7265-mention-heldout",
+  "failed_field": "mention_capture_complete_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7265_v639_mention_heldout.json",
+  "failed_evidence_sha256": "sha256:712335d44e39a49b1325f044a14dea84472e4deee9f354b6821c4ec764c10cfc",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7265-mention-heldout",
+    "failed_field": "mention_capture_complete_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7265_v639_mention_heldout.json",
+    "failed_evidence_sha256": "sha256:712335d44e39a49b1325f044a14dea84472e4deee9f354b6821c4ec764c10cfc"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7265-mention-heldout.mention_capture_complete_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7265-mention-heldout",
+      "artifact_field": "mention_capture_complete_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7265_v639_mention_heldout.json",
+      "artifact_sha256": "sha256:712335d44e39a49b1325f044a14dea84472e4deee9f354b6821c4ec764c10cfc"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

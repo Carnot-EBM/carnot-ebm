@@ -17866,3 +17866,4 @@ code |
 | 2026-09-13 10:26 UTC | Qualify shipped ARC transition witnesses through t | OK | 104 passed, 1 warning in 10.99s |
 | 2026-09-13 11:24 UTC | Live ARC adapter-withheld transition-witness compa | OK | 94 passed, 1 warning in 7.27s |
 | 2026-09-13 11:46 UTC | Bounded Qwen3.8 mention extraction with authentica | OK | 90 passed, 1 warning in 7.72s |
+| 2026-09-13 12:24 UTC | Held-out source fidelity on the mandated Qwen3.8 G | OK | 131 passed, 1 warning in 9.03s |
