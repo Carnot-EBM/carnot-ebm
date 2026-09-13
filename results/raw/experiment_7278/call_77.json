@@ -1,0 +1,195 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRaaaam precedes Raaaan.\nCLAIM:\nRaaaam precedes Raaaan.",
+          "role": "user"
+        }
+      ],
+      "seed": 727820270990,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "direct_self_consistency",
+    "attempted": true,
+    "call_id": "exp7278:n-154d19757b3d1de37719:direct_self_consistency:direct:1",
+    "call_order": 77,
+    "call_type": "direct",
+    "censored": false,
+    "completion_tokens": 8,
+    "decision": "supported",
+    "draw_index": 1,
+    "error": null,
+    "expected_payload_sha256": "sha256:e792484850e231e2db7d32532267ca98ec32d3ef32a0e4c3b8354b38cf4fc243",
+    "expected_request_bytes_sha256": "sha256:e792484850e231e2db7d32532267ca98ec32d3ef32a0e4c3b8354b38cf4fc243",
+    "finish_reason": "stop",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "latency_s": 0.4297358118928969,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 85,
+    "raw_completion": "{\"decision\":\"supported\"}",
+    "raw_completion_sha256": "sha256:3cc988cb7175799ff21dfeac36fd744fd077f90ef87fcb2e251a5b10bb9adc9b",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRaaaam precedes Raaaan.\nCLAIM:\nRaaaam precedes Raaaan.",
+          "role": "user"
+        }
+      ],
+      "seed": 727820270990,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gXCJ7XFxcImRlY2lzaW9uXFxcIjpcIiBkZWNpc2lvbiBcIn1cIlxuZGVjaXNpb24gOjo9IFwiXFxcInN1cHBvcnRlZFxcXCJcIiB8IFwiXFxcImNvbnRyYWRpY3RlZFxcXCJcIiB8IFwiXFxcInVua25vd25cXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHRoZSBjbGFpbSBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgZnVsbCBkZWNpc2lvbiBzdHJpbmc6IHN1cHBvcnRlZCwgY29udHJhZGljdGVkLCBvciB1bmtub3duLiBSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3Qgd2l0aCB0aGUgZGVjaXNpb24ga2V5LlxuU09VUkNFOlxuUmFhYWFtIHByZWNlZGVzIFJhYWFhbi5cbkNMQUlNOlxuUmFhYWFtIHByZWNlZGVzIFJhYWFhbi4iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI3ODIwMjcwOTkwLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\":\"supported\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789329131,
+      "id": "chatcmpl-hUGxiNHSfnWYK1htBXppJLesPwLIOAae",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 202.95,
+        "predicted_n": 8,
+        "predicted_per_second": 39.41857600394186,
+        "predicted_per_token_ms": 25.36875,
+        "prompt_ms": 214.965,
+        "prompt_n": 85,
+        "prompt_per_second": 395.41320680110715,
+        "prompt_per_token_ms": 2.529
+      },
+      "usage": {
+        "completion_tokens": 8,
+        "prompt_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 93
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjpcInN1cHBvcnRlZFwifSJ9fV0sImNyZWF0ZWQiOjE3ODkzMjkxMzEsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6OCwicHJvbXB0X3Rva2VucyI6ODUsInRvdGFsX3Rva2VucyI6OTMsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjowfX0sImlkIjoiY2hhdGNtcGwtaFVHeGlOSFNmbldZSzFodEJYcHBKTGVzUHdMSU9BYWUiLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjAsInByb21wdF9uIjo4NSwicHJvbXB0X21zIjoyMTQuOTY1LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoyLjUyOSwicHJvbXB0X3Blcl9zZWNvbmQiOjM5NS40MTMyMDY4MDExMDcxNSwicHJlZGljdGVkX24iOjgsInByZWRpY3RlZF9tcyI6MjAyLjk1LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS4zNjg3NSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM5LjQxODU3NjAwMzk0MTg2fX0=",
+    "request_bytes_sha256": "sha256:e792484850e231e2db7d32532267ca98ec32d3ef32a0e4c3b8354b38cf4fc243",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:0696761e8dd87a60f249c5bab6ed93a903cf2c4cb5485d2a451827a63005f901",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:bd8b802a9adc53a2f36d604fcebc4afab51c79fd850fec66970e52dc5d3871fe",
+      "server_pid": 3748950,
+      "server_pid_start_ticks": 162075114
+    },
+    "response_bytes_sha256": "sha256:c3f08c7c86cf3ad34cb6976bdd2b555e8cfaf3d8c05b842135013d8ec08d8695",
+    "response_observed_at_utc": "2026-09-13T19:52:11Z",
+    "row_sha256": "sha256:9492bd0ae5398ff46ea0450576fb05d380ffe2828cf8e2b98c07d5536d346bc8",
+    "schedule_row_sha256": "sha256:9798e2217edc9b1a6a981d1b083941519ad7e2e02c8683926dc7d32887885844",
+    "seed": 727820270990,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transport_complete": true,
+    "transport_error": null,
+    "unit_id": "n-154d19757b3d1de37719",
+    "usable": true
+  },
+  "schedule": {
+    "adaptive_stopping": false,
+    "arm": "direct_self_consistency",
+    "base_group_id": "g-04",
+    "call_id": "exp7278:n-154d19757b3d1de37719:direct_self_consistency:direct:1",
+    "call_order": 77,
+    "call_type": "direct",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727820270990,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "claim": {
+        "document_id": "n-154d19757b3d1de37719-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "n-154d19757b3d1de37719-claim",
+            "mention_id": "m000",
+            "surface_text": "Raaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "n-154d19757b3d1de37719-claim",
+            "mention_id": "m001",
+            "surface_text": "Raaaan"
+          }
+        ],
+        "text": "Raaaam precedes Raaaan."
+      },
+      "source": {
+        "document_id": "n-154d19757b3d1de37719-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "n-154d19757b3d1de37719-source",
+            "mention_id": "m000",
+            "surface_text": "Raaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "n-154d19757b3d1de37719-source",
+            "mention_id": "m001",
+            "surface_text": "Raaaan"
+          }
+        ],
+        "text": "Raaaam precedes Raaaan."
+      }
+    },
+    "draw_index": 1,
+    "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRaaaam precedes Raaaan.\nCLAIM:\nRaaaam precedes Raaaan.",
+    "prompt_sha256": "sha256:56ebdf94af2d3929fd11717b368f8d891217a9a56fed1dba821b33618e22807c",
+    "request_timeout_s": 90.0,
+    "retry_budget": 0,
+    "seed": 727820270990,
+    "unit_id": "n-154d19757b3d1de37719"
+  }
+}

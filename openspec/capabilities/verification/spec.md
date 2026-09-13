@@ -42114,3 +42114,101 @@ KV headroom, lease state, and raw bytes remain durable.
 **When** focused validation and independent replay finish
 **Then** each command retains its exit code, timing, and log hash
 **And** only a cold-valid candidate is written to the declared result path.
+
+### REQ-VERIFY-7278: Source Measurement SHALL Separate Extraction From Source Sufficiency
+
+Exp7278 SHALL authenticate the exact Exp7275 semantic replay and Exp7277
+comparator canary. It SHALL require `semantic_replay_ready_score=1` and
+`comparator_canary_ready_score=1`. Missing, retired, quarantined, or invalid
+external evidence SHALL produce a terminal blocked artifact with an exact
+`gate_check_summary`. The blocked artifact SHALL record zero current model
+loads and generation calls.
+
+The task SHALL seal 16 fresh base groups with four source conditions per group:
+supported, relation reversal, insufficient evidence, and consistent entity
+renaming. The resulting 64 units SHALL be disjoint from the exposed Exp7265
+held-out rows. Public source and claim documents SHALL contain mention tables
+derived only from their public UTF-8 bytes. A separate private authority SHALL
+hold expected decisions and gold pointer completions. The public roster hash,
+private authority hash, unit seeds, paired arm order, and source-shuffle
+permutation SHALL be frozen before inference. No private label, game source, or
+authority parser SHALL enter a model request.
+
+Each unit SHALL schedule one unchanged mention-pointer extraction pair with one
+source call and one claim call. Each unit SHALL also schedule two direct
+full-decision draws. This produces exactly 256 calls. Every
+call SHALL have a maximum output budget of 128 tokens, the same request timeout,
+and no retry or adaptive stop. Arm order SHALL be paired and randomized before
+outcomes. Direct disagreement SHALL resolve to unknown. The first direct draw
+SHALL remain visible as a one-shot secondary result. The task SHALL derive one
+shuffled-source control from the same captured extraction rows without another
+model call.
+
+The live path SHALL resolve `unsloth/Qwen3.8-27B-GGUF` Q4_K_M through
+`scripts.experiment_template.cached_sota_pair()`. It SHALL use the GGUF-embedded
+tokenizer and chat template through one task-owned native llama.cpp server. It
+SHALL set `CARNOT_FORCE_LIVE=1`, use one idle RTX 3090 lease, and run one server
+sequentially. It SHALL preserve model revision and hash, process ID and start
+ticks, launch arguments, server properties, GPU samples, measured KV headroom,
+and raw request and response bytes. It SHALL bound model load to 600 seconds and
+the generation window to 2400 seconds. It SHALL record a feasibility projection
+from Exp7277 timing before launch.
+
+The task SHALL keep every scheduled outcome. At the deadline, a missing call
+SHALL become an explicit missing or censored manifest row. Invalid and
+zero-quality outputs SHALL stay in all fixed denominators. An independent
+reducer SHALL rebuild request and response joins from raw evidence before
+publication. `source_capture_complete_score=1` SHALL require all 256 outcomes
+to be accounted, authentic public/private joins, and zero replay mismatch. It
+SHALL not require semantic correctness.
+
+The reducer SHALL emit separate representation, source and claim fidelity,
+decision correctness, unknown, false-accept, token, and latency fields for each
+arm. It SHALL retain 64 source-fidelity rows for each evaluated arm. It SHALL
+emit paired intervention rows for renaming, reversal, missing-source, and frozen
+source-shuffle controls. `source_value_score` SHALL remain a descriptive primary
+value gate. A failed efficacy gate SHALL prevent a positive verdict but SHALL
+not erase a complete authenticated measurement.
+
+The terminal artifact SHALL include every required Exp7278 field and a plain
+language principle for each field. A measured candidate SHALL first exist under
+`results/raw/experiment_7278/`. Focused tests, affected suites, scoped 100%
+coverage of new code, Ruff, changed-module mypy, exact-file spec coverage,
+independent raw replay, adversarial verification, and verdict-row consistency
+SHALL pass before atomic publication. Partial SHALL occur only in a separate
+checkpoint for unfinished current work.
+
+#### SCENARIO-VERIFY-7278-PREFLIGHT: External Failure Is Terminal Blocked
+
+**Given** Exp7275, Exp7277, the model cache, native runtime, or an idle RTX 3090 is invalid
+**When** Exp7278 authenticates all pre-launch resources
+**Then** it writes a terminal blocked artifact with the exact failed check
+**And** it records zero attempted model loads and generation calls.
+
+#### SCENARIO-VERIFY-7278-SCHEDULE: Fresh Fixed Denominators Are Sealed
+
+**Given** 16 new base groups and four public source conditions per group
+**When** Exp7278 freezes unit seeds, arm order, and source permutations
+**Then** it seals 64 units and exactly 256 equal-budget calls
+**And** no Exp7265 held-out unit or private authority field enters a request.
+
+#### SCENARIO-VERIFY-7278-REDUCE: Equal-Budget Arms Stay Separate
+
+**Given** one source/claim extraction pair and two direct draws for every public unit
+**When** the independent reducer reconstructs all raw outcomes
+**Then** it applies tie-to-unknown and retains the direct first draw separately
+**And** it derives shuffled-source controls without another model call.
+
+#### SCENARIO-VERIFY-7278-COMPLETENESS: Quality Does Not Define Capture Completion
+
+**Given** every planned call has an authentic outcome or explicit censoring row
+**When** the reducer computes completeness and scientific value
+**Then** replay fidelity and denominator accounting determine capture completeness
+**And** semantic errors remain in the value metrics and do not lower completeness.
+
+#### SCENARIO-VERIFY-7278-E2E: Public Requests Replay Into Private Authority
+
+**Given** a measured terminal candidate under the task raw directory
+**When** independent raw replay and focused validation complete
+**Then** public source and claim bytes reconstruct every extraction and direct row
+**And** the private authority grades them with zero label leakage before publication.
