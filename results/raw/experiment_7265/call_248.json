@@ -1,0 +1,157 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nHaaafs starts before Haaafr.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Haaafs\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafr\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 726520261161,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "mention_pointer",
+    "attempted": true,
+    "call_id": "sha256:ea45f9f3f4f2429af9390a6f013aab39b245f3956982c540b8bd448ee90b2307",
+    "call_order": 248,
+    "call_type": "claim",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 27,
+          "object_start": 21,
+          "object_surface": "Haaafr",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "relation_end": 28,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 6,
+          "subject_start": 0,
+          "subject_surface": "Haaafs"
+        }
+      ]
+    },
+    "completion_tokens": 36,
+    "cuda_offload_confirmed": true,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "latency_s": 1.3767565418966115,
+    "lease_id": "lease:604a4a9605906ba899170634bfdfdad76e146bdedee7858a901422c74f845a8c",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "subject_pointer": "m000"
+        }
+      ]
+    },
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nHaaafs starts before Haaafr.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Haaafs\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafr\"}]",
+    "prompt_sha256": "sha256:2db7c1770947b31eecb445548ac83f20469eb1c2a4500500a2b9b56b73a31b0e",
+    "prompt_tokens": 194,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"starts before\",\"subject_pointer\":\"m000\"}]}",
+    "raw_completion_sha256": "sha256:d064f3d163d87d4270709dbaa7fc971a6053efb062e4b0f94ae0cf5394536c3a",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJvYmplY3RfcG9pbnRlclxcXCI6XCIgcG9pbnRlciBcIixcXFwicG9sYXJpdHlcXFwiOlwiIHBvbGFyaXR5IFwiLFxcXCJwcmVkaWNhdGVcXFwiOlwiIHByZWRpY2F0ZSBcIixcXFwic3ViamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwifVwiXG5wb2ludGVyIDo6PSBcIlxcXCJtMDAwXFxcIlwiIHwgXCJcXFwibTAwMVxcXCJcIlxucHJlZGljYXRlIDo6PSBcIlxcXCJwcmVjZWRlc1xcXCJcIiB8IFwiXFxcInN0YXJ0cyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJlbmRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcIm9jY3VycyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJmb2xsb3dzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGFmdGVyXFxcIlwiIHwgXCJcXFwiZW5kcyBhZnRlclxcXCJcIiB8IFwiXFxcIm9jY3VycyBhZnRlclxcXCJcIlxucG9sYXJpdHkgOjo9IFwiXFxcInBvc2l0aXZlXFxcIlwiIHwgXCJcXFwibmVnYXRpdmVcXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6IkV4dHJhY3QgdGhlIG9uZSBzdGF0ZWQgcmVsYXRpb24gZnJvbSB0aGUgY2xhaW0uIFNlbGVjdCBzdWJqZWN0X3BvaW50ZXIgYW5kIG9iamVjdF9wb2ludGVyIG9ubHkgZnJvbSB0aGUgcHVibGljIG1lbnRpb24gdGFibGUuIFByZWRpY3QgcHJlZGljYXRlIGFuZCBwb2xhcml0eS4gUmV0dXJuIG9uZSBKU09OIG9iamVjdCB3aXRoIG91dGNvbWUgYW5kIHJlbGF0aW9ucywgb3IgdW5rbm93biB3aXRoIGFuIGVtcHR5IGxpc3QuXG5DTEFJTTpcbkhhYWFmcyBzdGFydHMgYmVmb3JlIEhhYWFmci5cblBVQkxJQ19NRU5USU9OX1RBQkxFOlxuW3tcImJ5dGVfZW5kXCI6NixcImJ5dGVfc3RhcnRcIjowLFwiZG9jdW1lbnRfaWRcIjpcInUtMjlkMzc5ZWE5ZWFjZjdlYjNkYjItb3JpZ2luYWwtY2xhaW1cIixcIm1lbnRpb25faWRcIjpcIm0wMDBcIixcInN1cmZhY2VfdGV4dFwiOlwiSGFhYWZzXCJ9LHtcImJ5dGVfZW5kXCI6MjcsXCJieXRlX3N0YXJ0XCI6MjEsXCJkb2N1bWVudF9pZFwiOlwidS0yOWQzNzllYTllYWNmN2ViM2RiMi1vcmlnaW5hbC1jbGFpbVwiLFwibWVudGlvbl9pZFwiOlwibTAwMVwiLFwic3VyZmFjZV90ZXh0XCI6XCJIYWFhZnJcIn1dIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyNjUyMDI2MTE2MSwic3RyZWFtIjpmYWxzZSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInN0YXJ0cyBiZWZvcmVcIixcInN1YmplY3RfcG9pbnRlclwiOlwibTAwMFwifV19In19XSwiY3JlYXRlZCI6MTc4OTMwMTkwMSwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjozNiwicHJvbXB0X3Rva2VucyI6MTk0LCJ0b3RhbF90b2tlbnMiOjIzMCwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC04NTBjQUhEdmtrNjhwemtQVWZzRFhpUTZUejFnaURGWiIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjE5NCwicHJvbXB0X21zIjoyOTMuMzg1LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoxLjUxMjI5MzgxNDQzMjk4OTYsInByb21wdF9wZXJfc2Vjb25kIjo2NjEuMjQ3MTY2NjkyMjMwNCwicHJlZGljdGVkX24iOjM2LCJwcmVkaWN0ZWRfbXMiOjkxNy4wOCwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjUuNDc0NDQ0NDQ0NDQ0NDQ0LCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6MzkuMjU1MDI2ODI0MjY4MzM0fX0=",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:46fb3dd672bd2e052d78f33aa1fe2cbc1736657906e038bb4971e041cee46240",
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:ce56d480a2c7adbdcaf76c31ab2bfa6429ac62007cc48d670a85b17eab8ee3a7",
+    "row_sha256": "sha256:7e5456d4b13124c2e4cb8b7acb3823d0cf4f47156d755328198c455971c1aeb1",
+    "seed": 726520261161,
+    "seed_join_valid": true,
+    "server_pid": 3567228,
+    "server_pid_start_ticks": 159334964,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 726520261161,
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-29d379ea9eacf7eb3db2",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:ea45f9f3f4f2429af9390a6f013aab39b245f3956982c540b8bd448ee90b2307",
+    "call_order": 248,
+    "call_type": "claim",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 726520261161,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-29d379ea9eacf7eb3db2-original-claim",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-29d379ea9eacf7eb3db2-original-claim",
+          "mention_id": "m000",
+          "surface_text": "Haaafs"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-29d379ea9eacf7eb3db2-original-claim",
+          "mention_id": "m001",
+          "surface_text": "Haaafr"
+        }
+      ],
+      "text": "Haaafs starts before Haaafr."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "input_sha256": "sha256:ef37c0142c673b0cf45f7efe367e22f4796f38f32c253dec182733367d901af1",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-29d379ea9eacf7eb3db2-original-claim",
+          "mention_id": "m000",
+          "surface_text": "Haaafs"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-29d379ea9eacf7eb3db2-original-claim",
+          "mention_id": "m001",
+          "surface_text": "Haaafr"
+        }
+      ],
+      "text": "Haaafs starts before Haaafr."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nHaaafs starts before Haaafr.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Haaafs\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-29d379ea9eacf7eb3db2-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafr\"}]",
+    "prompt_sha256": "sha256:2db7c1770947b31eecb445548ac83f20469eb1c2a4500500a2b9b56b73a31b0e",
+    "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "request_timeout_s": 90.0,
+    "seed": 726520261161,
+    "unit_id": "u-29d379ea9eacf7eb3db2"
+  }
+}

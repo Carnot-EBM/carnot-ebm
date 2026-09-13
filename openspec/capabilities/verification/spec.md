@@ -41862,3 +41862,73 @@ and actual parameters
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7264 and SCENARIO-VERIFY-7264-* | Implemented (`python/carnot/experiment_7264_v639_mention_canary.py`; `scripts/experiments/experiment_7264_v639_mention_canary.py`) | Focused tests (`tests/python/test_experiment_7264_v639_mention_canary.py`) plus native live capture and independent raw replay |
+
+### REQ-VERIFY-7265: Held-Out Mention Capture SHALL Use The Clean V639 Canary
+
+Exp7265 SHALL authenticate the exact Exp7264 artifact with
+`mention_canary_ready_score=1`. It SHALL also authenticate the unchanged Exp7236
+public and private manifests. The runner SHALL seal exactly 64 held-out units
+before generation. A missing, quarantined, invalid, or mismatched prerequisite
+SHALL produce one terminal `blocked` artifact. Its `gate_check_summary` SHALL name
+the exact failed check, upstream, field, expected value, and observed value.
+
+The frozen schedule SHALL contain 320 calls and 192 unit-arm rows. The
+`mention_pointer` and `explicit_schema_offset_control` arms SHALL each use one
+384-token source call and one 128-token claim call. The `direct_judge` arm SHALL
+use one 512-token call. The runner SHALL preserve paired arm order, fixed seeds,
+errors, truncations, unknown answers, and unattempted calls. It SHALL not select
+or stop work from private labels or observed answer quality.
+
+The live path SHALL use `cached_current_model()` for the cached Q4_K_M file of
+`unsloth/Qwen3.8-27B-GGUF`. It SHALL use the GGUF tokenizer and chat template
+through native llama.cpp. It SHALL set `CARNOT_FORCE_LIVE=1`, use a shipped GPU
+lease, and record the model hash, GPU UUID, VRAM, offload, native binary, server
+PID and start tick, request parameters, raw bytes, tokens, and timestamps. It
+SHALL use `live_llm_inference_local_gguf_sota`,
+`model_bounded_generation`, `live_gpu`, and `host` after generation starts. A
+pre-invocation external failure SHALL use `blocked_no_run`. A completed load
+without generation SHALL use `model_load_no_generation`.
+
+The reducer SHALL record source and claim offsets, relation and polarity,
+source fidelity, claim fidelity, sufficiency, exact energy, accepted errors,
+coverage, and direct-decision correctness. It SHALL grade against evaluator-private
+truth after generation. Canonical executor conformance SHALL not count as
+independent learned correctness. The artifact SHALL set `verifier_is_oracle=true`.
+It SHALL report supported, reversed, joint-support, and missing-support rows.
+
+`mention_capture_complete_score` SHALL equal one only when all 320 planned calls
+and all 192 rows have authenticated terminal accounting and independent replay
+passes. This completion score SHALL have no semantic quality threshold. Semantic
+quality gates SHALL stay separate and SHALL not hide a null result. The runner
+SHALL validate a complete or null candidate below `results/raw/` before atomic
+terminal publication. It SHALL retain command, exit code, and log hash for each
+required focused test, coverage, Ruff, mypy, spec coverage, raw replay,
+adversarial verification, and verdict-row consistency check.
+
+#### SCENARIO-VERIFY-7265-PREFLIGHT: External Absence Is Terminal Blocked
+
+**Given** Exp7264 or one sealed Exp7236 manifest is absent or unacceptable
+**When** Exp7265 checks prerequisites
+**Then** it issues no model call and publishes a terminal blocked artifact
+**And** the gate summary records the exact expected and observed values.
+
+#### SCENARIO-VERIFY-7265-SCHEDULE: The Held-Out Denominator Is Frozen
+
+**Given** the authenticated 64-unit held-out split
+**When** Exp7265 builds the public schedule
+**Then** it seals 320 calls with the frozen budgets, seeds, and paired order
+**And** no private authority label occurs in a prompt or selector.
+
+#### SCENARIO-VERIFY-7265-REDUCE: Private Authority Grades Public Outputs
+
+**Given** every scheduled call has a retained terminal outcome
+**When** the reducer compiles pointers or offsets and executes relations
+**Then** it emits 192 rows with separate fidelity, decision, energy, and error fields
+**And** it compares source semantics with evaluator-private truth.
+
+#### SCENARIO-VERIFY-7265-E2E: Raw Bytes Replay Before Publication
+
+**Given** a complete or null candidate under the task raw directory
+**When** focused validation and independent reduction run
+**Then** all 320 request and reply records replay to the same 192 semantic rows
+**And** only a cold-valid terminal artifact is written to `results/`.

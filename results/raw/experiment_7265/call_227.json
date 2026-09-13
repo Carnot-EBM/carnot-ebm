@@ -1,0 +1,135 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nHaaaff starts before Haaafg.",
+          "role": "user"
+        }
+      ],
+      "seed": 726520261140,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "explicit_schema_offset_control",
+    "attempted": true,
+    "call_id": "sha256:9973ea2f477d5aea397d7936c7c6cc75b89798b2537253f40a19a4e1381d1047",
+    "call_order": 227,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [
+        "type_mismatch"
+      ],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 47,
+    "cuda_offload_confirmed": true,
+    "errors": [
+      "type_mismatch"
+    ],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "latency_s": 1.534479730995372,
+    "lease_id": "lease:604a4a9605906ba899170634bfdfdad76e146bdedee7858a901422c74f845a8c",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 24,
+          "object_start": 18,
+          "polarity": "positive",
+          "predicate": "starts before",
+          "sentence_index": 0,
+          "subject_end": 6,
+          "subject_start": 0
+        }
+      ]
+    },
+    "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nHaaaff starts before Haaafg.",
+    "prompt_sha256": "sha256:512f32a7961a2098fe83058d2abc9b6eff151d05371d419daad824939f15f561",
+    "prompt_tokens": 108,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"sentence_index\":0,\"subject_start\":0,\"subject_end\":6,\"predicate\":\"starts before\",\"object_start\":18,\"object_end\":24,\"polarity\":\"positive\"}]}",
+    "raw_completion_sha256": "sha256:9c0e27770fccfd298c70a76b7ddec7628065b7e1ffcd37a87fccc61e956a67e3",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJzZW50ZW5jZV9pbmRleFxcXCI6XCIgc2VudGVuY2UgXCIsXFxcInN1YmplY3Rfc3RhcnRcXFwiOlwiIG9mZnNldCBcIixcXFwic3ViamVjdF9lbmRcXFwiOlwiIG9mZnNldCBcIixcXFwicHJlZGljYXRlXFxcIjpcIiBwcmVkaWNhdGUgXCIsXFxcIm9iamVjdF9zdGFydFxcXCI6XCIgb2Zmc2V0IFwiLFxcXCJvYmplY3RfZW5kXFxcIjpcIiBvZmZzZXQgXCIsXFxcInBvbGFyaXR5XFxcIjpcIiBwb2xhcml0eSBcIn1cIlxuc2VudGVuY2UgOjo9IFwiMFwiIHwgbm9uemVybyBkaWdpdHNcbm9mZnNldCA6Oj0gXCIwXCIgfCBub256ZXJvIGRpZ2l0c1xucHJlZGljYXRlIDo6PSBcIlxcXCJwcmVjZWRlc1xcXCJcIiB8IFwiXFxcInN0YXJ0cyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJlbmRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcIm9jY3VycyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJmb2xsb3dzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGFmdGVyXFxcIlwiIHwgXCJcXFwiZW5kcyBhZnRlclxcXCJcIiB8IFwiXFxcIm9jY3VycyBhZnRlclxcXCJcIlxucG9sYXJpdHkgOjo9IFwiXFxcInBvc2l0aXZlXFxcIlwiIHwgXCJcXFwibmVnYXRpdmVcXFwiXCJcbm5vbnplcm8gOjo9IFsxLTldXG5kaWdpdHMgOjo9IFswLTldKlxuIiwibWF4X3Rva2VucyI6Mzg0LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCBhbGwgc3RhdGVkIHJlbGF0aW9ucyBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgSlNPTiBvYmplY3Qgd2l0aCBrZXlzIG91dGNvbWUgYW5kIHJlbGF0aW9ucy4gRWFjaCByZWxhdGlvbiBtdXN0IHVzZSBzZW50ZW5jZV9pbmRleCwgc3ViamVjdF9zdGFydCwgc3ViamVjdF9lbmQsIHByZWRpY2F0ZSwgb2JqZWN0X3N0YXJ0LCBvYmplY3RfZW5kLCBhbmQgcG9sYXJpdHkuIE9mZnNldHMgYXJlIGhhbGYtb3BlbiBVVEYtOCBieXRlIG9mZnNldHMuIFJldHVybiB1bmtub3duIHdpdGggYW4gZW1wdHkgbGlzdCB3aGVuIG5vIGV4YWN0IHJlbGF0aW9uIGlzIGF2YWlsYWJsZS5cblNPVVJDRTpcbkhhYWFmZiBzdGFydHMgYmVmb3JlIEhhYWFmZy4iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI2NTIwMjYxMTQwLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJzZW50ZW5jZV9pbmRleFwiOjAsXCJzdWJqZWN0X3N0YXJ0XCI6MCxcInN1YmplY3RfZW5kXCI6NixcInByZWRpY2F0ZVwiOlwic3RhcnRzIGJlZm9yZVwiLFwib2JqZWN0X3N0YXJ0XCI6MTgsXCJvYmplY3RfZW5kXCI6MjQsXCJwb2xhcml0eVwiOlwicG9zaXRpdmVcIn1dfSJ9fV0sImNyZWF0ZWQiOjE3ODkzMDE4ODEsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6NDcsInByb21wdF90b2tlbnMiOjEwOCwidG90YWxfdG9rZW5zIjoxNTUsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjowfX0sImlkIjoiY2hhdGNtcGwtSEJnYWZrRWN2dDlNcEQ5cGQzN0JmRVl5ajhGdFlNNkUiLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjAsInByb21wdF9uIjoxMDgsInByb21wdF9tcyI6MjI0Ljk0OSwicHJvbXB0X3Blcl90b2tlbl9tcyI6Mi4wODI4NjExMTExMTExMTEzLCJwcm9tcHRfcGVyX3NlY29uZCI6NDgwLjEwODgyNDY2NjkyNDUsInByZWRpY3RlZF9uIjo0NywicHJlZGljdGVkX21zIjoxMTU1LjQ1NiwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjQuNTg0MTcwMjEyNzY1OTU0LCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6NDAuNjc2NTgxMzY3MDEwMDl9fQ==",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:9119b8c412f3c8bfe4f7308ba981a7171e2318a4c43e12d5865c17cd93376c3d",
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:5a02d667ad0c5c774e20f3ae6a8be1309d1d665587aa0074a27d1c6c741f0dac",
+    "row_sha256": "sha256:a90c34f826675898ee120576aab0b6b881c436c13ea9d9a0acbee8de172feaec",
+    "seed": 726520261140,
+    "seed_join_valid": true,
+    "server_pid": 3567228,
+    "server_pid_start_ticks": 159334964,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 726520261140,
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-aa7695c0188e71288669",
+    "usable": false
+  },
+  "schedule": {
+    "arm": "explicit_schema_offset_control",
+    "call_id": "sha256:9973ea2f477d5aea397d7936c7c6cc75b89798b2537253f40a19a4e1381d1047",
+    "call_order": 227,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 726520261140,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-aa7695c0188e71288669-original-source",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-aa7695c0188e71288669-original-source",
+          "mention_id": "m000",
+          "surface_text": "Haaaff"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-aa7695c0188e71288669-original-source",
+          "mention_id": "m001",
+          "surface_text": "Haaafg"
+        }
+      ],
+      "text": "Haaaff starts before Haaafg."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:228d924869d2902de7254b0dfae4707389b717cad3dbc2a94eeb2b0af0fbef30",
+    "model_input": {
+      "mentions": null,
+      "text": "Haaaff starts before Haaafg."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nHaaaff starts before Haaafg.",
+    "prompt_sha256": "sha256:512f32a7961a2098fe83058d2abc9b6eff151d05371d419daad824939f15f561",
+    "reference_grammar_sha256": "sha256:413e8c85f20619c527b2331b2834d71de47350c6105af509084b9203f9140a06",
+    "request_timeout_s": 90.0,
+    "seed": 726520261140,
+    "unit_id": "u-aa7695c0188e71288669"
+  }
+}

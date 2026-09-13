@@ -1,0 +1,157 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaaez starts before Haaafa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaaez\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafa\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 726520261130,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "mention_pointer",
+    "attempted": true,
+    "call_id": "sha256:aa4cc36f6a985aa9f621e7271ff02ec5577f0558ad8725a4c2ef30a7225717f4",
+    "call_order": 217,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 27,
+          "object_start": 21,
+          "object_surface": "Haaafa",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "relation_end": 28,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 6,
+          "subject_start": 0,
+          "subject_surface": "Haaaez"
+        }
+      ]
+    },
+    "completion_tokens": 36,
+    "cuda_offload_confirmed": true,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "latency_s": 1.3107911280822009,
+    "lease_id": "lease:604a4a9605906ba899170634bfdfdad76e146bdedee7858a901422c74f845a8c",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "subject_pointer": "m000"
+        }
+      ]
+    },
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaaez starts before Haaafa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaaez\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafa\"}]",
+    "prompt_sha256": "sha256:5a9efec18eabcb8e6fa135ddbd786a515ca7aed7c0ec70bbe0c7ad65539c64a5",
+    "prompt_tokens": 201,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"starts before\",\"subject_pointer\":\"m000\"}]}",
+    "raw_completion_sha256": "sha256:d064f3d163d87d4270709dbaa7fc971a6053efb062e4b0f94ae0cf5394536c3a",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJvYmplY3RfcG9pbnRlclxcXCI6XCIgcG9pbnRlciBcIixcXFwicG9sYXJpdHlcXFwiOlwiIHBvbGFyaXR5IFwiLFxcXCJwcmVkaWNhdGVcXFwiOlwiIHByZWRpY2F0ZSBcIixcXFwic3ViamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwifVwiXG5wb2ludGVyIDo6PSBcIlxcXCJtMDAwXFxcIlwiIHwgXCJcXFwibTAwMVxcXCJcIlxucHJlZGljYXRlIDo6PSBcIlxcXCJwcmVjZWRlc1xcXCJcIiB8IFwiXFxcInN0YXJ0cyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJlbmRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcIm9jY3VycyBiZWZvcmVcXFwiXCIgfCBcIlxcXCJmb2xsb3dzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGFmdGVyXFxcIlwiIHwgXCJcXFwiZW5kcyBhZnRlclxcXCJcIiB8IFwiXFxcIm9jY3VycyBhZnRlclxcXCJcIlxucG9sYXJpdHkgOjo9IFwiXFxcInBvc2l0aXZlXFxcIlwiIHwgXCJcXFwibmVnYXRpdmVcXFwiXCJcbiIsIm1heF90b2tlbnMiOjM4NCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6IkV4dHJhY3QgYWxsIHN0YXRlZCByZWxhdGlvbnMgZnJvbSB0aGUgc291cmNlLiBTZWxlY3Qgc3ViamVjdF9wb2ludGVyIGFuZCBvYmplY3RfcG9pbnRlciBvbmx5IGZyb20gdGhlIHB1YmxpYyBtZW50aW9uIHRhYmxlLiBQcmVkaWN0IHByZWRpY2F0ZSBhbmQgcG9sYXJpdHkuIFJldHVybiBvbmUgSlNPTiBvYmplY3Qgd2l0aCBvdXRjb21lIGFuZCByZWxhdGlvbnMsIG9yIHVua25vd24gd2l0aCBhbiBlbXB0eSBsaXN0LlxuU09VUkNFOlxuSGFhYWV6IHN0YXJ0cyBiZWZvcmUgSGFhYWZhLlxuUFVCTElDX01FTlRJT05fVEFCTEU6XG5be1wiYnl0ZV9lbmRcIjo2LFwiYnl0ZV9zdGFydFwiOjAsXCJkb2N1bWVudF9pZFwiOlwidS01NDY5ZTFlMzk5YWE5MTc3MWY4MC1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDBcIixcInN1cmZhY2VfdGV4dFwiOlwiSGFhYWV6XCJ9LHtcImJ5dGVfZW5kXCI6MjcsXCJieXRlX3N0YXJ0XCI6MjEsXCJkb2N1bWVudF9pZFwiOlwidS01NDY5ZTFlMzk5YWE5MTc3MWY4MC1vcmlnaW5hbC1zb3VyY2VcIixcIm1lbnRpb25faWRcIjpcIm0wMDFcIixcInN1cmZhY2VfdGV4dFwiOlwiSGFhYWZhXCJ9XSIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3MjY1MjAyNjExMzAsInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInN0YXJ0cyBiZWZvcmVcIixcInN1YmplY3RfcG9pbnRlclwiOlwibTAwMFwifV19In19XSwiY3JlYXRlZCI6MTc4OTMwMTg3MCwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjozNiwicHJvbXB0X3Rva2VucyI6MjAxLCJ0b3RhbF90b2tlbnMiOjIzNywicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1DN0R6YmZRS1VrT2daYUpYY1FtRU1oc0pKcWNweWdvZyIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjIwMSwicHJvbXB0X21zIjoyOTQuODQsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNDY2ODY1NjcxNjQxNzkxLCJwcm9tcHRfcGVyX3NlY29uZCI6NjgxLjcyNTY4MTcyNTY4MTcsInByZWRpY3RlZF9uIjozNiwicHJlZGljdGVkX21zIjo5MzAuMjcxLCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS44NDA4NjExMTExMTExMSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM4LjY5ODQwMDc4ODU4NzQxfX0=",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:d9e549280467b65bd35e1f504f438e57d7fb7552f733f60cd2c8c3b4d6bd946c",
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:2d80b3a5fc66f9e4f617b1c57bfcbb2a69c14d32ef2f24a8caaf0111e8a712cd",
+    "row_sha256": "sha256:4276feca5edd39c950b80ecb80dc0aa5e4a54e98616c2f1a76f02896ef628b99",
+    "seed": 726520261130,
+    "seed_join_valid": true,
+    "server_pid": 3567228,
+    "server_pid_start_ticks": 159334964,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 726520261130,
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-5469e1e399aa91771f80",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:aa4cc36f6a985aa9f621e7271ff02ec5577f0558ad8725a4c2ef30a7225717f4",
+    "call_order": 217,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 726520261130,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-5469e1e399aa91771f80-original-source",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-5469e1e399aa91771f80-original-source",
+          "mention_id": "m000",
+          "surface_text": "Haaaez"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-5469e1e399aa91771f80-original-source",
+          "mention_id": "m001",
+          "surface_text": "Haaafa"
+        }
+      ],
+      "text": "Haaaez starts before Haaafa."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "input_sha256": "sha256:5ffb839bd7c263f990abb4132789c3982f7c55644e51886fc08c8b1b87ecd477",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-5469e1e399aa91771f80-original-source",
+          "mention_id": "m000",
+          "surface_text": "Haaaez"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-5469e1e399aa91771f80-original-source",
+          "mention_id": "m001",
+          "surface_text": "Haaafa"
+        }
+      ],
+      "text": "Haaaez starts before Haaafa."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaaez starts before Haaafa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaaez\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-5469e1e399aa91771f80-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaafa\"}]",
+    "prompt_sha256": "sha256:5a9efec18eabcb8e6fa135ddbd786a515ca7aed7c0ec70bbe0c7ad65539c64a5",
+    "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "request_timeout_s": 90.0,
+    "seed": 726520261130,
+    "unit_id": "u-5469e1e399aa91771f80"
+  }
+}

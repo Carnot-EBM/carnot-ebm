@@ -1,0 +1,204 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaabe starts before Haaabf. Haaabf starts before Haaabg.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaabe\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaabf\"},{\"byte_end\":35,\"byte_start\":29,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Haaabf\"},{\"byte_end\":56,\"byte_start\":50,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Haaabg\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 726520260963,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "mention_pointer",
+    "attempted": true,
+    "call_id": "sha256:df235f941757f2b95df372b23d82ae28580950aae2578536dfa6cac9161e129c",
+    "call_order": 50,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 27,
+          "object_start": 21,
+          "object_surface": "Haaabf",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "relation_end": 28,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 6,
+          "subject_start": 0,
+          "subject_surface": "Haaabe"
+        },
+        {
+          "object_end": 56,
+          "object_start": 50,
+          "object_surface": "Haaabg",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "relation_end": 57,
+          "relation_start": 29,
+          "sentence_index": 1,
+          "subject_end": 35,
+          "subject_start": 29,
+          "subject_surface": "Haaabf"
+        }
+      ]
+    },
+    "completion_tokens": 62,
+    "cuda_offload_confirmed": true,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "latency_s": 2.219364494085312,
+    "lease_id": "lease:604a4a9605906ba899170634bfdfdad76e146bdedee7858a901422c74f845a8c",
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "subject_pointer": "m000"
+        },
+        {
+          "object_pointer": "m003",
+          "polarity": "positive",
+          "predicate": "starts before",
+          "subject_pointer": "m002"
+        }
+      ]
+    },
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaabe starts before Haaabf. Haaabf starts before Haaabg.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaabe\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaabf\"},{\"byte_end\":35,\"byte_start\":29,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Haaabf\"},{\"byte_end\":56,\"byte_start\":50,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Haaabg\"}]",
+    "prompt_sha256": "sha256:e7b109a0ade786768cfd42588246f37c3dbb8122de1d3c8bb12e87d9bd1a491a",
+    "prompt_tokens": 318,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"starts before\",\"subject_pointer\":\"m000\"},{\"object_pointer\":\"m003\",\"polarity\":\"positive\",\"predicate\":\"starts before\",\"subject_pointer\":\"m002\"}]}",
+    "raw_completion_sha256": "sha256:354a3cc912d9087002b4338cc2fb46c5cc78759ce65412c99d2b5597bd7731e1",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gdW5rbm93biB8IGtub3duXG51bmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcInVua25vd25cXFwiLFxcXCJyZWxhdGlvbnNcXFwiOltdfVwiXG5rbm93biA6Oj0gXCJ7XFxcIm91dGNvbWVcXFwiOlxcXCJrbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W1wiIHJlbGF0aW9uLWxpc3QgXCJdfVwiXG5yZWxhdGlvbi1saXN0IDo6PSByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvblxucmVsYXRpb24gOjo9IFwie1xcXCJvYmplY3RfcG9pbnRlclxcXCI6XCIgcG9pbnRlciBcIixcXFwicG9sYXJpdHlcXFwiOlwiIHBvbGFyaXR5IFwiLFxcXCJwcmVkaWNhdGVcXFwiOlwiIHByZWRpY2F0ZSBcIixcXFwic3ViamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwifVwiXG5wb2ludGVyIDo6PSBcIlxcXCJtMDAwXFxcIlwiIHwgXCJcXFwibTAwMVxcXCJcIiB8IFwiXFxcIm0wMDJcXFwiXCIgfCBcIlxcXCJtMDAzXFxcIlwiXG5wcmVkaWNhdGUgOjo9IFwiXFxcInByZWNlZGVzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImVuZHMgYmVmb3JlXFxcIlwiIHwgXCJcXFwib2NjdXJzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImZvbGxvd3NcXFwiXCIgfCBcIlxcXCJzdGFydHMgYWZ0ZXJcXFwiXCIgfCBcIlxcXCJlbmRzIGFmdGVyXFxcIlwiIHwgXCJcXFwib2NjdXJzIGFmdGVyXFxcIlwiXG5wb2xhcml0eSA6Oj0gXCJcXFwicG9zaXRpdmVcXFwiXCIgfCBcIlxcXCJuZWdhdGl2ZVxcXCJcIlxuIiwibWF4X3Rva2VucyI6Mzg0LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCBhbGwgc3RhdGVkIHJlbGF0aW9ucyBmcm9tIHRoZSBzb3VyY2UuIFNlbGVjdCBzdWJqZWN0X3BvaW50ZXIgYW5kIG9iamVjdF9wb2ludGVyIG9ubHkgZnJvbSB0aGUgcHVibGljIG1lbnRpb24gdGFibGUuIFByZWRpY3QgcHJlZGljYXRlIGFuZCBwb2xhcml0eS4gUmV0dXJuIG9uZSBKU09OIG9iamVjdCB3aXRoIG91dGNvbWUgYW5kIHJlbGF0aW9ucywgb3IgdW5rbm93biB3aXRoIGFuIGVtcHR5IGxpc3QuXG5TT1VSQ0U6XG5IYWFhYmUgc3RhcnRzIGJlZm9yZSBIYWFhYmYuIEhhYWFiZiBzdGFydHMgYmVmb3JlIEhhYWFiZy5cblBVQkxJQ19NRU5USU9OX1RBQkxFOlxuW3tcImJ5dGVfZW5kXCI6NixcImJ5dGVfc3RhcnRcIjowLFwiZG9jdW1lbnRfaWRcIjpcInUtN2JhNzFhYjZlNzBlMjg4NDdlMmYtb3JpZ2luYWwtc291cmNlXCIsXCJtZW50aW9uX2lkXCI6XCJtMDAwXCIsXCJzdXJmYWNlX3RleHRcIjpcIkhhYWFiZVwifSx7XCJieXRlX2VuZFwiOjI3LFwiYnl0ZV9zdGFydFwiOjIxLFwiZG9jdW1lbnRfaWRcIjpcInUtN2JhNzFhYjZlNzBlMjg4NDdlMmYtb3JpZ2luYWwtc291cmNlXCIsXCJtZW50aW9uX2lkXCI6XCJtMDAxXCIsXCJzdXJmYWNlX3RleHRcIjpcIkhhYWFiZlwifSx7XCJieXRlX2VuZFwiOjM1LFwiYnl0ZV9zdGFydFwiOjI5LFwiZG9jdW1lbnRfaWRcIjpcInUtN2JhNzFhYjZlNzBlMjg4NDdlMmYtb3JpZ2luYWwtc291cmNlXCIsXCJtZW50aW9uX2lkXCI6XCJtMDAyXCIsXCJzdXJmYWNlX3RleHRcIjpcIkhhYWFiZlwifSx7XCJieXRlX2VuZFwiOjU2LFwiYnl0ZV9zdGFydFwiOjUwLFwiZG9jdW1lbnRfaWRcIjpcInUtN2JhNzFhYjZlNzBlMjg4NDdlMmYtb3JpZ2luYWwtc291cmNlXCIsXCJtZW50aW9uX2lkXCI6XCJtMDAzXCIsXCJzdXJmYWNlX3RleHRcIjpcIkhhYWFiZ1wifV0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI2NTIwMjYwOTYzLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInN0YXJ0cyBiZWZvcmVcIixcInN1YmplY3RfcG9pbnRlclwiOlwibTAwMFwifSx7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwM1wiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInN0YXJ0cyBiZWZvcmVcIixcInN1YmplY3RfcG9pbnRlclwiOlwibTAwMlwifV19In19XSwiY3JlYXRlZCI6MTc4OTMwMTcwOSwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjo2MiwicHJvbXB0X3Rva2VucyI6MzE4LCJ0b3RhbF90b2tlbnMiOjM4MCwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1LRXVteW8xTDdGR0VxVjFmbnl2NnY2WU1kUm1BbkdhcSIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjMxOCwicHJvbXB0X21zIjo0NjUuMzMyLCJwcm9tcHRfcGVyX3Rva2VuX21zIjoxLjQ2MzMwODE3NjEwMDYyOSwicHJvbXB0X3Blcl9zZWNvbmQiOjY4My4zODMwNDY5NDI4MjgsInByZWRpY3RlZF9uIjo2MiwicHJlZGljdGVkX21zIjoxNTkyLjUwMiwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjUuNjg1NTE2MTI5MDMyMjYsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOC45MzI0NDcxODA2MDAwODZ9fQ==",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:942bf6e5d9b985dbdb308e8e1c4c4bf48d101f4e7a661d8c87f7d778472e5d9d",
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:5b66afcbff9652f96b2252e658e2ced3161acac5fc0208cd4dbc96b79f8e0c9c",
+    "row_sha256": "sha256:8e78613b0537c85cbbfeba695e8ba1b3b48f9e7424c1ef6fa1cdad620603f5b6",
+    "seed": 726520260963,
+    "seed_join_valid": true,
+    "server_pid": 3567228,
+    "server_pid_start_ticks": 159334964,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 726520260963,
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-7ba71ab6e70e28847e2f",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:df235f941757f2b95df372b23d82ae28580950aae2578536dfa6cac9161e129c",
+    "call_order": 50,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 726520260963,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "document": {
+      "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m000",
+          "surface_text": "Haaabe"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m001",
+          "surface_text": "Haaabf"
+        },
+        {
+          "byte_end": 35,
+          "byte_start": 29,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m002",
+          "surface_text": "Haaabf"
+        },
+        {
+          "byte_end": 56,
+          "byte_start": 50,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m003",
+          "surface_text": "Haaabg"
+        }
+      ],
+      "text": "Haaabe starts before Haaabf. Haaabf starts before Haaabg."
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "input_sha256": "sha256:ac6fe8ea42f9bcc874cfe4404153c013c79d63df24847dfa09ea4233a3a56435",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 6,
+          "byte_start": 0,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m000",
+          "surface_text": "Haaabe"
+        },
+        {
+          "byte_end": 27,
+          "byte_start": 21,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m001",
+          "surface_text": "Haaabf"
+        },
+        {
+          "byte_end": 35,
+          "byte_start": 29,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m002",
+          "surface_text": "Haaabf"
+        },
+        {
+          "byte_end": 56,
+          "byte_start": 50,
+          "document_id": "u-7ba71ab6e70e28847e2f-original-source",
+          "mention_id": "m003",
+          "surface_text": "Haaabg"
+        }
+      ],
+      "text": "Haaabe starts before Haaabf. Haaabf starts before Haaabg."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nHaaabe starts before Haaabf. Haaabf starts before Haaabg.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Haaabe\"},{\"byte_end\":27,\"byte_start\":21,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Haaabf\"},{\"byte_end\":35,\"byte_start\":29,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Haaabf\"},{\"byte_end\":56,\"byte_start\":50,\"document_id\":\"u-7ba71ab6e70e28847e2f-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Haaabg\"}]",
+    "prompt_sha256": "sha256:e7b109a0ade786768cfd42588246f37c3dbb8122de1d3c8bb12e87d9bd1a491a",
+    "reference_grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+    "request_timeout_s": 90.0,
+    "seed": 726520260963,
+    "unit_id": "u-7ba71ab6e70e28847e2f"
+  }
+}
