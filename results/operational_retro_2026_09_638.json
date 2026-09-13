@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.638",
+  "generated_at": "2026-09-13T07:24:45Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 84.5,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Typed transition witnesses for live world-model refinement",
+      "duration_minutes": 41.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V638 source ingestion and sealed execution map",
+      "duration_minutes": 21.21,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prospective continuous self-learning with bounded coverage memory",
+      "duration_minutes": 16.65,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Matched durable event cost for the persistent controller",
+      "duration_minutes": 2.94,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cold memory causality retention and rollback audit",
+      "duration_minutes": 1.14,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 9 synthesis-only experiments in 84.5 minutes, with 0 compute-bound experiments. Typed transition witnesses for live world-model refinement was the longest entry at 41.09 minutes, but the available timing data does not identify the phase or cause behind that duration.",
+  "bottlenecks_identified": [
+    "Synthesis wall time was concentrated in Typed transition witnesses for live world-model refinement (41.09 minutes), V638 source ingestion and sealed execution map (21.21 minutes), and Prospective continuous self-learning with bounded coverage memory (16.65 minutes).",
+    "Disk-mtime reconstruction provides experiment totals but no phase-level timing, so the cause of the longest synthesis durations cannot be determined from the available data."
+  ],
+  "improvements_suggested": [
+    "Emit structured elapsed-time spans at synthesis stage boundaries so source ingestion, implementation, validation, and artifact writing can be distinguished.",
+    "Add a readiness-aware synthesis queue that can overlap experiments only when their declared inputs prove they are independent.",
+    "Save restartable state at completed synthesis stages and write conductor-owned lifecycle timestamps instead of inferring timing from disk mtimes."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add readiness-aware overlap for synthesis experiments with satisfied, independent inputs.",
+    "Emit structured elapsed-time spans for every synthesis stage.",
+    "Persist restartable stage state with conductor-owned lifecycle timestamps."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "GPU idleness was expected because the milestone contained no compute-bound experiments, so it is not an operational fault. The next optimization should target synthesis orchestration, but missing stage attribution and a measured counterfactual require the savings estimate to remain zero."
+}

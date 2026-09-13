@@ -6773,3 +6773,10 @@ The critical path for milestone .250:
 - theme: one scored-stack compute dry run set the execution pace while task-scoped diagnostic evidence remained absent
 - key result: honest operational negative — the longest task is known, but its costly phase, compute-window GPU efficiency, and any eligible parallel-runner miss remain unverified
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.638
+
+- exp_range: no data available this milestone
+- theme: synthesis-only execution concentrated elapsed time in transition-witness, source-ingestion, and coverage-memory work
+- key result: honest operational negative — no compute-bound work occurred, so GPU efficiency and parallel-model dispatch were not applicable; disk-mtime totals identify the slowest synthesis tasks but not their costly phases
+- acceptance: no data available this milestone
