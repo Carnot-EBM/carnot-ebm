@@ -17888,3 +17888,4 @@ code |
 | 2026-09-13 21:59 UTC | Prospective continuous self-learning with charged  | FAIL | Codex CLI error: "--stream-id", + "prospective-01", + |
 | 2026-09-13 22:11 UTC | Prospective continuous self-learning with charged  | OK | 97 passed, 1 warning in 13.16s |
 | 2026-09-13 22:35 UTC | Cold admission causality, opportunity, and rollbac | OK | 95 passed, 1 warning in 12.89s |
+| 2026-09-13 23:06 UTC | Bounded group acknowledgment with durable constrai | OK | 96 passed, 1 warning in 20.82s |
