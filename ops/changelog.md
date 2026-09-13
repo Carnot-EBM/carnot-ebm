@@ -19934,3 +19934,4 @@ timed alternative is available.
 - 2026-09-12: Independent source semantics and matched-coverage audit (⚠️ Blocked) — honest_verdict=blocked_exp7252_missing_upstream_artifact; results/experiment_7252_v638_semantic_audit.json
 - 2026-09-12: Coverage-based archive admission and effective memory controls (⚠️ Research Finding) — honest_verdict=complete_circular_positive: bounded coverage fixture and effective controls are ready; results/experiment_7253_v638_coverage_memory.json
 - 2026-09-12: Prospective continuous self-learning with bounded coverage memory (⚠️ Research Finding) — honest_verdict=complete_null: bounded coverage memory did not pass every frozen gate; results/experiment_7254_v638_coverage_learning.json
+- 2026-09-13: Cold memory causality retention and rollback audit (⚠️ Research Finding) — honest_verdict=complete_null: coverage audit completed but promotion criteria did not all pass; results/experiment_7255_v638_coverage_audit.json
