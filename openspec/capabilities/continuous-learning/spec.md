@@ -15132,3 +15132,88 @@ execution venue SHALL be `host`. The exact evaluator SHALL set
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7282 and SCENARIO-CL-7282-* | Planned: the Exp7282 module will replay the sealed Exp7281 fixture and retain event, opportunity, comparison, cost, and terminal evidence. | Pending RED-first tests and implementation. |
+
+## REQ-CL-7283: Cold Admission Causality, Opportunity, And Rollback Audit
+
+Carnot SHALL authenticate the complete Exp7281 fixture and Exp7282 learning
+artifact before this audit starts. The Exp7282 value score MAY be zero. A
+missing, changed, retired, quarantined, or incomplete external input SHALL
+produce terminal blocked evidence. The block SHALL contain no measured rows
+and SHALL name the exact failure in `gate_check_summary`.
+
+A fresh process SHALL independently reduce every Exp7282 prequential and
+opportunity record. The reduction SHALL preserve every stream-arm unit,
+including null arms, zero-admission cases, neutral opportunities, and
+no-headroom opportunities. It SHALL compare stream-level numerators before any
+pooled result. It SHALL recompute harmful admissions, missed beneficial
+opportunities, paid query counts, alpha use, nomination and admission label
+identity, and complete controller state bytes.
+
+The audit SHALL replay withheld feedback, a corrupted label, a stale parent, a
+changed candidate, a duplicate release, restart before admission, an
+interrupted commit, and rollback. Each rejected operation SHALL preserve exact
+parent bytes. A cold reload SHALL preserve prediction and state identity. The
+audit SHALL delete one accepted update and count changes only in later
+decisions. It SHALL retain a zero-effect intervention as measured evidence.
+
+Mechanical safety, causal influence, and efficacy SHALL have separate
+verdicts. `admission_audit_complete_score` SHALL equal one when all cold
+reductions and dispositions are complete, even when efficacy is null.
+`admission_promotion_score` SHALL equal one only when the Exp7282 value gate,
+cold safety gate, causal gate, and opportunity-accounting gate all pass. The
+exact evaluator SHALL set `verifier_is_oracle=true`, so promotion cannot use
+`verdict_class=positive`.
+
+The E2E-007 adaptation SHALL run the complete statistical-admission update,
+reuse, hash, rejection, retention, cold restart, rollback, and weight-
+immutability path. It SHALL not claim the earlier SMGI certificate. The task
+SHALL use date `20260913`, no current model calls, CPU exact replay, host
+execution, and an aggregation-only cold reducer.
+
+### SCENARIO-CL-7283-PRECONDITIONS: Complete Null Learning Can Be Audited
+
+- GIVEN exact complete Exp7281 and Exp7282 terminal evidence
+- WHEN the upstream value score is zero
+- THEN the cold audit starts because the run-complete score is one
+- AND an external input failure produces row-free terminal blocked evidence.
+
+### SCENARIO-CL-7283-REDUCTION: Every Unit And Opportunity Is Preserved
+
+- GIVEN authenticated prequential and opportunity journals
+- WHEN a fresh process reduces their exact bytes
+- THEN every stream-arm numerator and null arm is reconstructed
+- AND zero-admission, neutral, and no-headroom opportunities keep their denominators.
+
+### SCENARIO-CL-7283-CONTROLS: Invalid Admission Inputs Preserve Bytes
+
+- GIVEN each of the eight fixed lifecycle attacks
+- WHEN the attack reaches the admission transaction boundary
+- THEN the attack is rejected or interrupted as specified
+- AND prior in-memory and durable state bytes remain exact.
+
+### SCENARIO-CL-7283-CAUSAL: Deleted Learning Affects Only Later Decisions
+
+- GIVEN one accepted update and its sealed prediction chronology
+- WHEN the audit removes that update and replays the public stream
+- THEN only decisions after its commit can differ
+- AND a measured zero effect remains present rather than being censored.
+
+### SCENARIO-CL-7283-E2E: Statistical Admission Has Its Own Certificate Path
+
+- GIVEN a nominated candidate and independent released admission cases
+- WHEN accept, reuse, rejection, restart, retention, rollback, and weight checks run
+- THEN state hashes and predictions survive cold restore and rollback is exact
+- AND the receipt does not claim that the SMGI experiment ran again.
+
+### SCENARIO-CL-7283-TERMINAL: Completion, Safety, Causality, And Efficacy Stay Separate
+
+- GIVEN complete cold evidence with one or more failed efficacy gates
+- WHEN terminal scores are derived
+- THEN `admission_audit_complete_score=1` and `admission_promotion_score=0`
+- AND the terminal verdict is `complete_null`, never partial or blocked.
+
+## Implementation Status (REQ-CL-7283)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7283 and SCENARIO-CL-7283-* | Planned: cold independent reduction, admission lifecycle attacks, causal deletion, E2E-007 adaptation, and atomic terminal evidence. | Pending RED-first tests and implementation. |
