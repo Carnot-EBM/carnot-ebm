@@ -14867,3 +14867,142 @@ defaults, repository roadmap state, or external systems.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7269 and SCENARIO-CL-7269-* | Implemented: `python/carnot/experiment_7269_v639_recognition_audit.py` authenticates complete Exp7268 evidence independently of its value score, reconstructs raw metrics in a cold process, replays released-only recognition, runs five byte-preserving mutations and E2E lifecycle checks, and seals terminal evidence through a thin wrapper. | Verified: RED-first precondition, reduction, replay, bound, mutation, lifecycle, null-completion, command, and defensive tests pass with 713 of 713 scoped statements covered. |
+
+## REQ-CL-7281: Fresh Paired Admission Before Constraint-Memory Reactivation
+
+Carnot SHALL authenticate the complete Exp7268 and Exp7269 evidence before it
+builds this fixture. It SHALL replay released lifecycle evidence only to measure
+old nomination and validation identity overlap. It SHALL classify old
+reactivations without changing any rule from old prospective outcomes. Missing,
+retired, quarantined, or changed external evidence SHALL produce a row-free
+terminal blocked artifact. The block SHALL name each exact failure in
+`gate_check_summary`.
+
+The opt-in admission controller SHALL freeze immutable candidate and incumbent
+state hashes at nomination. Admission SHALL use only distinct feedback released
+after nomination. It SHALL score both frozen states on each same labeled case.
+The controller SHALL reject reused or unreleased labels before state mutation.
+It SHALL commit only an accepted candidate. A rejection or deferral SHALL keep
+the incumbent bytes unchanged.
+
+The fixed paired rule SHALL use one-sided Clopper--Pearson bounds for positive
+and negative paired disagreements. Each opportunity SHALL receive 0.05 divided
+equally across at most eight fixed opportunities. Each endpoint SHALL receive
+the opportunity alpha divided by four and by the comparison count. The range
+control SHALL use the same alpha allocation, comparisons, labels, thresholds,
+and nominated candidate. Unconditional admission SHALL use the same nominated
+candidate stream without spending admission evidence.
+
+The fixture SHALL enumerate finite IID multinomial outcomes at n=8 and n=16.
+It SHALL verify simultaneous noncoverage against the allocated alpha. It SHALL
+retain zero-disagreement, all-harmful, all-useful, and multiple-comparison rows.
+It SHALL report when neither fixed rule can certify the requested threshold.
+This finite check SHALL not become a theorem for dependent or drifting streams.
+
+Four development streams and 24 new prospective streams SHALL be frozen before
+prospective outcomes are inspected. Each stream SHALL contain 1,024 events and
+128 warmup events. Twelve prospective streams SHALL use separated recurrence.
+Twelve SHALL use overlapping recurrence. Public events, delayed releases, and
+private evaluator authority SHALL use separate sealed bytes. No private regime,
+boundary, seed, label, or evaluator parameter SHALL enter nomination.
+
+Each stream-arm SHALL have at most 128 paid labels. Nomination and acquisition
+SHALL reserve 64 labels. Admission SHALL reserve 64 different labels. The
+admission reserve SHALL cover at most eight opportunities with eight fresh
+labels each. Common-candidate controls SHALL receive identical released cases.
+Closed-loop controls SHALL receive equal total quotas and SHALL retain their
+different trajectories.
+
+The fixture SHALL retain full-reference, reset, frozen-warmup, unconditional
+recognition, range-gated, paired-gated, and label-shuffled paired arms. Bounded
+arms SHALL retain at most four archives. Pending decisions and admission buffers
+SHALL count against the existing 69,632-byte complete-memory cap.
+
+The E2E control SHALL process a public event, freeze its prediction, nominate
+immutable states, receive disjoint delayed feedback, admit or reject, make a
+later prediction, cold restart, and roll back. Adversarial controls SHALL reject
+reused and unreleased labels while they preserve exact parent bytes.
+
+`admission_fixture_ready_score` SHALL equal one only when finite-rule checks,
+identity isolation, development intervention, manifests, quotas, memory bounds,
+restart, rejection, and rollback all pass. Readiness SHALL not require useful
+learning or any admission. A complete fixture with an infeasible fixed bound
+MAY remain ready when it reports that result as a measured null condition.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Every current model load, generation, inference, and
+usable-answer count SHALL be zero. CPU work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. A read-only reducer
+SHALL use `aggregation_from_upstream_artifacts` and class `aggregation`. The
+execution venue SHALL be `host`. The exact evaluator SHALL set
+`verifier_is_oracle=true`. Therefore a ready fixture SHALL use
+`verdict_class=circular_positive`, never `positive`.
+
+### SCENARIO-CL-7281-PRECONDITIONS: Exact Null Evidence Or Terminal Block
+
+- GIVEN the active Exp7281 task and complete Exp7268 and Exp7269 inputs
+- WHEN hashes, status, retirement, quarantine, requirements, and output ownership are checked
+- THEN only exact available evidence can start the fixture
+- AND an external failure produces a row-free terminal blocked artifact.
+
+### SCENARIO-CL-7281-OLD-EVIDENCE: Old Outcomes Do Not Tune Admission
+
+- GIVEN released Exp7268 lifecycle rows and the complete audit
+- WHEN nomination, validation, and reactivation rows are reduced
+- THEN overlap and harmful or useful classifications remain measured evidence
+- AND no old prospective outcome changes the fixed rule.
+
+### SCENARIO-CL-7281-FINITE-LAW: Exact Enumeration Checks The Paired Rule
+
+- GIVEN n=8 and n=16 IID ternary paired outcomes
+- WHEN every multinomial count is enumerated under the fixed alpha allocation
+- THEN simultaneous noncoverage does not exceed its allocated error
+- AND infeasible thresholds remain explicit rather than successful.
+
+### SCENARIO-CL-7281-ADMISSION: Fresh Paired Cases Control Commit
+
+- GIVEN immutable candidate and incumbent state hashes at nomination
+- WHEN disjoint subsequent released cases score both frozen states
+- THEN the fixed rule alone accepts, rejects, or defers the candidate
+- AND only acceptance can replace the incumbent.
+
+### SCENARIO-CL-7281-STREAMS: Public And Evaluator Authority Stay Separate
+
+- GIVEN four development and 24 prospective streams of 1,024 events
+- WHEN public, release, authority, and manifest bytes are sealed
+- THEN both recurrence strata and all event identities are complete
+- AND private evaluator fields do not enter nomination.
+
+### SCENARIO-CL-7281-QUOTAS: Nomination And Admission Labels Stay Disjoint
+
+- GIVEN seven arms and eight update opportunities per stream
+- WHEN the common-candidate and closed-loop controls execute
+- THEN no stream-arm exceeds 64 nomination or 64 admission labels
+- AND common-candidate arms receive identical admission cases.
+
+### SCENARIO-CL-7281-CONTROLS: The Fixed Rules Change Decisions
+
+- GIVEN the same nominated candidates and fresh labeled pairs
+- WHEN unconditional, range, paired, and label-shuffled rules run
+- THEN rule-specific decisions and missed opportunities stay visible
+- AND the development fixture proves that a control can change a decision.
+
+### SCENARIO-CL-7281-E2E: Restart And Rollback Preserve The Admission Boundary
+
+- GIVEN a frozen prediction, immutable nomination, and delayed paired evidence
+- WHEN admission, later prediction, cold restart, invalid reuse, and rollback run
+- THEN accepted state reloads exactly and rollback restores exact parent bytes
+- AND reused or unreleased labels cannot mutate state.
+
+### SCENARIO-CL-7281-TERMINAL: Readiness Is Separate From Learning Value
+
+- GIVEN complete finite checks, streams, controls, rows, and lifecycle evidence
+- WHEN the terminal artifact is cold-validated
+- THEN readiness depends only on fixture mechanics and sealed evidence
+- AND a measured opportunity null is complete rather than partial.
+
+## Implementation Status (REQ-CL-7281)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7281 and SCENARIO-CL-7281-* | Implemented: `python/carnot/experiment_7281_v640_admission_prototype.py` provides immutable paired admission, exact finite-law enumeration, authority-separated streams, seven arms, lifecycle attacks, cold reduction, and terminal sealing through a thin wrapper. | Verified: RED-first contract, finite-law, admission, quota, stream, E2E, command, and defensive tests pass with 1,043 of 1,043 scoped statements covered. |
