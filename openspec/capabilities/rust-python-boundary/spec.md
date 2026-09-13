@@ -498,3 +498,75 @@ the snapshot from a private path
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7257 and SCENARIO-RUSTPY-7257-* | Planned: thin Exp7257 runner over the shipped Exp7243 and Exp7256 controllers. | Planned: RED-first roster, equal durability, reducer, restart, blocked artifact, validator, and entrypoint tests. |
+
+### REQ-RUSTPY-7270: Durable Archive Event Cost Profile
+
+Carnot SHALL diagnose the failed Exp7257 capacity-four interactive cost gate
+from the saved raw rows before it proposes another native optimization. The
+cold reducer SHALL retain every capacity, batch, arm, and block. It SHALL
+report component fractions, unaccounted time, censored blocks, arm order,
+storage device, and p50/p95 durations. Matched seed and block pairs SHALL
+recompute the existing arithmetic mean of ratios as the primary diagnostic.
+The ratio of total time and paired mean log-ratio SHALL be explicit secondary
+diagnostics. Durable outliers SHALL remain in all estimates.
+
+When the saved rows do not separate durability operations, the experiment MAY
+run at most twelve fixed capacity-four, batch-one blocks with the shipped
+Exp7256 persistent controller. Each row SHALL split snapshot construction,
+parent reload, encoding, data write, file sync, rename, directory sync, and
+restore. The split SHALL preserve the Exp7257 durability guarantee, include
+instrumentation overhead, stop after 300 seconds, and make no model call.
+Parity and durable-byte checks SHALL fail closed.
+
+The profile SHALL count comparisons, bit operations, and transferred bytes.
+The counts are accounting measures, not KAN evidence. Its acceleration
+envelope SHALL hold validation and synchronization costs fixed and report the
+best possible speedup plus the replaceable speed needed for 10x and 100x. A
+delta-log prototype is warranted only when replaceable full-snapshot
+construction, parent reload, encoding, and metadata work are at least 50
+percent of matched capacity-four event time and a conservative model that
+includes synchronization, compaction, and worst-case replay permits at least
+1.5x. Sync dominance SHALL keep the warrant score at zero.
+
+The executable SHALL be a thin wrapper around a reusable module. It SHALL
+authenticate the Exp7257 and Exp7256 artifacts, their checksums, exact hashes,
+quarantine state, the driving requirement, and owned output paths before work.
+An absent, changed, or quarantined external prerequisite SHALL yield one
+row-free terminal blocked artifact with an exact gate summary. Provisional
+work SHALL use `results/checkpoints/`. Raw evidence SHALL use `results/raw/`.
+Only a cold-validated complete or blocked candidate MAY move atomically to
+`results/experiment_7270_v639_durable_profile.json`.
+
+### SCENARIO-RUSTPY-7270-COLD-REDUCTION: Saved Blocks Determine The Headline
+
+**Given** the complete Exp7257 raw block rows and their authenticated artifact
+**When** an independent reducer groups every capacity, batch, arm, seed, and block
+**Then** no durable outlier is removed and every component sum is checked
+**And** the primary and secondary paired ratio diagnostics are named separately.
+
+### SCENARIO-RUSTPY-7270-BOUNDED-REPLAY: Durability Operations Stay Visible
+
+**Given** the shipped Exp7256 controller and capacity-four batch-one fixture
+**When** at most twelve fixed blocks run for at most 300 seconds
+**Then** snapshot, reload, encoding, write, both syncs, rename, and restore are timed
+**And** final bytes, state hash, decisions, and the durability receipt retain parity.
+
+### SCENARIO-RUSTPY-7270-BOUND: Fixed Costs Limit Acceleration
+
+**Given** the independently reduced and instrumented component rows
+**When** validation and sync costs are held fixed in an Amdahl calculation
+**Then** 10x and 100x feasibility and required replaceable speedups are explicit
+**And** journal warrant remains zero unless both frozen cost conditions pass.
+
+### SCENARIO-RUSTPY-7270-E2E: Raw Evidence Reaches One Honest Finding
+
+**Given** authenticated saved timings and one bounded instrumented replay
+**When** component sums, parity, durability, acceleration, and replacement costs are checked
+**Then** the artifact declares the measured bottleneck and feasible upper bound
+**And** it makes no device-speed claim or claim for the retired ownership optimization.
+
+## Implementation Status (REQ-RUSTPY-7270)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7270 and SCENARIO-RUSTPY-7270-* | Implemented: cold raw-row reducer and bounded durable operation profiler over shipped Exp7256/7257 code. | Verified: RED-first authentication, reduction, outlier retention, bounded replay, Amdahl, warrant, blocked path, cold validator, and thin-entrypoint tests. |
