@@ -1,0 +1,199 @@
+$ PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7272_v639_board_state.py tests/python/test_experiment_7258_v638_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7272-focused-recorded
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collected 44 items
+
+tests/python/test_experiment_7272_v639_board_state.py .................. [ 40%]
+....                                                                     [ 50%]
+tests/python/test_experiment_7258_v638_board_state.py F.....FF.F...F.... [ 90%]
+.F..                                                                     [100%]
+
+=================================== FAILURES ===================================
+____________ test_req_ising_7258_authenticates_current_board_chains ____________
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_req_ising_7258_authentica0')
+
+    def test_req_ising_7258_authenticates_current_board_chains(tmp_path: Path) -> None:
+        """REQ-ISING-7258: current immutable board transcripts must hash-match."""
+    
+        checks, hashes, upstreams = experiment.collect_preconditions(
+            ROOT, experiment.ExperimentPaths.under(tmp_path)
+        )
+>       assert all(row["passed"] for row in checks)
+E       assert False
+E        +  where False = all(<generator object test_req_ising_7258_authenticates_current_board_chains.<locals>.<genexpr> at 0x7f62e2ae6190>)
+
+tests/python/test_experiment_7258_v638_board_state.py:57: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+________ test_scenario_ising_7258_artifact_is_complete_host_aggregation ________
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_artif0')
+
+    def test_scenario_ising_7258_artifact_is_complete_host_aggregation(tmp_path: Path) -> None:
+        """SCENARIO-ISING-7258-ARTIFACT: three dispositions complete the receipt."""
+    
+        paths = experiment.ExperimentPaths.under(tmp_path)
+        artifact = experiment.build_artifact(ROOT, paths)
+>       assert paths.checkpoint.is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_artif0/results/checkpoints/experiment_7258_v638_board_state.json').is_file
+E        +      where PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_artif0/results/checkpoints/experiment_7258_v638_board_state.json') = ExperimentPaths(artifact=PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_artif0/results/experiment_7..._dir=PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_artif0/results/raw/experiment_7258/validation')).checkpoint
+
+tests/python/test_experiment_7258_v638_board_state.py:174: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate sources before aggregation
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+[phase 0 end] preconditions failed=1
+_________ test_scenario_ising_7258_positive_operator_receipt_validates _________
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_scenario_ising_7258_posit0')
+
+    def test_scenario_ising_7258_positive_operator_receipt_validates(tmp_path: Path) -> None:
+        """SCENARIO-ISING-7258-GATEMATE: valid change produces a future-action row."""
+    
+        candidate = _valid_operator_receipt(tmp_path / "operator.json")
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[candidate],
+        )
+>       gate = next(row for row in artifact["board_rows"] if row["board"] == "GateMate")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests/python/test_experiment_7258_v638_board_state.py:206: StopIteration
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate sources before aggregation
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+[phase 0 end] preconditions failed=1
+____ test_req_ising_7258_reducer_rejects_mutations[mutation0-board_reducer] ____
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_req_ising_7258_reducer_re0')
+mutation = {'board_disposition_complete_score': 0}, error = 'board_reducer'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_disposition_complete_score": 0}, "board_reducer"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"model_load_count": 1}, "model_declaration"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7258_reducer_rejects_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7258: the independent reducer rejects unsafe mutations."""
+    
+        artifact = experiment.build_artifact(ROOT, experiment.ExperimentPaths.under(tmp_path))
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'board_reducer' in []
+E        +  where [] = <function validate_artifact at 0x7f62e3d7fce0>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_disposition_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f62e3d7fce0> = experiment.validate_artifact
+
+tests/python/test_experiment_7258_v638_board_state.py:250: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate sources before aggregation
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+[phase 0 end] preconditions failed=1
+______ test_req_ising_7258_reducer_rejects_mutations[mutation4-substrate] ______
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_req_ising_7258_reducer_re1')
+mutation = {'inference_substrate': 'cpu_exact_solver_or_simulator'}
+error = 'substrate'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_disposition_complete_score": 0}, "board_reducer"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"model_load_count": 1}, "model_declaration"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7258_reducer_rejects_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7258: the independent reducer rejects unsafe mutations."""
+    
+        artifact = experiment.build_artifact(ROOT, experiment.ExperimentPaths.under(tmp_path))
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'substrate' in ['blocked_substrate']
+E        +  where ['blocked_substrate'] = <function validate_artifact at 0x7f62e3d7fce0>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_disposition_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f62e3d7fce0> = experiment.validate_artifact
+
+tests/python/test_experiment_7258_v638_board_state.py:250: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate sources before aggregation
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+[phase 0 end] preconditions failed=1
+________________ test_req_ising_7258_defensive_reducer_branches ________________
+
+tmp_path = PosixPath('/tmp/exp7272-focused-recorded/test_req_ising_7258_defensive_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f62e3ee2960>
+
+    def test_req_ising_7258_defensive_reducer_branches(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-ISING-7258: malformed metadata and invalid builds remain explicit."""
+    
+        assert experiment._changed_conditions(
+            {"raw_receipt": {"changes": [None], "power": "power cycled"}}
+        ) == {"power": "power cycled"}
+    
+        paths = experiment.ExperimentPaths.under(tmp_path)
+        paths.validation_dir.mkdir(parents=True)
+        log = paths.validation_dir / "focused.log"
+        log.write_text("$ pytest focused\n1 passed\n[exit_code] 0\n", encoding="utf-8")
+        baseline_dir = paths.validation_dir.parent / "baseline_failures"
+        baseline_dir.mkdir()
+        baseline = baseline_dir / "full.log"
+        baseline.write_text("$ pytest all\nfailures\n[exit_code] 1\n", encoding="utf-8")
+        artifact = experiment.build_artifact(ROOT, paths)
+>       assert any(row["command"] == "pytest focused" for row in artifact["validation_receipts"])
+E       assert False
+E        +  where False = any(<generator object test_req_ising_7258_defensive_reducer_branches.<locals>.<genexpr> at 0x7f62e2738d40>)
+
+tests/python/test_experiment_7258_v638_board_state.py:327: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate sources before aggregation
+[phase 0 check start] source bytes, spec, and task contract
+[phase 0 check start] imports, ownership, and writable outputs
+[phase 0 check start] quarantine and shipped receipt validation
+[phase 0 end] preconditions failed=1
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_req_ising_7258_authenticates_current_board_chains
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_scenario_ising_7258_artifact_is_complete_host_aggregation
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_scenario_ising_7258_positive_operator_receipt_validates
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_req_ising_7258_reducer_rejects_mutations[mutation0-board_reducer]
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_req_ising_7258_reducer_rejects_mutations[mutation4-substrate]
+FAILED tests/python/test_experiment_7258_v638_board_state.py::test_req_ising_7258_defensive_reducer_branches
+========================= 6 failed, 38 passed in 3.28s =========================
+[exit_code] 1

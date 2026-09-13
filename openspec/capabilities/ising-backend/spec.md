@@ -1558,3 +1558,88 @@ zero external and hardware commands.
 **Terminal host-only receipt:** Given three authenticated dispositions,
 Exp7258 SHALL emit `board_disposition_complete_score=1`. Its rows and hashes
 SHALL reduce independently, even while GateMate remains blocked at row scope.
+
+### REQ-ISING-7272
+
+**The V639 board-state continuation MUST reuse the V638 reader to preserve
+graduated-board evidence and the exact GateMate physical-state boundary.**
+
+**Rationale:**
+Exp7258 recorded KV260 programmable-logic synthesis and latency separately
+from PolarFire hash-matched CPU dispatch. GateMate still requires a later
+operator-authored physical change after Exp6559. An unchanged hardware probe
+cannot add evidence.
+
+**Acceptance criteria:**
+- The tested implementation SHALL be
+  `python/carnot/experiment_7272_v639_board_state.py`. The executable SHALL be
+  the thin entrypoint
+  `scripts/experiments/experiment_7272_v639_board_state.py`.
+- Preconditions SHALL authenticate the V639 task contract, required source
+  bytes, writable output paths, exclusion state, the Exp7258 receipt, and all
+  KV260 and PolarFire evidence paths and hashes referenced by that receipt.
+- A missing, malformed, quarantined, or hash-mismatched mandatory input SHALL
+  produce a terminal blocked artifact. Its `gate_check_summary` SHALL name the
+  upstream, check, field, observed value, and expected value. It SHALL contain
+  no board rows.
+- The task SHALL reuse the Exp7258 operator receipt parser, row hasher,
+  reducer, and artifact validator. It SHALL not issue any SSH, JTAG, reset,
+  flash, sampling, purchase, vendor-contact, upload, publication, or external
+  message action.
+- Current invocation fields SHALL state `MODEL_SPECS=[]`,
+  `model_invoked=false`, and zero attempted and completed model loads,
+  generations, and usable answers. Historical model metadata SHALL remain in
+  a hashed sidecar.
+- The read-only reducer SHALL use
+  `aggregation_from_upstream_artifacts` and class `aggregation`. The execution
+  venue SHALL be `host`.
+- The KV260 row SHALL preserve the exact criterion
+  `board-level programmable-logic latency transcript and successful KV260 synthesis`
+  and FPGA-fabric provenance.
+- The PolarFire row SHALL preserve the exact criterion
+  `end-to-end hash-matched CPU dispatch with retained raw transcript evidence`.
+  It SHALL identify CPU execution and no observed programmable-logic sampling.
+- The GateMate search SHALL accept only an operator-authored cable, port,
+  power, board, or DirtyJTAG change after Exp6559. It SHALL retain the author,
+  date, path, hash, and changed condition. Without one, it SHALL preserve
+  `blocked_changed_physical_state` and the exact missing prerequisite. With
+  one, it SHALL name only one future action and issue no command.
+- Missing and malformed receipt fixtures SHALL fail closed. Raw rows and
+  provisional state SHALL stay under `results/raw/` and
+  `results/checkpoints/`.
+- `board_disposition_complete_score=1` SHALL mean that all three authenticated
+  dispositions and exact next conditions are recorded. It SHALL not mean that
+  all three board samplers work.
+- The producer SHALL validate a terminal candidate before it atomically writes
+  `results/experiment_7272_v639_board_state.json`.
+
+### SCENARIO-ISING-7272-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine marker, malformed mandatory artifact, invalid referenced
+hash, or unwritable output, Exp7272 SHALL emit a terminal blocked result. It
+SHALL emit no board row and no hardware operation.
+
+### SCENARIO-ISING-7272-BOARDS
+
+**Current receipt to dispositions:** Given an authenticated Exp7258 receipt
+and its referenced transcript hashes, Exp7272 SHALL preserve KV260 fabric
+graduation and PolarFire CPU graduation as distinct evidence classes.
+
+### SCENARIO-ISING-7272-GATEMATE
+
+**Physical-state boundary:** Given no valid operator-authored physical change
+after Exp6559, Exp7272 SHALL record `blocked_changed_physical_state`. Given a
+valid later change, it SHALL name one future action and issue no command.
+
+### SCENARIO-ISING-7272-FIXTURES
+
+**Receipt parser controls:** Given separate missing and malformed receipt
+fixtures, Exp7272 SHALL reject both and retain zero hardware or external
+commands.
+
+### SCENARIO-ISING-7272-ARTIFACT
+
+**Terminal host-only receipt:** Given three authenticated dispositions,
+Exp7272 SHALL emit `board_disposition_complete_score=1`. Its rows and hashes
+SHALL reduce independently while GateMate remains blocked at row scope.
