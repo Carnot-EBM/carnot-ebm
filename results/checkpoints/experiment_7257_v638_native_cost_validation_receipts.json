@@ -1,0 +1,125 @@
+{
+  "baseline_validation_failures": [
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "-q",
+        "tests/python/test_experiment_7257_v638_native_cost.py",
+        "-n",
+        "0",
+        "--basetemp=/tmp/exp7257-focused-rerun"
+      ],
+      "detail": "All 15 focused tests passed, but the repository addopts measured the entire Python tree and failed its unrelated 99 percent global threshold at 0.65 percent.",
+      "exit_code": 1,
+      "log_sha256": "sha256:a89ae571a189044de8bf099d2b543488927244019c87ef504d4c01ab58afa7a3",
+      "name": "repository_wide_coverage_injected_into_focused_test"
+    },
+    {
+      "command": [
+        ".venv/bin/coverage",
+        "run",
+        "--source=carnot.experiment_7257_v638_native_cost",
+        "-m",
+        "pytest",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7257_v638_native_cost.py",
+        "-n",
+        "0"
+      ],
+      "detail": "The direct coverage tracer aborted in an upstream native timezone initializer. The existing pytest-cov data supplied the required scoped report.",
+      "exit_code": 134,
+      "log_sha256": "sha256:07ca7ea2ab728892873718dd1d69f93f536bc6863424fce839c31baa07f0e172",
+      "name": "direct_coverage_native_initializer_abort"
+    },
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "-o",
+        "addopts=",
+        "-q",
+        "tests/python/test_experiment_7257_v638_native_cost.py",
+        "-n",
+        "0",
+        "--cov=carnot.experiment_7257_v638_native_cost",
+        "--cov-fail-under=100"
+      ],
+      "detail": "A second isolated pytest-cov process also aborted in the native initializer before test collection.",
+      "exit_code": 134,
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "isolated_pytest_cov_native_initializer_abort"
+    }
+  ],
+  "schema": "carnot.exp7257.validation_receipts.v1",
+  "validation_receipts": [
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "--no-cov",
+        "-q",
+        "tests/python/test_experiment_7257_v638_native_cost.py",
+        "-n",
+        "0",
+        "--basetemp=/tmp/exp7257-focused-pass"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:363d68dbb9015e829c8dc36a7a23031a0178eb9972770f381456187580c1c949",
+      "name": "focused_pytest_15_passed"
+    },
+    {
+      "command": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7257_v638_native_cost.py",
+        "--fail-under=100"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:232766bb8b3b8b2418e77dcc1ab7587043bf87f76ff449473c94975973ccac67",
+      "name": "scoped_coverage_550_of_550"
+    },
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7257_v638_native_cost.py",
+        "scripts/experiments/experiment_7257_v638_native_cost.py",
+        "tests/python/test_experiment_7257_v638_native_cost.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check_changed_scope"
+    },
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7257_v638_native_cost.py",
+        "scripts/experiments/experiment_7257_v638_native_cost.py",
+        "tests/python/test_experiment_7257_v638_native_cost.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format_changed_scope"
+    },
+    {
+      "command": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7257_v638_native_cost.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "mypy_changed_module"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7257_v638_native_cost.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "explicit_spec_coverage"
+    }
+  ]
+}
