@@ -17856,3 +17856,4 @@ code |
 | 2026-09-13 03:20 UTC | Persistent native ownership of the whole archive c | OK | 91 passed, 1 warning in 16.43s |
 | 2026-09-13 04:43 UTC | Matched durable event cost for the persistent cont | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ( + monkeyp |
 | 2026-09-13 05:02 UTC | Matched durable event cost for the persistent cont | OK | cache hit: 96 passed, 1 warning in 21.14s |
+| 2026-09-13 05:33 UTC | GateMate physical-state condition and graduated-bo | OK | 103 passed, 1 warning in 8.13s |
