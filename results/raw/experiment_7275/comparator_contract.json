@@ -1,0 +1,53 @@
+{
+  "contract_sha256": "sha256:2083321bb1c877f5e3aba3b0b629615ab193154e16fe3fbf70dc5a6b9d063dc1",
+  "decision_schema": {
+    "additionalProperties": false,
+    "required": [
+      "decision"
+    ],
+    "type": "object"
+  },
+  "decision_values": [
+    "supported",
+    "contradicted",
+    "unknown"
+  ],
+  "decoding_parameters": {
+    "cache_prompt": false,
+    "stream": false,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "draw_count": 2,
+  "draw_seeds": [
+    727520260913,
+    727520260914
+  ],
+  "draw_token_budgets": [
+    512,
+    512
+  ],
+  "embedded_chat_template": {
+    "required": true,
+    "sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "source": "authenticated_historical_identity_sidecar"
+  },
+  "finite_id_answer_channel": false,
+  "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+  "grammar_forwarding": "exact_requested_bytes",
+  "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+  "measurement_kind": "direct_comparator_measurement_repair",
+  "mention_method": {
+    "changed": false,
+    "mention_arm": "mention_pointer",
+    "schedule_sha256": "sha256:441968bced42a5846424415fb434a90286d1bff68e1b98732ad5c07f70667538",
+    "source_schedule_function": "carnot.experiment_7265_v639_mention_heldout.build_schedule"
+  },
+  "prompt_template": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\n{source}\nCLAIM:\n{claim}",
+  "public_only_prompts": true,
+  "schema": "carnot.exp7275.comparator_contract.v1",
+  "schema_supported_semantic_reprompt": false,
+  "system_prompt": "Return only one JSON object accepted by the supplied grammar.",
+  "tie_rule": "unknown"
+}

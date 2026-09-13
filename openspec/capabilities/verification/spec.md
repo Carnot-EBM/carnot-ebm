@@ -41932,3 +41932,85 @@ adversarial verification, and verdict-row consistency check.
 **When** focused validation and independent reduction run
 **Then** all 320 request and reply records replay to the same 192 semantic rows
 **And** only a cold-valid terminal artifact is written to `results/`.
+
+### REQ-VERIFY-7275: Semantic Replay SHALL Diagnose The V639 Transport Contract
+
+Exp7275 SHALL authenticate the terminal Exp7265 artifact, its public schedule,
+all 320 raw call files, the public and authority manifests, and the exclusion
+manifest. It SHALL rebuild the schedule from public inputs. It SHALL rebuild
+each native request byte string, grammar, decoding setting, response decode,
+historical parse result, and final semantic row. It SHALL not invoke an LLM.
+It SHALL preserve all 192 historical semantic rows, including invalid direct
+answers and abstained offset controls. It SHALL not overwrite Exp7265 or promote
+its mixed 63-of-192 count into a scientific comparison.
+
+The independent reducer SHALL reproduce all 320 historical completion rows and
+all 192 historical semantic rows exactly. It SHALL report the first divergence
+for every call. Each divergence SHALL name the producer function, consumer
+function, field, expected value, observed value, and one cause from
+`corruption`, `contract_mismatch`, `parser_rejection`, `real_model_error`, or
+`unknown_cause`. The reducer SHALL keep the original direct answers invalid.
+A corrected diagnostic MAY interpret a neutral symbol only when the authenticated
+request prompt and grammar explicitly define that symbol. This diagnostic SHALL
+not replace the historical parse result or semantic score.
+
+The task SHALL seal native-request and independent-reducer fixtures for all
+three full direct labels, malformed output, explicit unknown, Unicode text,
+duplicate mentions, reversed relations, changed request bytes, and token
+truncation. Every corrupted control SHALL fail closed. An unknown root cause or
+any reconstruction mismatch SHALL set `semantic_replay_ready_score=0` and SHALL
+stop fresh inference. The score SHALL equal one only when reconstruction is
+exact and all malformed controls fail closed. The score SHALL have no accuracy
+threshold.
+
+The sealed comparator contract SHALL use full decision strings and public-only
+prompts. It SHALL require the authenticated embedded chat template. It SHALL
+forward the requested grammar byte-for-byte. It SHALL define two equal-budget
+direct draws and a fixed tie-to-unknown rule. It SHALL keep the established
+mention method unchanged. It SHALL describe a measurement repair, not a finite-ID
+answer channel or a schema-supported semantic reprompt.
+
+The terminal artifact SHALL use ordinary top-level fields and the required field
+principles. It SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. Historical model identity SHALL stay in a hashed raw
+sidecar. A missing, retired, quarantined, or unauthenticated external input SHALL
+produce a terminal blocked artifact with an exact `gate_check_summary`. Partial
+is reserved for this task's own unfinished checkpoint.
+
+#### SCENARIO-VERIFY-7275-REPLAY: Historical Invalids Stay Invalid
+
+**Given** the authenticated Exp7265 schedule and 320 raw call records
+**When** the independent reducer decodes exact request and response bytes
+**Then** it reconstructs all stored completion and semantic rows without mismatch
+**And** direct neutral-symbol answers remain invalid in the historical reduction.
+
+#### SCENARIO-VERIFY-7275-DIVERGENCE: Contract Defects Are Located
+
+**Given** the producer prompt, grammar, retained response, and consumer parser
+**When** the reducer finds the first incompatible field or function boundary
+**Then** it records the exact producer and consumer functions and cause class
+**And** it keeps corruption, parser rejection, model error, and unknown separate.
+
+#### SCENARIO-VERIFY-7275-FIXTURES: Corrupted Controls Fail Closed
+
+**Given** the fixed native-request and independent-reducer fixture matrix
+**When** full labels, malformed output, Unicode, duplicate mentions, reversal,
+request mutation, explicit unknown, and truncation pass through the reducer
+**Then** valid full labels decode exactly and every corrupted control is rejected
+**And** the fixture receipt is bound into the reproducibility checksum.
+
+#### SCENARIO-VERIFY-7275-COMPARATOR: The Next Measurement Contract Is Sealed
+
+**Given** public source and claim text and the authenticated embedded template
+**When** the next direct comparator constructs two equal-budget native requests
+**Then** it uses full decision strings, exact grammar forwarding, and fixed seeds
+**And** disagreement resolves to unknown without changing the mention method.
+
+#### SCENARIO-VERIFY-7275-E2E: Authenticated Bytes Reach Semantic Rows
+
+**Given** one stored native request and response plus the authenticated manifests
+**When** the end-to-end replay runs from bytes through independent semantic scoring
+**Then** every historical row matches and a failed answer remains a valid negative
+**And** mutation of any authenticated input produces a terminal blocked result.
