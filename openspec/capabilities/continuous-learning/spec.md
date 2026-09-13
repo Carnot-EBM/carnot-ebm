@@ -14435,3 +14435,80 @@ change model weights, production defaults, or external systems.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7255 and SCENARIO-CL-7255-* | Implemented: `python/carnot/experiment_7255_v638_coverage_audit.py` authenticates Exp7253/Exp7254, independently reduces raw rows, instruments shipped finite-controller replay, audits aligned/shuffled effects, runs five isolated mutations and E2E-007, and seals a no-LLM terminal artifact through a thin script entrypoint. | Verified: `tests/python/test_experiment_7255_v638_coverage_audit.py` covers exact and blocked preconditions, raw reconstruction, authority isolation, controller/state replay, controls, all mutations, E2E restart/rejection/rollback, null promotion, terminal validation, CLI dispatch, defensive failures, and 100-percent new-code statement coverage. |
+
+## REQ-CL-7256: Persistent Native Archive Controller
+
+Carnot SHALL move the complete Exp7240 FIFO archive controller into one
+persistent native object. The object SHALL own active masks, archive entries,
+the released-witness window, validation receipts, version, and hash lineage.
+It SHALL preserve the Exp7240 prediction, energy, query, archive selection,
+release-order, commit, and rollback semantics. It SHALL not adopt Exp7253
+coverage admission.
+
+The study SHALL replay eight fixed existing streams through the Python
+reference, the Exp7243 native-active wrapper, and the new native controller.
+Each event and arm SHALL retain decisions, semantic state, archive identities,
+and lineage. The replay SHALL exercise all four archive slots, conflicting
+delayed releases, rollback, durable snapshot restore, and a fresh-process next
+decision. A mismatch SHALL fail readiness.
+
+The native hot path SHALL accept typed events. It SHALL not parse controller
+JSON or reconstruct an active object for each prediction. Snapshot parsing is
+permitted only during explicit construction or restore. Conversion-count rows
+SHALL show typed calls, snapshot parses, and active reconstructions for each
+arm. Throughput remains unscored until Exp7257.
+
+`native_controller_ready_score` SHALL equal one only after exact three-arm
+parity, exact durable and fresh-process continuation, transaction-negative
+tests, and visible removal of repeated hot-path conversion. The exact Python
+reference is an oracle. A ready result SHALL therefore use
+`verdict_class=circular_positive`, never `positive`.
+
+The executable SHALL authenticate exact upstream bytes, quarantine state,
+imports, output ownership, the current interpreter, and the isolated extension
+before replay. It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, all current
+model counters to zero, both substrate fields to
+`cpu_exact_solver_or_simulator`, and `execution_venue=host`. External absence
+SHALL produce a row-free terminal blocked artifact. It SHALL not publish a
+success-shaped artifact before measurement and cold validation finish.
+
+### SCENARIO-CL-7256-PARITY: Three Controllers Preserve FIFO Semantics
+
+- GIVEN eight fixed V637 streams and identical released feedback
+- WHEN Python, native-active, and persistent-native controllers process every unit
+- THEN predictions, energies, queries, archive selection, commits, and semantic states match
+- AND all four FIFO archive slots and conflicting delayed releases are exercised.
+
+### SCENARIO-CL-7256-PERSISTENCE: Native Ownership Removes Repeated Conversion
+
+- GIVEN one imported persistent native controller
+- WHEN typed prediction, energy, query, and commit operations execute
+- THEN active state and archive policy stay in the same native object
+- AND no prediction parses JSON or reconstructs an active controller.
+
+### SCENARIO-CL-7256-TRANSACTION: Invalid Changes Preserve Exact Parent Bytes
+
+- GIVEN a valid controller parent and durable snapshot
+- WHEN malformed snapshots, stale parents, interrupted writes, or stale rollbacks occur
+- THEN the operation fails before admission
+- AND live and durable parent bytes remain exact.
+
+### SCENARIO-CL-7256-RESTORE: A Fresh Process Continues Identically
+
+- GIVEN a validated commit and native snapshot
+- WHEN a new process loads the isolated extension and restores that snapshot
+- THEN its semantic state and next decisions match Python on every unit
+- AND the receipt binds the exact interpreter and extension bytes.
+
+### SCENARIO-CL-7256-TERMINAL: Readiness Is Circular And Throughput Is Deferred
+
+- GIVEN exact replay, restore, transaction, and conversion evidence
+- WHEN the independent reducer and cold validator derive the frozen gates
+- THEN readiness can equal one with `circular_positive` classification
+- AND no throughput value or new learning behavior is claimed.
+
+## Implementation Status (REQ-CL-7256)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7256 and SCENARIO-CL-7256-* | Implemented: persistent native FIFO controller, typed operations, isolated build, eight-stream replay, restart, and terminal artifact. | Verified: RED-first parity, conversion, snapshot, transaction, restart, artifact, command, and 100% scoped new-module coverage tests. |

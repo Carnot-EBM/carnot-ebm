@@ -11,6 +11,7 @@ use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 
 mod adaptive_state;
+mod experiment_7256_archive_controller;
 mod fixed_cardinality;
 mod kv260;
 mod mode_jump;
@@ -476,6 +477,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Persistent lossless packed-belief controller
     packed_belief::register_packed_belief_module(m)?;
+
+    // Persistent FIFO archive controller prototype
+    experiment_7256_archive_controller::register_experiment_7256_module(m)?;
 
     // Compact Safety-Net router ABI
     safety_net::register_safety_net_module(m)?;

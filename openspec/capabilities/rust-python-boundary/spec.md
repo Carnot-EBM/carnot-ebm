@@ -381,3 +381,51 @@ total event cost.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7243 and SCENARIO-RUSTPY-7243-* | Implemented: Exp7243 reuses `RustPackedBeliefController` for active packed operations inside the unchanged Python archive policy and binds parent/fresh-process receipts to the selected extension bytes. | `tests/python/test_experiment_7243_v637_native_memory.py` exercises compiled identity, no-fallback parity, fresh continuation, full-boundary paired costs, cold validation, and native-install failure cleanup with 754/754 scoped statements. |
+
+### REQ-RUSTPY-7256: Persistent FIFO Archive Controller Boundary
+
+Carnot SHALL expose an Exp7256 PyO3 controller that owns the complete Exp7240
+FIFO archive state across calls. The Rust object SHALL keep active survivor
+masks, archive masks, the released-witness window, nomination receipts,
+release identities, version, and rollback parent. Typed prediction, energy,
+query-selection, and release operations SHALL not reconstruct a Python active
+controller or parse a JSON snapshot on their hot path.
+
+The controller SHALL expose validated snapshot and restore operations. It
+SHALL reject unknown or malformed fields, invalid masks, invalid archive
+hashes, duplicate releases, stale parents, corrupt durable parents, and stale
+rollback. A rejected operation SHALL preserve the prior live bytes. The Python
+orchestrator MAY perform canonical file writes, but it SHALL admit a new native
+state only after the write succeeds.
+
+The extension SHALL build in an isolated target and load path bound to the
+running virtual-environment interpreter. The receipt SHALL include the
+compiler, binary hash, actual import path, Python ABI, build command, and
+native method inventory. The shared installed extension SHALL remain unchanged.
+
+### SCENARIO-RUSTPY-7256-TYPED: Typed Calls Keep State Native
+
+**Given** one restored Exp7256 native controller
+**When** Python sends typed event fields for prediction, query, and release
+**Then** the same Rust object supplies each result and retains the next state
+**And** its counters report zero hot-path JSON parses and active reconstructions.
+
+### SCENARIO-RUSTPY-7256-SNAPSHOT: Snapshot Validation Is Transactional
+
+**Given** valid native state and its exact parent hash
+**When** snapshot restore, commit, durable write, or rollback is attempted
+**Then** only a fully validated child becomes live
+**And** every rejected or interrupted operation preserves the exact parent.
+
+### SCENARIO-RUSTPY-7256-RESTART: Isolated Bytes Continue In A New Process
+
+**Given** the selected isolated extension and one validated snapshot
+**When** a fresh interpreter imports those exact bytes and processes later events
+**Then** state, decisions, archive selections, and lineage match the first process
+**And** the child receipt names the same binary hash.
+
+## Implementation Status (REQ-RUSTPY-7256)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7256 and SCENARIO-RUSTPY-7256-* | Implemented: persistent native FIFO controller with typed operations, transactional snapshots, counters, and isolated interpreter binding. | Verified: RED-first native API, parity, malformed state, stale transaction, interrupted write, fresh-process, and conversion-counter tests. |

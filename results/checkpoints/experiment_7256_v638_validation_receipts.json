@@ -1,0 +1,136 @@
+{
+  "baseline_validation_failures": [
+    {
+      "classification": "unrelated_non_green_repository_baseline",
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "duration_s": 1613.16,
+      "errors": 66,
+      "exit_code": 2,
+      "failed": 583,
+      "interrupted": true,
+      "interrupted_at_percent": 47,
+      "passed": 30318,
+      "principle": "Recorded separately; no baseline test or gate was weakened.",
+      "representative_error": "KeyError: unsloth/Qwen3.6-35B-A3B-GGUF",
+      "skipped": 106
+    }
+  ],
+  "schema": "carnot.exp7256.validation.v1",
+  "validation_receipts": [
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_experiment_7256_v638_native_controller.py",
+        "-q",
+        "-n",
+        "0",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7256-final-nocov"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:09b65c0517a1b8eb8060d7293abe00b6ea145a517879f403f251ee14501358cc",
+      "name": "focused_pytest"
+    },
+    {
+      "command": [
+        ".venv/bin/coverage",
+        "report",
+        "-m",
+        "python/carnot/experiment_7256_v638_native_controller.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:8bcea5762db8db18c93e7de2135db1b420940586a6ba7de0662d2950ac68d534",
+      "name": "scoped_new_code_coverage"
+    },
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7256_v638_native_controller.py",
+        "tests/python/test_experiment_7256_v638_native_controller.py",
+        "scripts/experiments/experiment_7256_v638_native_controller.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check"
+    },
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7256_v638_native_controller.py",
+        "tests/python/test_experiment_7256_v638_native_controller.py",
+        "scripts/experiments/experiment_7256_v638_native_controller.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format_check"
+    },
+    {
+      "command": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7256_v638_native_controller.py"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "name": "mypy_changed_module"
+    },
+    {
+      "command": [
+        "rustfmt",
+        "--edition",
+        "2021",
+        "--check",
+        "crates/carnot-python/src/experiment_7256_archive_controller.rs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "rustfmt_changed_module"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "-p",
+        "carnot-python",
+        "experiment_7256_archive_controller",
+        "--lib"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:b21a127d9aedee606a209c96cb9d70599c709564388cb346ae52de5c87a97f72",
+      "name": "rust_unit"
+    },
+    {
+      "command": [
+        ".venv/bin/python",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7256_v638_native_controller.py",
+        "crates/carnot-python/src/experiment_7256_archive_controller.rs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "explicit_spec_coverage"
+    },
+    {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_experiment_7256_v638_native_controller.py::test_scenario_cl_7256_typed_controller_matches_python",
+        "tests/python/test_experiment_7256_v638_native_controller.py::test_scenario_rustpy_7256_snapshot_transaction_and_rollback",
+        "tests/python/test_experiment_7256_v638_native_controller.py::test_scenario_cl_7256_eight_stream_replay_and_restart",
+        "-q",
+        "-n",
+        "0",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7256-e2e"
+      ],
+      "exit_code": 0,
+      "log_sha256": "sha256:5491f45cc4a2781e417439f9584dbc0d1eefd55fd1fdab85d50f644bf94ae67c",
+      "name": "e2e_003_004_007_adaptations"
+    }
+  ]
+}
