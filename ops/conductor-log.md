@@ -17883,3 +17883,4 @@ code |
 | 2026-09-13 19:28 UTC | Bounded Qwen3.8 comparator transport qualification | OK | 97 passed, 1 warning in 7.94s |
 | 2026-09-13 19:58 UTC | Fresh Qwen3.8 source comparison with valid equal-b | OK | 87 passed, 1 warning in 8.91s |
 | 2026-09-13 20:25 UTC | Independent source fidelity and matched-coverage v | OK | 122 passed, 1 warning in 13.89s |
+| 2026-09-13 21:00 UTC | Live ARC generalization after strict identity repa | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 92 passed, 1 warning in 8.68s |
