@@ -1,0 +1,2674 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_file_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "quantization": "Q4_K_M",
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+    }
+  ],
+  "acceptance_gate_results": [
+    {
+      "criterion": "all_four_episodes_accounted",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "Capture completeness is separate from method value."
+    },
+    {
+      "criterion": "typed_witness_prediction_lift_above_current",
+      "expected": ">0",
+      "observed": null,
+      "passed": false,
+      "principle": "Treatment must improve the paired current-feedback case study."
+    },
+    {
+      "criterion": "typed_witness_prediction_above_identity",
+      "expected": ">0",
+      "observed": null,
+      "passed": false,
+      "principle": "A learned candidate must beat predicting no state change."
+    },
+    {
+      "criterion": "treatment_plan_consumed_by_policy",
+      "expected": ">0",
+      "observed": 0,
+      "passed": false,
+      "principle": "A valid engine without an executed plan has no policy value."
+    },
+    {
+      "criterion": "no_matched_game_level_regression",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Prediction gains cannot hide a policy-level regression."
+    }
+  ],
+  "arc_capture_complete_score": 1,
+  "arc_method_value_score": 0,
+  "claim_scope": "two_game_case_study_only",
+  "duration_s": 1930.175191,
+  "ended_at_utc": "2026-09-13T11:20:12+00:00",
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7263-arc-live",
+  "field_principles": {
+    "MODEL_SPECS": "Declare models executable in this invocation; historical metadata stays in sidecars.",
+    "acceptance_gate_results": "Keep expected, observed, pass, and principle for every criterion.",
+    "arc_capture_complete_score": "One accounts for all four episodes; it is not an efficacy score.",
+    "arc_method_value_score": "One requires prediction lift, policy use, and no matched-game regression.",
+    "claim_scope": "Two public games permit a case study only, not a population interval.",
+    "duration_s": "Measure monotonic time and retain disjoint phase spans.",
+    "ended_at_utc": "Record the actual UTC end of terminal construction.",
+    "execution_host": "Record the host separately from the execution venue.",
+    "execution_venue": "Use host for host orchestration and identify hardware in runtime receipts.",
+    "experiment_id": "Bind the terminal result to Exp7263 without a nested value wrapper.",
+    "field_principles": "Store explanations here; consumers read ordinary top-level values.",
+    "gate_check_summary": "For blocked work, name each upstream check and exact observed and expected value.",
+    "honest_verdict": "Use terminal complete_ or blocked_ prefixes and state the measured finding.",
+    "inference_mode": "Use live_gpu only when the task-owned runtime has CUDA evidence.",
+    "inference_substrate": "Use the recognized literal that describes the computation that ran.",
+    "inference_substrate_class": "Declare actual compute; never pad time to satisfy a class floor.",
+    "invocation_counts": "Separate attempted and completed loads and generations from usable answers.",
+    "milestone": "Bind the result to milestone 2026.09.639.",
+    "model_invoked": "Derive model use from actual calls; parse failure does not erase an invocation.",
+    "new_solve_claimed": "Require registry precheck and reproduction before any new level credit.",
+    "per_game_results": "Keep every game, seed, arm outcome, and cost for paired recomputation.",
+    "phase_spans": "Keep measured load, generation, scoring, and validation spans separate.",
+    "policy_consumption_rows": "Join engine and plan hashes to actual executed policy actions.",
+    "population_confidence_interval": "Remain null because two games cannot support a population CI.",
+    "preconditions_checked": "Retain observed input hashes, resource ownership, and failures before model work.",
+    "random_seed": "Freeze independent-unit seeds before outcomes are visible.",
+    "raw_request_manifest": "Persist every dispatched request and reply with tokens and timestamps.",
+    "reproduced_levels": "Count only newly reproduced levels from this live attempt.",
+    "reproducibility_checksum": "Bind code, input manifests, configuration, and raw evidence.",
+    "rows": "Retain each game-arm unit, metric, error, abstention, and censoring state.",
+    "run_date": "Use 20260913 and actual UTC bounds so the dated evidence is auditable.",
+    "runtime_receipt": "Bind GPU, native process, offload, decoding, and lease evidence to this run.",
+    "sample_size_budget": "Record planned, attempted, completed, censored units and the fixed stop rule.",
+    "schema": "Version the result; retain ordinary top-level experiment_id and milestone.",
+    "selection_receipt": "Prove registry precheck preceded metadata-only roster freezing.",
+    "solve_provenance": "Use live_agent_self_discovery; registered public solves receive no new credit.",
+    "source_artifact_hashes": "Authenticate exact inputs and preserve quarantine and retirement state.",
+    "started_at_utc": "Record the actual UTC start of this invocation.",
+    "status": "Use complete or blocked only for terminal work; checkpoints hold unfinished work.",
+    "submission_configuration_diff": "Keep local and submitted runtime differences explicit.",
+    "validation_receipts": "Record commands, exits, and log hashes without suppressing failures.",
+    "verdict_class": "Use the fixed verdict vocabulary; oracle authority forbids a positive verdict.",
+    "verifier_is_oracle": "Expose shared evaluator authority; exact conformance is not learned correctness."
+  },
+  "gate_check_summary": [],
+  "honest_verdict": "complete_null_no_policy_consumed_plan",
+  "inference_mode": "live_gpu",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "invocation_counts": {
+    "generation_calls_attempted": 8,
+    "generation_calls_completed": 8,
+    "model_loads_attempted": 1,
+    "model_loads_completed": 1,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.639",
+  "model_invoked": true,
+  "new_solve_claimed": false,
+  "per_game_results": [
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 473.4820035882294
+      },
+      "disposition": "complete",
+      "episode_id": "re86:current_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 0,
+      "game": "re86",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 62.027256,
+          "ended_at_utc": "2026-09-13T10:50:28+00:00",
+          "episode_id": "re86:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 11265,
+          "request_bytes": 20006,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_request.json",
+          "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_response.json",
+          "response_sha256": "sha256:69dcbedcea48038fb1795d5656fdee7980b1ebb6ec6f3d1d45fd0924d3b3405d",
+          "started_at_utc": "2026-09-13T10:49:26+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:48191/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 63.55998,
+          "ended_at_utc": "2026-09-13T10:52:21+00:00",
+          "episode_id": "re86:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 10833,
+          "request_bytes": 16887,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_request.json",
+          "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_response.json",
+          "response_sha256": "sha256:f768c5ffb01fbc2d8a3a5080caf6eac16c8e01dcc1aa3b55e14a43cb276b71a2",
+          "started_at_utc": "2026-09-13T10:51:18+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:34225/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 472.7984210550785
+      },
+      "disposition": "complete",
+      "episode_id": "re86:typed_witness_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 1,
+      "game": "re86",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 62.250044,
+          "ended_at_utc": "2026-09-13T10:58:20+00:00",
+          "episode_id": "re86:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 11265,
+          "request_bytes": 20006,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_request.json",
+          "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_response.json",
+          "response_sha256": "sha256:fcfecdfd21e68715498e3fea271fb2cbccd1bbf6bff008c6cfa349d9b761c881",
+          "started_at_utc": "2026-09-13T10:57:18+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:45979/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 63.045161,
+          "ended_at_utc": "2026-09-13T11:00:13+00:00",
+          "episode_id": "re86:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 10833,
+          "request_bytes": 16887,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_request.json",
+          "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_response.json",
+          "response_sha256": "sha256:810c79f45e282daedb573620f946ed42e9afe5a5218bd23aa1d3ca538c307e7a",
+          "started_at_utc": "2026-09-13T10:59:10+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:48639/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 463.5844943791162
+      },
+      "disposition": "complete",
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 2,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.057706,
+          "ended_at_utc": "2026-09-13T11:06:08+00:00",
+          "episode_id": "r11l:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14466,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_request.json",
+          "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_response.json",
+          "response_sha256": "sha256:b748f4f773e661347bf6e3e1d29287c53ea0b304589190759525e5c31b58d272",
+          "started_at_utc": "2026-09-13T11:05:10+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:37859/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.197013,
+          "ended_at_utc": "2026-09-13T11:07:55+00:00",
+          "episode_id": "r11l:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 6404,
+          "request_bytes": 11087,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_request.json",
+          "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_response.json",
+          "response_sha256": "sha256:b158ad90f7c846f65e3c587a749ff881d5d14a02c7f517ac26a3fc11432d4ac4",
+          "started_at_utc": "2026-09-13T11:06:57+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:40613/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 463.8426543830428
+      },
+      "disposition": "complete",
+      "episode_id": "r11l:current_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 3,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.078737,
+          "ended_at_utc": "2026-09-13T11:13:52+00:00",
+          "episode_id": "r11l:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14466,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_request.json",
+          "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_response.json",
+          "response_sha256": "sha256:13319ba05f44fd1d9b2212f188dff80733c5cef0d8469f9e33d64e9c224b70d3",
+          "started_at_utc": "2026-09-13T11:12:54+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:54903/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.599423,
+          "ended_at_utc": "2026-09-13T11:15:40+00:00",
+          "episode_id": "r11l:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 6404,
+          "request_bytes": 11087,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_request.json",
+          "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_response.json",
+          "response_sha256": "sha256:3bd1dd3fba348b2aab730f029eaedbb826fb55c8a35aa8625ccadc7c8cf35196",
+          "started_at_utc": "2026-09-13T11:14:41+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:37717/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "phase_spans": [
+    {
+      "duration_s": 12.048263014992699,
+      "phase": "model_load"
+    }
+  ],
+  "policy_consumption_rows": [],
+  "population_confidence_interval": null,
+  "preconditions_checked": [
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_induction_tool_loop.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_eval_provenance.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_transition_witness_exp7248.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/arc_loop_solve.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/kaggle/submission_kernel/main.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7209_v635_span_canary.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7234_v637_arc_scored_dryrun.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7263_v639_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7263_v639_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7263_v639_arc_live.py"
+    },
+    {
+      "check": "driving_capability",
+      "expected": true,
+      "field": "REQ-ARC-WMTE-7263",
+      "observed": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "upstream",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "upstream",
+      "expected": "exp7262-arc-witness-receipt",
+      "field": "experiment_id",
+      "observed": "exp7262-arc-witness-receipt",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "upstream",
+      "expected": "complete",
+      "field": "status",
+      "observed": "complete",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "upstream",
+      "expected": 1,
+      "field": "arc_witness_ready_score",
+      "observed": 1,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "upstream",
+      "expected": false,
+      "field": "quarantine_state",
+      "observed": false,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "upstream",
+      "expected": true,
+      "field": "clean_terminal_bytes",
+      "observed": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7262_v639_arc_witness_receipt.json"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/checkpoints"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7263_v639_arc_live"
+    },
+    {
+      "check": "cached_current_model",
+      "expected": true,
+      "field": "Q4_K_M",
+      "observed": true,
+      "passed": true,
+      "upstream": "unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "check": "native_runtime",
+      "expected": true,
+      "field": "server_binary",
+      "observed": true,
+      "passed": true,
+      "upstream": "llama.cpp"
+    },
+    {
+      "check": "gpu",
+      "expected": true,
+      "field": "idle_gpu_with_20GB",
+      "observed": true,
+      "passed": true,
+      "upstream": "nvidia-smi"
+    },
+    {
+      "check": "registry_precheck_before_roster",
+      "expected": true,
+      "field": "four_counterbalanced_units",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    }
+  ],
+  "random_seed": 7263001,
+  "raw_request_manifest": [
+    {
+      "call_index": 0,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 62.027256,
+      "ended_at_utc": "2026-09-13T10:50:28+00:00",
+      "episode_id": "re86:current_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 11265,
+      "request_bytes": 20006,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_request.json",
+      "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_response.json",
+      "response_sha256": "sha256:69dcbedcea48038fb1795d5656fdee7980b1ebb6ec6f3d1d45fd0924d3b3405d",
+      "started_at_utc": "2026-09-13T10:49:26+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:48191/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 1,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 63.55998,
+      "ended_at_utc": "2026-09-13T10:52:21+00:00",
+      "episode_id": "re86:current_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 10833,
+      "request_bytes": 16887,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_request.json",
+      "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_response.json",
+      "response_sha256": "sha256:f768c5ffb01fbc2d8a3a5080caf6eac16c8e01dcc1aa3b55e14a43cb276b71a2",
+      "started_at_utc": "2026-09-13T10:51:18+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:34225/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 0,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 62.250044,
+      "ended_at_utc": "2026-09-13T10:58:20+00:00",
+      "episode_id": "re86:typed_witness_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 11265,
+      "request_bytes": 20006,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_request.json",
+      "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_response.json",
+      "response_sha256": "sha256:fcfecdfd21e68715498e3fea271fb2cbccd1bbf6bff008c6cfa349d9b761c881",
+      "started_at_utc": "2026-09-13T10:57:18+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:45979/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 1,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 63.045161,
+      "ended_at_utc": "2026-09-13T11:00:13+00:00",
+      "episode_id": "re86:typed_witness_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 10833,
+      "request_bytes": 16887,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_request.json",
+      "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_response.json",
+      "response_sha256": "sha256:810c79f45e282daedb573620f946ed42e9afe5a5218bd23aa1d3ca538c307e7a",
+      "started_at_utc": "2026-09-13T10:59:10+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:48639/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 0,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 58.057706,
+      "ended_at_utc": "2026-09-13T11:06:08+00:00",
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 7094,
+      "request_bytes": 14466,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_request.json",
+      "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_response.json",
+      "response_sha256": "sha256:b748f4f773e661347bf6e3e1d29287c53ea0b304589190759525e5c31b58d272",
+      "started_at_utc": "2026-09-13T11:05:10+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:37859/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 1,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 58.197013,
+      "ended_at_utc": "2026-09-13T11:07:55+00:00",
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 6404,
+      "request_bytes": 11087,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_request.json",
+      "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_response.json",
+      "response_sha256": "sha256:b158ad90f7c846f65e3c587a749ff881d5d14a02c7f517ac26a3fc11432d4ac4",
+      "started_at_utc": "2026-09-13T11:06:57+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:40613/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 0,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 58.078737,
+      "ended_at_utc": "2026-09-13T11:13:52+00:00",
+      "episode_id": "r11l:current_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 7094,
+      "request_bytes": 14466,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_request.json",
+      "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_response.json",
+      "response_sha256": "sha256:13319ba05f44fd1d9b2212f188dff80733c5cef0d8469f9e33d64e9c224b70d3",
+      "started_at_utc": "2026-09-13T11:12:54+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:54903/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 1,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 7263001000,
+        "temperature": 0.2
+      },
+      "duration_s": 58.599423,
+      "ended_at_utc": "2026-09-13T11:15:40+00:00",
+      "episode_id": "r11l:current_feedback",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 6404,
+      "request_bytes": 11087,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_request.json",
+      "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_response.json",
+      "response_sha256": "sha256:3bd1dd3fba348b2aab730f029eaedbb826fb55c8a35aa8625ccadc7c8cf35196",
+      "started_at_utc": "2026-09-13T11:14:41+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:37717/v1/chat/completions",
+      "usable_answer": false
+    }
+  ],
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:17df0678c34490ad30f77ed138a22c0a28eaa85319b5f2a0fb93b2156d76ae9b",
+  "rows": [
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 473.4820035882294
+      },
+      "disposition": "complete",
+      "episode_id": "re86:current_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 0,
+      "game": "re86",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 62.027256,
+          "ended_at_utc": "2026-09-13T10:50:28+00:00",
+          "episode_id": "re86:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 11265,
+          "request_bytes": 20006,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_request.json",
+          "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_response.json",
+          "response_sha256": "sha256:69dcbedcea48038fb1795d5656fdee7980b1ebb6ec6f3d1d45fd0924d3b3405d",
+          "started_at_utc": "2026-09-13T10:49:26+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:48191/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 63.55998,
+          "ended_at_utc": "2026-09-13T10:52:21+00:00",
+          "episode_id": "re86:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 10833,
+          "request_bytes": 16887,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_request.json",
+          "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_response.json",
+          "response_sha256": "sha256:f768c5ffb01fbc2d8a3a5080caf6eac16c8e01dcc1aa3b55e14a43cb276b71a2",
+          "started_at_utc": "2026-09-13T10:51:18+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:34225/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 472.7984210550785
+      },
+      "disposition": "complete",
+      "episode_id": "re86:typed_witness_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 1,
+      "game": "re86",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 62.250044,
+          "ended_at_utc": "2026-09-13T10:58:20+00:00",
+          "episode_id": "re86:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 11265,
+          "request_bytes": 20006,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_request.json",
+          "request_sha256": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_response.json",
+          "response_sha256": "sha256:fcfecdfd21e68715498e3fea271fb2cbccd1bbf6bff008c6cfa349d9b761c881",
+          "started_at_utc": "2026-09-13T10:57:18+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:45979/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 63.045161,
+          "ended_at_utc": "2026-09-13T11:00:13+00:00",
+          "episode_id": "re86:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 10833,
+          "request_bytes": 16887,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_request.json",
+          "request_sha256": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_response.json",
+          "response_sha256": "sha256:810c79f45e282daedb573620f946ed42e9afe5a5218bd23aa1d3ca538c307e7a",
+          "started_at_utc": "2026-09-13T10:59:10+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:48639/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 463.5844943791162
+      },
+      "disposition": "complete",
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 2,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.057706,
+          "ended_at_utc": "2026-09-13T11:06:08+00:00",
+          "episode_id": "r11l:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14466,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_request.json",
+          "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_response.json",
+          "response_sha256": "sha256:b748f4f773e661347bf6e3e1d29287c53ea0b304589190759525e5c31b58d272",
+          "started_at_utc": "2026-09-13T11:05:10+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:37859/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.197013,
+          "ended_at_utc": "2026-09-13T11:07:55+00:00",
+          "episode_id": "r11l:typed_witness_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 6404,
+          "request_bytes": 11087,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_request.json",
+          "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_response.json",
+          "response_sha256": "sha256:b158ad90f7c846f65e3c587a749ff881d5d14a02c7f517ac26a3fc11432d4ac4",
+          "started_at_utc": "2026-09-13T11:06:57+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:40613/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 463.8426543830428
+      },
+      "disposition": "complete",
+      "episode_id": "r11l:current_feedback",
+      "error": "ValueError: live model identity is invalid: every identity obligation must be supported",
+      "execution_order": 3,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.078737,
+          "ended_at_utc": "2026-09-13T11:13:52+00:00",
+          "episode_id": "r11l:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14466,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_request.json",
+          "request_sha256": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_response.json",
+          "response_sha256": "sha256:13319ba05f44fd1d9b2212f188dff80733c5cef0d8469f9e33d64e9c224b70d3",
+          "started_at_utc": "2026-09-13T11:12:54+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:54903/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 7263001000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.599423,
+          "ended_at_utc": "2026-09-13T11:15:40+00:00",
+          "episode_id": "r11l:current_feedback",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 6404,
+          "request_bytes": 11087,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_request.json",
+          "request_sha256": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_response.json",
+          "response_sha256": "sha256:3bd1dd3fba348b2aab730f029eaedbb826fb55c8a35aa8625ccadc7c8cf35196",
+          "started_at_utc": "2026-09-13T11:14:41+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:37717/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 7263001,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "run_date": "20260913",
+  "runtime_receipt": {
+    "completion_limit_per_episode": 2,
+    "context_tokens": 49152,
+    "embedded_chat_template": true,
+    "embedded_tokenizer": true,
+    "generated_token_limit_per_episode": 4096,
+    "gpu_index": 0,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_samples": [
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [],
+        "sampled_at_utc": "2026-09-13T10:48:11+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541542,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:48:24+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541542,
+            "used_memory_mb": 18030
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:48:57+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541723,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:49:42+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541723,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:50:27+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541937,
+            "used_memory_mb": 15878
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:51:12+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541937,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:51:57+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541937,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:52:42+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542153,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:53:27+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542284,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:54:12+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542404,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:54:58+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542531,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:55:43+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542531,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:56:28+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542750,
+            "used_memory_mb": 15878
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:57:13+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542750,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:57:58+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542750,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:58:43+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542992,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T10:59:28+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3542992,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:00:14+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543286,
+            "used_memory_mb": 15878
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:00:59+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:01:44+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543422,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:02:29+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543575,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:03:14+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543687,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:03:59+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543687,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:04:44+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543946,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:05:29+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3543946,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:06:14+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544166,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:06:59+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544166,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:07:44+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544166,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:08:30+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544417,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:09:15+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544553,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:10:00+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544688,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:10:45+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544807,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:11:30+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3544807,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:12:15+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545040,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:13:01+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545040,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:13:46+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545040,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:14:31+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545284,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:15:16+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545284,
+            "used_memory_mb": 18052
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:16:01+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545499,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:16:46+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545617,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:17:31+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545711,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:18:17+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3541514,
+            "used_memory_mb": 1480
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3545826,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T11:19:02+00:00"
+      }
+    ],
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "kv_quantization": "q8_0",
+    "lease_owner": {
+      "acquired_monotonic_ns": 1588191663908986,
+      "argv_digest": "sha256:2ca2be4f261e3aaae33607784864c6452a35d2f5288d48ba030cc7256e1afc73",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "expires_monotonic_ns": 1590132342829752,
+      "lease_id": "lease:5535ba59f7f78c16f8e74aed4caf33f4c6d38c46d3bf4d14d8adb42939eede5c",
+      "pid": 3541444,
+      "pid_start_ticks": 158818225,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7263-arc-live",
+      "token_digest": "sha256:dad2f6a10e314ac74e8534b65a4441d4d26bb5a2ed84a1b107ce1cb8a12f89e6",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "lease_release": {
+      "checksum": "sha256:5e5fcd07cc5418c2e4b7de57339c1a4db9e58de762ded788c2a29ed2603ccca9",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "lease_id": "lease:5535ba59f7f78c16f8e74aed4caf33f4c6d38c46d3bf4d14d8adb42939eede5c",
+      "phase": "terminal_complete",
+      "pid": 3541444,
+      "pid_start_ticks": 158818225,
+      "released": true,
+      "signals_sent": []
+    },
+    "native_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "offload_layers_observed": null,
+    "offload_layers_requested": 999,
+    "parallel_slots": 1,
+    "runner": "LocalGGUFProposer_native_llama.cpp",
+    "server_command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "49152",
+      "--port",
+      "50347",
+      "--host",
+      "127.0.0.1",
+      "--parallel",
+      "1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "server_log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p50347_1789296492.log",
+    "server_pid": 3541542,
+    "server_pid_start_tick": 158819230,
+    "signals_sent": [],
+    "task_linked_cuda_execution": true,
+    "timed_out": false,
+    "tokens_per_call": 2048,
+    "vram_free_before_mb": 24120,
+    "vram_total_mb": 24576
+  },
+  "sample_size_budget": {
+    "actions_per_episode": 192,
+    "attempted_units": 4,
+    "censored_units": 0,
+    "completed_units": 4,
+    "completion_limit_per_episode": 2,
+    "games": 2,
+    "generated_token_limit_per_episode": 4096,
+    "live_window_s": 2400,
+    "planned_units": 4,
+    "seeds_per_game": 1,
+    "stopping_rule": "four frozen counterbalanced episodes; timeouts stay censored"
+  },
+  "schema": "carnot.experiment_7263.v639.arc_live.v1",
+  "selection_receipt": {
+    "game_rows": [
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "re86",
+        "metadata_exposure_count": 0,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "r11l",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      }
+    ],
+    "games": [
+      "re86",
+      "r11l"
+    ],
+    "ranking": [
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "re86",
+        "metadata_exposure_count": 0,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "r11l",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "vc33",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 7,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "sb26",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "wa30",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 9,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "lf52",
+        "metadata_exposure_count": 1,
+        "registry_levels_before_attempt": 10,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "ls20",
+        "metadata_exposure_count": 2,
+        "registry_levels_before_attempt": 7,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "tn36",
+        "metadata_exposure_count": 3,
+        "registry_levels_before_attempt": 7,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "sk48",
+        "metadata_exposure_count": 3,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "su15",
+        "metadata_exposure_count": 3,
+        "registry_levels_before_attempt": 9,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "cn04",
+        "metadata_exposure_count": 4,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "tu93",
+        "metadata_exposure_count": 4,
+        "registry_levels_before_attempt": 9,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "m0r0",
+        "metadata_exposure_count": 5,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "sp80",
+        "metadata_exposure_count": 5,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "lp85",
+        "metadata_exposure_count": 6,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "s5i5",
+        "metadata_exposure_count": 6,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "sc25",
+        "metadata_exposure_count": 7,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "tr87",
+        "metadata_exposure_count": 7,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "bp35",
+        "metadata_exposure_count": 7,
+        "registry_levels_before_attempt": 9,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "g50t",
+        "metadata_exposure_count": 8,
+        "registry_levels_before_attempt": 7,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "ar25",
+        "metadata_exposure_count": 8,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "dc22",
+        "metadata_exposure_count": 10,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "cd82",
+        "metadata_exposure_count": 11,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "ft09",
+        "metadata_exposure_count": 11,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "game": "ka59",
+        "metadata_exposure_count": 12,
+        "registry_levels_before_attempt": 7,
+        "registry_precheck_passed": true
+      }
+    ],
+    "selection_basis": "fewest_exact_metadata_references_then_prior_levels_then_game_id",
+    "selection_steps": [
+      "registry_precheck",
+      "roster_freeze"
+    ],
+    "selection_used_outcome_labels": false
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:0712a8ec7c6abc3f493a60d25056b2bae210951d98d8c6f9d74920690052ac2b",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+    "python/carnot/agentic/arc_transition_witness_exp7248.py": "sha256:78d00691b14b7f5535fbe857e6dc98458a18747bc23d05421d35aa6be8d5a937",
+    "python/carnot/experiment_7209_v635_span_canary.py": "sha256:cb6524e856570f048af9f116ea73f6715d60e9bd62d46a088340a463169f4f6e",
+    "python/carnot/experiment_7234_v637_arc_scored_dryrun.py": "sha256:11470bcee0d3d7ed61ab0aacadd827a00adca09db81a2317a7ddd45236cfa126",
+    "python/carnot/experiment_7263_v639_arc_live.py": "sha256:a655c0eeb4917c9713b671ab0c09abe54fab1be8e6bd1b55d3a5335d8c2df625",
+    "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7262_v639_arc_witness_receipt.json": "sha256:4afcb000e972715c8311c6d0a3bdab5facdff44ef816d0df7e1a6ba67d349c86",
+    "results/raw/experiment_7263_v639_arc_live/episode_rows.json": "sha256:c2c21e8b76e02ffd6a99f7ec4dbecd255115977884ba7a490236c71f5f40bf2f",
+    "results/raw/experiment_7263_v639_arc_live/frozen_schedule.json": "sha256:9f6efb3467af263bd3b1d949e11bb0a9f118c68d3708942c2f16e8b929c42039",
+    "results/raw/experiment_7263_v639_arc_live/live_session.json": "sha256:44070e2650b4cbf8bdf3f50ce7d31e052f213157c65cdcfaf8358caffc671e29",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/prompt.raw": "sha256:a95c905def02b0f6928062836a5e26b18c93e2b0981b7d1db854b1593daf28f1",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111254_644341-bad237bc88b5/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/prompt.raw": "sha256:1159ece0c27d43f6e363fdb9392eaba191f0a55041c639f3e19b83291a2b50b3",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111352_835920-023bb6beec16/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/prompt.raw": "sha256:8a4573c15d17e70f4a93d2f6bfc17f155f8941f6e527c523c1612017550e6035",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111540_535609-f70728678d18/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/prompt.raw": "sha256:1bbc01bf169805f0b50bb7225aab38c0148a1717abef9c4b555de102204fcf0b",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111720_994196-82dfa3389103/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/prompt.raw": "sha256:35a4367a076170957dc8fcc8c1d161d68ec7f29bcb5db9a931657f2aad9edd95",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111721_103828-e42e078843f5/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/prompt.raw": "sha256:00dbbfccbb864925b7a7444477e303b0ed1d3f67008ffdb0c66f3d129217a70d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111810_293143-5dd030800353/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_request.json": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/00_response.json": "sha256:13319ba05f44fd1d9b2212f188dff80733c5cef0d8469f9e33d64e9c224b70d3",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_request.json": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/requests/01_response.json": "sha256:3bd1dd3fba348b2aab730f029eaedbb826fb55c8a35aa8625ccadc7c8cf35196",
+    "results/raw/experiment_7263_v639_arc_live/r11l__current_feedback/run_progress.json": "sha256:9985f0a48519169e4eadbab977119ed723e98ebb73161ae3b6dc682fa509e2b9",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/prompt.raw": "sha256:a95c905def02b0f6928062836a5e26b18c93e2b0981b7d1db854b1593daf28f1",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110510_067248-b1bcece32e15/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/prompt.raw": "sha256:1159ece0c27d43f6e363fdb9392eaba191f0a55041c639f3e19b83291a2b50b3",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110608_253341-ea078c4da5ce/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/environment_receipt.json": "sha256:3c84567217cf06777559814176426f451b201925af5e75c2faee2373aa2f1094",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/prompt.raw": "sha256:8a4573c15d17e70f4a93d2f6bfc17f155f8941f6e527c523c1612017550e6035",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110755_720079-845797171285/transitions.jsonl": "sha256:068a888cad370b590b71e31a17a1005a5357d0f4b1d5d5146b38b5cfba74250d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/prompt.raw": "sha256:1bbc01bf169805f0b50bb7225aab38c0148a1717abef9c4b555de102204fcf0b",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_564799-fd787606c9b3/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/prompt.raw": "sha256:35a4367a076170957dc8fcc8c1d161d68ec7f29bcb5db9a931657f2aad9edd95",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T110936_676203-37e5a46a0ac8/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/environment_receipt.json": "sha256:38657bc45af6e9cd385ad908a1003869aca5995c7578668d03534e536829d2c8",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/prompt.raw": "sha256:00dbbfccbb864925b7a7444477e303b0ed1d3f67008ffdb0c66f3d129217a70d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/e3/r11l/attempts/.evidence-staging/arc-20260913T111025_809771-f4867816ff7a/transitions.jsonl": "sha256:dde33f8725a36afb3b64615aa583a78cc4c3015b61a423def3a5f202e9ce633a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_request.json": "sha256:59013c1f58438622d0ea06513f7570f57b86b62c10f29807fca5cefcab129f0d",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/00_response.json": "sha256:b748f4f773e661347bf6e3e1d29287c53ea0b304589190759525e5c31b58d272",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_request.json": "sha256:5c3a8f201b9c0515264d7b93c9d695a9e78fae86f5bcba26dbb63fba05a1b70a",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/requests/01_response.json": "sha256:b158ad90f7c846f65e3c587a749ff881d5d14a02c7f517ac26a3fc11432d4ac4",
+    "results/raw/experiment_7263_v639_arc_live/r11l__typed_witness_feedback/run_progress.json": "sha256:ceabec3d916e8be074608b70fe52602984b0e97f77b7a7036b152b5e29d4732f",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/prompt.raw": "sha256:f358865868f9d22f2d5616fac83af164b18ee602f64fa61ed139aea06859113e",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T104926_571590-be47b446091d/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/prompt.raw": "sha256:70bb5873403eed14c571eb80738369c70bb70c8b239a9bbe3fe8b2276aed760a",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105028_775001-3cb741d9f84b/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/prompt.raw": "sha256:e19c1a91d55f53f710c6bb41690cfcf23a16e0257c86a99b9a7cb22edf51fc44",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105221_722595-b38985b3c2d4/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/prompt.raw": "sha256:6550df71621aaabc34dd68a116f1e7affad55df0c4edc8e1efcccf722f3345a6",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_409823-bfaea88345a9/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/prompt.raw": "sha256:4efb4152a8f9ddc31b03a456280ca16cf6b4eef1a4c7d31f7fa03a3eeb305a45",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105400_599065-c8404f5aab02/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/prompt.raw": "sha256:44e7e2d70cadc407705e2d8e4365c06b61910a55c324111b67185f690923c037",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105449_984533-52cc8400c74f/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_request.json": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/00_response.json": "sha256:69dcbedcea48038fb1795d5656fdee7980b1ebb6ec6f3d1d45fd0924d3b3405d",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_request.json": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/requests/01_response.json": "sha256:f768c5ffb01fbc2d8a3a5080caf6eac16c8e01dcc1aa3b55e14a43cb276b71a2",
+    "results/raw/experiment_7263_v639_arc_live/re86__current_feedback/run_progress.json": "sha256:727dfe3709d3dc8f3baa8573dd76780006b7cb5aa39c1070c5eaa5003f504f08",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/prompt.raw": "sha256:f358865868f9d22f2d5616fac83af164b18ee602f64fa61ed139aea06859113e",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105718_496911-ce4e01caaa3e/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/prompt.raw": "sha256:70bb5873403eed14c571eb80738369c70bb70c8b239a9bbe3fe8b2276aed760a",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T105820_911211-e9a173eff72a/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/environment_receipt.json": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/prompt.raw": "sha256:e19c1a91d55f53f710c6bb41690cfcf23a16e0257c86a99b9a7cb22edf51fc44",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110013_111718-17eb6ef6abe3/transitions.jsonl": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/prompt.raw": "sha256:6550df71621aaabc34dd68a116f1e7affad55df0c4edc8e1efcccf722f3345a6",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_602648-68758308aab6/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/prompt.raw": "sha256:4efb4152a8f9ddc31b03a456280ca16cf6b4eef1a4c7d31f7fa03a3eeb305a45",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110153_792580-2e3fd2828981/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/agent_factory.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/environment_receipt.json": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/live_policy.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/prompt.raw": "sha256:44e7e2d70cadc407705e2d8e4365c06b61910a55c324111b67185f690923c037",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/scorer.py": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T110242_975407-f3fd417de19d/transitions.jsonl": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_request.json": "sha256:106d407989e0b5272bb0225ddebaf5ac009487bfb31aba71d6fc10616de62620",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/00_response.json": "sha256:fcfecdfd21e68715498e3fea271fb2cbccd1bbf6bff008c6cfa349d9b761c881",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_request.json": "sha256:4c09d416275d249e846409d748e4d8f4234eaf2a7729e835cf5d6d774de127eb",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/requests/01_response.json": "sha256:810c79f45e282daedb573620f946ed42e9afe5a5218bd23aa1d3ca538c307e7a",
+    "results/raw/experiment_7263_v639_arc_live/re86__typed_witness_feedback/run_progress.json": "sha256:77109e022e2efadb5b677813efc0330d1ab07ebdfb61567bd87f8e09368effe0",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p34225_1789296667.log": "sha256:0e323f5295e4fa508896f87db9a32da6536c2d420e642255f6244704f14e2532",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p35037_1789297401.log": "sha256:90ecaf9eba60d3352128ba8dbe7e3e1575d6fc0ab1f9479b06f57db3c8406c1e",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p35393_1789296829.log": "sha256:0f42d3a4b3c0df31f78bd0d4ccdccb3f8c547cb1790292f80167f18b627dc039",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p36105_1789298279.log": "sha256:a714ef8ed610d8ea1308b62def08999b0818eeca997831b5f8c0e0b702f33bd7",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p37717_1789298071.log": "sha256:95f15a03bb792998433746fc2a01319c730eccc9dd57a4d3eec2a79ace427973",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p37859_1789297499.log": "sha256:1d73dd1caaa23ffa1b1863057328872fc350f5894e4e212e82ff779e5ab9c260",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p38911_1789298228.log": "sha256:272b43b797a928bdd098d1d892942d8e2a5e458b73418f9fe410f3c0f8225ca9",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p40005_1789296780.log": "sha256:1c26fd7a5edf79aafcb5976cbb85d46cd49a1175dca5dd10f8c9bf1c99360588",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p40613_1789297606.log": "sha256:fa71f75c87c01f8c48ca039c3fc768219e04f4d05d01ceae0c949cf4e8c40b1b",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p44191_1789297352.log": "sha256:3d1a679404fba68630e6f66e1d1975db074dd54ca14784c99bcd45c59af028e7",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p44553_1789298329.log": "sha256:ed4e1831986e89d331f43d87daab0fcfaaca8c0b3a0b41fd540144a3159381f8",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p44785_1789297765.log": "sha256:ecd043bfd65a7bf0db63fba271647764c7951f7bff13f0f1b9df53e064a996c8",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p45033_1789297714.log": "sha256:8fd35056639767fb15395d7e602cf5669f06c8a41df7f8dd2f773dd154d9b857",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p45979_1789297027.log": "sha256:3e93b36f75b9e5757252baef900f8527506be4aca9883526a153b008a499e7b8",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p47355_1789298179.log": "sha256:8f0958757c71b1ebb3d0dc6e57082ab8292d32680a58591b135136caef3a9d81",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p48191_1789296556.log": "sha256:7a04b0dd245cc4f765995c20853feaf0cdb45654470cbc5d384bae97b84a0e69",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p48639_1789297139.log": "sha256:0c81988c62350e1a3590319196b1b931d3a17b53ec2f4ec1878147678e78c8cd",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p50347_1789296492.log": "sha256:88c4a0fadb2a9fac5227ce75ca61e71b767454e1ad7ca65b8ac7c6a153558ea5",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p51769_1789297251.log": "sha256:3f49ca476cb7b8fae2d23b4bde8a22889e002e9c6cb814111c604d704321f149",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p53591_1789297864.log": "sha256:228b45262f755ee8b9fc1c2031669829a407d040e590730708688e61ec1e605c",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p53783_1789296879.log": "sha256:811df23462e2b1b8c591a9c08b812314ca1423e175fda95948ed41d7f5ed9c89",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p54903_1789297964.log": "sha256:17621234a4f9ec29517b03e831c832135c7b0181313ec50873659804ec8b175b",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p55157_1789297303.log": "sha256:68cdd73362c4629a54f9c3a70129516e4345dbbbf839013810249bb49836fc0b",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p58373_1789296928.log": "sha256:4060cc5037a61bb82b6800f73580ea356aa11c38b8c7214752abe4e992cf629b",
+    "results/raw/experiment_7263_v639_arc_live/server_logs/carnot_llama_server_logs/llama_server_p60819_1789297815.log": "sha256:c585c38e31dff6e108387d108abd0af8f5ababc6c8dac3c7c0e33a3f295e342c",
+    "scripts/arc_loop_solve.py": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7263_v639_arc_live.py": "sha256:dd798091a314e54065391b298c18e1a3dced8a2956a0006ca9370431bdf0cef9",
+    "scripts/kaggle/submission_kernel/main.py": "sha256:5aac185702c1dca6fe255b2844288a4bb155c7faa886ae339974cc18d906e460",
+    "tests/python/test_experiment_7263_v639_arc_live.py": "sha256:9d2f6b89bc28b6784b49614498880f4e05cf71121890752485d02a0ab8571417"
+  },
+  "started_at_utc": "2026-09-13T10:48:02+00:00",
+  "status": "complete",
+  "submission_configuration_diff": {
+    "competition_equivalent_claim": false,
+    "completion_cap": "4096_per_episode",
+    "gateway": "local_public_arcade_not_hidden_competition_gateway",
+    "gpu": "host_GPU_not_Kaggle_Blackwell_96GB",
+    "parallelism": "four_sequential_episodes_not_submitted_concurrent_games",
+    "runtime": "native_llama.cpp_single_server_not_submitted_vLLM",
+    "weights": "Q4_K_M_GGUF_not_submitted_NVFP4_safetensors"
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_7263_v639_arc_live.py -q --no-cov -n 0 --basetemp=/tmp/exp7263-focused_exp7263",
+      "duration_s": 2.508288,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/00_focused_exp7263.log",
+      "log_sha256": "sha256:5c2659140025b23e15bcf3625039dadc2fae884c37c6e6b0809a2bd6af01ac8c",
+      "name": "focused_exp7263",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 13 items\n\ntests/python/test_experiment_7263_v639_arc_live.py .............         [100%]\n\n============================== 13 passed in 0.96s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_7262_v639_arc_witness_receipt.py -q --no-cov -n 0 --basetemp=/tmp/exp7263-affected_exp7262",
+      "duration_s": 7.050597,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/01_affected_exp7262.log",
+      "log_sha256": "sha256:58444ab15dae8a5208da908d3e63b20212b7ea783af685550ab4b8b30c7a0594",
+      "name": "affected_exp7262",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 23 items\n\ntests/python/test_experiment_7262_v639_arc_witness_receipt.py .......... [ 43%]\n.............                                                            [100%]\n\n============================== 23 passed in 4.95s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_experiment_7248_v638_arc_witness.py -q --no-cov -n 0 --basetemp=/tmp/exp7263-affected_transition_witness",
+      "duration_s": 5.674807,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/02_affected_transition_witness.log",
+      "log_sha256": "sha256:b5cb8d5c02d852c3a986bf72b09512a81eca27c4ad938a3b67bb8bedd4730695",
+      "name": "affected_transition_witness",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 8 items\n\ntests/python/test_experiment_7248_v638_arc_witness.py ........           [100%]\n\n============================== 8 passed in 3.27s ===============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python/test_arc_induction_state_persistence.py -q --no-cov -n 0 --basetemp=/tmp/exp7263-affected_induction_state",
+      "duration_s": 11.524565,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/03_affected_induction_state.log",
+      "log_sha256": "sha256:da8eb2ebc7c326a004158bbf249300ea381793c75e067073c3aa1435c9c71e91",
+      "name": "affected_induction_state",
+      "output_tail": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncollected 40 items\n\ntests/python/test_arc_induction_state_persistence.py ................... [ 47%]\n.....................                                                    [100%]\n\n============================== 40 passed in 8.66s ==============================\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7263-v639.coverage --include=*/experiment_7263_v639_arc_live.py -m pytest -o addopts= tests/python/test_experiment_7263_v639_arc_live.py -q -n 0 --basetemp=/tmp/exp7263-coverage",
+      "duration_s": 4.007724,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/04_scoped_coverage_run.log",
+      "log_sha256": "sha256:3815bdabae9b23ea5cf4428f96932d627a061783d82b1bf52d68540199e4a941",
+      "name": "scoped_coverage_run",
+      "output_tail": ".............                                                            [100%]\n13 passed in 1.59s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7263-v639.coverage --include=*/experiment_7263_v639_arc_live.py --show-missing --fail-under=100",
+      "duration_s": 0.119574,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/05_scoped_coverage_report.log",
+      "log_sha256": "sha256:d184a73774ec05f60f78447c36fb0a8a16e0356769d6c63f36500e93b8d45272",
+      "name": "scoped_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7263_v639_arc_live.py     327      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              327      0   100%\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7263_v639_arc_live.py scripts/experiments/experiment_7263_v639_arc_live.py tests/python/test_experiment_7263_v639_arc_live.py",
+      "duration_s": 0.015006,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/06_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7263_v639_arc_live.py scripts/experiments/experiment_7263_v639_arc_live.py tests/python/test_experiment_7263_v639_arc_live.py",
+      "duration_s": 0.015339,
+      "exit_code": 1,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/07_ruff_format.log",
+      "log_sha256": "sha256:82cb33df5b6c8320951a12a36542dc7e6b608fecd4da6d169724a65cad3a88f5",
+      "name": "ruff_format",
+      "output_tail": "Would reformat: python/carnot/experiment_7263_v639_arc_live.py\n1 file would be reformatted, 2 files already formatted\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7263_v639_arc_live.py scripts/experiments/experiment_7263_v639_arc_live.py",
+      "duration_s": 0.224703,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/08_changed_module_mypy.log",
+      "log_sha256": "sha256:76c9a44efe110cfb1712fa4f833cba3e42e6040f6bfe58dff16a27211c8fd15d",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7263_v639_arc_live.py tests/python/test_experiment_7262_v639_arc_witness_receipt.py tests/python/test_experiment_7248_v638_arc_witness.py tests/python/test_arc_induction_state_persistence.py",
+      "duration_s": 0.020123,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/09_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7263_v639_arc_live.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/episode_rows.json",
+      "duration_s": 0.440206,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/10_independent_raw_row_reducer.log",
+      "log_sha256": "sha256:ac8607800016502934fe4677edfed9b0d0ac7af7528c0b29d11eabeda420bab0",
+      "name": "independent_raw_row_reducer",
+      "output_tail": "{\"event\": \"entrypoint\", \"experiment\": \"exp7263-arc-live\", \"phase\": \"startup\"}\n{\"arc_capture_complete_score\": 1, \"arc_method_value_score\": 0, \"claim_scope\": \"two_game_case_study_only\", \"current_feedback_mean_heldout_accuracy\": null, \"identity_baseline_mean_accuracy\": null, \"invocation_counts\": {\"generation_calls_attempted\": 8, \"generation_calls_completed\": 8, \"model_loads_attempted\": 1, \"model_loads_completed\": 1, \"usable_answers\": 0}, \"matched_game_level_regression\": false, \"population_confidence_interval\": null, \"regressed_games\": [], \"row_errors\": [], \"treatment_policy_consumed_plans\": 0, \"typed_witness_mean_heldout_accuracy\": null, \"typed_witness_prediction_lift_vs_current\": null, \"typed_witness_prediction_lift_vs_identity\": null, \"useful_treatment_candidate\": false}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/terminal_candidate.json",
+      "duration_s": 0.570286,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/00_terminal_candidate_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "terminal_candidate_adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7263_v639_arc_live/terminal_candidate.json",
+      "duration_s": 0.027511,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7263_v639_arc_live/validation/01_terminal_candidate_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_candidate_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

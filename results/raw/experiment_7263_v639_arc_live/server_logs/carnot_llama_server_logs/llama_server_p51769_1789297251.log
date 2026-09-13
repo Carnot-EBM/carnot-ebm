@@ -1,0 +1,45 @@
+0.00.049.393 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.049.395 I device_info:
+0.00.289.316 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 22373 MiB free)
+0.00.289.326 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128082 MiB, 128082 MiB free)
+0.00.289.414 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.289.455 I srv          init: running without SSL
+0.00.289.485 I srv          init: using 23 threads for HTTP server
+0.00.289.582 I srv         start: binding port with default address family
+0.00.290.724 I srv  llama_server: loading model
+0.00.290.729 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf'
+0.00.290.761 I common_init_result: fitting params to device memory ...
+0.00.290.761 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.09.816.825 W llama_context: n_ctx_seq (49152) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.09.843.996 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.09.912.940 I srv    load_model: initializing slots, n_slots = 1
+0.09.956.826 W srv    load_model: speculative decoding will use checkpoints
+0.09.956.854 W common_speculative_init: no implementations specified for speculative decoding
+0.09.956.857 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 49152
+0.09.956.957 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.09.956.958 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.09.956.958 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.09.956.959 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
+0.09.957.026 I srv          init: idle slots will be saved to prompt cache upon starting a new task
+0.09.974.968 I init: chat template, example_format: '<|im_start|>system
+Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.
+
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.09.988.466 I srv          init: init: chat template, thinking = 1
+0.09.988.530 I srv  llama_server: model loaded
+0.09.988.538 I srv  llama_server: server is listening on http://127.0.0.1:51769
+0.09.988.548 I srv  update_slots: all slots are idle
+0.50.796.767 I srv    operator(): operator(): cleaning up before exit...

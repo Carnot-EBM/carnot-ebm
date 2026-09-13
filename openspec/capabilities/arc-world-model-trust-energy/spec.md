@@ -31915,6 +31915,111 @@ through the shipped reproduction gate.
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7263: Measure typed transition-witness value in the live scored policy
+
+Experiment 7263 SHALL authenticate the clean terminal bytes of Experiment 7262.
+The prerequisite SHALL have experiment ID `exp7262-arc-witness-receipt`, terminal
+status `complete`, and `arc_witness_ready_score=1`. An absent, unreadable,
+quarantined, or nonconforming prerequisite SHALL produce a terminal blocked result.
+The result SHALL name every failed check in `gate_check_summary`. It SHALL not load
+a model or publish a partial result at the terminal result path.
+
+Before roster selection, the experiment SHALL parse the public solve registry. It
+SHALL rank public games by metadata exposure without reading game source or outcome
+labels from this attempt. It SHALL freeze the two least-exposed games and one seed.
+It SHALL reject a roster that has an enabled `GameAdapter`, a banked solution input,
+or a duplicate game-arm unit. The four episodes SHALL counterbalance current
+feedback and typed-witness feedback across games and execution order.
+
+The experiment SHALL construct each episode through `make_carnot_agent` and the
+live `E3AgentPolicy`. Each policy SHALL synthesize its own engine only from public
+frames and its own observed transitions. The current arm SHALL leave
+`CARNOT_ARC_TRANSITION_WITNESS` disabled. The treatment arm SHALL set it to `1`.
+Both arms SHALL use `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`. No arm SHALL read a
+game adapter, game source, registry solution, offline path, or evaluator label.
+
+One cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M model SHALL serve all four episodes
+through native llama.cpp and its embedded tokenizer and chat template. The parent
+SHALL acquire the shipped GPU lease before load. It SHALL authenticate the GGUF
+hash, GPU UUID, VRAM residency, offload layers, native binary, server PID and start
+tick, and actual decoding parameters. It SHALL set `CARNOT_FORCE_LIVE=1`,
+`inference_mode=live_gpu`, `inference_substrate=live_llm_inference`,
+`inference_substrate_class=model_full_generation`, and `execution_venue=host` only
+after the corresponding live evidence exists. It SHALL persist every raw request,
+reply, token count, and timestamp. It SHALL release only its process group and lease.
+
+Each episode SHALL have a frozen limit of 192 policy actions. It SHALL attempt at
+most two generation completions and at most 4096 generated tokens in total. It
+SHALL not increase the shipped induction budget. The complete live window SHALL
+stop within 2400 seconds. A timeout SHALL remain a censored episode row. No loaded
+model SHALL produce `model_load_no_generation`; no successful load SHALL produce
+`blocked_no_run`.
+
+The experiment SHALL reserve observed transitions before refinement for evaluation.
+Each episode SHALL report identity-baseline accuracy, candidate held-out accuracy,
+non-identity predictions, candidate validity, trust acceptance, installed plans,
+model-planned actions, completed levels, action cost, generation cost, and censoring.
+It SHALL join the accepted engine hash and installed plan hash to actual policy
+actions in `policy_consumption_rows`. Local and submitted runtime differences SHALL
+remain explicit.
+
+`arc_capture_complete_score` SHALL equal one only when all four planned episodes
+have a completed or censored row and all attempted model calls are accounted for.
+`arc_method_value_score` SHALL equal one only when typed-witness feedback improves
+paired held-out prediction above the identity baseline, at least one treatment plan
+is consumed by policy actions, and neither matched game loses completed levels.
+The two-game result SHALL support case-study claims only. It SHALL not report a
+population confidence interval. No policy consumption SHALL produce the terminal
+verdict `complete_null_no_policy_consumed_plan` for this feedback attempt.
+
+Any new reachable level SHALL first pass registry precheck. It SHALL then be
+reproduced through the shipped reproduction gate with
+`solve_provenance=live_agent_self_discovery`. A registered public solve SHALL not
+become new credit. `verifier_is_oracle` SHALL disclose the shared evaluator
+authority and SHALL prevent an oracle-defined positive claim.
+
+The experiment SHALL validate focused tests, affected live-policy suites, scoped
+100 percent coverage, Ruff check and format, changed-module mypy, and scoped spec
+coverage. Its E2E SHALL be the real four-episode scored-policy loop and cleanup. It
+SHALL independently reduce the raw rows. It SHALL run `adversarial_verify.py` and
+`verdict_row_consistency_lint.py` on a terminal candidate under `results/raw/`.
+Only then SHALL it atomically publish `results/experiment_7263_v639_arc_live.json`.
+
+### SCENARIO-ARC-WMTE-7263-EXTERNAL-BLOCK
+
+- GIVEN the Exp7262 receipt, cached Q4_K_M model, native runtime, GPU lease, public
+  registry, or output path is absent or rejected
+- WHEN Exp7263 checks preconditions before model load
+- THEN it publishes a terminal blocked artifact with exact observed and expected values
+- AND invocation counts remain zero and no success-shaped measurement is written.
+
+### SCENARIO-ARC-WMTE-7263-COUNTERBALANCED-LIVE-LOOP
+
+- GIVEN two metadata-selected least-exposed public games and one frozen seed
+- WHEN the four current-versus-witness episodes run through `make_carnot_agent`
+- THEN each game receives both arms with reversed arm order across games
+- AND each row enforces 192 actions, two completions, and 4096 generated tokens
+- AND every request, reply, transition metric, timeout, and cost remains reducible.
+
+### SCENARIO-ARC-WMTE-7263-POLICY-CONSUMPTION
+
+- GIVEN a treatment engine that passes the existing transition and trust gates
+- WHEN `E3AgentPolicy` installs and executes its plan
+- THEN a consumption row joins the engine and plan hashes to actual policy actions
+- AND method value remains zero if no joined action exists.
+
+### SCENARIO-ARC-WMTE-7263-TERMINAL-REDUCTION
+
+- GIVEN four complete or censored raw episode rows
+- WHEN the independent reducer and both artifact checkers inspect the terminal candidate
+- THEN capture completeness is computed independently from efficacy
+- AND value requires prediction lift above identity, treatment policy consumption,
+  and no matched-game level regression
+- AND the two-game result makes no population confidence-interval claim.
+
+Implementation status: specified 2026-09-13. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition

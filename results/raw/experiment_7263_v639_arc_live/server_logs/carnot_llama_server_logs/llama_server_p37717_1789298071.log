@@ -1,0 +1,81 @@
+0.00.050.230 I log_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.050.232 I device_info:
+0.00.311.461 I   - CUDA0   : NVIDIA GeForce RTX 3090 (24123 MiB, 22373 MiB free)
+0.00.311.470 I   - CPU     : AMD Ryzen AI 9 HX 370 w/ Radeon 890M (128082 MiB, 128082 MiB free)
+0.00.311.555 I system_info: n_threads = 12 (n_threads_batch = 12) / 24 | CUDA : ARCHS = 860 | USE_GRAPHS = 1 | PEER_MAX_BATCH_SIZE = 128 | CPU : SSE3 = 1 | SSSE3 = 1 | AVX = 1 | AVX_VNNI = 1 | AVX2 = 1 | F16C = 1 | FMA = 1 | BMI2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | LLAMAFILE = 1 | OPENMP = 1 | REPACK = 1 | 
+0.00.311.594 I srv          init: running without SSL
+0.00.311.623 I srv          init: using 23 threads for HTTP server
+0.00.311.718 I srv         start: binding port with default address family
+0.00.312.855 I srv  llama_server: loading model
+0.00.312.860 I srv    load_model: loading model '/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf'
+0.00.312.886 I common_init_result: fitting params to device memory ...
+0.00.312.887 I common_init_result: (for bugs during this step try to reproduce them with -fit off, or provide --verbose logs if the bug only occurs with -fit on)
+0.09.465.913 W llama_context: n_ctx_seq (49152) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+0.09.493.306 I common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+0.09.561.980 I srv    load_model: initializing slots, n_slots = 1
+0.09.605.853 W srv    load_model: speculative decoding will use checkpoints
+0.09.605.880 W common_speculative_init: no implementations specified for speculative decoding
+0.09.605.882 I slot   load_model: id  0 | task -1 | new slot, n_ctx = 49152
+0.09.605.982 I srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+0.09.605.983 I srv    load_model: use `--cache-ram 0` to disable the prompt cache
+0.09.605.984 I srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+0.09.605.985 I srv    load_model: context checkpoints enabled, max = 32, min spacing = 256
+0.09.606.051 I srv          init: idle slots will be saved to prompt cache upon starting a new task
+0.09.623.980 I init: chat template, example_format: '<|im_start|>system
+Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.
+
+You are a helpful assistant<|im_end|>
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+Hi there<|im_end|>
+<|im_start|>user
+How are you?<|im_end|>
+<|im_start|>assistant
+<think>
+'
+0.09.637.292 I srv          init: init: chat template, thinking = 1
+0.09.637.342 I srv  llama_server: model loaded
+0.09.637.347 I srv  llama_server: server is listening on http://127.0.0.1:37717
+0.09.637.355 I srv  update_slots: all slots are idle
+0.10.000.363 I srv  params_from_: Chat format: peg-native
+0.10.000.680 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.10.000.683 I srv  get_availabl: updating prompt cache
+0.10.000.696 I srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
+0.10.000.707 I srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 49152 tokens, 8589934592 est)
+0.10.000.711 I srv  get_availabl: prompt cache update took 0.02 ms
+0.10.000.804 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.10.162.235 I slot create_check: id  0 | task 0 | created context checkpoint 1 of 32 (pos_min = 41, pos_max = 41, n_tokens = 42, size = 149.626 MiB)
+0.13.019.940 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4138, progress = 0.65, t =   3.02 s / 1370.61 tokens per second
+0.14.471.477 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   5888, progress = 0.92, t =   4.47 s / 1317.04 tokens per second
+0.14.603.883 I slot create_check: id  0 | task 0 | created context checkpoint 2 of 32 (pos_min = 5887, pos_max = 5887, n_tokens = 5888, size = 149.626 MiB)
+0.14.830.270 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   6400, progress = 1.00, t =   4.83 s / 1325.21 tokens per second
+0.15.057.799 I slot create_check: id  0 | task 0 | created context checkpoint 3 of 32 (pos_min = 6399, pos_max = 6399, n_tokens = 6400, size = 149.626 MiB)
+0.17.691.266 I slot print_timing: id  0 | task 0 | n_decoded =    100, tg =  38.66 t/s
+0.20.692.425 I slot print_timing: id  0 | task 0 | n_decoded =    215, tg =  38.48 t/s
+0.23.704.978 I slot print_timing: id  0 | task 0 | n_decoded =    330, tg =  38.37 t/s
+0.26.730.838 I slot print_timing: id  0 | task 0 | n_decoded =    446, tg =  38.36 t/s
+0.29.738.299 I slot print_timing: id  0 | task 0 | n_decoded =    561, tg =  38.34 t/s
+0.32.745.744 I slot print_timing: id  0 | task 0 | n_decoded =    676, tg =  38.32 t/s
+0.35.762.193 I slot print_timing: id  0 | task 0 | n_decoded =    791, tg =  38.29 t/s
+0.38.766.385 I slot print_timing: id  0 | task 0 | n_decoded =    906, tg =  38.29 t/s
+0.41.770.675 I slot print_timing: id  0 | task 0 | n_decoded =   1021, tg =  38.29 t/s
+0.44.786.453 I slot print_timing: id  0 | task 0 | n_decoded =   1136, tg =  38.27 t/s
+0.47.794.831 I slot print_timing: id  0 | task 0 | n_decoded =   1251, tg =  38.27 t/s
+0.50.814.344 I slot print_timing: id  0 | task 0 | n_decoded =   1366, tg =  38.25 t/s
+0.53.818.668 I slot print_timing: id  0 | task 0 | n_decoded =   1481, tg =  38.25 t/s
+0.56.836.578 I slot print_timing: id  0 | task 0 | n_decoded =   1597, tg =  38.27 t/s
+0.59.847.569 I slot print_timing: id  0 | task 0 | n_decoded =   1713, tg =  38.29 t/s
+1.02.869.622 I slot print_timing: id  0 | task 0 | n_decoded =   1829, tg =  38.29 t/s
+1.05.890.127 I slot print_timing: id  0 | task 0 | n_decoded =   1945, tg =  38.30 t/s
+1.08.578.592 I slot print_timing: id  0 | task 0 | prompt eval time =    5103.61 ms /  6404 tokens (    0.80 ms per token,  1254.80 tokens per second)
+1.08.578.598 I slot print_timing: id  0 | task 0 |        eval time =   53474.14 ms /  2048 tokens (   26.11 ms per token,    38.30 tokens per second)
+1.08.578.599 I slot print_timing: id  0 | task 0 |       total time =   58577.75 ms /  8452 tokens
+1.08.578.605 I slot print_timing: id  0 | task 0 |    graphs reused =       2039
+1.08.578.768 I slot      release: id  0 | task 0 | stop processing: n_tokens = 8451, truncated = 0
+1.08.578.786 I srv  update_slots: all slots are idle
+1.47.171.842 I srv    operator(): operator(): cleaning up before exit...
