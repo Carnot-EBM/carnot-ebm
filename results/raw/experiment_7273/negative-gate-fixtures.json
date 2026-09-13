@@ -1,0 +1,61 @@
+{
+  "blocked_or_quarantined_rows": [
+    {
+      "actual_artifact_path": "results/experiment_7266_semantic_audit.json",
+      "artifact_sha256": "sha256:7b7327e927dac9ae30da4a260e834f25240fc9cbb8559bfc71411841bc1eef54",
+      "quarantine_state": {
+        "declared_flags": {},
+        "exclusion_manifest_match": false,
+        "quarantined": false
+      },
+      "status": "blocked",
+      "task_id": "exp7266-semantic-audit"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7271_delta_log.json",
+      "artifact_sha256": "sha256:2311cdf1f6f3b0ac2d373dd330889818237bea90ac99e2c8fa5e72018bcd6bab",
+      "quarantine_state": {
+        "declared_flags": {},
+        "exclusion_manifest_match": false,
+        "quarantined": false
+      },
+      "status": "blocked",
+      "task_id": "exp7271-delta-log"
+    }
+  ],
+  "failed_gate_rows": [
+    {
+      "actual_artifact_path": "results/experiment_7265_v639_mention_heldout.json",
+      "artifact_field": "mention_capture_complete_score",
+      "consumer": "exp7266-semantic-audit",
+      "declared_artifact_path": "results/experiment_7265_v639_mention_heldout.json",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "value_mismatch",
+      "passed": false,
+      "producer_declares_field": true,
+      "producer_milestone": "2026.09.639",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7265-mention-heldout"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7270_v639_durable_profile.json",
+      "artifact_field": "journal_optimization_warranted_score",
+      "consumer": "exp7271-delta-log",
+      "declared_artifact_path": "results/experiment_7270_v639_durable_profile.json",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "value_mismatch",
+      "passed": false,
+      "producer_declares_field": true,
+      "producer_milestone": "2026.09.639",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7270-durable-profile"
+    }
+  ],
+  "schema": "carnot.exp7273.negative_gate_fixtures.v1"
+}

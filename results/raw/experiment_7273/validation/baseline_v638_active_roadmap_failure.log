@@ -1,0 +1,747 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collected 30 items
+
+tests/python/test_experiment_7259_v638_capstone.py .EEEEEEEEEE.FE...EE.E [ 70%]
+                                                                         [ 70%]
+tests/python/test_experiment_7260_v639_source_contract.py .........      [100%]
+
+==================================== ERRORS ====================================
+___ ERROR at setup of test_scenario_report_7259_contract_keeps_fourteen_rows ___
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_missing_and_gate_block_rows_remain_explicit _
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_gates_distinguish_value_file_and_success _
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_______ ERROR at setup of test_scenario_report_7259_claims_use_raw_rows ________
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_artifact_is_complete_and_blocked _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+---------------------------- Captured stdout setup -----------------------------
+[exp7259] phase 0 start: authenticate inputs, ownership, imports, and writable paths
+[exp7259] phase 1 start: parse selected V638 YAML and named design independently
+_ ERROR at setup of test_scenario_report_7259_sidecars_and_branches_are_narrow _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_validator_rejects_mutations[capstone_complete_score-0-capstone_complete_score] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_validator_rejects_mutations[verdict_class-partial-verdict_class] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_validator_rejects_mutations[reproducibility_checksum-sha256:bad-reproducibility_checksum] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+________ ERROR at setup of test_req_report_7259_cli_paths_and_bad_date _________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+___ ERROR at setup of test_req_report_7259_upstream_validator_failure_paths ____
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+___ ERROR at setup of test_req_report_7259_sidecar_ignores_nonmapping_hashes ___
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+_ ERROR at setup of test_scenario_report_7259_validator_rejects_bad_source_hash_shape _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _trace=<pluggy._tracing.TagTracerSub object at 0x7fb759e02390>, _basetemp=PosixPath('/tmp/carnot-exp7273-affected'), _retention_count=1, _retention_policy='failed')
+
+    @pytest.fixture(scope="module")
+    def built_artifact(
+        tmp_path_factory: pytest.TempPathFactory,
+    ) -> tuple[dict[str, object], Path, Path]:
+        """Build one terminal fixture without changing repository result paths."""
+    
+        directory = tmp_path_factory.mktemp("exp7259")
+        output = directory / "result.json"
+        checkpoint = directory / "checkpoint.json"
+        raw_dir = directory / "raw"
+        log = directory / "fixture-validation.log"
+        log.write_text("fixture command passed\n", encoding="utf-8")
+        receipt_path = directory / "validation-receipts.json"
+        receipt_path.write_text(
+            json.dumps(
+                {
+                    "receipts": [
+                        {
+                            "name": "fixture_validation",
+                            "command": "pytest fixture",
+                            "exit_code": 0,
+                            "log_path": str(log),
+                            "log_sha256": capstone._sha256(log),
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+>       artifact = capstone.build_artifact(
+            ROOT,
+            capstone.RUN_DATE,
+            output,
+            checkpoint,
+            raw_dir=raw_dir,
+            validation_receipt_path=receipt_path,
+        )
+
+tests/python/test_experiment_7259_v638_capstone.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/carnot/experiment_7259_v638_capstone.py:1162: in build_artifact
+    contract = load_contract(root)
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+______ ERROR at setup of test_scenario_report_7259_terminal_write_guards _______
+
+    @pytest.fixture(scope="module")
+    def repository_state() -> tuple[dict[str, object], dict[str, dict[str, object]]]:
+        """Load the contract and evidence once because source hashing is repeated work."""
+    
+>       contract = capstone.load_contract(ROOT)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/python/test_experiment_7259_v638_capstone.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+=================================== FAILURES ===================================
+________ test_req_report_7259_contract_reader_rejects_wrong_authorities ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb6edeefbf0>
+
+    def test_req_report_7259_contract_reader_rejects_wrong_authorities(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-REPORT-7259: wrong roadmap shape, milestone, design, or order fails closed."""
+    
+        with monkeypatch.context() as patch:
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: [])
+            with pytest.raises(ValueError, match="root"):
+                capstone.load_contract(ROOT)
+        roadmap = capstone.yaml.safe_load((ROOT / capstone.ROADMAP_PATH).read_bytes())
+        with monkeypatch.context() as patch:
+            bad = deepcopy(roadmap)
+            bad["milestone"] = "2026.09.637"
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: bad)
+            with pytest.raises(ValueError, match="not V638"):
+                capstone.load_contract(ROOT)
+        with monkeypatch.context() as patch:
+            bad = deepcopy(roadmap)
+            bad["milestone_doc"] = "wrong.md"
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: bad)
+            with pytest.raises(ValueError, match="unexpected design"):
+>               capstone.load_contract(ROOT)
+
+tests/python/test_experiment_7259_v638_capstone.py:263: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/home/ianblenke/github.com/ianblenke/carnot')
+
+    def load_contract(root: Path) -> JsonDict:
+        """Parse the selected V638 YAML and its named Markdown design independently."""
+    
+        roadmap_path = root / ROADMAP_PATH
+        roadmap_bytes = roadmap_path.read_bytes()
+        roadmap = yaml.safe_load(roadmap_bytes)
+        if not isinstance(roadmap, Mapping):
+            raise ValueError("V638 roadmap root is not a mapping")
+        if roadmap.get("milestone") != MILESTONE:
+>           raise ValueError("active roadmap is not V638")
+E           ValueError: active roadmap is not V638
+
+python/carnot/experiment_7259_v638_capstone.py:184: ValueError
+
+During handling of the above exception, another exception occurred:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb6edeefbf0>
+
+    def test_req_report_7259_contract_reader_rejects_wrong_authorities(
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-REPORT-7259: wrong roadmap shape, milestone, design, or order fails closed."""
+    
+        with monkeypatch.context() as patch:
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: [])
+            with pytest.raises(ValueError, match="root"):
+                capstone.load_contract(ROOT)
+        roadmap = capstone.yaml.safe_load((ROOT / capstone.ROADMAP_PATH).read_bytes())
+        with monkeypatch.context() as patch:
+            bad = deepcopy(roadmap)
+            bad["milestone"] = "2026.09.637"
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: bad)
+            with pytest.raises(ValueError, match="not V638"):
+                capstone.load_contract(ROOT)
+        with monkeypatch.context() as patch:
+            bad = deepcopy(roadmap)
+            bad["milestone_doc"] = "wrong.md"
+            patch.setattr(capstone.yaml, "safe_load", lambda _value: bad)
+>           with pytest.raises(ValueError, match="unexpected design"):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: Regex pattern did not match.
+E             Expected regex: 'unexpected design'
+E             Actual message: 'active roadmap is not V638'
+
+tests/python/test_experiment_7259_v638_capstone.py:262: AssertionError
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7259_v638_capstone.py::test_req_report_7259_contract_reader_rejects_wrong_authorities
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_contract_keeps_fourteen_rows
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_missing_and_gate_block_rows_remain_explicit
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_gates_distinguish_value_file_and_success
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_claims_use_raw_rows
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_artifact_is_complete_and_blocked
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_sidecars_and_branches_are_narrow
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_validator_rejects_mutations[capstone_complete_score-0-capstone_complete_score]
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_validator_rejects_mutations[verdict_class-partial-verdict_class]
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_validator_rejects_mutations[reproducibility_checksum-sha256:bad-reproducibility_checksum]
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_req_report_7259_cli_paths_and_bad_date
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_req_report_7259_upstream_validator_failure_paths
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_req_report_7259_sidecar_ignores_nonmapping_hashes
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_validator_rejects_bad_source_hash_shape
+ERROR tests/python/test_experiment_7259_v638_capstone.py::test_scenario_report_7259_terminal_write_guards
+=================== 1 failed, 15 passed, 14 errors in 4.54s ====================

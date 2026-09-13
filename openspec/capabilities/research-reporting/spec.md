@@ -86,6 +86,108 @@ terminal result path.
 `tests/python/test_experiment_7260_v639_source_contract.py`. The terminal
 receipt is `results/experiment_7260_v639_source_contract.json`.
 
+## V639 independent evidence matrix — 2026-09-13
+
+**Status:** Implemented. The capstone keeps contract failure separate from
+scientific value and task completion.
+
+### REQ-REPORT-7273: Authenticate and close all fourteen V639 tasks
+
+Exp7273 SHALL read the active `2026.09.639` YAML and the exact Markdown file
+named by that YAML. It SHALL freeze both byte streams. It SHALL parse the two
+contracts independently and retain exactly fourteen ordered rows from
+`exp7260` through `exp7273`. It SHALL preserve every declared deliverable path.
+It SHALL use only the canonical conductor block when a declared deliverable is
+absent. It SHALL not substitute a similarly named result.
+
+Exp7273 SHALL authenticate each available producer and preserve its hash,
+terminal class, quarantine state, raw evidence count, and structured gate
+observations. It SHALL replay every gate from the same V639 YAML declaration.
+A missing file, missing field, quarantined value, mismatched value, and passing
+value SHALL remain distinct outcomes.
+
+Exp7273 SHALL independently reduce source fidelity, ARC transition prediction,
+policy consumption, recognition learning and safety, durable-cost limits, and
+delta-log semantics. It SHALL keep exact oracle parity, local public-game
+generalization, and an official hidden score as separate claims. It SHALL not
+promote completion, readiness, or validator success into scientific value.
+
+Exp7273 SHALL compare every current producer verdict with every exact
+`prior_failures` verdict in its task. A recurring verdict MAY retire only the
+same task mechanism. Other work SHALL name a changed cause or an exact changed
+prerequisite. The capstone SHALL not edit the exclusion manifest, roadmap, or
+conductor. It SHALL not publish, upload, submit, send an external message, or
+change a production default.
+
+The artifact SHALL set `capstone_complete_score=1` after all fourteen task
+dispositions and all derived rows are consistent. This score SHALL mean only
+that closeout is complete. Complete failed efficacy SHALL remain `null`.
+Missing, retired, or quarantined required science SHALL produce terminal
+`blocked` with a structured `gate_check_summary`. It SHALL never become
+`partial`; that class is reserved for unfinished Exp7273 work.
+
+The capstone SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model receipts and negative fixtures SHALL stay in hashed sidecars.
+The artifact SHALL retain actual UTC timestamps and monotonic phase durations.
+
+The terminal artifact SHALL contain every field and exact field principle from
+the frozen Exp7273 prompt. Its validator SHALL recompute the roster, gates,
+claims, branch decisions, source hashes, publication-gate shape, and checksum.
+
+#### SCENARIO-REPORT-7273-CONTRACT: Stale design bytes remain visible
+
+**Given** the selected V639 YAML and its named Markdown bytes
+**When** Exp7273 parses both sources independently
+**Then** it retains fourteen ordered comparison rows
+**And** a V636 Markdown milestone remains a contract mismatch, not a repaired
+or substituted V639 design.
+
+#### SCENARIO-REPORT-7273-INTAKE: Missing deliverables keep exact paths
+
+**Given** declared artifacts and canonical conductor blocks
+**When** Exp7273 builds the evidence matrix
+**Then** all fourteen rows preserve declared and actual paths and hashes
+**And** a blocked producer remains blocked without an invented deliverable.
+
+#### SCENARIO-REPORT-7273-CLAIMS: Raw evidence controls each conclusion
+
+**Given** authenticated producer rows and declared milestone scores
+**When** Exp7273 reduces source, ARC, recognition, and durable-cost claims
+**Then** each claim records its source fields, error, abstention, and value
+**And** oracle parity, public-game evidence, and hidden-score evidence remain
+separate.
+
+#### SCENARIO-REPORT-7273-DECISIONS: Prior failures stay task-scoped
+
+**Given** the exact V639 prior-failure declarations and current verdicts
+**When** Exp7273 creates branch decisions
+**Then** every task receives one closed action and exact next condition
+**And** retirement applies only after an exact same-verdict recurrence.
+
+#### SCENARIO-REPORT-7273-BLOCKED: Complete scope keeps upstream blocks
+
+**Given** all fourteen dispositions and unavailable required semantic evidence
+**When** Exp7273 completes its aggregation
+**Then** `capstone_complete_score` is one and `status` is blocked
+**And** `gate_check_summary` names the exact upstream field and observed value
+**And** the capstone does not retry the externally blocked branch.
+
+#### SCENARIO-REPORT-7273-ARTIFACT: Reloaded validation detects mutation
+
+**Given** a measured terminal candidate under `results/raw/`
+**When** the validator reloads its exact bytes
+**Then** the unchanged candidate passes independent validation
+**And** a changed roster, gate, claim, action, hash, class, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7273)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7273 and SCENARIO-REPORT-7273-* | Implemented: Exp7273 aggregation module, thin entrypoint, and blocked terminal artifact | Verified by focused RED/GREEN tests, 100% scoped coverage, lint, types, spec coverage, artifact replay, adversarial verification, row consistency, and aggregation E2E |
+
 ## V638 independent evidence matrix — 2026-09-13
 
 **Status:** Implemented. The terminal result remains blocked by absent external

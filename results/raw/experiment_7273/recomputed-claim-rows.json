@@ -1,0 +1,424 @@
+{
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_capture_accounted",
+      "claim_class": "circular_positive",
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "raw_rows",
+        "completeness_receipt"
+      ],
+      "matches": true,
+      "metric": "source_capture_accounted",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "raw_rows": 320,
+        "rows": 192,
+        "source_fidelity_rows": 192,
+        "token_cost_rows": 320
+      },
+      "recomputed_value": true,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7265-mention-heldout",
+      "unit_id": "exp7265-mention-heldout:source_capture_accounted",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_fidelity_exact",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "source_fidelity_rows",
+        "mention_capture_complete_score"
+      ],
+      "matches": true,
+      "metric": "source_fidelity_exact",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "raw_rows": 320,
+        "rows": 192,
+        "source_fidelity_rows": 192,
+        "token_cost_rows": 320
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7265-mention-heldout",
+      "unit_id": "exp7265-mention-heldout:source_fidelity_exact",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_semantic_value",
+      "claim_class": "blocked",
+      "declared_value": null,
+      "error": "blocked_producer_artifact",
+      "evidence_fields": [
+        "failed_upstream",
+        "failed_field",
+        "failed_observed"
+      ],
+      "matches": true,
+      "metric": "source_semantic_value",
+      "metric_value": null,
+      "positive_promoted": false,
+      "raw_evidence_counts": {},
+      "recomputed_value": null,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7266-semantic-audit",
+      "unit_id": "exp7266-semantic-audit:source_semantic_value",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_transition_oracle_parity",
+      "claim_class": "circular_positive",
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "terminal_handoff_rows"
+      ],
+      "matches": true,
+      "metric": "arc_transition_oracle_parity",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "rows": 13,
+        "terminal_handoff_rows": 2,
+        "witness_rows": 8
+      },
+      "recomputed_value": true,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7262-arc-witness-receipt",
+      "unit_id": "exp7262-arc-witness-receipt:arc_transition_oracle_parity",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_public_game_generalization",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "rows.heldout_accuracy",
+        "rows.identity_baseline_accuracy"
+      ],
+      "matches": true,
+      "metric": "arc_public_game_generalization",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "policy_consumption_rows": 0,
+        "rows": 4
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7263-arc-live",
+      "unit_id": "exp7263-arc-live:arc_public_game_generalization",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_policy_consumption",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "rows.policy_consumption_rows",
+        "policy_consumption_rows"
+      ],
+      "matches": true,
+      "metric": "arc_policy_consumption",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "policy_consumption_rows": 0,
+        "rows": 4
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7263-arc-live",
+      "unit_id": "exp7263-arc-live:arc_policy_consumption",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "official_hidden_score",
+      "claim_class": "null",
+      "declared_value": null,
+      "error": "official_hidden_score_absent",
+      "evidence_fields": [
+        "official_hidden_score",
+        "new_solve_claimed",
+        "solve_provenance"
+      ],
+      "matches": true,
+      "metric": "official_hidden_score",
+      "metric_value": null,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "policy_consumption_rows": 0,
+        "rows": 4
+      },
+      "recomputed_value": null,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7263-arc-live",
+      "unit_id": "exp7263-arc-live:official_hidden_score",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "recognition_run_complete",
+      "claim_class": "circular_positive",
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "comparison_rows",
+        "causal_summary",
+        "recognition_run_complete_score"
+      ],
+      "matches": true,
+      "metric": "recognition_run_complete",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "comparison_rows": 21,
+        "cost_rows": 7,
+        "rows": 192,
+        "supplied_change_oracle_rows": 0
+      },
+      "recomputed_value": true,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7268-recognition-learning",
+      "unit_id": "exp7268-recognition-learning:recognition_run_complete",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "recognition_learning_value",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "acceptance_gate_results.future_error_vs_reset",
+        "acceptance_gate_results.false_accept_vs_reset",
+        "acceptance_gate_results.recurrence_error_vs_shuffle",
+        "acceptance_gate_results.recurrence_degradation_vs_frozen",
+        "acceptance_gate_results.prospective_causal_change"
+      ],
+      "matches": true,
+      "metric": "recognition_learning_value",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "comparison_rows": 21,
+        "cost_rows": 7,
+        "rows": 192,
+        "supplied_change_oracle_rows": 0
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7268-recognition-learning",
+      "unit_id": "exp7268-recognition-learning:recognition_learning_value",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "recognition_safety",
+      "claim_class": "circular_positive",
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "acceptance_gate_results.cold_process",
+        "acceptance_gate_results.label_memory_bounds",
+        "acceptance_gate_results.mutation_rejections",
+        "acceptance_gate_results.pre_release_isolation",
+        "acceptance_gate_results.query_memory_limits",
+        "acceptance_gate_results.released_only_replay"
+      ],
+      "matches": true,
+      "metric": "recognition_safety",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "bound_rows": 192,
+        "comparison_rows": 21,
+        "e2e_rows": 6,
+        "intervention_rows": 4935,
+        "mutation_rows": 5,
+        "overlap_rows": 96,
+        "raw_check_rows": 98,
+        "replay_rows": 24,
+        "rollback_rows": 1,
+        "rows": 192
+      },
+      "recomputed_value": true,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7269-recognition-audit",
+      "unit_id": "exp7269-recognition-audit:recognition_safety",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "recognition_promotion",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "acceptance_gate_results.future_error_vs_reset",
+        "acceptance_gate_results.false_accept_vs_reset",
+        "acceptance_gate_results.recurrence_error_vs_shuffle",
+        "acceptance_gate_results.recurrence_degradation_vs_frozen",
+        "acceptance_gate_results.prospective_causal_change",
+        "acceptance_gate_results.cold_process",
+        "acceptance_gate_results.label_memory_bounds",
+        "acceptance_gate_results.mutation_rejections",
+        "acceptance_gate_results.pre_release_isolation",
+        "acceptance_gate_results.query_memory_limits",
+        "acceptance_gate_results.released_only_replay"
+      ],
+      "matches": true,
+      "metric": "recognition_promotion",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "bound_rows": 192,
+        "comparison_rows": 21,
+        "e2e_rows": 6,
+        "intervention_rows": 4935,
+        "mutation_rows": 5,
+        "overlap_rows": 96,
+        "raw_check_rows": 98,
+        "replay_rows": 24,
+        "rollback_rows": 1,
+        "rows": 192
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7269-recognition-audit",
+      "unit_id": "exp7269-recognition-audit:recognition_promotion",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "durable_profile_complete",
+      "claim_class": "circular_positive",
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "component_rows",
+        "component_reduction"
+      ],
+      "matches": true,
+      "metric": "durable_profile_complete",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "component_rows": 12,
+        "rows": 552,
+        "saved_cost_rows": 540
+      },
+      "recomputed_value": true,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7270-durable-profile",
+      "unit_id": "exp7270-durable-profile:durable_profile_complete",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "durable_cost_limit_value",
+      "claim_class": "null",
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "journal_warrant",
+        "acceleration_envelope.targets.10x"
+      ],
+      "matches": true,
+      "metric": "durable_cost_limit_value",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence_counts": {
+        "component_rows": 12,
+        "rows": 552,
+        "saved_cost_rows": 540
+      },
+      "recomputed_value": false,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7270-durable-profile",
+      "unit_id": "exp7270-durable-profile:durable_cost_limit_value",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "durable_log_semantics",
+      "claim_class": "blocked",
+      "declared_value": null,
+      "error": "blocked_producer_artifact",
+      "evidence_fields": [
+        "failed_upstream",
+        "failed_field",
+        "failed_observed"
+      ],
+      "matches": true,
+      "metric": "durable_log_semantics",
+      "metric_value": null,
+      "positive_promoted": false,
+      "raw_evidence_counts": {},
+      "recomputed_value": null,
+      "seed": 727320260913,
+      "source_authenticated": true,
+      "task_id": "exp7271-delta-log",
+      "unit_id": "exp7271-delta-log:durable_log_semantics",
+      "verifier_is_oracle": false
+    }
+  ],
+  "schema": "carnot.exp7273.recomputed_claim_rows.v1"
+}
