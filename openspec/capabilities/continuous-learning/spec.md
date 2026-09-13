@@ -14512,3 +14512,130 @@ success-shaped artifact before measurement and cold validation finish.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7256 and SCENARIO-CL-7256-* | Implemented: persistent native FIFO controller, typed operations, isolated build, eight-stream replay, restart, and terminal artifact. | Verified: RED-first parity, conversion, snapshot, transaction, restart, artifact, command, and 100% scoped new-module coverage tests. |
+
+## REQ-CL-7267: Active Recognition Before Constraint-Memory Reactivation
+
+Carnot SHALL diagnose the complete Exp7254 and Exp7255 null evidence before it
+builds a replacement fixture. The diagnosis SHALL reduce the saved selection
+rows into archive-size, distinguishability, eligibility, shuffled-choice, and
+later-decision counts. It SHALL separate one-candidate states, merged
+signatures, and safety rejection. The result SHALL not assign signature rebasing
+as the cause unless an observed replay preserves a distinguishing
+counterexample on a stable released-only witness basis.
+
+The recognition controller SHALL keep at most four immutable survivor-mask
+snapshots. It SHALL keep a bounded stable witness basis that retains released
+examples when they discriminate stored snapshots. It SHALL not rebase stored
+snapshot identity onto only the most recent examples. A separate bounded fresh
+validation set SHALL decide whether a stored snapshot is safe to reactivate.
+Reactivation SHALL require fresh released feedback, at least eight applicable
+fresh witnesses, and zero contradictions.
+
+When more than one archived survivor mask remains distinguishable, the active
+arm SHALL select a public query that maximizes archived prediction disagreement.
+The random-query arm SHALL use the same candidate set and query budget. The
+shuffled-association arm SHALL permute archive identities while it preserves
+snapshot contents. A query and its later feedback SHALL not change the
+prediction for the event that requested it. No hidden regime ID, future label,
+evaluator parameter, or supplied boundary SHALL enter nomination. Existing
+released contradiction detection SHALL provide the online change signal.
+Supplied boundaries MAY appear only in an oracle-assisted diagnostic row.
+
+Eight development streams SHALL freeze all representation, query, memory, and
+tie parameters before prospective labels are inspected. The fixture SHALL then
+seal 24 fresh streams of 1,024 events. Each stream SHALL have 128 warmup events
+and at most 128 charged feedback queries per arm. Twelve prospective streams
+SHALL use separated recurring regimes. Twelve SHALL use deliberately
+overlapping regimes. Public events, release schedules, and private evaluator
+authority SHALL use separate sealed bytes.
+
+The fixture SHALL replay frozen, reset, previous coverage, active recognition,
+random-query recognition, shuffled archive association, full version-space
+memory, and feedback-withheld arms. All arms SHALL use the same public stream.
+The bounded arms SHALL include pending requests, witness basis, archives, and
+ledgers within 69,632 total serialized bytes. The 32 old streams SHALL remain a
+diagnostic input only and SHALL not enter prospective fixture rows.
+
+The E2E control SHALL process a released event, request a query, receive delayed
+feedback, commit atomically, make a later prediction, cold restore, and roll
+back. Mutation controls SHALL reject future-label access, a shuffled identity
+mapping that cannot change selection, duplicate release IDs, and stale parent
+hashes. Rejected writes SHALL preserve exact in-memory and durable bytes.
+
+`recognition_fixture_ready_score` SHALL equal one only when at least one
+development selection changes under active discrimination, the stable-basis
+counterexample survives, all 24 prospective streams and eight arms are
+complete, and every query, memory, mutation, and E2E control passes. Readiness
+SHALL not depend on favorable held-out error. A complete fixture with a failed
+mechanism gate SHALL be a terminal null with a specific stop reason.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Every current load, generation, inference, and usable
+answer count SHALL be zero. Completed CPU work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` for the
+execution venue. The exact evaluator SHALL set `verifier_is_oracle=true`.
+Therefore a ready fixture SHALL use `verdict_class=circular_positive`, never
+`positive`. A missing or quarantined external prerequisite SHALL produce a
+row-free terminal blocked artifact with an exact `gate_check_summary`.
+
+### SCENARIO-CL-7267-PRECONDITIONS: Exact Null Evidence Or Block
+
+- GIVEN the active Exp7267 task, both complete V638 null artifacts, and their saved rows
+- WHEN hashes, quarantine state, imports, requirements, and output ownership are checked
+- THEN only exact complete evidence can start diagnosis or stream generation
+- AND an external failure produces a row-free terminal blocked artifact.
+
+### SCENARIO-CL-7267-DIAGNOSIS: Selection Stages Name The Observed Cause
+
+- GIVEN saved V638 nomination summaries and an instrumented released-only replay
+- WHEN archive size, distinct candidates, eligible candidates, choices, and later decisions are reduced
+- THEN one-candidate, signature-merge, and safety-rejection states remain separate
+- AND rebasing is named only if a stable-basis counterexample stays distinguishable.
+
+### SCENARIO-CL-7267-BASIS: Released Discriminators Stay Stable And Bounded
+
+- GIVEN more released examples than the witness capacity
+- WHEN stable-basis retention evaluates archived survivor-mask disagreement
+- THEN retained examples preserve discriminatory signatures under the fixed tie rule
+- AND fresh validation witnesses remain separate from the identity basis.
+
+### SCENARIO-CL-7267-QUERY: Maximum Disagreement Drives Charged Feedback
+
+- GIVEN at least two distinguishable archived survivor masks and public query candidates
+- WHEN active recognition selects one query
+- THEN it maximizes archived prediction disagreement under the frozen tie rule
+- AND neither evaluator authority nor the later query label reaches that decision.
+
+### SCENARIO-CL-7267-STREAMS: Development And Prospective Authority Stay Separate
+
+- GIVEN eight development streams and 24 fresh prospective streams in two equal strata
+- WHEN public, release, private authority, raw, and manifest bytes are sealed
+- THEN all fixed counts, delays, identities, and query limits conform
+- AND no label, regime, boundary, parameter, or seed reaches controller input.
+
+### SCENARIO-CL-7267-PANEL: Eight Arms Share Frozen Limits
+
+- GIVEN all eight declared arms and the 24 sealed prospective streams
+- WHEN the fixture replays every event without efficacy-based stopping
+- THEN every stream-arm row is complete and uncensored
+- AND each bounded arm stays within 128 queries, four archives, and 69,632 bytes.
+
+### SCENARIO-CL-7267-TRANSACTION: Feedback Changes Only Later Durable State
+
+- GIVEN a public event, query, delayed release, exact parent, and durable controller
+- WHEN commit, later prediction, reload, rejection, and rollback execute
+- THEN only a later prediction can observe the released change
+- AND future labels, duplicate releases, stale parents, and ineffective shuffles fail closed.
+
+### SCENARIO-CL-7267-TERMINAL: Readiness Is Mechanism Evidence
+
+- GIVEN complete diagnosis, development intervention, prospective fixture, controls, and raw reduction
+- WHEN terminal readiness is classified
+- THEN one certifies a causally effective fixture without scoring held-out learning value
+- AND any failed mechanism gate produces a complete null with its specific stop reason.
+
+## Implementation Status (REQ-CL-7267)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7267 and SCENARIO-CL-7267-* | Implemented: `python/carnot/experiment_7267_v639_recognition_prototype.py` provides the stable released-witness basis, active disagreement controller, two-stratum stream sealer, eight-arm fixture, diagnosis reducer, controls, and artifact builder. The script entrypoint remains thin. | Verified: RED-first basis, query, diagnosis, isolation, panel, transaction, terminal, command, and defensive tests pass with 902 of 902 scoped statements covered. |
