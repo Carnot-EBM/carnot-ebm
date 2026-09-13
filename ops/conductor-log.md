@@ -17869,3 +17869,4 @@ code |
 | 2026-09-13 12:24 UTC | Held-out source fidelity on the mandated Qwen3.8 G | OK | 131 passed, 1 warning in 9.03s |
 | 2026-09-13 12:27 UTC | Independent source semantics and matched-coverage  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7265-mention-heldout.mention_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-13 13:05 UTC | Active discrimination before constraint-memory rea | OK | 101 passed, 1 warning in 17.75s |
+| 2026-09-13 13:32 UTC | Prospective self-learning with active constraint r | OK | 93 passed, 1 warning in 18.92s |
