@@ -31971,6 +31971,47 @@ conformance. It SHALL not claim a game solve or efficacy.
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7262: Publish a terminal witness receipt only after validation
+
+Experiment 7262 SHALL reuse the shipped Exp7248 CPU witness panel. It SHALL not
+call the historical full-suite validation runner. It SHALL validate a complete
+or null candidate from a separate raw-evidence path before it calculates final
+readiness. It SHALL publish the terminal result atomically only after the method
+checks, the complete-candidate check, and an independent raw-row reduction pass.
+
+The terminal checker SHALL reject a deliberately partial checkpoint. An absent
+or quarantined external prerequisite SHALL produce a terminal blocked result
+with `gate_check_summary`. Only this experiment's unfinished work SHALL remain
+partial, and it SHALL remain under `results/checkpoints/` rather than at the
+terminal result path.
+
+The receipt SHALL prove actual `E3AgentPolicy` witness handoff. Each witness row
+SHALL bind an observed state, action, and successor to the witness delivered in
+the next request. It SHALL preserve direction and state identity, exclude later
+transitions, retain default-off request-byte parity, and leave plan installation
+authority unchanged. The receipt SHALL claim mechanism plumbing only. It SHALL
+not claim live model utility or a game-level solve.
+
+### SCENARIO-ARC-WMTE-7262-TERMINAL-HANDOFF
+
+- GIVEN a complete CPU panel and its authenticated raw rows
+- WHEN the terminal candidate is checked before publication
+- THEN the complete or null candidate passes the unchanged artifact checker
+- AND a partial checkpoint made from the same evidence fails that checker
+- AND readiness equals one only after the independent reducer agrees.
+
+### SCENARIO-ARC-WMTE-7262-WITNESS-DELIVERY
+
+- GIVEN scripted completions and agent-observed transition triples
+- WHEN the real `E3AgentPolicy` enters selfparse refinement
+- THEN the exact witness reaches the next prompt with the correct transition
+  direction and state identity
+- AND no later transition appears in that witness
+- AND default-off request bytes and plan authority remain unchanged.
+
+Implementation status: specified 2026-09-13. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7235: Audit saved scored-path world-model use without an LLM
 
 Experiment 7235 SHALL read Experiment 7234 only from
