@@ -1462,3 +1462,99 @@ topology, bandwidth, power, and latency unknown.
 emit `board_disposition_complete_score=1` with an empty hardware-operation
 list. The GateMate row MAY remain blocked while the top-level review is
 complete.
+
+### REQ-ISING-7258
+
+**The V638 board-state record MUST authenticate graduated-board evidence and
+the current GateMate physical-state boundary without a hardware command.**
+
+**Rationale:**
+Exp7244 authenticated KV260 programmable-logic synthesis and latency. It also
+authenticated PolarFire hash-matched CPU dispatch. The PolarFire receipt does
+not show FPGA sampling. GateMate still requires a later operator-authored
+physical change after Exp6559. Repeating an unchanged probe cannot add evidence.
+
+**Acceptance criteria:**
+- The production implementation SHALL be
+  `python/carnot/experiment_7258_v638_board_state.py`. The executable
+  entrypoint SHALL be
+  `scripts/experiments/experiment_7258_v638_board_state.py`.
+- Preconditions SHALL bind nonempty required source bytes, this requirement,
+  the exact V638 task contract, imports, writable outputs, and the exclusion
+  manifest. They SHALL reject quarantined or malformed mandatory inputs before
+  they use an acceptance value.
+- The task SHALL reuse the Exp7244 reader and validator. It SHALL authenticate
+  the immutable KV260 and PolarFire paths and hashes referenced by Exp7244.
+  Mutable documentation drift outside those evidence chains SHALL not replace
+  the immutable transcript checks.
+- The task SHALL set `MODEL_SPECS=[]` and `model_invoked=false`. Current model
+  invocation, model load, and generation counters SHALL all equal zero.
+  Historical model declarations SHALL remain in a hashed sidecar.
+- The task SHALL use `aggregation_from_upstream_artifacts` as its inference
+  substrate and `aggregation` as its substrate class. The execution venue SHALL
+  be `host`. The execution host SHALL be a separate field.
+- The GateMate search SHALL use only approved operator receipt sources. A valid
+  receipt SHALL be later than Exp6559 and name a cable, port, board, power, or
+  DirtyJTAG change. It SHALL retain source, author, date, hash, and changed
+  condition evidence.
+- Without a valid GateMate receipt, the board row SHALL use
+  `blocked_changed_physical_state`. It SHALL name the missing receipt and the
+  exact operator action that can enable a later task. A valid receipt SHALL only
+  name one newly enabled action for a future task.
+- The task SHALL issue no SSH, JTAG, reset, flash, firmware, sampling, purchase,
+  signup, upload, publication, or external-message action. The
+  `hardware_operations_issued` list SHALL be empty.
+- The KV260 row SHALL preserve the exact terminal criterion
+  `board-level programmable-logic latency transcript and successful KV260 synthesis`.
+  It SHALL preserve FPGA-fabric execution provenance.
+- The PolarFire row SHALL preserve the exact terminal criterion
+  `end-to-end hash-matched CPU dispatch with retained raw transcript evidence`.
+  It SHALL identify CPU execution and SHALL state that programmable-logic
+  sampling was not observed.
+- Each board row SHALL contain a unit ID, arm, seed, metric, error, abstention,
+  censoring state, evidence hashes, disposition, and exact next condition.
+  The aggregate SHALL be independently reducible from these rows.
+- Missing and malformed GateMate receipt fixtures SHALL fail closed. Their
+  hashed sidecar SHALL show zero external and hardware commands.
+- `board_disposition_complete_score` SHALL equal one when all three
+  dispositions and next conditions are authenticated. A GateMate row block
+  SHALL not block the completed host-only disposition record.
+- A failed repository or upstream precondition SHALL produce a terminal blocked
+  artifact. Its `gate_check_summary` SHALL name the upstream, check, field,
+  observed value, and expected value. It SHALL contain no board row.
+- The producer SHALL write provisional state only below `results/checkpoints/`.
+  It SHALL validate and atomically write the terminal artifact to
+  `results/experiment_7258_v638_board_state.json`.
+
+**Implementation status:** Implemented and verified (Exp7258)
+
+### SCENARIO-ISING-7258-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine marker, malformed mandatory artifact, invalid referenced
+hash, or unwritable output, Exp7258 SHALL emit a terminal blocked result. It
+SHALL emit no board row and no hardware operation.
+
+### SCENARIO-ISING-7258-BOARDS
+
+**Current receipt to dispositions:** Given an authenticated Exp7244 receipt and
+its immutable transcript hashes, Exp7258 SHALL preserve KV260 fabric graduation
+and PolarFire CPU graduation as separate evidence classes.
+
+### SCENARIO-ISING-7258-GATEMATE
+
+**Physical-state boundary:** Given no valid operator-authored physical change
+after Exp6559, Exp7258 SHALL record `blocked_changed_physical_state`. Given a
+valid later change, it SHALL name one later action and still issue no command.
+
+### SCENARIO-ISING-7258-FIXTURES
+
+**Receipt parser negative controls:** Given separate missing and malformed
+receipt fixtures, Exp7258 SHALL reject both. The fixture receipt SHALL retain
+zero external and hardware commands.
+
+### SCENARIO-ISING-7258-ARTIFACT
+
+**Terminal host-only receipt:** Given three authenticated dispositions,
+Exp7258 SHALL emit `board_disposition_complete_score=1`. Its rows and hashes
+SHALL reduce independently, even while GateMate remains blocked at row scope.
