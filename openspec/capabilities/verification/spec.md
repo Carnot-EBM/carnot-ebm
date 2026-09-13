@@ -42212,3 +42212,84 @@ checkpoint for unfinished current work.
 **When** independent raw replay and focused validation complete
 **Then** public source and claim bytes reconstruct every extraction and direct row
 **And** the private authority grades them with zero label leakage before publication.
+
+### REQ-VERIFY-7279: Source Audit SHALL Recompute Raw Semantics Against Matched Direct Self-Consistency
+
+Exp7279 SHALL authenticate the complete Exp7278 source measurement and the
+public, private, schedule, raw-manifest, and call-file bytes that it names.
+Missing, retired, quarantined, or invalid external evidence SHALL produce a
+terminal blocked artifact with an exact `gate_check_summary`. A block SHALL
+record zero current model loads and generations. Partial SHALL describe only
+unfinished Exp7279 work in a separate checkpoint.
+
+The audit SHALL invoke no LLM. It SHALL parse retained request and response
+bytes through an independent implementation. It SHALL not call an Exp7278
+summary or semantic reducer. The independent authority SHALL reconstruct all
+256 calls, all 64 units, and all 16 base groups. It SHALL preserve parse errors,
+explicit unknown decisions, abstentions, and censoring in fixed denominators.
+Changing only an Exp7278 summary SHALL not change the raw recomputation.
+
+The audit SHALL report each arm before a pooled claim. Arm rows SHALL include
+raw accuracy, false-accept, coverage, parse-error, abstention, source-exactness,
+and claim-exactness numerators and denominators. The primary comparison SHALL
+be verifier minus matched two-draw direct self-consistency. One-shot direct
+SHALL remain secondary. The fixed source-shuffle control SHALL reuse retained
+source extractions and make no model call.
+
+Paired confidence intervals SHALL use 10,000 fixed bootstrap resamples of the
+16 independent base groups. They SHALL not resample the 64 correlated source
+conditions as independent units. The audit SHALL report verifier-minus-direct
+accuracy and false-accept differences. It SHALL also report coverage and
+matched-coverage risk without selecting a threshold from private labels.
+
+The audit SHALL run wrong-authority, source-replacement, shuffled-label,
+consistent-renaming, and deleted-evidence controls. `source_audit_complete_score`
+SHALL equal one when every fixed row and control has a disposition, including a
+negative finding. `source_promotion_score` SHALL equal one only when the
+accuracy CI95 lower bound is above zero, the false-accept CI95 upper bound is at
+most zero, source leakage is absent, raw replay has no mismatch, verifier
+accuracy exceeds the frozen source-shuffle control, and all independence
+controls pass. Failed value criteria SHALL produce a complete null, not missing
+measurement. Shared evaluator authority SHALL prevent a `positive` verdict.
+
+The measured terminal candidate SHALL first exist under
+`results/raw/experiment_7279/`. Focused tests, affected suites, scoped 100%
+coverage, Ruff, changed-module mypy, exact-file spec coverage, independent raw
+replay, adversarial verification, and verdict-row consistency SHALL pass before
+atomic publication. The claim boundary SHALL remain the 16-base synthetic
+source pilot. It SHALL make no broad hallucination or GSM8K claim.
+
+#### SCENARIO-VERIFY-7279-PREFLIGHT: External Failure Is Terminal Blocked
+
+**Given** Exp7278 or any authenticated raw input is absent, retired, quarantined, or invalid
+**When** Exp7279 checks its prerequisites
+**Then** it publishes a terminal blocked artifact with the exact first failure
+**And** current load and generation counters remain zero.
+
+#### SCENARIO-VERIFY-7279-RAW: Independent Parsing Ignores Producer Summaries
+
+**Given** frozen public, private, schedule, manifest, request, and response bytes
+**When** Exp7279 independently parses and grades all calls
+**Then** it reconstructs 64 units grouped into 16 independent bases
+**And** changing only an Exp7278 summary leaves every reconstructed row unchanged.
+
+#### SCENARIO-VERIFY-7279-PAIRED: Base Groups Define Uncertainty
+
+**Given** four correlated source conditions for each of 16 bases
+**When** Exp7279 computes paired confidence intervals
+**Then** each of 10,000 resamples samples base groups rather than condition rows
+**And** raw arm numerators and denominators remain visible before comparisons.
+
+#### SCENARIO-VERIFY-7279-CONTROLS: Causal Failures Stay Visible
+
+**Given** authenticated evidence and fixed control mutations
+**When** authority, source, label, name, and deletion controls run
+**Then** every control records its expected and observed disposition
+**And** a failed value or independence criterion yields a complete null result.
+
+#### SCENARIO-VERIFY-7279-E2E: Raw Evidence Precedes Publication
+
+**Given** the frozen Exp7278 raw responses
+**When** the second authority builds all arm and base rows and paired intervals
+**Then** the measured candidate is independently replayed and checked under the raw directory
+**And** only a cold-valid candidate with passing validation receipts is published atomically.
