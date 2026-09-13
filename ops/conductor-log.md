@@ -17863,3 +17863,4 @@ code |
 | 2026-09-13 09:04 UTC | Milestone 2026.09.639 activated | OK | 14 tasks queued |
 | 2026-09-13 09:26 UTC | V639 source ingestion and exact execution contract | OK | 90 passed, 1 warning in 9.06s |
 | 2026-09-13 10:04 UTC | Repair authenticated compute floors and isolate th | OK | 118 passed, 1 warning in 180.53s (0:03:00) |
+| 2026-09-13 10:26 UTC | Qualify shipped ARC transition witnesses through t | OK | 104 passed, 1 warning in 10.99s |
