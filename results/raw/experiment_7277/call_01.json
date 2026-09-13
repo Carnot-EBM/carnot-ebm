@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nAmina founded Cedar Labs in 2019.\nCLAIM:\nAmina founded Cedar Labs.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_supported_founder:unconstrained",
+    "call_order": 1,
+    "censored": false,
+    "completion_tokens": 12,
+    "decision": "supported",
+    "error": null,
+    "expected_payload_sha256": "sha256:e96a3cfd0e8849e569e8e258a4bed552c6eb4f266b9c9796b5c3dbbaff55f2f8",
+    "expected_request_bytes_sha256": "sha256:e96a3cfd0e8849e569e8e258a4bed552c6eb4f266b9c9796b5c3dbbaff55f2f8",
+    "finish_reason": "stop",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "latency_s": 0.5060450960882008,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 85,
+    "raw_completion": "{\n  \"decision\": \"supported\"\n}",
+    "raw_completion_sha256": "sha256:b18565393e65b896342b4f80be95406f34ceb443093a69c8cf0277dbf856e896",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nAmina founded Cedar Labs in 2019.\nCLAIM:\nAmina founded Cedar Labs.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoiIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiSnVkZ2UgdGhlIGNsYWltIGZyb20gdGhlIHNvdXJjZS4gUmV0dXJuIG9uZSBmdWxsIGRlY2lzaW9uIHN0cmluZzogc3VwcG9ydGVkLCBjb250cmFkaWN0ZWQsIG9yIHVua25vd24uIFJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB3aXRoIHRoZSBkZWNpc2lvbiBrZXkuXG5TT1VSQ0U6XG5BbWluYSBmb3VuZGVkIENlZGFyIExhYnMgaW4gMjAxOS5cbkNMQUlNOlxuQW1pbmEgZm91bmRlZCBDZWRhciBMYWJzLiIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3Mjc1MjAyNjA5MTQsInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"supported\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327481,
+      "id": "chatcmpl-rL3jOPdoPtLWZQeR5dRlhdpb59HZNl8x",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 272.977,
+        "predicted_n": 12,
+        "predicted_per_second": 43.95974752451672,
+        "predicted_per_token_ms": 22.74808333333333,
+        "prompt_ms": 212.641,
+        "prompt_n": 85,
+        "prompt_per_second": 399.73476422703055,
+        "prompt_per_token_ms": 2.5016588235294117
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 97
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwic3VwcG9ydGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MzI3NDgxLCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjEyLCJwcm9tcHRfdG9rZW5zIjo4NSwidG90YWxfdG9rZW5zIjo5NywicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1yTDNqT1Bkb1B0TFdaUWVSNWRSbGhkcGI1OUhaTmw4eCIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjg1LCJwcm9tcHRfbXMiOjIxMi42NDEsInByb21wdF9wZXJfdG9rZW5fbXMiOjIuNTAxNjU4ODIzNTI5NDExNywicHJvbXB0X3Blcl9zZWNvbmQiOjM5OS43MzQ3NjQyMjcwMzA1NSwicHJlZGljdGVkX24iOjEyLCJwcmVkaWN0ZWRfbXMiOjI3Mi45NzcsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjIyLjc0ODA4MzMzMzMzMzMzLCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6NDMuOTU5NzQ3NTI0NTE2NzJ9fQ==",
+    "request_bytes_sha256": "sha256:e96a3cfd0e8849e569e8e258a4bed552c6eb4f266b9c9796b5c3dbbaff55f2f8",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:6798aff95c1b1697a16322036ab5f6b0611e83ebf27194ce9634d620b9f8aa44",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:aeb7239564c3ae74d5cf8efbac3e714fcc5aae09b7c3a914f26b4db36ee12e62",
+    "response_observed_at_utc": "2026-09-13T19:24:41Z",
+    "row_sha256": "sha256:fe5ff92dc2e5c38f15141781b9f411bc3c9fbfcac2c8172bd2f29859c19b9e5f",
+    "seed": 727520260914,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_supported_founder",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_supported_founder:unconstrained",
+    "call_order": 1,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260914,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nAmina founded Cedar Labs in 2019.\nCLAIM:\nAmina founded Cedar Labs.",
+    "prompt_sha256": "sha256:067afed03a4d59f46306d24558be43465f8c7fa12f98dad02db28470f484156c",
+    "retry_budget": 0,
+    "seed": 727520260914,
+    "unit_id": "dev_supported_founder",
+    "unit_index": 0
+  }
+}

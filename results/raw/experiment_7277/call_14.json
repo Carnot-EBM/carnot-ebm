@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nThe blue key opens the west door, not the east door.\nCLAIM:\nThe blue key opens the east door.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "constrained",
+    "call_id": "exp7277:dev_contradicted_direction:constrained",
+    "call_order": 14,
+    "censored": false,
+    "completion_tokens": 10,
+    "decision": "contradicted",
+    "error": null,
+    "expected_payload_sha256": "sha256:1813cdc8e230d32cf6928b54fef8e37a649fee7e51b5678525d78325822be8f2",
+    "expected_request_bytes_sha256": "sha256:1813cdc8e230d32cf6928b54fef8e37a649fee7e51b5678525d78325822be8f2",
+    "finish_reason": "stop",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "latency_s": 0.48665651702322066,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 88,
+    "raw_completion": "{\"decision\":\"contradicted\"}",
+    "raw_completion_sha256": "sha256:29503956463929a0b4c39d15ea51687f19306b6c0a086e6e34f6c34890c8a934",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nThe blue key opens the west door, not the east door.\nCLAIM:\nThe blue key opens the east door.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gXCJ7XFxcImRlY2lzaW9uXFxcIjpcIiBkZWNpc2lvbiBcIn1cIlxuZGVjaXNpb24gOjo9IFwiXFxcInN1cHBvcnRlZFxcXCJcIiB8IFwiXFxcImNvbnRyYWRpY3RlZFxcXCJcIiB8IFwiXFxcInVua25vd25cXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHRoZSBjbGFpbSBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgZnVsbCBkZWNpc2lvbiBzdHJpbmc6IHN1cHBvcnRlZCwgY29udHJhZGljdGVkLCBvciB1bmtub3duLiBSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3Qgd2l0aCB0aGUgZGVjaXNpb24ga2V5LlxuU09VUkNFOlxuVGhlIGJsdWUga2V5IG9wZW5zIHRoZSB3ZXN0IGRvb3IsIG5vdCB0aGUgZWFzdCBkb29yLlxuQ0xBSU06XG5UaGUgYmx1ZSBrZXkgb3BlbnMgdGhlIGVhc3QgZG9vci4iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI3NTIwMjYwOTEzLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\":\"contradicted\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327487,
+      "id": "chatcmpl-Dn0yfBfK5qzHIJCsyry8ZCYPB8q81czo",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 250.645,
+        "predicted_n": 10,
+        "predicted_per_second": 39.897065570827266,
+        "predicted_per_token_ms": 25.064500000000002,
+        "prompt_ms": 213.499,
+        "prompt_n": 88,
+        "prompt_per_second": 412.1799165335669,
+        "prompt_per_token_ms": 2.426125
+      },
+      "usage": {
+        "completion_tokens": 10,
+        "prompt_tokens": 88,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 98
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjpcImNvbnRyYWRpY3RlZFwifSJ9fV0sImNyZWF0ZWQiOjE3ODkzMjc0ODcsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6MTAsInByb21wdF90b2tlbnMiOjg4LCJ0b3RhbF90b2tlbnMiOjk4LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLURuMHlmQmZLNXF6SElKQ3N5cnk4WkNZUEI4cTgxY3pvIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6ODgsInByb21wdF9tcyI6MjEzLjQ5OSwicHJvbXB0X3Blcl90b2tlbl9tcyI6Mi40MjYxMjUsInByb21wdF9wZXJfc2Vjb25kIjo0MTIuMTc5OTE2NTMzNTY2OSwicHJlZGljdGVkX24iOjEwLCJwcmVkaWN0ZWRfbXMiOjI1MC42NDUsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI1LjA2NDUwMDAwMDAwMDAwMiwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM5Ljg5NzA2NTU3MDgyNzI2Nn19",
+    "request_bytes_sha256": "sha256:1813cdc8e230d32cf6928b54fef8e37a649fee7e51b5678525d78325822be8f2",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:2e6c28a83db0d9000fae70d65732413bc2856ba42276b1d909a4be86641e3ca3",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:50374ad5c58f794400a99b7efb1ea58dad043c216104cd6f6394aad7d7ad5732",
+    "response_observed_at_utc": "2026-09-13T19:24:47Z",
+    "row_sha256": "sha256:c8b386e6b020dc60462724ffd47dedcf2a5a6b18d0bce8a5f5b78dcab7f1d406",
+    "seed": 727520260913,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_contradicted_direction",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "constrained",
+    "call_id": "exp7277:dev_contradicted_direction:constrained",
+    "call_order": 14,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260913,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nThe blue key opens the west door, not the east door.\nCLAIM:\nThe blue key opens the east door.",
+    "prompt_sha256": "sha256:749ae106e872e444f38138549382ebebf80a25e709603373ca7a0588f39b7da7",
+    "retry_budget": 0,
+    "seed": 727520260913,
+    "unit_id": "dev_contradicted_direction",
+    "unit_index": 7
+  }
+}

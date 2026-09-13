@@ -42014,3 +42014,103 @@ request mutation, explicit unknown, and truncation pass through the reducer
 **When** the end-to-end replay runs from bytes through independent semantic scoring
 **Then** every historical row matches and a failed answer remains a valid negative
 **And** mutation of any authenticated input produces a terminal blocked result.
+
+### REQ-VERIFY-7277: Direct Comparator Canary SHALL Qualify Transport And Replay
+
+Exp7277 SHALL authenticate the exact Exp7275 terminal artifact and its sealed
+comparator contract. It SHALL require `semantic_replay_ready_score=1`. It SHALL
+also authenticate the current Exp7275 code hashes and exclusion state. A
+missing, retired, quarantined, or unauthenticated prerequisite SHALL produce a
+terminal `blocked` artifact with an exact `gate_check_summary`. A failed
+pre-launch check SHALL record zero current model loads and generation calls.
+
+Before model load, the task SHALL seal eight development prompts. The prompts
+SHALL cover supported, contradicted, and unknown decisions. At least one prompt
+SHALL cover an unknown or duplicate-mention boundary. These prompts SHALL not
+enter the held-out trial. The schedule SHALL contain exactly 16 calls: one
+constrained and one unconstrained direct judgment for each prompt. Every call
+SHALL use a 128-token output limit, temperature zero, a fixed seed, and no
+retry. The constrained arm SHALL forward the Exp7275 grammar exactly. The
+unconstrained arm SHALL use the same prompt and budget without an active
+grammar.
+
+The live path SHALL resolve `unsloth/Qwen3.8-27B-GGUF` with
+`scripts.experiment_template.cached_sota_pair()` and select its cached Q4_K_M
+path. It SHALL use the GGUF tokenizer and chat template through the shipped
+native llama.cpp server. It SHALL set `CARNOT_FORCE_LIVE=1`. It SHALL acquire
+one task-owned idle RTX 3090 lease and use one server sequentially. It SHALL
+record the model revision and content hash, process ID and start tick, server
+properties, launch arguments, GPU samples, measured KV headroom, lease state,
+and raw request and response bytes. It SHALL not use `DualGPURunner`. Model
+load SHALL stop after 600 seconds. The complete load and canary window SHALL
+stop after 900 seconds.
+
+The task SHALL use `inference_substrate=live_llm_inference`,
+`inference_substrate_class=model_bounded_generation`,
+`inference_mode=live_gpu`, and `execution_venue=host` after generation starts.
+A pre-launch external block SHALL use the actual no-model substrate and zero
+invocation counts. A completed load without generation SHALL use the applicable
+load-only substrate class. The runner SHALL keep attempted loads, completed
+loads, attempted calls, completed calls, and usable answers separate.
+
+An independent reducer SHALL rebuild all 16 request and response joins from
+task-owned raw bytes with the Exp7275 request builder and full-decision parser.
+Readiness SHALL require 16 of 16 joins, the exact grammar on every constrained
+request, zero replay discrepancies, eight parse-valid constrained outputs with
+the full decision vocabulary, complete current-model identity, and valid CUDA
+ownership. Decision accuracy SHALL be descriptive development evidence only.
+It SHALL not gate `comparator_canary_ready_score`. A failed canary SHALL end
+this branch without retry, retuning, or fixture replacement.
+
+The terminal artifact SHALL include every field named by the Exp7277 task. It
+SHALL include `raw_call_manifest`, `request_grammar_rows`, `runner_receipt`, and
+`semantic_accuracy_rows`. Each required field SHALL have a plain-language
+entry in `field_principles`. A measured terminal candidate SHALL first exist
+under `results/raw/`. Focused tests, scoped coverage, Ruff, mypy, exact-file
+spec coverage, independent raw replay, adversarial verification, and verdict
+row consistency SHALL pass before atomic publication. Partial SHALL remain
+only in a separate checkpoint for unfinished current work.
+
+#### SCENARIO-VERIFY-7277-PREFLIGHT: External Failure Is Terminal Blocked
+
+**Given** Exp7275, its contract, current code identity, the model cache, or an
+idle task-ownable RTX 3090 is missing or invalid
+**When** Exp7277 performs pre-launch checks
+**Then** it publishes one terminal blocked artifact with the exact first failure
+**And** it records zero attempted loads and generation calls.
+
+#### SCENARIO-VERIFY-7277-SCHEDULE: Eight Development Prompts Freeze Sixteen Calls
+
+**Given** the authenticated comparator contract and eight development prompts
+**When** the canary schedule is sealed before model load
+**Then** each prompt has one constrained and one unconstrained 128-token call
+**And** fixed seeds, equal prompts, zero temperature, and no retry bind all calls.
+
+#### SCENARIO-VERIFY-7277-TRANSPORT: One Owned Server Retains Native Evidence
+
+**Given** one task-owned RTX 3090 lease and the cached Q4_K_M model
+**When** the native llama.cpp server loads and handles the fixed schedule
+**Then** all calls run sequentially through the embedded chat template
+**And** process identity, server properties, launch arguments, GPU samples,
+KV headroom, lease state, and raw bytes remain durable.
+
+#### SCENARIO-VERIFY-7277-REPLAY: Independent Reduction Preserves Failures
+
+**Given** all authentic constrained and unconstrained request and response bytes
+**When** Exp7275 reconstructs each request and parses each full decision
+**Then** all 16 joins match with zero replay discrepancy
+**And** invalid or truncated unconstrained replies remain measured failures.
+
+#### SCENARIO-VERIFY-7277-GATE: Fidelity Is Independent Of Accuracy
+
+**Given** eight constrained outputs and descriptive authority labels
+**When** the canary readiness gate runs
+**Then** all constrained outputs must parse with the requested full vocabulary
+**And** semantic correctness does not raise or lower the readiness score.
+
+#### SCENARIO-VERIFY-7277-E2E: Raw Candidate Precedes Atomic Publication
+
+**Given** a measured terminal candidate under the task raw directory
+**When** focused validation and independent replay finish
+**Then** each command retains its exit code, timing, and log hash
+**And** only a cold-valid candidate is written to the declared result path.

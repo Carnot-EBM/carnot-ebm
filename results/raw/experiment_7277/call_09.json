@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRavi called Nia twice. Nia answered the second call.\nCLAIM:\nNia answered neither call.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_contradicted_duplicate:unconstrained",
+    "call_order": 9,
+    "censored": false,
+    "completion_tokens": 14,
+    "decision": "contradicted",
+    "error": null,
+    "expected_payload_sha256": "sha256:156b4b0e59dde9b57c5f5aefab8d1549d4c68864cd627e1d2315385505ec5490",
+    "expected_request_bytes_sha256": "sha256:156b4b0e59dde9b57c5f5aefab8d1549d4c68864cd627e1d2315385505ec5490",
+    "finish_reason": "stop",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "latency_s": 0.5461794880684465,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 85,
+    "raw_completion": "{\n  \"decision\": \"contradicted\"\n}",
+    "raw_completion_sha256": "sha256:ea25847cfde771a92d16921d653ce0a583df30ee33ee660c9f6a36c20c00ea79",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRavi called Nia twice. Nia answered the second call.\nCLAIM:\nNia answered neither call.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoiIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiSnVkZ2UgdGhlIGNsYWltIGZyb20gdGhlIHNvdXJjZS4gUmV0dXJuIG9uZSBmdWxsIGRlY2lzaW9uIHN0cmluZzogc3VwcG9ydGVkLCBjb250cmFkaWN0ZWQsIG9yIHVua25vd24uIFJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB3aXRoIHRoZSBkZWNpc2lvbiBrZXkuXG5TT1VSQ0U6XG5SYXZpIGNhbGxlZCBOaWEgdHdpY2UuIE5pYSBhbnN3ZXJlZCB0aGUgc2Vjb25kIGNhbGwuXG5DTEFJTTpcbk5pYSBhbnN3ZXJlZCBuZWl0aGVyIGNhbGwuIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyNzUyMDI2MDkxNCwic3RyZWFtIjpmYWxzZSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"contradicted\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327485,
+      "id": "chatcmpl-4nwTxDSaW0jEOMLcngf7ntidCdxwbrSJ",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 321.519,
+        "predicted_n": 14,
+        "predicted_per_second": 43.54330537231081,
+        "predicted_per_token_ms": 22.965642857142857,
+        "prompt_ms": 213.185,
+        "prompt_n": 85,
+        "prompt_per_second": 398.7147313366325,
+        "prompt_per_token_ms": 2.508058823529412
+      },
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 99
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwiY29udHJhZGljdGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MzI3NDg1LCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjE0LCJwcm9tcHRfdG9rZW5zIjo4NSwidG90YWxfdG9rZW5zIjo5OSwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC00bndUeERTYVcwakVPTUxjbmdmN250aWRDZHh3YnJTSiIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjg1LCJwcm9tcHRfbXMiOjIxMy4xODUsInByb21wdF9wZXJfdG9rZW5fbXMiOjIuNTA4MDU4ODIzNTI5NDEyLCJwcm9tcHRfcGVyX3NlY29uZCI6Mzk4LjcxNDczMTMzNjYzMjUsInByZWRpY3RlZF9uIjoxNCwicHJlZGljdGVkX21zIjozMjEuNTE5LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyMi45NjU2NDI4NTcxNDI4NTcsInByZWRpY3RlZF9wZXJfc2Vjb25kIjo0My41NDMzMDUzNzIzMTA4MX19",
+    "request_bytes_sha256": "sha256:156b4b0e59dde9b57c5f5aefab8d1549d4c68864cd627e1d2315385505ec5490",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:6c4595d740799ad1b3187f4070d92e287130bc742e25a335aa275a8164fc0c21",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:7c20aca0acc7e3967a526173e3d3f949fcd5a0b9f637b2e8d65878a1e78fa00a",
+    "response_observed_at_utc": "2026-09-13T19:24:45Z",
+    "row_sha256": "sha256:55bd57745360c324ce3ff21ca122c03e1eb6ba502d09a31db659f30cefaaa795",
+    "seed": 727520260914,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_contradicted_duplicate",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_contradicted_duplicate:unconstrained",
+    "call_order": 9,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260914,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nRavi called Nia twice. Nia answered the second call.\nCLAIM:\nNia answered neither call.",
+    "prompt_sha256": "sha256:a309d79a8792ba0ca75f7b8fbee4e2609e2d36b5a74b751e682e9ebe0eeafb97",
+    "retry_budget": 0,
+    "seed": 727520260914,
+    "unit_id": "dev_contradicted_duplicate",
+    "unit_index": 4
+  }
+}

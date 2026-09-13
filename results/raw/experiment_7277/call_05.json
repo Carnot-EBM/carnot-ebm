@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": true,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nOrchid Works is based in Lima.\nCLAIM:\nOrchid Works earned ten million dollars in 2025.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_unknown_revenue:unconstrained",
+    "call_order": 5,
+    "censored": false,
+    "completion_tokens": 12,
+    "decision": "unknown",
+    "error": null,
+    "expected_payload_sha256": "sha256:6d17089f145f63360897bdd7e10be6e2c4e6724907b99f2941ae30f106e162ec",
+    "expected_request_bytes_sha256": "sha256:6d17089f145f63360897bdd7e10be6e2c4e6724907b99f2941ae30f106e162ec",
+    "finish_reason": "stop",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "latency_s": 0.5084714230615646,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 91,
+    "raw_completion": "{\n  \"decision\": \"unknown\"\n}",
+    "raw_completion_sha256": "sha256:67027000699bb7f706e2827d1c1e0209f30575b68f85306cee55d8f7050a726f",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nOrchid Works is based in Lima.\nCLAIM:\nOrchid Works earned ten million dollars in 2025.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoiIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiSnVkZ2UgdGhlIGNsYWltIGZyb20gdGhlIHNvdXJjZS4gUmV0dXJuIG9uZSBmdWxsIGRlY2lzaW9uIHN0cmluZzogc3VwcG9ydGVkLCBjb250cmFkaWN0ZWQsIG9yIHVua25vd24uIFJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB3aXRoIHRoZSBkZWNpc2lvbiBrZXkuXG5TT1VSQ0U6XG5PcmNoaWQgV29ya3MgaXMgYmFzZWQgaW4gTGltYS5cbkNMQUlNOlxuT3JjaGlkIFdvcmtzIGVhcm5lZCB0ZW4gbWlsbGlvbiBkb2xsYXJzIGluIDIwMjUuIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyNzUyMDI2MDkxNCwic3RyZWFtIjpmYWxzZSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"unknown\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327483,
+      "id": "chatcmpl-PLDihwJYKQdPV9h9t6vAIm3RUU0wjQ4R",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 272.962,
+        "predicted_n": 12,
+        "predicted_per_second": 43.96216323151208,
+        "predicted_per_token_ms": 22.74683333333333,
+        "prompt_ms": 214.566,
+        "prompt_n": 91,
+        "prompt_per_second": 424.1119282644967,
+        "prompt_per_token_ms": 2.357868131868132
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 91,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 103
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwidW5rbm93blwiXG59In19XSwiY3JlYXRlZCI6MTc4OTMyNzQ4MywibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjoxMiwicHJvbXB0X3Rva2VucyI6OTEsInRvdGFsX3Rva2VucyI6MTAzLCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLVBMRGlod0pZS1FkUFY5aDl0NnZBSW0zUlVVMHdqUTRSIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6OTEsInByb21wdF9tcyI6MjE0LjU2NiwicHJvbXB0X3Blcl90b2tlbl9tcyI6Mi4zNTc4NjgxMzE4NjgxMzIsInByb21wdF9wZXJfc2Vjb25kIjo0MjQuMTExOTI4MjY0NDk2NywicHJlZGljdGVkX24iOjEyLCJwcmVkaWN0ZWRfbXMiOjI3Mi45NjIsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjIyLjc0NjgzMzMzMzMzMzMzLCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6NDMuOTYyMTYzMjMxNTEyMDh9fQ==",
+    "request_bytes_sha256": "sha256:6d17089f145f63360897bdd7e10be6e2c4e6724907b99f2941ae30f106e162ec",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:1c4c7b66a753d0b23d95751dc43af379e6b66b0804d6757986ab368c85c3c591",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:4041130b7565c48d8088915f56613d2246f608b58940326d31f9a98a4f4cccf5",
+    "response_observed_at_utc": "2026-09-13T19:24:43Z",
+    "row_sha256": "sha256:54330d5e92bb2de65d127698f4a1482b182ebbf6e421829a57957198fb755f4b",
+    "seed": 727520260914,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_unknown_revenue",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_unknown_revenue:unconstrained",
+    "call_order": 5,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260914,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nOrchid Works is based in Lima.\nCLAIM:\nOrchid Works earned ten million dollars in 2025.",
+    "prompt_sha256": "sha256:87f62c4338158278f7fc7ca23414f3101feaeaf8142cb92f035b8c96c2888a6e",
+    "retry_budget": 0,
+    "seed": 727520260914,
+    "unit_id": "dev_unknown_revenue",
+    "unit_index": 2
+  }
+}

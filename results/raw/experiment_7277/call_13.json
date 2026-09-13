@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_supported_unicode:unconstrained",
+    "call_order": 13,
+    "censored": false,
+    "completion_tokens": 7,
+    "decision": "supported",
+    "error": null,
+    "expected_payload_sha256": "sha256:d4faf3a78792c3efad0c22c7ed245b7b1e4f81daa8428b41e5ef198ad8d32d7a",
+    "expected_request_bytes_sha256": "sha256:d4faf3a78792c3efad0c22c7ed245b7b1e4f81daa8428b41e5ef198ad8d32d7a",
+    "finish_reason": "stop",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "latency_s": 0.37737133214250207,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 87,
+    "raw_completion": "{\"decision\": \"supported\"}",
+    "raw_completion_sha256": "sha256:1bbd5998b08bbb546bf887dc2d30ebeda630ce3be32d84021b442290de75351f",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoiIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiSnVkZ2UgdGhlIGNsYWltIGZyb20gdGhlIHNvdXJjZS4gUmV0dXJuIG9uZSBmdWxsIGRlY2lzaW9uIHN0cmluZzogc3VwcG9ydGVkLCBjb250cmFkaWN0ZWQsIG9yIHVua25vd24uIFJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB3aXRoIHRoZSBkZWNpc2lvbiBrZXkuXG5TT1VSQ0U6XG5ab8OrIG1haWxlZCB0aGUgY2Fmw6kgcmVjZWlwdCB0byDDiW1pbGUuXG5DTEFJTTpcbsOJbWlsZSByZWNlaXZlZCBhIGNhZsOpIHJlY2VpcHQgZnJvbSBab8OrLiIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3Mjc1MjAyNjA5MTQsInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\": \"supported\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327487,
+      "id": "chatcmpl-tU1pQksUqwWKsVJeakzFiwRipFoOZUiv",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 152.18,
+        "predicted_n": 7,
+        "predicted_per_second": 45.998160073597056,
+        "predicted_per_token_ms": 21.740000000000002,
+        "prompt_ms": 213.562,
+        "prompt_n": 87,
+        "prompt_per_second": 407.3758440171941,
+        "prompt_per_token_ms": 2.4547356321839082
+      },
+      "usage": {
+        "completion_tokens": 7,
+        "prompt_tokens": 87,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 94
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjogXCJzdXBwb3J0ZWRcIn0ifX1dLCJjcmVhdGVkIjoxNzg5MzI3NDg3LCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjcsInByb21wdF90b2tlbnMiOjg3LCJ0b3RhbF90b2tlbnMiOjk0LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLXRVMXBRa3NVcXdXS3NWSmVha3pGaXdSaXBGb09aVWl2IiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6ODcsInByb21wdF9tcyI6MjEzLjU2MiwicHJvbXB0X3Blcl90b2tlbl9tcyI6Mi40NTQ3MzU2MzIxODM5MDgyLCJwcm9tcHRfcGVyX3NlY29uZCI6NDA3LjM3NTg0NDAxNzE5NDEsInByZWRpY3RlZF9uIjo3LCJwcmVkaWN0ZWRfbXMiOjE1Mi4xOCwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjEuNzQwMDAwMDAwMDAwMDAyLCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6NDUuOTk4MTYwMDczNTk3MDU2fX0=",
+    "request_bytes_sha256": "sha256:d4faf3a78792c3efad0c22c7ed245b7b1e4f81daa8428b41e5ef198ad8d32d7a",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:cc29c27fb0a3010f14d60d6839480cbc449dbab04f87f34eabbd6fd1e13f07d4",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:0f36b52f2af90ba2f7c82f1ffc010f2cce9a869dede25be32afe5f2b634f794b",
+    "response_observed_at_utc": "2026-09-13T19:24:47Z",
+    "row_sha256": "sha256:74fcfd7a98a48eaff804d9c487946743328a1a0d227d624761e2a6d7a885c416",
+    "seed": 727520260914,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_supported_unicode",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_supported_unicode:unconstrained",
+    "call_order": 13,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260914,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+    "prompt_sha256": "sha256:0789501f3a01e526a229c45e4798ffe77382d78e9a014f1d276315801eceb3e9",
+    "retry_budget": 0,
+    "seed": 727520260914,
+    "unit_id": "dev_supported_unicode",
+    "unit_index": 6
+  }
+}

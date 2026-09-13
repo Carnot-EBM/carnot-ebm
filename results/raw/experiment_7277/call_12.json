@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "constrained",
+    "call_id": "exp7277:dev_supported_unicode:constrained",
+    "call_order": 12,
+    "censored": false,
+    "completion_tokens": 7,
+    "decision": "supported",
+    "error": null,
+    "expected_payload_sha256": "sha256:9fad8f4d1b30c1c6e0322c12a134eb6394c80c2947725316b8c2daf0ca9aa054",
+    "expected_request_bytes_sha256": "sha256:9fad8f4d1b30c1c6e0322c12a134eb6394c80c2947725316b8c2daf0ca9aa054",
+    "finish_reason": "stop",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "latency_s": 0.4027969599701464,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 87,
+    "raw_completion": "{\"decision\":\"supported\"}",
+    "raw_completion_sha256": "sha256:3cc988cb7175799ff21dfeac36fd744fd077f90ef87fcb2e251a5b10bb9adc9b",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gXCJ7XFxcImRlY2lzaW9uXFxcIjpcIiBkZWNpc2lvbiBcIn1cIlxuZGVjaXNpb24gOjo9IFwiXFxcInN1cHBvcnRlZFxcXCJcIiB8IFwiXFxcImNvbnRyYWRpY3RlZFxcXCJcIiB8IFwiXFxcInVua25vd25cXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHRoZSBjbGFpbSBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgZnVsbCBkZWNpc2lvbiBzdHJpbmc6IHN1cHBvcnRlZCwgY29udHJhZGljdGVkLCBvciB1bmtub3duLiBSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3Qgd2l0aCB0aGUgZGVjaXNpb24ga2V5LlxuU09VUkNFOlxuWm/DqyBtYWlsZWQgdGhlIGNhZsOpIHJlY2VpcHQgdG8gw4ltaWxlLlxuQ0xBSU06XG7DiW1pbGUgcmVjZWl2ZWQgYSBjYWbDqSByZWNlaXB0IGZyb20gWm/Dqy4iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI3NTIwMjYwOTEzLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\":\"supported\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327486,
+      "id": "chatcmpl-Iqrtbzoy70AdRwcicJsXC6QRTKex3kwm",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 167.985,
+        "predicted_n": 7,
+        "predicted_per_second": 41.670387236955676,
+        "predicted_per_token_ms": 23.997857142857146,
+        "prompt_ms": 213.548,
+        "prompt_n": 87,
+        "prompt_per_second": 407.40255118287223,
+        "prompt_per_token_ms": 2.4545747126436783
+      },
+      "usage": {
+        "completion_tokens": 7,
+        "prompt_tokens": 87,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 94
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjpcInN1cHBvcnRlZFwifSJ9fV0sImNyZWF0ZWQiOjE3ODkzMjc0ODYsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6NywicHJvbXB0X3Rva2VucyI6ODcsInRvdGFsX3Rva2VucyI6OTQsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjowfX0sImlkIjoiY2hhdGNtcGwtSXFydGJ6b3k3MEFkUndjaWNKc1hDNlFSVEtleDNrd20iLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjAsInByb21wdF9uIjo4NywicHJvbXB0X21zIjoyMTMuNTQ4LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoyLjQ1NDU3NDcxMjY0MzY3ODMsInByb21wdF9wZXJfc2Vjb25kIjo0MDcuNDAyNTUxMTgyODcyMjMsInByZWRpY3RlZF9uIjo3LCJwcmVkaWN0ZWRfbXMiOjE2Ny45ODUsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjIzLjk5Nzg1NzE0Mjg1NzE0NiwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjQxLjY3MDM4NzIzNjk1NTY3Nn19",
+    "request_bytes_sha256": "sha256:9fad8f4d1b30c1c6e0322c12a134eb6394c80c2947725316b8c2daf0ca9aa054",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:b7167568ee356633fd05afe65bbc3a8c27f4b98c63f1131002ce93dccbc870aa",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:1e36631102a405d73a6eed12119afd9c240a7af496b2e268c2768118528a8034",
+    "response_observed_at_utc": "2026-09-13T19:24:46Z",
+    "row_sha256": "sha256:25bcf8c053a21125d52fd7695e59529d1f4d2e682ceae102ad18ec122c804ea0",
+    "seed": 727520260913,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_supported_unicode",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "constrained",
+    "call_id": "exp7277:dev_supported_unicode:constrained",
+    "call_order": 12,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260913,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nZo\u00eb mailed the caf\u00e9 receipt to \u00c9mile.\nCLAIM:\n\u00c9mile received a caf\u00e9 receipt from Zo\u00eb.",
+    "prompt_sha256": "sha256:0789501f3a01e526a229c45e4798ffe77382d78e9a014f1d276315801eceb3e9",
+    "retry_budget": 0,
+    "seed": 727520260913,
+    "unit_id": "dev_supported_unicode",
+    "unit_index": 6
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": false,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nMira met Jo at noon. Later, Mira thanked Jo for the map.\nCLAIM:\nMira thanked Jo.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "constrained",
+    "call_id": "exp7277:dev_supported_duplicate:constrained",
+    "call_order": 6,
+    "censored": false,
+    "completion_tokens": 8,
+    "decision": "supported",
+    "error": null,
+    "expected_payload_sha256": "sha256:11147892d41d18707741a704617ee01eba86078f3bbe65ad086931e32cbe7258",
+    "expected_request_bytes_sha256": "sha256:11147892d41d18707741a704617ee01eba86078f3bbe65ad086931e32cbe7258",
+    "finish_reason": "stop",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "latency_s": 0.43137299502268434,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 88,
+    "raw_completion": "{\"decision\":\"supported\"}",
+    "raw_completion_sha256": "sha256:3cc988cb7175799ff21dfeac36fd744fd077f90ef87fcb2e251a5b10bb9adc9b",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nMira met Jo at noon. Later, Mira thanked Jo for the map.\nCLAIM:\nMira thanked Jo.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260913,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoicm9vdCA6Oj0gXCJ7XFxcImRlY2lzaW9uXFxcIjpcIiBkZWNpc2lvbiBcIn1cIlxuZGVjaXNpb24gOjo9IFwiXFxcInN1cHBvcnRlZFxcXCJcIiB8IFwiXFxcImNvbnRyYWRpY3RlZFxcXCJcIiB8IFwiXFxcInVua25vd25cXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHRoZSBjbGFpbSBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBvbmUgZnVsbCBkZWNpc2lvbiBzdHJpbmc6IHN1cHBvcnRlZCwgY29udHJhZGljdGVkLCBvciB1bmtub3duLiBSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3Qgd2l0aCB0aGUgZGVjaXNpb24ga2V5LlxuU09VUkNFOlxuTWlyYSBtZXQgSm8gYXQgbm9vbi4gTGF0ZXIsIE1pcmEgdGhhbmtlZCBKbyBmb3IgdGhlIG1hcC5cbkNMQUlNOlxuTWlyYSB0aGFua2VkIEpvLiIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3Mjc1MjAyNjA5MTMsInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\":\"supported\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327484,
+      "id": "chatcmpl-flfLvfyXIICRT7SZcnQLZtldF1LCk5Bg",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 202.194,
+        "predicted_n": 8,
+        "predicted_per_second": 39.56596140340465,
+        "predicted_per_token_ms": 25.27425,
+        "prompt_ms": 213.508,
+        "prompt_n": 88,
+        "prompt_per_second": 412.1625419188039,
+        "prompt_per_token_ms": 2.4262272727272727
+      },
+      "usage": {
+        "completion_tokens": 8,
+        "prompt_tokens": 88,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 96
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjpcInN1cHBvcnRlZFwifSJ9fV0sImNyZWF0ZWQiOjE3ODkzMjc0ODQsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6OCwicHJvbXB0X3Rva2VucyI6ODgsInRvdGFsX3Rva2VucyI6OTYsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjowfX0sImlkIjoiY2hhdGNtcGwtZmxmTHZmeVhJSUNSVDdTWmNuUUxadGxkRjFMQ2s1QmciLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjAsInByb21wdF9uIjo4OCwicHJvbXB0X21zIjoyMTMuNTA4LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoyLjQyNjIyNzI3MjcyNzI3MjcsInByb21wdF9wZXJfc2Vjb25kIjo0MTIuMTYyNTQxOTE4ODAzOSwicHJlZGljdGVkX24iOjgsInByZWRpY3RlZF9tcyI6MjAyLjE5NCwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjUuMjc0MjUsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOS41NjU5NjE0MDM0MDQ2NX19",
+    "request_bytes_sha256": "sha256:11147892d41d18707741a704617ee01eba86078f3bbe65ad086931e32cbe7258",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:bd1aaabc42886d0afd6398a42d61ce16848cf85b22bf1971f70950e24110b7e0",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:9ec9ffcd3ed5971d598e73bb2216130de58a86f95d00fcb8bc31aaf2a01e3966",
+    "response_observed_at_utc": "2026-09-13T19:24:44Z",
+    "row_sha256": "sha256:39d55b2cd250dbff8db881a55f9c26843e8cbe1f9b2e08f3567ed9ccaaa7798b",
+    "seed": 727520260913,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_supported_duplicate",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "constrained",
+    "call_id": "exp7277:dev_supported_duplicate:constrained",
+    "call_order": 6,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260913,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "root ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"supported\\\"\" | \"\\\"contradicted\\\"\" | \"\\\"unknown\\\"\"\n",
+    "grammar_requested": true,
+    "grammar_sha256": "sha256:a778bb4e3191e4a38f2b87a7bcd583e99f7e9286819c2f99bdd8adabf18d9116",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nMira met Jo at noon. Later, Mira thanked Jo for the map.\nCLAIM:\nMira thanked Jo.",
+    "prompt_sha256": "sha256:0c6d12aaafbd9410b78792851f8322ed98bc99e43bc68759ed04908216721da7",
+    "retry_budget": 0,
+    "seed": 727520260913,
+    "unit_id": "dev_supported_duplicate",
+    "unit_index": 3
+  }
+}

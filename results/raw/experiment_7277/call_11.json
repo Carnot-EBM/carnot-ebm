@@ -1,0 +1,146 @@
+{
+  "completion": {
+    "abstention": true,
+    "actual_parameters": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nLee saw Pat near the station. Lee later saw Pat downtown.\nCLAIM:\nPat owned the station.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_unknown_duplicate:unconstrained",
+    "call_order": 11,
+    "censored": false,
+    "completion_tokens": 7,
+    "decision": "unknown",
+    "error": null,
+    "expected_payload_sha256": "sha256:4b355ce6ae2953258c19916d6c06bc44cda3f4d7a19d0ffd15edb1718e97aa40",
+    "expected_request_bytes_sha256": "sha256:4b355ce6ae2953258c19916d6c06bc44cda3f4d7a19d0ffd15edb1718e97aa40",
+    "finish_reason": "stop",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "latency_s": 0.3761270549148321,
+    "metric": 1,
+    "output_token_budget": 128,
+    "parse_valid": true,
+    "parser_classification": "valid",
+    "prompt_tokens": 85,
+    "raw_completion": "{\"decision\": \"unknown\"}",
+    "raw_completion_sha256": "sha256:37da0f9edc7d53d08ac7c6e50e0f5b534f9155846566969bf109940198093f72",
+    "raw_request": {
+      "cache_prompt": false,
+      "grammar": "",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nLee saw Pat near the station. Lee later saw Pat downtown.\nCLAIM:\nPat owned the station.",
+          "role": "user"
+        }
+      ],
+      "seed": 727520260914,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJncmFtbWFyIjoiIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiSnVkZ2UgdGhlIGNsYWltIGZyb20gdGhlIHNvdXJjZS4gUmV0dXJuIG9uZSBmdWxsIGRlY2lzaW9uIHN0cmluZzogc3VwcG9ydGVkLCBjb250cmFkaWN0ZWQsIG9yIHVua25vd24uIFJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB3aXRoIHRoZSBkZWNpc2lvbiBrZXkuXG5TT1VSQ0U6XG5MZWUgc2F3IFBhdCBuZWFyIHRoZSBzdGF0aW9uLiBMZWUgbGF0ZXIgc2F3IFBhdCBkb3dudG93bi5cbkNMQUlNOlxuUGF0IG93bmVkIHRoZSBzdGF0aW9uLiIsInJvbGUiOiJ1c2VyIn1dLCJzZWVkIjo3Mjc1MjAyNjA5MTQsInN0cmVhbSI6ZmFsc2UsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"decision\": \"unknown\"}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789327486,
+      "id": "chatcmpl-hfWsC2f23bbVTwBsAvqpEAktsthgf4gE",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 152.147,
+        "predicted_n": 7,
+        "predicted_per_second": 46.00813686763459,
+        "predicted_per_token_ms": 21.735285714285713,
+        "prompt_ms": 211.975,
+        "prompt_n": 85,
+        "prompt_per_second": 400.9906828635452,
+        "prompt_per_token_ms": 2.4938235294117646
+      },
+      "usage": {
+        "completion_tokens": 7,
+        "prompt_tokens": 85,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 92
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjogXCJ1bmtub3duXCJ9In19XSwiY3JlYXRlZCI6MTc4OTMyNzQ4NiwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjo3LCJwcm9tcHRfdG9rZW5zIjo4NSwidG90YWxfdG9rZW5zIjo5MiwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1oZldzQzJmMjNiYlZUd0JzQXZxcEVBa3RzdGhnZjRnRSIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjg1LCJwcm9tcHRfbXMiOjIxMS45NzUsInByb21wdF9wZXJfdG9rZW5fbXMiOjIuNDkzODIzNTI5NDExNzY0NiwicHJvbXB0X3Blcl9zZWNvbmQiOjQwMC45OTA2ODI4NjM1NDUyLCJwcmVkaWN0ZWRfbiI6NywicHJlZGljdGVkX21zIjoxNTIuMTQ3LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyMS43MzUyODU3MTQyODU3MTMsInByZWRpY3RlZF9wZXJfc2Vjb25kIjo0Ni4wMDgxMzY4Njc2MzQ1OX19",
+    "request_bytes_sha256": "sha256:4b355ce6ae2953258c19916d6c06bc44cda3f4d7a19d0ffd15edb1718e97aa40",
+    "request_started_at_utc": null,
+    "resource": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:df2346bda7b1432b258c2d31bf469fdd11c4340f9008e82e0b3c50b9097cd396",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:443ed410a8f2573da35de31a51c6e0e791fdef342073dde51cde693131d9b64d",
+      "server_pid": 3739959,
+      "server_pid_start_ticks": 161917156
+    },
+    "response_bytes_sha256": "sha256:5b5911bda7ac95846c7169d62636be0a5bc978b64a9ca6fc82fe2dedf2dbda70",
+    "response_observed_at_utc": "2026-09-13T19:24:46Z",
+    "row_sha256": "sha256:2374784323e1076da1a1757ef2121027cfb8a08b117dae9f1b709dcf9625a70a",
+    "seed": 727520260914,
+    "terminal_state": "complete",
+    "transport_complete": true,
+    "unit_id": "dev_unknown_duplicate",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "unconstrained",
+    "call_id": "exp7277:dev_unknown_duplicate:unconstrained",
+    "call_order": 11,
+    "call_type": "direct_judgment",
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 727520260914,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "grammar": "",
+    "grammar_requested": false,
+    "grammar_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "held_out_eligible": false,
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return one full decision string: supported, contradicted, or unknown. Return only one JSON object with the decision key.\nSOURCE:\nLee saw Pat near the station. Lee later saw Pat downtown.\nCLAIM:\nPat owned the station.",
+    "prompt_sha256": "sha256:d9537f87fff218f91a5b6c9d34792dede491d8bb04d16a662bddf84eead3f087",
+    "retry_budget": 0,
+    "seed": 727520260914,
+    "unit_id": "dev_unknown_duplicate",
+    "unit_index": 5
+  }
+}
