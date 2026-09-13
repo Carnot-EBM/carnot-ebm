@@ -156,3 +156,6 @@ of truth, not this line.)
 | 2026-09-12 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_current_task_inference_claim | REAL_BUG | OPEN | |
 | 2026-09-12 | qa_layer_authenticity_audit | adversarial_verify.py::offline_arc_methodology_descriptor | SILENT_NON_FIRING | OPEN | |
 | 2026-09-12 | qa_layer_authenticity_audit | adversarial_verify.py::duration_floor_for_artifact | SILENT_NON_FIRING | OPEN | |
+| 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::check_execution_venue | SILENT_NON_FIRING | OPEN | |
+| 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::_artifact_run_date | SILENT_NON_FIRING | OPEN | |
+| 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::check_substrate_class | SILENT_NON_FIRING | OPEN | |

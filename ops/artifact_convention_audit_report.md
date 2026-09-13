@@ -10,9 +10,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| AGGREGATE_ONLY | 1 |
 
-## experiment_7238_v637_mention_capture.json
+## experiment_7252_v638_semantic_audit.json
 
 **CHECKABLE**
 
@@ -20,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked without running because the upstream structured-quarantine check found `flagged_adversarial|quarantined|fabricated` to be true instead of the required false.
+The experiment was blocked because the upstream `experiment_7251_v638_mention_heldout` artifact was missing, so no audit or comparative evaluation ran.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +28,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7239_v637_semantic_audit.json
+## experiment_7253_v638_coverage_memory.json
 
 **CHECKABLE**
 
@@ -36,23 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The semantic audit was blocked without running because upstream experiment 7237 had `flagged_adversarial|quarantined|fabricated` observed as `true` when `false` was required.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` records `failed_check`, `artifact_field`, `expected_value`, `observed_value`, and `upstream`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7240_v637_recurrence_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The recurrence fixture, controller, and positive controls are runnable.
+The bounded coverage fixture and its controls are ready and passed the stated acceptance gates.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7241_v637_recurrence_learning.json
+## experiment_7254_v638_coverage_learning.json
 
 **CHECKABLE**
 
@@ -68,7 +52,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Validated archive reuse did not pass every frozen learning gate.
+The completed experiment produced a null verdict because bounded coverage memory failed several frozen acceptance gates.
 
 ## WHAT IS MISSING
 nothing
@@ -76,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7242_v637_recurrence_audit.json
+## experiment_7255_v638_coverage_audit.json
 
 **CHECKABLE**
 
@@ -84,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The recurrence audit completed, but the promotion criteria did not all pass.
+The coverage audit completed, but promotion criteria did not all pass.
 
 ## WHAT IS MISSING
 nothing
@@ -92,23 +76,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7243_v637_native_memory.json
+## experiment_7256_v638_native_controller.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The native arm achieved exact parity but failed every performance gate, with a reported lower-CI speedup of 0.3632×.
+All three arms achieved exact oracle parity, and the persistent native controller eliminated active reconstruction and hot-path JSON parsing.
 
 ## WHAT IS MISSING
-nothing; `"cost_rows"` records per-unit `"arm"`, `"block"`, `"metric"`, and `"total_event_ns"`, while `"acceptance_gate_results"` records each gate’s `"actual"`, `"expected"`, and `"pass"` values.
+Complete per-event `"parity_rows"` for all three arms; the supplied `"parity_rows"` shows only `"python_reference"` before truncating, while `"acceptance_gate_results.exact_three_arm_parity"` and `"independent_reducer_receipt"` provide only aggregate zero-mismatch summaries.
 
 ## THE CHECK A READER CANNOT DO
-none
+Did every old-native-wrapper and persistent-native-controller event match the Python reference, or were their claimed zero mismatches produced only by the aggregate reducer?
 
-## experiment_7244_v637_board_disposition.json
+## experiment_7257_v638_native_cost.json
 
 **CHECKABLE**
 
@@ -116,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-All three board dispositions are recorded: KV260 and PolarFire retain authenticated graduations, while GateMate remains blocked because no operator-authored physical-state receipt after Exp6559 exists.
+The artifact claims the 10× and 100× performance gates were unmet, capacity-one passed, capacity-four failed, and parity and durability checks passed.
 
 ## WHAT IS MISSING
 nothing
@@ -124,18 +108,34 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7245_v637_capstone.json
+## experiment_7258_v638_board_state.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The capstone claims the thirteen-task matrix is complete, but at least one recomputed claim does not match and several component results are null, disqualified, or prerequisite-blocked.
+Three authenticated board dispositions were recorded: KV260 and PolarFire graduations remain preserved, while GateMate is blocked because the required operator-authored physical-state-change receipt is missing.
 
 ## WHAT IS MISSING
-The artifact is truncated inside `"evidence_matrix"` at `"observed_sha256": "sha256:04ba7b2566939d0`; the remaining evidence rows, any final `"honest_verdict"`, and any per-unit metric rows supporting comparative claims such as the native path being `"slower"` cannot be found.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Do the unseen per-unit measurements actually support the claim that the native-memory path was slower, rather than that conclusion being based only on aggregate values?
+none
+
+## experiment_7259_v638_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V638 capstone is blocked because required external scientific evidence is unavailable and multiple acceptance gates failed despite completion of the fourteen-task matrix.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

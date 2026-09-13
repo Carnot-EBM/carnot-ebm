@@ -44182,3 +44182,86 @@ control, and retired overlap. No model ran. No external result became a Carnot
 result. The selected roadmap references a Markdown design that still declares
 V636. Exp7246 preserves that source delta as a structural disqualification.
 <!-- EXP7246-V638-SOURCE-INGESTION-20260912-END -->
+
+<!-- V639-PLANNER-REFRESH-20260913-START -->
+## V639 planning research refresh — 2026-09-13
+
+This source pass precedes the V639 experiment design. Searches covered all
+eight requested arXiv topics and all six secondary channels. A rechecked
+reference is identified below; an external result is never a Carnot result.
+
+### Selected new lead and rechecked controls
+
+| Source and date | Finding supported by the source | Local question and boundary |
+|---|---|---|
+| [Gradient-Free Warm-Start Library Recovery](https://arxiv.org/abs/2606.21253), submitted 19 June 2026; v2 revised 13 August | Separates recognizing a recurring regime from learning its parameters. The bounds assume supplied segmentation and distinguishable regimes. A fair Bayesian memory baseline matches its statistical advantage. | New lead: test active discrimination between stored constraint hypotheses before reactivation. Include reset, random-query, full-memory, shuffled association and overlapping-regime controls. This is a finite-constraint adaptation, not a replication of the theorem or proof of autonomous segmentation. |
+| [Query-Driven Interactive Refinement](https://arxiv.org/abs/2509.24489), 29 September 2025 | Uses queries to reject over-fitted constraints and recover valid substructures. | Rechecked: select released-feedback queries that distinguish hypotheses; charge every query. Do not make unsupported constraints true by changing weights. |
+| [Retrieval-Warmed Energy-Based Reasoning](https://arxiv.org/abs/2606.26476), 25 June 2026 | Separates aligned memory, shuffled memory, random initialization, constants and oracle information; deployable memory fails a value-quality gate. | Rechecked: archive diversity is insufficient if the prospective intervention changes no choices. Measure distinguishability, candidate eligibility, selection and later prediction separately. |
+| [Beyond Document Grounding](https://arxiv.org/abs/2607.00895), 1 July 2026 | Evaluates localized hallucination spans over code, tool output and documents, using injected errors and reviewed evidence. | Rechecked: preserve exact source/claim offsets and localized error categories in a held-out extraction audit. Its trained detector and benchmark scores do not transfer to the required Qwen3.8 GGUF. |
+| [Hardware-Oriented Inference Complexity of KANs](https://arxiv.org/abs/2604.03345), 3 April 2026; [BiKA](https://arxiv.org/abs/2602.23455), 26 February | The former counts multiplications, bit operations and shifts; the latter uses learned binary thresholds for a small accelerator. | Rechecked: count actual operations and representation bytes in the constraint-memory path. Defer a new KAN architecture until extraction supplies usable training evidence; comparator operations are not themselves a KAN. |
+| [FPGA Ising Decomposition](https://arxiv.org/abs/2602.15985), 17 February 2026 | Moves decomposition near a custom Ising solver to reduce orchestration cost. | Rechecked: decompose durable event cost before another native optimization. Amdahl bounds must include transfers, validation and durable commits. No custom Ising chip is available here. |
+
+The warm-start [full method](https://arxiv.org/html/2606.21253v1) was also read.
+Its segmentation assumption is load-bearing. A supplied-change diagnostic may
+isolate recognition, but only a separately labelled hidden-change arm can
+support an autonomous-learning claim. The August revision says the results
+are unchanged.
+
+### Remaining primary topics and explicit deferrals
+
+- EBM verification/reasoning: rechecked [EBT](https://arxiv.org/abs/2507.02092)
+  through its OpenReview record and [ARM–EBM](https://arxiv.org/abs/2512.15605),
+  revised 25 May 2026. Compatibility energy and model equivalence do not
+  certify faithful extraction. The retired external-text scorer branch stays
+  closed. The new search also surfaced [ASP with EBMs](https://arxiv.org/abs/2607.08136);
+  its symbolic input requirements do not remove the extraction bottleneck.
+- Neural constraint satisfaction: the query-driven acquisition work above
+  supplies a practical mechanism; encoding already-known constraints into a
+  neural solver does not establish source fidelity.
+- Energy-guided and constrained generation: rechecked [ETS](https://arxiv.org/abs/2601.21484)
+  (record says ICML 2026 accepted), [CFGzip](https://arxiv.org/abs/2605.29986),
+  and [finite-automaton decoding for diffusion LMs](https://arxiv.org/abs/2607.07026).
+  Their Monte Carlo, vocabulary-compression and diffusion mechanisms are
+  distinct. None is a drop-in semantic verifier for Qwen3.8. Defer new decoding
+  experiments until source fidelity has a clean measurement.
+- Ising and hardware sampling: [parallel inertial p-bits](https://arxiv.org/abs/2604.17109)
+  was rechecked. Optimization success is distinct from equilibrium sample
+  quality; the old small-graph parallel-update retirement is unchanged.
+- Continual learning: the new recognition/estimation separation motivates a
+  bounded active-query memory trial. Include the strong memory baseline the
+  paper itself says it cannot beat.
+
+### Secondary-source checks
+
+| Channel | Observed access and disposition |
+|---|---|
+| OpenReview | Searched current EBM/verification records for NeurIPS, ICML and ICLR; read the [EBT submission](https://openreview.net/pdf/f9139bb41c8b7a03e09be518a71426bcbd061a3f.pdf). A hosted submission does not establish acceptance. |
+| Semantic Scholar | Both Graph API citation requests returned HTTP 200 on this pass: [EBT](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=100) returned 35 records; [ARM–EBM](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=100) returned eight. Neither supplied a next page. These are returned records, not exhaustive citation totals. Memoir, Solver-Hard, and world-model tool use recur on the EBT trail; the ARM trail includes Distributional EBMs and LoopUS. No new compatible local checkpoint was established. |
+| Hugging Face Papers | Opened the [verification feed](https://huggingface.co/papers?q=verification); it redirected to the 11 September daily page. Rechecked the span-grounding paper at its primary record. Feed placement is not validation. |
+| GitHub | Opened [weekly Python trending](https://github.com/trending/python?since=weekly). Page extraction was largely navigation and did not establish a relevant new ranked repository. No new dependency was selected from popularity alone. |
+| Extropic | Opened [writing](https://extropic.ai/writing); direct extraction was navigation-only. Indexed first-party writing and [Z1T](https://extropic.ai/writing/z1t) identify the 4 September update. Its latency section includes a model of FPGA orchestration and sampling costs, and excludes final vocabulary logits. Preserve those qualifications; no later update or local TSU access was established. |
+| Logical Intelligence | Opened [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models). It describes a constraint-enforcement layer, with a Sudoku demo link. The reviewed page supplies no local weights or reproducible integration recipe. |
+
+### Local evidence to carry into design
+
+V638's active roster ends at Exp7259. The completion archive ends at V637 at
+read time. Exp7246 and Exp7259 independently found the design still described
+V636. The next design and YAML must be checked together before handoff.
+Exp7247 produced no deliverable after three pre-test failures; Exp7250/7251
+never ran. Exp7248's method checks passed, but its full-suite timeout and
+adversarial validation failed; it cannot qualify a live efficacy comparison.
+
+Exp7254/7255 recorded zero prospective shuffle selection changes and failed
+the reset and recurrence gates. `_refresh_signatures` rebases every archive
+onto the latest released witness window. This is a candidate cause of lost
+distinguishability, not yet a measured explanation. A next prototype must
+diagnose this from event rows before choosing a changed recognition method.
+
+Exp7256 passed persistent native parity. Exp7257 failed the capacity-four
+interactive speed gate: the minimum interactive lower CI bound was about
+0.982, far below the 10x and 100x targets. Cost records contain large durable
+commit tails. Profile actual components and matched storage semantics before
+proposing another speedup. KV260 and PolarFire retain their different
+graduation scopes; GateMate still requires a later operator physical-change
+receipt before a new probe.
+<!-- V639-PLANNER-REFRESH-20260913-END -->
