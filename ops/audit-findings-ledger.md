@@ -159,3 +159,4 @@ of truth, not this line.)
 | 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::check_execution_venue | SILENT_NON_FIRING | OPEN | |
 | 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::_artifact_run_date | SILENT_NON_FIRING | OPEN | |
 | 2026-09-13 | qa_layer_authenticity_audit | adversarial_verify.py::check_substrate_class | SILENT_NON_FIRING | OPEN | |
+| 2026-09-13 | experiment_claim_audit | experiment_7267_v639_recognition_prototype.json | CLAIM_OVERSTATED | OPEN | |

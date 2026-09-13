@@ -3,389 +3,129 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-13
 
-Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 6 |
+| `SILENT_NON_FIRING` | 2 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 0 |
+| `UNKNOWN` | 2 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_execution_venue` — {"execution_venue":null}`. This is a declared non-string value outside the closed set, but it silently returns without a flag.
-- `adversarial_verify.py::_artifact_run_date` — {"run_date": 20260907}` is a plausible compact JSON date, but the function returns None and can silently bypass date-gated verification.
-- `adversarial_verify.py::check_substrate_class` — json { "inference_substrate_class": "blocked_no_run", "honest_verdict": "blocked_required_second_model_not_cached", "model_invoked": true, "generation_invoked": true, "duration_s": 120.0 } ``` A real partial run can invoke the first model before discovering that the second is unavailable. This fragment contradicts “nothing ran,” yet the function emits no flag.
-- `adversarial_verify.py::check_duration_vs_claim` — json { "path": "results/experiment_7220_v636_xml_canary.json", "honest_verdict": "blocked_vllm_server_startup_failed", "inference_substrate": "blocked_no_run", "inference_substrate_class": "blocked_no_run", "model_invoked": true, "duration_s": 53.904924 } ``` The full verifier reports no flags despite the direct contradiction between blocked-no-run provenance and actual model invocation.
-- `adversarial_verify.py::check_sample_size` — json { "n_samples": 128, "n_spins": 64, "wasserstein_distance": 0.42 } ``` This is a low-sample distributional claim, but no recognizer fires and no flag records that the claim was unverified.
-- `adversarial_verify.py::check_gate_passed_without_data` — json { "acceptance_gate_passed": true, "acceptance_gate": { "metric": "auroc", "operator": ">=", "threshold": 0.8 }, "inference_substrate": "embedding_only", "auroc": null } ``` The passed gate has a null declared metric, but no inspected top-level key matches the token tuple, so the function emits nothing.
+- `worktree_import_guard.py` — tests/python/test_experiment_6676_three_family_triggered_tail_ab.py` loaded from an agent worktree while `carnot.__file__` resolves to `/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py`, under the repository’s existing `--noconftest` coverage command.
+- `capstone_milestone_rot_lint.py` — python/carnot/experiment_7288_v640_capstone.py` containing the counterexample and reading `{"milestone": "2026.09.641", "tasks": [...]}` from the live roadmap.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_execution_venue` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_artifact_run_date` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_substrate_class` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_duration_vs_claim` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_sample_size` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::check_gate_passed_without_data` — **SILENT_NON_FIRING**
+- `worktree_import_guard.py` — **SILENT_NON_FIRING**
+- `capstone_milestone_rot_lint.py` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_substrate_declaration_shape
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The function claims: “WARN when `inference_substrate` is a dict with no `value`: it is not a declaration.”
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The sole field read, `value = d.get("inference_substrate")`, is guarded by `isinstance(value, dict)` before dictionary membership; there is no unsafe coercion or substring matching. The function contains no numeric thresholds, paths, writes, recognizer defaults, or measurements, and the repository records that removing its call makes the test suite fail.
-
-
-## adversarial_verify.py::check_execution_venue
+## worktree_import_guard.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-The function claims to hold every declared execution venue to a closed set while deliberately applying no duration floor.
+## CONCEPT
+Refuse any test run that loads tests from one checkout while executing the `carnot` package from another checkout.
 
 ## FINDINGS
-1. Silent non-firing: `raw_venue = d.get(EXECUTION_VENUE_FIELD)` followed by `if raw_venue is None:` and `return` conflates an absent key with a present null value. A declared null venue is outside the closed string set but produces no flag, indistinguishable from a genuine pass.
-2. Field-shape assumption: `if not isinstance(raw_venue, str) or raw_venue not in EXECUTION_VENUES:` requires a bare string. A principle-wrapped valid venue, list, or boolean is critical; rejecting lists and booleans is correct, but rejecting the project-permitted principle/value wrapper is a false positive.
-3. The test suite actively codifies the wrapper defect: its non-string test expects a value-wrapper containing a valid venue to be rejected. There is no acceptance test for the mandatory principle-annotated representation.
-4. No substring or boundary bug exists here. `raw_venue not in EXECUTION_VENUES` is exact set membership, not substring matching; there are no free-text searches, prefix checks, suffix checks, or regular expressions.
-5. No negation/context-blind scan exists.
-6. No numeric threshold or off-by-one comparison exists. The function intentionally reads no duration.
-7. The implementation is both narrower and broader than its claim: it misses a declared null value, yet rejects a wrapped valid member. That is not faithful enforcement of a closed semantic value set.
-8. The closed venue list represents the development host and the three boards in the cited continuity table. The inspected set contains host, KV260, GateMate, and PolarFire; no omitted member was found.
-9. Existing tests separately exercise absence, unknown strings, non-string values, every accepted member, floor independence, and entrypoint wiring. No independent shown branch appears deletable while leaving the suite green, although the suite preserves the wrapper bug.
-10. No absolute path, filesystem write, tracked-state mutation, recognizer-chain default, or pre-work measurement exists in this function. Its only mutation is `flags.append(`; the existing integration test writes under a temporary test directory.
+1. L68-L75: `check` is only defined; this file neither invokes nor registers it. A pytest run suppressing conftests never reaches these lines, allowing a foreign package to collect and run silently; this was reproduced with 10 tests collected and exit status zero.
+2. The fixed `OVERRIDE_ENV`, exact `"1"` value, and python/carnot layout are definitions, not samples. There is no narrow open-ended pattern list.
+3. Normal pytest runs beneath the project’s tests directory are covered by external conftests, but conftest-disabled runs, tests under python or scripts, direct script execution, and other runners are wholly outside this file. No mechanism here covers those paths.
+4. L71-L72 also permits accidental bypass when an exported `OVERRIDE_ENV` remains inherited after an intentional installed-package run.
+5. L44-L45 are behaviorally untested: deleting both `resolve()` calls should leave the current suite green because its path fixtures are already normalized absolute paths. The acceptance, rejection, nested-checkout, exact-override, raising, and conftest-wiring branches are tested.
+6. No hardcoded absolute write target exists. Absolute paths appear only in explanatory text, and the guard performs no writes.
+7. Internal path-resolution exceptions propagate, so machinery errors fail closed. There is no swallowed exception or clean fallback, although nonexistent canonical-shaped arguments are not existence-checked.
+8. L56-L57 is the only permission branch and represents the recognized canonical location; there is no unrecognized-input default that returns permission.
+9. No duration, count, size, or other work metric is consumed.
+10. The guard is side-effect free. Its repository tests write foreign-package fixtures only beneath temporary paths and do not mutate tracked state.
 
 ## COUNTEREXAMPLE
-False positive: `{"execution_venue":{"principle":"Records where the experiment actually ran.","value":"kv260"}}`. The semantic value is valid, but the wrapper receives a critical invalid-venue flag.
+From an agent worktree whose shared virtualenv resolves `carnot.__file__` to the main checkout, run `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/coverage run -m pytest --noconftest tests/python/test_experiment_6676_three_family_triggered_tail_ab.py -q -o addopts=`. Pytest suppresses every conftest carrying the guard, so the foreign import is never compared or refused.
 
 ## MISSED INPUT
-`{"execution_venue":null}`. This is a declared non-string value outside the closed set, but it silently returns without a flag.
+`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py` loaded from an agent worktree while `carnot.__file__` resolves to `/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py`, under the repository’s existing `--noconftest` coverage command.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The `d.get` and `None` handling destroys the distinction between absence and an explicitly invalid declaration. The bare-string guard also contradicts the project-wide wrapped-field convention, and the current tests entrench that contradiction. Use key-presence testing first, then unwrap a valid principle/value record before exact closed-set validation.
+The equality predicate is sound once called, but activation is narrower than the stated test-run concept. Real project automation explicitly disables the conftest layer that invokes it, converting a foreign-checkout run into an unchecked green run; enforcement must move to a runner boundary that those commands cannot silently omit.
 
 
-## adversarial_verify.py::_artifact_run_date
+## capstone_milestone_rot_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-`The artifact's own run_date, or None when it carries none this reader can parse.`
+## CONCEPT
+Prevent capstone code from becoming permanently unusable when it compares its frozen milestone against the advancing live roadmap and refuses on mismatch.
 
 ## FINDINGS
-1. Silent non-firing: a compact date represented as a JSON number reaches `if not isinstance(raw, str):` and then `return None`. That result is indistinguishable from an artifact with no date, so downstream cutover enforcement can silently treat a dated artifact as pre-cutover.
-2. Field extraction: `raw = d.get("run_date")` accepts arbitrary types, but only strings survive. `raw = raw.get("value")` correctly unwraps one principle-annotated dictionary, yet a wrapped number, list, nested wrapper, boolean, or null is silently collapsed to the same result as a missing field.
-3. String boundaries: there is no use of substring operators or regular expressions against free text. However, `text[:width]` creates an equivalent prefix-validation bug: only the first eight or ten characters are parsed, so unrelated or malformed trailing text is ignored.
-4. Boundary behavior: exact-width dates work, but over-width inputs also work. The implementation never verifies that the parsed prefix consumed the complete stripped value.
-5. Claim mismatch: the implementation is narrower than the claim because it recognizes only string-valued dates, while also being broader than its two documented formats because any string beginning with one of those formats is accepted.
-6. Pattern taxonomy: `for fmt, width in (("%Y-%m-%d", 10), ("%Y%m%d", 8)):` stands in for supported calendar-date representations. It omits the same compact representation when JSON encodes it numerically rather than lexically.
-7. Negation/context blindness: none; this function does not scan free text for flagged phrases.
-8. Untested-pattern risk cannot be established from the supplied function alone. The wrapped, dashed, and compact branches are logically distinct and none is obviously decorative or double-covered.
-9. No absolute path, filesystem write, tracked-state mutation, or timing/counter measurement exists here.
-10. The recognizer chain ends in `return None` for missing, malformed, unsupported, and wrong-typed values alike. A caller cannot distinguish genuine absence from failed validation, which is the unsafe default-branch shape described in the prompt.
+1. Silent non-firing: lines 139–140 treat any intervening `ast.Return` as recovery and `break`, without checking whether that return is reachable for a valid roadmap whose milestone moved. The counterexample consequently reaches line 142’s `return None`, which the caller accepts as no violation.
+
+2. Another silent exemption exists at lines 202–203 and 241–242: any call named by `_REPLAY_HELPERS` exempts the entire function. An unrelated `receipt_bytes` or `_replay_bytes` call can therefore hide a direct live-roadmap refusal.
+
+3. Pattern inventory: `MILESTONE_CONST` and the exact `MILESTONE` name are samples, omitting annotated assignments, alternate constant names, imported constants, and computed constants. The `research-roadmap.yaml` marker defines the canonical file, but recognizing only literals and direct `ast.Assign` aliases is a sample of ways to access it; imported aliases, alias chains, helper calls, and constructed paths are omitted. `_REPLAY_HELPERS` is a sample of archival mechanisms, while `ast.Raise` and `ast.Assert` are samples of refusal mechanisms that omit process exits, test-framework failures, and failure-status returns. `("body", "orelse", "finalbody")` is a reasonable definition of statement-list carriers under the walked AST. The `experiment_*capstone*.py` glob is only a sample of capstone names; `.py` is the file-type definition, and `"-"` is the CLI option prefix.
+
+4. Scope holes: lines 236–240 inspect only individual function bodies. Module-level validation and split helper/caller validation are invisible. The default glob excludes nested reporting capstones, differently named closeouts, renamed-out files, non-Python implementations, deletions, and unstaged changes; the configured hook has the same naming limitation. No secondary guard in this file covers those holes.
+
+5. Ordinary bypasses include adding an unrelated conditional return between the guard and raise, annotating the milestone constant, moving roadmap loading into another function, making an incidental replay-helper call, renaming the module outside the glob, committing through a hook-skipping path, or using no-verify.
+
+6. Tests cover the inline raise, sibling raise, assert, direct assignment alias, schema guard, legitimate fallback returns, `_replay_bytes`, missing/invalid source, and the live census. They do not cover the unrelated-return counterexample, module-level checks, split helpers, annotated constants, call-based refusal, asynchronous functions, or CLI dispatch. The `receipt_bytes` entry, the direct-literal branch in `_reads_roadmap`, the `ast.AsyncFunctionDef` branch, the `func.attr` half, and the `"orelse"`/`"finalbody"` cases appear deletable with the current focused suite still green.
+
+7. No absolute path is baked in: `REPO` is derived from `Path(__file__).resolve().parents[1]`. The guard performs no writes, so there is no wrong-checkout write-target defect.
+
+8. Read and syntax errors fail closed: `except (OSError, SyntaxError)` performs `found.append` before `continue`. Other decoding failures escape with a nonzero process exit, also closed. However, a missing default scan directory produces an empty glob and reaches `if not bad`, prints `OK`, and executes `return 0`, so an empty census fails open.
+
+9. Default branches disable checking at lines 233–234, 239–240, and 142: an unrecognized milestone declaration, roadmap access, or refusal shape is treated as clean rather than unverified. The guard consumes no runtime duration, count, or size metric, so no pre-work measurement defect applies. Neither the guard nor its inspected tests mutate tracked results, specifications, output, operations records, or curated documentation; fixtures use temporary directories.
 
 ## COUNTEREXAMPLE
-`{"run_date": "2026-09-070"}` is malformed but is accepted as 2026-09-07 because only its first ten characters are parsed.
+```python
+from pathlib import Path
+
+MILESTONE = "2026.09.640"
+ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
+
+def load_roadmap(repo_root):
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
+        return payload
+    if payload is None:
+        return {}
+    raise ValueError("expected frozen milestone")
+```
+
+For a valid live payload whose milestone is `2026.09.641`, execution reaches the raise, but the intervening schema-fallback return makes `_refuses_on_milestone` return `None`.
 
 ## MISSED INPUT
-`{"run_date": 20260907}` is a plausible compact JSON date, but the function returns None and can silently bypass date-gated verification.
+`python/carnot/experiment_7288_v640_capstone.py` containing the counterexample and reading `{"milestone": "2026.09.641", "tasks": [...]}` from the live roadmap.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The parser must distinguish a missing date from an invalid or unsupported date instead of routing all cases through `return None`. It should normalize explicitly supported scalar representations and require full-string consumption; otherwise both silent non-enforcement and false acceptance remain possible.
+This is a real silent non-firing: line 139 treats any intervening `ast.Return` as proof of recovery, line 140 abandons the search, and line 142’s `return None` is accepted as clean. A return reachable only for malformed input does not recover a valid live roadmap whose milestone advanced. The additional syntax, scope, and name-based exemptions require control-flow and provenance reasoning rather than another token.
 
 
-## adversarial_verify.py::check_substrate_class
+## harness_integrity_lint.py
 
-**Verdict:** `SILENT_NON_FIRING`
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## VERDICT
-SILENT_NON_FIRING
+## eval_run_consumer_field_lint.py
 
-## CLAIM
-The function claims to “Hold a declared `inference_substrate_class` to the closed enum and its floor.”
-
-## FINDINGS
-1. Silent non-firing: `blocked_no_run` is not checked against typed live evidence. Once the verdict is blocked, the class/verdict check passes; because the class is outside `_NO_MODEL_SUBSTRATE_CLASSES`, evidence that a model or generation actually ran is ignored. The result is indistinguishable from a genuine pass.
-2. Context-blind false positive: `if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:` treats every negative invocation field identically. For model_load_no_generation, generation_invoked=false confirms the declared class; this code instead emits a critical contradiction.
-3. Symmetric false negative: model_load_no_generation with generation_invoked=true is never rejected. Positive evidence is rejected only for `_NO_MODEL_SUBSTRATE_CLASSES`, so a class explicitly promising no generation accepts evidence that generation occurred.
-4. Field-shape assumptions: `raw_class = d.get(SUBSTRATE_CLASS_FIELD)` does not unwrap a principle/value wrapper at this function boundary; dicts and lists are deliberately rejected by `not isinstance(raw_class, str)`. More dangerously, `duration = d.get("duration_s")` followed by `_is_finite_number(duration)` silently skips wrapped, list-shaped, missing, or null durations rather than reporting that the floor could not be evaluated. `str(row.get("field", "?"))` affects only diagnostic rendering, not detection.
-5. No visible substring-boundary defect: every visible `in` operation is exact enum/set membership. Free-text blocked-verdict recognition is delegated to `_is_precondition_check_only_blocked`, so its substring and negation behavior cannot be established from this function.
-6. Numeric boundaries are correct: `run_date >= SUBSTRATE_CLASS_CUTOVER_DATE` implements “on or after,” and `float(duration) < floor` implements “below”; equality correctly passes.
-7. Documentation mismatch: the docstring says `ABSENT class: a warn`, but the post-cutover branch emits `severity="critical"` for every missing class. The implementation is broader and harsher than its own stated rule.
-8. Pattern taxonomy: `_NO_MODEL_SUBSTRATE_CLASSES` stands for declarations incompatible with live invocation but omits `blocked_no_run`. `_MODEL_SUBSTRATE_CLASSES` conflates model loading with generation, so it cannot represent the distinction required by model_load_no_generation. No defensible omitted member of the closed enum or retired-class set can be established from this function alone.
-9. Untested patterns: deleting model_load_no_generation or model_bounded_generation from `_MODEL_SUBSTRATE_CLASSES`, or cpu_exact_solver_or_simulator from `_NO_MODEL_SUBSTRATE_CLASSES`, left all 29 scoped substrate-class, cutover, and venue tests green. Those individual memberships are decorative under the scoped suite.
-10. No hardcoded absolute path, tracked-state write, or measurement-before-work behavior appears here. The function only appends flags and consumes an already-computed duration.
-
-## COUNTEREXAMPLE
-```json
-{
-  "inference_substrate_class": "model_load_no_generation",
-  "model_invoked": true,
-  "generation_invoked": false,
-  "duration_s": 120.0,
-  "honest_verdict": "complete: embeddings_extracted_without_generation"
-}
-```
-This honest embedding-only result is critically flagged because generation_invoked=false is misread as evidence that no model ran.
-
-## MISSED INPUT
-```json
-{
-  "inference_substrate_class": "blocked_no_run",
-  "honest_verdict": "blocked_required_second_model_not_cached",
-  "model_invoked": true,
-  "generation_invoked": true,
-  "duration_s": 120.0
-}
-```
-A real partial run can invoke the first model before discovering that the second is unavailable. This fragment contradicts “nothing ran,” yet the function emits no flag.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The shared `_MODEL_SUBSTRATE_CLASSES` predicate destroys the distinction between loading and generation, producing both a false positive and its symmetric false negative. `blocked_no_run` also bypasses the typed evidence that should disprove it, while an unreadable `duration_s` silently disables the floor. Split evidence by operation, cross-check every class against its permitted operations, and fail visibly when a required floor cannot be evaluated.
-
-
-## adversarial_verify.py::check_duration_vs_claim
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-It claims to detect a `Compute-bound artifact with implausibly short duration.`
-
-## FINDINGS
-1. Silent non-firing and context blindness: `if _is_precondition_check_only_blocked(d):` executes `return` before `claim = _classify_current_task_inference_claim(d)`. A blocked-looking verdict therefore overrides contradictory typed evidence that a model actually ran. The tracked experiment 7220 artifact exercises this path and receives no contradiction or duration flag.
-
-2. Field extraction is unsafe for direct callers: `duration = d.get("duration_s")` does not unwrap principle annotations. A wrapped dictionary, list, or None reaches `if not _is_finite_number(duration):` and silently returns. The file-level verifier normalizes wrappers first, but direct callers of this function do not receive that protection; internal reads from claim, classification, and floor are fixed helper contracts rather than artifact fields.
-
-3. The precondition exemption is narrower than its own concept. Its helper claims to recognize an explicit precondition-only substrate, but actually recognizes only blocked-prefixed verdicts. The existing test named for the explicit substrate also supplies a blocked verdict, so deleting the substrate field leaves that test green.
-
-4. The floor recognizer and enforcement control flow disagree. A marker-free simulation artifact receives a 0.0001-second floor from `duration_floor_for_artifact(d)`, but the compound guard at `not _has_compute_bound_marker(d)` returns before applying it. A duration of exactly 0.0 is therefore reported clean and is indistinguishable from a genuine pass.
-
-5. There is no direct boundaryless free-text operation in this body: state membership and reason equality are exact. The called compute-marker recognizer is nevertheless boundaryless, case-sensitive, and context-blind: retrain matches inside pretraining, a statement that GGUF was not invoked still becomes a positive compute marker, while lowercase gguf, llama-cpp-python, plain CUDA, and vllm can fail to match.
-
-6. The numeric boundaries themselves are correct. Every floor uses `if float(duration) < min_duration:`, so equality passes, matching the emitted minimum-duration language and the claim that only values below the floor are suspect.
-
-7. The implementation differs from its claim in both directions. It is broader because it checks aggregation and no-LLM workloads that are not compute-bound, but narrower because blocked contradictions, wrapped durations for direct callers, and marker-free floor-bearing substrates escape enforcement.
-
-8. The hardcoded claim-state set represents states requiring a live floor but effectively omits blocked claims carrying live evidence because of the earlier return. The reason-dispatch chain represents specialized floor families but omits no-LLM, ARC filter-runtime, log-analysis, web-search, and QA-lint reasons; the generic fallback cannot compensate when the marker guard returns first. The marker vocabulary represents expensive model execution but omits common real spellings, while the no-LLM vocabulary omits real corpus declarations such as web_bibliographic_research_no_model_inference and deterministic_artifact_replay_no_model_calls.
-
-9. At least two rules are deletable with behavior and tests remaining green. The later `if floor["reason"] == "aggregation":` branch is unreachable because non-live aggregation already returns from the earlier aggregation block; contradictory aggregation receives a live-model floor instead. The guard term `and not _is_live_llm_inference(d)` is redundant because a recognized live declaration already makes `_claim_requires_live_floor` true.
-
-10. The terminal `if floor is None:` still means no numeric check. A finite unrecognized declared substrate now receives a warning, but a non-finite duration returns before that warning, and a recognized marker-free no-LLM substrate can skip its non-null floor without any warning.
-
-11. No hardcoded absolute path, filesystem write, tracked-state mutation, or pre-work measurement exists in this function. It only appends flags, and the relevant tests use temporary paths.
-
-## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "complete: precondition probe only; model was not invoked",
-  "inference_substrate": "precondition_check_only",
-  "duration_s": 0.1,
-  "model_specs": {
-    "model": "unsloth/Qwen3.6-35B-A3B-GGUF"
-  }
-}
-```
-
-This honest precondition-only artifact is falsely flagged as DURATION_TOO_SHORT because the declared exemption is ignored and the negated model reference is treated as affirmative compute evidence.
-
-## MISSED INPUT
-```json
-{
-  "path": "results/experiment_7220_v636_xml_canary.json",
-  "honest_verdict": "blocked_vllm_server_startup_failed",
-  "inference_substrate": "blocked_no_run",
-  "inference_substrate_class": "blocked_no_run",
-  "model_invoked": true,
-  "duration_s": 53.904924
-}
-```
-
-The full verifier reports no flags despite the direct contradiction between blocked-no-run provenance and actual model invocation.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The early `return` makes verdict syntax more authoritative than typed execution evidence, and a tracked artifact already passes through that hole. Floor selection and floor enforcement disagree, while context-blind marker scanning creates opposite-direction false positives. Provenance classification, exemptions, and floor enforcement need one fail-visible decision path with field unwrapping at its boundary.
-
-
-## adversarial_verify.py::check_sample_size
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Distributional claims with sample size below statistical threshold.`
-
-## FINDINGS
-1. Silent non-firing: the recognizer is limited to KL, KS, and specially named mean-delta keys. A real distributional claim using Wasserstein distance matches nothing; `if has_kl or has_ks or has_dist_mean:` is false, so the function silently produces no flag. An unrecognized claim is indistinguishable from a genuine pass.
-
-2. Field extraction is broken for permitted wrappers. `n = d.get("n_samples") or d.get("n_examples")` assumes a bare scalar; a principle/value dict or list reaches `n = int(n)`, throws, and is silently approved by `except (TypeError, ValueError): return`.
-
-3. The same extraction line mishandles zero. A bare zero is falsy, so it falls through to the alternate field or None and can reach `if n is None: return`, even though zero is necessarily below every stated threshold. Booleans are accepted as integers, while fractional values are silently truncated.
-
-4. The conversion exception list is incomplete. `except (TypeError, ValueError):` omits OverflowError, so an infinite numeric value can crash the linter. Invalid values otherwise fail open instead of generating an unverifiable-input flag.
-
-5. `n_spins = d.get("n_spins")` followed by `isinstance(n_spins, (int, float))` assumes a bare numeric value. Wrapped dictionaries, numeric strings, lists, and None silently receive the weaker default floor; booleans are incorrectly accepted as numbers.
-
-6. The hardcoded patterns are narrower than their concepts:
-   - The sample-count aliases omit common members such as sample_size, num_samples, and effective_sample_size.
-   - `"kl_divergence" in d or "kl" in d` represents KL metrics but omits forward-KL, reverse-KL, and estimated-KL field conventions.
-   - `"ks_p_value" in d or "ks_statistic" in d` represents KS tests but omits full Kolmogorov–Smirnov names and common KS-test-prefixed fields.
-   - `k.startswith("mean_") and "delta" in k` represents mean-difference claims but misses reordered or synonymous names such as average difference.
-   - The combined marker set represents distributional evidence but entirely omits Wasserstein distance, Jensen–Shannon divergence, total variation, MMD, and energy distance.
-
-7. The KL and KS membership checks are exact dictionary-key checks, so they have no substring-boundary defect. The mean rule does: `"delta" in k` matches inside an unrelated longer token. The concrete DeltaForce field in the counterexample is falsely classified as a mean-delta distributional claim.
-
-8. The implementation is context-blind. Mere presence of a key matched by `"kl_divergence" in d or "kl" in d` or `"ks_p_value" in d or "ks_statistic" in d` triggers the check even when its value is None, explicitly says the metric was not computed, or is a wrapped null retained only for schema compatibility.
-
-9. The exact sample comparison `if n < min_required:` correctly treats equality as not “below” the threshold. The policy implementation is nevertheless contradictory: the comment says `At minimum, 10k samples`, but `min_required = 1000` applies below 64 spins.
-
-10. `if isinstance(n_spins, (int, float)) and n_spins >= 32:` is effectively inert from 32 through 1000 spins. From 32–63 its computed value cannot exceed the existing 1000 floor; from 64–1000 the following `n_spins >= 64` rule forces 10000 anyway. It affects behavior only above 1000 spins, so ordinary 32/64-spin tests would remain green if this branch were deleted; the supplied code cannot establish whether the actual suite tests that mutation.
-
-11. The implementation is simultaneously narrower and broader than its name and docstring: it misses many genuine distributional claims, but flags non-claims merely because a recognized key exists.
-
-12. There is no absolute path, filesystem write, tracked-state mutation, or duration/counter measurement in this function. It only mutates the supplied in-memory flag list. Test-suite side effects cannot be determined from the supplied code.
-
-## COUNTEREXAMPLE
-False positive:
-```json
-{
-  "n_samples": 32,
-  "mean_deltaforce_accuracy": 0.78,
-  "kl_divergence": {
-    "principle": "KL was intentionally not computed for this ablation; the field is retained for schema compatibility.",
-    "value": null
-  }
-}
-```
-This honest artifact is flagged despite making no KL or mean-delta distributional claim.
-
-## MISSED INPUT
-```json
-{
-  "n_samples": 128,
-  "n_spins": 64,
-  "wasserstein_distance": 0.42
-}
-```
-This is a low-sample distributional claim, but no recognizer fires and no flag records that the claim was unverified.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The checker fails open on unrecognized distribution metrics and malformed or wrapped sample counts, while key-presence logic can quarantine artifacts that explicitly record a metric as uncomputed. Its 10,000-sample policy is not implemented for most claimed non-toy cases, and the 32-spin branch is mostly inert. Fixing one alias or boundary would leave the dangerous silent-pass behavior intact.
-
-
-## adversarial_verify.py::check_gate_passed_without_data
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The function claims to detect `acceptance_gate_passed=true but key metric fields are null/missing/0.`
-
-## FINDINGS
-1. `if d.get("acceptance_gate_passed") is not True:` requires the field to be the singleton boolean True. A principle-wrapped value, list, numeric 1, string representation, or null silently bypasses the entire check.
-
-2. Metric values receive no visible unwrapping. `elif _is_finite_number(v) and float(v) == 0.0:` passes the raw value to the numeric recognizer, so wrapped dictionaries and lists are unsupported unless the unseen helper independently violates its apparent numeric-only contract.
-
-3. `if any(s in kl for s in ("threshold", "delta", "rate", "score", "lift", "ratio")):` performs unrestricted substring matching. Tokens can therefore match inside unrelated compound words, producing false positives.
-
-4. The implementation is context-blind for key names. A zero-valued field whose name says that a score is inapplicable or intentionally omitted still matches the embedded token and is reported as missing gate evidence.
-
-5. The exact-zero comparison is consistent with the stated zero condition: equality is flagged. Null is also handled. Missing fields are not handled at all because `for k, v in d.items():` can inspect only fields that exist.
-
-6. The claim and implementation materially diverge. The comment says `Look for keys mentioned in the gate definitions`, but the function never reads a gate definition; it heuristically scans every top-level key. This is simultaneously narrower than claimed for actual metrics and broader than claimed for unrelated keys containing one of the substrings.
-
-7. The sole hardcoded token tuple stands in for the concept of gate-definition and metric fields. It omits even `"gate"`, despite the immediately preceding comment explicitly listing it, and it cannot represent arbitrary named metrics.
-
-8. An unrecognized metric name leaves `suspect` empty and produces no flag or diagnostic. Callers cannot distinguish “all required evidence was valid” from “no metric field was recognized,” so the default behavior disables the check.
-
-9. Mutation-test coverage cannot be determined without the test suite. None of the six tokens is semantically subsumed by every other token, so no individual token is provably decorative from this snippet alone.
-
-10. This function contains no absolute path, filesystem write, tracked-artifact mutation, duration measurement, or measurement-before-work behavior. Tests and external helper behavior cannot be assessed from the supplied code.
-
-## COUNTEREXAMPLE
-```json
-{
-  "acceptance_gate_passed": true,
-  "inference_substrate": "embedding_only",
-  "generation_count": 0,
-  "auroc": 0.91
-}
-```
-This honest embedding-only artifact is falsely flagged because `ratio` occurs inside `generation_count`.
-
-## MISSED INPUT
-```json
-{
-  "acceptance_gate_passed": true,
-  "acceptance_gate": {
-    "metric": "auroc",
-    "operator": ">=",
-    "threshold": 0.8
-  },
-  "inference_substrate": "embedding_only",
-  "auroc": null
-}
-```
-The passed gate has a null declared metric, but no inspected top-level key matches the token tuple, so the function emits nothing.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Substring heuristics cannot reliably determine which fields are required by a gate, and they create both silent misses and unrelated-key matches. The check should unwrap annotated fields, resolve required metrics from the actual gate definition or schema, validate their presence and values explicitly, and report unrecognized gate definitions as unverified rather than successful.
-
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

@@ -44265,3 +44265,108 @@ proposing another speedup. KV260 and PolarFire retain their different
 graduation scopes; GateMate still requires a later operator physical-change
 receipt before a new probe.
 <!-- V639-PLANNER-REFRESH-20260913-END -->
+
+<!-- V640-PLANNER-REFRESH-20260913-START -->
+## V640 planning research refresh — 2026-09-13
+
+This refresh precedes the V640 task design. Sources below were checked on
+2026-09-13. External results are motivation, never Carnot measurements.
+
+### Findings selected for adaptation
+
+- **Update admission and missed opportunities.** [When Validation Stops
+  Learning](https://arxiv.org/abs/2609.10873), 9 September 2026, studies both
+  harmful admissions and useful updates rejected within a fixed budget. Its
+  paired-binomial construction exploits sparse outcome disagreements. The
+  paper's synthetic experiment also finds unconditional replay stronger in
+  closed-loop learning. Adapt its opportunity accounting and independent
+  admission samples to constraint archive reactivation. Keep an unconditional
+  arm and do not claim its statistical guarantee for dependent drift streams.
+- **Source-specific grounding.** [Beyond Document Grounding](https://arxiv.org/abs/2607.00895),
+  1 July 2026, extends span evaluation to code and tool outputs.
+  [SIRIN](https://arxiv.org/abs/2608.00033), August 2026, separates contextual
+  inconsistency detection from answerability; its [repository](https://github.com/sb-ai-lab/SIRIN)
+  exposes multiple detector interfaces. Adapt separate source fidelity,
+  abstention, and answer accuracy accounting. Do not add another external-text
+  ranker from the retired PHASE D family.
+- **Constraint difficulty controls.** [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047),
+  19 July 2026, reports that solver hardness and model verdict difficulty can
+  diverge, including sensitivity to proof-preserving relabeling. Adapt paired
+  renaming and relation-direction controls on fresh source groups. Do not
+  infer neural difficulty from an exact solver's runtime.
+- **World-model consumption.** [Current Agents Fail to Leverage World Model
+  as Tool for Foresight](https://arxiv.org/abs/2601.03905), v2, 8 January 2026,
+  distinguishes calling a simulator from using its predictions well. Require
+  separate runtime identity, valid prediction, trust, and consumed-action
+  receipts on the live ARC path. This source does not diagnose Carnot's bugs.
+
+### Rechecked alternatives and limits
+
+| Area | Primary source and disposition |
+|---|---|
+| EBM learning/reasoning | [EBT](https://arxiv.org/abs/2507.02092) and its [ICLR 2026 proceedings record](https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html) remain architecture references. [ARM–EBM](https://arxiv.org/abs/2512.15605) supplies a formal perspective, not evidence that likelihood verifies correctness. No foundation-model training run is selected. |
+| Neural structured constraints | [Distributional EBMs](https://arxiv.org/abs/2605.18871) combines learned scoring and analytical penalties. Its external-text scorer construction overlaps Carnot's retired PHASE D scope; retain only the separation of exact checks and uncertain scores. |
+| Guided generation | [DSVD](https://arxiv.org/abs/2503.03149), March 2025, motivates targeted rollback. [Energy-Guided Decoding](https://arxiv.org/abs/2507.07731), July 2025, addresses visual object hallucinations. Neither licenses retrying retired parser/budget tuning or claiming text/code transfer from a visual result. |
+| KAN | [MKAN](https://arxiv.org/abs/2606.17886), v3 revised 5 September 2026, guarantees architectural monotonicity through its parameterization. Useful future falsifying control for monotone energy calibration; monotonicity does not certify extracted semantics. Defer until the input measurement is independently valid. |
+| Ising/Potts hardware | [Mean-field Potts constraints](https://arxiv.org/abs/2602.04200) and [controlled analog Ising](https://arxiv.org/abs/2602.05595) target sparse or hybrid hardware. Existing Carnot Potts work and sampler-law checks already cover the immediate mechanism. Do not invent another board or claim their speedups locally. |
+| Thermodynamic computing | Extropic's [Z1T](https://extropic.ai/writing/z1t), 4 September 2026, describes sparse models and heterogeneous FPGA/TSU execution. Its energy/latency estimates use FPGA companion processors, and some model accounting excludes the vocabulary projection. Adapt full-boundary cost accounting; no local TSU access is established. |
+
+### Secondary-source access record
+
+- **OpenReview:** searched ICLR/ICML/NeurIPS EBM and verification records.
+  The [AtomGraph record](https://openreview.net/forum?id=dNsIZln2uv) was indexed
+  as an ICLR 2026 workshop submission, but direct opening reached a browser
+  challenge. EBT's proceedings page independently establishes its conference
+  record. Do not infer acceptance for other search hits.
+- **Semantic Scholar:** checked EBT's paper page and both Graph API citation
+  endpoints. The direct EBT request returned 35 records and no next page.
+  Its trail includes Solver-Hard, Memoir, and world-model tool use; the first
+  and third were rechecked on arXiv. ARM–EBM returned HTTP 429 on this pass.
+  Earlier successful counts remain historical, not a fresh exhaustive census.
+- **Hugging Face Papers:** searched verification and grounding; opened SIRIN's
+  primary record and repository. Feed placement is discovery evidence only.
+- **GitHub trending:** opened monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) lists. No new
+  EBM/constraint/KAN dependency was selected from the displayed rankings.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned
+  navigation only; the dated Z1T article was directly readable.
+- **Logical Intelligence:** checked [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  and [automatic formal verification](https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation).
+  These are first-party architecture/product descriptions. The reviewed pages
+  do not establish a compatible local Kona checkpoint or reproducible adapter.
+
+### Local findings that constrain the next design
+
+The archive ends at V638 at planning time. V639 is complete in the active
+fourteen-task roster and conductor log. Its declared design still says V636;
+Exp7260 is disqualified. The planner must replace both next-milestone files.
+
+Exp7265 retains 320 authentic terminal calls. Its nested completeness score is
+one, but top-level completion is zero after independent replay failed on all
+320 calls. Its 192 semantic rows include 63/64 correct mention-pointer
+decisions, 16/64 offset-control decisions, and 0/64 direct decisions. Direct
+rows contain invalid labels such as `a`; all offset controls abstain. The
+63/192 exactness count is not the mention arm's accuracy. Diagnose the raw
+replay and comparator contracts before claiming superiority or collecting
+more of the same outputs. Preserve the original null artifact.
+
+Exp7263's four episodes report `live model identity is invalid: every identity
+obligation must be supported`, zero actions, and truncated generations. The
+identity guard failure is observed; its failing obligation still needs a raw
+receipt diagnosis. A fixed-budget rerun needs a repaired, strict identity path.
+
+Exp7268's recognition changed later predictions, yet future error increased
+by 0.009673 versus reset (paired CI95 [0.001628, 0.017067]); false accepts also
+increased. The archived-state nominee is scored on the same recent feedback
+used in its nomination. Test a fresh prospective admission decision against
+the continuing incumbent, and measure rejected opportunities as well as harm.
+Treat selection bias as a hypothesis, not a diagnosis already established.
+
+Exp7270 measured durable sync as the bottleneck: fixed work was 94.8126% in
+its acceleration envelope, limiting elimination of replaceable work to about
+1.055x. Its delta-log warrant is zero. A new question can measure commit
+granularity and acknowledgment delay while preserving durability after every
+acknowledgment. Another faster-compute or same-semantics delta-log claim is
+not warranted. KV260 and PolarFire retain their distinct graduations; GateMate
+still needs a later operator physical-state receipt.
+<!-- V640-PLANNER-REFRESH-20260913-END -->

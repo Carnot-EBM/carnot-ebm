@@ -12,32 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 4 |
+| CLAIM_OVERSTATED | 1 |
 | NO_CLAIM | 3 |
-| CANNOT_DETERMINE | 1 |
 
-## experiment_7252_v638_semantic_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A semantic-value claim would be refuted if a serious direct or offset comparator tied or won, fidelity or coverage missed its threshold, selective error failed to improve, or contradiction controls were falsely accepted.
-
-## WAS THAT CHECKED
-No. The semantic criteria were not evaluated: the upstream artifact was missing, no units or rows were completed, and no model was invoked. Only the blocked prerequisite status was checked.
-
-## EVIDENCE
-`honest_verdict`: `blocked_exp7252_missing_upstream_artifact`; `status`: `blocked`; `verdict_class`: `blocked`; `inference_substrate`: `blocked_no_run`; `observed_value`: `missing_artifact`; `evaluated`: `false`; `observed`: `null`; `rows`: `[]`; `attempted_independent_units`: `0`; `completed_independent_units`: `0`; `model_invoked`: `false`; `semantic_audit_complete_score`: `0`; `semantic_value_score`: `0`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7253_v638_coverage_memory.json
+## experiment_7266_semantic_audit.json
 
 **NO_CLAIM**
 
@@ -48,86 +26,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no learning or comparative-value claim to falsify. Interpreting fixture readiness as an operational claim, it would be refuted by a memory-cap breach, a failed controller control, incomplete arm rows, or a shuffle diagnostic that did not change the selected snapshot.
+Not applicable; the artifact reports a failed prerequisite gate and makes no substantive comparative or value claim.
 
 ## WAS THAT CHECKED
-Yes, for operational readiness: the acceptance gates check bounded memory, seven controller controls, 256 eight-arm rows, and an identity-changing shuffle diagnostic. Learning gain and causal attribution were explicitly not assessed.
+No; the experiment was blocked before the semantic audit ran.
 
 ## EVIDENCE
-`science_learning_gain_scored`: `false`; `causal_attribution_eligible`: `false`; `science_learning_gain`: `not_scored`; `This phase builds a fixture and does not score learning gain.`; `coverage_fixture_ready_score`: `1`; `bounded_memory`; `pass`: `true`; `controller_controls`; `observed`: `7`; `eight_arm_rows`; `observed`: `256`; `selection_changed`: `true`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "mention_capture_complete_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7254_v638_coverage_learning.json
+## experiment_7267_v639_recognition_prototype.json
 
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Bounded coverage memory did not pass every frozen gate.
-
-## WHAT WOULD REFUTE IT
-Every frozen scientific gate passing, yielding a coverage-learning value score of 1.
-
-## WAS THAT CHECKED
-Yes, in `acceptance_gate_results`; several gates were evaluated and failed. The oracle-defined correctness does not circularly support a positive value claim here because the reported claim is a measured null.
-
-## EVIDENCE
-`"honest_verdict": "complete_null: bounded coverage memory did not pass every frozen gate"`; `"coverage_learning_value_score": 0`; `"effective_prospective_shuffle_intervention"` has `"pass": false`; `"future_error_vs_reset_upper_ci95_lt_zero"` has `"pass": false`; `"recurrence_error_vs_coverage_shuffled_upper_ci95_lt_zero"` has `"observed": 0.0` and `"pass": false`; `"verdict_class": "null"`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7255_v638_coverage_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The coverage audit completed, but the method failed the criteria required for promotion.
-
-## WHAT WOULD REFUTE IT
-A complete audit in which every preregistered promotion criterion passed and the promotion score was `1`.
-
-## WAS THAT CHECKED
-Yes. The separate `acceptance_gate_results` include observed values and pass states; several criteria failed, including comparisons against reset, frozen, destructive, and shuffled controls. The oracle verifier does not circularly support a positive value claim because the reported verdict is null.
-
-## EVIDENCE
-`honest_verdict` `complete_null: coverage audit completed but promotion criteria did not all pass`; `coverage_audit_complete_score` `1`; `coverage_promotion_score` `0`; `effective_prospective_shuffle_intervention` `pass` `false`; `future_error_vs_reset_upper_ci95_lt_zero` `pass` `false`; `recurrence_error_increase_vs_frozen_lte_0_02` `observed` `0.1318359375` `pass` `false`; `recurrence_error_vs_coverage_shuffled_upper_ci95_lt_zero` `observed` `0.0` `pass` `false`; `verdict_class` `null`; `verifier_is_oracle` `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7256_v638_native_controller.json
-
-**CANNOT_DETERMINE**
-
-> Audit-integrity guard: quoted evidence ['; the parity rows report '] does not appear in the artifact, so this verdict was downgraded and must not be acted on.
+**CLAIM_OVERSTATED**
 
 ## VERDICT
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The persistent native controller is ready because it achieved exact oracle parity and persistent native ownership.
+The active recognition fixture is ready, implying positive value despite held-out learning value not being scored.
 
 ## WHAT WOULD REFUTE IT
-Any semantic mismatch, non-identical rollback, failed restart decision/state check, or nonzero hot-path parsing or active reconstruction would refute the measured component claims; a serious existing-controller baseline tying or winning on end-to-end throughput or cost would refute the broader readiness/value claim.
+On sealed prospective streams, the active-recognition arm tying or producing more full-denominator error than the serious `previous_coverage` baseline under equal query and memory limits, as judged independently of the correctness-defining verifier.
 
 ## WAS THAT CHECKED
-No. Semantic parity, restart behavior, rollback, and ownership counters were checked and could fail, but the broader value conclusion remained oracle-defined and throughput was explicitly deferred; the old native wrapper was not compared on throughput or cost.
+No. Prospective rows were generated, but held-out learning value was explicitly not scored, and the verifier defining success was itself the oracle. Operational readiness gates and changed query selections do not test comparative value.
 
 ## EVIDENCE
-`honest_verdict` is `complete_circular_positive: exact oracle parity and persistent native ownership passed; throughput deferred to Exp7257`. `verifier_is_oracle` is `true`. `verdict_class` is `circular_positive`. `native_controller_ready_score` is `1`. `throughput_value_score` is `null`. `model_invoked` is `false`. For `persistent_native_controller`, `active_reconstruction_count` and `hot_path_json_parse_count` are both `0`; the parity rows report `mismatch_count` as `0` and `rollback_byte_identical` as `true`.
+`honest_verdict`: `complete_circular_positive: active recognition fixture is ready; held-out learning value is not scored`; `held_out_learning_value_scored`: `false`; `verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`; `arm`: `previous_coverage`; `model_invoked`: `false`; `attempted_generation_calls`: `0`.
 
 ## RECOMMENDATION
-NARROW_CLAIM
+ADD_MISSING_CONTROL
 
-## experiment_7257_v638_native_cost.json
+## experiment_7268_v639_recognition_learning.json
 
 **CLAIM_SUPPORTED**
 
@@ -135,21 +67,65 @@ NARROW_CLAIM
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Complete event measurement found no accepted persistent-native interactive cost value.
+Autonomous recognition completed, but one or more frozen value gates failed.
 
 ## WHAT WOULD REFUTE IT
-Both interactive-capacity lower confidence bounds exceeding 1 while exact parity and equal durability hold, producing a native event cost value score of 1.
+Either an incomplete recognition run or every frozen value gate passing would falsify the claim.
 
 ## WAS THAT CHECKED
-Yes. The acceptance gates tested both interactive capacities, exact parity, and equal durability across the complete 540-row roster; capacity four failed even though capacity one passed.
+Yes. Run completion was checked through the complete event-arm matrix, lifecycle and end-to-end receipts, and the completion score; value was separately tested by frozen acceptance gates, several of which failed. The serious full-memory comparator also beat active recognition on future error, consistent with the null rather than a positive value claim.
 
 ## EVIDENCE
-`"honest_verdict": "complete_null: complete event measurement found no accepted persistent-native interactive cost value"`; `"interactive_capacity_one"` with `"observed": true`; `"interactive_capacity_four"` with `"observed": false`; `"interactive_persistent_lower_ci95_min": 0.9817458323703578`; `"native_event_cost_value_score": 0`; `"equal_durability": true`; `"parity_failure_count": 0`; `"safety_failure_count": 0`; `"completed_independent_block_arm_units": 540`; `"censored_independent_block_arm_units": 0`; `"verdict_class": "null"`.
+`honest_verdict`: `complete_null: autonomous recognition completed but one or more frozen value gates failed`; `recognition_run_complete_score`: `1`; `recognition_value_score`: `0`; `complete_event_arm_matrix`; `expected`: `196608`; `observed`: `196608`; `pass`: `true`; `false_accept_vs_reset`; `pass`: `false`; `future_error_vs_reset`; `pass`: `false`; `recurrence_degradation_vs_frozen`; `pass`: `false`; `recurrence_error_vs_shuffle`; `pass`: `false`; `active_superiority_claimed`: `false`; `future_error_vs_full_memory`; `estimate`: `0.009672619047619048`; `ci95`: `[0.0017206101190476218, 0.017159598214285716]`; `verifier_is_oracle`: `true`; `verdict_class`: `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7258_v638_board_state.json
+## experiment_7269_v639_recognition_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The recognition audit completed, but the promotion gates did not all pass.
+
+## WHAT WOULD REFUTE IT
+A promotion score of 1 with every promotion gate passing, or evidence that the planned audit units were incomplete or censored, would refute the headline.
+
+## WAS THAT CHECKED
+Yes. The artifact reports full planned-stream completion with zero censored streams, reconstructs the complete stream-arm matrix, and evaluates each promotion gate individually; multiple gates fail.
+
+## EVIDENCE
+`honest_verdict`: `complete_null: recognition audit completed but promotion gates did not all pass`; `recognition_audit_complete_score`: `1`; `recognition_promotion_score`: `0`; `attempted_stream_count`: `24`; `completed_stream_count`: `24`; `censored_stream_count`: `0`; `false_accept_vs_reset`: `pass`: `false`; `future_error_vs_reset`: `pass`: `false`; `recurrence_degradation_vs_frozen`: `pass`: `false`; `recurrence_error_vs_shuffle`: `pass`: `false`; `verifier_is_oracle`: `true`; `verdict_class`: `null`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7270_v639_durable_profile.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Durable synchronization costs and insufficient replaceable snapshot work do not warrant a delta-log prototype.
+
+## WHAT WOULD REFUTE IT
+A measured replaceable fraction of at least 0.5 together with an estimated delta-log speedup of at least 1.5×—without parity or durability failures—would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The artifact applied both thresholds in `journal_warrant` using a complete 12-block component profile; all blocks were uncensored and checked for component accounting, parity, and durability.
+
+## EVIDENCE
+`honest_verdict` = `complete_null: durable sync or insufficient replaceable snapshot work blocks a delta-log prototype`; `replaceable_fraction_expected` = `>=0.5`; `replaceable_fraction_observed` = `0.011790551645999563`; `replaceable_fraction_passed` = `false`; `delta_log_speedup_expected` = `>=1.5`; `delta_log_speedup_observed` = `0.7561440834982079`; `delta_log_speedup_passed` = `false`; `sync_dominates` = `true`; `sync_fraction` = `0.9355276068704991`; `completed_blocks` = `12`; `censored_blocks` = `0`; `component_sum_failure_count` = `0`; `durability_failure_count` = `0`; `parity_failure_count` = `0`; `journal_optimization_warranted_score` = `0`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7271_delta_log.json
 
 **NO_CLAIM**
 
@@ -160,18 +136,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or value claim is made. For the receipt’s descriptive assertion, refutation would be fewer than three authenticated board dispositions, a missing exact next condition, mislabeling PolarFire CPU dispatch as FPGA sampling, or any hardware operation issued during this invocation.
+No falsifying observation applies because the artifact reports only a blocked pre-gate receipt and makes no comparative or performance claim.
 
 ## WAS THAT CHECKED
-Yes, as receipt consistency checks in `board_rows`, `acceptance_gate_results`, `sample_size_budget`, and `hardware_operations_issued`; no method-versus-rival test was applicable.
+No; the experiment did not proceed beyond the upstream gate.
 
 ## EVIDENCE
-`inference_substrate`: `aggregation_from_upstream_artifacts`; `model_invocation_count`: `0`; `hardware_operations_issued`: `[]`; `board_disposition_complete_score`: `1`; `One records three authenticated dispositions and exact next conditions, not three working samplers.`
+`"status"` is `"blocked"`; `"honest_verdict"` is `"blocked_gate_check_failed"`; `"passed"` is `false`; `"blocked_at_layer"` is `"conductor_pre_gate"`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7259_v638_capstone.json
+## experiment_7272_v639_board_state.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+This receipt records three authenticated board dispositions and their next conditions while preserving prior KV260 and PolarFire states and leaving GateMate blocked.
+
+## WHAT WOULD REFUTE IT
+Fewer than three authenticated dispositions, a missing next condition, a hash or receipt authentication failure, a board state inconsistent with the stated disposition, any hardware operation during this host-only aggregation, or evidence that GateMate’s required operator-authored change receipt existed.
+
+## WAS THAT CHECKED
+Yes. The three per-board rows, acceptance gates, operator-receipt search, authentication fields, and hardware-operation counts directly check those receipt-level assertions. No comparative method-value claim was made that would require a rival baseline.
+
+## EVIDENCE
+`"inference_substrate": "aggregation_from_upstream_artifacts"`; `"independent_units_completed": 3`; `"three_dispositions_reduce"`; `"observed": 1`; `"passed": true`; `"latest_receipt_authenticated": true`; `"hardware_operations_issued": []`; `"disposition": "blocked_changed_physical_state"`; `"exists": false`; `"programmable_logic_sampling_observed": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7273_v639_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -179,16 +177,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The fourteen-task matrix is complete, but held-out mention and live ARC evidence are absent, coverage learning shows no value over controls, and durable native-cost value is null.
+The V639 matrix is complete, but held-out fidelity and scientific value are null or blocked, so no positive closeout is warranted.
 
 ## WHAT WOULD REFUTE IT
-A matrix count other than 14; an authenticated held-out mention capture; successful live ARC policy consumption with a non-null score; coverage learning beating matched reset and shuffled controls; or durable native performance meeting parity and the 10× target.
+Any of these observations would falsify the headline: fewer than 14 completed dispositions; exact held-out source fidelity; a completed semantic audit; positive ARC generalization or policy consumption; recognition beating its frozen efficacy and recurrence controls; or established delta-log semantic value.
 
 ## WAS THAT CHECKED
-Yes. Matrix size and external-science availability were explicit acceptance gates; held-out and ARC prerequisites were replayed; coverage was assessed against reset and shuffled controls; and native cost was tested against parity and the 10× target. Invalid, missing, and oracle-based rows were not promoted as positive evidence.
+Yes. Completion was counted in `sample_size_budget`; fidelity and semantic-audit outcomes appear in `rows` and `gate_check_summary`; ARC, recognition, and delta-log outcomes appear in `prd_gap_matrix`. The artifact preserves failed and blocked outcomes rather than promoting them positively.
 
 ## EVIDENCE
-`"fourteen_task_matrix_complete"`, `"expected": 14`, `"observed": 14`, `"passed": true`; `"external_science_available"`, `"observed": false`, `"passed": false`; `"results/experiment_7251_v638_mention_heldout.json is absent"`; `"arc_witness_ready_score"`, `"expected_value": 1`, `"observed_value": 0`; `"The learner did not beat reset and shuffled controls or meet recurrence retention."`; `"value_observed": false`; `"One interactive capacity CI crossed below parity, and the 10x target failed."`; `"durable_cost_value": false`; `"positive_promoted": false`; `"verdict_class": "blocked"`.
+`"completed": 14`; `"planned": 14`; `"source_fidelity_exact"`; `"metric_value": false`; `"source_semantic_value"`; `"claim_class": "blocked"`; `"required_semantic_audit_available"`; `"observed": "blocked"`; `"public_game_generalization": false`; `"policy_consumption": false`; `"recognition_learning_value": false`; `"durable_log_semantics": null`; `"positive_promoted": false`; `"status": "blocked"`
 
 ## RECOMMENDATION
 KEEP
