@@ -17871,3 +17871,4 @@ code |
 | 2026-09-13 13:05 UTC | Active discrimination before constraint-memory rea | OK | 101 passed, 1 warning in 17.75s |
 | 2026-09-13 13:32 UTC | Prospective self-learning with active constraint r | OK | 93 passed, 1 warning in 18.92s |
 | 2026-09-13 14:04 UTC | Cold recognition causality and memory safety audit | OK | 103 passed, 1 warning in 21.78s |
+| 2026-09-13 14:52 UTC | Decompose durable event cost before another native | OK | 94 passed, 1 warning in 11.51s |
