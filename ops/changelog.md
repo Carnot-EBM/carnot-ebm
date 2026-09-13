@@ -19944,3 +19944,4 @@ timed alternative is available.
 - 2026-09-13: Repair authenticated compute floors and isolate the blocking fixture (⚠️ Research Finding) — honest_verdict=complete_null_compute_contract_repaired_no_scientific_value_claim; results/experiment_7261_v639_compute_contract.json
 - 2026-09-13: Qualify shipped ARC transition witnesses through terminal evidence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_arc_witness_terminal_handoff_mechanism_only; results/experiment_7262_v639_arc_witness_receipt.json
 - 2026-09-13: Live ARC adapter-withheld transition-witness comparison (⚠️ Research Finding) — honest_verdict=complete_null_no_policy_consumed_plan; results/experiment_7263_v639_arc_live.json
+- 2026-09-13: Bounded Qwen3.8 mention extraction with authenticated floors (⚠️ Research Finding) — honest_verdict=complete_circular_positive_mention_canary_ready_scale_gate_only; results/experiment_7264_v639_mention_canary.json
