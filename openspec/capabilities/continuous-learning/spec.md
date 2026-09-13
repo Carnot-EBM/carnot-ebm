@@ -15006,3 +15006,129 @@ execution venue SHALL be `host`. The exact evaluator SHALL set
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7281 and SCENARIO-CL-7281-* | Implemented: `python/carnot/experiment_7281_v640_admission_prototype.py` provides immutable paired admission, exact finite-law enumeration, authority-separated streams, seven arms, lifecycle attacks, cold reduction, and terminal sealing through a thin wrapper. | Verified: RED-first contract, finite-law, admission, quota, stream, E2E, command, and defensive tests pass with 1,043 of 1,043 scoped statements covered. |
+
+## REQ-CL-7282: Prospective Learning With Independent Admission
+
+Carnot SHALL authenticate the complete Exp7281 artifact and each sealed stream
+receipt before measurement. It SHALL use the frozen seven arms, 24 prospective
+stream IDs, 1,024 events, 128-event warmup, alpha allocation, candidates,
+thresholds, label quotas, archive capacity, and memory capacity without outcome
+tuning. A missing, changed, retired, quarantined, or failed external gate SHALL
+produce a row-free terminal blocked artifact with exact failures in
+`gate_check_summary`. A failed scientific value gate SHALL produce a complete
+null result, not partial evidence.
+
+The experiment SHALL first run a common-candidate diagnostic. It SHALL then
+execute every frozen arm on every prospective stream. Each event row SHALL seal
+its prediction before any same-event label release or state update. The raw
+journal SHALL retain all 172,032 event-arm rows. It SHALL report the full future
+interval after warmup and the 256-event recurrence interval separately.
+Evaluator-only fields MAY contain released labels and counterfactual candidate
+and incumbent outcomes. Learner inputs SHALL exclude private authority fields.
+
+Each opportunity row SHALL retain the common candidate identity, incumbent
+identity, decision, later candidate and incumbent errors, available gain,
+harmful-admission flag, missed-benefit flag, and censoring state. The row SHALL
+charge eight acquisition labels, eight admission labels, pending queue bytes,
+one update decision, rejection or commit work, and recovery delay. Summary rows
+SHALL use all eight opportunities per stream as the denominator. They SHALL
+retain neutral opportunities with zero available gain.
+
+The primary learning value gate SHALL require all of these conditions:
+
+- Paired-gated future-error CI95 upper is below zero versus reset.
+- Paired-gated future-error CI95 upper is below zero versus unconditional recognition.
+- Paired-gated false-accept CI95 upper is at most zero versus both controls.
+- Paired-gated recurrence degradation is at most 0.02 versus frozen warmup.
+- At least one admitted state change changes a later prediction.
+- Paired-gated recurrence error is lower than label-shuffled admission.
+
+Carnot SHALL bootstrap the 24 stream-paired differences with 10,000 fixed
+resamples. Full-memory and range-gated comparisons SHALL remain secondary
+controls. Zero admissions SHALL fail the learning value gate. Run completion
+SHALL remain separate from scientific value.
+
+The task SHALL finish the matrix within a 900-second measurement budget. It
+SHALL checkpoint each stream. It SHALL retain censored units if the budget is
+reached. A cold disk reducer SHALL reconstruct summary and comparison inputs
+before publication. The E2E control SHALL cover a complete stream, ordered
+prediction and release journal, candidate admission, later prediction, and
+opportunity denominator.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Every current load, generation, inference, and usable
+answer count SHALL be zero. CPU replay SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. The cold reducer
+SHALL use `aggregation_from_upstream_artifacts` and class `aggregation`. The
+execution venue SHALL be `host`. The exact evaluator SHALL set
+`verifier_is_oracle=true`, so favorable evidence SHALL use
+`verdict_class=circular_positive`, never `positive`.
+
+### SCENARIO-CL-7282-PRECONDITIONS: Exact Fixture Or Terminal Block
+
+- GIVEN the active task and the declared Exp7281 artifact and stream receipts
+- WHEN status, readiness, hashes, quarantine, retirement, and ownership are checked
+- THEN only the exact frozen fixture can start the measurement
+- AND an external failure produces terminal blocked evidence with no rows.
+
+### SCENARIO-CL-7282-COMMON-CANDIDATE: Opportunity Inputs Stay Fixed
+
+- GIVEN each stream and opportunity before outcomes are reduced
+- WHEN the seven arms execute
+- THEN candidate, admission-case, quota, alpha, and threshold identities match
+- AND the diagnostic runs before the learning comparison.
+
+### SCENARIO-CL-7282-PREQUENTIAL: Prediction Precedes Released Feedback
+
+- GIVEN all 1,024 events in each selected stream
+- WHEN every arm processes the ordered journal
+- THEN each prediction is sealed before same-event release and mutation
+- AND warmup, shift, and recurrence rows remain separately reducible.
+
+### SCENARIO-CL-7282-OPPORTUNITIES: Harm And Miss Denominators Are Complete
+
+- GIVEN eight fixed opportunities per stream and arm
+- WHEN candidate and incumbent future outcomes are evaluated
+- THEN harmful admissions and missed benefits use every opportunity as denominator
+- AND neutral zero-gain opportunities remain present.
+
+### SCENARIO-CL-7282-COSTS: Admission Work Is Fully Charged
+
+- GIVEN an acquisition, admission, rejection, or commit action
+- WHEN the opportunity ledger is written
+- THEN labels, pending bytes, decision work, commit or rejection, and delay are charged
+- AND memory and label caps remain explicit.
+
+### SCENARIO-CL-7282-COMPARISONS: Paired Streams Define Value
+
+- GIVEN 24 complete independent stream units
+- WHEN fixed 10,000-resample paired intervals are built
+- THEN primary and secondary comparisons retain raw differences and unit counts
+- AND failed efficacy gates cannot yield a positive verdict.
+
+### SCENARIO-CL-7282-CAUSAL: Admitted State Changes Affect Later Predictions
+
+- GIVEN a paired-gated accepted candidate with a changed state hash
+- WHEN later public predictions are compared with frozen warmup
+- THEN changed later decisions are counted without evaluator input
+- AND zero admissions cannot pass the learning gate.
+
+### SCENARIO-CL-7282-E2E: Journal To Future Error Is Recomputable
+
+- GIVEN one complete sealed stream
+- WHEN prediction, release, nomination, decision, and future scoring run
+- THEN the cold reducer reproduces each summary and opportunity denominator
+- AND every lifecycle stage remains ordered and complete.
+
+### SCENARIO-CL-7282-TERMINAL: Completion And Value Stay Separate
+
+- GIVEN complete rows, opportunity records, cold reduction, and validation receipts
+- WHEN one or more frozen value criteria fail
+- THEN `admission_run_complete_score=1` and `admission_value_score=0`
+- AND the verdict is `complete_null`, never partial or blocked.
+
+## Implementation Status (REQ-CL-7282)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7282 and SCENARIO-CL-7282-* | Planned: the Exp7282 module will replay the sealed Exp7281 fixture and retain event, opportunity, comparison, cost, and terminal evidence. | Pending RED-first tests and implementation. |
