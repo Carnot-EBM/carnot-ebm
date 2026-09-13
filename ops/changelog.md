@@ -19960,3 +19960,4 @@ timed alternative is available.
 - 2026-09-13: Bounded Qwen3.8 comparator transport qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_comparator_canary_ready_measurement_only; results/experiment_7277_v640_comparator_canary.json
 - 2026-09-13: Fresh Qwen3.8 source comparison with valid equal-budget controls (⚠️ Research Finding) — honest_verdict=complete_null_mention_pointer_does_not_exceed_equal_budget_direct; results/experiment_7278_v640_source_measurement.json
 - 2026-09-13: Independent source fidelity and matched-coverage value audit (⚠️ Research Finding) — honest_verdict=complete_null_verifier_did_not_beat_matched_direct_self_consistency; results/experiment_7279_v640_source_audit.json
+- 2026-09-13: Live ARC generalization after strict identity repair (⚠️ Research Finding) — honest_verdict=complete_null_typed_witness_policy_use_gates_not_met; results/experiment_7280_v640_arc_live.json
