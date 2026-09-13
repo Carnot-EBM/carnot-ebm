@@ -652,6 +652,10 @@ def test_validation_and_main_defensive_orchestration(
 
     commands = exp._validation_commands(tmp_path / "candidate.json")
     assert any("adversarial_verify.py" in command for row in commands for command in row)
+    affected = next(row for row in commands if any("::test_" in item for item in row))
+    for selector in (item for item in affected if "::test_" in item):
+        path, node = selector.split("::", 1)
+        assert f"def {node}(" in (exp.REPO_ROOT / path).read_text(encoding="utf-8")
 
     failed_check = exp.gate_check("missing", "upstream", "field", True, False)
     blocked = exp.build_blocked_artifact(
