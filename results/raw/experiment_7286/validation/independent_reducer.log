@@ -1,0 +1,3 @@
+$ PYTHONPATH=python:. .venv/bin/python -c "import json; from pathlib import Path; from carnot import experiment_7286_v640_board_state as e; d=json.loads(Path(results/raw/experiment_7286/terminal_candidate.json).read_text()); r=e.reduce_board_rows(d[rows]); assert r[board_disposition_complete_score]==d[board_disposition_complete_score]==1; assert r[hardware_command_count]==0; assert r[row_hashes_match] is True; print(json.dumps(r, sort_keys=True))"
+{"board_count": 3, "board_disposition_complete_score": 1, "board_names": ["GateMate", "KV260", "PolarFire"], "hardware_command_count": 0, "row_hashes_match": true}
+[exit_code] 0

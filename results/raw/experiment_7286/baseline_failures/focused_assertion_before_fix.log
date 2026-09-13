@@ -1,0 +1,53 @@
+$ PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-focused
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0
+rootdir: /home/ianblenke/github.com/ianblenke/carnot
+configfile: pyproject.toml
+plugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2
+collected 15 items
+
+tests/python/test_experiment_7286_v640_board_state.py ...F...........    [100%]
+
+=================================== FAILURES ===================================
+___________ test_scenario_ising_7286_boards_preserve_distinct_scopes ___________
+
+tmp_path = PosixPath('/tmp/exp7286-focused/test_scenario_ising_7286_board0')
+
+    def test_scenario_ising_7286_boards_preserve_distinct_scopes(tmp_path: Path) -> None:
+        """SCENARIO-ISING-7286-BOARDS: fabric, CPU, and physical state stay separate."""
+    
+        paths = experiment.ExperimentPaths.under(tmp_path)
+        _, _, upstreams = experiment.collect_preconditions(ROOT, paths)
+        operator = experiment.search_gatemate_operator_receipts(
+            ROOT, paths.operator_search, candidate_paths=[tmp_path / "missing.json"]
+        )
+        rows = experiment.build_board_rows(ROOT, upstreams, operator)
+        by_board = {row["board"]: row for row in rows}
+        assert set(by_board) == {"KV260", "GateMate", "PolarFire"}
+        assert by_board["KV260"]["processor_class"] == "fpga_fabric"
+        assert by_board["GateMate"]["disposition"] == "blocked_changed_physical_state"
+        assert by_board["GateMate"]["exact_next_condition"] == experiment.GATEMATE_OPERATOR_ACTION
+        assert by_board["PolarFire"]["processor_class"] == "cpu"
+        assert by_board["PolarFire"]["programmable_logic_sampling_observed"] is False
+        assert all(row["hardware_operations_issued"] == [] for row in rows)
+>       assert experiment.reduce_board_rows(rows) == {
+            "board_count": 3,
+            "board_disposition_complete_score": 1,
+            "hardware_command_count": 0,
+        }
+E       AssertionError: assert {'board_count...ount': 0, ...} == {'board_count...and_count': 0}
+E         
+E         Omitting 3 identical items, use -vv to show
+E         Left contains 2 more items:
+E         {'board_names': ['GateMate', 'KV260', 'PolarFire'], 'row_hashes_match': True}
+E         Use -v to get more diff
+
+tests/python/test_experiment_7286_v640_board_state.py:127: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_scenario_ising_7286_boards_preserve_distinct_scopes
+========================= 1 failed, 14 passed in 1.61s =========================
+[exit_code] 1

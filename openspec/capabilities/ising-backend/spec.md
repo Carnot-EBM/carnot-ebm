@@ -1643,3 +1643,85 @@ commands.
 **Terminal host-only receipt:** Given three authenticated dispositions,
 Exp7272 SHALL emit `board_disposition_complete_score=1`. Its rows and hashes
 SHALL reduce independently while GateMate remains blocked at row scope.
+
+### REQ-ISING-7286
+
+**The V640 board-state continuation MUST reuse the V639 reader and preserve
+the exact scope of each authenticated board disposition.**
+
+**Rationale:**
+KV260 graduated for FPGA-fabric synthesis and latency. PolarFire graduated
+only for hash-matched CPU dispatch. GateMate remains blocked until a later
+operator-authored physical-state change exists. A repeated unchanged probe
+cannot add evidence.
+
+**Acceptance criteria:**
+- The tested implementation SHALL be
+  `python/carnot/experiment_7286_v640_board_state.py`. The executable SHALL be
+  the thin entrypoint
+  `scripts/experiments/experiment_7286_v640_board_state.py`.
+- Preconditions SHALL authenticate the V640 task contract, required source
+  bytes, writable output paths, exclusion state, the Exp7272 receipt, and all
+  KV260 and PolarFire evidence paths and hashes referenced by that receipt.
+- A missing, malformed, quarantined, hash-mismatched, or retired mandatory
+  input SHALL produce a terminal blocked artifact. Its `gate_check_summary`
+  SHALL name the upstream, check, field, observed value, and expected value.
+  It SHALL contain no board rows.
+- The task SHALL reuse the Exp7272 board reader and validator chain. It SHALL
+  issue no SSH, JTAG, reset, flash, sampling, installation, purchase, vendor
+  contact, upload, publication, or external message.
+- Current invocation fields SHALL state `MODEL_SPECS=[]`,
+  `model_invoked=false`, and zero attempted and completed model loads,
+  generations, and usable answers. Historical model metadata SHALL remain in
+  a hashed sidecar.
+- The read-only reducer SHALL use `aggregation_from_upstream_artifacts` and
+  class `aggregation`. The execution venue SHALL be `host`.
+- The KV260 row SHALL retain FPGA-fabric synthesis and latency graduation.
+  The PolarFire row SHALL retain CPU dispatch and no programmable-logic
+  sampling. The two scopes SHALL remain distinct.
+- The GateMate search SHALL accept only an operator-authored cable, USB port,
+  power, board, or DirtyJTAG change after Exp6559. It SHALL retain the author,
+  date, path, hash, and changed condition. Without one, it SHALL preserve
+  `blocked_changed_physical_state` and the exact missing prerequisite. With
+  one, it SHALL name one future probe and issue no command.
+- Missing and malformed receipt fixtures SHALL fail closed. Raw rows and
+  provisional state SHALL stay under `results/raw/` and
+  `results/checkpoints/`.
+- `board_disposition_complete_score=1` SHALL mean that all three authenticated
+  dispositions and exact next conditions are present. It SHALL not mean that
+  every board sampler works.
+- The producer SHALL validate a raw terminal candidate before it atomically
+  writes `results/experiment_7286_v640_board_state.json`.
+
+### SCENARIO-ISING-7286-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine or retirement marker, malformed mandatory artifact,
+invalid referenced hash, or unwritable output, Exp7286 SHALL emit a terminal
+blocked result. It SHALL emit no board row and no hardware operation.
+
+### SCENARIO-ISING-7286-BOARDS
+
+**Current receipt to original evidence:** Given an authenticated Exp7272
+receipt and its referenced transcript hashes, Exp7286 SHALL preserve KV260
+fabric graduation and PolarFire CPU graduation as distinct evidence classes.
+
+### SCENARIO-ISING-7286-GATEMATE
+
+**Physical-state boundary:** Given no valid operator-authored physical change
+after Exp6559, Exp7286 SHALL record `blocked_changed_physical_state`. Given a
+valid later change, it SHALL name one future probe and issue no command.
+
+### SCENARIO-ISING-7286-FIXTURES
+
+**Receipt parser controls:** Given separate missing and malformed receipt
+fixtures, Exp7286 SHALL reject both and retain zero hardware or external
+commands.
+
+### SCENARIO-ISING-7286-ARTIFACT
+
+**Terminal host-only receipt:** Given three authenticated dispositions,
+Exp7286 SHALL emit `board_disposition_complete_score=1`. Its rows and source
+hashes SHALL reduce independently while GateMate remains blocked at row scope.
+
+**Implementation status:** Implemented and verified (Exp7286)

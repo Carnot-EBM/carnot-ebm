@@ -1,0 +1,1081 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "current_receipt_and_references_authenticated": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Use the shipped V639 validator and original referenced hashes."
+    },
+    "gatemate_disposition_recorded": {
+      "expected": "changed receipt or blocked_changed_physical_state",
+      "observed": "blocked_changed_physical_state",
+      "passed": true,
+      "principle": "Record a later change or its exact missing receipt."
+    },
+    "hardware_operations_issued_count": {
+      "expected": 0,
+      "observed": 0,
+      "passed": true,
+      "principle": "This host-only task issues no board command."
+    },
+    "kv260_exact_terminal_preserved": {
+      "expected": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "observed": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "passed": true,
+      "principle": "Preserve synthesis and programmable-logic latency graduation."
+    },
+    "negative_receipt_fixtures_fail_closed": {
+      "expected": {
+        "all_failed_closed": true,
+        "count": 2
+      },
+      "observed": {
+        "all_failed_closed": true,
+        "count": 2
+      },
+      "passed": true,
+      "principle": "Missing and malformed receipts authorize no command."
+    },
+    "polarfire_cpu_not_fpga_preserved": {
+      "expected": {
+        "fpga_sampling": false,
+        "processor_class": "cpu"
+      },
+      "observed": {
+        "fpga_sampling": false,
+        "processor_class": "cpu"
+      },
+      "passed": true,
+      "principle": "Keep CPU dispatch distinct from FPGA sampling."
+    },
+    "three_dispositions_reduce": {
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "Every board has authenticated evidence and an exact next condition."
+    }
+  },
+  "baseline_validation_failures": [
+    {
+      "command": "COVERAGE_FILE=/tmp/exp7286.coverage .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_7286_v640_board_state.py --show-missing --fail-under=100",
+      "exit_code": 2,
+      "log_hash": "sha256:a5754cb4025fd10300826311044fb48207b6c5f26c1e956b9d6408662df6432f",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/baseline_failures/coverage_97_before_defensive_tests.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-focused",
+      "exit_code": 1,
+      "log_hash": "sha256:3a11708f31a187ad2a7d621e464bc2ed7394fe82f840740bc0d8216b54725235",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/baseline_failures/focused_assertion_before_fix.log"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7286_v640_board_state.py tests/python/test_experiment_7286_v640_board_state.py scripts/experiments/experiment_7286_v640_board_state.py",
+      "exit_code": 1,
+      "log_hash": "sha256:705658d02ff1767f4e96daf04c57089a1b934fcc100ef68d4a516fa22b3e5c0c",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/baseline_failures/ruff_format_before_apply.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-red",
+      "exit_code": 2,
+      "log_hash": "sha256:4529c04aee5b7c0dce939bc1cefc61caaba362bfde3304cc6edba3089629bb6f",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/baseline_failures/tests_before_implementation.log"
+    }
+  ],
+  "board_disposition_complete_score": 1,
+  "board_rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "KV260",
+      "censored": false,
+      "disposition": "graduated_preserved",
+      "error": null,
+      "exact_next_condition": "none; any future access uses ssh kria only",
+      "execution_venue": "kv260",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6",
+      "latest_receipt_path": "results/experiment_7272_v639_board_state.json",
+      "metric": true,
+      "observed_state": {
+        "median_latency_ms": 0.025465,
+        "programmable_logic_latency_transcript": true,
+        "sample_count": 32,
+        "synthesis_and_overlay_confirmed": true
+      },
+      "processor_class": "fpga_fabric",
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+          "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+        },
+        {
+          "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+          "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+        }
+      ],
+      "row_sha256": "sha256:4880bd48c552c1c80ba35b20dd02685ceae3ae45ed07b4e0534fd68754fd6e28",
+      "seed": null,
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": true,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "GateMate",
+      "censored": false,
+      "disposition": "blocked_changed_physical_state",
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_condition": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "execution_venue": "gatemate",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:33399ed83a4391fcdced7176bb81b9769858253ae16969bc18850704adb3f481",
+      "latest_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/gatemate_operator_receipt_search.json",
+      "metric": false,
+      "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_state": "operator_changed_physical_state_receipt_missing",
+      "operator_author_evidence": null,
+      "operator_changed_conditions": {},
+      "operator_date_evidence": null,
+      "operator_evidence_hash": null,
+      "operator_source_path": null,
+      "processor_class": "unavailable",
+      "row_sha256": "sha256:eaa5e08f06ed331d03b11494e7f531e6d2c9fb3510ff52c9af120356b5037c28",
+      "seed": null,
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    },
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "PolarFire",
+      "censored": false,
+      "disposition": "graduated_cpu_dispatch_preserved",
+      "error": null,
+      "exact_next_condition": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "execution_venue": "polarfire",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6",
+      "latest_receipt_path": "results/experiment_7272_v639_board_state.json",
+      "metric": true,
+      "observed_state": {
+        "binary_sha256": "sha256:756f9e6bb80a1af495a1d37e40356f166f0fc3c50a6bffe9a9af8721b45ac27c",
+        "dispatch_completed": true,
+        "input_hash_matches": true,
+        "input_sha256": "sha256:1afb4db70c81817af732c457a9c2e5653250e4d7e6ccc57232536107a2bf3596",
+        "output_hash_matches": true,
+        "output_sha256": "sha256:220fade2b4c13e1b1a4ba300a5fe81acd7dfe9ec93c4fcb090c7573ed2f3af66",
+        "transport_exit_code": 0,
+        "workload_exit_code": 0
+      },
+      "processor_class": "cpu",
+      "programmable_logic_sampling_observed": false,
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+          "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+        },
+        {
+          "path": "results/experiment_7231_v636_board_continuity.json",
+          "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+        }
+      ],
+      "row_sha256": "sha256:965559a09a81afc9fa9cb4be416633093c745e8cd288341ecb692f4b2343afe4",
+      "seed": null,
+      "smoke_repeated": false,
+      "terminal_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": true,
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "completed_at_utc": "2026-09-13T23:57:45.066702+00:00",
+  "duration_s": 0.1060746789444238,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": 7286,
+  "external_actions": {
+    "external_messages": [],
+    "firmware_actions": [],
+    "publications": [],
+    "purchases": [],
+    "signups": [],
+    "uploads": []
+  },
+  "field_principles": {
+    "MODEL_SPECS": "Declare models executable in this invocation; keep historical identities in hashed sidecars.",
+    "acceptance_gate_results": "Each criterion records expected, observed, passed, and principle; separate completeness and value.",
+    "baseline_validation_failures": "Keep unrelated nonzero suite receipts separate from the passing changed-scope gates.",
+    "board_disposition_complete_score": "One means three authenticated dispositions and exact next conditions are present.",
+    "board_rows": "Separate KV260 fabric, PolarFire CPU, and GateMate physical-state evidence.",
+    "completed_at_utc": "Record the actual UTC end timestamp.",
+    "duration_s": "Measure monotonic elapsed time and disjoint phase spans.",
+    "execution_host": "Record the real hostname separately from the closed venue vocabulary.",
+    "execution_venue": "Host orchestration is host; identify real device execution separately.",
+    "experiment_id": "Bind this receipt to Exp7286.",
+    "field_principles": "Store explanations here; consumer values remain ordinary top-level fields.",
+    "gate_check_summary": "For blocked_* name upstream, exact field or check, observed value, and expected value.",
+    "generation_count": "Count only generations made by this invocation.",
+    "hardware_operations_issued": "Empty for this host-only receipt.",
+    "honest_verdict": "Completed findings start complete_ or complete:; external absence starts blocked_; retain the measured finding.",
+    "inference_substrate": "Use the recognized literal for actual computation, not an invented task label.",
+    "inference_substrate_class": "Use the correct no-LLM class and never pad duration.",
+    "invocation_counts": "Separate attempted and completed loads and generation from usable answers.",
+    "milestone": "Bind this receipt to milestone 2026.09.640.",
+    "model_invocation_count": "Count only model calls made by this invocation.",
+    "model_invoked": "Derive from actual calls, including failed or unusable generation.",
+    "model_load_count": "Count only model loads made by this invocation.",
+    "operator_state_receipt": "Only a real later physical-state change can enable a future GateMate probe.",
+    "phase_spans_s": "Retain the disjoint measured phase spans that make up the invocation.",
+    "preconditions_checked": "Record actual input hashes, authority separation, resource ownership, and failures.",
+    "random_seed": "Freeze independent-unit seeds before observing results.",
+    "reproducibility_checksum": "Bind code, configuration, input manifests, and raw evidence.",
+    "rows": "Keep each unit, arm, seed, error, abstention, cost, metric, and censoring state.",
+    "run_date": "Use 20260913 and actual UTC start and end times.",
+    "sample_size_budget": "Record planned, attempted, completed, and censored units and the stopping rule.",
+    "schema": "Version the result and retain ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Preserve exact input identity, retirement, and quarantine status.",
+    "spec_refs": "Connect the artifact and tests to REQ-ISING-7286 scenarios.",
+    "started_at_utc": "Record the actual UTC start timestamp.",
+    "status": "Use complete or blocked for terminal evidence; keep unfinished work in separate checkpoints.",
+    "task_id": "Bind this receipt to the exact V640 roadmap task.",
+    "validation_receipts": "Retain command, exit code, timing, and log hash; do not hide failures.",
+    "verdict_class": "Use the closed verdict class; only incomplete work from this task is partial.",
+    "verifier_is_oracle": "Expose shared verifier or evaluator authority; exact conformance is not learned correctness."
+  },
+  "gate_check_summary": {
+    "artifact_field": null,
+    "board_blocks": [
+      {
+        "expected_value": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+        "field": "operator-authored physical change after Exp6559",
+        "observed_value": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+        "upstream": "operator_state_receipt",
+        "verdict": "blocked_changed_physical_state"
+      }
+    ],
+    "checks": [
+      {
+        "check": "required_source_bytes",
+        "expected_value": "all nonempty",
+        "field": "REQUIRED_SOURCE_PATHS",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "openspec/capabilities/ising-backend/spec.md": 91220,
+          "ops/e2e-test-plan.md": 8197,
+          "ops/exclusion_manifest.yaml": 56173,
+          "ops/known-issues.md": 1806942,
+          "python/carnot/experiment_7286_v640_board_state.py": 36599,
+          "research-hardware-wishlist.md": 29009,
+          "research-program.md": 28560,
+          "research-roadmap.yaml": 146772,
+          "results/experiment_6559_gatemate_changed_state_continuity.json": 66021,
+          "results/experiment_7272_v639_board_state.json": 50202,
+          "scripts/experiments/experiment_7286_v640_board_state.py": 177,
+          "tests/python/test_experiment_7286_v640_board_state.py": 12783
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "driving_capability_spec",
+        "expected_value": {
+          "requirement": true,
+          "scenarios": true
+        },
+        "field": "REQ-ISING-7286 and scenarios",
+        "observed_value": {
+          "requirement": true,
+          "scenarios": true
+        },
+        "passed": true,
+        "upstream": "openspec/capabilities/ising-backend/spec.md"
+      },
+      {
+        "check": "roadmap_task_contract",
+        "expected_value": {
+          "deliverable": "results/experiment_7286_v640_board_state.json",
+          "estimated_wall_time_min": 20,
+          "id": "exp7286-board-state",
+          "max_turns": 20,
+          "milestone": "2026.09.640",
+          "per_unit_rows": true,
+          "prior_failure_ids": [
+            "exp6559-gatemate-changed-state-continuity"
+          ],
+          "priority": "high",
+          "prompt_sha256": "sha256:6322a824a1b141bc8925fce9d4224e595150b4dd6486ef0486eb7da3a375d2c2",
+          "requires_gpu": false,
+          "title": "GateMate changed-state review and graduated-board continuity",
+          "track": "hardware"
+        },
+        "field": "exp7286-board-state",
+        "observed_value": {
+          "deliverable": "results/experiment_7286_v640_board_state.json",
+          "estimated_wall_time_min": 20,
+          "id": "exp7286-board-state",
+          "max_turns": 20,
+          "milestone": "2026.09.640",
+          "per_unit_rows": true,
+          "prior_failure_ids": [
+            "exp6559-gatemate-changed-state-continuity"
+          ],
+          "priority": "high",
+          "prompt_sha256": "sha256:6322a824a1b141bc8925fce9d4224e595150b4dd6486ef0486eb7da3a375d2c2",
+          "requires_gpu": false,
+          "title": "GateMate changed-state review and graduated-board continuity",
+          "track": "hardware"
+        },
+        "passed": true,
+        "upstream": "research-roadmap.yaml"
+      },
+      {
+        "check": "imports_resource_ownership_and_outputs",
+        "expected_value": "all authorities available and outputs writable",
+        "field": "shipped authorities and output ownership",
+        "observed_value": {
+          "artifact_writable": true,
+          "checkpoint_writable": true,
+          "execution_host": "icbfl1",
+          "historical_models_writable": true,
+          "latest_artifact_validator": true,
+          "latest_board_reader": true,
+          "negative_fixtures_writable": true,
+          "operator_receipt_parser": true,
+          "operator_search_writable": true,
+          "python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "row_reducer": true
+        },
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "exclusion_manifest_loaded",
+        "expected_value": true,
+        "field": "YAML mapping",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "check": "exp7272_not_quarantined_or_retired",
+        "expected_value": false,
+        "field": "quarantined_or_retired",
+        "observed_value": {
+          "active_flags": [],
+          "disqualified": null,
+          "exclusion_manifest_match": false,
+          "flagged_adversarial": null,
+          "invalidated": null,
+          "quarantine": null,
+          "quarantine_flags": null,
+          "quarantined": false
+        },
+        "passed": true,
+        "upstream": "results/experiment_7272_v639_board_state.json"
+      },
+      {
+        "check": "exp7272_latest_validator",
+        "expected_value": [],
+        "field": "validator_errors",
+        "observed_value": [],
+        "passed": true,
+        "upstream": "results/experiment_7272_v639_board_state.json"
+      },
+      {
+        "check": "graduated_board_reference_hashes",
+        "expected_value": "all current bytes hash-match",
+        "field": "KV260 and PolarFire original evidence paths and hashes",
+        "observed_value": {
+          "all_match": true,
+          "rows": [
+            {
+              "expected_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+              "observed_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+              "passed": true,
+              "path": "results/experiment_7258_v638_board_state.json"
+            },
+            {
+              "expected_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+              "observed_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+              "passed": true,
+              "path": "results/experiment_7244_v637_board_disposition.json"
+            },
+            {
+              "expected_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+              "observed_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+              "passed": true,
+              "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json"
+            },
+            {
+              "expected_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+              "observed_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+              "passed": true,
+              "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json"
+            },
+            {
+              "expected_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+              "observed_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+              "passed": true,
+              "path": "results/experiment_7258_v638_board_state.json"
+            },
+            {
+              "expected_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+              "observed_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+              "passed": true,
+              "path": "results/experiment_7244_v637_board_disposition.json"
+            },
+            {
+              "expected_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+              "observed_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+              "passed": true,
+              "path": "results/raw/experiment_7231/polarfire_dispatch.json"
+            },
+            {
+              "expected_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+              "observed_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+              "passed": true,
+              "path": "results/experiment_7231_v636_board_continuity.json"
+            }
+          ]
+        },
+        "passed": true,
+        "upstream": "results/experiment_7272_v639_board_state.json"
+      },
+      {
+        "check": "graduated_board_terminal_definitions",
+        "expected_value": {
+          "kv260_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+          "kv260_met": true,
+          "kv260_processor": "fpga_fabric",
+          "polarfire_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+          "polarfire_fpga_sampling": false,
+          "polarfire_met": true,
+          "polarfire_processor": "cpu"
+        },
+        "field": "exact terminal criteria and processor boundaries",
+        "observed_value": {
+          "kv260_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+          "kv260_met": true,
+          "kv260_processor": "fpga_fabric",
+          "polarfire_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+          "polarfire_fpga_sampling": false,
+          "polarfire_met": true,
+          "polarfire_processor": "cpu"
+        },
+        "passed": true,
+        "upstream": "results/experiment_7272_v639_board_state.json"
+      },
+      {
+        "check": "exp6559_boundary_authenticated",
+        "expected_value": {
+          "hash_match": true,
+          "present": true
+        },
+        "field": "presence and hash",
+        "observed_value": {
+          "expected_by_exp7272": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+          "observed_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+          "receipt_present": true
+        },
+        "passed": true,
+        "upstream": "results/experiment_6559_gatemate_changed_state_continuity.json"
+      }
+    ],
+    "expected_value": null,
+    "failed_check": null,
+    "field": null,
+    "observed_value": null,
+    "passed": true,
+    "upstream": null
+  },
+  "generation_count": 0,
+  "hardware_operations_issued": [],
+  "honest_verdict": "complete: three authenticated board dispositions and exact next conditions are recorded. KV260 fabric graduation and PolarFire hash-matched CPU dispatch remain preserved. PolarFire CPU dispatch is not FPGA sampling. GateMate remains blocked_changed_physical_state because the required operator receipt is missing. This invocation issued zero hardware operations.",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.640",
+  "model_invocation_count": 0,
+  "model_invoked": false,
+  "model_load_count": 0,
+  "operator_state_receipt": {
+    "author_evidence": null,
+    "changed_conditions": {},
+    "cutoff_date": "20260823",
+    "cutoff_experiment": "Exp6559",
+    "cutoff_source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "cutoff_source_path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+    "date_evidence": null,
+    "evidence_hash": null,
+    "exists": false,
+    "external_commands_issued": [],
+    "hardware_command_count": 0,
+    "hardware_operations_issued": [],
+    "newer_than_exp6559": false,
+    "newly_enabled_next_action": null,
+    "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+    "search_receipt_hash": "sha256:33399ed83a4391fcdced7176bb81b9769858253ae16969bc18850704adb3f481",
+    "search_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/gatemate_operator_receipt_search.json",
+    "source_path": null,
+    "source_text": null
+  },
+  "phase_spans_s": {
+    "phase_0_preconditions": 0.07100858492776752,
+    "phase_1_hashed_sidecars": 0.0042623530607670546,
+    "phase_2_operator_receipt": 0.026866857893764973,
+    "phase_3_board_reducer": 0.0006210561841726303,
+    "phase_4_artifact_assembly": 0.0015202248468995094
+  },
+  "preconditions_checked": [
+    {
+      "check": "required_source_bytes",
+      "expected_value": "all nonempty",
+      "field": "REQUIRED_SOURCE_PATHS",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "openspec/capabilities/ising-backend/spec.md": 91220,
+        "ops/e2e-test-plan.md": 8197,
+        "ops/exclusion_manifest.yaml": 56173,
+        "ops/known-issues.md": 1806942,
+        "python/carnot/experiment_7286_v640_board_state.py": 36599,
+        "research-hardware-wishlist.md": 29009,
+        "research-program.md": 28560,
+        "research-roadmap.yaml": 146772,
+        "results/experiment_6559_gatemate_changed_state_continuity.json": 66021,
+        "results/experiment_7272_v639_board_state.json": 50202,
+        "scripts/experiments/experiment_7286_v640_board_state.py": 177,
+        "tests/python/test_experiment_7286_v640_board_state.py": 12783
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "driving_capability_spec",
+      "expected_value": {
+        "requirement": true,
+        "scenarios": true
+      },
+      "field": "REQ-ISING-7286 and scenarios",
+      "observed_value": {
+        "requirement": true,
+        "scenarios": true
+      },
+      "passed": true,
+      "upstream": "openspec/capabilities/ising-backend/spec.md"
+    },
+    {
+      "check": "roadmap_task_contract",
+      "expected_value": {
+        "deliverable": "results/experiment_7286_v640_board_state.json",
+        "estimated_wall_time_min": 20,
+        "id": "exp7286-board-state",
+        "max_turns": 20,
+        "milestone": "2026.09.640",
+        "per_unit_rows": true,
+        "prior_failure_ids": [
+          "exp6559-gatemate-changed-state-continuity"
+        ],
+        "priority": "high",
+        "prompt_sha256": "sha256:6322a824a1b141bc8925fce9d4224e595150b4dd6486ef0486eb7da3a375d2c2",
+        "requires_gpu": false,
+        "title": "GateMate changed-state review and graduated-board continuity",
+        "track": "hardware"
+      },
+      "field": "exp7286-board-state",
+      "observed_value": {
+        "deliverable": "results/experiment_7286_v640_board_state.json",
+        "estimated_wall_time_min": 20,
+        "id": "exp7286-board-state",
+        "max_turns": 20,
+        "milestone": "2026.09.640",
+        "per_unit_rows": true,
+        "prior_failure_ids": [
+          "exp6559-gatemate-changed-state-continuity"
+        ],
+        "priority": "high",
+        "prompt_sha256": "sha256:6322a824a1b141bc8925fce9d4224e595150b4dd6486ef0486eb7da3a375d2c2",
+        "requires_gpu": false,
+        "title": "GateMate changed-state review and graduated-board continuity",
+        "track": "hardware"
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "imports_resource_ownership_and_outputs",
+      "expected_value": "all authorities available and outputs writable",
+      "field": "shipped authorities and output ownership",
+      "observed_value": {
+        "artifact_writable": true,
+        "checkpoint_writable": true,
+        "execution_host": "icbfl1",
+        "historical_models_writable": true,
+        "latest_artifact_validator": true,
+        "latest_board_reader": true,
+        "negative_fixtures_writable": true,
+        "operator_receipt_parser": true,
+        "operator_search_writable": true,
+        "python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "row_reducer": true
+      },
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "exclusion_manifest_loaded",
+      "expected_value": true,
+      "field": "YAML mapping",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "exp7272_not_quarantined_or_retired",
+      "expected_value": false,
+      "field": "quarantined_or_retired",
+      "observed_value": {
+        "active_flags": [],
+        "disqualified": null,
+        "exclusion_manifest_match": false,
+        "flagged_adversarial": null,
+        "invalidated": null,
+        "quarantine": null,
+        "quarantine_flags": null,
+        "quarantined": false
+      },
+      "passed": true,
+      "upstream": "results/experiment_7272_v639_board_state.json"
+    },
+    {
+      "check": "exp7272_latest_validator",
+      "expected_value": [],
+      "field": "validator_errors",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "results/experiment_7272_v639_board_state.json"
+    },
+    {
+      "check": "graduated_board_reference_hashes",
+      "expected_value": "all current bytes hash-match",
+      "field": "KV260 and PolarFire original evidence paths and hashes",
+      "observed_value": {
+        "all_match": true,
+        "rows": [
+          {
+            "expected_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+            "observed_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+            "passed": true,
+            "path": "results/experiment_7258_v638_board_state.json"
+          },
+          {
+            "expected_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+            "observed_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+            "passed": true,
+            "path": "results/experiment_7244_v637_board_disposition.json"
+          },
+          {
+            "expected_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+            "observed_sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+            "passed": true,
+            "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json"
+          },
+          {
+            "expected_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+            "observed_sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+            "passed": true,
+            "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json"
+          },
+          {
+            "expected_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+            "observed_sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8",
+            "passed": true,
+            "path": "results/experiment_7258_v638_board_state.json"
+          },
+          {
+            "expected_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+            "observed_sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a",
+            "passed": true,
+            "path": "results/experiment_7244_v637_board_disposition.json"
+          },
+          {
+            "expected_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+            "observed_sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801",
+            "passed": true,
+            "path": "results/raw/experiment_7231/polarfire_dispatch.json"
+          },
+          {
+            "expected_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+            "observed_sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588",
+            "passed": true,
+            "path": "results/experiment_7231_v636_board_continuity.json"
+          }
+        ]
+      },
+      "passed": true,
+      "upstream": "results/experiment_7272_v639_board_state.json"
+    },
+    {
+      "check": "graduated_board_terminal_definitions",
+      "expected_value": {
+        "kv260_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+        "kv260_met": true,
+        "kv260_processor": "fpga_fabric",
+        "polarfire_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+        "polarfire_fpga_sampling": false,
+        "polarfire_met": true,
+        "polarfire_processor": "cpu"
+      },
+      "field": "exact terminal criteria and processor boundaries",
+      "observed_value": {
+        "kv260_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+        "kv260_met": true,
+        "kv260_processor": "fpga_fabric",
+        "polarfire_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+        "polarfire_fpga_sampling": false,
+        "polarfire_met": true,
+        "polarfire_processor": "cpu"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7272_v639_board_state.json"
+    },
+    {
+      "check": "exp6559_boundary_authenticated",
+      "expected_value": {
+        "hash_match": true,
+        "present": true
+      },
+      "field": "presence and hash",
+      "observed_value": {
+        "expected_by_exp7272": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "observed_sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+        "receipt_present": true
+      },
+      "passed": true,
+      "upstream": "results/experiment_6559_gatemate_changed_state_continuity.json"
+    }
+  ],
+  "random_seed": 7286,
+  "reproducibility_checksum": "sha256:ced8596ec7060700ee21e77af4d8dd271721e095ca76e152c44145d8b239f4d0",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "KV260",
+      "censored": false,
+      "disposition": "graduated_preserved",
+      "error": null,
+      "exact_next_condition": "none; any future access uses ssh kria only",
+      "execution_venue": "kv260",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6",
+      "latest_receipt_path": "results/experiment_7272_v639_board_state.json",
+      "metric": true,
+      "observed_state": {
+        "median_latency_ms": 0.025465,
+        "programmable_logic_latency_transcript": true,
+        "sample_count": 32,
+        "synthesis_and_overlay_confirmed": true
+      },
+      "processor_class": "fpga_fabric",
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+          "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+        },
+        {
+          "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+          "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+        }
+      ],
+      "row_sha256": "sha256:4880bd48c552c1c80ba35b20dd02685ceae3ae45ed07b4e0534fd68754fd6e28",
+      "seed": null,
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": true,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "GateMate",
+      "censored": false,
+      "disposition": "blocked_changed_physical_state",
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_condition": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "execution_venue": "gatemate",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:33399ed83a4391fcdced7176bb81b9769858253ae16969bc18850704adb3f481",
+      "latest_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/gatemate_operator_receipt_search.json",
+      "metric": false,
+      "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_state": "operator_changed_physical_state_receipt_missing",
+      "operator_author_evidence": null,
+      "operator_changed_conditions": {},
+      "operator_date_evidence": null,
+      "operator_evidence_hash": null,
+      "operator_source_path": null,
+      "processor_class": "unavailable",
+      "row_sha256": "sha256:eaa5e08f06ed331d03b11494e7f531e6d2c9fb3510ff52c9af120356b5037c28",
+      "seed": null,
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    },
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "PolarFire",
+      "censored": false,
+      "disposition": "graduated_cpu_dispatch_preserved",
+      "error": null,
+      "exact_next_condition": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "execution_venue": "polarfire",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260913",
+      "latest_receipt_hash": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6",
+      "latest_receipt_path": "results/experiment_7272_v639_board_state.json",
+      "metric": true,
+      "observed_state": {
+        "binary_sha256": "sha256:756f9e6bb80a1af495a1d37e40356f166f0fc3c50a6bffe9a9af8721b45ac27c",
+        "dispatch_completed": true,
+        "input_hash_matches": true,
+        "input_sha256": "sha256:1afb4db70c81817af732c457a9c2e5653250e4d7e6ccc57232536107a2bf3596",
+        "output_hash_matches": true,
+        "output_sha256": "sha256:220fade2b4c13e1b1a4ba300a5fe81acd7dfe9ec93c4fcb090c7573ed2f3af66",
+        "transport_exit_code": 0,
+        "workload_exit_code": 0
+      },
+      "processor_class": "cpu",
+      "programmable_logic_sampling_observed": false,
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+          "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+        },
+        {
+          "path": "results/experiment_7231_v636_board_continuity.json",
+          "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+        }
+      ],
+      "row_sha256": "sha256:965559a09a81afc9fa9cb4be416633093c745e8cd288341ecb692f4b2343afe4",
+      "seed": null,
+      "smoke_repeated": false,
+      "terminal_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": true,
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "run_date": "20260913",
+  "sample_size_budget": {
+    "attempted": 3,
+    "censored": 0,
+    "completed": 3,
+    "independent_units_completed": 3,
+    "independent_units_planned": 3,
+    "planned": 3,
+    "stopping_rule": "one read-only disposition per board; zero board commands"
+  },
+  "schema": "carnot.exp7286.v640.board_state.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/ising-backend/spec.md": "sha256:1e9755b9ea8afcf4e685e9fafad5dcf4a5206a098236fdb4767caeaf9f1b0b63",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "ops/known-issues.md": "sha256:aba0e64467be2a888c6728eb20bd3440549cd17095c25690a9d9f756e348a9a8",
+    "python/carnot/experiment_7286_v640_board_state.py": "sha256:d35ea1f88f050f02599cf6b857ce90e42c2e6aa93fba478e3b7c43b0d036390b",
+    "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-roadmap.yaml": "sha256:a01407740041d5986fd8c7f9551d5493b9dd246e3582282b90e9939ce5ad0c75",
+    "results/experiment_6559_gatemate_changed_state_continuity.json": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "results/experiment_7272_v639_board_state.json": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6",
+    "results/raw/experiment_7286/baseline_failures/coverage_97_before_defensive_tests.log": "sha256:a5754cb4025fd10300826311044fb48207b6c5f26c1e956b9d6408662df6432f",
+    "results/raw/experiment_7286/baseline_failures/focused_assertion_before_fix.log": "sha256:3a11708f31a187ad2a7d621e464bc2ed7394fe82f840740bc0d8216b54725235",
+    "results/raw/experiment_7286/baseline_failures/ruff_format_before_apply.log": "sha256:705658d02ff1767f4e96daf04c57089a1b934fcc100ef68d4a516fa22b3e5c0c",
+    "results/raw/experiment_7286/baseline_failures/tests_before_implementation.log": "sha256:4529c04aee5b7c0dce939bc1cefc61caaba362bfde3304cc6edba3089629bb6f",
+    "results/raw/experiment_7286/gatemate_operator_receipt_search.json": "sha256:33399ed83a4391fcdced7176bb81b9769858253ae16969bc18850704adb3f481",
+    "results/raw/experiment_7286/historical_model_receipts.json": "sha256:79c1e01c542c4afbaca9d3173dfda387dad34b5636b3371c81bc89f5600df0e3",
+    "results/raw/experiment_7286/negative_fixture_receipts.json": "sha256:9ace58eec62140c8ffbda785d1eab12ecf8e0a4f83f572566bedc635abd7d3bc",
+    "results/raw/experiment_7286/validation/adversarial_verify.log": "sha256:8deae4cb12c404be5565e9b58a281a23bd273cff990b4403800a4bfcc3f82934",
+    "results/raw/experiment_7286/validation/candidate_build.log": "sha256:dc25253e2af75155da6ce14e4158527949be91140c15931fd59efbaf06a9fd42",
+    "results/raw/experiment_7286/validation/candidate_rebuild_after_spec.log": "sha256:1993c4e42a8da5ee54f4d31cdbf923562e568d8fccb38c4261693b5905873015",
+    "results/raw/experiment_7286/validation/candidate_validate.log": "sha256:261fe73bb758b380df860761616b6c6fa044f52d9700d0b38c83b1fbc0507198",
+    "results/raw/experiment_7286/validation/coverage_report.log": "sha256:d053efd24531a45b2771b7898b299729a876d58aaa966619bd4c98c3cd7c9780",
+    "results/raw/experiment_7286/validation/coverage_run.log": "sha256:e07b3920d62ca7b35a4bf16dd09305b907fa30f78bdb55b4ef5c33e4648e7878",
+    "results/raw/experiment_7286/validation/e2e_receipt_chain.log": "sha256:0e6ab7367f63170e36414aa2796eb9e6744b921d657c85f8531f41c68396cde8",
+    "results/raw/experiment_7286/validation/focused_pytest.log": "sha256:f144837b610f9ad734d1098b3c2fc754fc91df782928795bdf6ab90622e34f74",
+    "results/raw/experiment_7286/validation/independent_reducer.log": "sha256:688b08cac2df2ee020046fc17e2347c7cb4f8e624581577febd34c27c88415ff",
+    "results/raw/experiment_7286/validation/mypy.log": "sha256:ffa176c792db276dfeea27aa0108fb848a71496c34c2be481c6d4ca4490c8585",
+    "results/raw/experiment_7286/validation/ruff_check.log": "sha256:41283d0b56fccd64fb8a21b26cc155aad5d141875fb6e12dd4c49eadde28302b",
+    "results/raw/experiment_7286/validation/ruff_format.log": "sha256:d8c86bd3c5855f3aa4877f8af1049312d2e04c56fc9fc1acd847d352a907b047",
+    "results/raw/experiment_7286/validation/spec_coverage.log": "sha256:d5f4de911b3352ba22bafe4eb8ed87fe81ac5009ef2ce0dcc29d913d7f4ed0a6",
+    "results/raw/experiment_7286/validation/verdict_row_lint.log": "sha256:241ca2c897f42ff6ddcbd7bee3830139bdc26aba9ceac6eb0a237224b2985475",
+    "scripts/experiments/experiment_7286_v640_board_state.py": "sha256:a54d93cc040b9ff1c0cb98b6234b43765687197f4294b7980c3c5a34bce4d3da",
+    "tests/python/test_experiment_7286_v640_board_state.py": "sha256:3a27f1b34f70d144dbd841dc1a77e011837475d462dbe893fe7916bb73942fb3"
+  },
+  "spec_refs": [
+    "REQ-ISING-7286",
+    "SCENARIO-ISING-7286-PREFLIGHT",
+    "SCENARIO-ISING-7286-BOARDS",
+    "SCENARIO-ISING-7286-GATEMATE",
+    "SCENARIO-ISING-7286-FIXTURES",
+    "SCENARIO-ISING-7286-ARTIFACT"
+  ],
+  "started_at_utc": "2026-09-13T23:57:44.960644+00:00",
+  "status": "complete",
+  "task_id": "exp7286-board-state",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/raw/experiment_7286/terminal_candidate.json",
+      "exit_code": 0,
+      "log_hash": "sha256:8deae4cb12c404be5565e9b58a281a23bd273cff990b4403800a4bfcc3f82934",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/adversarial_verify.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/python -u scripts/experiments/experiment_7286_v640_board_state.py --date 20260913 --output results/raw/experiment_7286/terminal_candidate.json",
+      "exit_code": 0,
+      "log_hash": "sha256:dc25253e2af75155da6ce14e4158527949be91140c15931fd59efbaf06a9fd42",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/candidate_build.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7286_v640_board_state.py --date 20260913 --output results/raw/experiment_7286/terminal_candidate.json",
+      "exit_code": 0,
+      "log_hash": "sha256:1993c4e42a8da5ee54f4d31cdbf923562e568d8fccb38c4261693b5905873015",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/candidate_rebuild_after_spec.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7286_v640_board_state.py --validate results/raw/experiment_7286/terminal_candidate.json",
+      "exit_code": 0,
+      "log_hash": "sha256:261fe73bb758b380df860761616b6c6fa044f52d9700d0b38c83b1fbc0507198",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/candidate_validate.log"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/exp7286.coverage-final .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_7286_v640_board_state.py --show-missing --fail-under=100",
+      "exit_code": 0,
+      "log_hash": "sha256:d053efd24531a45b2771b7898b299729a876d58aaa966619bd4c98c3cd7c9780",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/coverage_report.log"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/exp7286.coverage-final PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/coverage run --rcfile=/dev/null --include=python/carnot/experiment_7286_v640_board_state.py -m pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-coverage-stable",
+      "exit_code": 0,
+      "log_hash": "sha256:e07b3920d62ca7b35a4bf16dd09305b907fa30f78bdb55b4ef5c33e4648e7878",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/coverage_run.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-e2e -k authenticates_current_receipt_chain or gatemate_fixtures_fail_closed or boards_preserve_distinct_scopes or artifact_is_complete_host_aggregation",
+      "exit_code": 0,
+      "log_hash": "sha256:0e6ab7367f63170e36414aa2796eb9e6744b921d657c85f8531f41c68396cde8",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/e2e_receipt_chain.log"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7286_v640_board_state.py -q --no-cov -n 0 --basetemp /tmp/exp7286-focused-final",
+      "exit_code": 0,
+      "log_hash": "sha256:f144837b610f9ad734d1098b3c2fc754fc91df782928795bdf6ab90622e34f74",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/focused_pytest.log"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python -c \"import json; from pathlib import Path; from carnot import experiment_7286_v640_board_state as e; d=json.loads(Path(results/raw/experiment_7286/terminal_candidate.json).read_text()); r=e.reduce_board_rows(d[rows]); assert r[board_disposition_complete_score]==d[board_disposition_complete_score]==1; assert r[hardware_command_count]==0; assert r[row_hashes_match] is True; print(json.dumps(r, sort_keys=True))\"",
+      "exit_code": 0,
+      "log_hash": "sha256:688b08cac2df2ee020046fc17e2347c7cb4f8e624581577febd34c27c88415ff",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/independent_reducer.log"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/mypy python/carnot/experiment_7286_v640_board_state.py",
+      "exit_code": 0,
+      "log_hash": "sha256:ffa176c792db276dfeea27aa0108fb848a71496c34c2be481c6d4ca4490c8585",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/mypy.log"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7286_v640_board_state.py tests/python/test_experiment_7286_v640_board_state.py scripts/experiments/experiment_7286_v640_board_state.py",
+      "exit_code": 0,
+      "log_hash": "sha256:41283d0b56fccd64fb8a21b26cc155aad5d141875fb6e12dd4c49eadde28302b",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/ruff_check.log"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7286_v640_board_state.py tests/python/test_experiment_7286_v640_board_state.py scripts/experiments/experiment_7286_v640_board_state.py",
+      "exit_code": 0,
+      "log_hash": "sha256:d8c86bd3c5855f3aa4877f8af1049312d2e04c56fc9fc1acd847d352a907b047",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/ruff_format.log"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7286_v640_board_state.py",
+      "exit_code": 0,
+      "log_hash": "sha256:d5f4de911b3352ba22bafe4eb8ed87fe81ac5009ef2ce0dcc29d913d7f4ed0a6",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/spec_coverage.log"
+    },
+    {
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py results/raw/experiment_7286/terminal_candidate.json",
+      "exit_code": 0,
+      "log_hash": "sha256:241ca2c897f42ff6ddcbd7bee3830139bdc26aba9ceac6eb0a237224b2985475",
+      "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7286/validation/verdict_row_lint.log"
+    },
+    {
+      "command": "internal current.reduce_board_rows(board_rows)",
+      "exit_code": 0,
+      "log_hash": "sha256:1ba85223b190a4c9e4c06a92dcefefe6557c2caaf2b452320a7159e3b7cb04e7"
+    }
+  ],
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}
