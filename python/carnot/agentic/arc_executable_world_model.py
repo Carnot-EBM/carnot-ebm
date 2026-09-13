@@ -6425,6 +6425,9 @@ class LocalGGUFProposer:
     # induced on Qwen. These record what the running server actually says.
     observed_server_model_path: Optional[str] = None
     reuse_model_check: str = "not_checked"
+    # The kernel start tick is captured when this instance launches a server.
+    # A later provenance check uses it to reject PID reuse without guessing.
+    server_pid_start_tick: Optional[int] = None
     # Set by `__post_init__` when it re-fitted `ffn_cpu_layers` because this instance's `mtp`
     # disagreed with the environment default the dataclass factory had used. Recorded rather than
     # silently corrected: a re-fit means somebody's mental model of this launch was wrong, and the
@@ -7171,6 +7174,7 @@ class LocalGGUFProposer:
         """
         proc = self._proc
         self._proc = None
+        self.server_pid_start_tick = None
         if proc is None or proc.poll() is not None:
             return  # never launched, or already exited on its own -- nothing to clean up
         diagnostic = f"{reason} (pid={getattr(proc, 'pid', '?')}, port={self.port})"
@@ -7411,7 +7415,10 @@ class LocalGGUFProposer:
         self.generator_server_path = str(server)
         if not path or not server.exists():
             return False  # GPU enforcement: no CPU fallback
-        from carnot.agentic.arc_eval_provenance import huggingface_snapshot_revision
+        from carnot.agentic.arc_eval_provenance import (
+            huggingface_snapshot_revision,
+            process_start_tick,
+        )
 
         self.requested_model_path = str(Path(path).absolute())
         self.requested_model_filename = Path(path).name
@@ -7589,6 +7596,7 @@ class LocalGGUFProposer:
         self._proc = subprocess.Popen(
             args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
         )
+        self.server_pid_start_tick = process_start_tick(getattr(self._proc, "pid", None))
         load_wait_attempts = max(90, int(self.timeout / 2))  # large full-precision models (e.g.
         # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
         # CAPPED at 300 attempts (10 min) since 2026-08-21: this budget is for MODEL LOAD time,
@@ -8371,6 +8379,7 @@ class LocalGGUFProposer:
         if self._proc is not None:
             self._proc.terminate()
             self._proc = None
+            self.server_pid_start_tick = None
 
     def _begin_engine_evidence(
         self,

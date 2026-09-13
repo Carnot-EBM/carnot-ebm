@@ -415,7 +415,7 @@ def identity_source_payload_sha256(value: Mapping[str, Any]) -> str:
 def _path_fingerprint(path: Any) -> dict[str, Any] | None:
     """Capture link and target identity so a later symlink swap is visible."""
 
-    candidate = _absolute_path(path)
+    candidate = _absolute_path(os.fspath(path) if isinstance(path, os.PathLike) else path)
     if candidate is None:
         return None
     try:
@@ -440,12 +440,28 @@ def _path_fingerprint(path: Any) -> dict[str, Any] | None:
     }
 
 
+def process_start_tick(pid: Any) -> int | None:
+    """Read the kernel start tick that distinguishes a live process from PID reuse."""
+
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 0:
+        return None
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8").split()
+        tick = int(fields[21])
+    except (IndexError, OSError, ValueError):
+        return None
+    return tick if tick > 0 else None
+
+
 def capture_arc_model_identity_source_provenance(
     *,
     raw_server_props: Mapping[str, Any],
     requested_model_path: Any,
     source_kind: str,
     source_artifact_path: str | Path | None = None,
+    launch_model_argument: Any = None,
+    server_pid: Any = None,
+    server_pid_start_tick: Any = None,
 ) -> dict[str, Any]:
     """Seal the raw report and requested path before identity validation.
 
@@ -467,7 +483,29 @@ def capture_arc_model_identity_source_provenance(
         "source_artifact_path": None,
         "source_artifact_hash": None,
         "source_reproducibility_checksum": None,
+        "launch_model_argument": (
+            str(launch_model_argument)
+            if isinstance(launch_model_argument, str) and launch_model_argument
+            else None
+        ),
+        "runtime_process": None,
     }
+    if server_pid is not None or server_pid_start_tick is not None:
+        observed_start_tick = process_start_tick(server_pid)
+        source["runtime_process"] = {
+            "pid": server_pid,
+            "launch_start_tick": server_pid_start_tick,
+            "observed_start_tick": observed_start_tick,
+            "supported": bool(
+                isinstance(server_pid, int)
+                and not isinstance(server_pid, bool)
+                and server_pid > 0
+                and isinstance(server_pid_start_tick, int)
+                and not isinstance(server_pid_start_tick, bool)
+                and server_pid_start_tick > 0
+                and observed_start_tick == server_pid_start_tick
+            ),
+        }
     if source_artifact_path is None:
         return source
     artifact_path = Path(source_artifact_path)
@@ -714,10 +752,22 @@ def build_typed_arc_model_identity_receipt(
         and requested.name == filename
         and alias_names_agree
     )
+    captured_fingerprint = source.get("requested_path_fingerprint")
+    captured_target_matches = bool(
+        isinstance(captured_fingerprint, Mapping)
+        and requested_resolved is not None
+        and captured_fingerprint.get("resolved_path") == str(requested_resolved)
+        and requested_stat is not None
+        and captured_fingerprint.get("target_device") == requested_stat.st_dev
+        and captured_fingerprint.get("target_inode") == requested_stat.st_ino
+        and captured_fingerprint.get("target_nlink") == requested_stat.st_nlink
+        and captured_fingerprint.get("target_size") == requested_stat.st_size
+    )
     unique_condition = (
         None
         if requested_stat is None or observed_stat is None
-        else requested_stat.st_nlink == observed_stat.st_nlink == 1
+        else captured_target_matches
+        and requested_stat.st_nlink == observed_stat.st_nlink
         and (requested_stat.st_dev, requested_stat.st_ino)
         == (observed_stat.st_dev, observed_stat.st_ino)
     )
@@ -730,6 +780,22 @@ def build_typed_arc_model_identity_receipt(
         source.get("raw_report_sha256") == expected_raw_hash,
         source.get("requested_path_fingerprint") == requested_fingerprint,
     ]
+    captured_launch = source.get("launch_model_argument")
+    if captured_launch is not None:
+        source_checks.append(captured_launch == launch_model_argument)
+    runtime_process = source.get("runtime_process")
+    if source.get("source_kind") == "live_server_props":
+        source_checks.append(isinstance(runtime_process, Mapping))
+    if runtime_process is not None:
+        source_checks.extend(
+            [
+                isinstance(runtime_process, Mapping),
+                isinstance(runtime_process, Mapping) and runtime_process.get("supported") is True,
+                isinstance(runtime_process, Mapping)
+                and runtime_process.get("observed_start_tick")
+                == runtime_process.get("launch_start_tick"),
+            ]
+        )
     artifact_path_raw = source.get("source_artifact_path")
     if artifact_path_raw is not None:
         artifact_path = _absolute_path(artifact_path_raw)
@@ -810,8 +876,13 @@ def build_typed_arc_model_identity_receipt(
             _status(unique_condition),
             "stable file descriptor device, inode, and link count",
             {
+                "requested_device": requested_stat.st_dev if requested_stat else None,
+                "requested_inode": requested_stat.st_ino if requested_stat else None,
                 "requested_nlink": requested_stat.st_nlink if requested_stat else None,
+                "observed_device": observed_stat.st_dev if observed_stat else None,
+                "observed_inode": observed_stat.st_ino if observed_stat else None,
                 "observed_nlink": observed_stat.st_nlink if observed_stat else None,
+                "captured_target": captured_fingerprint,
             },
         ),
         _obligation(
@@ -1434,6 +1505,13 @@ def build_arc_eval_provenance_for_policy(
                     raw_server_props=raw_props,
                     requested_model_path=requested_path,
                     source_kind="live_server_props",
+                    launch_model_argument=(
+                        command[command.index("-m") + 1]
+                        if command and "-m" in command and command.index("-m") + 1 < len(command)
+                        else None
+                    ),
+                    server_pid=getattr(getattr(prop, "_proc", None), "pid", None),
+                    server_pid_start_tick=getattr(prop, "server_pid_start_tick", None),
                 )
                 launch_argument = requested_path
                 if command and "-m" in command:

@@ -32020,6 +32020,91 @@ Only then SHALL it atomically publish `results/experiment_7263_v639_arc_live.jso
 Implementation status: specified 2026-09-13. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7276: Preserve authenticated runtime identity across the scored policy handoff
+
+Experiment 7276 SHALL diagnose each Experiment 7263 episode from retained evidence.
+It SHALL report the unsupported obligation and the lifecycle boundary where the
+generic identity exception occurred. It SHALL keep the historical launch path,
+requested and resolved model paths, content hash, inode, link count, server process
+identity, raw `/props` availability, and source receipt distinct. It SHALL not infer
+that the GGUF or model selection was wrong from the generic exception.
+
+The shared typed identity builder SHALL accept a stable regular file with multiple
+hard links only when the source fingerprint captured that same link count, device,
+inode, size, resolved path, and content hash before policy use. A new link, symlink
+replacement, changed path, changed hash, or changed inode after capture SHALL remain
+unsupported. This repair SHALL not weaken the hub, revision, requested filename,
+launch `-m`, raw server report, path resolution, or source-provenance obligations.
+
+The runtime handoff SHALL bind the server PID and process start tick recorded at
+launch to an independent process observation. It SHALL bind the retained launch
+argument to the raw server report before `choose_action`. The real provenance builder
+SHALL consume only a typed receipt whose obligations remain supported. Missing
+`/props`, a stale PID or start tick, a wrong launch path, a replaced symlink, and a
+genuine unsupported identity SHALL fail before the fixture receives policy credit.
+Rejected evidence SHALL stay visible. A rejected check SHALL never be replaced with
+an unconditional true value.
+
+Experiment 7276 SHALL use isolated temporary GGUF-shaped fixtures and scripted
+transports. It SHALL exercise start, `/props`, typed identity, the submitted
+`make_carnot_agent` and `E3AgentPolicy` path, `choose_action`, and the real provenance
+builder. It SHALL not invoke an LLM, inspect game source, create a game model, change
+a token budget, or enable a production default. Historical model facts and injected
+fixtures SHALL live in hashed sidecars and SHALL not enter `MODEL_SPECS`.
+
+`arc_identity_ready_score` SHALL equal one only when the stable-hard-link defect is
+reproduced before the repair, the repaired path passes through the real policy
+entrypoint, every adversarial control rejects, and independent raw-row reduction
+agrees. If no defect is proved, the experiment SHALL publish a complete diagnostic
+null with readiness zero. An absent, unreadable, quarantined, retired, or conflicting
+external prerequisite SHALL publish a terminal blocked result with
+`gate_check_summary`. Only this experiment's unfinished work MAY use partial status,
+and it SHALL stay under `results/checkpoints/`.
+
+The terminal result SHALL use run date `20260913`, milestone `2026.09.640`,
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current load and generation counters,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL retain ordinary top-level values, field principles,
+precondition and source hashes, phase spans, unit rows, identity-obligation rows,
+policy-entrypoint receipts, unsupported controls, sample budget, acceptance gates,
+oracle disclosure, validation receipts, and a checksum over code, configuration,
+inputs, and raw evidence.
+
+### SCENARIO-ARC-WMTE-7276-STABLE-HARD-LINK
+
+- GIVEN a snapshot symlink and a content-addressed blob with a pre-existing second hard link
+- AND the source fingerprint captured that exact file identity before policy use
+- WHEN the typed builder joins the requested path, launch path, raw `/props`, inode, and hash
+- THEN every identity obligation is supported
+- AND adding or replacing a link after capture is still rejected.
+
+### SCENARIO-ARC-WMTE-7276-POLICY-HANDOFF
+
+- GIVEN a scripted server start with matching raw `/props`, PID, start tick, and launch argument
+- WHEN the submitted factory constructs `E3AgentPolicy` and `choose_action` runs
+- THEN the real provenance builder consumes the same authenticated typed receipt
+- AND the policy-entrypoint receipt records the factory, policy class, action, and provenance hash.
+
+### SCENARIO-ARC-WMTE-7276-UNSUPPORTED-CONTROLS
+
+- GIVEN symlink replacement, a stale PID or start tick, missing `/props`, a wrong launch path,
+  or a genuinely unsupported file identity
+- WHEN the same runtime evidence path validates the fixture
+- THEN that control is rejected with its unsupported obligation and failure boundary
+- AND readiness remains zero if any control is accepted.
+
+### SCENARIO-ARC-WMTE-7276-TERMINAL-EVIDENCE
+
+- GIVEN authenticated Exp7263 evidence and complete CPU fixture rows
+- WHEN the independent reducer and terminal artifact checkers run
+- THEN the result is complete or blocked, never partial
+- AND readiness, verdict class, invocation counts, raw rows, sidecar hashes, and validation
+  receipts agree before atomic publication.
+
+Implementation status: specified 2026-09-13. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition
