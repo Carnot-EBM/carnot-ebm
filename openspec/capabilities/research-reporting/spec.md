@@ -1,5 +1,83 @@
 # Research Reporting Capability Specification
 
+## V638 independent evidence matrix — 2026-09-13
+
+**Status:** Implemented. The terminal result remains blocked by absent external
+science evidence and the mismatched named design.
+
+### REQ-REPORT-7259: Authenticate and close the V638 evidence matrix
+
+Exp7259 SHALL read only the active `2026.09.638` YAML and the design bytes that
+the roadmap names. It SHALL parse both sources independently. It SHALL retain
+exactly fourteen ordered contract rows for `exp7246` through `exp7259`. Each row
+SHALL preserve the title, deliverable, structured gates, artifact hash, raw
+evidence state, quarantine state, and observed upstream gates. Missing producer
+artifacts SHALL remain explicit. The final row SHALL identify Exp7259 as the
+self-synthesis row.
+
+Exp7259 SHALL authenticate each available producer before it promotes a claim.
+It SHALL independently reduce per-unit evidence for source semantics, exact
+oracle conformance, completed capture, causal learning, useful world-model
+prediction, actual policy consumption, durable native cost, and official score.
+It SHALL keep contract completion separate from PRD completion. A readiness
+score or copied headline SHALL not rehabilitate missing or quarantined evidence.
+
+Exp7259 SHALL replay each structured gate against the same-milestone producer.
+It SHALL distinguish a missing file, a missing field, quarantine, and a true
+numeric zero. It SHALL compare each exact producer verdict with its declared
+`prior_failures`. A recurrence MAY retire only that task mechanism. It SHALL not
+edit the exclusion manifest, activate a roadmap, publish, submit, upload, or
+change a production default.
+
+The terminal artifact SHALL set `capstone_complete_score=1` when all fourteen
+matrix rows exist. This score SHALL not require scientific success. An unchanged
+external prerequisite SHALL produce `status=blocked`, `verdict_class=blocked`,
+an honest verdict that starts with `blocked_`, and an exact
+`gate_check_summary`. The artifact SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current model counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+
+The artifact SHALL include every field named by the frozen Exp7259 prompt. Its
+`rows` SHALL contain recomputable claim reductions. Its `contract_rows` SHALL
+contain the independent document/YAML comparison. Its `prd_gap_matrix` SHALL
+separately report FR-11, FR-12, FR-05/08, and NFR-01. Validation receipts SHALL
+record each command, exit code, and log hash.
+
+#### SCENARIO-REPORT-7259-CONTRACT: Missing tasks stay in the roster
+
+**Given** the frozen V638 YAML and named design bytes
+**When** Exp7259 parses and compares the sources
+**Then** it records fourteen ordered rows and keeps absent producer files as
+blocked evidence rows instead of dropping them.
+
+#### SCENARIO-REPORT-7259-CLAIMS: Raw rows control promotion
+
+**Given** terminal, blocked, missing, or quarantined producer evidence
+**When** Exp7259 recomputes each scientific claim
+**Then** only authenticated raw rows can support a positive value and exact
+oracle conformance remains distinct from learned verification evidence.
+
+#### SCENARIO-REPORT-7259-GATES: Missing evidence differs from zero
+
+**Given** the V638 structured gate declarations
+**When** Exp7259 reads the actual same-milestone producer files
+**Then** each replay records the expected value, observed value, producer
+declaration, quarantine state, and a distinct file, field, or value outcome.
+
+#### SCENARIO-REPORT-7259-ARTIFACT: Completion can remain blocked
+
+**Given** a complete fourteen-row matrix with an absent required science source
+**When** Exp7259 writes its terminal receipt
+**Then** `capstone_complete_score` is one while the overall verdict remains
+blocked and no publication action occurs.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7259_v638_capstone.py`,
+`scripts/experiments/experiment_7259_v638_capstone.py`, and
+`tests/python/test_experiment_7259_v638_capstone.py`. The terminal receipt is
+`results/experiment_7259_v638_capstone.json`.
+
 ## V638 source ingestion and sealed execution map — 2026-09-12
 
 **Status:** Implemented. No V638 scientific result is claimed.

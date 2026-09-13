@@ -17857,3 +17857,4 @@ code |
 | 2026-09-13 04:43 UTC | Matched durable event cost for the persistent cont | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ( + monkeyp |
 | 2026-09-13 05:02 UTC | Matched durable event cost for the persistent cont | OK | cache hit: 96 passed, 1 warning in 21.14s |
 | 2026-09-13 05:33 UTC | GateMate physical-state condition and graduated-bo | OK | 103 passed, 1 warning in 8.13s |
+| 2026-09-13 06:56 UTC | V638 independent evidence matrix and next-branch d | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: er_validation_ |
