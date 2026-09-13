@@ -17852,3 +17852,4 @@ code |
 | 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 0: OPEN 1 |
 | 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 0: OPEN 1 days: SILE |
 | 2026-09-13 00:56 UTC | Cold memory causality retention and rollback audit | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: p7255.main( + |
+| 2026-09-13 02:03 UTC | Cold memory causality retention and rollback audit | OK | 94 passed, 1 warning in 20.30s |
