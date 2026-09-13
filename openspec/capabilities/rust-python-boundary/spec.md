@@ -429,3 +429,72 @@ native method inventory. The shared installed extension SHALL remain unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7256 and SCENARIO-RUSTPY-7256-* | Implemented: persistent native FIFO controller with typed operations, transactional snapshots, counters, and isolated interpreter binding. | Verified: RED-first native API, parity, malformed state, stale transaction, interrupted write, fresh-process, and conversion-counter tests. |
+
+### REQ-RUSTPY-7257: Complete Native Archive Event Cost
+
+Carnot SHALL compare the shipped Python archive controller, the former native
+active-state wrapper, and the persistent Exp7256 native controller. The fixed
+roster SHALL use archive capacities 1 and 4, batch sizes 1, 16, and 128, and 30
+interleaved paired blocks per cell. Every arm SHALL use the same trace, seed,
+CPU affinity, thread limits, storage location, and durable commit cadence.
+
+Each timed block SHALL include lookup, query selection, delayed release and
+update, validation, snapshot serialization, a flushed file replacement, and
+restore. Rows SHALL retain each component, the complete block and event cost,
+the residual cost, decision and state hashes, durability observations, errors,
+abstentions, and censoring. Warmup SHALL remain outside steady-state rows.
+Build, import, initial state transfer, and break-even costs SHALL remain in
+separate amortization rows.
+
+The result SHALL compute paired 95 percent bootstrap intervals from the 30
+blocks in each arm comparison. `native_event_cost_value_score` SHALL equal one
+only when the Python-over-persistent-native lower interval is above one at
+batch size one for both capacities, exact three-arm parity has no failure, and
+all arms use equal durability. Larger batch results SHALL remain separate.
+NFR-01 SHALL require a measured 10x lower bound. The program's hardware
+aspiration SHALL require a measured 100x lower bound. A repeated cost null
+SHALL retire this boundary optimization only.
+
+The executable SHALL authenticate the complete Exp7256 artifact, its
+`native_controller_ready_score`, its checksum, its quarantine state, and the
+exact imported binary before measurement. An absent or changed external
+prerequisite SHALL produce a row-free `blocked_*` terminal artifact. The task
+SHALL invoke no model and SHALL use the CPU exact-solver substrate literals.
+The terminal artifact SHALL retain all 540 cost rows and every required
+provenance field. It SHALL pass cold validation before an atomic write.
+
+### SCENARIO-RUSTPY-7257-COST: Full Events Use Equal Durability
+
+**Given** one sealed trace and one isolated native binary
+**When** all three arms run one interleaved timing block
+**Then** each arm performs the same validation, serialization, fsync, rename,
+and restore policy
+**And** decision and state hashes expose any omitted operation.
+
+### SCENARIO-RUSTPY-7257-GATE: Interactive Cells Gate Native Value
+
+**Given** 30 paired blocks for every frozen capacity and batch cell
+**When** the independent reducer computes Python-over-persistent-native ratios
+**Then** both capacity-specific batch-one lower CI95 values must exceed one
+**And** batch 16 and batch 128 results cannot replace interactive evidence.
+
+### SCENARIO-RUSTPY-7257-RESTART: Timed Bytes Replay In A Fresh Process
+
+**Given** the extension and snapshot bytes used by the cost benchmark
+**When** a fresh interpreter imports those exact extension bytes and restores
+the snapshot from a private path
+**Then** its next decisions and state match the Python reference
+**And** its receipt binds the interpreter, import path, and binary hash.
+
+### SCENARIO-RUSTPY-7257-TERMINAL: Oracle And Cost Claims Stay Separate
+
+**Given** exact-oracle parity and an independently reduced cost result
+**When** the terminal verdict is classified
+**Then** oracle use forbids the `positive` class
+**And** a failed scientific cost gate requires `null`, not a success class.
+
+## Implementation Status (REQ-RUSTPY-7257)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7257 and SCENARIO-RUSTPY-7257-* | Planned: thin Exp7257 runner over the shipped Exp7243 and Exp7256 controllers. | Planned: RED-first roster, equal durability, reducer, restart, blocked artifact, validator, and entrypoint tests. |
