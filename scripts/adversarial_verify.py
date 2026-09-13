@@ -2539,11 +2539,15 @@ _INVOCATION_BOOLEAN_FIELDS = frozenset(
 )
 _INVOCATION_COUNT_FIELDS = frozenset(
     {
+        "generation_calls_attempted",
+        "generation_calls_completed",
         "generation_call_count",
         "inference_call_count",
         "invocation_count",
         "live_inference_call_count",
         "llm_call_count",
+        "model_loads_attempted",
+        "model_loads_completed",
         "model_inference_call_count",
         "model_invocation_count",
     }
@@ -3199,6 +3203,38 @@ def offline_arc_methodology_descriptor(d: dict[str, Any]) -> dict[str, Any] | No
     }
 
 
+def _validated_substrate_class_floor(d: dict[str, Any]) -> dict[str, Any] | None:
+    """Return a class floor only when the existing typed checks accept the class.
+
+    REQ-SUBSTRATE-CLASS-1 / SCENARIO-SUBSTRATE-CLASS-9 and -10. The closed
+    class is authoritative when it is a bare, current enum member and its
+    invocation evidence agrees. Invalid or contradictory classes fall through
+    to the older provenance-aware reader; they can never lower that floor.
+    """
+
+    substrate_class = d.get(SUBSTRATE_CLASS_FIELD)
+    if not isinstance(substrate_class, str) or substrate_class not in SUBSTRATE_CLASSES:
+        return None
+    blocked = _is_precondition_check_only_blocked(d)
+    if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN:
+        return None
+    if substrate_class in _MODEL_SUBSTRATE_CLASSES and blocked:
+        return None
+    live_evidence, negative_evidence, _external = _typed_invocation_evidence(d)
+    if substrate_class in _NO_MODEL_SUBSTRATE_CLASSES and live_evidence:
+        return None
+    if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:
+        return None
+    floor = SUBSTRATE_CLASS_FLOORS[substrate_class]
+    if floor is None:
+        return None
+    return {
+        "substrate": substrate_class,
+        "min_duration_s": floor,
+        "reason": "substrate_class",
+    }
+
+
 def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     """Return the duration floor selected from the artifact substrate.
 
@@ -3209,6 +3245,9 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     """
     if _is_precondition_check_only_blocked(d):
         return None
+    class_floor = _validated_substrate_class_floor(d)
+    if class_floor is not None:
+        return class_floor
     classification = _classify_inference_substrate(d)
     claim = _classify_current_task_inference_claim(d)
     requires_live_floor = claim["state"] in {

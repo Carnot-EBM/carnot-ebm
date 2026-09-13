@@ -16,6 +16,7 @@ import pytest
 
 from carnot import experiment_7226_v636_belief_compiler as exp7226
 from carnot import experiment_7240_v637_recurrence_fixture as exp7240
+from carnot import experiment_7261_v639_compute_contract as exp7261
 from carnot.memory import transactional_constraint_memory as transactional
 
 
@@ -70,10 +71,11 @@ def test_principle_unwrap_is_exact_and_preconditions_pass(tmp_path: Path) -> Non
     ordinary = {"principle": "why", "value": 3, "evidence": "kept"}
     assert exp7240.unwrap_principled(ordinary) is ordinary
 
-    paths = exp7240.ExperimentPaths.under(tmp_path)
-    checks, hashes, upstream = exp7240.collect_preconditions(exp7240.REPO_ROOT, paths)
+    receipt = exp7261.build_hermetic_exp7240_fixture(tmp_path / "fixture")
+    checks, hashes, upstream = exp7261.read_hermetic_exp7240_fixture(receipt)
     assert exp7240.gate_summary(checks)["passed"] is True
-    assert hashes[str(exp7240.REPO_ROOT / exp7240.DEFAULT_UPSTREAM_ARTIFACT)].startswith("sha256:")
+    fixture_root = Path(receipt["root"])
+    assert hashes[str(fixture_root / exp7240.DEFAULT_UPSTREAM_ARTIFACT)].startswith("sha256:")
     assert upstream["belief_run_complete_score"] == 1
     assert (
         exp7240.ExperimentPaths.defaults().artifact == exp7240.REPO_ROOT / exp7240.DEFAULT_ARTIFACT
@@ -84,7 +86,7 @@ def test_principle_unwrap_is_exact_and_preconditions_pass(tmp_path: Path) -> Non
     changed_upstream = deepcopy(upstream)
     changed_upstream["decision_rows_path"] = "not-a-receipt"
     with patch.object(exp7240, "_load_object", return_value=changed_upstream):
-        changed_checks, _, _ = exp7240.collect_preconditions(exp7240.REPO_ROOT, paths)
+        changed_checks, _, _ = exp7261.read_hermetic_exp7240_fixture(receipt)
     assert exp7240.gate_summary(changed_checks)["passed"] is False
 
 
@@ -372,8 +374,10 @@ def test_small_panel_progress_uses_existing_acquisition(capsys: pytest.CaptureFi
 def test_six_arm_panel_and_terminal_artifact(tmp_path: Path) -> None:
     """REQ-CL-7240 / SCENARIO-CL-7240-ARMS and -TERMINAL."""
 
+    receipt = exp7261.build_hermetic_exp7240_fixture(tmp_path / "fixture")
+    repo_root = Path(receipt["root"])
     paths = exp7240.ExperimentPaths.under(tmp_path)
-    artifact = exp7240.build_and_seal(exp7240.REPO_ROOT, paths, progress=True)
+    artifact = exp7240.build_and_seal(repo_root, paths, progress=True)
     assert artifact["status"] == "complete"
     assert artifact["recurrence_fixture_ready_score"] == 1
     assert artifact["verdict_class"] == "circular_positive"
@@ -385,9 +389,9 @@ def test_six_arm_panel_and_terminal_artifact(tmp_path: Path) -> None:
     assert all(row["intended_query_count"] == exp7240.QUERY_CEILING for row in artifact["rows"])
     assert artifact["sample_size_budget"]["completed_arm_event_rows"] == 196_608
     assert artifact["acceptance_gate_results"]["science_efficacy"]["pass"] is None
-    assert exp7240.validate_artifact(artifact, repo_root=exp7240.REPO_ROOT) == []
+    assert exp7240.validate_artifact(artifact, repo_root=repo_root) == []
 
-    exp7240.write_artifact(paths.artifact, artifact, repo_root=exp7240.REPO_ROOT)
+    exp7240.write_artifact(paths.artifact, artifact, repo_root=repo_root)
     loaded = json.loads(paths.artifact.read_text())
     assert loaded["reproducibility_checksum"] == artifact["reproducibility_checksum"]
     assert paths.raw_rows.exists()
@@ -395,9 +399,7 @@ def test_six_arm_panel_and_terminal_artifact(tmp_path: Path) -> None:
 
     changed = deepcopy(artifact)
     changed["rows"][0]["error"] += 1
-    assert "reproducibility_checksum" in exp7240.validate_artifact(
-        changed, repo_root=exp7240.REPO_ROOT
-    )
+    assert "reproducibility_checksum" in exp7240.validate_artifact(changed, repo_root=repo_root)
 
     mutation_cases: list[tuple[str, dict[str, object]]] = []
     changed = deepcopy(artifact)
@@ -457,7 +459,7 @@ def test_six_arm_panel_and_terminal_artifact(tmp_path: Path) -> None:
     mutation_cases.append(("sample_size_budget", changed))
     for expected_error, changed in mutation_cases:
         changed["reproducibility_checksum"] = exp7240.reproducibility_checksum(changed)
-        errors = exp7240.validate_artifact(changed, repo_root=exp7240.REPO_ROOT)
+        errors = exp7240.validate_artifact(changed, repo_root=repo_root)
         assert any(error.startswith(expected_error) for error in errors)
     with pytest.raises(ValueError, match="artifact_validation_failed:forced"):
         exp7240._require_valid(["forced"])
@@ -466,8 +468,10 @@ def test_six_arm_panel_and_terminal_artifact(tmp_path: Path) -> None:
 def test_external_failure_builds_valid_row_free_block(tmp_path: Path) -> None:
     """REQ-CL-7240 / SCENARIO-CL-7240-PRECONDITIONS."""
 
+    receipt = exp7261.build_hermetic_exp7240_fixture(tmp_path / "fixture")
+    repo_root = Path(receipt["root"])
     paths = exp7240.ExperimentPaths.under(tmp_path)
-    checks, hashes, upstream = exp7240.collect_preconditions(exp7240.REPO_ROOT, paths)
+    checks, hashes, upstream = exp7240.collect_preconditions(repo_root, paths)
     failed = deepcopy(checks)
     failed[0]["observed_value"] = False
     failed[0]["passed"] = False
@@ -476,14 +480,14 @@ def test_external_failure_builds_valid_row_free_block(tmp_path: Path) -> None:
     assert artifact["rows"] == []
     assert artifact["inference_substrate"] == "blocked_no_run"
     assert artifact["honest_verdict"].startswith("blocked_")
-    assert exp7240.validate_artifact(artifact, repo_root=exp7240.REPO_ROOT) == []
+    assert exp7240.validate_artifact(artifact, repo_root=repo_root) == []
 
     changed = deepcopy(artifact)
     changed["rows"] = [{"unexpected": True}]
     changed["reproducibility_checksum"] = exp7240.reproducibility_checksum(changed)
-    assert "blocked_contract" in exp7240.validate_artifact(changed, repo_root=exp7240.REPO_ROOT)
+    assert "blocked_contract" in exp7240.validate_artifact(changed, repo_root=repo_root)
     with patch.object(exp7240, "collect_preconditions", return_value=(failed, hashes, upstream)):
-        rebuilt = exp7240.build_and_seal(exp7240.REPO_ROOT, paths)
+        rebuilt = exp7240.build_and_seal(repo_root, paths)
     assert rebuilt["status"] == "blocked"
 
     broken_views = exp7240.build_stream_views()
@@ -492,7 +496,7 @@ def test_external_failure_builds_valid_row_free_block(tmp_path: Path) -> None:
         patch.object(exp7240, "build_stream_views", return_value=broken_views),
         pytest.raises(ValueError, match="stream_conformance_failed"),
     ):
-        exp7240.build_and_seal(exp7240.REPO_ROOT, exp7240.ExperimentPaths.under(tmp_path / "bad"))
+        exp7240.build_and_seal(repo_root, exp7240.ExperimentPaths.under(tmp_path / "bad"))
 
 
 def test_main_rejects_wrong_date_and_thin_wrapper_delegates(

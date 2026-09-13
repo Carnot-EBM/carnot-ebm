@@ -18,7 +18,7 @@ probes), but still real model-load-and-invoke work -- not fabricated. Mirrors th
 as this project's four prior substrate-category additions this week: add a genuine new category
 with its own calibrated floor rather than force-fitting into an existing one.
 
-Spec refs: none (operational lint fix, no OpenSpec capability).
+Spec ref: REQ-SUBSTRATE-CLASS-1 (the calibrated bounded-generation floor).
 """
 
 from __future__ import annotations

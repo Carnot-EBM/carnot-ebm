@@ -1,0 +1,1168 @@
+retired:
+- experiment_id: 2091
+  completed_milestone: 2026.05.164
+  reason: gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries / 2h wall
+    time on 2026-05-14). LaTeX markup strip ($\Pi$Net -> PiNet) did not resolve. Retired
+    pending agent-routing investigation.
+- experiment_id: 260
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, sequential inference loop
+- experiment_id: 308
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, legacy checkpoint-failure state
+- experiment_id: 309
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, checkpoint-failure state
+- experiment_id: 346
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive
+    milestones'
+- experiment_id: 380
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 381
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 382
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 383
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive
+    milestones'
+- experiment_id: 410
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: EORM v3 retrain, 14 consecutive milestones, 716 min
+    cumulative overhead'
+- experiment_id: 425
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: 22nd consecutive slowest-5 appearance, 1672
+    min cumulative overhead (27.9 hours zero-value compute)'
+- experiment_id: 491
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: JEPA curriculum diagnostic 12th slowest-5 appearance,
+    findings incorporated in Exps 693/698/799/809'
+- experiment_id: 527
+  completed_milestone: 2026.04.57
+  reason: 3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no
+    remaining research mandate
+- experiment_id: 603
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: CoACEExtractorV4 repeated carry-over, superseded
+    by DualGPU migration'
+- experiment_id: 627
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: interwhen mid-generation monitor, serial loop
+    superseded by paragraph-boundary batching (Exp 841)'
+retired_experiments:
+- experiment_scope: HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)
+  reason: 'retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61 (below_v1
+    verdict). SAE geometry approach does not discriminate hallucinations reliably
+    after two attempts.'
+  retired_milestone: 2026.04.67
+  retire_if_same_verdict: true
+- experiment_id: 887
+  completed_milestone: 2026.04.68
+  reason: 'retire_if_same_verdict: discriminative JEPAPredictor has failed OOD generalisation
+    in 11 consecutive attempts (exp783,exp799,exp804,exp809,exp825,exp834,exp872,exp887).
+    VJEPA is the replacement. ood_auc <= 0.60 after VJEPA pretraining.'
+- experiment_id: 783
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 799
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 804
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 809
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 825
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 834
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 872
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+retired_extras:
+- id: arc-induce-completion-budget-raise
+  reason: >-
+    RETIRED AS A LEVER, 2026-07-31, honouring the retire_if_same_verdict:true this
+    direction was re-run under. Raising the induce completion budget was already
+    recorded as a negative inline in arc_executable_world_model.induce()
+    (proto_l2_fix_finder, 2026-06-25: "a budget bump does NOT help; the model just
+    rambles more"). The rerun was legitimate -- REQ-ARC-FCP-5699-34 had measured 8192
+    fixing the refactor call on a 27B, and REQ-ARC-FCP-5699-35 kept 4096 only because
+    that requirement "was specific to a 3x larger, non-live candidate", a reason that
+    expired when the live generator became gemma-4-31B-it on 2026-07-28. It was re-run
+    on the current model, across BOTH induce call shapes AND the refactor call, at
+    4096/8192/16384 x 3 seeded attempts, and came back with the SAME verdict: 0 usable
+    engines at every budget, 0 of 24 generated engines ever changing the grid at all,
+    and mean code lines flat (20.3 on the combined call at all three budgets) while
+    predicted_n tripled. So the direction retires.
+    WHAT IS NOT RETIRED: the SAMPLER. The same sweep's control arm found repeat_penalty
+    1.1 turns the shipped arm's 0/3 into 3/3 non-degenerate engines at cell recall
+    0.9474, in under half the budget. That is a different lever and is OPEN.
+  experiment_ids:
+  - outer_loop_arc_induce_budget_phase1_20260731
+  retired_milestone: '2026.07.31'
+  retired_by_artifact: results/outer_loop_arc_induce_budget_phase1_20260731.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - raising CARNOT_ARC_INDUCE_MAX_TOKENS or _INDUCE_DEFAULT_MAX_TOKENS to fix induction quality
+  - raising the induce or refactor n_predict budget as a truncation remedy without a sampler change
+  - treating "[HIT n_predict OUTPUT LIMIT]" on an induce/refactor call as a budget shortage
+  reopen_requires_new_mechanism: >-
+    A budget raise reopens only alongside a change that stops the decode-level
+    repetition -- a repetition penalty, a different generator, or a prompt that does
+    not lead the model into a self-repeating impasse. Budget alone has now been
+    measured twice, on two generators, and is closed. Note also the arithmetic: on a
+    24 GiB card the SHIPPED default already does not fit (81920 cells -> 23888 MiB +
+    1500 guard vs 24123 free), so a raise has a real VRAM cost on top of no benefit.
+- id: GGUF-model-download-for-code-repair
+  reason: "CLI approach also failed; 12 total attempts (Exps 857-890). Code repair\
+    \ via GGUF models is retired \u2014 use transformers loader (Exp 881) instead.\n"
+- id: iCE40-PIMI-sparse-adjacency
+  reason: 'Three structural strategies + parallel update strategy all failed to reach
+    5x sweep reduction
+
+    on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x),
+    901 (4.33x).
+
+    Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
+
+    Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for
+    this graph.
+
+    The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint
+    problems.
+
+    '
+  experiment_ids:
+  - 860
+  - 876
+  - 889
+  - 901
+  milestone: 2026.04.69
+- experiment_scope: iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)
+  reason: 'retire_if_same_verdict triggered by Exp 914: all four strategies
+
+    (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
+
+    failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
+
+    Exp 901 already retired N=8 scope; Exp 914 closes N=64.
+
+    The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
+
+    spin-glass problems at larger scale with more frustrated constraints.
+
+    KV260 FPGA track remains viable but PIMI specifically is retired.
+
+    '
+  retired_milestone: 2026.04.70
+  experiment_ids:
+  - 860
+  - 876
+  - 889
+  - 901
+  - 914
+- experiment_id: 786
+  completed_milestone: 2026.04.74
+  reason: 'Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones
+    with
+
+    honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
+
+    runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight
+    (Exp 952).
+
+    Retired to prevent continued wall-time burn with zero research value.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 641
+  completed_milestone: 2026.04.74
+  reason: 'HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
+
+    verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with
+    no improvement
+
+    signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
+
+    (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 906
+  completed_milestone: 2026.04.79
+  reason: "Preflight v30 retirement (Exp 1028): Exp 906 accumulated no-progress verdicts\
+    \ across\nmilestones .77, .78, .79 \u2014 three consecutive milestone carryovers\
+    \ without advancement.\nRetired by manifest enforcement step to prevent continued\
+    \ conductor wall-time burn.\n"
+  retire_if_same_verdict: true
+- id: grpo_vprm_v15_scope_closed
+  reason: 'GRPO/VPRM v1-v14 is retired as active research scope after repeated
+
+    blocked, missing, smoke-only, no-improvement, and non-headline outcomes.
+
+    Future GRPO v15 or VPRM v15 proposals are blocked unless an operator
+
+    explicitly reopens the scope with a new root cause and falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1118
+  - exp1129
+  - exp1146
+  - exp1159
+  - exp1173
+  - exp1184
+  - exp1187
+  - exp1195
+  - exp1196
+  - exp1208
+  - exp1209
+  - exp1219
+  - exp1220
+  - exp1221
+  - exp1235
+  - exp1236
+  - exp1247
+  - exp1259
+  - exp1273
+  - exp1289
+  - exp1304
+  - exp1317
+  - exp1330
+  - exp1346
+  - exp1360
+  - exp1383
+  - exp1388
+  - exp1393
+  blocked_patterns:
+  - GRPO v15
+  - VPRM v15
+  - GRPO/VPRM v15
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: wopr_puzzle_cartridge_research_scope_closed
+  reason: 'WOPR puzzle cartridges are retired as active research scope after Hex,
+
+    Connect Four, Nonogram, Futoshiki, Kakuro, Masyu, Slitherlink, and related
+
+    gallery tasks proved useful as demos but did not map cleanly to Carnot''s
+
+    verify-repair LLM thesis or Phase-3 substrate trajectory. Future WOPR
+
+    puzzle cartridge or gallery-update research tasks are blocked unless an
+
+    operator explicitly reopens gallery work with a new root cause, direct
+
+    thesis or substrate link, and falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1059
+  - exp1069
+  - exp1070
+  - exp1071
+  - exp1097
+  - exp1102
+  - exp1124
+  - exp1125
+  - exp1136
+  - exp1141
+  - exp1175
+  - exp1188
+  - exp1201
+  - exp1214
+  - exp1227
+  - exp1240
+  - exp1243
+  - exp1253
+  - exp1261
+  - exp1262
+  - exp1279
+  - exp1280
+  blocked_patterns:
+  - WOPR puzzle cartridge
+  - WOPR game cartridge
+  - WOPR games gallery
+  - HF Spaces gallery update
+  - new puzzle cartridge
+  - Hex cartridge
+  - Connect Four cartridge
+  - Nonogram cartridge
+  - Futoshiki cartridge
+  - Kakuro cartridge
+  - Masyu cartridge
+  - Slitherlink cartridge
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1457_wopr_puzzle_cartridge_retirement.json
+  operator_reopen_required: true
+  preserve_demo_assets: true
+  retire_if_same_verdict: true
+- id: hardnet_dsp_repair_stack_scope_closed
+  reason: 'HardNet++/DSP repair variants are retired as active headline research scope
+
+    after the stack repeatedly reduced to the same retained lesson:
+
+    hard-constraint repair is useful, but the learned DSP stop policy matched
+
+    conservative replay and did not prove a broad general rule. Future
+
+    HardNet++/DSP, DSP feasibility-channel, SnareNet/FSNet repair, or
+
+    KKT-Hardnet variant tasks are blocked unless an operator explicitly reopens the
+    line
+
+    with a new root cause, non-replay evidence, and a
+
+    falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1147
+  - exp1275
+  - exp1276
+  - exp1291
+  - exp1292
+  - exp1305
+  - exp1318
+  blocked_patterns:
+  - HardNet++
+  - HardNet++/DSP
+  - KKT-Hardnet
+  - DSP feasibility channel
+  - DSP stop policy
+  - SnareNet repair
+  - FSNet repair
+  - conservative replay repair policy
+  - repair stack variant
+  retained_lesson: hard constraints remain valuable; variant proliferation does not
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: repair_headline_wording_retired_v285
+  reason: 'Unsupported repair headline wording is retired after matrix v19 and capstone
+
+    v285 preserved repair as bounded, retained two retired repair headline rows,
+
+    and required explicit rerun gates before any future repair promotion attempt.
+
+    Future repair-headline or Exp 3016/3028 promotion reruns are blocked unless
+
+    an operator explicitly reopens the scope with deterministic fingerprints,
+
+    seeds, duration sanity, de-tautology metrics, verifier gain, and exact
+
+    checker authority.
+
+    '
+  blocked_patterns:
+  - headline SOTA repair
+  - repair result is promotable as a headline SOTA repair claim
+  - original Exp 3016 headline repair claim
+  - Exp 3016 headline repair claim is promotable
+  - Exp 3028 supplies clean acceptance-controlled SOTA repair evidence
+  retired_milestone: 2026.05.285
+  retired_by_artifact: results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: thrml_scaling_sweep_lineage_retired_after_vendoring
+  reason: 'Retire the THRML scaling sweep lineage (exp1526-1531, 1543-1544 patterns).
+    Once THRML is vendored (exp1564), parity is constructive (KL=0 by definition);
+    the scaling sweep becomes a paper-v6 retrospective entry, not active research.
+
+    '
+  experiment_ids:
+  - exp1526
+  - exp1527
+  - exp1528
+  - exp1529
+  - exp1530
+  - exp1531
+  - exp1543
+  - exp1544
+  blocked_patterns:
+  - THRML/Carnot parity n=8
+  - THRML/Carnot parity n=16
+  - THRML/Carnot parity n=32
+  - THRML/Carnot parity n=64
+  - THRML/Carnot parity n=128
+  - THRML/Carnot parity n=256
+  - THRML diverse topology parity
+  - THRML scaling sweep
+  retired_milestone: 2026.05.120
+  retired_by_artifact: results/experiment_1560_119_completion_archive_120_activation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: specann_phase3_sampler_optimization_rejected
+  reason: "Spectral Annealing is retired for Phase 3 inference-time argmin after\n\
+    Deep Think DT-COMPOSITION (e)/(f): HUBO\u2192QUBO reductions inject gadgets\n\
+    and penalties that fracture the spectral homotopy path, phase-transition\nlevel-crossings\
+    \ force cold-restarts, and SpecAnn+BRAIN+MCMC Layers\ntriggers Gadget-Induced\
+    \ Mean-Field Collapse. Carnot retains the existing\nGibbs-heuristic argmin on\
+    \ unreduced HUBO energy.\n"
+  experiment_ids:
+  - exp1563
+  blocked_patterns:
+  - Spectral Annealing
+  - SpecAnn
+  - SpecAnn+BRAIN+MCMC Layers
+  - "HUBO\u2192QUBO Spectral Annealing"
+  retired_milestone: 2026.05.120
+  retired_by_artifact: results/experiment_1563_specann_rejection_architecture_record.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: kv260_host_sd_card_precondition_retired
+  reason: "The KV260 has run Ubuntu Xilinx and been reachable via `ssh kria` since\n\
+    2026-05-20 ~13:00 EDT. The carnot_ising_v4 bitstream is activated at\nruntime\
+    \ via `xmutil loadapp carnot_ising_v2_n64`. Any future Carnot\nbitstream update\
+    \ is delivered via `ssh + scp + xmutil` \u2014 no host SD\ncard flash is required.\
+    \ The `ls /dev/mmcblk*` precondition used by\nexp2670/exp2710/exp2722 (and originally\
+    \ queued for exp2735) checks the\nHOST machine's SD card slot, not the board's\
+    \ state; this is wrong-\nmechanism and was burning per-milestone wall time on\
+    \ a non-applicable\nbranch. Any future task whose preconditions include host /dev/mmcblk*\n\
+    for KV260 is retired. Use ssh-reachability + xmutil + on-board uio\nverification\
+    \ instead (see CLAUDE.md Pre-Launch Preconditions table KV260\nrow).\n"
+  experiment_ids:
+  - exp2670
+  - exp2710
+  - exp2722
+  blocked_patterns:
+  - KV260 SD Card Branch
+  - KV260 Continuity SD Card
+  - SD Card Branch
+  - /dev/mmcblk for kv260
+  - host SD card for kv260
+  - host SD card flash for kv260
+  retired_milestone: 2026.05.258
+  retired_by_artifact: results/experiment_2722_kv260_continuity_258.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: otv_kvcache_probe_retired
+  reason: "OTV one-token KV-cache probe (arXiv:2603.01025) achieved probe_auroc=0.25\
+    \ in exp2728\n(.259) \u2014 worse than random chance (0.5 baseline). The proxy\
+    \ implementation (TF-IDF\nlogistic regression as \"correctness direction\") does\
+    \ not transfer to live GGUF responses.\nPreferred alternative: ODAR two-tier routing\
+    \ (exp2720) achieved 65% savings without\na separate probe. OTV-specific fast-path\
+    \ is retired.\n"
+  experiment_ids:
+  - exp2728
+  blocked_patterns:
+  - OTV one-token verification probe
+  - OTV fast path
+  - otv_probe
+  - correctness direction vector
+  retired_milestone: 2026.05.259
+  retired_by_artifact: results/experiment_2728_otv_fast_path.json
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+- id: diversity_maximizing_verifier_selection_retired
+  reason: "Diversity-maximizing greedy selection (exp2732, .259) achieved diversity_lift=-8.5e-6\n\
+    \u2014 essentially zero at the noise floor. Selection-stage gains are exhausted\
+    \ at the\ncurrent k=15 ensemble; each additional verifier adds precision but not\
+    \ recall, making\nselection non-beneficial. Preferred alternative: uniform weighting\
+    \ (near-optimal at k=15\nper exp2732 uniform_auroc). Diversity-specific selection\
+    \ experiments are retired.\n"
+  experiment_ids:
+  - exp2732
+  blocked_patterns:
+  - diversity-maximizing greedy selection
+  - diversity_select
+  - greedy verifier selection
+  - verifier diversity maximization
+  retired_milestone: 2026.05.259
+  retired_by_artifact: results/experiment_2732_entanglement_retirement_diversity_audit.json
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+- experiment_id: 2823
+  completed_milestone: 2026.05.267
+  reason: 'Fabricated under gemini-cli 0.42.0 chunk-VWGAOW57.js intermittent-
+
+    success window. duration_s=9.58e-05 (95 microseconds) on a
+
+    claimed live-GPU 5-seed x dual-condition x 200-question
+
+    TruthfulQA evaluation. flagged_adversarial=True on the artifact
+
+    itself. Moved to legacy/fabricated/. Honest re-run under
+
+    codex/claude pending; this experiment_id retired from
+
+    reuse to prevent the number from being cited as a real result.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 3920
+  experiment_scope: graph-grounding fact-verifier route (python/carnot/verify/graph_grounding_fact_verifier_defabricated.py)
+  completed_milestone: 2026.06.362
+  reason: 'retire_if_same_verdict: graph-grounding fact-verifier route retired after
+    four consecutive fabrication/block outcomes in exp3862/exp3886/exp3896/exp3920;
+    exp3920 blocked_llama_cpp_inference_failed and was flagged, so future facts work
+    must be reopened as KGHaluBench-graded future-work rather than requeued.
+
+    '
+  retire_if_same_verdict: true
+  retirement_marker: graph_grounding_fact_verifier_scope_retired_exp3920_v362
+- experiment_scope: "GAP-3 trained-content-energy ARC candidate selector (Stage-2\
+    \ lineage: arc3_gap3_stage2_transition_ebm / arc3_gap3_stage2v2_transition_ebm\
+    \ \u2014 any vN content-energy EBM trained to rank TRM ARC candidates)"
+  completed_milestone: 2026.06.366
+  reason: "retire_if_same_verdict condition met across v1+v2: trained content\nenergies\
+    \ master their training curriculum (synthetic near-miss AUROC\n0.79-0.85; real\
+    \ wrong-shape 0.77-0.96) but score AUROC 0.43-0.50 on the\ndominant real-error\
+    \ class (same-shape plausible-but-wrong rule\napplications, 59.1% of errors /\
+    \ 81.4% of wrong-pair mass) across BOTH\narchitectures and curricula; selection\
+    \ statistically at random both\ntimes; every eval-side steelman tops out at exactly\
+    \ the no-E union\n0.4839. Lineage ceiling ~0.63-0.69 vs the ~0.92-0.99 per-task\
+    \ AUROC\nneeded to match vote. Re-open requires operator authorization AND the\n\
+    pre-registered gate-1R (gold-vs-REAL-mined-near-miss AUROC >= 0.70 on\ntasks held\
+    \ out from both training and checkpoint selection) passed\nBEFORE any selection\
+    \ eval \u2014 and the yield forensics say that gate\ncannot currently be fed from\
+    \ this checkpoint's training split.\n"
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+  retirement_marker: gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09
+- id: live_lora_verifier_as_reward_path_retired_exp4247
+  experiment_scope: live-LoRA verifier-as-reward path
+  reason: 'retire_if_same_verdict: Exp 4247 set live_lora_retired=true after 6 infra
+    failures; use the offline reward-weighted SFT path instead. Operator reopen required.'
+  experiment_ids:
+  - exp4247
+  retired_milestone: 2026.04.393
+  retired_by_artifact: results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json
+  recorded_by_artifact: results/experiment_4252_verifier_registry_gaps_hygiene.json
+  infra_failure_count: 6
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - live-LoRA verifier-as-reward
+  - live LoRA verifier reward
+  - live_lora verifier reward
+  - verifier_reward_lora_harness
+- id: code_oracle_distinct_replication_corpus_specific_retired_exp4264
+  experiment_scope: code oracle-distinct replication in-loop rerun axis
+  reason: 'retire_if_same_verdict: Exp 4264 reported replication_read=corpus_specific
+    with code_replication_beats_vote=False and code_predictor_minus_vote_delta=-0.00625;
+    the .392 +3.1pp code result stands as single-corpus evidence only.'
+  experiment_ids:
+  - exp4264
+  retired_milestone: 2026.06.395
+  retired_by_artifact: results/experiment_4264_code_oracle_distinct_replication_retry.json
+  recorded_by_artifact: results/experiment_4277_verifier_registry_gaps_hygiene.json
+  verdict: corpus_specific
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - code oracle-distinct replication retry
+  - code oracle-distinct in-loop replication
+  - code_oracle_distinct_replication_retry
+- id: verifier_as_reward_in_loop_axis_out_of_band_exp4263
+  experiment_scope: verifier-as-reward in-loop training axis
+  reason: 'retire_if_same_verdict: Exp 4263 prepared the reward-weighted corpus and
+    one-command runner, so verifier-as-reward training is now out-of-band/operator-owned
+    rather than an in-loop conductor task.'
+  experiment_ids:
+  - exp4263
+  retired_milestone: 2026.06.395
+  retired_by_artifact: results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json
+  recorded_by_artifact: results/experiment_4277_verifier_registry_gaps_hygiene.json
+  ready_for_out_of_band: true
+  out_of_band_runner_path: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py
+  operator_owned: true
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - verifier-as-reward in-loop training
+  - in-loop verifier-as-reward
+  - in_loop verifier reward training
+- id: cross_domain_selection_retired_exp4314_v399
+  experiment_scope: cross-domain verifier selection axis after repeated domain-bound
+    IR3DE/CASCAL/ContextPRM selector verdicts
+  reason: 'retire_if_same_verdict: Exp 4314 repeated Exp 4305''s domain-bound cross-domain
+    selection verdict; future cross-domain selector reruns need a new root cause,
+    a different discriminator, and operator authorization.'
+  experiment_ids:
+  - exp4305
+  - exp4314
+  retired_milestone: 2026.06.400
+  retired_by_artifact: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+  recorded_by_artifact: results/experiment_4333_verifier_registry_gaps_hygiene.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - cross-domain verifier selection
+  - cross_domain_selector_ir3de_cascal
+  - family-invariant cross-domain selection rerun
+- id: cross_game_value_transfer_retired_exp4342_v401
+  experiment_scope: ARC cross-game learned value-transfer direction after raw-frame,
+    small-frame, and action-role encoder nulls
+  reason: 'retire_if_same_verdict: Exp 4342 is the third cross-game transfer null
+    after Exp 4318 and Exp 4331; future cross-game value-transfer reruns need a new
+    discriminator, more reproduced traces, and operator authorization.'
+  experiment_ids:
+  - exp4318
+  - exp4331
+  - exp4342
+  retired_milestone: 2026.06.401
+  retired_by_artifact: results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+  recorded_by_artifact: results/experiment_4344_verifier_registry_gaps_hygiene.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - cross-game value transfer
+  - cross_game_state_reduction rerun
+  - action-role cross-game encoder rerun
+- id: fover_in_domain_pool_retired_v469
+  experiment_scope: FoVer in-domain candidate-selection pool build / verifier-vs-tuned-self-consistency
+    selection / selector adversarial audit, based on the retracted "FoVer provides
+    candidate-selection headroom" premise
+  reason: 'retire_if_same_verdict: the premise this scope was based on is a construction
+    artifact, not a measurement -- load_fover_domain_pool''s mode=task_index%4 formula
+    (python/carnot/experiment_4305_cross_domain_selector_generalization.py:616)
+    exactly reproduces the previously-reported oracle@K=0.769/SC=0.269 numbers by
+    arithmetic construction, and the real corpus (data/fover_corpus_v4.json, 6548
+    rows) has no natural multi-candidate structure to select among (6544/6546 question_ids
+    have exactly one row). See ops/known-issues.md "NUDGE 2026-07-01 -- RETRACTED"
+    and "MOAT REDIRECT 2026-06-30 -- RETRACTED" for the full corrigendum. The corrected,
+    well-posed follow-up (does a learned verifier beat a cheap baseline on the real
+    corpus) already ran and is a separate, non-retired scope --
+    results/experiment_fover_stepverifier_vs_cheap_baseline.json.'
+  experiment_ids:
+  - exp5111
+  - exp5112
+  - exp5113
+  retired_milestone: 2026.07.469
+  retired_by_artifact: results/headroom_survey_cross_domain.json
+  recorded_by_artifact: results/experiment_fover_stepverifier_vs_cheap_baseline.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - fover in-domain candidate-selection pool
+  - fover in-domain pool
+  - in-domain verifier selection versus tuned self-consistency
+  - fover selector adversarial audit
+- id: generation_axis_exploration_signal_retired_exp5154_v473
+  experiment_scope: ARC first-contact candidate-generation exploration-signal tweaks
+    on unsolved games after novelty, program-synthesis filter, and energy-as-fitness
+    QD nulls
+  reason: 'retire_if_same_verdict: Exp 5154 is the third independent null on better
+    exploration signals for first-contact candidate generation after Exp 4688 and
+    Exp 4689. Future reruns need an operator_override citing a genuinely new mechanism;
+    deepen-wall cross-level warm-starts and representation/perception fixes are outside
+    this retired scope.'
+  experiment_ids:
+  - exp4688
+  - exp4689
+  - exp5154
+  retired_milestone: 2026.07.473
+  retired_by_artifact: results/experiment_5154_energy_fitness_directed_exploration_v472.json
+  recorded_by_artifact: results/experiment_5165_generation_axis_retirement_hygiene_v473.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - first-contact candidate-generation rerun
+  - first contact exploration signal rerun
+  - novelty-bonus first-contact rerun
+  - program-synthesis first-contact rerun
+  - energy-as-fitness first-contact rerun
+- id: phase_d_external_text_scorer_retired_exp5163_v474
+  experiment_scope: external-TEXT-based energy/reward verifier scoring (LoRA-EBM
+    holistic scorer / uPRM / EBRM style) vs. self-consistency on off-ARC reasoning
+    corpora
+  reason: 'retire_if_same_verdict: Exp 5163 is the terminal Phase D continuation
+    after seven milestones of null or marginal external generated-text/logprob scorer
+    evidence. LoRA-EBM, uPRM, EBRM, process-reward, and distributional-energy ranker
+    attempts failed to produce a decision-grade win over genuine tuned self-consistency
+    on headroom-present off-ARC corpora. Future reruns need an operator_override
+    citing a genuinely different mechanism; hidden-state/internal-representation
+    verifiers, ARC oracle-distinct verifier work, and the FoVer production ensemble
+    are outside this retired scope.'
+  experiment_ids:
+  - exp4940
+  - exp5003
+  - exp5004
+  - exp5005
+  - exp5007
+  - exp5015
+  - exp5017
+  - exp5018
+  - exp5022
+  - exp5029
+  - exp5031
+  - exp5032
+  - exp5033
+  - exp5036
+  - exp5045
+  - exp5046
+  - exp5047
+  - exp5050
+  - exp5059
+  - exp5060
+  - exp5063
+  - exp5072
+  - exp5086
+  - exp5087
+  - exp5088
+  - exp5126
+  - exp5163
+  retired_milestone: 2026.07.474
+  retired_by_artifact: results/experiment_5163_mmlu_pro_verifier_rescale_v473.json
+  recorded_by_artifact: results/experiment_5170_retire_phase_d_external_text_scorer_v474.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - train lora ebm scorer v2 on off-arc reasoning corpus
+  - rerun uprm text scorer on off-arc reasoning corpus
+  - rerun ebrm external text reward scorer on off-arc reasoning corpus
+  - phase d external text scorer rerun
+- id: exp5240_arc_provenance_routing_patch_scope_retired_v480
+  experiment_scope: Exp 5240/5241 ARC provenance-routing live patch scope
+  reason: >-
+    retire_current_provenance_patch: Exp 5253 clean live-path receipts kept
+    level_delta=0, so future work should not rerun this zero-delta
+    provenance-routing patch as a solve candidate without an operator
+    override and a new mechanism.
+  experiment_ids:
+  - exp5240
+  - exp5241
+  - exp5253
+  retired_milestone: 2026.07.480
+  retired_by_artifact: results/experiment_5253_arc_live_patch_clean_receipts_v480.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - experiment_5240_arc_rubric_to_patch_synthesis_v479
+  - experiment_5241_arc_gated_live_patch_attempt_v479
+  - provenance-routing live patch zero-delta rerun
+- id: exp5284_sota_offload_cpu_only_path_retired_v483
+  experiment_scope: Current llama-cpp-python SOTA GGUF reruns that request GPU
+    offload but produce no GPU-offload support or memory-delta evidence
+  reason: >-
+    retire_if_same_verdict: Exp 5284 repeated the Exp 5274 blocked
+    runtime/offload precondition class. The mandated GGUF model files resolved
+    and tiny generation smoke calls returned, but the installed llama.cpp path
+    reported no GPU offload support and GPU memory receipts showed no offload
+    evidence, so downstream SOTA quality tasks remained gate-blocked. Future
+    reruns need a changed runtime substrate or a fresh GPU-offload receipt, not
+    another pass through the same CPU-only offload path.
+  experiment_ids:
+  - exp5274
+  - exp5284
+  retired_milestone: 2026.07.483
+  retired_by_artifact: results/experiment_5284_sota_runtime_offload_receipt_repair_v483.json
+  recorded_by_artifact: results/experiment_5294_capstone_v483.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - rerun SOTA GGUF extraction with current CPU-only llama-cpp-python offload path
+  - repeat exp5284 blocked_no_gpu_offload_evidence without changed runtime substrate
+  - SOTA quality task gated only by the same no-offload llama.cpp receipt
+- id: exp5641_arc_counterexample_transition_model_retired_v510
+  scope_key: arc_counterexample_patched_transition_model_exp5641
+  experiment_scope: Exp5641 counterexample-patched ARC executable transition model
+    only
+  reason: >-
+    Exp5641 accepted safe patches but executable_model_ready_score stayed 0.0
+    and the .509 capstone recorded terminal retirement; do not retune or reuse
+    this counterexample patcher without operator authorization.
+  experiment_ids:
+  - exp5641
+  retired_milestone: 2026.07.510
+  retired_by_artifact: results/experiment_5641_arc_counterexample_executable_model.json
+  recorded_by_artifact: results/experiment_5706_transition_v510.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - Exp5641 counterexample-patched ARC executable transition model
+  - counterexample-patched ARC transition patcher exp5641
+  - counterexample_patched_executable_model_retired_terminal
+- id: exp5645_two_axis_beta_lambda_tempering_retired_v510
+  scope_key: two_axis_beta_lambda_tempering_extension_exp5645
+  experiment_scope: Exp5645 two-axis beta-lambda tempering hard-constraint quality
+    extension only
+  reason: >-
+    Exp5645 failed every preregistered quality-promotion gate and regressed
+    hard-instance quality; preserve the promoted one-axis exchange sampler.
+  experiment_ids:
+  - exp5645
+  retired_milestone: 2026.07.510
+  retired_by_artifact: results/experiment_5645_two_axis_tempering_hard_constraint_quality.json
+  recorded_by_artifact: results/experiment_5706_transition_v510.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - Exp5645 two-axis beta-lambda tempering hard-constraint quality extension
+  - two-axis beta-lambda tempering extension exp5645
+  - two_axis_quality_extension_exp5645
+- id: exp5709_fr11_prospective_shadow_stream_retired_v511
+  scope_key: fr11_prospective_shadow_stream_exp5709_same_verdict
+  experiment_scope: Exp5709 prospective shadow stream rerun with the same parse-failed
+    Exp5708 stream verdict only
+  reason: >-
+    Exp5709 gate-blocked because Exp5708 authenticated CUDA but produced a
+    parse-failed exact stream: 21 truncations, 26 missing-answer rows, 3 parses,
+    and zero validator disagreements. Preserve future clean prospective streams
+    and generic lifecycle learning.
+  experiment_ids:
+  - exp5709
+  retired_milestone: 2026.07.511
+  retired_by_artifact: results/experiment_5709_fr11_prospective_shadow_stream.json
+  recorded_by_artifact: results/experiment_5717_transition_v511.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - fr11_prospective_shadow_stream_exp5709_same_verdict
+  - repeat Exp5709 prospective shadow stream on the parse-failed Exp5708 stream
+  - blocked_gate_check_failed after exp5708 parse_failures without a new clean
+    stream
+- id: exp5773_prospective_constraint_acquisition_ab_retired_v516
+  scope_key: prospective_constraint_acquisition_exp5773_same_verdict
+  experiment_scope: Exp5773 prospective constraint acquisition A/B rerun on an
+    unready or parse-failed constraint stream only
+  reason: >-
+    Exp5787 repeated the same blocked_gate_check_failed verdict after Exp5786
+    produced authenticated real SOTA responses but kept stream_ready_score at
+    0.0 and satisfiable_drift_count below the learning gate. Preserve future
+    clean parse-qualified streams and exact prospective skill learning.
+  experiment_ids:
+  - exp5773
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5787_validation_gated_constraint_skill_ab.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - prospective_constraint_acquisition_exp5773_same_verdict
+  - repeat Exp5773 prospective constraint acquisition on an unready stream
+  - blocked_gate_check_failed after exp5786 stream_ready_score 0.0 without a new
+    clean stream
+- id: exp5775_constraint_sidecar_shadow_integration_retired_v516
+  scope_key: constraint_sidecar_shadow_integration_exp5775_same_verdict
+  experiment_scope: Exp5775 constraint sidecar shadow integration rerun with a
+    missing or transfer-unqualified sidecar only
+  reason: >-
+    Exp5789 repeated the same blocked_gate_check_failed verdict because the
+    exact Exp5788 transfer-audit deliverable was absent and the shadow adapter
+    remained gate-blocked. Keep the adapter default-off until a transfer-ready
+    upstream artifact exists and all integration gates replay cleanly.
+  experiment_ids:
+  - exp5775
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5789_constraint_skill_shadow_adapter.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - constraint_sidecar_shadow_integration_exp5775_same_verdict
+  - repeat Exp5775 sidecar shadow integration with missing Exp5788 transfer audit
+  - blocked_gate_check_failed after exp5788 exact deliverable missing
+- id: exp5767_arc_game_blind_composition_hardening_retired_v516
+  scope_key: arc_game_blind_composition_exp5767_same_verdict
+  experiment_scope: Exp5767 ARC game-blind composition hardening rerun with a
+    missing or selector-unqualified world-model selector only
+  reason: >-
+    Exp5793 repeated the same blocked_gate_check_failed verdict because the
+    exact Exp5792 calibration-only selector deliverable was absent and live ARC
+    influence stayed gate-blocked. Do not update ARC solve credit or live model
+    influence from missing selector evidence.
+  experiment_ids:
+  - exp5767
+  retired_milestone: 2026.07.516
+  retired_by_artifact: results/experiment_5793_arc_live_world_model_ab.json
+  recorded_by_artifact: results/experiment_5795_v516_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - arc_game_blind_composition_exp5767_same_verdict
+  - repeat Exp5767 ARC composition hardening with missing Exp5792 selector
+  - blocked_gate_check_failed after exp5792 exact deliverable missing
+- id: finite_id_gguf_generated_answer_transport_same_mechanism_v519
+  scope_key: finite_id_gguf_generated_answer_transport_same_mechanism_v519
+  experiment_scope: Current GGUF generated-answer transport lane using finite
+    IDs, shared or split budgets, grammar constraints, stop tuning, or parser
+    retries.
+  reason: >-
+    retire_if_same_verdict: Exp5813 ran the changed split-budget canary on the
+    three mandated SOTA GGUF families and still produced
+    answer_channel_ready_score=0.0, zero qualified SOTA families, 2/144 exact
+    labels, 138 parser failures, and 134 truncations. Future work must use a
+    materially different non-generation surface.
+  experiment_ids:
+  - exp5799
+  - exp5812
+  - exp5813
+  retired_milestone: 2026.07.518
+  retired_by_artifact: results/experiment_5813_split_budget_sota_canary.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_same_mechanism_retries:
+  - finite-id generated-answer retry
+  - shared-budget generated-answer retry
+  - split-budget generated-answer retry
+  - grammar generated-answer retry
+  - stop/parser generated-answer retry
+  blocked_patterns:
+  - finite-ID GGUF generated-answer retry
+  - shared-budget finite-choice generated-answer retry
+  - split-budget generated-answer retry
+  - grammar constrained generated-answer retry
+  - stop-token generated-answer retry
+  - parser-only generated-answer retry
+  - same-mechanism MMLU-Pro GGUF answer transport retry
+  preserved_open_surfaces:
+  - sota paired embeddings
+  - final-token/final-layer embedding verifier
+  - exact constraint acquisition
+  - non-generation ARC world-feedback surfaces
+- id: exp5895_csl_exact_slot_requalification_retired_v525
+  scope_key: exp5895_csl_exact_slot_repeated_global_suite_exit_2
+  experiment_scope: Frozen Exp5895 shortcut-safe continuous self-learning exact-slot requalification with repeated global suite exit-code-2 verdict
+  reason: >-
+    retire_if_same_verdict: Exp5912 reproduced the frozen Exp5895 science hash
+    and the same required global-suite exit-code-2 terminal condition, so only
+    this exact requalification scope is retired. Transactional CSL or materially
+    different mechanisms remain separate unless they depend on this retired slot.
+  experiment_ids:
+  - exp5895
+  - exp5912
+  retired_milestone: 2026.07.525
+  retired_by_artifact: results/experiment_5912_csl_exact_slot_requalification.json
+  recorded_by_artifact: results/experiment_5917_v525_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - exp5895 CSL exact-slot requalification with repeated global suite exit 2
+  - frozen Exp5895 shortcut-safe CSL replay promoted as ready after same verdict
+- id: exp5923_schema_supported_constraintir_zero_exact_semantics_retired_v526
+  scope_key: schema_supported_constraintir_zero_exact_semantics_v526
+  experiment_scope: Exp5923 schema-supported ConstraintIR live A/B exact-semantic zero-result reprompt scope
+  reason: >-
+    retire_if_same_verdict: Exp5923 replayed the ready schema/tokenizer
+    support through all three mandated GGUF families and still produced zero
+    exact semantic success, so this exact schema-supported reprompt mechanism
+    is retired. Open structural compiler, tokenizer bridge, exact executor,
+    CSL memory, and unrelated constraint mechanisms remain separate.
+  experiment_ids:
+  - exp5909-sota-constraint-synthesis-ab
+  - exp5910-verification-guided-constraint-repair
+  - exp5923-sota-schema-supported-constraintir-ab
+  retired_milestone: 2026.07.526
+  retired_by_artifact: results/experiment_5923_sota_schema_supported_constraintir_ab.json
+  recorded_by_artifact: results/experiment_5931_v526_capstone_reconciliation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - schema-supported ConstraintIR reprompt after zero exact semantic success
+  - treating structural validity as semantic success after Exp5923 retirement
+- id: inert_click_pruner_retired_v527
+  experiment_scope: ARC inert-click / click-signature pruning as a live-path lever
+    (SUBMITTED_INERT_CLICK_PRUNER_ENABLED), in any plain budget/roster A/B form
+  reason: >-
+    retire_if_same_verdict: FOURTH attempt (exp5595, exp5602, exp5756, and the
+    2026-07-26 shipped-config A/B) returning exp5756's verdict verbatim, now with a
+    measured COST rather than a bare null. exp5756's own retire condition was
+    explicit: "do NOT flip ... another plain budget/roster A/B is not warranted
+    without a NEW mechanism that makes pruning reduce rather than reshape search
+    cost." The 2026-07-26 run met that condition: 25 games x 3 seeds at budget 2000
+    against the SHIPPED configuration gave zero new wins on any seed, LOST ft09 on
+    2 of 3 seeds (a replicated safety regression the prior attempts never saw), and
+    states_expanded +12.0% concentrated 93% in 3 games. The lever genuinely FIRED
+    (147760 candidate rows pruned), so this is not a dead-lever artifact. Both
+    quantitative axes were additionally UNINTERPRETABLE, not merely failed: the
+    capability anchors were won by no arm so the value was arithmetically forced,
+    and of 31 both-win cells 20 were structurally frozen so the efficiency median's
+    pass region was EMPTY A PRIORI. The motivating claim was also FALSIFIED -- the
+    pruner could never have fixed r11l, because its inertness predicate computes
+    `changed` on the RAW grid (arc_inert_click_pruner.py:217) and r11l renders a
+    monotone step counter, so every action is raw-frame changed and nothing can look
+    inert; only the HUD/node-identity repair could fix r11l, and it did.
+  experiment_ids:
+  - exp5595-inert-click-pruner
+  - exp5602-inert-click-pruner-matched-budget-ab
+  - exp5756-inert-click-pruner-11game-ab
+  - outer-loop-inert-click-pruner-shipped-config-ab-20260726
+  retired_milestone: 2026.07.527
+  retired_by_artifact: results/outer_loop_inert_click_pruner_shipped_config_ab_20260726.json
+  recorded_by_artifact: results/experiment_5756_inert_click_pruner_11game_ab.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - inert-click pruner budget or roster A/B without a new mechanism
+  - click-signature pruning re-keyed after the 2026-07-26 shipped-config null
+  - crediting the pruner with an r11l fix delivered by the HUD node-identity repair
+  - citing exp5766 add:inert_click_pruner macro_delta 0.0 as a causal measurement
+  reopen_requires_new_mechanism: >-
+    A MASK-AWARE inertness predicate (compute `changed` on the HUD-masked grid, not
+    the raw one) would clear exp5756's "new mechanism" bar. Its anchors must be games
+    the ALREADY-SHIPPED auto_hud_mask unblocks, so any result is attributable to the
+    predicate fix rather than to the 2026-07-25 edge-bar repair, and r11l must NOT be
+    among them. Nav-side pruning is a SEPARATE direction and is not retired by this
+    entry, though the 2026-07-26 HazardMovePruner measurement found it inert at
+    budget 400 and search-reshaping (not reducing) at 2000.
+- id: exp5854_shared_state_initializer_gate_repeat_retired_v543
+  scope_key: exp5854_gate_blocked_shared_state_initializer_retry_v543
+  experiment_scope: Shared activation-to-ASP-state initializer retry that reaches the same blocked_gate_check_failed verdict before exercising initializer utility
+  reason: >-
+    retire_if_same_verdict: Exp6302 repeated Exp5854's blocked_gate_check_failed
+    terminal verdict because Exp6301 reported activation_bus_integrity_ready_score=0.0.
+    This retires only the exact same-gate initializer retry. A materially different
+    initializer can reopen only after the shared activation bus integrity gate clears.
+  experiment_ids:
+  - exp5854-portable-comparative-energy-controls
+  - exp6302-shared-activation-state-initializer
+  retired_milestone: 2026.08.543
+  retired_by_artifact: results/experiment_6309_v543_adversarial_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - shared-state initializer promoted after activation_bus_integrity_ready_score below 1.0
+  - retrying the Exp6302 initializer gate without new Exp6301 integrity evidence
+- id: exp6291_licensed_transfer_gate_repeat_retired_v543
+  scope_key: exp6291_gate_blocked_licensed_transfer_retry_v543
+  experiment_scope: Evidence-licensed cross-family transfer retry that reaches the same blocked_gate_check_failed verdict before target-licensed transfer evidence exists
+  reason: >-
+    retire_if_same_verdict: Exp6305 repeated Exp6291's blocked_gate_check_failed
+    terminal verdict because Exp6301 did not clear the activation-bus integrity gate.
+    This retires only the same blocked licensed-transfer retry. Retrieval-only,
+    safety-only, or replay-only evidence remains insufficient for licensed transfer.
+  experiment_ids:
+  - exp6291-chronological-memory-crystallization-ab
+  - exp6305-evidence-licensed-cross-family-transfer
+  retired_milestone: 2026.08.543
+  retired_by_artifact: results/experiment_6309_v543_adversarial_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - licensed transfer promoted while Exp6301 activation-bus integrity is blocked
+  - retrieval-only or replay-only evidence counted as evidence-licensed transfer
+- id: exp6581_6582_one_family_flagship_source_shard_retired_v572
+  scope_key: one_family_flagship_source_shard_blocked_precondition_without_quality_claim
+  experiment_scope: One-family flagship GGUF source-shard runs that load a flagship model, run to completion, then fail a quality precondition and emit blocked_precondition_failed_without_quality_claim
+  reason: >-
+    retire_if_same_verdict: Exp6581 (Qwen3.6) and Exp6582 (Gemma-4-31B) reached the
+    identical blocked_precondition_failed_without_quality_claim verdict on two
+    different model families. The block is not a missing model and not a failed
+    admission gate. Both runs loaded a model and did real work first: Exp6581 ran
+    927s, Exp6582 ran 1109s and then 2411s on its re-run. Two families failing at
+    the same point points at the quality precondition itself, not at either model.
+    The conductor logged 10 poison-and-rerun events across these two tasks in four
+    hours. Each cycle is correct in isolation. The artifact honestly declares
+    verdict_class blocked, the poison guard correctly refuses to log it as OK, and
+    the re-run reproduces the same block. Together they form a loop with no exit,
+    and each iteration costs up to 40 minutes of live GPU. Retirement is the
+    mechanism the Failed-Experiment Rerun Discipline provides for exactly this.
+    This retires ONLY the one-family flagship source-shard scope at the current
+    precondition. It does not retire flagship model use in general. Reopen once
+    someone diagnoses why the quality precondition fails after a successful load,
+    and states what changed.
+  correction_2026_08_24: >-
+    APPENDED CORRECTION, not a rewrite. The reason text above is wrong on two
+    points and is kept verbatim so the error is visible.
+    FIRST, Exp6581 is UN-RETIRED. It ran once and never repeated. The conductor
+    journal shows 0 launches for the Qwen3.6 task and 2 for the Gemma-4-31B task.
+    retire_if_same_verdict requires the SAME verdict on a REPEAT run, which only
+    Exp6582 satisfies. The claim of "10 poison-and-rerun events across these two
+    tasks" came from a grep that also counted commit and in-process-doc lines. The
+    real rerun count is two, both Exp6582. Exp6581 was removed from
+    scripts/conductor_exclusion_manifest.json on 2026-08-24 and is free to run.
+    SECOND, no precondition failed. Both artifacts record
+    gate_check_summary.all_structured_gates_passed=true with first_failure=null,
+    aggregate_row_recomputation.authentic_terminal_row_count=0, and
+    preconditions_checked absent. Every structured gate PASSED. The run produced
+    zero authentic terminal rows and honestly declined to claim quality. The
+    original reason read the verdict STRING, not the artifact, and named a failing
+    quality precondition that does not exist.
+    The open question is therefore not "why does the precondition fail" but "why
+    does a 15-40 minute live run produce zero authentic terminal rows".
+  correction_2026_08_24_second: >-
+    SECOND APPENDED CORRECTION. The first correction above is also wrong, on its
+    central claim. Both prior texts are kept verbatim so the sequence of errors is
+    visible.
+    THE FIRST CORRECTION SAID no precondition failed. It did. Both artifacts carry
+    preconditions_checked as a 29-key dict with
+    all_required_preconditions_available=false and a populated failed_preconditions:
+    ['verification_commands'] for Exp6581, and
+    ['idle_supported_gpu', 'verification_commands'] for Exp6582. The verdict
+    blocked_precondition_failed_without_quality_claim was accurate the whole time.
+    HOW THE ERROR HAPPENED, because the mechanism matters more than the fact: the
+    outer loop read the artifact through a principle-unwrap helper that returns
+    d[k]['value'] for any dict-valued field. preconditions_checked IS a dict, so the
+    helper returned None and the field read as absent. A reader that assumes every
+    dict is a principle wrapper destroys any dict-valued field. That is the same bug
+    class this project's QA-layer discipline exists to catch.
+    THE ACTUAL CAUSE, diagnosed by an independent agent and verified against the
+    artifacts: the failing check is verification_commands at
+    experiment_6581_qwen36_flagship_source_shard.py:1513. It requires the ENTIRE
+    project test suite to exit 0 before a model may load. No model was ever loaded in
+    either run. Roughly 99.8% of each run was the test suite, so the 927s and 2411s
+    durations are pytest, NOT live GPU inference. The original reason text and the
+    first correction both describe GPU work that did not happen.
+    THE CHECK IS BOTH WRONG AND RIGHT. Wrongly placed, as a precondition rather than
+    a post-work focused test, and wrongly formed, since a bare pytest inherits the
+    coverage addopts. But the suite is genuinely red repo-wide, 68 to 470 failures
+    over twelve days, so the check reports a TRUE fact. The fix is to demote and
+    repair it, and to escalate the red suite separately. Deleting it would hide a
+    real problem.
+    EXP6582's SECOND FAILED PRECONDITION IS PROBABLY SELF-INFLICTED. idle_supported_gpu
+    failed on a contended box. The outer loop's own seed sweep has held GPU 1
+    continuously for over 19 hours. So a harness fix alone does not unblock Exp6582.
+    RETIREMENT STATUS IS UNCHANGED by this correction. Exp6582 stays retired on its
+    own evidence: two runs, same verdict. Exp6581 stays un-retired: it ran once.
+    Neither retirement rests on the mechanism claims corrected here.
+  correction_2026_08_24_third_retirement_reversed: >-
+    THIRD APPENDED CORRECTION, and this one reverses the retirement itself. All
+    prior text above is kept verbatim. Independent audit of the outer loop's own
+    findings refuted the justification, and the outer loop verified the two
+    load-bearing facts before acting on it.
+    BOTH BLOCKING PRECONDITIONS ARE ENVIRONMENTAL, not properties of the
+    experiment. verification_commands has since been demoted out of the
+    pre-launch gate (REQ-REPORT-6581-VERIFY-SCOPE). idle_supported_gpu failed
+    because the box was contended, and the contention was the outer loop's own
+    seed sweep, which held GPU 1 continuously for over 19 hours. An experiment
+    retired because its environment was broken is wrongly retired, and half that
+    broken environment was ours.
+    CLAUDE.md's Pre-Launch Preconditions Discipline states that blocked_*
+    verdicts are honest non-terminal states and should not burn the doomed-rerun
+    ledger. Retiring on a repeated blocked_* verdict applied the wrong
+    instrument.
+    THE RED-SUITE CLAIM IN THE TEXT ABOVE IS NOT SOURCED FROM THESE ARTIFACTS.
+    Verified directly: each artifact carries eighteen exit_code 0 values and a
+    single exit_code 124, a TIMEOUT. The repo-wide suite is genuinely red, but
+    that is recorded in ops/known-issues.md from separate runs. These two runs
+    timed out; they did not observe 68-470 failures.
+    This entry's own reopen condition -- a diagnosis of why the precondition
+    fails, and a statement of what changed -- is met. The diagnosis is
+    docs/research-notes (verification_commands at
+    experiment_6581_qwen36_flagship_source_shard.py:1513 required a green
+    repo-wide suite before a model could load). What changed: the check is
+    demoted and repaired.
+    exp6582 is UN-RETIRED and removed from scripts/conductor_exclusion_manifest.json.
+    NEITHER experiment is now retired. This entry is kept, not deleted, because
+    the scope_key and blocked_patterns still describe a real shape worth
+    matching if it recurs WITH a diagnosed cause -- and because three rounds of
+    wrong reasoning by one author is itself worth leaving legible.
+  experiment_ids:
+  - exp6582-gemma4-31b-flagship-source-shard
+  un_retired_experiment_ids:
+  - exp6581-qwen36-flagship-source-shard
+  retired_milestone: 2026.08.572
+  retired_by_artifact: results/experiment_6582_gemma4_31b_flagship_source_shard.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - one-family flagship source shard re-proposed without a diagnosed cause for the failing quality precondition
+  - flagship source shard retried after blocked_precondition_failed_without_quality_claim with no stated change

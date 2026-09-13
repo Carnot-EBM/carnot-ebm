@@ -11403,6 +11403,41 @@ warn severity.
 Given the full verifier on a file, both checks SHALL run after the principle unwrap,
 so a class written as `{"value": ..., "principle": ...}` is read bare.
 
+**AMENDED 2026-09-13 by Exp7261 (append-only).** For a present member of the closed
+class enum, the shared duration-floor reader SHALL select the class floor after the
+existing typed invocation evidence has been checked for contradiction. The prose
+`inference_substrate` remains descriptive and SHALL NOT override a valid class. This
+keeps `model_full_generation` at 60 seconds, `model_bounded_generation` at 10 seconds,
+and `model_load_no_generation` at 2 seconds. It fixes the observed Exp7237 case where
+a measured 59.466359-second bounded canary was valid under its declared 10-second
+class but the legacy prose reader selected the 60-second full-generation floor.
+
+An absent, malformed, retired, unknown, blocked-inconsistent, or typed-evidence-
+contradictory class SHALL NOT lower the legacy floor. In particular, positive load or
+generation counts contradict a no-model class, negative invocation evidence
+contradicts a model class, mixed positive and negative typed evidence remains
+contradictory, and a genuinely subfloor duration remains critical. Historical stamps
+and mixed-backend ARC rejection evidence remain unchanged.
+
+#### SCENARIO-SUBSTRATE-CLASS-9
+
+Given a valid model class and compatible typed invocation evidence, the shared floor
+reader, the duration checker, and `summarize_artifact.py` SHALL select the same class
+floor even when the prose substrate would select a different legacy floor.
+
+#### SCENARIO-SUBSTRATE-CLASS-10
+
+Given an absent, malformed, retired, unknown, blocked-inconsistent, or typed-evidence-
+contradictory class, the class SHALL NOT lower the floor selected by the existing
+provenance-aware reader, and every existing contradiction flag SHALL still fire.
+
+#### SCENARIO-SUBSTRATE-CLASS-11
+
+Given below-floor and at-floor fixtures for full generation, bounded generation, and
+load-only work, the below-floor fixtures SHALL fail and the at-floor fixtures SHALL
+pass at exactly 60, 10, and 2 seconds respectively, without padding or an
+experiment-identity exception.
+
 ## Implementation Status (REQ-SUBSTRATE-CLASS-1)
 
 | REQ | Implementation | Tests |
