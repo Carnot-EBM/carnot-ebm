@@ -6780,3 +6780,10 @@ The critical path for milestone .250:
 - theme: synthesis-only execution concentrated elapsed time in transition-witness, source-ingestion, and coverage-memory work
 - key result: honest operational negative — no compute-bound work occurred, so GPU efficiency and parallel-model dispatch were not applicable; disk-mtime totals identify the slowest synthesis tasks but not their costly phases
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.639
+
+- exp_range: no data available this milestone
+- theme: a single compute comparison defined the critical path while experiment-scoped timing and device attribution remained incomplete
+- key result: honest operational negative — the compute duration order is established, but no data available this milestone explains the internal cost or demonstrates an eligible concurrent multi-model DualGPURunner miss; the locked compute-task GPU-idle assessment is false
+- acceptance: no data available this milestone

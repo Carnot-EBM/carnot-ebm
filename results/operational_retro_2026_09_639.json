@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.639",
+  "generated_at": "2026-09-13T16:02:04Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 45.6,
+  "experiments_completed": 11,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC adapter-withheld transition-witness comparison",
+      "duration_minutes": 32.17,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Held-out source fidelity on the mandated Qwen3.8 GGUF",
+      "duration_minutes": 5.77,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair authenticated compute floors and isolate the blocking fixture",
+      "duration_minutes": 3.34,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded Qwen3.8 mention extraction with authenticated floors",
+      "duration_minutes": 1.28,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify shipped ARC transition witnesses through terminal evidence",
+      "duration_minutes": 0.88,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 11 experiments in 45.6 minutes, including 3 compute-bound experiments. The 32.17-minute Live ARC adapter-withheld transition-witness comparison was the dominant compute-bound entry; the locked field records no compute-task GPU-idle condition, while the uncorrelated snapshot cannot establish overall compute-window efficiency.",
+  "bottlenecks_identified": [
+    "Live ARC adapter-withheld transition-witness comparison was the longest compute-bound experiment at 32.17 minutes, followed by Held-out source fidelity on the mandated Qwen3.8 GGUF at 5.77 minutes and Bounded Qwen3.8 mention extraction with authenticated floors at 1.28 minutes; the timing block provides no phase-level cause for those durations.",
+    "Disk-mtime reconstruction gives experiment-level elapsed time but no stage spans, so setup, model loading, inference, validation, and artifact work cannot be separated.",
+    "Accelerator samples are not attached to experiment start and stop boundaries, so compute-window device efficiency cannot be evaluated from the available snapshot.",
+    "No model-count or runner-selection receipt is available, so the evidence does not establish that a task with 2 or more models in parallel failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Emit task-scoped phase timers for preparation, model loading, inference, validation, and artifact writing, especially for the longest compute-bound comparison.",
+    "Sample GPU utilization only inside each declared compute window and attach the samples to that experiment's receipt.",
+    "Record model_count, requested parallelism, selected runner, and GPU assignment at launch; select DualGPURunner only when 2 or more models are loaded in parallel.",
+    "Add restartable phase checkpoints to the longest comparison so interrupted work can resume from a completed boundary."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the 32.17-minute compute-bound comparison with phase timers and restartable checkpoints.",
+    "Bind GPU telemetry to explicit compute-window start and stop events in every compute-bound experiment.",
+    "Persist model-count and runner-choice receipts, with DualGPURunner eligibility limited to parallel runs loading 2 or more models."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The duration ranking is clear, but the available reconstruction and idle snapshot do not reveal which internal stage created the critical path. Estimated savings remain at 0 percent because the supplied blocks contain no measured optimization counterfactual."
+}
