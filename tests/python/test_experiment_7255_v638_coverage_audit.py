@@ -15,6 +15,7 @@ from carnot import experiment_7255_v638_coverage_audit as exp7255
 def test_preconditions_authenticate_null_learner(tmp_path: Path) -> None:
     """SCENARIO-CL-7255-PRECONDITIONS: a complete null remains auditable."""
 
+    assert exp7255.RUN_DATE == "20260913"
     paths = exp7255.ExperimentPaths.under(tmp_path)
     checks, upstreams, hashes = exp7255.collect_preconditions(exp7255.REPO_ROOT, paths)
 
@@ -232,12 +233,14 @@ def test_one_stream_build_seals_sidecar_and_terminal(tmp_path: Path) -> None:
         == []
     )
 
-    exp7255.write_artifact(
+    receipt = exp7255.write_artifact(
         paths.artifact,
         artifact,
         repo_root=exp7255.REPO_ROOT,
         expected_stream_ids=("prospective-01",),
     )
+    assert receipt["sha256"] == exp7255._sha256_path(paths.artifact)
+    assert receipt["bytes"] == paths.artifact.stat().st_size
     assert json.loads(paths.artifact.read_text(encoding="utf-8"))["experiment_id"] == 7255
 
 

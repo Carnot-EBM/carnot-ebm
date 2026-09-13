@@ -14374,7 +14374,7 @@ replay, causality, bounds, final-state, mutation, and E2E checks complete.
 reproduces every Exp7254 scientific value gate. A complete audit of a null
 learner SHALL use `verdict_class=null` and SHALL not promote the learner.
 
-The run SHALL use date `20260912`, `MODEL_SPECS=[]`, `model_invoked=false`, and
+The run SHALL use date `20260913`, `MODEL_SPECS=[]`, `model_invoked=false`, and
 zero current model counters. Completed work SHALL use
 `cpu_exact_solver_or_simulator` for both substrate fields and `host` as the
 execution venue. The exact evaluator SHALL set `verifier_is_oracle=true`, so a

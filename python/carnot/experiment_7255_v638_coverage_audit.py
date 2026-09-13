@@ -40,7 +40,7 @@ JsonDict = dict[str, Any]
 EXPERIMENT_ID = 7255
 SCHEMA = "carnot.exp7255.v638_coverage_audit.v1"
 MILESTONE = "2026.09.638"
-RUN_DATE = "20260912"
+RUN_DATE = "20260913"
 AUDIT_SEED = 7_255_000
 BOOTSTRAP_SEED = exp7254.BOOTSTRAP_SEED
 BOOTSTRAP_DRAWS = exp7254.BOOTSTRAP_DRAWS
@@ -137,7 +137,7 @@ FIELD_PRINCIPLES = {
     "experiment_id": "Bind the result to the fixed Exp7255 task.",
     "milestone": "Bind the result to milestone 2026.09.638.",
     "status": "A terminal artifact is complete or blocked; checkpoints remain unfinished.",
-    "run_date": "Use 20260912 and retain actual UTC timestamps.",
+    "run_date": "Use 20260913 and retain actual UTC timestamps.",
     "started_at_utc": "Record the actual UTC start time.",
     "completed_at_utc": "Record the actual UTC end time.",
     "field_principles": "Store explanations here and ordinary values at top level.",
@@ -2118,7 +2118,13 @@ def write_artifact(
         )
     )
     path.parent.mkdir(parents=True, exist_ok=True)
-    return transactional._atomic_write(path, transactional.canonical_json_bytes(artifact))
+    payload = transactional.canonical_json_bytes(artifact)
+    receipt = transactional._atomic_write(path, payload)
+    return {
+        **receipt,
+        "sha256": transactional.sha256_bytes(payload),
+        "bytes": len(payload),
+    }
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
