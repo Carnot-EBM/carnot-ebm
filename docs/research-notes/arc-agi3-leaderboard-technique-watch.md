@@ -336,3 +336,7 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Gate search on recent field-level retrodiction accuracy—when an executable model is insufficiently validated, issue an information-gathering probe and route its precise errors only to the responsible observation, transition, or policy component.
 
+## 2026-09-13 13:36 UTC -- NEW
+
+- **New top-five entrant — Ebi (`ebinan92`):** now **#2 at 8.68**, behind Tufa Labs. The scoring notebook remains private; no ARC-specific code, notebook, discussion, repository, or writeup is publicly attributable. **Classification: unknown**—source-reading/hardcoding versus general-purpose cannot yet be determined. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public Kaggle notebooks](https://www.kaggle.com/ebinan92/code), [GitHub profile](https://github.com/ebinan92)
+

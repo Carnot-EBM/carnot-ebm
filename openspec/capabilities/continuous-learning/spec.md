@@ -14763,3 +14763,107 @@ for online constraint-state updates.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7268 and SCENARIO-CL-7268-* | Implemented: `python/carnot/experiment_7268_v639_recognition_learning.py` authenticates the sealed prototype, checkpoints each eight-arm stream replay, retains lifecycle and cost receipts, bootstraps paired streams, and keeps completion separate from value. The script entrypoint remains thin. | Verified: RED-first seal, chronology, receipt, metric, bootstrap, cost, E2E, terminal, defensive, and command tests pass with 654 of 654 scoped statements covered. |
+
+## REQ-CL-7269: Independent Recognition Causality And Memory Safety Audit
+
+Carnot SHALL audit Exp7268 when its `recognition_run_complete_score` is one.
+The audit SHALL not require a positive `recognition_value_score`. It SHALL
+authenticate the exact producer artifact, raw event rows, lifecycle receipts,
+sealed Exp7267 streams, controller code, exclusions, requirements, and output
+ownership before reduction. An absent, changed, malformed, or quarantined
+external prerequisite SHALL produce a row-free terminal blocked artifact with
+the exact failed check in `gate_check_summary`.
+
+A cold process SHALL reconstruct all 192 stream-arm summaries from the 196,608
+raw event rows. It SHALL rebuild all frozen Exp7268 comparisons, confidence
+intervals, science gates, label budgets, byte caps, retained constraints,
+false accepts, overlap recall, intervention joins, and recurrence measures. A
+missing field or source SHALL fail validation and SHALL not become a measured
+zero.
+
+The audit SHALL replay active, random, and shuffled query choices from public
+events and then-released feedback only. It SHALL verify prediction seals before
+release. It SHALL require prospective active-versus-random query changes and
+join changed choice identity to later changed predictions. It SHALL retain
+zero-effect rows and both recurrence strata.
+
+Five isolated mutation controls SHALL inject a future label, a private regime
+ID, a duplicate release, a stale parent, and a corrupted archive. Every attack
+SHALL be rejected before state publication. Rejection SHALL preserve exact
+prior in-memory and durable bytes. Historical or injected model metadata SHALL
+remain in a hashed sidecar outside current invocation fields.
+
+The E2E-007 adaptation SHALL seal a prediction before release, accept delayed
+feedback with authenticated changed state, reject invalid writes without byte
+changes, cold-load with decision parity, and roll back to exact parent bytes.
+These checks audit the new finite recognition memory. They SHALL not claim that
+Exp1659 ran again.
+
+`recognition_audit_complete_score` SHALL equal one after complete independent
+reduction, replay, mutation, and lifecycle review. `recognition_promotion_score`
+SHALL equal one only if every reconstructed Exp7268 science gate and every audit
+safety gate passes. A complete audit of a null learner SHALL remain complete,
+use `verdict_class=null`, and keep promotion zero.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, `model_invoked=false`, and
+zero current load, generation, inference, and answer counters. CPU checks SHALL
+use `cpu_exact_solver_or_simulator` for both substrate fields. The raw reducer
+SHALL declare `aggregation_from_upstream_artifacts` and class `aggregation`.
+The execution venue SHALL be `host`. The exact evaluator SHALL set
+`verifier_is_oracle=true`. The task SHALL not change model weights, production
+defaults, repository roadmap state, or external systems.
+
+### SCENARIO-CL-7269-PRECONDITIONS: Complete Recognition Run Or Block
+
+- GIVEN the active Exp7269 task and exact Exp7268 terminal and sidecar bytes
+- WHEN status, completion, checksums, hashes, quarantine, imports, and output ownership are checked
+- THEN `recognition_run_complete_score=1` permits the audit even when value is zero
+- AND an external failure produces a row-free blocked artifact with its exact observed value.
+
+### SCENARIO-CL-7269-REDUCTION: Raw Rows Reconstruct The Full Matrix
+
+- GIVEN 196,608 authenticated prequential rows from 24 streams and eight arms
+- WHEN a cold process reduces the evidence without producer aggregates
+- THEN all 192 stream-arm rows, comparisons, intervals, and frozen gates match
+- AND a missing field fails instead of becoming a zero effect.
+
+### SCENARIO-CL-7269-REPLAY: Only Released Data Drives Recognition
+
+- GIVEN sealed public events, delayed releases, and private authority bytes
+- WHEN selected queries and archive associations are replayed
+- THEN no future label or private regime field enters a decision
+- AND changed prospective choices join to later changed predictions.
+
+### SCENARIO-CL-7269-BOUNDS: Labels, Bytes, Constraints, Safety, And Overlap Stay Visible
+
+- GIVEN every stream-arm row in both recurrence strata
+- WHEN the audit recomputes resource and outcome metrics
+- THEN label ceilings, byte caps, retained constraints, false accepts, and overlap recall are explicit
+- AND zero-headroom or zero-effect rows stay in their original denominators.
+
+### SCENARIO-CL-7269-MUTATIONS: Invalid Inputs Preserve Prior Bytes
+
+- GIVEN future-label, regime-ID, duplicate-release, stale-parent, and corrupted-archive attacks
+- WHEN each isolated mutation reaches the recognition transaction boundary
+- THEN each named attack is rejected
+- AND in-memory and durable bytes remain equal to their exact parent bytes.
+
+### SCENARIO-CL-7269-E2E: Accepted State Survives Reload And Rollback
+
+- GIVEN a prediction sealed before delayed feedback
+- WHEN a valid commit, invalid commit, cold reload, later decision, and rollback execute
+- THEN accepted state changes are authenticated and reload decisions match
+- AND rejection and rollback preserve the required exact bytes.
+
+### SCENARIO-CL-7269-TERMINAL: Audit Completion Does Not Depend On Accuracy
+
+- GIVEN a complete independent audit and reconstructed safety and science gates
+- WHEN one or more science gates fail
+- THEN `recognition_audit_complete_score=1` and `recognition_promotion_score=0`
+- AND the terminal result is `complete_null`, never partial or blocked.
+
+## Implementation Status (REQ-CL-7269)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7269 and SCENARIO-CL-7269-* | Implemented: `python/carnot/experiment_7269_v639_recognition_audit.py` authenticates complete Exp7268 evidence independently of its value score, reconstructs raw metrics in a cold process, replays released-only recognition, runs five byte-preserving mutations and E2E lifecycle checks, and seals terminal evidence through a thin wrapper. | Verified: RED-first precondition, reduction, replay, bound, mutation, lifecycle, null-completion, command, and defensive tests pass with 713 of 713 scoped statements covered. |
