@@ -1,0 +1,3301 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_file_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "name": "Qwen3.8-27B",
+      "quantization": "Q4_K_M",
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "selection_role": "current_headline"
+    }
+  ],
+  "acceptance_gate_results": [
+    {
+      "criterion": "all_four_episode_dispositions_and_lineage",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "Capture completeness is separate from policy value."
+    },
+    {
+      "criterion": "re86_useful_consumed_treatment_plan",
+      "expected": true,
+      "observed": {
+        "accuracy_above_identity": false,
+        "candidate_valid": false,
+        "consumed_plan_actions": 0,
+        "heldout_accuracy": null,
+        "identity_baseline_accuracy": null,
+        "installed_plans": 0,
+        "non_identity_predictions": 0,
+        "paired_progress_no_regression": true,
+        "trust_accepted": false,
+        "useful_consumed_plan": false
+      },
+      "passed": false,
+      "principle": "Each treatment game must predict usefully and affect policy action."
+    },
+    {
+      "criterion": "r11l_useful_consumed_treatment_plan",
+      "expected": true,
+      "observed": {
+        "accuracy_above_identity": false,
+        "candidate_valid": false,
+        "consumed_plan_actions": 0,
+        "heldout_accuracy": null,
+        "identity_baseline_accuracy": null,
+        "installed_plans": 0,
+        "non_identity_predictions": 0,
+        "paired_progress_no_regression": true,
+        "trust_accepted": false,
+        "useful_consumed_plan": false
+      },
+      "passed": false,
+      "principle": "Each treatment game must predict usefully and affect policy action."
+    },
+    {
+      "criterion": "no_paired_progress_regression",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Prediction quality cannot hide worse paired game progress."
+    },
+    {
+      "criterion": "scoped_validation_passed",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "Measured claims require the scoped tests and independent checks."
+    }
+  ],
+  "arc_capture_complete_score": 1,
+  "arc_method_value_score": 0,
+  "claim_scope": "two_game_pilot_case_study_only",
+  "duration_s": 596.308144,
+  "ended_at_utc": "2026-09-13T20:55:16+00:00",
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7280-arc-live",
+  "field_principles": {
+    "MODEL_SPECS": "Declare models executable in this invocation; keep historical identities in hashed sidecars.",
+    "acceptance_gate_results": "Each criterion records expected, observed, passed, and principle.",
+    "arc_capture_complete_score": "One means all four dispositions and raw lineage are authenticated.",
+    "arc_method_value_score": "One requires useful prediction and consumed plans in both treatment games.",
+    "claim_scope": "Four episodes over two public games support a pilot case study only.",
+    "duration_s": "Measure monotonic elapsed time and disjoint phase spans.",
+    "ended_at_utc": "Record the actual UTC terminal construction time.",
+    "execution_host": "Record the host separately from the execution venue.",
+    "execution_venue": "Host orchestration is host; identify real device execution separately.",
+    "experiment_id": "Identify this invocation with an ordinary stable string.",
+    "field_principles": "Store explanations here; consumer values remain ordinary top-level fields.",
+    "gate_check_summary": "For blocked work name upstream, exact check, observed value, and expected value.",
+    "honest_verdict": "Completed findings start complete_; external absence starts blocked_.",
+    "identity_obligation_rows": "Each episode proves strict runtime identity before generation.",
+    "inference_mode": "Use live_gpu only when task-owned CUDA execution is observed.",
+    "inference_substrate": "Use the recognized literal for actual computation, not a task label.",
+    "inference_substrate_class": "Declare full generation, load-only work, or the actual no-model class.",
+    "invocation_counts": "Separate attempted and completed loads and generation from usable answers.",
+    "milestone": "Bind the result to milestone 2026.09.640.",
+    "model_invoked": "Derive from actual calls, including failed or unusable generation.",
+    "new_solve_claimed": "Registered public progress is not a new solve claim.",
+    "official_score": "Keep the official score unset because no submission or upload occurs.",
+    "per_game_results": "Keep four paired-arm rows with errors, costs, censoring, and progress.",
+    "phase_spans": "Keep load, generation, benchmark, and validation spans distinct.",
+    "policy_consumption_rows": "Bind predicted transition, selected plan, and actual action issued.",
+    "population_confidence_interval": "Remain unset because this pilot has only two games.",
+    "preconditions_checked": "Record actual input hashes, authority separation, resource ownership, and failures.",
+    "random_seed": "Freeze independent-unit seeds before observing results.",
+    "raw_request_manifest": "Retain every actual request and response byte receipt.",
+    "reproduced_levels": "List only levels reproduced from captured live action labels.",
+    "reproducibility_checksum": "Bind code, configuration, input manifests, and raw evidence.",
+    "rows": "Keep each unit, arm, seed, error, abstention, cost, metric, and censoring state.",
+    "run_date": "Use 20260913 and actual UTC start and end times.",
+    "runner_receipt": "Bind current Qwen GGUF ownership, server, model hash, raw calls, and CUDA samples.",
+    "sample_size_budget": "Record planned, attempted, completed, censored units, and the stopping rule.",
+    "schema": "Version the result and retain ordinary top-level experiment_id and milestone.",
+    "selection_receipt": "Prove registry precheck fixed the two public development games before play.",
+    "solve_provenance": "Only live_agent_self_discovery can support this live method path.",
+    "source_artifact_hashes": "Preserve exact input identity, retirement, and quarantine status.",
+    "started_at_utc": "Record the actual UTC invocation start.",
+    "status": "Use complete or blocked for terminal evidence; keep unfinished work in checkpoints.",
+    "submission_configuration_diff": "Keep local and submitted runtime differences explicit.",
+    "validation_receipts": "Retain command, exit code, timing, and log hash; do not hide failures.",
+    "verdict_class": "Use the closed verdict vocabulary; oracle authority forbids positive.",
+    "verifier_is_oracle": "Expose shared evaluator authority; exact conformance is not learned correctness."
+  },
+  "gate_check_summary": [],
+  "honest_verdict": "complete_null_typed_witness_policy_use_gates_not_met",
+  "identity_obligation_rows": [
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "/props.model_path and absolute /props candidates",
+      "obligation": "absolute_raw_report",
+      "observed": {
+        "conflicting_absolute_fields": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "requested path and /props.model_path strict resolution",
+      "obligation": "path_resolution",
+      "observed": {
+        "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+      "obligation": "selected_snapshot_relation",
+      "observed": "snapshot_alias",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "launch -m argument and /props.model_path",
+      "obligation": "launch_report_agreement",
+      "observed": {
+        "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+      "obligation": "content_hash",
+      "observed": {
+        "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "hub",
+      "observed": "unsloth/Qwen3.8-27B-GGUF",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "revision",
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "selected file name and raw report aliases",
+      "obligation": "requested_filename",
+      "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed": {
+        "captured_target": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "observed_device": 64770,
+        "observed_inode": 5370618110,
+        "observed_nlink": 2,
+        "requested_device": 64770,
+        "requested_inode": 5370618110,
+        "requested_nlink": 2
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:current_feedback",
+      "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+      "obligation": "source_provenance",
+      "observed": {
+        "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+        "requested_path_fingerprint": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "runtime_process": {
+          "launch_start_tick": 162403062,
+          "observed_start_tick": 162403062,
+          "pid": 3765416,
+          "supported": true
+        },
+        "source_artifact_hash": null,
+        "source_artifact_path": null,
+        "source_kind": "live_server_props",
+        "source_reproducibility_checksum": null
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "/props.model_path and absolute /props candidates",
+      "obligation": "absolute_raw_report",
+      "observed": {
+        "conflicting_absolute_fields": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "requested path and /props.model_path strict resolution",
+      "obligation": "path_resolution",
+      "observed": {
+        "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+      "obligation": "selected_snapshot_relation",
+      "observed": "snapshot_alias",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "launch -m argument and /props.model_path",
+      "obligation": "launch_report_agreement",
+      "observed": {
+        "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+      "obligation": "content_hash",
+      "observed": {
+        "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "hub",
+      "observed": "unsloth/Qwen3.8-27B-GGUF",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "revision",
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "selected file name and raw report aliases",
+      "obligation": "requested_filename",
+      "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed": {
+        "captured_target": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "observed_device": 64770,
+        "observed_inode": 5370618110,
+        "observed_nlink": 2,
+        "requested_device": 64770,
+        "requested_inode": 5370618110,
+        "requested_nlink": 2
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "re86:typed_witness_feedback",
+      "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+      "obligation": "source_provenance",
+      "observed": {
+        "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+        "requested_path_fingerprint": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "runtime_process": {
+          "launch_start_tick": 162403062,
+          "observed_start_tick": 162403062,
+          "pid": 3765416,
+          "supported": true
+        },
+        "source_artifact_hash": null,
+        "source_artifact_path": null,
+        "source_kind": "live_server_props",
+        "source_reproducibility_checksum": null
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "/props.model_path and absolute /props candidates",
+      "obligation": "absolute_raw_report",
+      "observed": {
+        "conflicting_absolute_fields": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "requested path and /props.model_path strict resolution",
+      "obligation": "path_resolution",
+      "observed": {
+        "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+      "obligation": "selected_snapshot_relation",
+      "observed": "snapshot_alias",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "launch -m argument and /props.model_path",
+      "obligation": "launch_report_agreement",
+      "observed": {
+        "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+      "obligation": "content_hash",
+      "observed": {
+        "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "hub",
+      "observed": "unsloth/Qwen3.8-27B-GGUF",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "revision",
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "selected file name and raw report aliases",
+      "obligation": "requested_filename",
+      "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed": {
+        "captured_target": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "observed_device": 64770,
+        "observed_inode": 5370618110,
+        "observed_nlink": 2,
+        "requested_device": 64770,
+        "requested_inode": 5370618110,
+        "requested_nlink": 2
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:typed_witness_feedback",
+      "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+      "obligation": "source_provenance",
+      "observed": {
+        "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+        "requested_path_fingerprint": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "runtime_process": {
+          "launch_start_tick": 162403062,
+          "observed_start_tick": 162403062,
+          "pid": 3765416,
+          "supported": true
+        },
+        "source_artifact_hash": null,
+        "source_artifact_path": null,
+        "source_kind": "live_server_props",
+        "source_reproducibility_checksum": null
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "/props.model_path and absolute /props candidates",
+      "obligation": "absolute_raw_report",
+      "observed": {
+        "conflicting_absolute_fields": false,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "requested path and /props.model_path strict resolution",
+      "obligation": "path_resolution",
+      "observed": {
+        "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+      "obligation": "selected_snapshot_relation",
+      "observed": "snapshot_alias",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "launch -m argument and /props.model_path",
+      "obligation": "launch_report_agreement",
+      "observed": {
+        "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+      "obligation": "content_hash",
+      "observed": {
+        "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "hub",
+      "observed": "unsloth/Qwen3.8-27B-GGUF",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "selected snapshot directory",
+      "obligation": "revision",
+      "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "selected file name and raw report aliases",
+      "obligation": "requested_filename",
+      "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed": {
+        "captured_target": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "observed_device": 64770,
+        "observed_inode": 5370618110,
+        "observed_nlink": 2,
+        "requested_device": 64770,
+        "requested_inode": 5370618110,
+        "requested_nlink": 2
+      },
+      "status": "supported"
+    },
+    {
+      "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+      "authenticated_before_first_generation": true,
+      "episode_id": "r11l:current_feedback",
+      "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+      "obligation": "source_provenance",
+      "observed": {
+        "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+        "requested_path_fingerprint": {
+          "link_device": 64770,
+          "link_inode": 6444907433,
+          "link_mode": 41471,
+          "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "target_device": 64770,
+          "target_inode": 5370618110,
+          "target_mode": 33188,
+          "target_nlink": 2,
+          "target_size": 17106775008
+        },
+        "runtime_process": {
+          "launch_start_tick": 162403062,
+          "observed_start_tick": 162403062,
+          "pid": 3765416,
+          "supported": true
+        },
+        "source_artifact_hash": null,
+        "source_artifact_path": null,
+        "source_kind": "live_server_props",
+        "source_reproducibility_checksum": null
+      },
+      "status": "supported"
+    }
+  ],
+  "inference_mode": "live_gpu",
+  "inference_substrate": "model_load_no_generation",
+  "inference_substrate_class": "model_load_no_generation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "model_loads_attempted": 1,
+    "model_loads_completed": 1,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.640",
+  "model_invoked": false,
+  "new_solve_claimed": false,
+  "official_score": null,
+  "per_game_results": [
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "re86:current_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 0,
+      "fresh_store": true,
+      "game": "re86",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "re86:typed_witness_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 1,
+      "fresh_store": true,
+      "game": "re86",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 2,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:current_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 3,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "phase_spans": [],
+  "policy_consumption_rows": [],
+  "population_confidence_interval": null,
+  "preconditions_checked": [
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/arc_leaderboard_eval.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/arc_loop_solve.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_eval_provenance.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7263_v639_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7276_v640_arc_identity.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7280_v640_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7280_v640_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7280_v640_arc_live.py"
+    },
+    {
+      "check": "driving_capability",
+      "expected": true,
+      "field": "REQ-ARC-WMTE-7280",
+      "observed": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": true,
+      "field": "exists",
+      "observed": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": "exp7276-arc-identity",
+      "field": "experiment_id",
+      "observed": "exp7276-arc-identity",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": "2026.09.640",
+      "field": "milestone",
+      "observed": "2026.09.640",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": "complete",
+      "field": "status",
+      "observed": "complete",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": 1,
+      "field": "arc_identity_ready_score",
+      "observed": 1,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": false,
+      "field": "quarantine_state",
+      "observed": false,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": false,
+      "field": "retirement_state",
+      "observed": false,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "identity_upstream",
+      "expected": true,
+      "field": "clean_terminal_bytes",
+      "observed": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7276_v640_arc_identity.json"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/checkpoints"
+    },
+    {
+      "check": "writable_output_directory",
+      "expected": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7280_v640_arc_live"
+    },
+    {
+      "check": "cached_sota_pair",
+      "expected": true,
+      "field": "current_Q4_K_M_snapshot",
+      "observed": true,
+      "passed": true,
+      "upstream": "unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "check": "native_runtime",
+      "expected": true,
+      "field": "server_binary",
+      "observed": true,
+      "passed": true,
+      "upstream": "llama.cpp"
+    },
+    {
+      "check": "gpu_lease",
+      "expected": true,
+      "field": "idle_RTX_3090_with_headroom",
+      "observed": true,
+      "passed": true,
+      "upstream": "nvidia-smi"
+    },
+    {
+      "check": "registry_precheck_before_roster",
+      "expected": true,
+      "field": "re86_r11l_four_counterbalanced_units",
+      "observed": true,
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    }
+  ],
+  "random_seed": 728020260913,
+  "raw_request_manifest": [],
+  "reproduced_levels": [],
+  "reproducibility_checksum": "sha256:8df994990332c4b7eb774bcc1590a43767bdfa8eb51fb16c79ad8f2b603dcb7a",
+  "rows": [
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "re86:current_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 0,
+      "fresh_store": true,
+      "game": "re86",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:current_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "re86:typed_witness_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 1,
+      "fresh_store": true,
+      "game": "re86",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "re86:typed_witness_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "typed_witness_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:typed_witness_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 2,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:typed_witness_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    },
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "current_feedback",
+      "candidate_valid": false,
+      "censored": true,
+      "compute_cost": {
+        "wall_s": 0.0
+      },
+      "disposition": "censored_timeout",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:current_feedback",
+      "error": "whole_live_window_timeout",
+      "execution_order": 3,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 0,
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-13T20:53:51+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:current_feedback",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:ed82cedc7f6712f8321f0aa19c626762b3d34b548322679f94bf4a00546517b0",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 162403062,
+              "observed_start_tick": 162403062,
+              "pid": 3765416,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:5d70ba94bfed5439d92158190261132fbd73bd6f24dd32aaf2f379b4fb66214a",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": false,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [],
+      "seed": 728020260913,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "run_date": "20260913",
+  "runner_receipt": {
+    "dual_gpu_runner_used": false,
+    "gpu_index": 0,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_samples": [
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [],
+        "sampled_at_utc": "2026-09-13T20:45:30+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:46:15+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:46:21+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18030
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:47:00+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18030
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:47:45+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:48:31+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:49:16+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:50:01+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:50:46+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:51:31+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:52:16+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:53:01+00:00"
+      },
+      {
+        "gpu_index": 0,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765416,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 3765388,
+            "used_memory_mb": 1480
+          }
+        ],
+        "sampled_at_utc": "2026-09-13T20:53:46+00:00"
+      }
+    ],
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "kv_headroom_measurement": "idle_free_vram_before_minus_peak_task_owned_server_vram",
+    "lease_owner": {
+      "acquired_monotonic_ns": 1624029841927144,
+      "argv_digest": "sha256:5b3e9e47c489d1bdd4759c50b01b5e12eac7a12baaf0d2d275224b390265bf61",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "expires_monotonic_ns": 1624616570349043,
+      "lease_id": "lease:8b8f83aadea5da7c8686eb73b6be4dc4f02380275d8013bf46c1ecbf1023039a",
+      "pid": 3765289,
+      "pid_start_ticks": 162401984,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7280-arc-live",
+      "token_digest": "sha256:db7f45e0b331da0a919f7b9fcde218420396764862efa9a352c6a0601807f1b9",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "lease_release": {
+      "checksum": "sha256:b0e66fea791e687e500e4991a04ef6c2276081e7b9081be79e19d85531b2a3c2",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "lease_id": "lease:8b8f83aadea5da7c8686eb73b6be4dc4f02380275d8013bf46c1ecbf1023039a",
+      "phase": "terminal_complete",
+      "pid": 3765289,
+      "pid_start_ticks": 162401984,
+      "released": true,
+      "signals_sent": []
+    },
+    "measured_kv_headroom_mb": 6068,
+    "measured_peak_owned_vram_mb": 18052,
+    "signals_sent": [],
+    "task_linked_cuda_execution": true,
+    "timed_out": false,
+    "vram_free_before_mb": 24120,
+    "vram_total_mb": 24576
+  },
+  "sample_size_budget": {
+    "actions_per_episode": 192,
+    "attempted_units": 4,
+    "censored_units": 4,
+    "completed_units": 0,
+    "elapsed_cap_per_arm_s": 3000,
+    "games": 2,
+    "generated_tokens_per_episode": 4096,
+    "generation_calls_per_episode": 2,
+    "model_load_limit_s": 600,
+    "planned_units": 4,
+    "seeds_per_game": 1,
+    "session_limit_s": 3000,
+    "stopping_rule": "four fixed counterbalanced episodes; authentic timeouts stay censored"
+  },
+  "schema": "carnot.experiment_7280.v640.arc_live.v1",
+  "selection_receipt": {
+    "game_rows": [
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "banked_solution_disabled": true,
+        "game": "re86",
+        "registered_public_development_target": true,
+        "registry_levels_before_attempt": 8,
+        "registry_precheck_passed": true,
+        "registry_reproducibility": "reproduced"
+      },
+      {
+        "adapter_available_but_withheld": true,
+        "adapter_disabled": true,
+        "banked_solution_disabled": true,
+        "game": "r11l",
+        "registered_public_development_target": true,
+        "registry_levels_before_attempt": 6,
+        "registry_precheck_passed": true,
+        "registry_reproducibility": "reproduced"
+      }
+    ],
+    "games": [
+      "re86",
+      "r11l"
+    ],
+    "re_solve_campaign": false,
+    "roster_complete": true,
+    "selection_basis": "task_frozen_registered_public_development_targets",
+    "selection_steps": [
+      "registry_precheck",
+      "roster_freeze"
+    ],
+    "selection_used_game_source": false,
+    "selection_used_outcome_labels": false
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf": {
+      "quarantined": false,
+      "retired": false,
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    },
+    "AGENTS.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+    },
+    "CODEX.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:4b04d9de3fba2f7f988002856f8dabaff13f4f4fd4922f51cd1077101b1f1114"
+    },
+    "ops/arc_solve_registry.yaml": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    },
+    "ops/e2e-test-plan.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "python/carnot/agentic/arc_eval_provenance.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:79daea4437faa06a511d9cffb24cd80393c390380d1c9e427e0cb4b4042feee4"
+    },
+    "python/carnot/agentic/arc_executable_world_model.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:217dd6800997df7062ab967ca28ce43239ffe3ed1f6bd41d14d6e7895cacf722"
+    },
+    "python/carnot/experiment_7263_v639_arc_live.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a655c0eeb4917c9713b671ab0c09abe54fab1be8e6bd1b55d3a5335d8c2df625"
+    },
+    "python/carnot/experiment_7276_v640_arc_identity.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d47950a16c0f09957ed5cde605d68bcde4c95d72fd69bd58276fd2af1777a2e2"
+    },
+    "python/carnot/experiment_7280_v640_arc_live.py": {
+      "current_output": true,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:683e6c331720986836dbcbf016685dc729a5f4313e8d2c839ebc05060aecbf2c"
+    },
+    "research-program.md": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7276_v640_arc_identity.json": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:4b6fafe3342b09072e5925b21521e909f83345e750efefbae630793f9b32ad7b"
+    },
+    "results/raw/experiment_7280_v640_arc_live/episode_rows.json": {
+      "sha256": "sha256:96045ffebb971ef295bba2c53a8a94966b0a31a80365ca28eaeae8fc165a49d0"
+    },
+    "results/raw/experiment_7280_v640_arc_live/failure_receipts/preflight_path_type_blocked.json": {
+      "sha256": "sha256:5e53707ec2b326b633932f4ee03c6bfdbdd8037400c677a670426cfa16e99c0e"
+    },
+    "results/raw/experiment_7280_v640_arc_live/frozen_schedule.json": {
+      "sha256": "sha256:a58de02d8c8613d94602f606d74b10aade7f0281bcd738f2c7ad4ded964f9219"
+    },
+    "results/raw/experiment_7280_v640_arc_live/live_session.json": {
+      "sha256": "sha256:7f1f7fa9a61493d2575ffb672df3f75bf6584d1931a11ad6fbea32083e2e9b36"
+    },
+    "results/raw/experiment_7280_v640_arc_live/model_identity.json": {
+      "sha256": "sha256:eb75480aaa8821f442ca8d139fc24ae7de2f9230b5ad6414924d11b1ca3b0a44"
+    },
+    "results/raw/experiment_7280_v640_arc_live/raw_server_props.json": {
+      "sha256": "sha256:a708ca0d5172c4c321d800d207d1299648f36d6fbb2c74304daf4da2070caf90"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/prompt.raw": {
+      "sha256": "sha256:f358865868f9d22f2d5616fac83af164b18ee602f64fa61ed139aea06859113e"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/prompt.raw": {
+      "sha256": "sha256:70bb5873403eed14c571eb80738369c70bb70c8b239a9bbe3fe8b2276aed760a"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/prompt.raw": {
+      "sha256": "sha256:e19c1a91d55f53f710c6bb41690cfcf23a16e0257c86a99b9a7cb22edf51fc44"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/environment_receipt.json": {
+      "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/prompt.raw": {
+      "sha256": "sha256:6550df71621aaabc34dd68a116f1e7affad55df0c4edc8e1efcccf722f3345a6"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/transitions.jsonl": {
+      "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/environment_receipt.json": {
+      "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/prompt.raw": {
+      "sha256": "sha256:4efb4152a8f9ddc31b03a456280ca16cf6b4eef1a4c7d31f7fa03a3eeb305a45"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/transitions.jsonl": {
+      "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/00_request.json": {
+      "sha256": "sha256:ee5fda7cb8ba1caaed07229534901df74ebe0eba6b423692bf51578a1f9d6656"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/00_response.json": {
+      "sha256": "sha256:26ea7d5b30b787c9ac908d861da8c60eaed0c5a41accd2d1d090174be9004127"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/01_request.json": {
+      "sha256": "sha256:fa9fb8d067a864ecb63c6baafa85047b968fda051c13048fea0349c6b8ff1373"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/01_response.json": {
+      "sha256": "sha256:1cc1d4f6b84d042de961ac2d3909c3997c20d8ca3c35948b13071568c2f8e6f8"
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/run_progress.json": {
+      "sha256": "sha256:24e5e36a0685b6f321ba96574525f70b4b4bdc289a2cab210e427d1e11a157c4"
+    },
+    "results/raw/experiment_7280_v640_arc_live/server_logs/carnot_llama_server_logs/llama_server_p59419_1789332330.log": {
+      "sha256": "sha256:8000cef238493e665fefff76ede034c71b24c61f1b56a00b5673cc789d1e7b40"
+    },
+    "scripts/arc_leaderboard_eval.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:3d1d991200942194dcbaeda2a81aa9b16e533a840e2c67967e5a8af4f55b3215"
+    },
+    "scripts/arc_loop_solve.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca"
+    },
+    "scripts/experiment_template.py": {
+      "current_output": false,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7280_v640_arc_live.py": {
+      "current_output": true,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:7b91378417fe0decb4c12fab6087ffc934237075909eceea7a9dd19b70ba1f93"
+    },
+    "tests/python/test_experiment_7280_v640_arc_live.py": {
+      "current_output": true,
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:96cd2429e9429e61779a3b4ce49da1446e23f504220564d03009c11eae6ba7b2"
+    }
+  },
+  "started_at_utc": "2026-09-13T20:45:20+00:00",
+  "status": "complete",
+  "submission_configuration_diff": {
+    "adapters": "withheld",
+    "competition_equivalent_claim": false,
+    "gateway": "local_public_arcade_not_hidden_competition_gateway",
+    "gpu": "one_task_owned_RTX_3090_not_Kaggle_Blackwell_96GB",
+    "parallelism": "four_sequential_episodes_not_DualGPURunner",
+    "runtime": "native_llama.cpp_single_server_not_submitted_vLLM",
+    "weights": "Q4_K_M_GGUF_not_submitted_NVFP4_safetensors"
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7280_v640_arc_live.py -q --no-cov -n 0 --basetemp=/tmp/exp7280-focused_exp7280",
+      "duration_s": 2.373344,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/00_focused_exp7280.log",
+      "log_sha256": "sha256:a3485d737325499a61624264465b61ce1dc52ff133d8cc60b071b73c6c8da989",
+      "name": "focused_exp7280",
+      "output_tail": "...........                                                              [100%]\n11 passed in 0.88s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7276_v640_arc_identity.py -q --no-cov -n 0 --basetemp=/tmp/exp7280-affected_exp7276",
+      "duration_s": 10.039225,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/01_affected_exp7276.log",
+      "log_sha256": "sha256:0adc790ee56ff6438c660070d6a6f339888af949193e68dd49d7f90a76ad12c1",
+      "name": "affected_exp7276",
+      "output_tail": "......................                                                   [100%]\n22 passed in 7.92s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_eval_provenance_contract_20260905.py -q --no-cov -n 0 --basetemp=/tmp/exp7280-affected_arc_eval_provenance",
+      "duration_s": 3.857455,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/02_affected_arc_eval_provenance.log",
+      "log_sha256": "sha256:2eb23a3c0b4bbf4831de587950e861f6f05aa2aa2c7f6d683667b5f65068a590",
+      "name": "affected_arc_eval_provenance",
+      "output_tail": ".....................                                                    [100%]\n21 passed in 2.36s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_induction_state_persistence.py -q --no-cov -n 0 --basetemp=/tmp/exp7280-e2e_009_policy_memory",
+      "duration_s": 11.412191,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/03_e2e_009_policy_memory.log",
+      "log_sha256": "sha256:42479475f869091539bd32bfc374d60083b84cff7d473b1d4812e703dde85c05",
+      "name": "e2e_009_policy_memory",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.47s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7280-e2e009-r11l.json",
+      "duration_s": 3.590907,
+      "environment_overrides": {
+        "CARNOT_ARC_DISABLE_INDUCTION": "1"
+      },
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/04_e2e_009_offline_scored_smoke.log",
+      "log_sha256": "sha256:6998b067fdce1d7b4eb8cd52ed12a015c31e5c919c56c7b0281cc94bbef25063",
+      "name": "e2e_009_offline_scored_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-13 16:54:58 | INFO | Created new scorecard: 1fa88091-bb47-45e2-9fca-f0575646a956\n2026-09-13 16:54:58 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-13 16:54:58 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7280-e2e009-r11l.json\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_tool_grammar_transport.py -q --no-cov -n 0 --basetemp=/tmp/exp7280-e2e010",
+      "duration_s": 10.040014,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/05_e2e_010_grammar_transport.log",
+      "log_sha256": "sha256:518d820365fd20e3338454210dfacb192400c763bfc438b8860938b913cb93c7",
+      "name": "e2e_010_grammar_transport",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.15s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7280-v640.coverage --include=*/experiment_7280_v640_arc_live.py -m pytest -o addopts= tests/python/test_experiment_7280_v640_arc_live.py -q -n 0 --basetemp=/tmp/exp7280-coverage",
+      "duration_s": 4.2118,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/06_scoped_coverage_run.log",
+      "log_sha256": "sha256:f23a4773912917a7bb5f8ca947a3557a9a8cea7a0d43304e3d9ac2d322b51fef",
+      "name": "scoped_coverage_run",
+      "output_tail": "...........                                                              [100%]\n11 passed in 1.74s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7280-v640.coverage --include=*/experiment_7280_v640_arc_live.py --show-missing --fail-under=100",
+      "duration_s": 0.114791,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/07_scoped_coverage_report.log",
+      "log_sha256": "sha256:da793175a9f32519bbed3d4225ad2ff17d89ed9a0c1630db8c0e6394737ad966",
+      "name": "scoped_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7280_v640_arc_live.py     285      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              285      0   100%\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7280_v640_arc_live.py scripts/experiments/experiment_7280_v640_arc_live.py tests/python/test_experiment_7280_v640_arc_live.py",
+      "duration_s": 0.013453,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/08_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7280_v640_arc_live.py scripts/experiments/experiment_7280_v640_arc_live.py tests/python/test_experiment_7280_v640_arc_live.py",
+      "duration_s": 0.010907,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/09_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7280_v640_arc_live.py scripts/experiments/experiment_7280_v640_arc_live.py",
+      "duration_s": 1.127548,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/10_changed_module_mypy.log",
+      "log_sha256": "sha256:bb2a6b8a79829fc8181098e9e42acac4ad7416e39d74a82fb36e557f58ced201",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 2 source files\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7280_v640_arc_live.py tests/python/test_experiment_7276_v640_arc_identity.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py",
+      "duration_s": 0.022563,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/11_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7280_v640_arc_live.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7280_v640_arc_live/episode_rows.json",
+      "duration_s": 0.491586,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/12_independent_raw_row_reducer.log",
+      "log_sha256": "sha256:7d7593e8d277a9af2dd9a27c6bc7263c6de1758ed730ed3276f71c718572d423",
+      "name": "independent_raw_row_reducer",
+      "output_tail": "{\"event\": \"entrypoint\", \"experiment\": \"exp7280-arc-live\", \"phase\": \"startup\"}\n{\"arc_capture_complete_score\": 1, \"arc_method_value_score\": 0, \"claim_scope\": \"two_game_pilot_case_study_only\", \"invocation_counts\": {\"generation_calls_attempted\": 0, \"generation_calls_completed\": 0, \"model_loads_attempted\": 1, \"model_loads_completed\": 1, \"usable_answers\": 0}, \"matched_game_level_regression\": false, \"population_confidence_interval\": null, \"regressed_games\": [], \"row_errors\": [], \"treatment_accuracy_above_identity_by_game\": {\"r11l\": false, \"re86\": false}, \"treatment_game_checks\": {\"r11l\": {\"accuracy_above_identity\": false, \"candidate_valid\": false, \"consumed_plan_actions\": 0, \"heldout_accuracy\": null, \"identity_baseline_accuracy\": null, \"installed_plans\": 0, \"non_identity_predictions\": 0, \"paired_progress_no_regression\": true, \"trust_accepted\": false, \"useful_consumed_plan\": false}, \"re86\": {\"accuracy_above_identity\": false, \"candidate_valid\": false, \"consumed_plan_actions\": 0, \"heldout_accuracy\": null, \"identity_baseline_accuracy\": null, \"installed_plans\": 0, \"non_identity_predictions\": 0, \"paired_progress_no_regression\": true, \"trust_accepted\": false, \"useful_consumed_plan\": false}}, \"treatment_games_with_useful_consumed_plan\": []}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7280_v640_arc_live/terminal_candidate.json",
+      "duration_s": 0.589533,
+      "environment_overrides": {},
+      "exit_code": 1,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/00_terminal_candidate_adversarial_verify.log",
+      "log_sha256": "sha256:22fa6a24a9386a281e15e2b43065fec6c5e5416bbe1182038303ec7a70808a01",
+      "name": "terminal_candidate_adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7280-arc-live () -- 2 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: conflicting_typed_invocation_evidence; substrate='model_load_no_generation', live_evidence_count=10, negative_evidence_count=27. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=model_load_no_generation claims a model ran, but typed invocation evidence says it did not (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked']). Contradictory.\n\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7280_v640_arc_live/terminal_candidate.json",
+      "duration_s": 0.024349,
+      "environment_overrides": {},
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7280_v640_arc_live/validation/01_terminal_candidate_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_candidate_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

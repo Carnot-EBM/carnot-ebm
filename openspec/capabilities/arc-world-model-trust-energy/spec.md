@@ -32105,6 +32105,114 @@ inputs, and raw evidence.
 Implementation status: specified 2026-09-13. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7280: Re-run typed-witness policy use after identity repair
+
+Experiment 7280 SHALL re-run the Experiment 7263 scored-policy comparison only
+after it authenticates Experiment 7276. Experiment 7263 ended with
+`complete_null_no_policy_consumed_plan` because the live handoff rejected a
+stable pre-existing GGUF hard link before the policy could act. Experiment 7276
+repaired that specific identity rule and proved the repaired handoff through
+`make_carnot_agent`. The rerun SHALL require experiment ID
+`exp7276-arc-identity`, milestone `2026.09.640`, terminal status `complete`, and
+`arc_identity_ready_score=1`. Missing, quarantined, retired, or conflicting
+evidence SHALL produce a terminal blocked artifact with exact failures in
+`gate_check_summary`. Such an external block is not partial.
+
+The roster SHALL be frozen to the registered public development games `re86`
+and `r11l`. The registry precheck SHALL occur before policy construction. The
+experiment SHALL withhold every per-game adapter, banked solve, game source,
+offline search path, and evaluator label. It SHALL use one seed per game and
+run current feedback against typed-witness feedback. The second game's arm order
+SHALL be reversed. Each of the four rows SHALL use a fresh store and the actual
+`E3AgentPolicy` built by `make_carnot_agent`, then run through
+`arc_leaderboard_eval.run_game`.
+
+One cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M model SHALL serve all four episodes
+sequentially through the shipped native llama.cpp transport. The experiment
+SHALL resolve the cache through `scripts.experiment_template.cached_sota_pair`,
+pin the snapshot revision and file hash, use the GGUF's embedded tokenizer and
+chat template, and set `CARNOT_FORCE_LIVE=1`. A task-owned idle RTX 3090 lease
+SHALL bind the server PID, process start tick, launch arguments, raw `/props`,
+GPU samples, residency, and measured KV headroom. It SHALL authenticate every
+typed identity obligation after server load and before the first generation.
+It SHALL retain those obligations for every episode. It SHALL stop only its own
+process group and SHALL not claim `DualGPURunner` use.
+
+Each episode SHALL retain the Experiment 7263 limits: 192 policy actions, at
+most two generation calls, and at most 4096 generated tokens. The complete
+session limit SHALL be 3000 seconds, including a 600-second model-load limit.
+The two arms SHALL have equal action, token, and elapsed caps. The experiment
+SHALL not tune a stop rule, retry a schema beyond the shipped two-call loop,
+load a per-game model, run exhaustive offline BFS, or perform a calibration
+solve. A real timeout SHALL be a captured censored row. A missing external
+prerequisite SHALL be blocked instead.
+
+Every episode row SHALL retain raw calls, non-identity predictions, reserved
+transition accuracy, the identity baseline, trust decisions, installed plans,
+actual consumed actions, cost, error, abstention, and censoring. A valid model
+program is not policy value by itself. `arc_capture_complete_score` SHALL equal
+one only when all four dispositions and their raw lineage are authenticated.
+`arc_method_value_score` SHALL equal one only when each treatment game has a
+valid trusted non-identity plan, its held-back transition accuracy exceeds its
+own identity baseline, at least one action from that plan is consumed, and its
+paired progress does not regress. This is a two-game pilot with no population
+confidence interval and no hidden-leaderboard claim.
+
+Any new level credit SHALL use `solve_provenance=live_agent_self_discovery` and
+pass captured-action reproduction through the shipped gate. Registered public
+levels, `development_proxy`, and `outer_loop_re` SHALL receive no new credit.
+The official score SHALL remain unset. Shared evaluator authority SHALL be
+declared with `verifier_is_oracle=true`, which forbids a positive verdict.
+
+The experiment SHALL run the scoped E2E-009 and E2E-010 checks plus the real
+four-episode loop. It SHALL run focused and affected tests, scoped 100 percent
+coverage for new code, Ruff check and format, changed-module mypy, and exact-file
+spec coverage. It SHALL independently reduce raw rows. It SHALL run
+`adversarial_verify.py` and `verdict_row_consistency_lint.py` on the measured
+candidate under `results/raw/`. Only after those checks SHALL it atomically
+publish `results/experiment_7280_v640_arc_live.json`. It SHALL retain validation
+failures and SHALL not write a success-shaped placeholder.
+
+### SCENARIO-ARC-WMTE-7280-EXTERNAL-BLOCK
+
+- GIVEN the Exp7276 identity receipt, registry, current cached GGUF, native runtime,
+  idle RTX 3090 lease, or writable evidence path is absent or rejected
+- WHEN Exp7280 checks that prerequisite at its applicable boundary
+- THEN it publishes a terminal blocked artifact with the exact expected and observed value
+- AND its invocation counters and substrate describe only work that actually occurred.
+
+### SCENARIO-ARC-WMTE-7280-IDENTITY-BEFORE-GENERATION
+
+- GIVEN the native server loaded the pinned Q4_K_M GGUF under the task lease
+- WHEN the first policy episode is about to start
+- THEN raw `/props`, launch path, PID, start tick, revision, hash, and file identity support every obligation
+- AND each episode row carries the authenticated obligations with a time before its first generation.
+
+### SCENARIO-ARC-WMTE-7280-COUNTERBALANCED-POLICY-USE
+
+- GIVEN registered public games `re86` and `r11l` with adapters withheld
+- WHEN the four scheduled episodes run through the scored policy and real eval loop
+- THEN each game receives both feedback arms with reversed order on `r11l`
+- AND every row enforces 192 actions, two calls, 4096 generated tokens, and fresh stores.
+
+### SCENARIO-ARC-WMTE-7280-PER-GAME-VALUE
+
+- GIVEN four complete or censored rows with authenticated raw lineage
+- WHEN the independent reducer evaluates pilot method value
+- THEN every treatment game must beat its identity baseline with a valid trusted non-identity plan
+- AND every treatment game must consume that plan without paired progress regression
+- AND a valid but unused plan leaves method value at zero.
+
+### SCENARIO-ARC-WMTE-7280-TERMINAL-PUBLICATION
+
+- GIVEN the raw reducer, scoped validation, E2E checks, and both terminal-candidate linters
+- WHEN the terminal artifact is built
+- THEN all required ordinary fields, principles, identity rows, runner receipts, and raw hashes agree
+- AND the result is complete or blocked, the official score is unset, and publication is atomic.
+
+Implementation status: specified 2026-09-13. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition
