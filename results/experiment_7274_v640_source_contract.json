@@ -1,0 +1,3641 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "contract_exact",
+      "expected": "14 matching exp7274-through-exp7287 rows",
+      "observed": [
+        "exp7274-source-contract",
+        "exp7275-semantic-replay",
+        "exp7276-arc-identity",
+        "exp7277-comparator-canary",
+        "exp7278-source-measurement",
+        "exp7279-source-audit",
+        "exp7280-arc-live",
+        "exp7281-admission-prototype",
+        "exp7282-admission-learning",
+        "exp7283-admission-audit",
+        "exp7284-commit-prototype",
+        "exp7285-commit-frontier",
+        "exp7286-board-state",
+        "exp7287-capstone"
+      ],
+      "passed": false,
+      "principle": "Both independently parsed authorities must agree exactly."
+    },
+    {
+      "criterion": "gate_controls",
+      "expected": 32,
+      "observed": 32,
+      "passed": true,
+      "principle": "Every real gate edge must distinguish false from missing evidence."
+    },
+    {
+      "criterion": "source_dispositions",
+      "expected": 5,
+      "observed": 5,
+      "passed": true,
+      "principle": "Each source adoption remains bounded, falsifiable, and non-local."
+    },
+    {
+      "criterion": "request_budget",
+      "expected": "four primary records maximum",
+      "observed": 4,
+      "passed": true,
+      "principle": "The recheck cannot expand beyond four primary URLs."
+    },
+    {
+      "criterion": "raw_authorities",
+      "expected": 2,
+      "observed": 2,
+      "passed": true,
+      "principle": "Exact Markdown and YAML bytes must survive the raw freeze."
+    },
+    {
+      "criterion": "sidecars",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Historical models, source bodies, and controls stay outside current counters."
+    },
+    {
+      "criterion": "source_hashes",
+      "expected": "all present",
+      "observed": "all present",
+      "passed": true,
+      "principle": "Every consumed local file and evidence sidecar has an exact digest."
+    },
+    {
+      "criterion": "validation",
+      "expected": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_declarations",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "e2e_gate_controls",
+        "independent_reducer",
+        "adversarial",
+        "row_consistency"
+      ],
+      "observed": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_declarations",
+        "focused_tests",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "mypy",
+        "scoped_spec_coverage",
+        "e2e_gate_controls",
+        "independent_reducer",
+        "adversarial",
+        "row_consistency"
+      ],
+      "passed": true,
+      "principle": "All scoped checks must retain exact commands and successful exits."
+    }
+  ],
+  "activation_files_modified": false,
+  "baseline_failures": [],
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7274_v640_source_contract.json",
+  "completed_at_utc": "2026-09-13T18:03:05.629490+00:00",
+  "contract_rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7219_v636_source_contract.json",
+        "gates": [],
+        "id": "exp7219-source-contract",
+        "order": 1,
+        "title": "V636 source delta and exact execution contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7274-source-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7274_v640_source_contract.json",
+        "gates": [],
+        "id": "exp7274-source-contract",
+        "order": 1,
+        "title": "V640 source ingestion and exact execution contract"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7220_v636_xml_canary.json",
+        "gates": [],
+        "id": "exp7220-xml-canary",
+        "order": 2,
+        "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7275-semantic-replay",
+      "yaml": {
+        "deliverable": "results/experiment_7275_v640_semantic_replay.json",
+        "gates": [],
+        "id": "exp7275-semantic-replay",
+        "order": 2,
+        "title": "Repair source replay and direct-comparator measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7221_v636_arc_session.json",
+        "gates": [],
+        "id": "exp7221-arc-session",
+        "order": 3,
+        "title": "Live ARC adapter-withheld cumulative discovery session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7276-arc-identity",
+      "yaml": {
+        "deliverable": "results/experiment_7276_v640_arc_identity.json",
+        "gates": [],
+        "id": "exp7276-arc-identity",
+        "order": 3,
+        "title": "Repair live ARC identity handoff without relaxing evidence"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7222_v636_span_fixture.json",
+        "gates": [],
+        "id": "exp7222-span-fixture",
+        "order": 4,
+        "title": "Recognized-substrate source-span fixture qualification"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7277-comparator-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7277_v640_comparator_canary.json",
+        "gates": [
+          {
+            "artifact_field": "semantic_replay_ready_score",
+            "op": "==",
+            "upstream": "exp7275-semantic-replay",
+            "value": 1
+          }
+        ],
+        "id": "exp7277-comparator-canary",
+        "order": 4,
+        "title": "Bounded Qwen3.8 comparator transport qualification"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7223_v636_span_canary.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7223-span-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 source-span semantic canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7278-source-measurement",
+      "yaml": {
+        "deliverable": "results/experiment_7278_v640_source_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "semantic_replay_ready_score",
+            "op": "==",
+            "upstream": "exp7275-semantic-replay",
+            "value": 1
+          },
+          {
+            "artifact_field": "comparator_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7277-comparator-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7278-source-measurement",
+        "order": 5,
+        "title": "Fresh Qwen3.8 source comparison with valid equal-budget controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7224_v636_span_capture.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "span_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7223-span-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7224-span-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out source-span grounding measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7279-source-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7279_v640_source_audit.json",
+        "gates": [
+          {
+            "artifact_field": "source_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7278-source-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7279-source-audit",
+        "order": 6,
+        "title": "Independent source fidelity and matched-coverage value audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+        "gates": [
+          {
+            "artifact_field": "span_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7224-span-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7225-semantics-audit",
+        "order": 7,
+        "title": "Independent source fidelity and verifier-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7280-arc-live",
+      "yaml": {
+        "deliverable": "results/experiment_7280_v640_arc_live.json",
+        "gates": [
+          {
+            "artifact_field": "arc_identity_ready_score",
+            "op": "==",
+            "upstream": "exp7276-arc-identity",
+            "value": 1
+          }
+        ],
+        "id": "exp7280-arc-live",
+        "order": 7,
+        "title": "Live ARC generalization after strict identity repair"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+        "gates": [],
+        "id": "exp7226-belief-compiler",
+        "order": 8,
+        "title": "Lossless hypothesis-memory compiler and fresh stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7281-admission-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7281_v640_admission_prototype.json",
+        "gates": [],
+        "id": "exp7281-admission-prototype",
+        "order": 8,
+        "title": "Independent feedback admission for constraint-memory reuse"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7227_v636_belief_learning.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7227-belief-learning",
+        "order": 9,
+        "title": "Continuous self-learning with lossless delayed-feedback memory"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7282-admission-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7282_v640_admission_learning.json",
+        "gates": [
+          {
+            "artifact_field": "admission_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7281-admission-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7282-admission-learning",
+        "order": 9,
+        "title": "Prospective continuous self-learning with charged update admission"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "belief_run_complete_score",
+            "op": "==",
+            "upstream": "exp7227-belief-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7228-belief-cold-audit",
+        "order": 10,
+        "title": "Cold hypothesis-memory causality and rollback audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7283-admission-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7283_v640_admission_audit.json",
+        "gates": [
+          {
+            "artifact_field": "admission_run_complete_score",
+            "op": "==",
+            "upstream": "exp7282-admission-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7283-admission-audit",
+        "order": 10,
+        "title": "Cold admission causality, opportunity, and rollback audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+        "gates": [],
+        "id": "exp7229-rare-event-audit",
+        "order": 11,
+        "title": "Fixed-cardinality rare-event observability audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7284-commit-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7284_v640_commit_prototype.json",
+        "gates": [],
+        "id": "exp7284-commit-prototype",
+        "order": 11,
+        "title": "Bounded group acknowledgment with durable constraint state"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7230_v636_native_belief.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7230-native-belief",
+        "order": 12,
+        "title": "Native lossless constraint-memory parity and amortized cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7285-commit-frontier",
+      "yaml": {
+        "deliverable": "results/experiment_7285_v640_commit_frontier.json",
+        "gates": [
+          {
+            "artifact_field": "commit_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7284-commit-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7285-commit-frontier",
+        "order": 12,
+        "title": "Matched durability throughput and acknowledgment-latency frontier"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7231_v636_board_continuity.json",
+        "gates": [],
+        "id": "exp7231-board-continuity",
+        "order": 13,
+        "title": "KV260 GateMate and PolarFire evidence continuity"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7286-board-state",
+      "yaml": {
+        "deliverable": "results/experiment_7286_v640_board_state.json",
+        "gates": [],
+        "id": "exp7286-board-state",
+        "order": 13,
+        "title": "GateMate changed-state review and graduated-board continuity"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7232_v636_capstone.json",
+        "gates": [],
+        "id": "exp7232-capstone",
+        "order": 14,
+        "title": "V636 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7287-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7287_v640_capstone.json",
+        "gates": [],
+        "id": "exp7287-capstone",
+        "order": 14,
+        "title": "V640 independent evidence matrix and next-branch decisions"
+      }
+    }
+  ],
+  "duration_s": 30.638188,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "expected_id_order": [
+    "exp7274-source-contract",
+    "exp7275-semantic-replay",
+    "exp7276-arc-identity",
+    "exp7277-comparator-canary",
+    "exp7278-source-measurement",
+    "exp7279-source-audit",
+    "exp7280-arc-live",
+    "exp7281-admission-prototype",
+    "exp7282-admission-learning",
+    "exp7283-admission-audit",
+    "exp7284-commit-prototype",
+    "exp7285-commit-frontier",
+    "exp7286-board-state",
+    "exp7287-capstone"
+  ],
+  "experiment_id": "exp7274-source-contract",
+  "external_message_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "Declare models executable in this invocation; keep historical identities in hashed sidecars.",
+    "acceptance_gate_results": "Each criterion records expected, observed, passed, and principle; separate completeness and value.",
+    "activation_files_modified": "This field keeps one V640 contract fact auditable.",
+    "baseline_failures": "This field keeps one V640 contract fact auditable.",
+    "checkpoint_path": "This field keeps one V640 contract fact auditable.",
+    "completed_at_utc": "This field keeps one V640 contract fact auditable.",
+    "contract_rows": "One literal row per planned task, including title, path, and structured gates.",
+    "duration_s": "Measure monotonic elapsed time and disjoint phase spans.",
+    "execution_host": "This field keeps one V640 contract fact auditable.",
+    "execution_venue": "Host orchestration is host; identify real device execution separately.",
+    "expected_id_order": "This field keeps one V640 contract fact auditable.",
+    "experiment_id": "This field keeps one V640 contract fact auditable.",
+    "external_message_performed": "This field keeps one V640 contract fact auditable.",
+    "field_principles": "Store explanations here; consumer values remain ordinary top-level fields.",
+    "gate_check_summary": "For blocked_* name upstream, exact field or check, observed value, and expected value.",
+    "gate_control_rows": "Keep four distinct observations for every real structured edge.",
+    "gate_producer_rows": "This field keeps one V640 contract fact auditable.",
+    "honest_verdict": "Completed findings start complete_ or complete:; external absence starts blocked_; retain the measured finding.",
+    "inference_substrate": "Use the recognized literal for actual computation, not an invented task label.",
+    "inference_substrate_class": "Use full generation 60s, bounded generation 10s, load-only 2s, or the correct no-LLM class; never pad duration.",
+    "invocation_counts": "Separate attempted and completed loads and generation from usable answers.",
+    "markdown_id_order": "This field keeps one V640 contract fact auditable.",
+    "markdown_milestone": "This field keeps one V640 contract fact auditable.",
+    "markdown_task_rows": "This field keeps one V640 contract fact auditable.",
+    "measured_candidate_path": "This field keeps one V640 contract fact auditable.",
+    "milestone": "This field keeps one V640 contract fact auditable.",
+    "model_invoked": "Derive from actual calls, including failed or unusable generation.",
+    "observed_id_order": "This field keeps one V640 contract fact auditable.",
+    "phase_spans": "This field keeps one V640 contract fact auditable.",
+    "preconditions_checked": "Record actual input hashes, authority separation, resource ownership, and failures.",
+    "production_default_changed": "This field keeps one V640 contract fact auditable.",
+    "publication_performed": "This field keeps one V640 contract fact auditable.",
+    "random_seed": "Freeze independent-unit seeds before observing results.",
+    "raw_authority_rows": "This field keeps one V640 contract fact auditable.",
+    "receipt_dependency_rows": "This field keeps one V640 contract fact auditable.",
+    "reproducibility_checksum": "Bind code, configuration, input manifests, and raw evidence.",
+    "research_roadmap_modified": "This field keeps one V640 contract fact auditable.",
+    "rows": "Keep each unit, arm, seed, error, abstention, cost, metric, and censoring state.",
+    "run_date": "Use 20260913 and actual UTC start and end times.",
+    "sample_size_budget": "Record planned, attempted, completed, and censored units and the stopping rule.",
+    "schema": "Version the result and retain ordinary top-level experiment_id and milestone.",
+    "scientific_value_claimed": "This field keeps one V640 contract fact auditable.",
+    "sidecar_receipts": "This field keeps one V640 contract fact auditable.",
+    "source_access_rows": "This field keeps one V640 contract fact auditable.",
+    "source_artifact_hashes": "Preserve exact input identity, retirement, and quarantine status.",
+    "source_contract_complete_score": "One only when both fourteen-task contracts and their exact gates agree.",
+    "source_dispositions": "Bound source claims and explain adaptation or deferral.",
+    "started_at_utc": "This field keeps one V640 contract fact auditable.",
+    "status": "Use complete or blocked for terminal evidence; keep unfinished work in separate checkpoints.",
+    "submission_performed": "This field keeps one V640 contract fact auditable.",
+    "upload_performed": "This field keeps one V640 contract fact auditable.",
+    "validation_receipts": "Retain command, exit code, timing, and log hash; do not hide failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive. Failed efficacy gates forbid positive. Only incomplete own work is partial; unchanged external blocks are terminal blocked.",
+    "verifier_is_oracle": "Expose shared verifier/evaluator authority; exact conformance is not learned correctness.",
+    "yaml_authority_path": "This field keeps one V640 contract fact auditable.",
+    "yaml_milestone": "This field keeps one V640 contract fact auditable.",
+    "yaml_task_rows": "This field keeps one V640 contract fact auditable."
+  },
+  "gate_check_summary": {
+    "expected_value": "2026.09.640",
+    "failed_check": "markdown_milestone",
+    "field": "milestone",
+    "observed_value": "2026.09.636",
+    "passed": false,
+    "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+  },
+  "gate_control_rows": [
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "true",
+      "consumer": "exp7277-comparator-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_0_passing/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "semantic_replay_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:652c31b7d66efcc5637c7a258201455b6c45f27674eaf4661a1af8af061ec2fe",
+      "observation": {
+        "fixture_payload": {
+          "semantic_replay_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "false",
+      "consumer": "exp7277-comparator-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_0_failed/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "semantic_replay_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:af5c5f77d9f14b1b174cacdb62983cd7d31324d8c758b2046b1ce7e3c46a180b",
+      "observation": {
+        "fixture_payload": {
+          "semantic_replay_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7277-comparator-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_0_absent_field/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'semantic_replay_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'semantic_replay_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7277-comparator-canary",
+      "edge_index": 0,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7275-semantic-replay'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7275-semantic-replay'",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "true",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_1_passing/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "semantic_replay_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:652c31b7d66efcc5637c7a258201455b6c45f27674eaf4661a1af8af061ec2fe",
+      "observation": {
+        "fixture_payload": {
+          "semantic_replay_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "false",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_1_failed/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "semantic_replay_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:af5c5f77d9f14b1b174cacdb62983cd7d31324d8c758b2046b1ce7e3c46a180b",
+      "observation": {
+        "fixture_payload": {
+          "semantic_replay_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_1_absent_field/experiment_7275_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'semantic_replay_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'semantic_replay_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "semantic_replay_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 1,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7275-semantic-replay'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7275-semantic-replay'",
+      "research_result": false,
+      "upstream": "exp7275-semantic-replay",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "comparator_canary_ready_score",
+      "case": "true",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_2_passing/experiment_7277_gate_fixture.json",
+      "fixture_payload": {
+        "comparator_canary_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:4ebf535597df4e82da1dbccf72346511620fad5c8afe0a8b6ad66dd67959ed1a",
+      "observation": {
+        "fixture_payload": {
+          "comparator_canary_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7277-comparator-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "comparator_canary_ready_score",
+      "case": "false",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_2_failed/experiment_7277_gate_fixture.json",
+      "fixture_payload": {
+        "comparator_canary_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:399af9c2bc0fd1b71726d435d71ae28abd32963fc4043aff334103fcd44cbf36",
+      "observation": {
+        "fixture_payload": {
+          "comparator_canary_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7277-comparator-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "comparator_canary_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_2_absent_field/experiment_7277_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'comparator_canary_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'comparator_canary_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7277-comparator-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "comparator_canary_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7278-source-measurement",
+      "edge_index": 2,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7277-comparator-canary'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7277-comparator-canary'",
+      "research_result": false,
+      "upstream": "exp7277-comparator-canary",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "source_capture_complete_score",
+      "case": "true",
+      "consumer": "exp7279-source-audit",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_3_passing/experiment_7278_gate_fixture.json",
+      "fixture_payload": {
+        "source_capture_complete_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:09e5882566f4e894687d799855e5a8cfd13fb89bad98b2946e0168c79ca10b4c",
+      "observation": {
+        "fixture_payload": {
+          "source_capture_complete_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7278-source-measurement",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "source_capture_complete_score",
+      "case": "false",
+      "consumer": "exp7279-source-audit",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_3_failed/experiment_7278_gate_fixture.json",
+      "fixture_payload": {
+        "source_capture_complete_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:0312ae17d51c106abb19f3a5dc7d4c278cb0574a4a2275037b3c66cacd9507cf",
+      "observation": {
+        "fixture_payload": {
+          "source_capture_complete_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7278-source-measurement",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "source_capture_complete_score",
+      "case": "missing_field",
+      "consumer": "exp7279-source-audit",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_3_absent_field/experiment_7278_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'source_capture_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'source_capture_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7278-source-measurement",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "source_capture_complete_score",
+      "case": "missing_file",
+      "consumer": "exp7279-source-audit",
+      "edge_index": 3,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7278-source-measurement'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7278-source-measurement'",
+      "research_result": false,
+      "upstream": "exp7278-source-measurement",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_identity_ready_score",
+      "case": "true",
+      "consumer": "exp7280-arc-live",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_4_passing/experiment_7276_gate_fixture.json",
+      "fixture_payload": {
+        "arc_identity_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:517cac12d988e1545278473008521beb63db85653fea2995dbc888045a66215f",
+      "observation": {
+        "fixture_payload": {
+          "arc_identity_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7276-arc-identity",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_identity_ready_score",
+      "case": "false",
+      "consumer": "exp7280-arc-live",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_4_failed/experiment_7276_gate_fixture.json",
+      "fixture_payload": {
+        "arc_identity_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:b2a6112204eae35b8a26791163237391df6d5669e936054bfb6ab01d92a0aacb",
+      "observation": {
+        "fixture_payload": {
+          "arc_identity_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7276-arc-identity",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_identity_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7280-arc-live",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_4_absent_field/experiment_7276_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'arc_identity_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'arc_identity_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7276-arc-identity",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "arc_identity_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7280-arc-live",
+      "edge_index": 4,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7276-arc-identity'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7276-arc-identity'",
+      "research_result": false,
+      "upstream": "exp7276-arc-identity",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_fixture_ready_score",
+      "case": "true",
+      "consumer": "exp7282-admission-learning",
+      "edge_index": 5,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_5_passing/experiment_7281_gate_fixture.json",
+      "fixture_payload": {
+        "admission_fixture_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:fac6a8a6ea94b3983cd9729cf31e2f0729f6d1249280b4f4b921627572d8d338",
+      "observation": {
+        "fixture_payload": {
+          "admission_fixture_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7281-admission-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_fixture_ready_score",
+      "case": "false",
+      "consumer": "exp7282-admission-learning",
+      "edge_index": 5,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_5_failed/experiment_7281_gate_fixture.json",
+      "fixture_payload": {
+        "admission_fixture_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:e97025a57bb524ff3794c7b512c0a712c19f182ddc8a9f377eaadbb854f61228",
+      "observation": {
+        "fixture_payload": {
+          "admission_fixture_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7281-admission-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_fixture_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7282-admission-learning",
+      "edge_index": 5,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_5_absent_field/experiment_7281_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'admission_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'admission_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7281-admission-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_fixture_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7282-admission-learning",
+      "edge_index": 5,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7281-admission-prototype'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7281-admission-prototype'",
+      "research_result": false,
+      "upstream": "exp7281-admission-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_run_complete_score",
+      "case": "true",
+      "consumer": "exp7283-admission-audit",
+      "edge_index": 6,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_6_passing/experiment_7282_gate_fixture.json",
+      "fixture_payload": {
+        "admission_run_complete_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:4ce0d058a5bf2a2e452bed9eafddba7b0ee5dd3fb9aa52a239492caa6cbfcdf3",
+      "observation": {
+        "fixture_payload": {
+          "admission_run_complete_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7282-admission-learning",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_run_complete_score",
+      "case": "false",
+      "consumer": "exp7283-admission-audit",
+      "edge_index": 6,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_6_failed/experiment_7282_gate_fixture.json",
+      "fixture_payload": {
+        "admission_run_complete_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:5c2e5a602bff3d6b329614e6533ca759bdb6654289e1135aadbb055b9e4cd1e6",
+      "observation": {
+        "fixture_payload": {
+          "admission_run_complete_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7282-admission-learning",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_run_complete_score",
+      "case": "missing_field",
+      "consumer": "exp7283-admission-audit",
+      "edge_index": 6,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_6_absent_field/experiment_7282_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'admission_run_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'admission_run_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7282-admission-learning",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "admission_run_complete_score",
+      "case": "missing_file",
+      "consumer": "exp7283-admission-audit",
+      "edge_index": 6,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7282-admission-learning'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7282-admission-learning'",
+      "research_result": false,
+      "upstream": "exp7282-admission-learning",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "commit_protocol_ready_score",
+      "case": "true",
+      "consumer": "exp7285-commit-frontier",
+      "edge_index": 7,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_7_passing/experiment_7284_gate_fixture.json",
+      "fixture_payload": {
+        "commit_protocol_ready_score": 1,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:1628bc943156a26d3160bbee200f327c0ed4e1a2121e6231b64a89eb7832b878",
+      "observation": {
+        "fixture_payload": {
+          "commit_protocol_ready_score": 1,
+          "status": "complete"
+        },
+        "observed_value": 1,
+        "passed": true,
+        "reason": "actual=1 == expected=1"
+      },
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "reason": "actual=1 == expected=1",
+      "research_result": false,
+      "upstream": "exp7284-commit-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "commit_protocol_ready_score",
+      "case": "false",
+      "consumer": "exp7285-commit-frontier",
+      "edge_index": 7,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_7_failed/experiment_7284_gate_fixture.json",
+      "fixture_payload": {
+        "commit_protocol_ready_score": 0,
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:b493af062243531d2362fa138240a7b4409958a4938f634aec7a870e4de446b2",
+      "observation": {
+        "fixture_payload": {
+          "commit_protocol_ready_score": 0,
+          "status": "complete"
+        },
+        "observed_value": 0,
+        "passed": false,
+        "reason": "actual=0 == expected=1"
+      },
+      "observed_value": 0,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "research_result": false,
+      "upstream": "exp7284-commit-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "commit_protocol_ready_score",
+      "case": "missing_field",
+      "consumer": "exp7285-commit-frontier",
+      "edge_index": 7,
+      "expected_value": 1,
+      "fixture_path": "/tmp/exp7274-gates-dw3t8j7w/edge_7_absent_field/experiment_7284_gate_fixture.json",
+      "fixture_payload": {
+        "status": "complete"
+      },
+      "fixture_sha256": "sha256:a1e73038b20b14c8814f26b22e8107c1b410db346c6736eea60480137a09109b",
+      "observation": {
+        "fixture_payload": {
+          "status": "complete"
+        },
+        "observed_value": null,
+        "passed": false,
+        "reason": "actual=None == expected=1 -- upstream artifact has NO field 'commit_protocol_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised."
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "actual=None == expected=1 -- upstream artifact has NO field 'commit_protocol_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "research_result": false,
+      "upstream": "exp7284-commit-prototype",
+      "validation_input": true
+    },
+    {
+      "artifact_field": "commit_protocol_ready_score",
+      "case": "missing_file",
+      "consumer": "exp7285-commit-frontier",
+      "edge_index": 7,
+      "expected_value": 1,
+      "fixture_path": null,
+      "fixture_payload": null,
+      "fixture_sha256": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+      "observation": {
+        "fixture_payload": null,
+        "observed_value": null,
+        "passed": false,
+        "reason": "upstream artifact not found for task id 'exp7284-commit-prototype'"
+      },
+      "observed_value": null,
+      "operator": "==",
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp7284-commit-prototype'",
+      "research_result": false,
+      "upstream": "exp7284-commit-prototype",
+      "validation_input": true
+    }
+  ],
+  "gate_producer_rows": [
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7277-comparator-canary",
+      "field": "semantic_replay_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7275-semantic-replay",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7278-source-measurement",
+      "field": "semantic_replay_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7275-semantic-replay",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7278-source-measurement",
+      "field": "comparator_canary_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7277-comparator-canary",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7279-source-audit",
+      "field": "source_capture_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7278-source-measurement",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7280-arc-live",
+      "field": "arc_identity_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7276-arc-identity",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7282-admission-learning",
+      "field": "admission_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7281-admission-prototype",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7283-admission-audit",
+      "field": "admission_run_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7282-admission-learning",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7285-commit-frontier",
+      "field": "commit_protocol_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7284-commit-prototype",
+      "value": 1
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v640_source_contract_mismatched_or_invalid",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "usable_answers": 0
+  },
+  "markdown_id_order": [
+    "exp7219-source-contract",
+    "exp7220-xml-canary",
+    "exp7221-arc-session",
+    "exp7222-span-fixture",
+    "exp7223-span-canary",
+    "exp7224-span-capture",
+    "exp7225-semantics-audit",
+    "exp7226-belief-compiler",
+    "exp7227-belief-learning",
+    "exp7228-belief-cold-audit",
+    "exp7229-rare-event-audit",
+    "exp7230-native-belief",
+    "exp7231-board-continuity",
+    "exp7232-capstone"
+  ],
+  "markdown_milestone": "2026.09.636",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7219_v636_source_contract.json",
+      "gates": [],
+      "id": "exp7219-source-contract",
+      "order": 1,
+      "title": "V636 source delta and exact execution contract"
+    },
+    {
+      "deliverable": "results/experiment_7220_v636_xml_canary.json",
+      "gates": [],
+      "id": "exp7220-xml-canary",
+      "order": 2,
+      "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+    },
+    {
+      "deliverable": "results/experiment_7221_v636_arc_session.json",
+      "gates": [],
+      "id": "exp7221-arc-session",
+      "order": 3,
+      "title": "Live ARC adapter-withheld cumulative discovery session"
+    },
+    {
+      "deliverable": "results/experiment_7222_v636_span_fixture.json",
+      "gates": [],
+      "id": "exp7222-span-fixture",
+      "order": 4,
+      "title": "Recognized-substrate source-span fixture qualification"
+    },
+    {
+      "deliverable": "results/experiment_7223_v636_span_canary.json",
+      "gates": [
+        {
+          "artifact_field": "span_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7222-span-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7223-span-canary",
+      "order": 5,
+      "title": "Bounded Qwen3.8 source-span semantic canary"
+    },
+    {
+      "deliverable": "results/experiment_7224_v636_span_capture.json",
+      "gates": [
+        {
+          "artifact_field": "span_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7222-span-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "span_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7223-span-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7224-span-capture",
+      "order": 6,
+      "title": "Qwen3.8 held-out source-span grounding measurement"
+    },
+    {
+      "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+      "gates": [
+        {
+          "artifact_field": "span_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7224-span-capture",
+          "value": 1
+        }
+      ],
+      "id": "exp7225-semantics-audit",
+      "order": 7,
+      "title": "Independent source fidelity and verifier-value audit"
+    },
+    {
+      "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+      "gates": [],
+      "id": "exp7226-belief-compiler",
+      "order": 8,
+      "title": "Lossless hypothesis-memory compiler and fresh stream"
+    },
+    {
+      "deliverable": "results/experiment_7227_v636_belief_learning.json",
+      "gates": [
+        {
+          "artifact_field": "belief_compiler_ready_score",
+          "op": "==",
+          "upstream": "exp7226-belief-compiler",
+          "value": 1
+        }
+      ],
+      "id": "exp7227-belief-learning",
+      "order": 9,
+      "title": "Continuous self-learning with lossless delayed-feedback memory"
+    },
+    {
+      "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "belief_run_complete_score",
+          "op": "==",
+          "upstream": "exp7227-belief-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7228-belief-cold-audit",
+      "order": 10,
+      "title": "Cold hypothesis-memory causality and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+      "gates": [],
+      "id": "exp7229-rare-event-audit",
+      "order": 11,
+      "title": "Fixed-cardinality rare-event observability audit"
+    },
+    {
+      "deliverable": "results/experiment_7230_v636_native_belief.json",
+      "gates": [
+        {
+          "artifact_field": "belief_compiler_ready_score",
+          "op": "==",
+          "upstream": "exp7226-belief-compiler",
+          "value": 1
+        }
+      ],
+      "id": "exp7230-native-belief",
+      "order": 12,
+      "title": "Native lossless constraint-memory parity and amortized cost"
+    },
+    {
+      "deliverable": "results/experiment_7231_v636_board_continuity.json",
+      "gates": [],
+      "id": "exp7231-board-continuity",
+      "order": 13,
+      "title": "KV260 GateMate and PolarFire evidence continuity"
+    },
+    {
+      "deliverable": "results/experiment_7232_v636_capstone.json",
+      "gates": [],
+      "id": "exp7232-capstone",
+      "order": 14,
+      "title": "V636 independent evidence matrix and branch decisions"
+    }
+  ],
+  "measured_candidate_path": "results/raw/experiment_7274/measured-terminal-candidate.json",
+  "milestone": "2026.09.640",
+  "model_invoked": false,
+  "observed_id_order": [
+    "exp7274-source-contract",
+    "exp7275-semantic-replay",
+    "exp7276-arc-identity",
+    "exp7277-comparator-canary",
+    "exp7278-source-measurement",
+    "exp7279-source-audit",
+    "exp7280-arc-live",
+    "exp7281-admission-prototype",
+    "exp7282-admission-learning",
+    "exp7283-admission-audit",
+    "exp7284-commit-prototype",
+    "exp7285-commit-frontier",
+    "exp7286-board-state",
+    "exp7287-capstone"
+  ],
+  "phase_spans": [
+    {
+      "detail": "preconditions",
+      "duration_s": 0.049577,
+      "end_elapsed_s": 0.049577,
+      "phase": 0,
+      "start_elapsed_s": 0.0
+    },
+    {
+      "detail": "no-model declaration",
+      "duration_s": 5e-06,
+      "end_elapsed_s": 0.05011,
+      "phase": 1,
+      "start_elapsed_s": 0.050105
+    },
+    {
+      "detail": "authority freeze and contract comparison",
+      "duration_s": 0.002044,
+      "end_elapsed_s": 0.052505,
+      "phase": 2,
+      "start_elapsed_s": 0.050462
+    },
+    {
+      "detail": "schema and real gate controls",
+      "duration_s": 0.002788,
+      "end_elapsed_s": 0.056416,
+      "phase": 3,
+      "start_elapsed_s": 0.053627
+    },
+    {
+      "detail": "bounded source ingestion",
+      "duration_s": 0.604013,
+      "end_elapsed_s": 0.661869,
+      "phase": 4,
+      "start_elapsed_s": 0.057856
+    },
+    {
+      "detail": "evidence sidecars",
+      "duration_s": 0.003189,
+      "end_elapsed_s": 0.668043,
+      "phase": 5,
+      "start_elapsed_s": 0.664854
+    },
+    {
+      "detail": "scoped validation",
+      "duration_s": 29.957424,
+      "end_elapsed_s": 30.62753,
+      "phase": 6,
+      "start_elapsed_s": 0.670105
+    },
+    {
+      "detail": "terminal derivation",
+      "duration_s": 0.000199,
+      "end_elapsed_s": 30.629817,
+      "phase": 7,
+      "start_elapsed_s": 30.629618
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap.yaml",
+      "expected_value": "2026.09.640",
+      "field": "milestone",
+      "observed_value": "2026.09.640",
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": false,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap-next.yaml",
+      "expected_value": "2026.09.640",
+      "field": "milestone",
+      "observed_value": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "path": "research-roadmap-next.yaml",
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "yaml_authority",
+      "expected_value": "2026.09.640",
+      "field": "milestone",
+      "observed_value": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml|research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 1165,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "upstream": "AGENTS.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 311988,
+        "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+      },
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 2396,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "upstream": "CODEX.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 28560,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "upstream": "research-program.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 56173,
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      },
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 8197,
+        "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+      },
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 3433424,
+        "sha256": "sha256:0ccdfea9df92fdca1d3557f47f09f1427a5d48fbe988370eb70829de79186b78"
+      },
+      "upstream": "research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-complete.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 5030823,
+        "sha256": "sha256:134c0f19566b104cfb844832d998dbf5caf09ad0a674d3ea26bc33410625eb4f"
+      },
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 146766,
+        "sha256": "sha256:82f24f111fabee4fd4435d65e9eaa2fe3989e95c4f9a466fd6344824e3da7ff5"
+      },
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 20215,
+        "sha256": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0"
+      },
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 9371,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      "upstream": "scripts/roadmap_schema.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/conductor_gates.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 29979,
+        "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca"
+      },
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 10078,
+        "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
+      },
+      "upstream": "scripts/audit_roadmap_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 8053,
+        "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+      },
+      "upstream": "scripts/validate_prior_failures.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 29604,
+        "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+      },
+      "upstream": "scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/harness_consumer_checks.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 11765,
+        "sha256": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5"
+      },
+      "upstream": "scripts/harness_consumer_checks.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 328917,
+        "sha256": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa"
+      },
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 18650,
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      },
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/check_spec_coverage.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 6306,
+        "sha256": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559"
+      },
+      "upstream": "scripts/check_spec_coverage.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 4132983,
+        "sha256": "sha256:54b380833451b636e43612fe9f407bdae8de1ecf17f40f7de8eda3b7430e59fd"
+      },
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7274_v640_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 65188,
+        "sha256": "sha256:cde910571cb0240dd2fd4c5179f3d01ee434d7562343995e271f02af625edbed"
+      },
+      "upstream": "python/carnot/experiment_7274_v640_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/experiments/experiment_7274_v640_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 209,
+        "sha256": "sha256:16608947bc050f0ebd79ef5f443d7af0e0f548504b1258a320dc45e755b5e06e"
+      },
+      "upstream": "scripts/experiments/experiment_7274_v640_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:tests/python/test_experiment_7274_v640_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 21281,
+        "sha256": "sha256:2f76162cfe2e72e52b9b1d9a008db058f0701bf8b9137d47ea7f158957d36641"
+      },
+      "upstream": "tests/python/test_experiment_7274_v640_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v639_terminal_capstone",
+      "expected_value": "terminal and not quarantined",
+      "field": "status|quarantine",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:793a3c682ee6c8ada0c9406163e8a7cd888b4bb47c5ed9eacb4c45ad4d1fa047",
+        "status": "blocked"
+      },
+      "upstream": "results/experiment_7273_v639_capstone.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7274",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7274",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "design_authority",
+      "expected_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "field": "milestone_doc",
+      "observed_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "task_upstream_gates",
+      "expected_value": [],
+      "field": "gated_on",
+      "observed_value": [],
+      "upstream": "exp7274-source-contract"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "result_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "raw_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7274"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "checkpoint_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints"
+    }
+  ],
+  "production_default_changed": false,
+  "publication_performed": false,
+  "random_seed": 727420260913,
+  "raw_authority_rows": [
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7274/v640-design.md",
+      "raw_sha256": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+      "source_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "source_sha256": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+      "source_type": "markdown"
+    },
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7274/selected-roadmap.yaml",
+      "raw_sha256": "sha256:82f24f111fabee4fd4435d65e9eaa2fe3989e95c4f9a466fd6344824e3da7ff5",
+      "source_path": "research-roadmap.yaml",
+      "source_sha256": "sha256:82f24f111fabee4fd4435d65e9eaa2fe3989e95c4f9a466fd6344824e3da7ff5",
+      "source_type": "yaml"
+    }
+  ],
+  "receipt_dependency_rows": [
+    {
+      "expected_consumers": [],
+      "observed_consumers": [],
+      "passed": true,
+      "upstream": "exp7274-source-contract"
+    }
+  ],
+  "reproducibility_checksum": "sha256:c1e859bfeddfbf0d574e374e73bc42d5dcf892f2b940d5a6c146469ad270b12a",
+  "research_roadmap_modified": false,
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7219_v636_source_contract.json",
+        "gates": [],
+        "id": "exp7219-source-contract",
+        "order": 1,
+        "title": "V636 source delta and exact execution contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7274-source-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7274_v640_source_contract.json",
+        "gates": [],
+        "id": "exp7274-source-contract",
+        "order": 1,
+        "title": "V640 source ingestion and exact execution contract"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7220_v636_xml_canary.json",
+        "gates": [],
+        "id": "exp7220-xml-canary",
+        "order": 2,
+        "title": "Bounded local vLLM Qwen3 XML tool-parser canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7275-semantic-replay",
+      "yaml": {
+        "deliverable": "results/experiment_7275_v640_semantic_replay.json",
+        "gates": [],
+        "id": "exp7275-semantic-replay",
+        "order": 2,
+        "title": "Repair source replay and direct-comparator measurement"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7221_v636_arc_session.json",
+        "gates": [],
+        "id": "exp7221-arc-session",
+        "order": 3,
+        "title": "Live ARC adapter-withheld cumulative discovery session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7276-arc-identity",
+      "yaml": {
+        "deliverable": "results/experiment_7276_v640_arc_identity.json",
+        "gates": [],
+        "id": "exp7276-arc-identity",
+        "order": 3,
+        "title": "Repair live ARC identity handoff without relaxing evidence"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7222_v636_span_fixture.json",
+        "gates": [],
+        "id": "exp7222-span-fixture",
+        "order": 4,
+        "title": "Recognized-substrate source-span fixture qualification"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7277-comparator-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7277_v640_comparator_canary.json",
+        "gates": [
+          {
+            "artifact_field": "semantic_replay_ready_score",
+            "op": "==",
+            "upstream": "exp7275-semantic-replay",
+            "value": 1
+          }
+        ],
+        "id": "exp7277-comparator-canary",
+        "order": 4,
+        "title": "Bounded Qwen3.8 comparator transport qualification"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7223_v636_span_canary.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7223-span-canary",
+        "order": 5,
+        "title": "Bounded Qwen3.8 source-span semantic canary"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7278-source-measurement",
+      "yaml": {
+        "deliverable": "results/experiment_7278_v640_source_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "semantic_replay_ready_score",
+            "op": "==",
+            "upstream": "exp7275-semantic-replay",
+            "value": 1
+          },
+          {
+            "artifact_field": "comparator_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7277-comparator-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7278-source-measurement",
+        "order": 5,
+        "title": "Fresh Qwen3.8 source comparison with valid equal-budget controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7224_v636_span_capture.json",
+        "gates": [
+          {
+            "artifact_field": "span_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7222-span-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "span_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7223-span-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7224-span-capture",
+        "order": 6,
+        "title": "Qwen3.8 held-out source-span grounding measurement"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7279-source-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7279_v640_source_audit.json",
+        "gates": [
+          {
+            "artifact_field": "source_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7278-source-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7279-source-audit",
+        "order": 6,
+        "title": "Independent source fidelity and matched-coverage value audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7225_v636_semantics_audit.json",
+        "gates": [
+          {
+            "artifact_field": "span_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7224-span-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7225-semantics-audit",
+        "order": 7,
+        "title": "Independent source fidelity and verifier-value audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7280-arc-live",
+      "yaml": {
+        "deliverable": "results/experiment_7280_v640_arc_live.json",
+        "gates": [
+          {
+            "artifact_field": "arc_identity_ready_score",
+            "op": "==",
+            "upstream": "exp7276-arc-identity",
+            "value": 1
+          }
+        ],
+        "id": "exp7280-arc-live",
+        "order": 7,
+        "title": "Live ARC generalization after strict identity repair"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7226_v636_belief_compiler.json",
+        "gates": [],
+        "id": "exp7226-belief-compiler",
+        "order": 8,
+        "title": "Lossless hypothesis-memory compiler and fresh stream"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7281-admission-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7281_v640_admission_prototype.json",
+        "gates": [],
+        "id": "exp7281-admission-prototype",
+        "order": 8,
+        "title": "Independent feedback admission for constraint-memory reuse"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7227_v636_belief_learning.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7227-belief-learning",
+        "order": 9,
+        "title": "Continuous self-learning with lossless delayed-feedback memory"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7282-admission-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7282_v640_admission_learning.json",
+        "gates": [
+          {
+            "artifact_field": "admission_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7281-admission-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7282-admission-learning",
+        "order": 9,
+        "title": "Prospective continuous self-learning with charged update admission"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7228_v636_belief_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "belief_run_complete_score",
+            "op": "==",
+            "upstream": "exp7227-belief-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7228-belief-cold-audit",
+        "order": 10,
+        "title": "Cold hypothesis-memory causality and rollback audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7283-admission-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7283_v640_admission_audit.json",
+        "gates": [
+          {
+            "artifact_field": "admission_run_complete_score",
+            "op": "==",
+            "upstream": "exp7282-admission-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7283-admission-audit",
+        "order": 10,
+        "title": "Cold admission causality, opportunity, and rollback audit"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7229_v636_rare_event_audit.json",
+        "gates": [],
+        "id": "exp7229-rare-event-audit",
+        "order": 11,
+        "title": "Fixed-cardinality rare-event observability audit"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7284-commit-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7284_v640_commit_prototype.json",
+        "gates": [],
+        "id": "exp7284-commit-prototype",
+        "order": 11,
+        "title": "Bounded group acknowledgment with durable constraint state"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7230_v636_native_belief.json",
+        "gates": [
+          {
+            "artifact_field": "belief_compiler_ready_score",
+            "op": "==",
+            "upstream": "exp7226-belief-compiler",
+            "value": 1
+          }
+        ],
+        "id": "exp7230-native-belief",
+        "order": 12,
+        "title": "Native lossless constraint-memory parity and amortized cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7285-commit-frontier",
+      "yaml": {
+        "deliverable": "results/experiment_7285_v640_commit_frontier.json",
+        "gates": [
+          {
+            "artifact_field": "commit_protocol_ready_score",
+            "op": "==",
+            "upstream": "exp7284-commit-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7285-commit-frontier",
+        "order": 12,
+        "title": "Matched durability throughput and acknowledgment-latency frontier"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7231_v636_board_continuity.json",
+        "gates": [],
+        "id": "exp7231-board-continuity",
+        "order": 13,
+        "title": "KV260 GateMate and PolarFire evidence continuity"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7286-board-state",
+      "yaml": {
+        "deliverable": "results/experiment_7286_v640_board_state.json",
+        "gates": [],
+        "id": "exp7286-board-state",
+        "order": 13,
+        "title": "GateMate changed-state review and graduated-board continuity"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7232_v636_capstone.json",
+        "gates": [],
+        "id": "exp7232-capstone",
+        "order": 14,
+        "title": "V636 independent evidence matrix and branch decisions"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 727420260913,
+      "unit_id": "exp7287-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7287_v640_capstone.json",
+        "gates": [],
+        "id": "exp7287-capstone",
+        "order": 14,
+        "title": "V640 independent evidence matrix and next-branch decisions"
+      }
+    }
+  ],
+  "run_date": "20260913",
+  "sample_size_budget": {
+    "contract_rows": {
+      "attempted": 14,
+      "censored": 0,
+      "completed": 14,
+      "independent_units": 14,
+      "planned": 14
+    },
+    "gate_controls": {
+      "attempted": 32,
+      "censored": 0,
+      "completed": 32,
+      "independent_units": 32,
+      "planned": 32
+    },
+    "network_requests": {
+      "attempted": 4,
+      "censored": 0,
+      "completed": 4,
+      "independent_units": 4,
+      "planned": 4
+    },
+    "source_dispositions": {
+      "attempted": 5,
+      "censored": 0,
+      "completed": 5,
+      "independent_units": 5,
+      "planned": 5
+    },
+    "stopping_rule": "Stop after fourteen contract rows, four controls for each of eight gates, five bounded dispositions, and four primary requests."
+  },
+  "schema": "carnot.exp7274.v640_source_contract.v1",
+  "scientific_value_claimed": false,
+  "sidecar_receipts": {
+    "history": {
+      "path": "results/raw/experiment_7274/historical-model-receipts.json",
+      "sha256": "sha256:2e43e99dabe508d349f569dd7b2e3e300dbfa2bf3393b040af9e6c78134b13cb"
+    },
+    "negative_fixtures": {
+      "path": "results/raw/experiment_7274/negative-gate-fixtures.json",
+      "sha256": "sha256:91e8df13aebc93f9016e2388ca04f24e5e83620c0e85866828c7f249c5c0ce14"
+    },
+    "source_access": {
+      "path": "results/raw/experiment_7274/source-access-receipts.json",
+      "sha256": "sha256:12d99016e503e639103b44d918da6e59925ac427feaa01d295a1d3d3ad442efb"
+    }
+  },
+  "source_access_rows": [
+    {
+      "access_id": "source_controls",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_version": null,
+      "refresh_version": "v1",
+      "response_sha256": "sha256:4837b6dd7b4ab8d893a74eecd378c014cdd935c53b4f25d109b2d3141cdec24a",
+      "retrieval_date": "2026-09-13",
+      "source_delta": "version_or_identity_delta",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2607.17047"
+    },
+    {
+      "access_id": "world_model_consumption",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_version": null,
+      "refresh_version": "v2",
+      "response_sha256": "sha256:151ca5556cfd05dff9b732e7d53081f1b82875a2edc800e249e48617b5d8ef9e",
+      "retrieval_date": "2026-09-13",
+      "source_delta": "version_or_identity_delta",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2601.03905"
+    },
+    {
+      "access_id": "independent_update_admission",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_version": null,
+      "refresh_version": "v1",
+      "response_sha256": "sha256:56f6517faac848b846b55b09ff7f1ce68eed28d3474541df4fb728090f100f37",
+      "retrieval_date": "2026-09-13",
+      "source_delta": "version_or_identity_delta",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true,
+      "url": "https://arxiv.org/abs/2609.10873"
+    },
+    {
+      "access_id": "acknowledgment_costs",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_version": null,
+      "refresh_version": "2026-09-04",
+      "response_sha256": "sha256:0b83813e58e4d351a662df3104ada7ed2e40526477841028579750b5cd229cbc",
+      "retrieval_date": "2026-09-13",
+      "source_delta": "version_or_identity_delta",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true,
+      "url": "https://extropic.ai/writing/z1t"
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:54b380833451b636e43612fe9f407bdae8de1ecf17f40f7de8eda3b7430e59fd",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7274_v640_source_contract.py": "sha256:cde910571cb0240dd2fd4c5179f3d01ee434d7562343995e271f02af625edbed",
+    "research-complete.yaml": "sha256:134c0f19566b104cfb844832d998dbf5caf09ad0a674d3ea26bc33410625eb4f",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:0ccdfea9df92fdca1d3557f47f09f1427a5d48fbe988370eb70829de79186b78",
+    "research-roadmap.yaml": "sha256:82f24f111fabee4fd4435d65e9eaa2fe3989e95c4f9a466fd6344824e3da7ff5",
+    "results/experiment_7273_v639_capstone.json": "sha256:793a3c682ee6c8ada0c9406163e8a7cd888b4bb47c5ed9eacb4c45ad4d1fa047",
+    "results/raw/experiment_7274/historical-model-receipts.json": "sha256:2e43e99dabe508d349f569dd7b2e3e300dbfa2bf3393b040af9e6c78134b13cb",
+    "results/raw/experiment_7274/negative-gate-fixtures.json": "sha256:91e8df13aebc93f9016e2388ca04f24e5e83620c0e85866828c7f249c5c0ce14",
+    "results/raw/experiment_7274/selected-roadmap.yaml": "sha256:82f24f111fabee4fd4435d65e9eaa2fe3989e95c4f9a466fd6344824e3da7ff5",
+    "results/raw/experiment_7274/source-access-receipts.json": "sha256:12d99016e503e639103b44d918da6e59925ac427feaa01d295a1d3d3ad442efb",
+    "results/raw/experiment_7274/v640-design.md": "sha256:f73bb13e9e8b72e259a2abd00bec20ab5c917fd9a8938fc3a528ddd35bb177e0",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/audit_roadmap_gates.py": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7274_v640_source_contract.py": "sha256:16608947bc050f0ebd79ef5f443d7af0e0f548504b1258a320dc45e755b5e06e",
+    "scripts/harness_consumer_checks.py": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7274_v640_source_contract.py": "sha256:2f76162cfe2e72e52b9b1d9a008db058f0701bf8b9137d47ea7f158957d36641"
+  },
+  "source_contract_complete_score": 0,
+  "source_dispositions": [
+    {
+      "access_error": null,
+      "access_receipt_id": "source_controls",
+      "access_status": "http_success",
+      "access_status_code": 200,
+      "disposition": "adapt",
+      "falsifying_controls": [
+        "relation reversal",
+        "consistent entity renaming",
+        "insufficient evidence",
+        "equal-budget direct decision"
+      ],
+      "input_needs": "authenticated sources, fresh claims, matched relabeling, and private authority",
+      "local_evidence_claimed": false,
+      "method": "pair relation-direction and entity-renaming controls on fresh source groups",
+      "method_family": "source_controls",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2607.17047",
+      "refresh_date": "2026-09-13",
+      "refresh_version": "v1",
+      "retirement_overlap": "does not revive retired external-text rankers or infer neural difficulty from solver runtime",
+      "row_id": "source_controls_adapt",
+      "source_delta": "version_or_identity_delta",
+      "target_tasks": [
+        "exp7275-semantic-replay",
+        "exp7277-comparator-canary",
+        "exp7278-source-measurement",
+        "exp7279-source-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_receipt_id": "source_controls",
+      "access_status": "http_success",
+      "access_status_code": 200,
+      "disposition": "defer",
+      "falsifying_controls": [
+        "syntax-only",
+        "shuffled source",
+        "direct decision"
+      ],
+      "input_needs": "independently valid source measurement and non-self-certified labels",
+      "local_evidence_claimed": false,
+      "method": "defer another learned external-text ranker until source fidelity is independently valid",
+      "method_family": "source_controls",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2607.17047",
+      "refresh_date": "2026-09-13",
+      "refresh_version": "v1",
+      "retirement_overlap": "preserves the retired PHASE D external-text scorer boundary",
+      "row_id": "source_ranker_defer",
+      "source_delta": "version_or_identity_delta",
+      "target_tasks": [
+        "exp7279-source-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_receipt_id": "world_model_consumption",
+      "access_status": "http_success",
+      "access_status_code": 200,
+      "disposition": "adapt",
+      "falsifying_controls": [
+        "current feedback",
+        "typed-witness feedback",
+        "reversed arm order"
+      ],
+      "input_needs": "strict runtime identity, transition witness, policy trace, and consumed action",
+      "local_evidence_claimed": false,
+      "method": "separate model identity, valid prediction, trust, and consumed action receipts",
+      "method_family": "world_model_consumption",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2601.03905",
+      "refresh_date": "2026-09-13",
+      "refresh_version": "v2",
+      "retirement_overlap": "does not reopen public-game re-solves or infer Carnot bugs from an external benchmark",
+      "row_id": "world_model_consumption_adapt",
+      "source_delta": "version_or_identity_delta",
+      "target_tasks": [
+        "exp7276-arc-identity",
+        "exp7280-arc-live"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_receipt_id": "independent_update_admission",
+      "access_status": "http_success",
+      "access_status_code": 200,
+      "disposition": "implement",
+      "falsifying_controls": [
+        "frozen",
+        "unconditional replay",
+        "reset",
+        "feedback withheld"
+      ],
+      "input_needs": "frozen candidates, independent admission samples, continuing incumbent, and charged feedback",
+      "local_evidence_claimed": false,
+      "method": "admit archived updates on independent prospective samples and count rejected opportunities",
+      "method_family": "independent_update_admission",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2609.10873",
+      "refresh_date": "2026-09-13",
+      "refresh_version": "v1",
+      "retirement_overlap": "does not reuse nomination feedback for admission or revive harmful unchanged recognition",
+      "row_id": "independent_update_admission_implement",
+      "source_delta": "version_or_identity_delta",
+      "target_tasks": [
+        "exp7281-admission-prototype",
+        "exp7282-admission-learning",
+        "exp7283-admission-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_receipt_id": "acknowledgment_costs",
+      "access_status": "http_success",
+      "access_status_code": 200,
+      "disposition": "implement",
+      "falsifying_controls": [
+        "size one",
+        "max four",
+        "max sixteen",
+        "interactive dependent queries"
+      ],
+      "input_needs": "matched events, durable sync receipts, group size, and per-event acknowledgment time",
+      "local_evidence_claimed": false,
+      "method": "measure durable grouping against acknowledgment delay at the full storage boundary",
+      "method_family": "acknowledgment_costs",
+      "observed_version": null,
+      "primary_url": "https://extropic.ai/writing/z1t",
+      "refresh_date": "2026-09-13",
+      "refresh_version": "2026-09-04",
+      "retirement_overlap": "does not repeat the failed delta-log claim or transfer vendor speed estimates locally",
+      "row_id": "acknowledgment_costs_implement",
+      "source_delta": "version_or_identity_delta",
+      "target_tasks": [
+        "exp7284-commit-prototype",
+        "exp7285-commit-frontier"
+      ]
+    }
+  ],
+  "started_at_utc": "2026-09-13T18:02:34.999609+00:00",
+  "status": "complete",
+  "submission_performed": false,
+  "upload_performed": false,
+  "validation_receipts": [
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/scripts'\"'\"');from roadmap_schema import Roadmap;Roadmap.model_validate(yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text()))'",
+      "duration_s": 0.142815,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/roadmap_schema.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "roadmap_schema",
+      "passed": true,
+      "stdout_tail": "",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.428819,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/prior_failure.log",
+      "log_sha256": "sha256:cf8e6aa1ba9a3ad1d096c2fccbbd388f26f60a1e7d817497db0ce62acc6743bd",
+      "name": "prior_failure",
+      "passed": true,
+      "stdout_tail": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 12.050025,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/exclusion_manifest.log",
+      "log_sha256": "sha256:38161f53f4ec65fa5a57d4136137fe719ab9671585482697011818e0d5830617",
+      "name": "exclusion_manifest",
+      "passed": true,
+      "stdout_tail": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.056211,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/prompt_paths.log",
+      "log_sha256": "sha256:cc425b81cf6f173ff8b4e9f9e8cee64b17f0f15b308d5a479468b325128ccd3f",
+      "name": "prompt_paths",
+      "passed": true,
+      "stdout_tail": "  invented paths: 0\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.794924,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/gate_declarations.log",
+      "log_sha256": "sha256:7d3eb281a05fc10486c1e4e61c7587f4e738e120c87da4343f20ae5d37578ba0",
+      "name": "gate_declarations",
+      "passed": true,
+      "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 8,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/.coverage-exp7274-v640 '--include=*/experiment_7274_v640_source_contract.py' -m pytest -o addopts= -n 0 --basetemp=/tmp/exp7274-v640-focused-pytest /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7274_v640_source_contract.py -q",
+      "duration_s": 8.315516,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/focused_tests.log",
+      "log_sha256": "sha256:f67bbf99e30d7c1f39351754a65bea5a0203e77d09fa5b6ed8a54acb9906f49d",
+      "name": "focused_tests",
+      "passed": true,
+      "stdout_tail": ".........                                                                [100%]\n9 passed in 5.94s\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/.coverage-exp7274-v640 '--include=*/experiment_7274_v640_source_contract.py' --show-missing --fail-under=100",
+      "duration_s": 0.088587,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/focused_coverage.log",
+      "log_sha256": "sha256:ed83e7d46efd78555c8aeb15a5ebaa3f2bd82e78dccf9996e33aa0a211db283c",
+      "name": "focused_coverage",
+      "passed": true,
+      "stdout_tail": "Name                                                    Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------\npython/carnot/experiment_7274_v640_source_contract.py     507      0   100%\n-------------------------------------------------------------------------------------\nTOTAL                                                     507      0   100%\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7274_v640_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7274_v640_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7274_v640_source_contract.py",
+      "duration_s": 0.012501,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "passed": true,
+      "stdout_tail": "All checks passed!\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7274_v640_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7274_v640_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7274_v640_source_contract.py",
+      "duration_s": 0.010595,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "passed": true,
+      "stdout_tail": "3 files already formatted\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7274_v640_source_contract.py",
+      "duration_s": 0.094516,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "mypy",
+      "passed": true,
+      "stdout_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7274_v640_source_contract.py",
+      "duration_s": 0.02126,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "passed": true,
+      "stdout_tail": "OK: All tests reference specification requirements.\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,tempfile,yaml;from carnot.experiment_7274_v640_source_contract import run_gate_replays,gate_replays_complete;roadmap=yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text());directory=tempfile.TemporaryDirectory(prefix='\"'\"'exp7274-e2e-'\"'\"',dir='\"'\"'/tmp'\"'\"');rows=run_gate_replays(roadmap,pathlib.Path(directory.name));print({'\"'\"'rows'\"'\"':len(rows),'\"'\"'complete'\"'\"':gate_replays_complete(rows)});sys.exit(not gate_replays_complete(rows))'",
+      "duration_s": 0.638314,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/e2e_gate_controls.log",
+      "log_sha256": "sha256:c4e97cf8ae305b454aadf6a22341d8e6349b1f53d4f1f35529421059de87ab00",
+      "name": "e2e_gate_controls",
+      "passed": true,
+      "stdout_tail": "[exp7274] phase 4 gate start: edge=1/8 case=passing\n[exp7274] phase 4 gate end: edge=1 case=passing passed=True\n[exp7274] phase 4 gate start: edge=1/8 case=failed\n[exp7274] phase 4 gate end: edge=1 case=failed passed=False\n[exp7274] phase 4 gate start: edge=1/8 case=absent_field\n[exp7274] phase 4 gate end: edge=1 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=1/8 case=absent_file\n[exp7274] phase 4 gate end: edge=1 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=2/8 case=passing\n[exp7274] phase 4 gate end: edge=2 case=passing passed=True\n[exp7274] phase 4 gate start: edge=2/8 case=failed\n[exp7274] phase 4 gate end: edge=2 case=failed passed=False\n[exp7274] phase 4 gate start: edge=2/8 case=absent_field\n[exp7274] phase 4 gate end: edge=2 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=2/8 case=absent_file\n[exp7274] phase 4 gate end: edge=2 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=3/8 case=passing\n[exp7274] phase 4 gate end: edge=3 case=passing passed=True\n[exp7274] phase 4 gate start: edge=3/8 case=failed\n[exp7274] phase 4 gate end: edge=3 case=failed passed=False\n[exp7274] phase 4 gate start: edge=3/8 case=absent_field\n[exp7274] phase 4 gate end: edge=3 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=3/8 case=absent_file\n[exp7274] phase 4 gate end: edge=3 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=4/8 case=passing\n[exp7274] phase 4 gate end: edge=4 case=passing passed=True\n[exp7274] phase 4 gate start: edge=4/8 case=failed\n[exp7274] phase 4 gate end: edge=4 case=failed passed=False\n[exp7274] phase 4 gate start: edge=4/8 case=absent_field\n[exp7274] phase 4 gate end: edge=4 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=4/8 case=absent_file\n[exp7274] phase 4 gate end: edge=4 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=5/8 case=passing\n[exp7274] phase 4 gate end: edge=5 case=passing passed=True\n[exp7274] phase 4 gate start: edge=5/8 case=failed\n[exp7274] phase 4 gate end: edge=5 case=failed passed=False\n[exp7274] phase 4 gate start: edge=5/8 case=absent_field\n[exp7274] phase 4 gate end: edge=5 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=5/8 case=absent_file\n[exp7274] phase 4 gate end: edge=5 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=6/8 case=passing\n[exp7274] phase 4 gate end: edge=6 case=passing passed=True\n[exp7274] phase 4 gate start: edge=6/8 case=failed\n[exp7274] phase 4 gate end: edge=6 case=failed passed=False\n[exp7274] phase 4 gate start: edge=6/8 case=absent_field\n[exp7274] phase 4 gate end: edge=6 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=6/8 case=absent_file\n[exp7274] phase 4 gate end: edge=6 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=7/8 case=passing\n[exp7274] phase 4 gate end: edge=7 case=passing passed=True\n[exp7274] phase 4 gate start: edge=7/8 case=failed\n[exp7274] phase 4 gate end: edge=7 case=failed passed=False\n[exp7274] phase 4 gate start: edge=7/8 case=absent_field\n[exp7274] phase 4 gate end: edge=7 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=7/8 case=absent_file\n[exp7274] phase 4 gate end: edge=7 case=absent_file passed=False\n[exp7274] phase 4 gate start: edge=8/8 case=passing\n[exp7274] phase 4 gate end: edge=8 case=passing passed=True\n[exp7274] phase 4 gate start: edge=8/8 case=failed\n[exp7274] phase 4 gate end: edge=8 case=failed passed=False\n[exp7274] phase 4 gate start: edge=8/8 case=absent_field\n[exp7274] phase 4 gate end: edge=8 case=absent_field passed=False\n[exp7274] phase 4 gate start: edge=8/8 case=absent_file\n[exp7274] phase 4 gate end: edge=8 case=absent_file passed=False\n{'rows': 32, 'complete': True}\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7274_v640_source_contract import independent_reduce;errors=independent_reduce(json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7274/measured-terminal-candidate.json'\"'\"').read_text()));print(errors);sys.exit(bool(errors))'",
+      "duration_s": 0.706106,
+      "exit_code": 0,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "inference_substrate_class": "aggregation",
+      "log_path": "results/raw/experiment_7274/validation/independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "passed": true,
+      "stdout_tail": "[]\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7274/measured-terminal-candidate.json",
+      "duration_s": 0.565628,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/adversarial.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial",
+      "passed": true,
+      "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7274/measured-terminal-candidate.json",
+      "duration_s": 0.021129,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7274/validation/row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "row_consistency",
+      "passed": true,
+      "stdout_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true,
+  "yaml_authority_path": "research-roadmap.yaml",
+  "yaml_milestone": "2026.09.640",
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7274_v640_source_contract.json",
+      "gates": [],
+      "id": "exp7274-source-contract",
+      "order": 1,
+      "title": "V640 source ingestion and exact execution contract"
+    },
+    {
+      "deliverable": "results/experiment_7275_v640_semantic_replay.json",
+      "gates": [],
+      "id": "exp7275-semantic-replay",
+      "order": 2,
+      "title": "Repair source replay and direct-comparator measurement"
+    },
+    {
+      "deliverable": "results/experiment_7276_v640_arc_identity.json",
+      "gates": [],
+      "id": "exp7276-arc-identity",
+      "order": 3,
+      "title": "Repair live ARC identity handoff without relaxing evidence"
+    },
+    {
+      "deliverable": "results/experiment_7277_v640_comparator_canary.json",
+      "gates": [
+        {
+          "artifact_field": "semantic_replay_ready_score",
+          "op": "==",
+          "upstream": "exp7275-semantic-replay",
+          "value": 1
+        }
+      ],
+      "id": "exp7277-comparator-canary",
+      "order": 4,
+      "title": "Bounded Qwen3.8 comparator transport qualification"
+    },
+    {
+      "deliverable": "results/experiment_7278_v640_source_measurement.json",
+      "gates": [
+        {
+          "artifact_field": "semantic_replay_ready_score",
+          "op": "==",
+          "upstream": "exp7275-semantic-replay",
+          "value": 1
+        },
+        {
+          "artifact_field": "comparator_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7277-comparator-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7278-source-measurement",
+      "order": 5,
+      "title": "Fresh Qwen3.8 source comparison with valid equal-budget controls"
+    },
+    {
+      "deliverable": "results/experiment_7279_v640_source_audit.json",
+      "gates": [
+        {
+          "artifact_field": "source_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7278-source-measurement",
+          "value": 1
+        }
+      ],
+      "id": "exp7279-source-audit",
+      "order": 6,
+      "title": "Independent source fidelity and matched-coverage value audit"
+    },
+    {
+      "deliverable": "results/experiment_7280_v640_arc_live.json",
+      "gates": [
+        {
+          "artifact_field": "arc_identity_ready_score",
+          "op": "==",
+          "upstream": "exp7276-arc-identity",
+          "value": 1
+        }
+      ],
+      "id": "exp7280-arc-live",
+      "order": 7,
+      "title": "Live ARC generalization after strict identity repair"
+    },
+    {
+      "deliverable": "results/experiment_7281_v640_admission_prototype.json",
+      "gates": [],
+      "id": "exp7281-admission-prototype",
+      "order": 8,
+      "title": "Independent feedback admission for constraint-memory reuse"
+    },
+    {
+      "deliverable": "results/experiment_7282_v640_admission_learning.json",
+      "gates": [
+        {
+          "artifact_field": "admission_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7281-admission-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp7282-admission-learning",
+      "order": 9,
+      "title": "Prospective continuous self-learning with charged update admission"
+    },
+    {
+      "deliverable": "results/experiment_7283_v640_admission_audit.json",
+      "gates": [
+        {
+          "artifact_field": "admission_run_complete_score",
+          "op": "==",
+          "upstream": "exp7282-admission-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7283-admission-audit",
+      "order": 10,
+      "title": "Cold admission causality, opportunity, and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7284_v640_commit_prototype.json",
+      "gates": [],
+      "id": "exp7284-commit-prototype",
+      "order": 11,
+      "title": "Bounded group acknowledgment with durable constraint state"
+    },
+    {
+      "deliverable": "results/experiment_7285_v640_commit_frontier.json",
+      "gates": [
+        {
+          "artifact_field": "commit_protocol_ready_score",
+          "op": "==",
+          "upstream": "exp7284-commit-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp7285-commit-frontier",
+      "order": 12,
+      "title": "Matched durability throughput and acknowledgment-latency frontier"
+    },
+    {
+      "deliverable": "results/experiment_7286_v640_board_state.json",
+      "gates": [],
+      "id": "exp7286-board-state",
+      "order": 13,
+      "title": "GateMate changed-state review and graduated-board continuity"
+    },
+    {
+      "deliverable": "results/experiment_7287_v640_capstone.json",
+      "gates": [],
+      "id": "exp7287-capstone",
+      "order": 14,
+      "title": "V640 independent evidence matrix and next-branch decisions"
+    }
+  ]
+}

@@ -1,5 +1,92 @@
 # Research Reporting Capability Specification
 
+## V640 source ingestion and exact execution contract — 2026-09-13
+
+**Status:** Implemented. This receipt is advisory and makes no scientific claim.
+
+### REQ-REPORT-7274: Authenticate the V640 source and task contract
+
+Exp7274 SHALL select only a roadmap whose milestone is `2026.09.640`. It SHALL
+prefer `research-roadmap.yaml` after activation. It MAY use
+`research-roadmap-next.yaml` before activation. It SHALL freeze the selected
+YAML bytes and the bytes at the selected roadmap's `milestone_doc` path. It
+SHALL not edit either authority.
+
+Exp7274 SHALL parse the Markdown and YAML contracts independently. It SHALL
+compare exactly fourteen ordered IDs, titles, deliverables, and structured
+gates for `exp7274` through `exp7287`. A readable milestone, task, path, or gate
+mismatch SHALL produce a terminal `disqualified` receipt. The task SHALL not
+activate, repair, or infer missing contract rows. A missing, quarantined, or
+retired external prerequisite SHALL produce terminal `blocked`, not `partial`,
+with an exact `gate_check_summary`.
+
+Exp7274 SHALL run the shipped roadmap schema, prior-failure, exclusion,
+prompt-path, and gate-declaration checks. It SHALL exercise the real conductor
+gate evaluator against temporary producer artifacts. Each of the eight V640
+edges SHALL retain true, false, missing-field, and missing-file observations as
+distinct `gate_control_rows`.
+
+Exp7274 SHALL ingest the dated V640 refresh without converting literature into
+local evidence. It SHALL make no more than four requests to primary records.
+`source_dispositions` SHALL cover source controls, world-model consumption,
+independent update admission, and acknowledgment costs. Each row SHALL retain
+the date, version, access state, implement, adapt, or defer decision, required
+inputs, falsifying controls, target tasks, and overlap with retired work.
+
+The terminal artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, and
+zero current load, generation, and usable-answer counters. CPU parsing and gate
+replay SHALL use `inference_substrate=cpu_exact_solver_or_simulator` and the
+same `inference_substrate_class`. A read-only independent reducer SHALL declare
+`aggregation_from_upstream_artifacts` and class `aggregation` in its receipt.
+Host work SHALL use `execution_venue=host`. The task SHALL measure monotonic
+duration and SHALL not pad it.
+
+The artifact SHALL include every field named by the frozen Exp7274 prompt.
+Historical model facts, source responses, and negative gate fixtures SHALL live
+in hashed sidecars. `rows` SHALL equal the fourteen literal `contract_rows`.
+`source_contract_complete_score` SHALL equal one only when both selected files
+agree, all source dispositions are complete, all gate controls are distinct,
+and all scoped checks pass. A contract mismatch SHALL keep the score at zero
+without changing the terminal completion state.
+
+#### SCENARIO-REPORT-7274-CONTRACT: A stale design is disqualified
+
+**Given** independently parsed V640 YAML and named Markdown bytes
+**When** their milestone, IDs, order, titles, paths, or gates differ
+**Then** Exp7274 retains fourteen comparison rows, sets the completion score to
+zero, and records a terminal `disqualified` verdict without repairing either
+authority.
+
+#### SCENARIO-REPORT-7274-GATES: Four controls remain distinct
+
+**Given** every structured gate from an exact temporary plan copy
+**When** the real evaluator reads true, false, missing-field, and missing-file
+producer fixtures
+**Then** each observation remains distinct and a missing value cannot be
+reported as a measured false value.
+
+#### SCENARIO-REPORT-7274-SOURCES: External findings remain non-local
+
+**Given** the 2026-09-13 refresh and at most four bounded primary requests
+**When** Exp7274 records source dispositions
+**Then** every method row retains date, version, access, input, control, target,
+and retirement boundaries while `local_evidence_claimed` remains false.
+
+#### SCENARIO-REPORT-7274-ARTIFACT: Evidence controls the terminal result
+
+**Given** a complete, disqualified, or externally blocked candidate under
+`results/raw/`
+**When** independent reduction and validation recompute its rows, hashes,
+score, lifecycle, counters, and checksum
+**Then** only the measured candidate can be atomically published to the declared
+terminal result path.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7274_v640_source_contract.py`,
+`scripts/experiments/experiment_7274_v640_source_contract.py`, and
+`tests/python/test_experiment_7274_v640_source_contract.py`. The terminal
+receipt is `results/experiment_7274_v640_source_contract.json`.
+
 ## V639 source ingestion and exact execution contract — 2026-09-13
 
 **Status:** Implemented. This receipt is advisory and makes no scientific claim.
