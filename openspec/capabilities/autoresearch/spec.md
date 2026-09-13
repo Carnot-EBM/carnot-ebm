@@ -2355,6 +2355,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-021 | N/A | Implemented (`python/carnot/autoresearch/toy_benchmarks.py`, `scripts/autoresearch_conductor_round.py`) | 16 Python (`test_autoresearch_toy_benchmarks.py`) + shared conductor-round test file |
 | REQ-AUTO-022 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 2 Python (shared conductor-round test file) |
 | REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
+| REQ-AUTO-024 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 5 Python (shared conductor-round test file) |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3953,6 +3954,42 @@ iteration 1 is evaluated and, if it beats baseline, accepted --
 **Then** the generator is called exactly 2 times (the outer bound wins),
 and `result.generator_exhausted` is `False` (the empty-streak threshold was
 never reached; the loop ended on `max_iterations` instead).
+
+### REQ-AUTO-024: Correct Generator Attribution in Commit Messages
+
+**Origin:** the first two real production autoresearch rounds after REQ-AUTO-023
+shipped both ran entirely on the Fable 5.1 fallback (`fable_fallback_iterations:
+[0, 1, 2, 3, 4]` -- codex failed every single iteration), yet all 5 resulting
+git commits said "Hypothesis proposed via codex exec (see call_codex)". The
+text was a hardcoded literal in `commit_accepted_hypothesis`, never checked
+against which generator actually produced the winning hypothesis.
+
+`ExperimentEntry` (the shared, REQ-AUTO-008 dataclass `orchestrator.py`
+returns) carries no generator-provenance field, and this script does not own
+that dataclass -- widening it is out of scope here. Instead, the system SHALL
+recover which generator won from the entry id's own shape:
+`run_loop_with_generator` names each entry `llm-<timestamp>-<iteration:03d>`,
+and `fable_fallback_iterations` (already tracked per REQ-AUTO-022) records
+which iterations needed the fallback. `generator_label_for_entry(entry_id,
+fable_fallback_iterations)` SHALL parse the trailing iteration number and
+return a label naming Fable when that iteration is in the fallback list,
+codex otherwise -- falling back to the codex label (never raising) if the id
+does not match the expected shape. `commit_accepted_hypothesis` SHALL accept
+this label and interpolate it into the commit message in place of the
+hardcoded text.
+
+#### SCENARIO-AUTO-024-A: A Fable-produced acceptance is attributed to Fable
+
+**Given** a round where the generator reports iteration 0 as a fallback
+iteration and iteration 0's hypothesis is accepted
+**When** the round commits that hypothesis
+**Then** the commit message names Fable, not codex.
+
+#### SCENARIO-AUTO-024-B: A codex-produced acceptance is attributed to codex
+
+**Given** a round where no iteration needed the fallback
+**When** an accepted hypothesis is committed
+**Then** the commit message names codex exec, matching the historical text.
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

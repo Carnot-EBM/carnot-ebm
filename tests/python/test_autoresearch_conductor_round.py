@@ -68,6 +68,35 @@ class TestCommitAcceptedHypothesis:
         )
         assert record_path.exists()
 
+    def test_generator_label_lands_in_the_commit_message(self, tmp_path: Path) -> None:
+        """REQ-AUTO-024. Regression for the round-1 incident: every commit
+        message said "via codex exec" even when Fable produced the
+        hypothesis, because the text was hardcoded rather than passed in."""
+        _init_repo(tmp_path)
+        checker = ConstitutionChecker()
+        entry = _make_entry()
+
+        sha = acr.commit_accepted_hypothesis(
+            checker,
+            entry,
+            "double_well",
+            0.05,
+            -6.0,
+            project_root=tmp_path,
+            generator_label="Fable 5.1 fallback (codex returned nothing this iteration)",
+        )
+
+        assert sha is not None
+        msg = subprocess.run(
+            ["git", "log", "-1", "--format=%B", sha],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        assert "via Fable 5.1 fallback" in msg
+        assert "via codex exec" not in msg
+
     def test_commit_message_carries_the_score(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
         checker = ConstitutionChecker()
@@ -397,6 +426,22 @@ class TestGenerateHypothesesWithFallback:
         assert log == [0]  # the attempt is still recorded even though it also failed
 
 
+class TestGeneratorLabelForEntry:
+    """REQ-AUTO-024: the commit-message attribution bug -- round 1's real
+    production commits all said "via codex exec" even though
+    fable_fallback_iterations showed codex failed every single iteration."""
+
+    def test_iteration_not_in_fallback_list_is_codex(self) -> None:
+        assert acr.generator_label_for_entry("llm-20260913-082215-000", [1, 2]) == "codex exec"
+
+    def test_iteration_in_fallback_list_is_fable(self) -> None:
+        label = acr.generator_label_for_entry("llm-20260913-082215-002", [0, 2, 4])
+        assert "Fable" in label
+
+    def test_unparseable_id_defaults_to_codex_not_a_crash(self) -> None:
+        assert acr.generator_label_for_entry("not-the-expected-shape", [0]) == "codex exec"
+
+
 class TestRecomputeMetrics:
     """Unit tests for the REQ-AUTO-021 fix to adversarial review finding 1."""
 
@@ -497,6 +542,51 @@ class TestRunRound:
         ).stdout
         assert log.count("\n") == 1  # only the seed commit -- the fabricated claim never landed
         assert not (tmp_path / "ops" / "autoresearch_discoveries").exists()
+
+    def test_fable_produced_hypothesis_is_attributed_to_fable_end_to_end(
+        self, tmp_path: Path
+    ) -> None:
+        """REQ-AUTO-024, full pipeline. Round 1's real production commits all
+        said "via codex exec" although fable_fallback_iterations showed codex
+        failed every iteration -- this reproduces the exact wiring
+        (run_round -> generator closure -> commit_accepted_hypothesis) that
+        must attribute correctly."""
+        _init_repo(tmp_path)
+
+        def fake_generator(
+            _model,
+            _timeout,
+            _baselines,
+            _failures,
+            iteration,
+            fallback_log,
+            _fable_timeout,
+        ):
+            fallback_log.append(iteration)  # simulate: codex failed, Fable won
+            return [
+                ("fable win", "def run(d): return {'double_well': {'final_state': [1.0, 1.0]}}")
+            ]
+
+        with (
+            patch.object(acr, "codex_available", return_value=True),
+            patch.object(acr, "generate_hypotheses_with_fallback", side_effect=fake_generator),
+        ):
+            acr.run_round(
+                model="gpt-6-astra",
+                max_iterations=1,
+                project_root=tmp_path,
+                receipt_path=tmp_path / "receipt.md",
+            )
+
+        msg = subprocess.run(
+            ["git", "log", "-1", "--format=%B"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout
+        assert "via Fable 5.1 fallback" in msg
+        assert "via codex exec" not in msg
 
     def test_both_generators_failing_leaves_reasons_in_the_receipt(self, tmp_path: Path) -> None:
         """REQ-AUTO-022 / SCENARIO-AUTO-022-A. Real call_codex/call_fable

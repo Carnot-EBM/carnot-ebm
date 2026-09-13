@@ -101,6 +101,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -131,8 +132,9 @@ DEFAULT_CODEX_TIMEOUT_S = 300
 # prompt returns in ~15-30s; the real autoresearch hypothesis prompt timed
 # out at 100s). This is slower reasoning at max effort, not a bug -- give it
 # real headroom rather than reusing codex's budget. The overall round has an
-# 1800s outer timeout (_run_audit_with_receipt) and this only fires on the
-# rare fallback path, so there is room.
+# 3600s outer timeout (_run_audit_with_receipt, bumped from 1800s alongside
+# REQ-AUTO-023's retry budget) and this only fires on the fallback path, so
+# there is room.
 DEFAULT_FABLE_TIMEOUT_S = 600
 
 # REQ-AUTO-021: unlike hypothesis_generator.DEFAULT_SYSTEM_PROMPT (which asks
@@ -421,6 +423,28 @@ def generate_hypotheses_with_fallback(
     return fable_generate_hypotheses(fable_timeout, baselines, recent_failures, iteration)
 
 
+_ENTRY_ID_ITERATION = re.compile(r"-(\d+)$")
+
+
+def generator_label_for_entry(entry_id: str, fable_fallback_iterations: Sequence[int]) -> str:
+    """REQ-AUTO-024: which generator actually produced this entry.
+
+    orchestrator.py's `run_loop_with_generator` names each entry
+    ``llm-<timestamp>-<iteration:03d>`` (see its own exp_id line) -- the
+    trailing iteration number is the only place that survives to tell
+    codex and Fable apart after the fact, since `ExperimentEntry` itself
+    (a shared, REQ-AUTO-008 dataclass) carries no generator-provenance
+    field, and this script does not own that dataclass. Falls back to
+    "codex exec" (the historical, still-correct-in-the-common-case
+    hardcoded text) if the id does not match the expected shape, rather
+    than raising on an unexpected format.
+    """
+    match = _ENTRY_ID_ITERATION.search(entry_id)
+    if match and int(match.group(1)) in fable_fallback_iterations:
+        return "Fable 5.1 fallback (codex returned nothing this iteration)"
+    return "codex exec"
+
+
 def _git(project_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", *args], cwd=project_root, check=check, capture_output=True, text=True
@@ -438,6 +462,7 @@ def commit_accepted_hypothesis(
     baseline_after: float | None,
     *,
     project_root: Path,
+    generator_label: str = "codex exec",
 ) -> str | None:
     """Persist one accepted hypothesis as its own scoped git commit.
 
@@ -451,6 +476,13 @@ def commit_accepted_hypothesis(
     unsanitized name is a path-traversal vector; a non-JSON-serializable
     metric must not crash before the receipt is written; a failed commit
     must not leave an untracked file for a later `git add -A` to sweep in).
+
+    `generator_label` (REQ-AUTO-024) names which generator actually
+    produced this hypothesis in the commit message -- callers should pass
+    `generator_label_for_entry(entry.id, fable_fallback_iterations)`, not
+    rely on the default. The default of "codex exec" exists only so the
+    many tests exercising commit mechanics (not attribution) don't need a
+    value they don't care about.
     """
     if not _SAFE_BENCHMARK_NAME.match(benchmark_name):
         return None
@@ -496,9 +528,9 @@ def commit_accepted_hypothesis(
         f"(final_energy {baseline_before} -> {baseline_after})\n\n"
         f"{entry.hypothesis_description}\n\n"
         "Autonomous mutation round -- no operator or outer-loop session\n"
-        "involved in this commit. Hypothesis proposed via codex exec (see\n"
-        "call_codex), accepted by the existing 3-gate evaluator\n"
-        "(REQ-AUTO-005), persisted per REQ-AUTO-019/REQ-AUTO-020.\n"
+        f"involved in this commit. Hypothesis proposed via {generator_label},\n"
+        "accepted by the existing 3-gate evaluator (REQ-AUTO-005),\n"
+        "persisted per REQ-AUTO-019/REQ-AUTO-020.\n"
     )
     # -- <path> (a pathspec, not a bare flag) scopes the commit to ONLY this
     # file even if something else is already staged in the index -- a bare
@@ -625,6 +657,7 @@ def run_round(
                 energy_before.get(bench_name),
                 after_energy,
                 project_root=project_root,
+                generator_label=generator_label_for_entry(entry.id, fable_fallback_iterations),
             )
             if sha:
                 energy_before[bench_name] = after_energy

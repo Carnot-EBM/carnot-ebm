@@ -26711,3 +26711,28 @@ set, ruff/mypy clean.
 
 Both gaps named in the original "two-for-two zero-iteration production fires" entry (no retry, no
 diagnostic) are now closed.
+
+## 2026-09-13: commit-message generator-attribution bug fixed — REQ-AUTO-024
+
+The first two real production autoresearch rounds after REQ-AUTO-022/023 shipped both ran
+entirely on the Fable 5.1 fallback (`fable_fallback_iterations: [0, 1, 2, 3, 4]` -- codex
+failed every iteration both times), producing 5 real accepted hypotheses and git commits.
+Every one of those commit messages said "Hypothesis proposed via codex exec (see call_codex)"
+-- a hardcoded literal, never checked against which generator actually won.
+
+**The fix.** `generator_label_for_entry(entry_id, fable_fallback_iterations)` parses the
+iteration number `run_loop_with_generator` embeds in each entry id
+(`llm-<timestamp>-<iteration:03d>`) and checks it against the already-tracked
+`fable_fallback_iterations` list (REQ-AUTO-022) to decide which generator produced it, falling
+back to the historical "codex exec" text if the id doesn't match the expected shape (never
+raising). `commit_accepted_hypothesis` now takes this as an explicit `generator_label`
+parameter instead of hardcoding the text; `run_round` computes and passes it per accepted
+entry. `ExperimentEntry` itself (the shared REQ-AUTO-008 orchestrator dataclass) was
+deliberately NOT widened with a new field -- out of scope, and the entry-id parsing approach
+needed no shared-module change at all.
+
+Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-024. 5 new tests (unit tests for
+the label helper, a commit-message test, and a full run_round-to-commit end-to-end
+reproduction of the exact incident), 158/158 across the full autoresearch test set, ruff/mypy
+clean. Also fixed a stale comment (still said "1800s outer timeout" after the REQ-AUTO-023
+timeout bump to 3600s -- caught while working in the same file).

@@ -16488,3 +16488,12 @@ timeout for the round is now 3600s (was 1800s) to fit that worst case. Both gaps
 2026-09-12 "two-for-two zero-iteration production fires" entry are now closed.
 Next: watch the next real production fire — it should now show multiple generator attempts in
 `ops/autoresearch_conductor_report.md` before giving up, if it gives up at all.
+
+## 2026-09-13: autoresearch commit attribution fixed (REQ-AUTO-024)
+
+Working: autoresearch commit messages now correctly name Fable 5.1 vs codex exec as the
+generator, derived from the entry id + fable_fallback_iterations rather than a hardcoded
+string. Two real production rounds fired since the REQ-AUTO-023 retry fix shipped, producing
+the project's first-ever accepted autoresearch discoveries (5 real git-committed hypotheses,
+both DoubleWell and Rosenbrock benchmarks driven to near machine-precision zero) — this fix
+corrects their commit-message attribution after the fact was noticed.
