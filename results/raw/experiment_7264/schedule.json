@@ -1,0 +1,2756 @@
+{
+  "schedule": [
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:ad41d11ecc665ebd0faa11c0567761e133ef6b03668784600d96e9add805c6f1",
+      "call_order": 0,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237001,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaaa precedes Caaaab.",
+      "prompt_sha256": "sha256:47a8aba663d871d492859d3cae82a220ed7906d5299d8684420ba1c74c599f2d",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237001,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:6f478c4d676ac11789dd9c1fe0571c97a8ecf5aaf5406cd1b3e2704f2a7cb809",
+      "call_order": 1,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237002,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaaa precedes Caaaab.",
+      "prompt_sha256": "sha256:8400532af842cc5538d92fee6644e8f09d767ec282553b63351a5d83f0f36c52",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237002,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:1f2d85d97ae822038ab8a99bef57fc15a94b1a98dc6d262ed9da74478ab46975",
+      "call_order": 2,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237003,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaaa precedes Caaaab.",
+      "prompt_sha256": "sha256:4780700530c25ddc735a7871d3726b1c23bf1c590fd780e7ac161004fa060e5b",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237003,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:65c3d9b4037c0a8037ac84512fb561e67410bb24678e75e48212939318419760",
+      "call_order": 3,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237004,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaaa precedes Caaaab.",
+      "prompt_sha256": "sha256:694bbc03aed1ea262d258e0a8f94af4d3643c0c50874fa185e18f5c57196cf8f",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237004,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:c6b43d87e4b6fb718aeb2e40dd6adc70d5a89ffa2efa27ee8ab50761005ee8d4",
+      "call_order": 4,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237005,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaaa precedes Caaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-76541c4abc6149ebfb44-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaaa\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-76541c4abc6149ebfb44-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaab\"}]",
+      "prompt_sha256": "sha256:99fa375f65dce75942b5b46eaf3ee3864da4d1bce82cd060de9e3efcb756712c",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237005,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:803cba6481948d32ec30b4620c89f403a0bd8c028998656034ddda355a70de6b",
+      "call_order": 5,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237006,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-76541c4abc6149ebfb44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:e2eb8db7d36c9d1a487e973d845861e6f810d486246bfe99c91c38ab34f9d69f",
+      "input_text": "Caaaaa precedes Caaaab.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaa"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-76541c4abc6149ebfb44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaab"
+          }
+        ],
+        "text": "Caaaaa precedes Caaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaaa precedes Caaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-76541c4abc6149ebfb44-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaaa\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-76541c4abc6149ebfb44-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaab\"}]",
+      "prompt_sha256": "sha256:5bf99b7d1cdd0d1ce34ca4b09d92808e2d2dadc05ccfd788cc63c5b2168a8a96",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237006,
+      "unit_id": "u-76541c4abc6149ebfb44"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:9081724a603e236e7bda02aeff24be1a846016045b7dd0c5e20429cadc4e11e1",
+      "call_order": 6,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237007,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaad"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaae"
+          }
+        ],
+        "text": "Caaaad precedes Caaaae."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:dba6215a5b7f835cef125b3bdfc5d9abdc015f533ef46a7f62890d6b61dacd08",
+      "input_text": "Caaaad precedes Caaaae.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaad precedes Caaaae."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaad precedes Caaaae.",
+      "prompt_sha256": "sha256:4436ba1052affaa86f4336ddda5645d0df259438887a718649dd352106a894bc",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237007,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:425e52c884bfe5957148aa8ca08e265f0949b26f4e6e165033e3b1a1d5e339ae",
+      "call_order": 7,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237008,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaae"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaad"
+          }
+        ],
+        "text": "Caaaae precedes Caaaad."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:c0f13b0442f2f7518f44d9f72e0194db524c4772390b0f12ab390c6c9bb8ce16",
+      "input_text": "Caaaae precedes Caaaad.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaae precedes Caaaad."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaae precedes Caaaad.",
+      "prompt_sha256": "sha256:bad25c1ec31110c19288ff750571c7585fae31fd1d2729eec9b52495b9c20e87",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237008,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:5f12cddf2146b5875e3f92b488465f741ac053ef23307a2b012d68432165c303",
+      "call_order": 8,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237009,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaad"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaae"
+          }
+        ],
+        "text": "Caaaad precedes Caaaae."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:dba6215a5b7f835cef125b3bdfc5d9abdc015f533ef46a7f62890d6b61dacd08",
+      "input_text": "Caaaad precedes Caaaae.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaad precedes Caaaae."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaad precedes Caaaae.",
+      "prompt_sha256": "sha256:fc9fbc86f92cc022952ea98bfe20d5792fe9ea17e07d963ff9e39534f8daa19e",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237009,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:9e451fe974269e78f95842d5ec14f4eca5bd56e0ba6768c0cb9d303067e05710",
+      "call_order": 9,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237010,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaae"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaad"
+          }
+        ],
+        "text": "Caaaae precedes Caaaad."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:c0f13b0442f2f7518f44d9f72e0194db524c4772390b0f12ab390c6c9bb8ce16",
+      "input_text": "Caaaae precedes Caaaad.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaae precedes Caaaad."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaae precedes Caaaad.",
+      "prompt_sha256": "sha256:916f7a679b2e132dc38294bb545eb824567684e15587c2178a6eb445121593b8",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237010,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:cc5e520706838ac2d53464df43128b7836ab8c6fe2aa4bb58e492200b057679f",
+      "call_order": 10,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237011,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaad"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaae"
+          }
+        ],
+        "text": "Caaaad precedes Caaaae."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:dba6215a5b7f835cef125b3bdfc5d9abdc015f533ef46a7f62890d6b61dacd08",
+      "input_text": "Caaaad precedes Caaaae.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaad"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaae"
+          }
+        ],
+        "text": "Caaaad precedes Caaaae."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaad precedes Caaaae.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-a214b611eea40320112b-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaad\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-a214b611eea40320112b-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaae\"}]",
+      "prompt_sha256": "sha256:f9aa65d424e950be964de357e15d76405e5fafae1694eaa5e9acae95364e2ab3",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237011,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:df6f0f85fe0eeb017848ce19d65bf8430b61e3ab9ba55cf0a8c13566543c822a",
+      "call_order": 11,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237012,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-a214b611eea40320112b-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaae"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaad"
+          }
+        ],
+        "text": "Caaaae precedes Caaaad."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:c0f13b0442f2f7518f44d9f72e0194db524c4772390b0f12ab390c6c9bb8ce16",
+      "input_text": "Caaaae precedes Caaaad.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaae"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-a214b611eea40320112b-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaad"
+          }
+        ],
+        "text": "Caaaae precedes Caaaad."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaae precedes Caaaad.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-a214b611eea40320112b-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaae\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-a214b611eea40320112b-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaad\"}]",
+      "prompt_sha256": "sha256:0183b8f21ff6227e8340d5edeeb9db35c067141532d4af964265e2b323cd7975",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237012,
+      "unit_id": "u-a214b611eea40320112b"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:a58f3a5fa348ee58cdd3b6044154119256fd10913772433f84a1d68dbd33bf49",
+      "call_order": 12,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237013,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:d72aec2fbfb3b541c4ef8749286e599fcd0948e94c749f711e6e24a66c957ce2",
+      "input_text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaag precedes Caaaah. Caaaah precedes Caaaai.",
+      "prompt_sha256": "sha256:284f9bf0bd824b6786494917db79ae365574d44a83ab5024a8147e85344a8bd4",
+      "reference_grammar_sha256": "sha256:051a522dddae0ff24a963cbd20af96ff98618e8e148352934b4d7b22cad5f66b",
+      "request_timeout_s": 90.0,
+      "seed": 7237013,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:114e4242f7fde29fc5f8681fd888a8335c9555fb64680c2c543fc0f7316af5a6",
+      "call_order": 13,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237014,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:804f4b24cddfac8290ae7f483c09792ba5e852f5422d9f394c36492b85aae7c0",
+      "input_text": "Caaaag precedes Caaaai.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaag precedes Caaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaag precedes Caaaai.",
+      "prompt_sha256": "sha256:e96b74d75a86836d898ecf75eded48202c66365224a563e64506b4078a4a7dd8",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237014,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:9a6cba45bcf0529bdce87a933b579627fb6fb27ff1d98b044caa35a307a5bd56",
+      "call_order": 14,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237015,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:d72aec2fbfb3b541c4ef8749286e599fcd0948e94c749f711e6e24a66c957ce2",
+      "input_text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaag precedes Caaaah. Caaaah precedes Caaaai.",
+      "prompt_sha256": "sha256:5b947bfaf28d8db9b01e0e8dd2dabeb3e3fc29e5287f838dbe2800bd10dcb561",
+      "reference_grammar_sha256": "sha256:051a522dddae0ff24a963cbd20af96ff98618e8e148352934b4d7b22cad5f66b",
+      "request_timeout_s": 90.0,
+      "seed": 7237015,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:3b71d93e562a925ed97220baf9981579160c1ae566916aedaa65da58667015fb",
+      "call_order": 15,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237016,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:804f4b24cddfac8290ae7f483c09792ba5e852f5422d9f394c36492b85aae7c0",
+      "input_text": "Caaaag precedes Caaaai.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaag precedes Caaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaag precedes Caaaai.",
+      "prompt_sha256": "sha256:2f577133a20962c39b33cbea58e6c66becfeda8a30427daa2eedd7a410b89669",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237016,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:c2a13809af4c619f810d9743324888f4c3f10464b6c488ad649be0e38dfbca6d",
+      "call_order": 16,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237017,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+      "input_sha256": "sha256:d72aec2fbfb3b541c4ef8749286e599fcd0948e94c749f711e6e24a66c957ce2",
+      "input_text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaah"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaah. Caaaah precedes Caaaai."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaag precedes Caaaah. Caaaah precedes Caaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaag\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaah\"},{\"byte_end\":30,\"byte_start\":24,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Caaaah\"},{\"byte_end\":46,\"byte_start\":40,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Caaaai\"}]",
+      "prompt_sha256": "sha256:799ebe1b3aa8dc22c61d57ba61935e63dada3bb8933ec43e79f8c155147f422d",
+      "reference_grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+      "request_timeout_s": 90.0,
+      "seed": 7237017,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:87515a051f2197d4c733ced1bd1c5779367e3e113e90eb8bad8b81ea656f56b3",
+      "call_order": 17,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237018,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaai."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:804f4b24cddfac8290ae7f483c09792ba5e852f5422d9f394c36492b85aae7c0",
+      "input_text": "Caaaag precedes Caaaai.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaag"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-aeecd8bfd1b0cf345254-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaai"
+          }
+        ],
+        "text": "Caaaag precedes Caaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaag precedes Caaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaag\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-aeecd8bfd1b0cf345254-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaai\"}]",
+      "prompt_sha256": "sha256:b811a355cb412fda96e51a29669f991b6dcf45b386e6b70c1625ca628e7af8d7",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237018,
+      "unit_id": "u-aeecd8bfd1b0cf345254"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:bea53811ccd8752999927e29958a2715e665554ba034f40c968973bdcfcd4865",
+      "call_order": 18,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237019,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaak"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:8e5ba4db4a1f0f9d7effda98bca7b57036a0944b89e6f3ebcd35b753d4ad6ae8",
+      "input_text": "Caaaaj precedes Caaaak.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaaj precedes Caaaak.",
+      "prompt_sha256": "sha256:4c63aae9b1114438534967a9eadc32dd4e166a64682cfc381389769faf7e70d6",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237019,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:031c87a667463ea6ad97b95fc45959fbe292719bd85337bc154b722aa5d835b6",
+      "call_order": 19,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237020,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaal"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:fcc0281e27ca28b41cf7758e736495897c1002e43018c306a2d71a4d18337caa",
+      "input_text": "Caaaaj precedes Caaaal.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaaj precedes Caaaal.",
+      "prompt_sha256": "sha256:06be35eb1207df8d6c977aa5f030371327ab01553cb90135e5e4f2e8e0dba1e1",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237020,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:38dd678346190727776af3f72b2760db986220ee0dd8fa43b8fef7c882042836",
+      "call_order": 20,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237021,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaak"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:8e5ba4db4a1f0f9d7effda98bca7b57036a0944b89e6f3ebcd35b753d4ad6ae8",
+      "input_text": "Caaaaj precedes Caaaak.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaaj precedes Caaaak.",
+      "prompt_sha256": "sha256:aeec973c5d4cf3218c57ac94127afec27648b28568d51fa4f13eef1a5c1bff8e",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237021,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:051c50ea1945e62526145ba076b74cb8b2a1bdb3f538a1e930d689d52b421e66",
+      "call_order": 21,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237022,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaal"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:fcc0281e27ca28b41cf7758e736495897c1002e43018c306a2d71a4d18337caa",
+      "input_text": "Caaaaj precedes Caaaal.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaaj precedes Caaaal.",
+      "prompt_sha256": "sha256:366df65f8eb4e2f36f74246613329b4645399aac0640f3498215ca2196e70a1b",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237022,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:571d85a3757401dadf5cb116c0eb04bf5b619fbb8774ad89fa0454bedbd54627",
+      "call_order": 22,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237023,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaak"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:8e5ba4db4a1f0f9d7effda98bca7b57036a0944b89e6f3ebcd35b753d4ad6ae8",
+      "input_text": "Caaaaj precedes Caaaak.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaak"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaak."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaaj precedes Caaaak.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-6c0a2f61373ff52aff44-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaaj\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-6c0a2f61373ff52aff44-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaak\"}]",
+      "prompt_sha256": "sha256:7c659fc6455d5c64997e4a547fad1c5ea4db1e55d22f745e5c2e73c97cdd93a4",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237023,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:168ae4a37ea9ce038d91ccb889e93626fa69b82cd300836b9af4cb4e93030d97",
+      "call_order": 23,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237024,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaal"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:fcc0281e27ca28b41cf7758e736495897c1002e43018c306a2d71a4d18337caa",
+      "input_text": "Caaaaj precedes Caaaal.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaj"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-6c0a2f61373ff52aff44-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaal"
+          }
+        ],
+        "text": "Caaaaj precedes Caaaal."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaaj precedes Caaaal.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-6c0a2f61373ff52aff44-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaaj\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-6c0a2f61373ff52aff44-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaal\"}]",
+      "prompt_sha256": "sha256:75bc8b852e0df06520aa72c872181a9793f4cf836d5779dff53a266f39e17a98",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237024,
+      "unit_id": "u-6c0a2f61373ff52aff44"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:2dfec489006babca2169cbd823eff13a82f0f19803a76a8ee8471f9d7e3958c7",
+      "call_order": 24,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237025,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaam precedes Caaaan.",
+      "prompt_sha256": "sha256:acff083cfaa8eaec473b2d71abf12ac3f9cc97308ba9750175364d8f081bb4ae",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237025,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:edf3dccff2cc9e93b09f9c1e0f941efd840c7096ba799b42eb4e72f664a81d3d",
+      "call_order": 25,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237026,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaam precedes Caaaan.",
+      "prompt_sha256": "sha256:394673a403b7907772136290abcf3133813e0cfbc425464569ec32cefa9fd5dd",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237026,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:7af517e85d2f3318410e95cf3a6fbb1d1e14d6b05ea301f3c8cb4961f19c6126",
+      "call_order": 26,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237027,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaam precedes Caaaan.",
+      "prompt_sha256": "sha256:c85375241967b1a76a2f9d0781c4ed56ce11e100506c5ec421bf666cc8671112",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237027,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:41c2dc93ee298ae347be4835f1239dd05411fb8e5079017ed25ccd7c83bf5351",
+      "call_order": 27,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237028,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaam precedes Caaaan.",
+      "prompt_sha256": "sha256:13df231b88527e2e883e4d8f7cfc21daf6d8bdf60c982ae72833f1cb50f827b5",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237028,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:726c521d7edcd0e3b8fcf52a9a4ab35753d2658c18f02eae966ecd2dfd582dfd",
+      "call_order": 28,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237029,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaam precedes Caaaan.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-b7139cce9d39677e2166-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaam\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-b7139cce9d39677e2166-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaan\"}]",
+      "prompt_sha256": "sha256:30eed4a0b41915100b7ef82cbd8098137760b684d487bf74f60750548e0053b9",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237029,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:5d46a31d428b831d07ee82a8f38f70e190212355ed2f93b07cf7bb1de27c089b",
+      "call_order": 29,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237030,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b7139cce9d39677e2166-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:22effce87bfd8fa0bc2c8579ed3f79fa2c434a905e816b1172f3f5641d80ae90",
+      "input_text": "Caaaam precedes Caaaan.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaam"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b7139cce9d39677e2166-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaan"
+          }
+        ],
+        "text": "Caaaam precedes Caaaan."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaam precedes Caaaan.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-b7139cce9d39677e2166-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaam\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-b7139cce9d39677e2166-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaan\"}]",
+      "prompt_sha256": "sha256:1f7a0ac0b5f184a8a55dbd2fd7cb6d367725f2d952c19d09f158aded2e300379",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237030,
+      "unit_id": "u-b7139cce9d39677e2166"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:b766e7e7be5ee9a1e82f88c0b176abd1786d66786a1fd35b99d98b06f37c6980",
+      "call_order": 30,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237031,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaap"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaq"
+          }
+        ],
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:195c4eff140fc136ba23831048855c07b5b1add808de43570d9c33374f9dbe1d",
+      "input_text": "Caaaap precedes Caaaaq.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaap precedes Caaaaq.",
+      "prompt_sha256": "sha256:837e0dc884df5010147d51c3af2e2d74c06dd8efbbdc1011303bf94edbe926a0",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237031,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:a500502d2a7bfefeddfde968bc0929d9cd5ba8581e2b63e37435ce45b7b23d26",
+      "call_order": 31,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237032,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaq"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaap"
+          }
+        ],
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:c95ce0c64e514725f4dfc174f655d7877e2241d23368d77535638da6440784e3",
+      "input_text": "Caaaaq precedes Caaaap.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaaq precedes Caaaap.",
+      "prompt_sha256": "sha256:a8cef4e593aeb3579387707fe31e2532e01b5b65c90b90c281738a17e5f72a7c",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237032,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:fd3141fb349b8d4e76f9aa7f08b3e4028ea954da2c9cc5f89b843c71271fd5c4",
+      "call_order": 32,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237033,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaap"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaq"
+          }
+        ],
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:195c4eff140fc136ba23831048855c07b5b1add808de43570d9c33374f9dbe1d",
+      "input_text": "Caaaap precedes Caaaaq.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaap precedes Caaaaq.",
+      "prompt_sha256": "sha256:038a6182e9e5d53a60c15fd9923549f637a848d35f2761d982116c5f3d280108",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237033,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:0bef193e3a12d11bda5e9c07e033771bf997220949f792662e55dece73f47e57",
+      "call_order": 33,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237034,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaq"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaap"
+          }
+        ],
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:c95ce0c64e514725f4dfc174f655d7877e2241d23368d77535638da6440784e3",
+      "input_text": "Caaaaq precedes Caaaap.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaaq precedes Caaaap.",
+      "prompt_sha256": "sha256:264018466682f1c452d34461eaedbaeb09d8f226b721ca425f65c12411ac92c4",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237034,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:a3fe48acb510092504402faad776f4e28c94687986905a3e8727fdab07dc2ae7",
+      "call_order": 34,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237035,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaap"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaq"
+          }
+        ],
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:195c4eff140fc136ba23831048855c07b5b1add808de43570d9c33374f9dbe1d",
+      "input_text": "Caaaap precedes Caaaaq.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaap"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaq"
+          }
+        ],
+        "text": "Caaaap precedes Caaaaq."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaap precedes Caaaaq.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-b4cbf232a8a1ecb4da9c-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaap\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-b4cbf232a8a1ecb4da9c-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaaq\"}]",
+      "prompt_sha256": "sha256:b8a9fb83bd4b919419be1dd8497b4b808fcba1b1ba6a3007d73a283224f0ca20",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237035,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:817fed9fdbe61b0eb3d4c330a09d845689b5c6972aa040eca868f87877a371f6",
+      "call_order": 35,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237036,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaq"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaap"
+          }
+        ],
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:c95ce0c64e514725f4dfc174f655d7877e2241d23368d77535638da6440784e3",
+      "input_text": "Caaaaq precedes Caaaap.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaaq"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-b4cbf232a8a1ecb4da9c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaap"
+          }
+        ],
+        "text": "Caaaaq precedes Caaaap."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaaq precedes Caaaap.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-b4cbf232a8a1ecb4da9c-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaaq\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-b4cbf232a8a1ecb4da9c-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaap\"}]",
+      "prompt_sha256": "sha256:cef3258ac95ac4866c92812c6ce0129992d8f723653d5d31b71446c96c73748f",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237036,
+      "unit_id": "u-b4cbf232a8a1ecb4da9c"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:3ee4f86344551b6f44f624d1a86cd4384d2f3f09742750141cb1cccd90204be0",
+      "call_order": 36,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237037,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:ef9c12bcbf9faa198078cafe1fa3004332a8047359be979790d62c8c6bee18c1",
+      "input_text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.",
+      "prompt_sha256": "sha256:ab4eeefd1bf585557db6b5fb68cce4603f11717c585c81df7b2e697171084ac9",
+      "reference_grammar_sha256": "sha256:051a522dddae0ff24a963cbd20af96ff98618e8e148352934b4d7b22cad5f66b",
+      "request_timeout_s": 90.0,
+      "seed": 7237037,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:008d6c7fa567639882be7a85954bec4aa14871f5a371734447aa2a89e12fd2c2",
+      "call_order": 37,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237038,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:5a4182216f147a5f488aa2d59872b8bcb6837b3330a435dcfcbd27db9a449fd8",
+      "input_text": "Caaaas precedes Caaaau.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaas precedes Caaaau."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaas precedes Caaaau.",
+      "prompt_sha256": "sha256:c04a9b6ec877d41ca433ba8485ff6b2a85475faf1779a8616fbb727e16c5d3f2",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237038,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:18933218db57601c5d996d6f5930ec0b5fd5ff46e8cee4074c1d6483e073b640",
+      "call_order": 38,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237039,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:ef9c12bcbf9faa198078cafe1fa3004332a8047359be979790d62c8c6bee18c1",
+      "input_text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.",
+      "prompt_sha256": "sha256:86f46500c19835680630ad7cba720e3dc6ec07409743219a2b46c36fb0379562",
+      "reference_grammar_sha256": "sha256:051a522dddae0ff24a963cbd20af96ff98618e8e148352934b4d7b22cad5f66b",
+      "request_timeout_s": 90.0,
+      "seed": 7237039,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:74f4cec5ed779778ff5c1501d2edee7408ac5fd769d960c0f56c451d54c4550d",
+      "call_order": 39,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237040,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:5a4182216f147a5f488aa2d59872b8bcb6837b3330a435dcfcbd27db9a449fd8",
+      "input_text": "Caaaas precedes Caaaau.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaas precedes Caaaau."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaas precedes Caaaau.",
+      "prompt_sha256": "sha256:d70917513642b05dbbd77acc60b096f2fe2797428cfddb291a2b5b8a98e60367",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237040,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:55c549a980654124ea8b3e60e70df835c06973cc3745eb35a87c7a0b4d57bdcc",
+      "call_order": 40,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237041,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\" | \"\\\"m002\\\"\" | \"\\\"m003\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+      "input_sha256": "sha256:ef9c12bcbf9faa198078cafe1fa3004332a8047359be979790d62c8c6bee18c1",
+      "input_text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 30,
+            "byte_start": 24,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m002",
+            "surface_text": "Caaaat"
+          },
+          {
+            "byte_end": 46,
+            "byte_start": 40,
+            "document_id": "u-9232d5bda000a3b8c07a-original-source",
+            "mention_id": "m003",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaat. Caaaat precedes Caaaau."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaas precedes Caaaat. Caaaat precedes Caaaau.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaas\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaat\"},{\"byte_end\":30,\"byte_start\":24,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m002\",\"surface_text\":\"Caaaat\"},{\"byte_end\":46,\"byte_start\":40,\"document_id\":\"u-9232d5bda000a3b8c07a-original-source\",\"mention_id\":\"m003\",\"surface_text\":\"Caaaau\"}]",
+      "prompt_sha256": "sha256:f26fac23357846aa7e3a1582b7257d86dcd820dd35b62009d2835550801e046c",
+      "reference_grammar_sha256": "sha256:6fb8bd0495e010ff24d1e9ec3c491b81529b0b8e57efd84306140f863a1ee7d2",
+      "request_timeout_s": 90.0,
+      "seed": 7237041,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:52d7fb5dc3a3ed02ec5ac92cbb321bc2bd7b7edde3930e911562eb3857f406ef",
+      "call_order": 41,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237042,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaau."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:5a4182216f147a5f488aa2d59872b8bcb6837b3330a435dcfcbd27db9a449fd8",
+      "input_text": "Caaaas precedes Caaaau.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaas"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-9232d5bda000a3b8c07a-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaau"
+          }
+        ],
+        "text": "Caaaas precedes Caaaau."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaas precedes Caaaau.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-9232d5bda000a3b8c07a-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaas\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-9232d5bda000a3b8c07a-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaau\"}]",
+      "prompt_sha256": "sha256:7aae9dc696b8367f10ecf67158da3a24bc6deea9fbe94cef671c78f91fe9ca82",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237042,
+      "unit_id": "u-9232d5bda000a3b8c07a"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:7c2a1fa5b842b9ffd777202ef762d9d4ae4eb579e4b368a61392ab4833e4ea7b",
+      "call_order": 42,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237043,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaw"
+          }
+        ],
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:3ede2cc54e0c2b123a90a0cb36e20c2d3ad851e2a3069ab77a480f26fb242904",
+      "input_text": "Caaaav precedes Caaaaw.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nCaaaav precedes Caaaaw.",
+      "prompt_sha256": "sha256:42f639e16fd6fa2003f0a615b4af3205ec77921474e45c7a6a23305e4a248071",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237043,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    },
+    {
+      "arm": "original_offset",
+      "call_id": "sha256:3b8e1fcc28ae956675a8076ea07a463407a1a9a91f8194a82dc183fa01b55824",
+      "call_order": 43,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237044,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaax"
+          }
+        ],
+        "text": "Caaaav precedes Caaaax."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:395175ff2dd1c7611d24e627d117ed4fd6bbd8dbb4b2b087ca6ae221b1a70599",
+      "input_text": "Caaaav precedes Caaaax.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaav precedes Caaaax."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nCaaaav precedes Caaaax.",
+      "prompt_sha256": "sha256:1c40f86ad002a54841e730dd856b281e890bb0e67c836d448487e8546d4c9411",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237044,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:7f37f4e37b5651d6236cf9a06bb65cabfa043f0b35103f6f767eb806d59cea8e",
+      "call_order": 44,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237045,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaw"
+          }
+        ],
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:3ede2cc54e0c2b123a90a0cb36e20c2d3ad851e2a3069ab77a480f26fb242904",
+      "input_text": "Caaaav precedes Caaaaw.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Return one JSON object with keys outcome and relations. Each relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nSOURCE:\nCaaaav precedes Caaaaw.",
+      "prompt_sha256": "sha256:63d516bab9316fa63e5790b55c8b78e8034f97be35cbc078360d4dd86e928b7c",
+      "reference_grammar_sha256": "sha256:ebec40166dae498bfddfb5f4a13a44e23fa783b04fb1418509af1b8f8e5c28bc",
+      "request_timeout_s": 90.0,
+      "seed": 7237045,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    },
+    {
+      "arm": "explicit_schema_offset_control",
+      "call_id": "sha256:8f35c7eadb05718f24ecbb0464b3fde43cd47d204ed4ea6e6831a1566459d6e5",
+      "call_order": 45,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237046,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaax"
+          }
+        ],
+        "text": "Caaaav precedes Caaaax."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:395175ff2dd1c7611d24e627d117ed4fd6bbd8dbb4b2b087ca6ae221b1a70599",
+      "input_text": "Caaaav precedes Caaaax.",
+      "model_input": {
+        "mentions": null,
+        "text": "Caaaav precedes Caaaax."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Return one JSON object with keys outcome and relations. The relation must use sentence_index, subject_start, subject_end, predicate, object_start, object_end, and polarity. Offsets are half-open UTF-8 byte offsets. Return unknown with an empty list when no exact relation is available.\nCLAIM:\nCaaaav precedes Caaaax.",
+      "prompt_sha256": "sha256:8932449cff211357c35e4a5b58a683d877e5edade338914ab2b4db6981860e46",
+      "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+      "request_timeout_s": 90.0,
+      "seed": 7237046,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:6b1d32352d213ec147fb02fee057187517a9b50263333aebe9b9884d7444af44",
+      "call_order": 46,
+      "call_type": "source",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237047,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaw"
+          }
+        ],
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "input_sha256": "sha256:3ede2cc54e0c2b123a90a0cb36e20c2d3ad851e2a3069ab77a480f26fb242904",
+      "input_text": "Caaaav precedes Caaaaw.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-source",
+            "mention_id": "m001",
+            "surface_text": "Caaaaw"
+          }
+        ],
+        "text": "Caaaav precedes Caaaaw."
+      },
+      "output_token_budget": 384,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nCaaaav precedes Caaaaw.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-84c803b9e49d3eb7cd6c-original-source\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaav\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-84c803b9e49d3eb7cd6c-original-source\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaaw\"}]",
+      "prompt_sha256": "sha256:d48585e8bd3593deef436622ba4c412cb8560daefbeace217adf631d2a9a310d",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "seed": 7237047,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:691332d53838d9bf2f11a5bcee4bcd089abc6a8bb4527ae7a837557dcb6d8384",
+      "call_order": 47,
+      "call_type": "claim",
+      "cold_request": true,
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "seed": 7237048,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "document": {
+        "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaax"
+          }
+        ],
+        "text": "Caaaav precedes Caaaax."
+      },
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "input_sha256": "sha256:395175ff2dd1c7611d24e627d117ed4fd6bbd8dbb4b2b087ca6ae221b1a70599",
+      "input_text": "Caaaav precedes Caaaax.",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 6,
+            "byte_start": 0,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m000",
+            "surface_text": "Caaaav"
+          },
+          {
+            "byte_end": 22,
+            "byte_start": 16,
+            "document_id": "u-84c803b9e49d3eb7cd6c-original-claim",
+            "mention_id": "m001",
+            "surface_text": "Caaaax"
+          }
+        ],
+        "text": "Caaaav precedes Caaaax."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nCaaaav precedes Caaaax.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":6,\"byte_start\":0,\"document_id\":\"u-84c803b9e49d3eb7cd6c-original-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Caaaav\"},{\"byte_end\":22,\"byte_start\":16,\"document_id\":\"u-84c803b9e49d3eb7cd6c-original-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Caaaax\"}]",
+      "prompt_sha256": "sha256:a444c43a4fa8e081ab27faa966fd3a01b29d2c3c5ca543650e230886b0215317",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "seed": 7237048,
+      "unit_id": "u-84c803b9e49d3eb7cd6c"
+    }
+  ]
+}

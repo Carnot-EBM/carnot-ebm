@@ -41766,3 +41766,99 @@ one, and observed `missing_artifact`.
 score, or checksum changes
 **Then** cold validation rejects the artifact
 **And** replay performs no model call and does not create producer rows.
+
+### REQ-VERIFY-7264: Fixed Mention Canary SHALL Repeat With Corrected Compute Evidence
+
+Exp7264 SHALL authenticate `exp7261-compute-contract` with
+`compute_contract_ready_score=1`. It SHALL also authenticate the exact Exp7236
+terminal artifact and its public and private fixture bytes. An absent,
+quarantined, or invalid upstream SHALL produce a terminal `blocked` artifact.
+The artifact SHALL name the failed upstream field in `gate_check_summary`.
+
+The canary SHALL reuse the eight Exp7236 calibration units. It SHALL use the
+`original_offset`, `explicit_schema_offset_control`, and `mention_pointer` arms.
+Each arm SHALL use separate source and claim calls. The fixed schedule SHALL
+contain exactly 48 calls. Source calls SHALL have a 384-token output limit.
+Claim calls SHALL have a 128-token output limit. The schedule and seeds SHALL
+freeze before model output is scored. Outcome-based retries are not permitted.
+
+The live path SHALL resolve `unsloth/Qwen3.8-27B-GGUF` with
+`cached_current_model()`. It SHALL use the cached Q4_K_M GGUF, its embedded
+tokenizer and chat template, native llama.cpp, and non-thinking mode. It SHALL
+set `CARNOT_FORCE_LIVE=1`. It SHALL record the GGUF hash, native binary, server
+PID and start tick, GPU UUID, VRAM, offload layers, actual request parameters,
+tokens, timestamps, lease ownership, and cleanup. It SHALL use
+`inference_substrate=live_llm_inference_local_gguf_sota`,
+`inference_substrate_class=model_bounded_generation`, and
+`execution_venue=host` after generation starts. A failed preflight SHALL use
+`blocked_no_run`. A completed load with no generation SHALL use
+`model_load_no_generation`.
+
+`mention_canary_ready_score` SHALL equal one only when all 48 calls are
+accounted for with clean provenance, at least seven of eight pointer units are
+parse-complete, at least seven are usable, at least six preserve source and
+claim semantics plus the final decision, and reversed negative controls have
+zero false accepts. Syntax success SHALL not imply usable evidence. A complete
+measurement that fails a scientific gate SHALL use `verdict_class=null`.
+The oracle-graded canary SHALL set `verifier_is_oracle=true`. It SHALL not make
+a learned semantic-value claim or change historical quarantine state.
+
+The terminal artifact SHALL include `schema`, `experiment_id`, `milestone`,
+`status`, `run_date`, actual UTC timestamps, `field_principles`,
+`preconditions_checked`, `MODEL_SPECS`, `model_invoked`, `invocation_counts`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `sample_size_budget`,
+`acceptance_gate_results`, `gate_check_summary`, `verifier_is_oracle`,
+`honest_verdict`, `verdict_class`, `validation_receipts`,
+`mention_canary_ready_score`, `usable_unit_counts`,
+`frozen_heldout_settings`, and `raw_call_manifest`. Each required field SHALL
+have a plain-language entry in `field_principles`.
+
+The frozen Exp7265 settings SHALL give `mention_pointer` and
+`explicit_schema_offset_control` separate 384-token source and 128-token claim
+calls. The `direct_judge` arm SHALL use one 512-token call. The settings SHALL
+bind seeds, prompt hashes, token budgets, and abstention rules before held-out
+evaluation.
+
+#### SCENARIO-VERIFY-7264-PREFLIGHT: Upstream Absence Is Terminal Blocked
+
+**Given** an absent, quarantined, or invalid Exp7261 or Exp7236 input
+**When** Exp7264 runs preflight
+**Then** it writes no success-shaped measurement
+**And** the terminal blocked artifact names the exact failed check.
+
+#### SCENARIO-VERIFY-7264-SCHEDULE: Public Schedule Freezes Forty-Eight Calls
+
+**Given** the eight authenticated calibration units
+**When** Exp7264 freezes its public work
+**Then** it creates eight by three by two calls with fixed limits and seeds
+**And** no private authority field enters a model request.
+
+#### SCENARIO-VERIFY-7264-GATE: Syntax And Fidelity Stay Separate
+
+**Given** retained source and claim replies
+**When** the independent reducer scores the fixed gate
+**Then** it reports parse completeness, usability, semantics, and false accepts
+**And** it computes readiness only from the original fixed thresholds.
+
+#### SCENARIO-VERIFY-7264-PROVENANCE: Invocation Evidence Is Fresh
+
+**Given** a task-owned native llama.cpp server and GPU lease
+**When** bounded generation runs
+**Then** every call joins its request bytes, seed, server identity, GPU identity,
+and actual parameters
+**And** model load, generation, and usable-answer counts remain separate.
+
+#### SCENARIO-VERIFY-7264-ARTIFACT: Terminal Publication Follows Raw Validation
+
+**Given** a complete or null candidate under `results/raw/`
+**When** independent replay and the corrected checkers finish
+**Then** their commands, exit codes, and log hashes enter validation receipts
+**And** atomic publication occurs only after all required validation passes.
+
+## Implementation Status (REQ-VERIFY-7264)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7264 and SCENARIO-VERIFY-7264-* | Implemented (`python/carnot/experiment_7264_v639_mention_canary.py`; `scripts/experiments/experiment_7264_v639_mention_canary.py`) | Focused tests (`tests/python/test_experiment_7264_v639_mention_canary.py`) plus native live capture and independent raw replay |
