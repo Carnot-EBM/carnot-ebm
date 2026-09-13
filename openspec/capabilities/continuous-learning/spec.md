@@ -15217,3 +15217,111 @@ execution, and an aggregation-only cold reducer.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7283 and SCENARIO-CL-7283-* | Planned: cold independent reduction, admission lifecycle attacks, causal deletion, E2E-007 adaptation, and atomic terminal evidence. | Pending RED-first tests and implementation. |
+
+## REQ-CL-7284: Opt-In Host Group Commit With Durable Acknowledgment
+
+Carnot SHALL authenticate the complete Exp7270 durable-cost profile before this
+prototype starts. The profile SHALL report durable sync as the measured
+bottleneck and SHALL reject the delta-log warrant. A missing, changed, retired,
+quarantined, or incomplete external prerequisite SHALL produce a row-free
+terminal blocked artifact. The block SHALL name the exact failure in
+`gate_check_summary`. Same-milestone Exp7284 paths are outputs, not existing
+prerequisites.
+
+The prototype SHALL wrap the shipped `PersistentNativeArchiveController` on
+the host. It SHALL not add a journal format. It SHALL not rewrite the native
+controller. The wrapper SHALL compare immediate size-one commits with maximum
+group sizes four and sixteen. Groups four and sixteen SHALL wait at most 10 ms.
+The size-one arm SHALL flush immediately.
+
+Acceptance SHALL mean that a valid independent release with a unique event ID
+enters the bounded host queue. Acceptance is not acknowledgment. Queueing SHALL
+not mutate or expose controller state. The durable linearization point SHALL be
+the successful directory sync after the atomic state-file replacement. The
+whole group SHALL become visible only after that point. Acknowledgment SHALL
+follow the linearization point and SHALL cover every ordered event in the
+group. A dependent query SHALL first flush all pending events. The query SHALL
+charge the complete flush delay.
+
+The queue SHALL bound pending events and canonical pending bytes. A full queue
+SHALL apply producer backpressure without accepting the event. A duplicate ID
+in pending or committed state SHALL fail before mutation. A timeout SHALL flush
+the current nonempty group. Shutdown SHALL flush by default. Abort shutdown
+SHALL discard only unacknowledged queued events. A commit or sync failure SHALL
+acknowledge no event. It SHALL roll back live state when the durable parent is
+still authoritative. If publication has started, it SHALL enter a failed state
+that refuses queries until fresh-process restore.
+
+The existing per-event transition SHALL be the independent semantic reference.
+Each group SHALL match serial transition bytes, hashes, order, and decisions.
+The E2E SHALL use child processes, real temporary disk writes, file sync,
+rename, directory sync, injected `SIGKILL`, and fresh-process restore. It SHALL
+cover crashes before write, after write, after file sync, after rename, after
+directory sync, and after acknowledgment. Acknowledged events SHALL survive in
+order exactly once. Unacknowledged events MAY be absent or present. Every
+recovered state SHALL be a valid old or new complete state. Retry SHALL not
+apply an already durable event twice.
+
+The benchmark SHALL retain each event, arm, seed, group, queue delay, commit
+delay, acknowledgment delay, dependent-query delay, error, abstention, cost,
+and censoring state. It SHALL measure the fixed arms only. It SHALL not claim a
+same-semantics speedup. `commit_protocol_ready_score=1` SHALL certify only the
+durability, order, exactly-once replay, rollback, bounds, and visibility
+contract. It SHALL not change a production default.
+
+The task SHALL use date `20260913`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Every current model load, generation, inference, and
+usable-answer count SHALL be zero. CPU work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. A cold reducer SHALL
+use `aggregation_from_upstream_artifacts` and class `aggregation`. The
+execution venue SHALL be `host`. The exact semantic reference SHALL set
+`verifier_is_oracle=true`. Thus readiness SHALL use
+`verdict_class=circular_positive`, never `positive`.
+
+### SCENARIO-CL-7284-QUEUE: Acceptance Is Bounded And Is Not Acknowledgment
+
+- GIVEN valid independent releases and fixed queue limits
+- WHEN releases arrive below, at, and above each limit
+- THEN only unique releases within both limits enter the queue
+- AND backpressure, duplicate, timeout, shutdown, and abort dispositions are explicit.
+
+### SCENARIO-CL-7284-VISIBILITY: Queries Observe Only Durable Groups
+
+- GIVEN accepted events that have not reached directory sync
+- WHEN an independent or dependent query arrives
+- THEN no uncommitted learned state is visible
+- AND a dependent query flushes first and charges its full delay.
+
+### SCENARIO-CL-7284-PARITY: Grouped Transitions Match Serial Transitions
+
+- GIVEN the same ordered releases and starting controller bytes
+- WHEN size-one, size-four, and size-sixteen arms commit
+- THEN each durable endpoint equals the per-event serial reference exactly
+- AND every acknowledgment lists the same event order exactly once.
+
+### SCENARIO-CL-7284-CRASH: Real Process Death Preserves The Contract
+
+- GIVEN each fixed write, sync, rename, and acknowledgment boundary
+- WHEN a child process reaches the boundary and receives `SIGKILL`
+- THEN fresh-process restore reads a valid complete old or new state
+- AND every acknowledged event survives in order exactly once.
+
+### SCENARIO-CL-7284-FAILURE: Failed Publication Cannot Leak State
+
+- GIVEN an update, write, sync, duplicate, capacity, or shutdown failure
+- WHEN the wrapper returns its disposition
+- THEN it acknowledges no affected event and preserves or restores the valid parent
+- AND a publication-stage failure refuses queries until fresh restore.
+
+### SCENARIO-CL-7284-TERMINAL: Readiness Changes Latency Semantics Only
+
+- GIVEN complete benchmark, parity, crash, rollback, queue, and visibility rows
+- WHEN the cold reducer derives terminal gates
+- THEN `commit_protocol_ready_score=1` certifies semantic readiness only
+- AND the artifact makes no same-semantics speed claim or production-default change.
+
+## Implementation Status (REQ-CL-7284)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7284 and SCENARIO-CL-7284-* | Planned: opt-in host wrapper over the shipped native controller, fixed group benchmark, real-disk crash matrix, cold reducer, and atomic terminal artifact. | Pending RED-first tests and implementation. |
