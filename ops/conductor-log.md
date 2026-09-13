@@ -17874,3 +17874,4 @@ code |
 | 2026-09-13 14:52 UTC | Decompose durable event cost before another native | OK | 94 passed, 1 warning in 11.51s |
 | 2026-09-13 14:55 UTC | Durable constraint delta log and crash-replay prot | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7270-durable-profile.journal_optimization_warranted_score (actual=0 == expected=1) |
 | 2026-09-13 15:14 UTC | GateMate changed-state condition and graduated-boa | OK | 103 passed, 1 warning in 8.07s |
+| 2026-09-13 15:56 UTC | V639 independent evidence matrix and branch decisi | OK | 100 passed, 1 warning in 20.18s |
