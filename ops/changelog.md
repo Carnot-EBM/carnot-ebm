@@ -19957,3 +19957,4 @@ timed alternative is available.
 - 2026-09-13: V640 source ingestion and exact execution contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v640_source_contract_mismatched_or_invalid; results/experiment_7274_v640_source_contract.json
 - 2026-09-13: Repair source replay and direct-comparator measurement (⚠️ Research Finding) — honest_verdict=complete_null_transport_replayed_contract_defects_preserve_exp7265_null; results/experiment_7275_v640_semantic_replay.json
 - 2026-09-13: Repair live ARC identity handoff without relaxing evidence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_identity_runtime_handoff_repaired; results/experiment_7276_v640_arc_identity.json
+- 2026-09-13: Bounded Qwen3.8 comparator transport qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_comparator_canary_ready_measurement_only; results/experiment_7277_v640_comparator_canary.json
