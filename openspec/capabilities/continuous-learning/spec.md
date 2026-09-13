@@ -14327,3 +14327,111 @@ SHALL produce a row-free terminal blocked artifact with an exact gate summary.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7254 and SCENARIO-CL-7254-* | Implemented: `python/carnot/experiment_7254_v638_coverage_learning.py` authenticates the sealed coverage fixture, replays eight arms, records actual commit hashes and costs, computes paired stream gates, runs E2E-007 controls, and writes an atomic terminal artifact. The script entrypoint remains thin. | `tests/python/test_experiment_7254_v638_coverage_learning.py` covers exact preconditions, blocked output, prequential replay, raw reduction, causal gates, cost targets, E2E restart and rollback, terminal validation, CLI dispatch, defensive failures, and 100-percent new-code line coverage. |
+
+## REQ-CL-7255: Independent Coverage Learning Causality Audit
+
+Carnot SHALL audit the complete Exp7253 fixture and the complete Exp7254
+learner in a fresh process. The audit SHALL authenticate exact artifact and
+sidecar bytes before reduction. A missing, malformed, or quarantined upstream
+SHALL produce a row-free terminal blocked result. An upstream scientific null
+SHALL remain eligible for a complete safety audit.
+
+The audit SHALL reconstruct every stream-arm error, false-accept, abstention,
+recurrence, query, release, update, reactivation, decision-change, cost, and
+memory value from the hashed event rows. It SHALL rebuild the frozen 10,000-draw
+paired confidence intervals from streams with bootstrap seed 7,254,951. It
+SHALL recompute the unchanged recurrence increase limit of 0.02 and every
+Exp7254 scientific gate without using producer aggregates.
+
+The audit SHALL replay the finite controllers from public observations and
+released feedback. It SHALL prove that predictions precede feedback and that
+controller inputs exclude labels and private regime fields. It SHALL validate
+each commit parent and child hash. It SHALL validate every reactivation against
+its contemporaneous released witnesses. It SHALL enforce every component and
+total memory bound. Cold final states SHALL match the authenticated state
+manifest and durable bytes.
+
+For FIFO and coverage admission, the audit SHALL compare aligned and shuffled
+arms. Each stream and admission mode SHALL report candidate-mapping changes,
+selected-archive changes, later-decision changes, and zero-headroom counts.
+Zero-headroom events SHALL remain in the denominator.
+
+Five isolated negative fixtures SHALL mutate FIFO and coverage into one
+function, cancel the shuffle, expose a future label, change a private regime,
+and omit a durable write. Each mutation SHALL fail its named check. These
+fixtures and the preserved Exp7242 historical receipt SHALL live in one hashed
+sidecar outside current invocation fields.
+
+The E2E-007 adaptation SHALL cold-load durable state, predict one unseen query,
+apply delayed feedback, accept one valid commit, reject one wrong-parent
+commit, and reload in another process with decision parity. It SHALL prove
+that rejected writes preserve bytes and that rollback restores exact parent
+bytes.
+
+`coverage_audit_complete_score` SHALL equal one when raw reduction, controller
+replay, causality, bounds, final-state, mutation, and E2E checks complete.
+`coverage_promotion_score` SHALL equal one only when the independent audit also
+reproduces every Exp7254 scientific value gate. A complete audit of a null
+learner SHALL use `verdict_class=null` and SHALL not promote the learner.
+
+The run SHALL use date `20260912`, `MODEL_SPECS=[]`, `model_invoked=false`, and
+zero current model counters. Completed work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` as the
+execution venue. The exact evaluator SHALL set `verifier_is_oracle=true`, so a
+successful promotion could only be `circular_positive`. The task SHALL not
+change model weights, production defaults, or external systems.
+
+### SCENARIO-CL-7255-PRECONDITIONS: Exact Upstreams Or Block
+
+- GIVEN the fixed Exp7253, Exp7254, raw, stream, state, and historical receipts
+- WHEN hashes, checksums, quarantine state, imports, and output ownership are checked
+- THEN only exact complete upstream evidence can enter the fresh reducer
+- AND an external failure produces a row-free blocked artifact with the exact failed field.
+
+### SCENARIO-CL-7255-REDUCTION: Raw Rows Define Every Metric
+
+- GIVEN all 262,144 hashed event-arm rows
+- WHEN the fresh reducer joins public, release, and private authority rows
+- THEN it reconstructs all 256 stream-arm summaries and eight paired intervals
+- AND stored producer outcomes or aggregates cannot replace the reconstructed values.
+
+### SCENARIO-CL-7255-CAUSALITY: Feedback And Regimes Stay Hidden
+
+- GIVEN public decisions and delayed releases
+- WHEN the audit replays each event and commit
+- THEN no decision sees unreleased feedback or a private regime field
+- AND every parent, child, reactivation witness, and memory bound passes independently.
+
+### SCENARIO-CL-7255-CONTROLS: Shuffles And Admission Must Be Effective
+
+- GIVEN FIFO, coverage, aligned, and shuffled archive arms
+- WHEN their nomination and decision histories are compared
+- THEN mapping, selected-archive, later-decision, and zero-headroom counts are retained
+- AND a canceled or aliased intervention cannot pass as effective.
+
+### SCENARIO-CL-7255-MUTATIONS: Five Attacks Fail Their Named Checks
+
+- GIVEN isolated admission, shuffle, label, regime, and durable-write mutations
+- WHEN each negative fixture is audited
+- THEN each mutation fails its corresponding check
+- AND the negative bytes remain in a hashed sidecar outside current compute fields.
+
+### SCENARIO-CL-7255-E2E: Durable Learning Survives A Fresh Process
+
+- GIVEN one cold controller and one unseen query
+- WHEN delayed feedback is committed, a wrong parent is rejected, and another process reloads
+- THEN accepted state and later decisions have parity after reload
+- AND rejection and rollback preserve exact durable bytes.
+
+### SCENARIO-CL-7255-TERMINAL: Completion Does Not Imply Promotion
+
+- GIVEN a complete independent audit and recomputed Exp7254 gates
+- WHEN at least one scientific gate fails
+- THEN `coverage_audit_complete_score` remains one and `coverage_promotion_score` is zero
+- AND the terminal verdict is `complete_null` with no production promotion.
+
+## Implementation Status (REQ-CL-7255)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7255 and SCENARIO-CL-7255-* | Implemented: `python/carnot/experiment_7255_v638_coverage_audit.py` authenticates Exp7253/Exp7254, independently reduces raw rows, instruments shipped finite-controller replay, audits aligned/shuffled effects, runs five isolated mutations and E2E-007, and seals a no-LLM terminal artifact through a thin script entrypoint. | Verified: `tests/python/test_experiment_7255_v638_coverage_audit.py` covers exact and blocked preconditions, raw reconstruction, authority isolation, controller/state replay, controls, all mutations, E2E restart/rejection/rollback, null promotion, terminal validation, CLI dispatch, defensive failures, and 100-percent new-code statement coverage. |

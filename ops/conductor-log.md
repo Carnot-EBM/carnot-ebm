@@ -17840,3 +17840,15 @@ code |
 | 2026-09-12 22:03 UTC | Independent source semantics and matched-coverage  | OK | 99 passed, 1 warning in 7.49s |
 | 2026-09-12 22:46 UTC | Coverage-based archive admission and effective mem | OK | 110 passed, 1 warning in 22.16s |
 | 2026-09-12 23:32 UTC | Prospective continuous self-learning with bounded  | OK | 91 passed, 1 warning in 38.01s |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | exclusion_manifest_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on exclus |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_timestamp_field age-week 2: OPEN 14 days: SILENT_NON_ |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_online_training_evidence age-week 1: OPEN 7 |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_online_arm_metric_items age-week 1: OPEN 7 days: SILENT_ |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_byte_identical_online_arm_reason age-week 1: OPEN 7 days |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_positive_probe_exercise_evidence age-week 1: OPEN 7  |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_but_unrun_probe_reasons age-week 1: OPEN 7 days |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_nondegenerate_lever_evidence age-week 1: OPEN 7 days |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_declares_deterministic_non_live age-week 0: OP |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_current_task_inference_claim age-week 0: OPEN 1 |
+| 2026-09-13 00:26 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::duration_floor_for_artifact age-week 0: OPEN 1 days: SILE |
+| 2026-09-13 00:56 UTC | Cold memory causality retention and rollback audit | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: p7255.main( + |
