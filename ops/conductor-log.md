@@ -17929,3 +17929,4 @@ code |
 | 2026-09-14 03:10 UTC | V641 source ingestion and exact fourteen-task cont | FAIL | Codex CLI error: Use plain words. Avoid jargon the reader has not seen befor |
 | 2026-09-14 03:31 UTC | V641 source ingestion and exact fourteen-task cont | OK | 87 passed, 1 warning in 8.90s |
 | 2026-09-14 04:05 UTC | Preserve live ARC invocation evidence across timeo | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 125 passed, 1 warning in 20.93s |
+| 2026-09-14 04:08 UTC | Accumulate one authentic adapter-withheld live sel | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7289-arc-boundary.arc_boundary_ready_score (actual=0 == expected=1) |
