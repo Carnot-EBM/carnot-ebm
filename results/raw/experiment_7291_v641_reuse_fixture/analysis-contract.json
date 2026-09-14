@@ -1,0 +1,44 @@
+{
+  "amortization_claim_counts": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "bootstrap": {
+    "draws": 10000,
+    "method": "paired_nonparametric_bootstrap_over_source_groups",
+    "one_sided_confidence": 0.95,
+    "seed": 7291300
+  },
+  "frozen_before_predictions": true,
+  "gates": {
+    "accuracy_delta_lower": {
+      "operator": ">=",
+      "threshold": -0.02
+    },
+    "cached_fresh_semantic_mismatches": {
+      "operator": "==",
+      "threshold": 0
+    },
+    "coverage_delta_lower": {
+      "operator": ">=",
+      "threshold": -0.02
+    },
+    "eight_claim_cost_speedup_lower": {
+      "operator": ">=",
+      "threshold": 1.5
+    },
+    "reuse_false_accepts_minus_direct": {
+      "operator": "<=",
+      "threshold": 0
+    },
+    "served_stale_constraints": {
+      "operator": "==",
+      "threshold": 0
+    }
+  },
+  "general_source_extraction_correctness_claimed": false,
+  "rare_error_safety_certified": false,
+  "schema": "carnot.versioned_source_reuse_analysis_contract.v1"
+}

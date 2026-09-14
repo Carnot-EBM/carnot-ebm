@@ -1,0 +1,351 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [],
+  "cache_key_contract": {},
+  "comparison_contract": {
+    "arms": [
+      {
+        "arm": "warm_prefix_direct",
+        "calls_per_claim": 2,
+        "current_full_source": true,
+        "draw_seeds": [
+          7291401,
+          7291402
+        ],
+        "instruction_order": [
+          "instruction",
+          "source",
+          "claim"
+        ],
+        "tie_or_abstention_rule": "disagreement_or_unknown_yields_unknown"
+      },
+      {
+        "arm": "fresh_verifier",
+        "claim_extractions_per_claim": 1,
+        "source_extractions_per_claim": 1,
+        "verification_per_claim": 1
+      },
+      {
+        "arm": "versioned_reuse_verifier",
+        "claim_extractions_per_claim": 1,
+        "source_compilations_per_group": 2,
+        "verification_per_claim": 1
+      }
+    ],
+    "call_ceilings": {
+      "direct": 256,
+      "fresh_verifier": 256,
+      "reuse_verifier": 160
+    },
+    "cost_components": [
+      "initialization",
+      "prefill",
+      "source_compilation",
+      "claim_extraction",
+      "cache_lookup",
+      "invalidation",
+      "verification",
+      "generation",
+      "failed_calls"
+    ],
+    "cost_rule": "report backend counters and complete observed costs; never infer a cache hit",
+    "identical_claim_units": 128,
+    "independent_source_groups": 16,
+    "max_output_tokens_per_call": 128,
+    "native_prefix_or_kv_reuse": "allowed_for_both_eligible_paths_if_observed",
+    "retry_count": 0,
+    "source_revision_before_claim": 5,
+    "total_call_ceiling": 672
+  },
+  "control_rows": [],
+  "duration_s": 0.0,
+  "execution_venue": "host",
+  "experiment_id": "exp7291-reuse-fixture",
+  "field_principles": {
+    "MODEL_SPECS": "Actual executable local model identities; keep historical models in hashed sidecars.",
+    "acceptance_gate_results": "Each completeness/value check names expected, observed, passed and principle.",
+    "cache_key_contract": "Content/version/parser/model keys and conservative dependency invalidation.",
+    "comparison_contract": "Exact three arms, fixed call/token ceilings, independent units, costs and preregistered gates.",
+    "control_rows": "Every adversarial cache control with observed and expected values.",
+    "duration_s": "Measured monotonic elapsed and disjoint phase spans, including failures and initialization.",
+    "execution_venue": "Host is host; identify actual GPU/native/device execution separately.",
+    "field_principles": "Store explanations here while consumer values remain ordinary top-level values.",
+    "fixture_manifest_path": "Immutable development/evaluation source groups and scorer-only label hashes.",
+    "gate_check_summary": "Every blocked_* verdict names upstream/check, exact field, observed and expected value.",
+    "honest_verdict": "Complete findings start complete_ or complete:; external absence starts blocked_; state the actual finding.",
+    "inference_substrate": "Use the recognized literal for actual computation; never infer from intended task.",
+    "inference_substrate_class": "Full generation60s, bounded10s, load-only2s, or actual no-LLM class; never pad elapsed time.",
+    "invocation_counts": "Separate attempted/completed/failed loads and generation; retain in-flight events on timeout.",
+    "model_invoked": "True for any actual attempted model load or generation, including failed and unusable work.",
+    "preconditions_checked": "Hash actual inputs, authority boundaries, resource ownership and failed checks.",
+    "random_seed": "Freeze development and independent evaluation seeds before observing outcomes.",
+    "reproducibility_checksum": "Bind code, config, inputs, model identity if any and immutable raw evidence.",
+    "reuse_fixture_ready_score": "One only for cache, freshness, schema, independent-label and split controls.",
+    "rows": "Every comparative unit/arm/seed with metric, cost, error, abstention and censoring; no aggregate-only claim.",
+    "run_date": "Use 20260914, real UTC start/end and monotonic timing.",
+    "sample_size_budget": "Planned, attempted, complete and censored units plus the frozen stopping rule.",
+    "schema": "Version the artifact; retain ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Keep exact producer identities, terminal classes, retirement and quarantine state.",
+    "status": "Use a terminal complete or blocked record; unfinished own work belongs in separate checkpoints.",
+    "validation_receipts": "Command, exit code, elapsed time and log hash; preserve actual failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; failed efficacy gates forbid positive. Only own unfinished work is partial; unchanged external failure is terminal blocked.",
+    "verifier_is_oracle": "Expose shared verifier/evaluator authority; same-authority mechanics are not learned correctness."
+  },
+  "fixture_manifest_path": null,
+  "gate_check_summary": null,
+  "honest_verdict": "partial_exp7291_current_work_unfinished",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.641",
+  "model_invoked": false,
+  "phase_spans": [],
+  "preconditions_checked": [
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:88ef3531959594c8f4c0d5dd5961372948c8316719d7eaa994c6932a4a0e5929",
+      "upstream": "research-references.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:a046c4133ac33a5cb88db6863e233de45c7a92bdda99b99db6dd75152799ad5a",
+      "upstream": "python/carnot/experiment_7275_v640_semantic_replay.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:bc718df318ffd12f43dcb669d9b1d08c756c2fd0a9623d49e22cab8c6118d045",
+      "upstream": "python/carnot/experiment_7278_v640_source_measurement.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:d33937634830fd2585c170c7e975edd802c53304f611b45cb1e868b004645fcb",
+      "upstream": "python/carnot/experiment_7279_v640_source_audit.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:a402b4d155e1d326d65a41d95c0f24f55235aad1bbc0d446a6782ab2701d1d8f",
+      "upstream": "python/carnot/experiment_7236_v637_mention_fixture.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:9b6945ea8bfa1c9e88ebaefd047c3ef9ec78824c7958d5af70a0b48f5b90d5f7",
+      "upstream": "python/carnot/experiment_7265_v639_mention_heldout.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+      "upstream": "scripts/check_spec_coverage.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:eb27157e997e21e95ca21eea62e2e26510a90cd998542b2c988996ea0d974131",
+      "upstream": "openspec/capabilities/verification/spec.md"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:de0d32bd252390096459956750a382f33bc1ff85f1a5fd8b9caee9e154eb08e9",
+      "upstream": "python/carnot/experiment_7291_v641_reuse_fixture.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:5a2cfdf1fabbff072461354df6d36a4d87f976b609310373c79d88c53326c05f",
+      "upstream": "scripts/experiments/experiment_7291_v641_reuse_fixture.py"
+    },
+    {
+      "check": "source_input",
+      "expected": "present regular file",
+      "field": "file_state",
+      "observed": "present regular file",
+      "passed": true,
+      "sha256": "sha256:f94980a5124e22cbde9bd45746ea0c2c8bdb9faaccf9a2c8be7908e1550d4e25",
+      "upstream": "tests/python/test_experiment_7291_v641_reuse_fixture.py"
+    },
+    {
+      "check": "exclusion_state",
+      "expected": "not listed",
+      "field": "experiment_id",
+      "observed": "not listed",
+      "passed": true,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "random_seed": 7291001,
+  "reproducibility_checksum": "sha256:868c93ae9d92590fb936eb9b8bf7b483e662cffa9ee2bf7242a86177f6f13028",
+  "reuse_fixture_ready_score": 0,
+  "rows": [],
+  "run_date": "20260914",
+  "sample_size_budget": {
+    "attempted_claim_units": 0,
+    "censored_claim_units": 0,
+    "claims_per_group": 8,
+    "complete_claim_units": 0,
+    "planned_arm_rows": 384,
+    "planned_claim_units": 128,
+    "planned_groups": 16,
+    "stopping_rule": "execute each fixed public claim once per arm; no adaptive stop"
+  },
+  "schema": "carnot.versioned_source_reuse_fixture.v1",
+  "source_artifact_hashes": {},
+  "split_seeds": {
+    "bootstrap": 7291300,
+    "development": [
+      7291100,
+      7291101,
+      7291102,
+      7291103,
+      7291104,
+      7291105,
+      7291106,
+      7291107
+    ],
+    "evaluation": [
+      7291200,
+      7291201,
+      7291202,
+      7291203,
+      7291204,
+      7291205,
+      7291206,
+      7291207,
+      7291208,
+      7291209,
+      7291210,
+      7291211,
+      7291212,
+      7291213,
+      7291214,
+      7291215
+    ]
+  },
+  "status": "partial",
+  "timestamps": {
+    "completed_at_utc": null,
+    "started_at_utc": null
+  },
+  "validation_receipts": [],
+  "verdict_class": "partial",
+  "verifier_is_oracle": true
+}

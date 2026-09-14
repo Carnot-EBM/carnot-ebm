@@ -42293,3 +42293,107 @@ source pilot. It SHALL make no broad hallucination or GSM8K claim.
 **When** the second authority builds all arm and base rows and paired intervals
 **Then** the measured candidate is independently replayed and checked under the raw directory
 **And** only a cold-valid candidate with passing validation receipts is published atomically.
+
+### REQ-VERIFY-7291: Versioned Source Compilation Reuse SHALL Fail Closed
+
+Exp7291 SHALL build an opt-in cache around the shipped mention-pointer
+compiler. The cache SHALL store only compiled source records. It SHALL not
+store labels, claim answers, or claim compilations. Each key SHALL bind the
+source content digest, monotonic source version, parser/schema hash, and exact
+model configuration hash. A changed source SHALL invalidate all dependent
+compilations. A stale version, missing provenance field, or source-ID collision
+SHALL return an error without serving cached constraints. Every distinct claim
+SHALL run claim extraction and typed verification.
+
+The fixture SHALL freeze eight development source groups and sixteen separate
+evaluation source groups before scoring. Each group SHALL contain eight
+distinct chronological claims and one source revision before claim five. The
+evaluation set SHALL contain 128 claim units and balance supported,
+contradicted, and unsupported decisions within the fixed eight-claim pattern.
+The public fixture SHALL include paraphrases, renamed entities,
+numeric/operator changes, and source-ID collision probes. A construction
+oracle MAY create labels and spans only in a scorer-side authority file. The
+cache, extractor, and prediction paths SHALL not read that authority file.
+The public manifest, scorer authority, and frozen analysis contract SHALL each
+have an exact content hash.
+
+The comparison contract SHALL preregister three arms over identical claim
+units: warm-prefix direct generation with two fixed draws and a frozen
+disagreement-to-unknown rule; a fresh verifier that extracts the source and
+claim for every query; and a versioned-reuse verifier that compiles two source
+versions per group and extracts every claim. It SHALL use equal instruction
+order and current source bytes for the direct arm. It SHALL allow native
+prefix reuse for either eligible path but SHALL charge only cache work that the
+backend actually reports. It SHALL freeze call and output-token ceilings,
+group-level independence, complete cost components, and gates before a future
+model invocation.
+
+The CPU fixture SHALL execute injected extraction records through the shipped
+compiler and typed executor. It SHALL test stale-version rejection,
+supported-span reconstruction, unknown fields, capacity eviction, malformed
+extraction, source-shuffle sensitivity, and renamed-entity invariance. A
+deliberately stale-cache result SHALL appear only as a labeled negative control.
+`reuse_fixture_ready_score` SHALL equal one only when cache correctness,
+freshness, schema rejection, authority separation, and split controls pass.
+
+The frozen evaluation SHALL define sixteen independent groups and 128 claim
+units. Primary gates SHALL require exact cached-versus-fresh semantic parity,
+zero served stale constraints, one-sided 95 percent group-bootstrap lower
+bounds of at least -0.02 for accuracy and coverage versus direct, no more
+empirical false accepts than direct, and a paired full-cost speedup lower bound
+of at least 1.5 at eight claims. It SHALL report one-, two-, four-, and
+eight-claim amortization with the bootstrap seed and method. This pilot SHALL
+not claim rare-error safety or general source-extraction correctness.
+
+The terminal artifact SHALL use ordinary top-level values and all required
+field principles. It SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`,
+zero invocation counters, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. Missing, retired, quarantined, or unauthenticated
+external inputs SHALL produce a terminal blocked artifact with an exact
+`gate_check_summary`. Partial SHALL describe only unfinished current work in a
+separate checkpoint. A measured candidate SHALL precede focused tests, scoped
+coverage, Ruff, mypy, exact-test spec coverage, independent raw reduction,
+adversarial verification, verdict-row consistency, and atomic publication.
+
+#### SCENARIO-VERIFY-7291-CACHE: Changed Sources Cannot Serve Old Constraints
+
+**Given** one cached source compilation and complete provenance
+**When** the source content or monotonic version changes
+**Then** the cache invalidates every dependent compilation before replacement
+**And** stale versions, source-ID collisions, and missing provenance fail closed.
+
+#### SCENARIO-VERIFY-7291-AUTHORITY: Labels Cannot Reach Prediction Paths
+
+**Given** disjoint public development and evaluation groups plus private labels
+**When** the fixture executes all three arms before scorer-only grading
+**Then** cache entries contain source compilations and public provenance only
+**And** no label, expected answer, or claim compilation enters a cache entry.
+
+#### SCENARIO-VERIFY-7291-CONTROLS: Injected Extraction Exercises Real Boundaries
+
+**Given** fixed CPU extraction fixtures and the shipped mention-pointer compiler
+**When** span, schema, eviction, malformed, shuffle, rename, and stale controls run
+**Then** every control records expected and observed values with a disposition
+**And** the deliberately stale result stays outside all primary comparison rows.
+
+#### SCENARIO-VERIFY-7291-COMPARISON: Three Arms Preserve Claims And Complete Costs
+
+**Given** eight claims and a source revision before the fifth claim in each group
+**When** the direct, fresh, and reuse fixture arms execute identical public units
+**Then** direct uses two fixed draws, fresh compiles per query, and reuse compiles twice
+**And** each row retains prediction, error, abstention, censoring, and actual cost work.
+
+#### SCENARIO-VERIFY-7291-BOOTSTRAP: Independent Groups Define The Pilot Gates
+
+**Given** 128 fixed claim units nested in sixteen evaluation groups
+**When** 10,000 fixed resamples compute parity, deltas, and amortized speedups
+**Then** resampling selects groups and never treats claims as independent units
+**And** the artifact reports one-sided uncertainty at one, two, four, and eight claims.
+
+#### SCENARIO-VERIFY-7291-E2E: Immutable Raw Evidence Precedes Publication
+
+**Given** the public manifest, private scorer file, analysis contract, and raw rows
+**When** an independent reducer and focused validation check their exact hashes
+**Then** all required schema fields and readiness gates reconstruct from raw evidence
+**And** only a cold-valid terminal candidate is atomically published.

@@ -1,0 +1,86 @@
+{
+  "rows": [
+    {
+      "control": "stale_version_rejection",
+      "expected": "stale_source_version",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "stale_source_version",
+      "passed": true
+    },
+    {
+      "control": "supported_span_reconstruction",
+      "expected": true,
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "control": "unknown_fields",
+      "expected": "completion_shape",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "completion_shape",
+      "passed": true
+    },
+    {
+      "control": "eviction",
+      "expected": 1,
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "control": "fail_closed_extraction",
+      "expected": "unknown",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "unknown",
+      "passed": true
+    },
+    {
+      "control": "source_shuffle_sensitivity",
+      "expected": true,
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "control": "renamed_entity_invariance",
+      "expected": "supported",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "supported",
+      "passed": true
+    },
+    {
+      "control": "source_id_collision",
+      "expected": "source_id_collision",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "source_id_collision",
+      "passed": true
+    },
+    {
+      "control": "missing_provenance",
+      "expected": "missing_provenance",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": false,
+      "observed": "missing_provenance",
+      "passed": true
+    },
+    {
+      "control": "deliberately_stale_cache",
+      "expected": true,
+      "fresh_prediction": "contradicted",
+      "included_in_primary_rows": false,
+      "labelled_negative_control": true,
+      "observed": true,
+      "passed": true,
+      "stale_prediction": "supported"
+    }
+  ]
+}
