@@ -19974,3 +19974,4 @@ timed alternative is available.
 - 2026-09-14: Build a versioned source-compilation reuse fixture (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_fixture_ready_but_repository_full_suite_failed; results/experiment_7291_v641_reuse_fixture.json
 - 2026-09-14: Canary Qwen3.8 source reuse and warm-prefix comparators (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_canary_ready_but_repository_full_suite_failed; results/experiment_7292_v641_reuse_canary.json
 - 2026-09-14: Measure fresh-source reuse parity and end-to-end cost (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_validation_failed; results/experiment_7293_v641_reuse_measurement.json
+- 2026-09-14: Independently audit source reuse safety and amortization (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_audit_validation_failed; results/experiment_7294_v641_reuse_audit.json
