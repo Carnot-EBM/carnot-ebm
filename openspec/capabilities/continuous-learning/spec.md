@@ -15539,6 +15539,115 @@ use `execution_venue=host`.
 |---|---|---|
 | REQ-CL-7298 and SCENARIO-CL-7298-* | Implemented: opt-in SQLite full-snapshot adapter, native parity, five-boundary crash matrix, fail-closed controls, cold reduction, and terminal evidence. | `tests/python/test_experiment_7298_v641_snapshot_journal.py`; 18 focused tests pass and 835 of 835 scoped statements are covered. |
 
+## REQ-CL-7299: Persistent Full-Snapshot Storage Cost
+
+Carnot SHALL authenticate the exact Exp7298 terminal artifact before measuring
+storage cost. The artifact SHALL be complete and SHALL report
+`snapshot_journal_ready_score=1`. A missing, changed, quarantined, retired, or
+incomplete external prerequisite SHALL produce row-free terminal blocked
+evidence. `gate_check_summary` SHALL name the failed input, exact field,
+observed value, and expected value. Same-milestone Exp7299 paths are outputs,
+not prerequisites.
+
+The benchmark SHALL freeze eight independent seeds. Each seed SHALL use the
+same task-owned local filesystem, serialized initial state, event stream,
+arrival schedule, native transition, queue limits, and grouping for both
+storage arms. The arms SHALL be the existing atomic replacement writer and the
+Exp7298 persistent SQLite full-snapshot adapter. Each arm SHALL run maximum
+group sizes 1, 4, and 16 for burst, steady-paced, and interactive-dependent
+arrivals. Each trial SHALL contain 256 events. Arm order SHALL be interleaved
+from the frozen seed before results are observed. Files SHALL be disjoint.
+
+The benchmark SHALL retain initialization, queue wait, native transition,
+serialization, database or file write, sync, acknowledgment, retry, recovery,
+and total time. It SHALL not disable sync, reduce native work, reduce updates,
+change deadlines, or change the queue contract. The benchmark budget SHALL be
+1,800 seconds. Each incomplete paired run SHALL remain in the rows with an
+explicit censored disposition.
+
+An independent reducer SHALL verify row hashes and recompute seed-cluster
+bootstrap intervals with 10,000 draws. The deployment candidate is fixed as
+SQLite group 16 before measurement. It SHALL require the burst throughput
+ratio lower 95 percent bound to be at least 1.5 against matched atomic group
+16. It SHALL also require steady p95 acknowledgment latency at most 50 ms and
+an interactive acknowledgment latency ratio upper 95 percent bound at most
+1.05. Every acknowledged event SHALL survive exactly once. Native state bytes
+and event order SHALL match. Original queue limits SHALL remain unchanged.
+Group sizes 1 and 4 are sensitivity results only.
+
+The E2E SHALL run native transition, the same queue contract, measured durable
+acknowledgment, process restart, and independent recovered-state comparison for
+both writers. Restart and crash controls SHALL operate on measured artifacts.
+Cold totals SHALL include initialization. Steady totals SHALL exclude only
+initialization and recovery. A warm-only win SHALL not pass the joint gate.
+Filesystem caching, firmware sync honesty, and physical power-loss behavior
+SHALL remain explicit limitations.
+
+`snapshot_capture_complete_score=1` SHALL require complete paired workloads,
+authenticated identities, complete cost rows, independent reduction, and
+restart evidence. `snapshot_value_score=1` SHALL require every fixed group-16
+burst, steady, interactive, durability, parity, cold-total, and queue gate.
+The original NFR-01 full-boundary target of at least 10x SHALL be assessed
+separately. A local 1.5x pass does not satisfy NFR-01. Host results SHALL not
+imply FPGA performance or tenfold Carnot acceleration.
+
+The task SHALL use run date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Every current load and generation counter SHALL be zero.
+CPU transition, replay, benchmark, and test work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. The read-only
+reducer SHALL use `aggregation_from_upstream_artifacts` and class
+`aggregation`. Execution SHALL use `execution_venue=host`. Same-authority
+native parity SHALL set `verifier_is_oracle=true`. A passing local value result
+SHALL therefore use `verdict_class=circular_positive`, never `positive`.
+
+### SCENARIO-CL-7299-PRECONDITIONS: Snapshot Journal Evidence Is Exact Or Work Blocks
+
+- GIVEN Exp7298, its producer bytes, exclusions, filesystem, and output paths
+- WHEN checksums, readiness, quarantine, retirement, identities, and ownership are checked
+- THEN only exact complete protocol evidence can start measurement
+- AND each external failure produces terminal blocked evidence with no measured rows.
+
+### SCENARIO-CL-7299-PAIRING: Writers Receive Identical Frozen Work
+
+- GIVEN eight seeds, three arrival processes, three groups, and two writers
+- WHEN each 256-event trial runs in its frozen interleaved order
+- THEN matched arms use identical initial bytes, events, schedules, deadlines, and native calls
+- AND disjoint files preserve every complete or censored paired unit.
+
+### SCENARIO-CL-7299-COSTS: Full Boundary Costs Reconcile
+
+- GIVEN one measured initialization, event submission, durable group, acknowledgment, and restart
+- WHEN exclusive phase costs are reduced
+- THEN initialization, queue, native, serialization, write, sync, acknowledgment, retry, and recovery remain separate
+- AND cold and steady totals reconcile without treating cached host timing as power-loss proof.
+
+### SCENARIO-CL-7299-REDUCTION: Fixed Group Sixteen Gates Use Cluster Bootstrap
+
+- GIVEN saved row-level acknowledgment and throughput evidence
+- WHEN a fresh reducer performs 10,000 seed-cluster bootstrap draws
+- THEN it reports fixed group-16 burst and interactive ratio bounds plus steady p95
+- AND group sizes 1 and 4 remain sensitivity results, not post-result selections.
+
+### SCENARIO-CL-7299-RECOVERY: Measured Artifacts Restore Independently
+
+- GIVEN acknowledged atomic and SQLite measured states and fixed crash controls
+- WHEN each writer is killed or closed and opened in a fresh process
+- THEN acknowledged sequences, exact native bytes, hashes, and next decisions match
+- AND committed but unacknowledged work receives no credit and is never applied twice.
+
+### SCENARIO-CL-7299-TERMINAL: Capture Value And NFR-01 Stay Separate
+
+- GIVEN complete paired costs, parity, recovery, queue controls, and fixed value gates
+- WHEN the terminal artifact is classified
+- THEN capture completeness, bounded deployment value, and the original 10x target are separate
+- AND no FPGA, physical power-loss, production-default, or tenfold Carnot claim follows.
+
+## Implementation Status (REQ-CL-7299)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7299 and SCENARIO-CL-7299-* | Implemented: fixed paired atomic-versus-SQLite benchmark, complete phase costs, fixed group-16 cluster bootstrap reduction, independent measured-artifact restart checks, and atomic terminal evidence. | `tests/python/test_experiment_7299_v641_snapshot_cost.py`; 14 focused tests pass and 768 of 768 scoped statements are covered. |
+
 ## REQ-CL-7295: Bounded Fixed-Share Selection Over Complete Hypotheses
 
 Carnot SHALL provide an opt-in fixed-share controller. The controller SHALL

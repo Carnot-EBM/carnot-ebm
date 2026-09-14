@@ -1,0 +1,65 @@
+{
+  "schema": "carnot.exp7299.validation_checkpoint.v1",
+  "status": "partial_validation_retryable",
+  "validation_receipts": [
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7299_v641_snapshot_cost.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7299-focused"
+      ],
+      "duration_s": 5.252753171836957,
+      "exit_code": 0,
+      "log_sha256": "sha256:697cd71f7cbdf43ba9edee0e5fd2feefcc26261aea6f12ade18bebd0b14323d1",
+      "name": "focused_pytest"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/python/test_experiment_7299_v641_snapshot_cost.py",
+        "tests/python/test_experiment_7298_v641_snapshot_journal.py",
+        "tests/python/test_experiment_7285_v640_commit_frontier.py",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7299-affected"
+      ],
+      "duration_s": 79.26541985198855,
+      "exit_code": 0,
+      "log_sha256": "sha256:86e0379752ec9e5fbde4387ae4a34d7c7f73cff16212096f0e9aa26c959a5880",
+      "name": "affected_suites"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-m",
+        "pytest",
+        "tests/python",
+        "-q",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7299-full"
+      ],
+      "duration_s": 43.11501199589111,
+      "exit_code": 1,
+      "log_sha256": "sha256:08e9ef851ebc3fe737be1257ba3cc47fe3993f02a21b78ce7880c7b9f6dad6de",
+      "name": "full_python_suite"
+    }
+  ]
+}
