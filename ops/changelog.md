@@ -19989,3 +19989,4 @@ timed alternative is available.
 - 2026-09-14: Run one adapter-withheld live selfparse generalization session (⚠️ Research Finding) — honest_verdict=complete_null_no_runtime_tool_result_to_policy_action_chain; results/experiment_7305_v642_arc_selfparse.json
 - 2026-09-14: Build joint-claim source verification and matched batch controls (⚠️ Research Finding) — honest_verdict=complete_disqualified_batch_fixture_validation_failed; results/experiment_7306_v642_batch_fixture.json
 - 2026-09-14: Qualify bounded Qwen3.8 joint-claim transport (⚠️ Blocked) — honest_verdict=blocked_exp7306_upstream_terminal_class; results/experiment_7307_v642_batch_canary.json
+- 2026-09-14: Prototype factor-local revision from delayed constraint feedback (⚠️ Research Finding) — honest_verdict=complete_circular_positive: bounded factor-local revision fixture is ready; prospective efficacy remains unmeasured; results/experiment_7310_v642_factor_prototype.json
