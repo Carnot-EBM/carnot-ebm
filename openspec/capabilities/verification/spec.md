@@ -42576,3 +42576,109 @@ consistency SHALL pass before atomic publication.
 **When** an independent reducer replays the complete measurement
 **Then** source revision, invalidation, extraction, verification, scoring, and cost reconstruct
 **And** only a cold-valid terminal candidate is atomically published.
+
+### REQ-VERIFY-7294: Reuse Audit SHALL Reconstruct Correlated Cost And Parity
+
+Exp7294 SHALL authenticate the exact Exp7293 measurement artifact and the
+frozen Exp7291 contract. It SHALL require only
+`reuse_capture_complete_score=1` from Exp7293. It SHALL not gate audit work on
+`reuse_value_score`, an upstream verdict class, or another upstream efficacy
+score. Missing, retired, quarantined, or invalid external evidence SHALL
+produce a terminal blocked artifact with an exact `gate_check_summary`.
+
+The audit SHALL hash the Exp7291 manifest, analysis contract, scorer authority,
+and model and parser identities. It SHALL authenticate the Exp7293 raw call
+manifest and every retained call byte stream. It SHALL require sixteen source
+groups, 128 distinct claims, and three arms. It SHALL require all 672 planned
+calls and a complete per-unit row for every claim and arm.
+
+The audit SHALL reconstruct each decision from saved bytes with the shipped
+mention-pointer parser. A separate scorer-only reader SHALL add labels only
+after reconstruction. The reducer SHALL not copy upstream headline
+aggregates. It SHALL preserve failed source compilation as a shared event for
+all dependent claims. It SHALL keep unsupported-claim abstentions in each
+accuracy, coverage, and false-accept denominator.
+
+The audit SHALL compute exact cached-versus-fresh prediction parity, stale
+serves, accuracy, false accepts, abstentions, coverage, and complete cost for
+every query and source group. Complete cost SHALL include initialization,
+source compilation, prefix prefill, lookup or invalidation, claim extraction,
+verification, synchronization, and failed calls. It SHALL report cold-start
+gain and steady-state gain separately. It SHALL require positive gain after
+initialization and SHALL not promote a warm-only result when cold cost fails.
+
+The paired reduction SHALL resample sixteen source groups. It SHALL not
+resample correlated claims. It SHALL use 10,000 draws and one frozen seed. It
+SHALL report one-sided 95 percent lower bounds for accuracy difference,
+coverage difference, and eight-claim full-cost speedup. It SHALL retain the
+estimate, bound, unit count, and numerator or denominator for each criterion.
+Sixteen groups SHALL not support a rare-event assurance claim.
+
+The frozen gates SHALL require zero cached-versus-fresh semantic mismatches,
+zero stale serves, accuracy and coverage lower differences versus warm direct
+of at least -0.02, empirical false accepts no greater than direct, an
+eight-claim full-cost speedup lower bound of at least 1.5, and positive
+cold-start and steady-state gains. `reuse_audit_complete_score` SHALL equal one
+when the independent reduction and all audit controls finish. A failed
+scientific gate SHALL yield a complete null result.
+`reuse_promotion_score` SHALL equal one only when every audit, parity, safety,
+and full-cost gate passes with authentic authority separation. Shared verifier
+authority forbids a positive verdict.
+
+The audit SHALL mutate a source-version receipt, reuse a changed entity,
+shuffle source-group labels, omit a failed call, and permute identical source
+IDs. Each corrupted copy SHALL be rejected. Control copies SHALL never replace
+real evidence. The audit SHALL also reconstruct extracted source spans from
+the saved source bytes.
+
+The terminal artifact SHALL contain every field required by the Exp7294 task.
+It SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero load and
+generation counters, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. A measured
+candidate SHALL first exist under
+`results/raw/experiment_7294_v641_reuse_audit/`. Focused tests, affected
+suites, scoped coverage, Ruff, mypy, exact-test spec coverage, independent raw
+reduction, adversarial verification, and verdict-row consistency SHALL pass
+before atomic publication.
+
+#### SCENARIO-VERIFY-7294-AUTH: Audit Readiness Does Not Depend On Efficacy
+
+**Given** authentic Exp7293 evidence with `reuse_capture_complete_score=1`
+**When** an upstream value score or verdict reports a scientific failure
+**Then** Exp7294 still performs the independent audit
+**And** only missing or invalid evidence produces a blocked record.
+
+#### SCENARIO-VERIFY-7294-REPLAY: Saved Bytes Reconstruct All Decisions
+
+**Given** 672 authenticated call records and separate scorer labels
+**When** the audit parses source, claim, and direct response bytes
+**Then** it reconstructs 128 claims across all three arms without headline aggregates
+**And** each source failure remains correlated across every dependent claim.
+
+#### SCENARIO-VERIFY-7294-BOOTSTRAP: Source Groups Define Uncertainty
+
+**Given** eight correlated claim rows in each of sixteen source groups
+**When** the audit draws 10,000 paired bootstrap samples
+**Then** each draw samples source groups and keeps their claims together
+**And** every bound reports its group denominator and absolute counts.
+
+#### SCENARIO-VERIFY-7294-CONTROLS: Every Frozen Corruption Fails Closed
+
+**Given** five isolated copies of authenticated raw evidence
+**When** version, entity, label, missing-call, and source-ID mutations run
+**Then** the audit rejects every corrupted copy with a named finding
+**And** the control copies do not change the measured evidence.
+
+#### SCENARIO-VERIFY-7294-GATES: Cold Cost Controls Promotion
+
+**Given** reconstructed parity, safety, coverage, and complete costs
+**When** warm throughput passes but initialization removes the cold gain
+**Then** the joint value gate and `reuse_promotion_score` fail
+**And** the terminal result remains a complete audit with a null verdict.
+
+#### SCENARIO-VERIFY-7294-E2E: Raw Capture Reaches One Atomic Verdict
+
+**Given** immutable live capture, frozen contracts, and scorer-only labels
+**When** replay, group reduction, corruption controls, and promotion gates finish
+**Then** a cold validator reproduces the result from raw evidence
+**And** only the validated terminal candidate is published atomically.
