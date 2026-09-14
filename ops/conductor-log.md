@@ -17935,3 +17935,4 @@ code |
 | 2026-09-14 05:28 UTC | Measure fresh-source reuse parity and end-to-end c | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (790s silence). Last out |
 | 2026-09-14 06:18 UTC | Measure fresh-source reuse parity and end-to-end c | OK | 87 passed, 1 warning in 7.47s |
 | 2026-09-14 06:50 UTC | Independently audit source reuse safety and amorti | OK | 89 passed, 1 warning in 9.88s |
+| 2026-09-14 07:43 UTC | Prototype bounded delayed-feedback hypothesis mixt | OK | 96 passed, 1 warning in 64.25s (0:01:04) |
