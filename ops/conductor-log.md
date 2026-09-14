@@ -17920,3 +17920,4 @@ code |
 | 2026-09-14 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_artifact_run_date age-week 0: OPEN 1 days: SILENT_NON_FI |
 | 2026-09-14 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 0: OPEN 1 days: SILENT_NON |
 | 2026-09-14 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7267_v639_recognition_prototype.json age-week 0: OPEN 1 days: CLAIM_O |
+| 2026-09-14 00:36 UTC | V640 independent evidence matrix and next-branch d | OK | 102 passed, 1 warning in 23.65s |
