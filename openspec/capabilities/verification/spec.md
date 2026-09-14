@@ -42790,3 +42790,98 @@ artifact SHALL include every field required by the Exp7306 task, including
 **When** the joint response is parsed and each compiled claim reaches the exact executor
 **Then** the independent scorer reconstructs all four decisions from hash-bound public rows
 **And** only a cold-valid terminal candidate is atomically published.
+
+### REQ-VERIFY-7307: Live Batch Canary SHALL Fail Closed And Replay Native Bytes
+
+Exp7307 SHALL authenticate the Exp7306 fixture, public development panel,
+exclusion manifest, research contract, model directive, and output paths before
+model work. The Exp7306 artifact SHALL have `batch_fixture_ready_score=1` and a
+non-failure terminal class. Missing, quarantined, retired, blocked, or
+disqualified evidence SHALL produce a terminal blocked artifact before model
+loading. The `gate_check_summary` SHALL retain the failed check, upstream,
+field, observed value, and expected value exactly.
+
+When all dependencies pass, Exp7307 SHALL select two development source
+versions with four claims each. It SHALL compare serial versioned verification,
+joint versioned verification, and joint direct decisions. The schedule SHALL
+contain at most sixteen calls: ten serial, four joint-verifier, and two direct.
+Each arm and source version SHALL receive at most 1,280 output tokens. Total
+allocation SHALL not exceed 7,680 output tokens. No retry, repair, evaluation
+row, or threshold tuning is permitted.
+
+The live path SHALL use `unsloth/Qwen3.8-27B-GGUF` from
+`cached_current_model()`. It SHALL load the resolved GGUF through llama.cpp and
+use its embedded tokenizer. The run SHALL set `CARNOT_FORCE_LIVE=1` and SHALL
+not substitute a smaller or simulated model. It SHALL reserve an available GPU
+without interrupting another user. A bounded lease failure SHALL produce a
+terminal blocked artifact.
+
+Every attempted request SHALL retain native request and response bytes before
+content interpretation. Every arm SHALL account for all eight requested claim
+identifiers. An independent replay SHALL reconstruct parser decisions from the
+retained bytes. Missing, duplicate, unknown, or mismatched identifiers SHALL
+remain failures or abstentions. No mock response can replace a failed live
+request after a model load.
+
+`batch_canary_ready_score` SHALL equal one only when CUDA invocation is
+authentic, all calls are accounted for, identifiers transport correctly, and
+native replay agrees. This gate permits a later scale test. It does not measure
+source correctness or scientific superiority. Shared verifier authority SHALL
+limit a successful verdict to `circular_positive`. Semantically wrong but valid
+responses SHALL remain in the rows.
+
+The artifact SHALL distinguish load and generation attempts, completions,
+failures, cancellations, and in-flight work. Any attempted load SHALL set
+`model_invoked=true`. Generation attempts SHALL use `live_llm_inference` and
+`model_bounded_generation`. Load-only work SHALL use
+`model_load_no_generation`. A pre-load external block SHALL record the actual
+no-model substrate.
+
+#### SCENARIO-VERIFY-7307-DEPENDENCY: A Disqualified Fixture Blocks Before Model Load
+
+**Given** Exp7306 has `batch_fixture_ready_score=1` and `verdict_class=disqualified`
+**When** Exp7307 authenticates same-milestone inputs
+**Then** it writes a terminal `blocked` result with zero load and generation attempts
+**And** `gate_check_summary` reports the exact Exp7306 terminal-class comparison.
+
+#### SCENARIO-VERIFY-7307-CALLS: Two Versions Use Sixteen Bounded Calls
+
+**Given** two development source versions with four claims each
+**When** all three live arms execute once
+**Then** the schedule contains ten serial, four joint-verifier, and two direct calls
+**And** each arm-version allocation is at most 1,280 tokens and total allocation is 7,680 tokens.
+
+#### SCENARIO-VERIFY-7307-IDS: Each Arm Accounts For Eight Identifiers
+
+**Given** eight claim identifiers requested by each arm
+**When** native responses arrive with any order or transport failure
+**Then** each identifier has one explicit completed, failed, or censored outcome
+**And** no parser joins a response by list position.
+
+#### SCENARIO-VERIFY-7307-REPLAY: Native Bytes Reconstruct Parser Decisions
+
+**Given** retained native request and response bytes for every attempted call
+**When** an independent parser replays the evidence
+**Then** its decisions match every retained parser decision exactly
+**And** corrupt or absent bytes fail without a generated fallback.
+
+#### SCENARIO-VERIFY-7307-PROVENANCE: Readiness Requires Owned CUDA Work
+
+**Given** the mandated cached GGUF and an available reserved GPU
+**When** the owned llama.cpp process loads and serves the fixed schedule
+**Then** runtime identity binds the GGUF hash, embedded tokenizer, backend, CUDA support, and device work
+**And** CPU replay or model loading without generation cannot set `batch_canary_ready_score=1`.
+
+#### SCENARIO-VERIFY-7307-GATE: Transport Success Is Not Source Verification
+
+**Given** complete authentic transport and reproducible parser replay
+**When** one or more model decisions are semantically wrong
+**Then** those decisions remain in the rows and readiness can still equal one
+**And** the verdict is at most `circular_positive` with no source-value claim.
+
+#### SCENARIO-VERIFY-7307-E2E: One Command Produces A Cold-Valid Terminal Record
+
+**Given** authenticated dependencies and task-owned raw and checkpoint paths
+**When** the unbuffered Exp7307 entrypoint runs
+**Then** it streams phase and slow-call boundaries through validation
+**And** it atomically publishes only the validated terminal result.

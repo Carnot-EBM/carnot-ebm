@@ -1,0 +1,736 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "acceptance_gate_results": [
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "required_path_available",
+      "expected": "file",
+      "observed": "file",
+      "passed": true,
+      "principle": "Every named input must exist before model work starts."
+    },
+    {
+      "criterion": "declared_output_path",
+      "expected": "inside_results",
+      "observed": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree."
+    },
+    {
+      "criterion": "declared_output_path",
+      "expected": "inside_results",
+      "observed": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree."
+    },
+    {
+      "criterion": "declared_output_path",
+      "expected": "inside_results",
+      "observed": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree."
+    },
+    {
+      "criterion": "upstream_artifact_validation",
+      "expected": [],
+      "observed": [],
+      "passed": true,
+      "principle": "The exact producer validator must accept the stored artifact bytes."
+    },
+    {
+      "criterion": "upstream_status",
+      "expected": "complete",
+      "observed": "complete",
+      "passed": true,
+      "principle": "A same-milestone input must be terminal before the canary can consume it."
+    },
+    {
+      "criterion": "batch_fixture_ready",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "The CPU fixture must seal the request and parser contract first."
+    },
+    {
+      "criterion": "upstream_quarantine",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Quarantined evidence cannot authorize new model work."
+    },
+    {
+      "criterion": "upstream_terminal_class",
+      "expected": "not blocked or disqualified",
+      "observed": "disqualified",
+      "passed": false,
+      "principle": "A numeric readiness value cannot override a failed terminal class."
+    },
+    {
+      "criterion": "upstream_producer_identity",
+      "expected": "exp7306-batch-fixture",
+      "observed": "exp7306-batch-fixture",
+      "passed": true,
+      "principle": "The dependency must come from the named producer."
+    },
+    {
+      "criterion": "public_panel_schema",
+      "expected": "carnot.batch_fixture.public_panel.v1",
+      "observed": "carnot.batch_fixture.public_panel.v1",
+      "passed": true,
+      "principle": "The live requests must use the sealed public panel format."
+    },
+    {
+      "criterion": "development_split_available",
+      "expected": 8,
+      "observed": 8,
+      "passed": true,
+      "principle": "The canary may use only the sealed development split."
+    },
+    {
+      "criterion": "public_authority_isolation",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Evaluator labels cannot enter model prompts or transport checks."
+    },
+    {
+      "criterion": "retirement_and_exclusion",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "Retired or excluded work cannot silently resume."
+    },
+    {
+      "criterion": "current_model_directive",
+      "expected": "unsloth/Qwen3.8-27B-GGUF",
+      "observed": "unsloth/Qwen3.8-27B-GGUF",
+      "passed": true,
+      "principle": "The canary cannot silently select another cached model."
+    }
+  ],
+  "batch_canary_ready_score": 0,
+  "call_budget_contract": {
+    "batched_versioned_verifier": {
+      "allocated_output_tokens": 2560,
+      "calls": 4
+    },
+    "batched_warm_prefix_direct": {
+      "allocated_output_tokens": 2560,
+      "calls": 2
+    },
+    "claims_per_source_version": 4,
+    "per_arm_source_version_output_tokens": 1280,
+    "repair_calls": 0,
+    "retry_calls": 0,
+    "serial_versioned_verifier": {
+      "allocated_output_tokens": 2560,
+      "calls": 10
+    },
+    "source_versions": 2,
+    "total_allocated_output_tokens": 7680,
+    "total_generation_calls_maximum": 16
+  },
+  "duration_s": 3122.7582599602174,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7307-batch-canary",
+  "field_principles": {
+    "MODEL_SPECS": "Actual current executable model identities; historical identities remain in sidecars.",
+    "acceptance_gate_results": "Every check has expected, observed, passed, and a one-line principle explaining its purpose.",
+    "batch_canary_ready_score": "One for real bounded transport and replay, not source correctness.",
+    "duration_s": "Measure total elapsed and disjoint phase spans including failed work.",
+    "execution_venue": "Record actual host/device work; a CPU replay is not GPU or FPGA execution.",
+    "gate_check_summary": "Every blocked_* names upstream/check, exact field, observed value, and expected value.",
+    "honest_verdict": "Completed findings start complete_ or complete:; external failure starts blocked_. State the finding.",
+    "inference_substrate": "Describe actual computation with a recognized literal, not intended work.",
+    "inference_substrate_class": "Full generation has a 60s floor; bounded generation 10s; load-only 2s. Never pad time.",
+    "invocation_counts": "Separate attempted, completed, failed, cancelled, and in-flight loads and generations.",
+    "model_invoked": "True for any attempted model load or generation, even when output is unusable.",
+    "parser_replay_receipt": "Independent bytes-to-decisions reconstruction must agree.",
+    "per_call_rows": "Native request/output, IDs, budgets, and exact attempts make the canary auditable.",
+    "preconditions_checked": "Hash real inputs and record actual availability and failed checks.",
+    "random_seed": "Seal development and independent evaluation seeds before seeing outcomes.",
+    "reproducibility_checksum": "Bind code, inputs, config, model when used, and raw evidence.",
+    "rows": "Record every comparative unit/arm with metrics, costs, errors, abstentions, and censoring.",
+    "run_date": "Use 20260914 with actual UTC start/end and monotonic phase timing.",
+    "runtime_model_identity": "The cached model and actual backend must match the directive.",
+    "sample_size_budget": "Keep planned, attempted, complete, and censored counts with the frozen stopping rule.",
+    "schema": "Version the record while keeping ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Authenticate producer identity, terminal class, and quarantine state.",
+    "status": "Write the terminal result only after the work and checks; checkpoints remain separate.",
+    "validation_receipts": "Record exact commands, scope, exit codes, elapsed time, and log hashes; retain failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial; unchanged external failure is blocked.",
+    "verifier_is_oracle": "Shared evaluator authority permits circular_positive only, not positive scientific value."
+  },
+  "gate_check_summary": {
+    "expected_value": "not blocked or disqualified",
+    "failed_check": "upstream_terminal_class",
+    "field": "verdict_class",
+    "observed_value": "disqualified",
+    "upstream": "exp7306-batch-fixture"
+  },
+  "gpu_receipts": {
+    "cuda_work_observed": false,
+    "other_users_interrupted": false,
+    "reservation_status": "not_attempted_external_dependency_block"
+  },
+  "honest_verdict": "blocked_exp7306_upstream_terminal_class",
+  "inference_mode": "not_invoked",
+  "inference_substrate": "blocked_before_qualifying_computation",
+  "inference_substrate_class": "blocked_no_run",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "methodology_note": "This is a bounded transport canary with no source-verification value claim. The disqualified fixture stopped work before model resolution, loading, generation, or replay.",
+  "milestone": "2026.09.642",
+  "model_invoked": false,
+  "parser_replay_receipt": {
+    "all_identifiers_accounted": false,
+    "decision_discrepancies": [],
+    "native_rows_attempted": 0,
+    "native_rows_replayed": 0,
+    "status": "not_attempted_external_block"
+  },
+  "per_call_rows": [],
+  "phase_spans": [
+    {
+      "duration_s": 0.10931743704713881,
+      "phase": "authenticate_inputs"
+    },
+    {
+      "duration_s": 3122.6414474979974,
+      "phase": "required_validations"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7306_v642_batch_fixture.json",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:00f4775588aa90b43e7de34d7911de016363c150600a1724e4e181d4240fa0e3",
+      "upstream": "upstream"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7306_v642_batch_fixture/public_panel.json",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:f76085153b76b24ffa96029fc72061265710697122ced41ba759607c4da4f787",
+      "upstream": "public_panel"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "upstream": "exclusion_manifest"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "upstream": "research_program"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/verification/spec.md",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:a5f3e324c67dc28a1e637d907c4a491b1aaab646d355366a18f1ca636aea74b5",
+      "upstream": "verification_spec"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/sota_models.py",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "upstream": "sota_model_registry"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7307_v642_batch_canary.py",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:827a89c853940b401467039800cf3dc667b5bd402bf79ac09971df72d1052cda",
+      "upstream": "module"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7307_v642_batch_canary.py",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:385af227e17af1f78edf46b0b79a302fc8f1e12ba338fbcea6436cd257990401",
+      "upstream": "entrypoint"
+    },
+    {
+      "check": "required_path_available",
+      "expected_value": "file",
+      "field": "path",
+      "observed_value": "file",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7307_v642_batch_canary.py",
+      "principle": "Every named input must exist before model work starts.",
+      "sha256": "sha256:9281bd83aac4319cb3f78965e4535d3f735a0b737947b5ea2d063156da47ce21",
+      "upstream": "focused_tests"
+    },
+    {
+      "check": "declared_output_path",
+      "expected_value": "inside_results",
+      "field": "path_scope",
+      "observed_value": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree.",
+      "upstream": "terminal_result"
+    },
+    {
+      "check": "declared_output_path",
+      "expected_value": "inside_results",
+      "field": "path_scope",
+      "observed_value": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree.",
+      "upstream": "raw_evidence"
+    },
+    {
+      "check": "declared_output_path",
+      "expected_value": "inside_results",
+      "field": "path_scope",
+      "observed_value": "inside_results",
+      "passed": true,
+      "principle": "Task outputs must stay inside the declared results tree.",
+      "upstream": "checkpoint"
+    },
+    {
+      "check": "upstream_artifact_validation",
+      "expected_value": [],
+      "field": "schema_and_checksum",
+      "observed_value": [],
+      "passed": true,
+      "principle": "The exact producer validator must accept the stored artifact bytes.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "upstream_status",
+      "expected_value": "complete",
+      "field": "status",
+      "observed_value": "complete",
+      "passed": true,
+      "principle": "A same-milestone input must be terminal before the canary can consume it.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "batch_fixture_ready",
+      "expected_value": 1,
+      "field": "batch_fixture_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "principle": "The CPU fixture must seal the request and parser contract first.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "upstream_quarantine",
+      "expected_value": false,
+      "field": "quarantined_or_flagged_adversarial",
+      "observed_value": false,
+      "passed": true,
+      "principle": "Quarantined evidence cannot authorize new model work.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "upstream_terminal_class",
+      "expected_value": "not blocked or disqualified",
+      "field": "verdict_class",
+      "observed_value": "disqualified",
+      "passed": false,
+      "principle": "A numeric readiness value cannot override a failed terminal class.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "upstream_producer_identity",
+      "expected_value": "exp7306-batch-fixture",
+      "field": "experiment_id",
+      "observed_value": "exp7306-batch-fixture",
+      "passed": true,
+      "principle": "The dependency must come from the named producer.",
+      "upstream": "exp7306-batch-fixture"
+    },
+    {
+      "check": "public_panel_schema",
+      "expected_value": "carnot.batch_fixture.public_panel.v1",
+      "field": "schema",
+      "observed_value": "carnot.batch_fixture.public_panel.v1",
+      "passed": true,
+      "principle": "The live requests must use the sealed public panel format.",
+      "upstream": "results/raw/experiment_7306_v642_batch_fixture/public_panel.json"
+    },
+    {
+      "check": "development_split_available",
+      "expected_value": 8,
+      "field": "development_group_count",
+      "observed_value": 8,
+      "passed": true,
+      "principle": "The canary may use only the sealed development split.",
+      "upstream": "results/raw/experiment_7306_v642_batch_fixture/public_panel.json"
+    },
+    {
+      "check": "public_authority_isolation",
+      "expected_value": false,
+      "field": "private_label_fields_present",
+      "observed_value": false,
+      "passed": true,
+      "principle": "Evaluator labels cannot enter model prompts or transport checks.",
+      "upstream": "results/raw/experiment_7306_v642_batch_fixture/public_panel.json"
+    },
+    {
+      "check": "retirement_and_exclusion",
+      "expected_value": false,
+      "field": "experiment_or_dependency_listed",
+      "observed_value": false,
+      "passed": true,
+      "principle": "Retired or excluded work cannot silently resume.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "current_model_directive",
+      "expected_value": "unsloth/Qwen3.8-27B-GGUF",
+      "field": "hf_id",
+      "observed_value": "unsloth/Qwen3.8-27B-GGUF",
+      "passed": true,
+      "principle": "The canary cannot silently select another cached model.",
+      "upstream": "python/carnot/inference/sota_models.py"
+    }
+  ],
+  "random_seed": {
+    "development": 7306101,
+    "evaluation_observed": false,
+    "independent_evaluation": 7306201,
+    "sealed_before_outcomes": true
+  },
+  "repository_health": {
+    "all_required_validations_passed": false,
+    "failed_validation_names": [
+      "full_python_suite"
+    ],
+    "preserved_upstream_failure": "full_python_suite",
+    "preserved_upstream_full_suite_log_sha256": "sha256:823b3369a44a241aa4f0c41e6d25cefa1397a3a5169f5eb1d5653097feba7a60"
+  },
+  "reproducibility_checksum": "sha256:af696033cdbaefc0d5f2c89e8c4afda3df92e44431da6cd0f9372681d9124dc1",
+  "rows": [],
+  "run_date": "20260914",
+  "runtime_model_identity": {
+    "actual_gguf_path": null,
+    "backend": "not_loaded",
+    "cache_capability": "not_checked_external_dependency_block",
+    "cuda_support": "not_checked_external_dependency_block",
+    "directive_hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "embedded_tokenizer": "not_checked_external_dependency_block",
+    "gguf_sha256": null,
+    "quantization": "Q4_K_M",
+    "resolution_status": "not_resolved_external_dependency_block"
+  },
+  "sample_size_budget": {
+    "attempted_generation_calls": 0,
+    "cancelled_generation_calls": 0,
+    "censored_comparative_rows": 24,
+    "censored_generation_calls": 16,
+    "complete_comparative_rows": 0,
+    "completed_generation_calls": 0,
+    "failed_generation_calls": 0,
+    "planned_comparative_rows": 24,
+    "planned_generation_calls": 16,
+    "planned_output_tokens": 7680,
+    "planned_source_versions": 2,
+    "planned_units_per_arm": 8,
+    "stopping_rule": "stop on any failed external dependency; otherwise attempt the fixed sixteen calls once without retry, repair, or tuning"
+  },
+  "schema": "carnot.exp7307.v642_batch_canary.v1",
+  "sealed_development_manifest": {
+    "claim_identifiers_per_arm": 8,
+    "evaluation_rows_used": 0,
+    "schedule_status": "not_built_external_dependency_block",
+    "source_versions": 2
+  },
+  "source_artifact_hashes": {
+    "openspec/capabilities/verification/spec.md": {
+      "producer_identity": "verification_spec",
+      "quarantined": false,
+      "sha256": "sha256:a5f3e324c67dc28a1e637d907c4a491b1aaab646d355366a18f1ca636aea74b5",
+      "terminal_class": "source_file"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "producer_identity": "exclusion_manifest",
+      "quarantined": false,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "terminal_class": "source_file"
+    },
+    "python/carnot/experiment_7307_v642_batch_canary.py": {
+      "producer_identity": "module",
+      "quarantined": false,
+      "sha256": "sha256:827a89c853940b401467039800cf3dc667b5bd402bf79ac09971df72d1052cda",
+      "terminal_class": "source_file"
+    },
+    "python/carnot/inference/sota_models.py": {
+      "producer_identity": "sota_model_registry",
+      "quarantined": false,
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "terminal_class": "source_file"
+    },
+    "research-program.md": {
+      "producer_identity": "research_program",
+      "quarantined": false,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "terminal_class": "source_file"
+    },
+    "results/experiment_7306_v642_batch_fixture.json": {
+      "producer_identity": "exp7306-batch-fixture",
+      "quarantined": false,
+      "sha256": "sha256:00f4775588aa90b43e7de34d7911de016363c150600a1724e4e181d4240fa0e3",
+      "terminal_class": "disqualified"
+    },
+    "results/raw/experiment_7306_v642_batch_fixture/public_panel.json": {
+      "producer_identity": "public_panel",
+      "quarantined": false,
+      "sha256": "sha256:f76085153b76b24ffa96029fc72061265710697122ced41ba759607c4da4f787",
+      "terminal_class": "source_file"
+    },
+    "scripts/experiments/experiment_7307_v642_batch_canary.py": {
+      "producer_identity": "entrypoint",
+      "quarantined": false,
+      "sha256": "sha256:385af227e17af1f78edf46b0b79a302fc8f1e12ba338fbcea6436cd257990401",
+      "terminal_class": "source_file"
+    },
+    "tests/python/test_experiment_7307_v642_batch_canary.py": {
+      "producer_identity": "focused_tests",
+      "quarantined": false,
+      "sha256": "sha256:9281bd83aac4319cb3f78965e4535d3f735a0b737947b5ea2d063156da47ce21",
+      "terminal_class": "source_file"
+    }
+  },
+  "status": "blocked",
+  "timestamps": {
+    "completed_at_utc": "2026-09-14T17:53:46.443522+00:00",
+    "started_at_utc": "2026-09-14T17:01:43.684902+00:00"
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= -n 0 --no-cov --basetemp=/tmp/exp7307-focused tests/python/test_experiment_7307_v642_batch_canary.py -q",
+      "duration_s": 3.4973933422006667,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/focused_pytest.log",
+      "log_sha256": "sha256:1ce03978dbcbfe5f9195563e532d113b23517586b892d27d23ba9a460466a9ab",
+      "name": "focused_pytest",
+      "passed": true,
+      "scope": "new behavior"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= -n 0 --no-cov --basetemp=/tmp/exp7307-affected tests/python/test_experiment_7307_v642_batch_canary.py tests/python/test_experiment_7306_v642_batch_fixture.py tests/python/test_experiment_7292_v641_reuse_canary.py -q",
+      "duration_s": 6.138571063056588,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/affected_suites.log",
+      "log_sha256": "sha256:eea32dfcbff18cf51c0535651884852b338184da49d032003a8f9c37b0d95835",
+      "name": "affected_suites",
+      "passed": true,
+      "scope": "new and explicitly affected suites"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "duration_s": 3104.4799004001543,
+      "exit_code": 2,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/full_python_suite.log",
+      "log_sha256": "sha256:6a64462c20324a09ccf93fe34787ec7af4230d06578ab03ae64fe566f5fba231",
+      "name": "full_python_suite",
+      "passed": false,
+      "scope": "repository Python suite"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m coverage run --data-file=/tmp/.coverage-exp7307-v642 '--include=*/experiment_7307_v642_batch_canary.py' -m pytest -o addopts= -n 0 --no-cov --basetemp=/tmp/exp7307-coverage tests/python/test_experiment_7307_v642_batch_canary.py -q",
+      "duration_s": 6.3506070950534195,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/scoped_coverage.log",
+      "log_sha256": "sha256:d5b9b867783817100b48853b6393f3f1d6762fa00385fa3ff6fc5377f3b16976",
+      "name": "scoped_coverage",
+      "passed": true,
+      "scope": "new module lines"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m coverage report --data-file=/tmp/.coverage-exp7307-v642 '--include=*/experiment_7307_v642_batch_canary.py' --show-missing --fail-under=100",
+      "duration_s": 0.0865609769243747,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/scoped_coverage_report.log",
+      "log_sha256": "sha256:a97fe40027100bf1a6222f4259b4f12ec00575f767e13c54136639ef07641ce2",
+      "name": "scoped_coverage_report",
+      "passed": true,
+      "scope": "100 percent new module line coverage"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m ruff check python/carnot/experiment_7307_v642_batch_canary.py scripts/experiments/experiment_7307_v642_batch_canary.py tests/python/test_experiment_7307_v642_batch_canary.py",
+      "duration_s": 0.03372415620833635,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "passed": true,
+      "scope": "changed Python files"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m ruff format --check python/carnot/experiment_7307_v642_batch_canary.py scripts/experiments/experiment_7307_v642_batch_canary.py tests/python/test_experiment_7307_v642_batch_canary.py",
+      "duration_s": 0.024482229026034474,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "passed": true,
+      "scope": "changed Python files"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -m mypy python/carnot/experiment_7307_v642_batch_canary.py",
+      "duration_s": 0.10275331418961287,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "passed": true,
+      "scope": "new module"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7307_v642_batch_canary.py",
+      "duration_s": 0.017064403044059873,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "passed": true,
+      "scope": "exact new tests"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7307_v642_batch_canary.py --date 20260914 --check-artifact /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7307_v642_batch_canary/terminal_candidate.json",
+      "duration_s": 1.269161842064932,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/e2e_terminal_candidate.log",
+      "log_sha256": "sha256:ed16ae399a9e03e34d5171e0acf81c2ff941605f2f3d8a141a9ca6fdfe007f46",
+      "name": "e2e_terminal_candidate",
+      "passed": true,
+      "scope": "entrypoint cold validation"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7307_v642_batch_canary/terminal_candidate.json",
+      "duration_s": 0.6109956218861043,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "passed": true,
+      "scope": "terminal candidate"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7307_v642_batch_canary/terminal_candidate.json",
+      "duration_s": 0.023954348172992468,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7307_v642_batch_canary/validation/verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:2a5acc7f6565e1cba7cebf220383f1fb8b6afbbc1ef9c87af7959b982029deda",
+      "name": "verdict_row_consistency_strict",
+      "passed": true,
+      "scope": "terminal candidate strict row consistency"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
