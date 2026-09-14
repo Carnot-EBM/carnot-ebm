@@ -1,0 +1,3668 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "contract_exact",
+      "expected": [
+        "exp7302-source-contract",
+        "exp7303-validation-scope",
+        "exp7304-arc-receipt",
+        "exp7305-arc-selfparse",
+        "exp7306-batch-fixture",
+        "exp7307-batch-canary",
+        "exp7308-batch-measurement",
+        "exp7309-batch-audit",
+        "exp7310-factor-prototype",
+        "exp7311-factor-learning",
+        "exp7312-factor-audit",
+        "exp7313-cost-envelope",
+        "exp7314-board-continuity",
+        "exp7315-capstone"
+      ],
+      "observed": [
+        "exp7302-source-contract",
+        "exp7303-validation-scope",
+        "exp7304-arc-receipt",
+        "exp7305-arc-selfparse",
+        "exp7306-batch-fixture",
+        "exp7307-batch-canary",
+        "exp7308-batch-measurement",
+        "exp7309-batch-audit",
+        "exp7310-factor-prototype",
+        "exp7311-factor-learning",
+        "exp7312-factor-audit",
+        "exp7313-cost-envelope",
+        "exp7314-board-continuity",
+        "exp7315-capstone"
+      ],
+      "passed": false,
+      "principle": "Both byte authorities must agree on all five task dimensions."
+    },
+    {
+      "criterion": "gate_controls",
+      "expected": 40,
+      "observed": 40,
+      "passed": true,
+      "principle": "Each real gate keeps five evaluator and intake observations."
+    },
+    {
+      "criterion": "source_dispositions",
+      "expected": 4,
+      "observed": 4,
+      "passed": true,
+      "principle": "Access failure stays evidence without blocking a complete source row."
+    },
+    {
+      "criterion": "request_budget",
+      "expected": "exactly four sequential primary requests",
+      "observed": 4,
+      "passed": true,
+      "principle": "The literature recheck stays within its fixed request budget."
+    },
+    {
+      "criterion": "raw_authorities",
+      "expected": 2,
+      "observed": 2,
+      "passed": true,
+      "principle": "Original Markdown and YAML bytes remain independently available."
+    },
+    {
+      "criterion": "sidecars",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Historical and fixture payloads remain outside current counters."
+    },
+    {
+      "criterion": "source_hashes",
+      "expected": "all present",
+      "observed": "all present",
+      "passed": true,
+      "principle": "Every consumed input and sidecar has an exact digest."
+    },
+    {
+      "criterion": "affected_validation",
+      "expected": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_fields",
+        "focused_pytest",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "changed_module_mypy",
+        "scoped_spec_coverage",
+        "exact_plan_e2e",
+        "independent_reducer",
+        "adversarial",
+        "row_consistency"
+      ],
+      "observed": [
+        "roadmap_schema",
+        "prior_failure",
+        "exclusion_manifest",
+        "prompt_paths",
+        "gate_fields",
+        "focused_pytest",
+        "focused_coverage",
+        "ruff_check",
+        "ruff_format",
+        "changed_module_mypy",
+        "scoped_spec_coverage"
+      ],
+      "passed": false,
+      "principle": "Required checks pass independently of repository-wide observations."
+    }
+  ],
+  "activation_files_modified": false,
+  "baseline_failures": [
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.062833,
+      "exit_code": 1,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/prompt_paths.log",
+      "log_sha256": "sha256:24b8dc56b00d0e9799526997527ab68c89ea0b56bf7cd66f24004956f5288ab0",
+      "name": "prompt_paths",
+      "passed": false,
+      "stdout_tail": "    INVENTED PATH  research-roadmap-next.yaml  (parent directory does not exist)\n  invented paths: 1\n",
+      "timed_out": false
+    }
+  ],
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7302_v642_source_contract.json",
+  "completed_at_utc": "2026-09-14T13:41:52.890417+00:00",
+  "contract_complete_score": 0,
+  "contract_rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7288_v641_source_contract.json",
+        "gates": [],
+        "id": "exp7288-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V641 source ingestion and exact fourteen-task contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7302-source-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7302_v642_source_contract.json",
+        "gates": [],
+        "id": "exp7302-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V642 literature ingestion and exact fourteen-task receipt"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7289_v641_arc_boundary.json",
+        "gates": [],
+        "id": "exp7289-arc-boundary",
+        "order": 2,
+        "phase": 1,
+        "title": "Preserve live ARC invocation evidence across timeout boundaries"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7303-validation-scope",
+      "yaml": {
+        "deliverable": "results/experiment_7303_v642_validation_scope.json",
+        "gates": [],
+        "id": "exp7303-validation-scope",
+        "order": 2,
+        "phase": 1,
+        "title": "Separate required experiment checks from repository health"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7290_v641_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7289-arc-boundary",
+            "value": 1
+          }
+        ],
+        "id": "exp7290-arc-selfparse",
+        "order": 3,
+        "phase": 1,
+        "title": "Accumulate one authentic adapter-withheld live selfparse session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7304-arc-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7304_v642_arc_receipt.json",
+        "gates": [
+          {
+            "artifact_field": "validation_scope_ready_score",
+            "op": "==",
+            "upstream": "exp7303-validation-scope",
+            "value": 1
+          }
+        ],
+        "id": "exp7304-arc-receipt",
+        "order": 3,
+        "phase": 2,
+        "title": "Qualify current ARC invocation receipts without fixture contamination"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7291_v641_reuse_fixture.json",
+        "gates": [],
+        "id": "exp7291-reuse-fixture",
+        "order": 4,
+        "phase": 2,
+        "title": "Build a versioned source-compilation reuse fixture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7305-arc-selfparse",
+      "yaml": {
+        "deliverable": "results/experiment_7305_v642_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_receipt_ready_score",
+            "op": "==",
+            "upstream": "exp7304-arc-receipt",
+            "value": 1
+          }
+        ],
+        "id": "exp7305-arc-selfparse",
+        "order": 4,
+        "phase": 2,
+        "title": "Run one adapter-withheld live selfparse generalization session"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7292_v641_reuse_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7292-reuse-canary",
+        "order": 5,
+        "phase": 2,
+        "title": "Canary Qwen3.8 source reuse and warm-prefix comparators"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7306-batch-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7306_v642_batch_fixture.json",
+        "gates": [],
+        "id": "exp7306-batch-fixture",
+        "order": 5,
+        "phase": 2,
+        "title": "Build joint-claim source verification and matched batch controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7293_v641_reuse_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "reuse_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7292-reuse-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7293-reuse-measurement",
+        "order": 6,
+        "phase": 2,
+        "title": "Measure fresh-source reuse parity and end-to-end cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7307-batch-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7307_v642_batch_canary.json",
+        "gates": [
+          {
+            "artifact_field": "batch_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7306-batch-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7307-batch-canary",
+        "order": 6,
+        "phase": 2,
+        "title": "Qualify bounded Qwen3.8 joint-claim transport"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7294_v641_reuse_audit.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7293-reuse-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7294-reuse-audit",
+        "order": 7,
+        "phase": 2,
+        "title": "Independently audit source reuse safety and amortization"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7308-batch-measurement",
+      "yaml": {
+        "deliverable": "results/experiment_7308_v642_batch_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "batch_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7306-batch-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "batch_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7307-batch-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7308-batch-measurement",
+        "order": 7,
+        "phase": 2,
+        "title": "Measure batched source fidelity and complete inference cost"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7295_v641_mixture_prototype.json",
+        "gates": [],
+        "id": "exp7295-mixture-prototype",
+        "order": 8,
+        "phase": 3,
+        "title": "Prototype bounded delayed-feedback hypothesis mixtures"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7309-batch-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7309_v642_batch_audit.json",
+        "gates": [
+          {
+            "artifact_field": "batch_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7308-batch-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7309-batch-audit",
+        "order": 8,
+        "phase": 2,
+        "title": "Independently audit batch semantics and cross-claim interference"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7296_v641_mixture_learning.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7295-mixture-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7296-mixture-learning",
+        "order": 9,
+        "phase": 3,
+        "title": "Evaluate prospective self-learning under delayed labels"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7310-factor-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7310_v642_factor_prototype.json",
+        "gates": [],
+        "id": "exp7310-factor-prototype",
+        "order": 9,
+        "phase": 3,
+        "title": "Prototype factor-local revision from delayed constraint feedback"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7297_v641_mixture_audit.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7296-mixture-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7297-mixture-audit",
+        "order": 10,
+        "phase": 3,
+        "title": "Audit feedback causality and recurrence safety independently"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7311-factor-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7311_v642_factor_learning.json",
+        "gates": [
+          {
+            "artifact_field": "factor_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7310-factor-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7311-factor-learning",
+        "order": 10,
+        "phase": 3,
+        "title": "Measure prospective continuous learning with local factor revision"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7298_v641_snapshot_journal.json",
+        "gates": [],
+        "id": "exp7298-snapshot-journal",
+        "order": 11,
+        "phase": 4,
+        "title": "Prototype persistent-journal full-snapshot acknowledgments"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7312-factor-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7312_v642_factor_audit.json",
+        "gates": [
+          {
+            "artifact_field": "factor_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7311-factor-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7312-factor-audit",
+        "order": 11,
+        "phase": 3,
+        "title": "Audit factor-learning causality retention and rollback"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7299_v641_snapshot_cost.json",
+        "gates": [
+          {
+            "artifact_field": "snapshot_journal_ready_score",
+            "op": "==",
+            "upstream": "exp7298-snapshot-journal",
+            "value": 1
+          }
+        ],
+        "id": "exp7299-snapshot-cost",
+        "order": 12,
+        "phase": 4,
+        "title": "Measure persistent-journal latency and durable throughput"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7313-cost-envelope",
+      "yaml": {
+        "deliverable": "results/experiment_7313_v642_cost_envelope.json",
+        "gates": [],
+        "id": "exp7313-cost-envelope",
+        "order": 12,
+        "phase": 4,
+        "title": "Bound remaining durable-state acceleration from measured stage rows"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7300_v641_board_continuity.json",
+        "gates": [],
+        "id": "exp7300-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record board continuity and changed-state prerequisites"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7314-board-continuity",
+      "yaml": {
+        "deliverable": "results/experiment_7314_v642_board_continuity.json",
+        "gates": [],
+        "id": "exp7314-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record GateMate prerequisites and graduated-board continuity"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7301_v641_capstone.json",
+        "gates": [],
+        "id": "exp7301-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile fourteen V641 dispositions and bounded research claims"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7315-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7315_v642_capstone.json",
+        "gates": [],
+        "id": "exp7315-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile all fourteen V642 outcomes and next research decisions"
+      }
+    }
+  ],
+  "duration_s": 26.703693,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "expected_id_order": [
+    "exp7302-source-contract",
+    "exp7303-validation-scope",
+    "exp7304-arc-receipt",
+    "exp7305-arc-selfparse",
+    "exp7306-batch-fixture",
+    "exp7307-batch-canary",
+    "exp7308-batch-measurement",
+    "exp7309-batch-audit",
+    "exp7310-factor-prototype",
+    "exp7311-factor-learning",
+    "exp7312-factor-audit",
+    "exp7313-cost-envelope",
+    "exp7314-board-continuity",
+    "exp7315-capstone"
+  ],
+  "experiment_id": "exp7302-source-contract",
+  "external_message_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "Actual current executable model identities; historical identities remain in sidecars.",
+    "acceptance_gate_results": "Every check has expected, observed, passed, and a one-line principle explaining its purpose.",
+    "activation_files_modified": "This field keeps one V642 contract fact auditable.",
+    "baseline_failures": "This field keeps one V642 contract fact auditable.",
+    "checkpoint_path": "This field keeps one V642 contract fact auditable.",
+    "completed_at_utc": "This field keeps one V642 contract fact auditable.",
+    "contract_complete_score": "One only for the literal fourteen-row contract and all metadata checks; advisory.",
+    "contract_rows": "Exact ordered values from both authorities allow independent comparison.",
+    "duration_s": "Measure total elapsed and disjoint phase spans including failed work.",
+    "execution_host": "This field keeps one V642 contract fact auditable.",
+    "execution_venue": "Record actual host/device work; a CPU replay is not GPU or FPGA execution.",
+    "expected_id_order": "This field keeps one V642 contract fact auditable.",
+    "experiment_id": "This field keeps one V642 contract fact auditable.",
+    "external_message_performed": "This field keeps one V642 contract fact auditable.",
+    "field_principles": "Keep explanations separate while consumers read ordinary top-level values.",
+    "gate_check_summary": "Every blocked_* names upstream/check, exact field, observed value, and expected value.",
+    "gate_control_rows": "All five input conditions per gate expose broken producer/consumer contracts.",
+    "gate_producer_rows": "This field keeps one V642 contract fact auditable.",
+    "honest_verdict": "Completed findings start complete_ or complete:; external failure starts blocked_. State the finding.",
+    "inference_substrate": "Describe actual computation with a recognized literal, not intended work.",
+    "inference_substrate_class": "Full generation has a 60s floor; bounded generation 10s; load-only 2s. Never pad time.",
+    "invocation_counts": "Separate attempted, completed, failed, cancelled, and in-flight loads and generations.",
+    "markdown_id_order": "This field keeps one V642 contract fact auditable.",
+    "markdown_milestone": "This field keeps one V642 contract fact auditable.",
+    "markdown_task_rows": "This field keeps one V642 contract fact auditable.",
+    "measured_candidate_path": "This field keeps one V642 contract fact auditable.",
+    "milestone": "This field keeps one V642 contract fact auditable.",
+    "model_invoked": "True for any attempted model load or generation, even when output is unusable.",
+    "observed_id_order": "This field keeps one V642 contract fact auditable.",
+    "phase_spans": "This field keeps one V642 contract fact auditable.",
+    "preconditions_checked": "Hash real inputs and record actual availability and failed checks.",
+    "production_default_changed": "This field keeps one V642 contract fact auditable.",
+    "publication_performed": "This field keeps one V642 contract fact auditable.",
+    "random_seed": "Seal development and independent evaluation seeds before seeing outcomes.",
+    "raw_authority_rows": "This field keeps one V642 contract fact auditable.",
+    "receipt_dependency_rows": "This field keeps one V642 contract fact auditable.",
+    "repository_health": "Keep repository-wide observations separate from required affected checks.",
+    "reproducibility_checksum": "Bind code, inputs, config, model when used, and raw evidence.",
+    "research_roadmap_modified": "This field keeps one V642 contract fact auditable.",
+    "rows": "Record every comparative unit/arm with metrics, costs, errors, abstentions, and censoring.",
+    "run_date": "Use 20260914 with actual UTC start/end and monotonic phase timing.",
+    "sample_size_budget": "Keep planned, attempted, complete, and censored counts with the frozen stopping rule.",
+    "schema": "Version the record while keeping ordinary top-level experiment_id and milestone.",
+    "scientific_value_claimed": "This field keeps one V642 contract fact auditable.",
+    "sidecar_receipts": "This field keeps one V642 contract fact auditable.",
+    "source_access_rows": "This field keeps one V642 contract fact auditable.",
+    "source_artifact_hashes": "Authenticate producer identity, terminal class, and quarantine state.",
+    "source_dispositions": "URLs, version dates, access outcomes, adaptations, and falsifiers distinguish evidence from hypotheses.",
+    "started_at_utc": "This field keeps one V642 contract fact auditable.",
+    "status": "Write the terminal result only after the work and checks; checkpoints remain separate.",
+    "submission_performed": "This field keeps one V642 contract fact auditable.",
+    "upload_performed": "This field keeps one V642 contract fact auditable.",
+    "validation_receipts": "Record exact commands, scope, exit codes, elapsed time, and log hashes; retain failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial; unchanged external failure is blocked.",
+    "verifier_is_oracle": "Shared evaluator authority permits circular_positive only, not positive scientific value.",
+    "yaml_authority_path": "This field keeps one V642 contract fact auditable.",
+    "yaml_milestone": "This field keeps one V642 contract fact auditable.",
+    "yaml_task_rows": "This field keeps one V642 contract fact auditable."
+  },
+  "gate_check_summary": {
+    "expected_value": "2026.09.642",
+    "failed_check": "markdown_milestone",
+    "field": "milestone",
+    "observed_value": "2026.09.641",
+    "passed": false,
+    "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+  },
+  "gate_control_rows": [
+    {
+      "actual": 1,
+      "artifact_field": "validation_scope_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7304-arc-receipt",
+      "edge_index": 0,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "validation_scope_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_0_passing/experiment_7303_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7303-validation-scope",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "validation_scope_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7304-arc-receipt",
+      "edge_index": 0,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "validation_scope_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_0_failed/experiment_7303_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7303-validation-scope",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "validation_scope_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'validation_scope_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7304-arc-receipt",
+      "edge_index": 0,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "validation_scope_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_0_missing_field/experiment_7303_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7303-validation-scope",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "validation_scope_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7303-validation-scope'",
+      "consumer": "exp7304-arc-receipt",
+      "edge_index": 0,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "validation_scope_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7303-validation-scope",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "validation_scope_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7304-arc-receipt",
+      "edge_index": 0,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "validation_scope_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_0_quarantined_passing/experiment_7303_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7303-validation-scope",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "arc_receipt_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7305-arc-selfparse",
+      "edge_index": 1,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "arc_receipt_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_1_passing/experiment_7304_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7304-arc-receipt",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "arc_receipt_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7305-arc-selfparse",
+      "edge_index": 1,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "arc_receipt_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_1_failed/experiment_7304_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7304-arc-receipt",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "arc_receipt_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'arc_receipt_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7305-arc-selfparse",
+      "edge_index": 1,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "arc_receipt_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_1_missing_field/experiment_7304_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7304-arc-receipt",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "arc_receipt_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7304-arc-receipt'",
+      "consumer": "exp7305-arc-selfparse",
+      "edge_index": 1,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "arc_receipt_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7304-arc-receipt",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "arc_receipt_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7305-arc-selfparse",
+      "edge_index": 1,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "arc_receipt_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_1_quarantined_passing/experiment_7304_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7304-arc-receipt",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7307-batch-canary",
+      "edge_index": 2,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_2_passing/experiment_7306_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7307-batch-canary",
+      "edge_index": 2,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_2_failed/experiment_7306_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'batch_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7307-batch-canary",
+      "edge_index": 2,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_2_missing_field/experiment_7306_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7306-batch-fixture'",
+      "consumer": "exp7307-batch-canary",
+      "edge_index": 2,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7307-batch-canary",
+      "edge_index": 2,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_2_quarantined_passing/experiment_7306_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 3,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_3_passing/experiment_7306_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 3,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_3_failed/experiment_7306_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'batch_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 3,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_3_missing_field/experiment_7306_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7306-batch-fixture'",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 3,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_fixture_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 3,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "batch_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_3_quarantined_passing/experiment_7306_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7306-batch-fixture",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_canary_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 4,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "batch_canary_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_4_passing/experiment_7307_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7307-batch-canary",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "batch_canary_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 4,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_canary_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_4_failed/experiment_7307_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7307-batch-canary",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_canary_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'batch_canary_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 4,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_canary_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_4_missing_field/experiment_7307_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7307-batch-canary",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_canary_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7307-batch-canary'",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 4,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_canary_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7307-batch-canary",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_canary_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7308-batch-measurement",
+      "edge_index": 4,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "batch_canary_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_4_quarantined_passing/experiment_7307_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7307-batch-canary",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_capture_complete_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7309-batch-audit",
+      "edge_index": 5,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "batch_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_5_passing/experiment_7308_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7308-batch-measurement",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "batch_capture_complete_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7309-batch-audit",
+      "edge_index": 5,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_5_failed/experiment_7308_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7308-batch-measurement",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_capture_complete_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'batch_capture_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7309-batch-audit",
+      "edge_index": 5,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_5_missing_field/experiment_7308_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7308-batch-measurement",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "batch_capture_complete_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7308-batch-measurement'",
+      "consumer": "exp7309-batch-audit",
+      "edge_index": 5,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "batch_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7308-batch-measurement",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "batch_capture_complete_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7309-batch-audit",
+      "edge_index": 5,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "batch_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_5_quarantined_passing/experiment_7308_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7308-batch-measurement",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "factor_fixture_ready_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7311-factor-learning",
+      "edge_index": 6,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "factor_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_6_passing/experiment_7310_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7310-factor-prototype",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "factor_fixture_ready_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7311-factor-learning",
+      "edge_index": 6,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_6_failed/experiment_7310_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7310-factor-prototype",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "factor_fixture_ready_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'factor_fixture_ready_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7311-factor-learning",
+      "edge_index": 6,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_6_missing_field/experiment_7310_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7310-factor-prototype",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "factor_fixture_ready_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7310-factor-prototype'",
+      "consumer": "exp7311-factor-learning",
+      "edge_index": 6,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7310-factor-prototype",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "factor_fixture_ready_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7311-factor-learning",
+      "edge_index": 6,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "factor_fixture_ready_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_6_quarantined_passing/experiment_7310_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7310-factor-prototype",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "factor_capture_complete_score",
+      "case": "passing",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7312-factor-audit",
+      "edge_index": 7,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": true,
+      "experiment_precondition_reason": "upstream_precondition_passed",
+      "field": "factor_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_7_passing/experiment_7311_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7311-factor-learning",
+      "validation_input": true
+    },
+    {
+      "actual": 0,
+      "artifact_field": "factor_capture_complete_score",
+      "case": "false",
+      "conductor_passed": false,
+      "conductor_reason": "actual=0 == expected=1",
+      "consumer": "exp7312-factor-audit",
+      "edge_index": 7,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_7_failed/experiment_7311_validation_input.json",
+      "observed_value": 0,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7311-factor-learning",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "factor_capture_complete_score",
+      "case": "missing_field",
+      "conductor_passed": false,
+      "conductor_reason": "actual=None == expected=1 -- upstream artifact has NO field 'factor_capture_complete_score'; it did not honour its own REQUIRED ARTIFACT FIELDS, or this gate names a field nobody promised.",
+      "consumer": "exp7312-factor-audit",
+      "edge_index": 7,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_7_missing_field/experiment_7311_validation_input.json",
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7311-factor-learning",
+      "validation_input": true
+    },
+    {
+      "actual": null,
+      "artifact_field": "factor_capture_complete_score",
+      "case": "missing_file",
+      "conductor_passed": false,
+      "conductor_reason": "upstream artifact not found for task id 'exp7311-factor-learning'",
+      "consumer": "exp7312-factor-audit",
+      "edge_index": 7,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "upstream_field_did_not_match",
+      "field": "factor_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": null,
+      "observed_value": null,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7311-factor-learning",
+      "validation_input": true
+    },
+    {
+      "actual": 1,
+      "artifact_field": "factor_capture_complete_score",
+      "case": "quarantined",
+      "conductor_passed": true,
+      "conductor_reason": "actual=1 == expected=1",
+      "consumer": "exp7312-factor-audit",
+      "edge_index": 7,
+      "expected": 1,
+      "expected_value": 1,
+      "experiment_precondition_passed": false,
+      "experiment_precondition_reason": "quarantined_upstream_rejected_before_field_consumption",
+      "field": "factor_capture_complete_score",
+      "field_gate_authenticates_artifact": false,
+      "fixture_path": "/tmp/exp7274-gates-z6bwgbga/edge_7_quarantined_passing/experiment_7311_validation_input.json",
+      "observed_value": 1,
+      "operator": "==",
+      "research_result": false,
+      "upstream": "exp7311-factor-learning",
+      "validation_input": true
+    }
+  ],
+  "gate_producer_rows": [
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7304-arc-receipt",
+      "field": "validation_scope_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7303-validation-scope",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7305-arc-selfparse",
+      "field": "arc_receipt_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7304-arc-receipt",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7307-batch-canary",
+      "field": "batch_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7306-batch-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7308-batch-measurement",
+      "field": "batch_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7306-batch-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7308-batch-measurement",
+      "field": "batch_canary_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7307-batch-canary",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7309-batch-audit",
+      "field": "batch_capture_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7308-batch-measurement",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7311-factor-learning",
+      "field": "factor_fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7310-factor-prototype",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7312-factor-audit",
+      "field": "factor_capture_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7311-factor-learning",
+      "value": 1
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v642_contract_mismatched_or_invalid",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "markdown_id_order": [
+    "exp7288-source-contract",
+    "exp7289-arc-boundary",
+    "exp7290-arc-selfparse",
+    "exp7291-reuse-fixture",
+    "exp7292-reuse-canary",
+    "exp7293-reuse-measurement",
+    "exp7294-reuse-audit",
+    "exp7295-mixture-prototype",
+    "exp7296-mixture-learning",
+    "exp7297-mixture-audit",
+    "exp7298-snapshot-journal",
+    "exp7299-snapshot-cost",
+    "exp7300-board-continuity",
+    "exp7301-capstone"
+  ],
+  "markdown_milestone": "2026.09.641",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7288_v641_source_contract.json",
+      "gates": [],
+      "id": "exp7288-source-contract",
+      "order": 1,
+      "phase": 1,
+      "title": "V641 source ingestion and exact fourteen-task contract"
+    },
+    {
+      "deliverable": "results/experiment_7289_v641_arc_boundary.json",
+      "gates": [],
+      "id": "exp7289-arc-boundary",
+      "order": 2,
+      "phase": 1,
+      "title": "Preserve live ARC invocation evidence across timeout boundaries"
+    },
+    {
+      "deliverable": "results/experiment_7290_v641_arc_selfparse.json",
+      "gates": [
+        {
+          "artifact_field": "arc_boundary_ready_score",
+          "op": "==",
+          "upstream": "exp7289-arc-boundary",
+          "value": 1
+        }
+      ],
+      "id": "exp7290-arc-selfparse",
+      "order": 3,
+      "phase": 1,
+      "title": "Accumulate one authentic adapter-withheld live selfparse session"
+    },
+    {
+      "deliverable": "results/experiment_7291_v641_reuse_fixture.json",
+      "gates": [],
+      "id": "exp7291-reuse-fixture",
+      "order": 4,
+      "phase": 2,
+      "title": "Build a versioned source-compilation reuse fixture"
+    },
+    {
+      "deliverable": "results/experiment_7292_v641_reuse_canary.json",
+      "gates": [
+        {
+          "artifact_field": "reuse_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7291-reuse-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7292-reuse-canary",
+      "order": 5,
+      "phase": 2,
+      "title": "Canary Qwen3.8 source reuse and warm-prefix comparators"
+    },
+    {
+      "deliverable": "results/experiment_7293_v641_reuse_measurement.json",
+      "gates": [
+        {
+          "artifact_field": "reuse_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7291-reuse-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "reuse_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7292-reuse-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7293-reuse-measurement",
+      "order": 6,
+      "phase": 2,
+      "title": "Measure fresh-source reuse parity and end-to-end cost"
+    },
+    {
+      "deliverable": "results/experiment_7294_v641_reuse_audit.json",
+      "gates": [
+        {
+          "artifact_field": "reuse_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7293-reuse-measurement",
+          "value": 1
+        }
+      ],
+      "id": "exp7294-reuse-audit",
+      "order": 7,
+      "phase": 2,
+      "title": "Independently audit source reuse safety and amortization"
+    },
+    {
+      "deliverable": "results/experiment_7295_v641_mixture_prototype.json",
+      "gates": [],
+      "id": "exp7295-mixture-prototype",
+      "order": 8,
+      "phase": 3,
+      "title": "Prototype bounded delayed-feedback hypothesis mixtures"
+    },
+    {
+      "deliverable": "results/experiment_7296_v641_mixture_learning.json",
+      "gates": [
+        {
+          "artifact_field": "mixture_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7295-mixture-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp7296-mixture-learning",
+      "order": 9,
+      "phase": 3,
+      "title": "Evaluate prospective self-learning under delayed labels"
+    },
+    {
+      "deliverable": "results/experiment_7297_v641_mixture_audit.json",
+      "gates": [
+        {
+          "artifact_field": "mixture_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7296-mixture-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7297-mixture-audit",
+      "order": 10,
+      "phase": 3,
+      "title": "Audit feedback causality and recurrence safety independently"
+    },
+    {
+      "deliverable": "results/experiment_7298_v641_snapshot_journal.json",
+      "gates": [],
+      "id": "exp7298-snapshot-journal",
+      "order": 11,
+      "phase": 4,
+      "title": "Prototype persistent-journal full-snapshot acknowledgments"
+    },
+    {
+      "deliverable": "results/experiment_7299_v641_snapshot_cost.json",
+      "gates": [
+        {
+          "artifact_field": "snapshot_journal_ready_score",
+          "op": "==",
+          "upstream": "exp7298-snapshot-journal",
+          "value": 1
+        }
+      ],
+      "id": "exp7299-snapshot-cost",
+      "order": 12,
+      "phase": 4,
+      "title": "Measure persistent-journal latency and durable throughput"
+    },
+    {
+      "deliverable": "results/experiment_7300_v641_board_continuity.json",
+      "gates": [],
+      "id": "exp7300-board-continuity",
+      "order": 13,
+      "phase": 4,
+      "title": "Record board continuity and changed-state prerequisites"
+    },
+    {
+      "deliverable": "results/experiment_7301_v641_capstone.json",
+      "gates": [],
+      "id": "exp7301-capstone",
+      "order": 14,
+      "phase": 4,
+      "title": "Reconcile fourteen V641 dispositions and bounded research claims"
+    }
+  ],
+  "measured_candidate_path": "results/raw/experiment_7302/measured-terminal-candidate.json",
+  "milestone": "2026.09.642",
+  "model_invoked": false,
+  "monotonic_origin": 1684986.422537893,
+  "observed_id_order": [
+    "exp7302-source-contract",
+    "exp7303-validation-scope",
+    "exp7304-arc-receipt",
+    "exp7305-arc-selfparse",
+    "exp7306-batch-fixture",
+    "exp7307-batch-canary",
+    "exp7308-batch-measurement",
+    "exp7309-batch-audit",
+    "exp7310-factor-prototype",
+    "exp7311-factor-learning",
+    "exp7312-factor-audit",
+    "exp7313-cost-envelope",
+    "exp7314-board-continuity",
+    "exp7315-capstone"
+  ],
+  "phase_spans": [
+    {
+      "detail": "preconditions",
+      "duration_s": 0.049733,
+      "end_elapsed_s": 0.049733,
+      "phase": 0,
+      "start_elapsed_s": 0.0
+    },
+    {
+      "detail": "no-model declaration",
+      "duration_s": 3e-06,
+      "end_elapsed_s": 0.050352,
+      "phase": 1,
+      "start_elapsed_s": 0.050349
+    },
+    {
+      "detail": "authority freeze and contract comparison",
+      "duration_s": 0.002387,
+      "end_elapsed_s": 0.053152,
+      "phase": 2,
+      "start_elapsed_s": 0.050765
+    },
+    {
+      "detail": "schema and real gate controls",
+      "duration_s": 0.003405,
+      "end_elapsed_s": 0.057769,
+      "phase": 3,
+      "start_elapsed_s": 0.054364
+    },
+    {
+      "detail": "bounded source ingestion",
+      "duration_s": 0.19858,
+      "end_elapsed_s": 0.257833,
+      "phase": 4,
+      "start_elapsed_s": 0.059252
+    },
+    {
+      "detail": "evidence sidecars",
+      "duration_s": 0.002024,
+      "end_elapsed_s": 0.262531,
+      "phase": 5,
+      "start_elapsed_s": 0.260506
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap.yaml",
+      "expected_value": "2026.09.642",
+      "field": "milestone",
+      "observed_value": "2026.09.642",
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": false,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap-next.yaml",
+      "expected_value": "2026.09.642",
+      "field": "milestone",
+      "observed_value": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "path": "research-roadmap-next.yaml",
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "yaml_authority",
+      "expected_value": "2026.09.642",
+      "field": "milestone",
+      "observed_value": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml|research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 1165,
+        "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+      },
+      "upstream": "AGENTS.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 311988,
+        "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+      },
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 2396,
+        "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+      },
+      "upstream": "CODEX.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 28560,
+        "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+      },
+      "upstream": "research-program.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 56173,
+        "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+      },
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 8197,
+        "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+      },
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 3453534,
+        "sha256": "sha256:582d6a27d0de4c6c54e032499799fdf3e9472205a84f31c880500923109b7940"
+      },
+      "upstream": "research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-complete.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 5036458,
+        "sha256": "sha256:b1f244a749d7cb6e9af0b11eec66073b8242d54667b0c8fdf30d56851992eb71"
+      },
+      "upstream": "research-complete.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-roadmap.yaml",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 146746,
+        "sha256": "sha256:36b72311263e70d7221b573cbe21186607f9aea92d912f23c46272c40db307b4"
+      },
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 25551,
+        "sha256": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b"
+      },
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 9371,
+        "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+      },
+      "upstream": "scripts/roadmap_schema.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/conductor_gates.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 29979,
+        "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca"
+      },
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 10078,
+        "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
+      },
+      "upstream": "scripts/audit_roadmap_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 8053,
+        "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+      },
+      "upstream": "scripts/validate_prior_failures.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 29604,
+        "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+      },
+      "upstream": "scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/harness_consumer_checks.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 11765,
+        "sha256": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5"
+      },
+      "upstream": "scripts/harness_consumer_checks.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 328917,
+        "sha256": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa"
+      },
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 18650,
+        "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+      },
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/check_spec_coverage.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 6306,
+        "sha256": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559"
+      },
+      "upstream": "scripts/check_spec_coverage.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 4155945,
+        "sha256": "sha256:523e207a035de3fbb5fc4d79d6095e45d963ab49b0aa4d9ef70c8cd202748850"
+      },
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7302_v642_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 52382,
+        "sha256": "sha256:fe5775e19681e693ffda8a60b06286b7ac3f7eb9d87027ad285cbfdb931d9798"
+      },
+      "upstream": "python/carnot/experiment_7302_v642_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/experiments/experiment_7302_v642_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 211,
+        "sha256": "sha256:c90d66aa24158e39d2ad412107a65e1ba3f2115bb9dbed9670e4855977c2c729"
+      },
+      "upstream": "scripts/experiments/experiment_7302_v642_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:tests/python/test_experiment_7302_v642_source_contract.py",
+      "expected_value": "readable_nonempty_authenticated_bytes",
+      "field": "bytes|sha256",
+      "observed_value": {
+        "bytes": 20283,
+        "sha256": "sha256:be4326724acac5e0bf7666ac90219b54b88b01af0c43932a76868a2f57bc38d7"
+      },
+      "upstream": "tests/python/test_experiment_7302_v642_source_contract.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "v641_terminal_contract_evidence",
+      "expected_value": "terminal historical evidence; not a dependency gate",
+      "field": "status|quarantine",
+      "observed_value": {
+        "quarantined": false,
+        "sha256": "sha256:5706bb65b4f0182dcefb7d42e1680c18382726a81ec310cb20cc345c1a6dd11d",
+        "status": "complete"
+      },
+      "upstream": "results/experiment_7288_v641_source_contract.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7302",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7302",
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "design_authority",
+      "expected_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "field": "milestone_doc",
+      "observed_value": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "task_upstream_gates",
+      "expected_value": [],
+      "field": "gated_on",
+      "observed_value": [],
+      "upstream": "exp7302-source-contract"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "result_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "raw_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7302"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "checkpoint_directory",
+      "expected_value": "temporary_write_succeeded",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "owner_uid": 1000,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints"
+    }
+  ],
+  "production_default_changed": false,
+  "publication_performed": false,
+  "random_seed": 730220260914,
+  "raw_authority_rows": [
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7302/v642-design.md",
+      "raw_sha256": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+      "source_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "source_sha256": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+      "source_type": "markdown"
+    },
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7302/selected-roadmap.yaml",
+      "raw_sha256": "sha256:36b72311263e70d7221b573cbe21186607f9aea92d912f23c46272c40db307b4",
+      "source_path": "research-roadmap.yaml",
+      "source_sha256": "sha256:36b72311263e70d7221b573cbe21186607f9aea92d912f23c46272c40db307b4",
+      "source_type": "yaml"
+    }
+  ],
+  "receipt_dependency_rows": [
+    {
+      "expected_consumers": [],
+      "observed_consumers": [],
+      "passed": true,
+      "upstream": "exp7302-source-contract"
+    }
+  ],
+  "repository_health": {
+    "current_checks": [],
+    "historical_failures": [
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q -o addopts= -n 0 --basetemp=/tmp/exp7288-v641-full",
+        "duration_s": 46.256216,
+        "exit_code": 2,
+        "log_sha256": "sha256:92bf3ccb8e9744d601335b49ee1293f46c085ec7f54296e885cd445330b39207",
+        "name": "full_python_suite",
+        "producer_path": "results/experiment_7288_v641_source_contract.json",
+        "producer_sha256": "sha256:5706bb65b4f0182dcefb7d42e1680c18382726a81ec310cb20cc345c1a6dd11d"
+      }
+    ],
+    "passed": false,
+    "scope": "repository_wide_observation_not_contract_acceptance"
+  },
+  "reproducibility_checksum": "sha256:c986b2161bc78248f756e52350c2ddbe07ab01d6d2078624fdda945408ab660f",
+  "research_roadmap_modified": false,
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7288_v641_source_contract.json",
+        "gates": [],
+        "id": "exp7288-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V641 source ingestion and exact fourteen-task contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7302-source-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7302_v642_source_contract.json",
+        "gates": [],
+        "id": "exp7302-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V642 literature ingestion and exact fourteen-task receipt"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7289_v641_arc_boundary.json",
+        "gates": [],
+        "id": "exp7289-arc-boundary",
+        "order": 2,
+        "phase": 1,
+        "title": "Preserve live ARC invocation evidence across timeout boundaries"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7303-validation-scope",
+      "yaml": {
+        "deliverable": "results/experiment_7303_v642_validation_scope.json",
+        "gates": [],
+        "id": "exp7303-validation-scope",
+        "order": 2,
+        "phase": 1,
+        "title": "Separate required experiment checks from repository health"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7290_v641_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7289-arc-boundary",
+            "value": 1
+          }
+        ],
+        "id": "exp7290-arc-selfparse",
+        "order": 3,
+        "phase": 1,
+        "title": "Accumulate one authentic adapter-withheld live selfparse session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7304-arc-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7304_v642_arc_receipt.json",
+        "gates": [
+          {
+            "artifact_field": "validation_scope_ready_score",
+            "op": "==",
+            "upstream": "exp7303-validation-scope",
+            "value": 1
+          }
+        ],
+        "id": "exp7304-arc-receipt",
+        "order": 3,
+        "phase": 2,
+        "title": "Qualify current ARC invocation receipts without fixture contamination"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7291_v641_reuse_fixture.json",
+        "gates": [],
+        "id": "exp7291-reuse-fixture",
+        "order": 4,
+        "phase": 2,
+        "title": "Build a versioned source-compilation reuse fixture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7305-arc-selfparse",
+      "yaml": {
+        "deliverable": "results/experiment_7305_v642_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_receipt_ready_score",
+            "op": "==",
+            "upstream": "exp7304-arc-receipt",
+            "value": 1
+          }
+        ],
+        "id": "exp7305-arc-selfparse",
+        "order": 4,
+        "phase": 2,
+        "title": "Run one adapter-withheld live selfparse generalization session"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7292_v641_reuse_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7292-reuse-canary",
+        "order": 5,
+        "phase": 2,
+        "title": "Canary Qwen3.8 source reuse and warm-prefix comparators"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7306-batch-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7306_v642_batch_fixture.json",
+        "gates": [],
+        "id": "exp7306-batch-fixture",
+        "order": 5,
+        "phase": 2,
+        "title": "Build joint-claim source verification and matched batch controls"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7293_v641_reuse_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "reuse_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7292-reuse-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7293-reuse-measurement",
+        "order": 6,
+        "phase": 2,
+        "title": "Measure fresh-source reuse parity and end-to-end cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7307-batch-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7307_v642_batch_canary.json",
+        "gates": [
+          {
+            "artifact_field": "batch_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7306-batch-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7307-batch-canary",
+        "order": 6,
+        "phase": 2,
+        "title": "Qualify bounded Qwen3.8 joint-claim transport"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7294_v641_reuse_audit.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7293-reuse-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7294-reuse-audit",
+        "order": 7,
+        "phase": 2,
+        "title": "Independently audit source reuse safety and amortization"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7308-batch-measurement",
+      "yaml": {
+        "deliverable": "results/experiment_7308_v642_batch_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "batch_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7306-batch-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "batch_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7307-batch-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7308-batch-measurement",
+        "order": 7,
+        "phase": 2,
+        "title": "Measure batched source fidelity and complete inference cost"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7295_v641_mixture_prototype.json",
+        "gates": [],
+        "id": "exp7295-mixture-prototype",
+        "order": 8,
+        "phase": 3,
+        "title": "Prototype bounded delayed-feedback hypothesis mixtures"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7309-batch-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7309_v642_batch_audit.json",
+        "gates": [
+          {
+            "artifact_field": "batch_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7308-batch-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7309-batch-audit",
+        "order": 8,
+        "phase": 2,
+        "title": "Independently audit batch semantics and cross-claim interference"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7296_v641_mixture_learning.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7295-mixture-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7296-mixture-learning",
+        "order": 9,
+        "phase": 3,
+        "title": "Evaluate prospective self-learning under delayed labels"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7310-factor-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7310_v642_factor_prototype.json",
+        "gates": [],
+        "id": "exp7310-factor-prototype",
+        "order": 9,
+        "phase": 3,
+        "title": "Prototype factor-local revision from delayed constraint feedback"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7297_v641_mixture_audit.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7296-mixture-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7297-mixture-audit",
+        "order": 10,
+        "phase": 3,
+        "title": "Audit feedback causality and recurrence safety independently"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7311-factor-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7311_v642_factor_learning.json",
+        "gates": [
+          {
+            "artifact_field": "factor_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7310-factor-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7311-factor-learning",
+        "order": 10,
+        "phase": 3,
+        "title": "Measure prospective continuous learning with local factor revision"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": false,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7298_v641_snapshot_journal.json",
+        "gates": [],
+        "id": "exp7298-snapshot-journal",
+        "order": 11,
+        "phase": 4,
+        "title": "Prototype persistent-journal full-snapshot acknowledgments"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7312-factor-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7312_v642_factor_audit.json",
+        "gates": [
+          {
+            "artifact_field": "factor_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7311-factor-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7312-factor-audit",
+        "order": 11,
+        "phase": 3,
+        "title": "Audit factor-learning causality retention and rollback"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7299_v641_snapshot_cost.json",
+        "gates": [
+          {
+            "artifact_field": "snapshot_journal_ready_score",
+            "op": "==",
+            "upstream": "exp7298-snapshot-journal",
+            "value": 1
+          }
+        ],
+        "id": "exp7299-snapshot-cost",
+        "order": 12,
+        "phase": 4,
+        "title": "Measure persistent-journal latency and durable throughput"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7313-cost-envelope",
+      "yaml": {
+        "deliverable": "results/experiment_7313_v642_cost_envelope.json",
+        "gates": [],
+        "id": "exp7313-cost-envelope",
+        "order": 12,
+        "phase": 4,
+        "title": "Bound remaining durable-state acceleration from measured stage rows"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7300_v641_board_continuity.json",
+        "gates": [],
+        "id": "exp7300-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record board continuity and changed-state prerequisites"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7314-board-continuity",
+      "yaml": {
+        "deliverable": "results/experiment_7314_v642_board_continuity.json",
+        "gates": [],
+        "id": "exp7314-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record GateMate prerequisites and graduated-board continuity"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "order": true,
+        "phase": true,
+        "title": false
+      },
+      "cost": null,
+      "error": "contract_mismatch",
+      "markdown": {
+        "deliverable": "results/experiment_7301_v641_capstone.json",
+        "gates": [],
+        "id": "exp7301-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile fourteen V641 dispositions and bounded research claims"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": false,
+      "seed": 730220260914,
+      "unit_id": "exp7315-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7315_v642_capstone.json",
+        "gates": [],
+        "id": "exp7315-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile all fourteen V642 outcomes and next research decisions"
+      }
+    }
+  ],
+  "run_date": "20260914",
+  "sample_size_budget": {
+    "contract_rows": {
+      "attempted": 14,
+      "censored": 0,
+      "completed": 14,
+      "independent_units": 14,
+      "planned": 14
+    },
+    "gate_controls": {
+      "attempted": 40,
+      "censored": 0,
+      "completed": 40,
+      "independent_units": 40,
+      "planned": 40
+    },
+    "network_requests": {
+      "attempted": 4,
+      "censored": 0,
+      "completed": 4,
+      "independent_units": 4,
+      "planned": 4
+    },
+    "source_dispositions": {
+      "attempted": 4,
+      "censored": 0,
+      "completed": 4,
+      "independent_units": 4,
+      "planned": 4
+    },
+    "stopping_rule": "Stop after fourteen contract rows, five controls for each of eight gates, four source dispositions, four sequential requests, and one validation sequence."
+  },
+  "schema": "carnot.exp7302.v642_source_contract.v1",
+  "scientific_value_claimed": false,
+  "sidecar_receipts": {
+    "history": {
+      "path": "results/raw/experiment_7302/historical-model-receipts.json",
+      "sha256": "sha256:c47390d9aa0e2074e81796f0e6482ca1d752921a2253c71c966595570e5db64f"
+    },
+    "negative_fixtures": {
+      "path": "results/raw/experiment_7302/negative-gate-fixtures.json",
+      "sha256": "sha256:feb19cd6dba9620028210ba86c9a9a4b50cf32f46470c8fc5b1715f435e388ec"
+    },
+    "source_access": {
+      "path": "results/raw/experiment_7302/source-access-receipts.json",
+      "sha256": "sha256:e9421d43744d4c85a9f40b68e5e62a6f08c3764de16c74258a0a14730b332f09"
+    }
+  },
+  "source_access_rows": [
+    {
+      "access_id": "batch_prompting",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2511.04108v4",
+      "publication_or_version_date": "2025-11-06 / v4 2026-02-20",
+      "response_sha256": "sha256:3135578069cbe4a8a86834014736e5bc9e01f19e519197ed30b7067fb92000bb",
+      "retrieval_date": "2026-09-14",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true
+    },
+    {
+      "access_id": "batch_interference",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2503.15551v2",
+      "publication_or_version_date": "2025-03-18 / v2 2025-06-20",
+      "response_sha256": "sha256:bd04ea283471dbede0eee2fdd3c039544aaf9b215f228ad8d8edbe8cc17ec0b7",
+      "retrieval_date": "2026-09-14",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true
+    },
+    {
+      "access_id": "constraint_substructure_recovery",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2509.24489",
+      "publication_or_version_date": "2025-09-29",
+      "response_sha256": "sha256:7ea44c63cee54db58a8fb1179fdea3db0c80ffee9e8c6444755d5334d0b916f7",
+      "retrieval_date": "2026-09-14",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": false
+    },
+    {
+      "access_id": "selected_ebt_citation",
+      "access_status": "http_success",
+      "error": null,
+      "kind": "primary_record",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2507.02092",
+      "publication_or_version_date": "2025-07-02",
+      "response_sha256": "sha256:d0e90afbd69984291a4705343a3141a4c7014265532aeb8fc72353f9d4920a4e",
+      "retrieval_date": "2026-09-14",
+      "status_code": 200,
+      "timeout_s": 20,
+      "title_verified": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:523e207a035de3fbb5fc4d79d6095e45d963ab49b0aa4d9ef70c8cd202748850",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7302_v642_source_contract.py": "sha256:fe5775e19681e693ffda8a60b06286b7ac3f7eb9d87027ad285cbfdb931d9798",
+    "research-complete.yaml": "sha256:b1f244a749d7cb6e9af0b11eec66073b8242d54667b0c8fdf30d56851992eb71",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:582d6a27d0de4c6c54e032499799fdf3e9472205a84f31c880500923109b7940",
+    "research-roadmap.yaml": "sha256:36b72311263e70d7221b573cbe21186607f9aea92d912f23c46272c40db307b4",
+    "results/experiment_7288_v641_source_contract.json": "sha256:5706bb65b4f0182dcefb7d42e1680c18382726a81ec310cb20cc345c1a6dd11d",
+    "results/raw/experiment_7302/historical-model-receipts.json": "sha256:c47390d9aa0e2074e81796f0e6482ca1d752921a2253c71c966595570e5db64f",
+    "results/raw/experiment_7302/negative-gate-fixtures.json": "sha256:feb19cd6dba9620028210ba86c9a9a4b50cf32f46470c8fc5b1715f435e388ec",
+    "results/raw/experiment_7302/selected-roadmap.yaml": "sha256:36b72311263e70d7221b573cbe21186607f9aea92d912f23c46272c40db307b4",
+    "results/raw/experiment_7302/source-access-receipts.json": "sha256:e9421d43744d4c85a9f40b68e5e62a6f08c3764de16c74258a0a14730b332f09",
+    "results/raw/experiment_7302/v642-design.md": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/audit_roadmap_gates.py": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/conductor_gates.py": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7302_v642_source_contract.py": "sha256:c90d66aa24158e39d2ad412107a65e1ba3f2115bb9dbed9670e4855977c2c729",
+    "scripts/harness_consumer_checks.py": "sha256:dcdb1b6e5c1fa7e61729e7f9e0115e1d6580abffd4876b77a90e1037b4a207c5",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7302_v642_source_contract.py": "sha256:be4326724acac5e0bf7666ac90219b54b88b01af0c43932a76868a2f57bc38d7"
+  },
+  "source_dispositions": [
+    {
+      "access_error": null,
+      "access_status_code": 200,
+      "adapted_mechanism": "extract several claims jointly within one source version and give direct generation the same batch opportunity",
+      "deferred_boundary": "call reduction alone is not source-verification value and does not repeat the V641 cache mechanism",
+      "disposition": "adapt",
+      "falsifier": "reject value when full cost, semantic parity, coverage, or matched direct-batch comparison fails",
+      "local_evidence_claimed": false,
+      "method_family": "batch_prompting",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2511.04108v4",
+      "publication_or_version_date": "2025-11-06 / v4 2026-02-20",
+      "retrieval_date": "2026-09-14",
+      "target_tasks": [
+        "exp7306-batch-fixture",
+        "exp7307-batch-canary",
+        "exp7308-batch-measurement",
+        "exp7309-batch-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_status_code": 200,
+      "adapted_mechanism": "mix valid and invalid claims, permute identifiers, and inject an instruction inside source data",
+      "deferred_boundary": "delimiters are tested controls and do not establish isolation by construction",
+      "disposition": "implement",
+      "falsifier": "any untouched claim changes because another batch member or source instruction contaminates it",
+      "local_evidence_claimed": false,
+      "method_family": "batch_interference",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2503.15551v2",
+      "publication_or_version_date": "2025-03-18 / v2 2025-06-20",
+      "retrieval_date": "2026-09-14",
+      "target_tasks": [
+        "exp7306-batch-fixture",
+        "exp7309-batch-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_status_code": 200,
+      "adapted_mechanism": "revise only the factor contradicted by released feedback while retaining unaffected factors",
+      "deferred_boundary": "the local factor update is not a reproduction of query-driven refinement or proof of continuous learning",
+      "disposition": "adapt",
+      "falsifier": "future error fails to improve with protected coverage or sealed past predictions change",
+      "local_evidence_claimed": false,
+      "method_family": "constraint_substructure_recovery",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2509.24489",
+      "publication_or_version_date": "2025-09-29",
+      "retrieval_date": "2026-09-14",
+      "target_tasks": [
+        "exp7310-factor-prototype",
+        "exp7311-factor-learning",
+        "exp7312-factor-audit"
+      ]
+    },
+    {
+      "access_error": null,
+      "access_status_code": 200,
+      "adapted_mechanism": "retain EBT as the selected energy-reasoning citation while exact execution checks extracted constraints",
+      "deferred_boundary": "energy compatibility does not certify faithful extraction and does not reopen retired energy-generation work",
+      "disposition": "defer",
+      "falsifier": "adopt only after a compatible local model shows independent calibration or reasoning value",
+      "local_evidence_claimed": false,
+      "method_family": "selected_ebt_citation",
+      "observed_access": "http_success",
+      "observed_version": null,
+      "primary_url": "https://arxiv.org/abs/2507.02092",
+      "publication_or_version_date": "2025-07-02",
+      "retrieval_date": "2026-09-14",
+      "target_tasks": [
+        "exp7315-capstone"
+      ]
+    }
+  ],
+  "started_at_utc": "2026-09-14T13:41:26.186778+00:00",
+  "status": "complete",
+  "submission_performed": false,
+  "upload_performed": false,
+  "validation_receipts": [
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/scripts'\"'\"');from roadmap_schema import Roadmap;Roadmap.model_validate(yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text()))'",
+      "duration_s": 0.108542,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/roadmap_schema.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "roadmap_schema",
+      "passed": true,
+      "stdout_tail": "",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.625212,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/prior_failure.log",
+      "log_sha256": "sha256:cf8e6aa1ba9a3ad1d096c2fccbbd388f26f60a1e7d817497db0ce62acc6743bd",
+      "name": "prior_failure",
+      "passed": true,
+      "stdout_tail": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 12.138544,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/exclusion_manifest.log",
+      "log_sha256": "sha256:38161f53f4ec65fa5a57d4136137fe719ab9671585482697011818e0d5830617",
+      "name": "exclusion_manifest",
+      "passed": true,
+      "stdout_tail": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/harness_consumer_checks.py prompt-paths /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.062833,
+      "exit_code": 1,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/prompt_paths.log",
+      "log_sha256": "sha256:24b8dc56b00d0e9799526997527ab68c89ea0b56bf7cd66f24004956f5288ab0",
+      "name": "prompt_paths",
+      "passed": false,
+      "stdout_tail": "    INVENTED PATH  research-roadmap-next.yaml  (parent directory does not exist)\n  invented paths: 1\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.60664,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/gate_fields.log",
+      "log_sha256": "sha256:7d3eb281a05fc10486c1e4e61c7587f4e738e120c87da4343f20ae5d37578ba0",
+      "name": "gate_fields",
+      "passed": true,
+      "stdout_tail": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 8,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 14,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 14,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/.coverage-exp7302-v642 '--include=*/experiment_7302_v642_source_contract.py' -m pytest -o addopts= -n 0 --no-cov --basetemp=/tmp/exp7302-v642-focused /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7302_v642_source_contract.py -q",
+      "duration_s": 6.621764,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/focused_pytest.log",
+      "log_sha256": "sha256:c065dfa0e0efa1fffdce195b05a11dd1080d07ba51833f55bc7a51c04533e1be",
+      "name": "focused_pytest",
+      "passed": true,
+      "stdout_tail": ".........                                                                [100%]\n9 passed in 4.23s\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/.coverage-exp7302-v642 '--include=*/experiment_7302_v642_source_contract.py' --show-missing --fail-under=100",
+      "duration_s": 0.083238,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/focused_coverage.log",
+      "log_sha256": "sha256:8a37995eae652c91db6e7f1aa18f9b0274c1cccc2153ccd57759313b3ac215e1",
+      "name": "focused_coverage",
+      "passed": true,
+      "stdout_tail": "Name                                                    Stmts   Miss  Cover   Missing\n-------------------------------------------------------------------------------------\npython/carnot/experiment_7302_v642_source_contract.py     392      0   100%\n-------------------------------------------------------------------------------------\nTOTAL                                                     392      0   100%\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7302_v642_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7302_v642_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7302_v642_source_contract.py",
+      "duration_s": 0.01221,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "passed": true,
+      "stdout_tail": "All checks passed!\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7302_v642_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7302_v642_source_contract.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7302_v642_source_contract.py",
+      "duration_s": 0.01065,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "passed": true,
+      "stdout_tail": "3 files already formatted\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7302_v642_source_contract.py",
+      "duration_s": 0.131303,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "passed": true,
+      "stdout_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "timed_out": false
+    },
+    {
+      "baseline_failure": false,
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7302_v642_source_contract.py",
+      "duration_s": 0.031117,
+      "exit_code": 0,
+      "inference_substrate": "cpu_exact_solver_or_simulator",
+      "inference_substrate_class": "cpu_exact_solver_or_simulator",
+      "log_path": "results/raw/experiment_7302/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "passed": true,
+      "stdout_tail": "OK: All tests reference specification requirements.\n",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true,
+  "yaml_authority_path": "research-roadmap.yaml",
+  "yaml_milestone": "2026.09.642",
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7302_v642_source_contract.json",
+      "gates": [],
+      "id": "exp7302-source-contract",
+      "order": 1,
+      "phase": 1,
+      "title": "V642 literature ingestion and exact fourteen-task receipt"
+    },
+    {
+      "deliverable": "results/experiment_7303_v642_validation_scope.json",
+      "gates": [],
+      "id": "exp7303-validation-scope",
+      "order": 2,
+      "phase": 1,
+      "title": "Separate required experiment checks from repository health"
+    },
+    {
+      "deliverable": "results/experiment_7304_v642_arc_receipt.json",
+      "gates": [
+        {
+          "artifact_field": "validation_scope_ready_score",
+          "op": "==",
+          "upstream": "exp7303-validation-scope",
+          "value": 1
+        }
+      ],
+      "id": "exp7304-arc-receipt",
+      "order": 3,
+      "phase": 2,
+      "title": "Qualify current ARC invocation receipts without fixture contamination"
+    },
+    {
+      "deliverable": "results/experiment_7305_v642_arc_selfparse.json",
+      "gates": [
+        {
+          "artifact_field": "arc_receipt_ready_score",
+          "op": "==",
+          "upstream": "exp7304-arc-receipt",
+          "value": 1
+        }
+      ],
+      "id": "exp7305-arc-selfparse",
+      "order": 4,
+      "phase": 2,
+      "title": "Run one adapter-withheld live selfparse generalization session"
+    },
+    {
+      "deliverable": "results/experiment_7306_v642_batch_fixture.json",
+      "gates": [],
+      "id": "exp7306-batch-fixture",
+      "order": 5,
+      "phase": 2,
+      "title": "Build joint-claim source verification and matched batch controls"
+    },
+    {
+      "deliverable": "results/experiment_7307_v642_batch_canary.json",
+      "gates": [
+        {
+          "artifact_field": "batch_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7306-batch-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7307-batch-canary",
+      "order": 6,
+      "phase": 2,
+      "title": "Qualify bounded Qwen3.8 joint-claim transport"
+    },
+    {
+      "deliverable": "results/experiment_7308_v642_batch_measurement.json",
+      "gates": [
+        {
+          "artifact_field": "batch_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7306-batch-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "batch_canary_ready_score",
+          "op": "==",
+          "upstream": "exp7307-batch-canary",
+          "value": 1
+        }
+      ],
+      "id": "exp7308-batch-measurement",
+      "order": 7,
+      "phase": 2,
+      "title": "Measure batched source fidelity and complete inference cost"
+    },
+    {
+      "deliverable": "results/experiment_7309_v642_batch_audit.json",
+      "gates": [
+        {
+          "artifact_field": "batch_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7308-batch-measurement",
+          "value": 1
+        }
+      ],
+      "id": "exp7309-batch-audit",
+      "order": 8,
+      "phase": 2,
+      "title": "Independently audit batch semantics and cross-claim interference"
+    },
+    {
+      "deliverable": "results/experiment_7310_v642_factor_prototype.json",
+      "gates": [],
+      "id": "exp7310-factor-prototype",
+      "order": 9,
+      "phase": 3,
+      "title": "Prototype factor-local revision from delayed constraint feedback"
+    },
+    {
+      "deliverable": "results/experiment_7311_v642_factor_learning.json",
+      "gates": [
+        {
+          "artifact_field": "factor_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7310-factor-prototype",
+          "value": 1
+        }
+      ],
+      "id": "exp7311-factor-learning",
+      "order": 10,
+      "phase": 3,
+      "title": "Measure prospective continuous learning with local factor revision"
+    },
+    {
+      "deliverable": "results/experiment_7312_v642_factor_audit.json",
+      "gates": [
+        {
+          "artifact_field": "factor_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7311-factor-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7312-factor-audit",
+      "order": 11,
+      "phase": 3,
+      "title": "Audit factor-learning causality retention and rollback"
+    },
+    {
+      "deliverable": "results/experiment_7313_v642_cost_envelope.json",
+      "gates": [],
+      "id": "exp7313-cost-envelope",
+      "order": 12,
+      "phase": 4,
+      "title": "Bound remaining durable-state acceleration from measured stage rows"
+    },
+    {
+      "deliverable": "results/experiment_7314_v642_board_continuity.json",
+      "gates": [],
+      "id": "exp7314-board-continuity",
+      "order": 13,
+      "phase": 4,
+      "title": "Record GateMate prerequisites and graduated-board continuity"
+    },
+    {
+      "deliverable": "results/experiment_7315_v642_capstone.json",
+      "gates": [],
+      "id": "exp7315-capstone",
+      "order": 14,
+      "phase": 4,
+      "title": "Reconcile all fourteen V642 outcomes and next research decisions"
+    }
+  ]
+}

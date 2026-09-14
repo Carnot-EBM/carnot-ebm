@@ -1,5 +1,98 @@
 # Research Reporting Capability Specification
 
+## V642 literature ingestion and exact execution contract — 2026-09-14
+
+**Status:** Implemented. This receipt is advisory. It does not gate a scientific branch.
+
+### REQ-REPORT-7302: Authenticate the V642 source and task contract
+
+Exp7302 SHALL select only a roadmap whose milestone is `2026.09.642`. It SHALL
+use `research-roadmap-next.yaml` before activation. It SHALL use
+`research-roadmap.yaml` after activation. It SHALL hash the original selected
+YAML bytes and the bytes at its `milestone_doc` path. It SHALL not edit,
+activate, archive, or otherwise alter either roster.
+
+Exp7302 SHALL parse the Markdown contract and YAML tasks independently. It
+SHALL require exactly fourteen ordered tasks from `exp7302-source-contract`
+through `exp7315-capstone`. IDs, titles, phases, deliverables, and all gates
+SHALL match. A readable stale milestone or contract mutation SHALL produce a
+terminal `disqualified` receipt. Contract mutations SHALL cover count, order,
+ID, output path, and gate field.
+
+Exp7302 SHALL run the shipped schema, prior-failure, exclusion, prompt-path,
+and gate audits on the selected YAML. It SHALL exercise the real conductor
+gate reader for each gate. Controls SHALL include passing, false, absent-file,
+absent-field, and quarantined fixtures. A task precondition SHALL reject a
+missing, quarantined, or disqualified dependency even when its numeric gate
+field equals one. The exact failed check SHALL remain in `gate_check_summary`.
+
+Exp7302 SHALL ingest the dated V642 source table. `source_dispositions` SHALL
+cover batch prompting, batch interference, constraint-substructure recovery,
+and one selected EBT citation. Each row SHALL state an implement, adapt, or
+defer decision. Each row SHALL preserve the primary URL, source date, access
+outcome, adaptation, falsifier, and deferred boundary. Exp7302 SHALL issue at
+most four primary requests. Each request SHALL have a 20-second limit. Requests
+SHALL run one at a time. Failed access SHALL remain an observation.
+
+Exp7302 SHALL not invoke a model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, and zero attempted, completed, failed, cancelled, and
+in-flight load and generation counters. It SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical and fixture invocation payloads SHALL remain in hash-bound sidecars.
+
+The terminal artifact SHALL contain every field and exact principle named in
+the Exp7302 prompt. `rows` SHALL equal `contract_rows`. The
+`contract_complete_score` SHALL equal one only when the two authorities match,
+all metadata checks pass, all gate controls are distinct, all source rows are
+complete, and all affected checks pass. Repository-wide failures SHALL remain
+in `repository_health` with exact command and log hashes. Such failures do not
+waive a failing affected check. Shared parser and gate authority SHALL set
+`verifier_is_oracle=true`. An exact result SHALL therefore use
+`circular_positive`, not `positive`. External failure SHALL be terminal
+`blocked`. Only unfinished Exp7302 work MAY be `partial`.
+
+#### SCENARIO-REPORT-7302-CONTRACT: Fourteen independent rows match exactly
+
+**Given** separate V642 Markdown and YAML byte streams
+**When** Exp7302 parses and compares their literal contracts
+**Then** fourteen ordered rows agree on ID, title, phase, deliverable, and gates
+**And** count, order, ID, output-path, and gate-field mutations fail.
+
+#### SCENARIO-REPORT-7302-GATES: Five real evaluator controls remain distinct
+
+**Given** each structured V642 gate edge
+**When** the real conductor reader evaluates five isolated fixtures
+**Then** passing, false, absent-file, absent-field, and quarantined outcomes remain distinct
+**And** the task precondition rejects quarantined or disqualified producers.
+
+#### SCENARIO-REPORT-7302-SOURCES: V642 sources remain bounded evidence
+
+**Given** the dated V642 refresh and four selected primary URLs
+**When** Exp7302 performs sequential bounded access checks
+**Then** every decision keeps its date, access result, adaptation, and falsifier
+**And** no source row claims local scientific evidence.
+
+#### SCENARIO-REPORT-7302-METADATA: Current work stays separate from history
+
+**Given** a no-model aggregation task with historical and fixture evidence
+**When** Exp7302 builds the terminal candidate
+**Then** current model counters remain zero and sidecars bind non-current payloads
+**And** repository health remains separate from affected validation.
+
+#### SCENARIO-REPORT-7302-ARTIFACT: Stored evidence controls terminal state
+
+**Given** a measured candidate under `results/raw/experiment_7302/`
+**When** independent reduction and artifact checks recompute its contents
+**Then** only an exact candidate reaches the declared terminal output
+**And** external absence is blocked while readable contract failure is disqualified.
+
+## Implementation Status (REQ-REPORT-7302)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7302 and SCENARIO-REPORT-7302-* | Implemented: reusable V642 adapter, thin CLI, sidecars, and terminal receipt | Verified by focused tests, scoped 100% coverage, roadmap audits, exact-contract E2E, adversarial verification, row consistency, and spec coverage recorded in the receipt |
+
 ## V641 source ingestion and exact execution contract — 2026-09-14
 
 **Status:** Planned. This receipt is advisory and makes no scientific claim.

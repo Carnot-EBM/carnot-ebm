@@ -340,3 +340,5 @@ CHECK_TIMED_OUT
 
 - **New top-five entrant — Ebi (`ebinan92`):** now **#2 at 8.68**, behind Tufa Labs. The scoring notebook remains private; no ARC-specific code, notebook, discussion, repository, or writeup is publicly attributable. **Classification: unknown**—source-reading/hardcoding versus general-purpose cannot yet be determined. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public Kaggle notebooks](https://www.kaggle.com/ebinan92/code), [GitHub profile](https://github.com/ebinan92)
 
+## 2026-09-14 13:34 UTC -- checked, nothing new
+
