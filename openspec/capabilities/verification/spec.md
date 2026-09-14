@@ -42481,3 +42481,98 @@ consistency SHALL pass before atomic publication.
 **When** the independent reducer runs source, claim, cache, and verdict checks
 **Then** each comparative row reconstructs its decision and actual token cost
 **And** only a cold-valid terminal candidate is atomically published.
+
+### REQ-VERIFY-7293: Distinct-Claim Reuse Measurement SHALL Charge Full Work
+
+Exp7293 SHALL authenticate the exact Exp7291 fixture and Exp7292 canary
+artifacts. It SHALL require `reuse_fixture_ready_score=1` and
+`reuse_canary_ready_score=1`. It SHALL also require the exact shared public
+manifest, analysis contract, scorer authority, model, tokenizer, parser, and
+configuration hashes. The generator process SHALL not read scorer-only labels
+before every model response is captured. Missing, retired, quarantined, or
+invalid external evidence SHALL produce a terminal blocked artifact with an
+exact `gate_check_summary`.
+
+The measurement SHALL use the sixteen frozen evaluation source groups and all
+eight distinct claims in each group. It SHALL freeze arm order independently
+for each group before generation. Direct SHALL use two fixed draws per claim,
+for 256 calls. Fresh verification SHALL extract one current source and one
+claim for every query, for 256 calls. Versioned reuse SHALL extract two source
+versions per group and one claim per query, for 160 calls. The schedule SHALL
+contain exactly 672 calls. Each call SHALL use at most 128 output tokens,
+temperature zero, one fixed seed, no retry, and no response repair.
+
+The live path SHALL resolve only `unsloth/Qwen3.8-27B-GGUF` from
+`scripts.experiment_template.cached_sota_pair()` and select Q4_K_M. It SHALL
+use the embedded GGUF tokenizer and chat template through the shipped native
+llama.cpp loader. It SHALL honor an idle task-owned GPU lease without eviction.
+Model load and all calls SHALL stop after 2700 seconds. The runner SHALL check
+the remaining budget before each call. It SHALL complete or censor every
+planned row in a group across all three arms before it starts another group.
+
+The cache lifetime SHALL stay inside one source group and one source version.
+A source revision SHALL invalidate the prior compilation before claim five.
+Every distinct claim SHALL run claim extraction and typed verification. One
+failed source compilation SHALL stay visible on every dependent query. The
+runner SHALL retain immutable requests, responses, cache receipts, source and
+claim manifests, source-version receipts, per-call results, per-unit results,
+and censoring.
+
+The reducer SHALL charge model initialization separately and allocate it
+symmetrically across arms. Full cost SHALL include source compilation, prefix
+prefill, lookup or invalidation, claim extraction, verification,
+synchronization, and failed calls. It SHALL report cold-start and steady
+per-group totals, latency distributions, and one-, two-, four-, and
+eight-claim amortization. Cached-token counters SHALL remain transport evidence
+and SHALL not become measured wall-time savings.
+
+`reuse_capture_complete_score` SHALL equal one only when all sixteen groups
+contain authentic live evidence and reconstructable complete costs for every
+planned row. `reuse_value_score` SHALL equal one only when all frozen freshness,
+semantic parity, accuracy, coverage, false-accept, and full-cost gates pass.
+A complete failed value gate SHALL produce a null result. Shared verifier
+authority forbids a positive verdict. The independent Exp7294 audit controls
+final scientific promotion.
+
+The terminal artifact SHALL contain every field required by the Exp7293 task.
+After generation starts it SHALL use `inference_substrate=live_llm_inference`
+and `inference_substrate_class=model_full_generation`. A measured candidate
+SHALL first exist under `results/raw/experiment_7293_v641_reuse_measurement/`.
+Focused tests, affected suites, scoped coverage, Ruff, mypy, exact-test spec
+coverage, independent raw reduction, adversarial verification, and verdict-row
+consistency SHALL pass before atomic publication.
+
+#### SCENARIO-VERIFY-7293-SCHEDULE: Groups Contain All Frozen Arms
+
+**Given** sixteen groups with eight claims and a revision before claim five
+**When** Exp7293 freezes independent group arm orders
+**Then** it creates 256 direct, 256 fresh, and 160 reuse calls
+**And** each group keeps all 42 calls contiguous for fair completion or censoring.
+
+#### SCENARIO-VERIFY-7293-FAILURE: Source Failure Reaches Dependent Claims
+
+**Given** one failed reused source compilation for a group and version
+**When** the reducer evaluates each dependent claim
+**Then** every dependent row retains the source error and abstains
+**And** no later claim repairs, hides, or replaces that source response.
+
+#### SCENARIO-VERIFY-7293-COST: Full Work Defines Amortization
+
+**Given** measured call, cache, verification, synchronization, and load costs
+**When** Exp7293 reduces one, two, four, and eight distinct claims
+**Then** it reports cold-start and steady per-group totals for every arm
+**And** cached-token estimates never substitute for measured elapsed time.
+
+#### SCENARIO-VERIFY-7293-CAPTURE: Complete Groups Define Readiness
+
+**Given** a frozen 2700-second capture budget and 672 planned calls
+**When** the budget or a transport failure prevents a call
+**Then** the runner retains a censored row for every omitted call in that group
+**And** capture readiness stays zero unless all sixteen groups are authentic.
+
+#### SCENARIO-VERIFY-7293-E2E: Revision And Cost Replay From Raw Evidence
+
+**Given** immutable source, claim, request, response, and version receipts
+**When** an independent reducer replays the complete measurement
+**Then** source revision, invalidation, extraction, verification, scoring, and cost reconstruct
+**And** only a cold-valid terminal candidate is atomically published.
