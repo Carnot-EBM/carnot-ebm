@@ -17958,3 +17958,4 @@ code |
 | 2026-09-14 18:34 UTC | Prototype factor-local revision from delayed const | OK | 91 passed, 1 warning in 24.62s |
 | 2026-09-14 19:58 UTC | Measure prospective continuous learning with local | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: int_dir / "eva |
 | 2026-09-14 20:55 UTC | Measure prospective continuous learning with local | OK | 94 passed, 1 warning in 21.21s |
+| 2026-09-14 22:18 UTC | Audit factor-learning causality retention and roll | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: eceipt = { + |

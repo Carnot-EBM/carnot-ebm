@@ -16181,3 +16181,105 @@ only. It SHALL not change model weights or production defaults.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7311 and SCENARIO-CL-7311-* | Implemented in `python/carnot/experiment_7311_v642_factor_learning.py` with the thin entrypoint `scripts/experiments/experiment_7311_v642_factor_learning.py`. The run authenticates Exp7310, replays five durable hook arms on 24 sealed streams, records pre-label causal evidence, cold-reduces rows, and keeps finite-domain CPU scope explicit. | `tests/python/test_experiment_7311_v642_factor_learning.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 641/641 (100%). |
+
+## REQ-CL-7312: Independent Audit Of Retained Factor Evidence
+
+Carnot SHALL audit Exp7311 from immutable public events, released labels, and
+hash-bound producer rows. The audit SHALL authenticate
+`factor_capture_complete_score == 1`, the producer terminal class, every raw
+receipt, every stream seal, every relevant code hash, and the exclusion state.
+A missing, quarantined, retired, disqualified, or malformed external input
+SHALL produce a row-free terminal blocked artifact. Its `gate_check_summary`
+SHALL retain the exact upstream, check, field, observed value, and expected
+value.
+
+A fresh worker SHALL reconstruct all 107,520 predictions and all 15,360
+arm-specific state transitions. It SHALL use only public events and labels at
+their declared release time. It SHALL not use producer aggregate rows, private
+regime identities, change points, or future labels during prediction. The
+worker SHALL retain every prediction, state, factor, label, and transition
+mismatch.
+
+The audit SHALL run five independent hostile controls. A permutation of future
+labels SHALL not change a prediction sealed before the permuted label releases.
+A consistent permutation of public factor names SHALL preserve decisions.
+Erasing retained witnesses after warmup SHALL expose whether witness retention
+causes later outcome changes. Delaying all feedback beyond evaluation SHALL
+remove every evaluation-time update. A corrupt rollback parent hash SHALL be
+rejected and SHALL not create replacement state.
+
+The reducer SHALL recompute paired intervals from independent streams. It SHALL
+keep isolated-factor, overlapping-factor, and stationary strata separate. It
+SHALL compare future and non-feedback error to global and local reset arms. It
+SHALL also preserve recurrence, false-accept, coverage, abstention, label
+parity, and memory-cap evidence. Bitset or state-byte changes alone SHALL not
+count as learning.
+
+`factor_audit_complete_score` SHALL equal one only when replay is exact, all
+hostile controls pass, all five arms use equal labels and memory limits, and no
+owned unit is censored. `factor_promotion_score` SHALL equal one only when every
+independently recomputed efficacy, safety, causality, coverage, and resource
+gate passes. A complete efficacy failure SHALL be a terminal null and SHALL
+name the retained-witness factor mechanism to retire. Shared exact evaluator
+authority SHALL allow `circular_positive`, never `positive`.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All current load and generation counters SHALL be zero.
+The top-level substrate SHALL be `aggregation_from_upstream_artifacts` with
+class `aggregation`. Execution SHALL use `execution_venue=host`. Historical or
+injected invocation payloads SHALL remain in hash-bound sidecars.
+
+### SCENARIO-CL-7312-PRECONDITIONS: Exact Capture Or Terminal Block
+
+- GIVEN Exp7311, its raw receipts, stream seals, source hashes, exclusions, and output ownership
+- WHEN capture score, terminal class, quarantine, disqualification, retirement, hashes, and task identity are checked
+- THEN only exact complete evidence can start the audit
+- AND an external failure produces a row-free blocked record with the exact failed check.
+
+### SCENARIO-CL-7312-COLD-REPLAY: Rebuild Predictions And Transitions
+
+- GIVEN only public events and labels whose release index has arrived
+- WHEN a fresh worker replays all five arms across the frozen streams
+- THEN every prediction and arm-specific transition matches or records its exact mismatch
+- AND private regime fields and producer aggregates never enter prediction state.
+
+### SCENARIO-CL-7312-INTERVENTIONS: Hostile Copies Have Independent Outcomes
+
+- GIVEN task-owned copies of authenticated development evidence
+- WHEN future labels, factor names, retained witnesses, feedback timing, and a rollback hash are changed
+- THEN each intervention reports its declared independent outcome
+- AND corrupt rollback evidence rejects without inventing recovery state.
+
+### SCENARIO-CL-7312-INTERVALS: Streams And Strata Stay Independent
+
+- GIVEN cold-replayed stream-arm rows with equal label schedules and memory limits
+- WHEN paired intervals are recomputed for error, recurrence, safety, and coverage
+- THEN whole streams are the independent units and all three strata remain visible
+- AND future and non-feedback comparisons retain their exact denominators.
+
+### SCENARIO-CL-7312-CAUSALITY: Retained Evidence Must Change Later Outcomes
+
+- GIVEN retained-witness and witness-erased copies with the same public sequence and released labels
+- WHEN later pre-label predictions and outcomes are compared
+- THEN only changes after legitimate releases count as causal learning
+- AND inert bitset or byte changes do not earn promotion credit.
+
+### SCENARIO-CL-7312-E2E: Immutable Capture Through Audit Reduction
+
+- GIVEN immutable Exp7311 capture bytes
+- WHEN authentication, cold replay, hostile controls, reduction, and strict artifact checks run
+- THEN each stage retains input and output hashes and all real capture bytes remain unchanged
+- AND no model, device, publication, or production-default action occurs.
+
+### SCENARIO-CL-7312-TERMINAL: Audit Completeness And Promotion Stay Separate
+
+- GIVEN a complete independent audit whose frozen efficacy gates can pass or fail
+- WHEN terminal scores are derived
+- THEN audit completeness remains independent of scientific promotion
+- AND a complete failure is null while an unchanged external failure is blocked.
+
+## Implementation Status (REQ-CL-7312)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7312 and SCENARIO-CL-7312-* | Implemented in `python/carnot/experiment_7312_v642_factor_audit.py` with the thin entrypoint `scripts/experiments/experiment_7312_v642_factor_audit.py`. The audit authenticates Exp7311 and its immutable inputs. A fresh worker reconstructs all five arms from public events and due labels. Five hostile controls test label timing, factor-name invariance, witness erasure, feedback removal, and corrupt rollback rejection. | `tests/python/test_experiment_7312_v642_factor_audit.py` covers exact blocking, replay parity, controls, independent intervals, causal outcome credit, terminal separation, and atomic evidence. Scoped statement coverage is 568/568 (100%). |
