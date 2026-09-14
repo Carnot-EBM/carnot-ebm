@@ -17924,3 +17924,5 @@ code |
 | 2026-09-14 02:18 UTC | Plan milestone 2026.09.641 | OK | 14 tasks proposed |
 | 2026-09-14 02:37 UTC | Activation REFUSED: milestone 2026.09.641 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7300-board-continuity. NEXT_ROADMAP_FILE left in place for operator inspection. |
 | 2026-09-14 02:37 UTC | Activation replan 1/2: 2026.09.641 | OK | refused roadmap quarantined to roadmap-2026.09.641-refusal1.yaml; replanning with lint report |
+| 2026-09-14 02:49 UTC | Plan milestone 2026.09.641 | OK | 14 tasks proposed |
+| 2026-09-14 03:07 UTC | Milestone 2026.09.641 activated | OK | 14 tasks queued |
