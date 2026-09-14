@@ -17931,3 +17931,4 @@ code |
 | 2026-09-14 04:05 UTC | Preserve live ARC invocation evidence across timeo | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 125 passed, 1 warning in 20.93s |
 | 2026-09-14 04:08 UTC | Accumulate one authentic adapter-withheld live sel | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7289-arc-boundary.arc_boundary_ready_score (actual=0 == expected=1) |
 | 2026-09-14 04:35 UTC | Build a versioned source-compilation reuse fixture | OK | 92 passed, 1 warning in 10.30s |
+| 2026-09-14 05:05 UTC | Canary Qwen3.8 source reuse and warm-prefix compar | OK | 93 passed, 1 warning in 7.63s |
