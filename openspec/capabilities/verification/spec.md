@@ -42682,3 +42682,111 @@ before atomic publication.
 **When** replay, group reduction, corruption controls, and promotion gates finish
 **Then** a cold validator reproduces the result from raw evidence
 **And** only the validated terminal candidate is published atomically.
+
+### REQ-VERIFY-7306: Batch Fixture SHALL Preserve Versioned Claim Isolation
+
+Exp7306 SHALL build a deterministic CPU fixture for joint claim extraction.
+It SHALL authenticate the V641 source fixture, measurement, audit, exclusion
+manifest, research contracts, and output paths before execution. Missing,
+quarantined, retired, or disqualified required evidence SHALL produce a
+terminal blocked artifact. Its `gate_check_summary` SHALL preserve the exact
+failed check, upstream, field, observed value, and expected value.
+
+The fixture SHALL freeze eight development groups and sixteen independent
+evaluation groups. Each group SHALL contain two source versions. Each version
+SHALL contain four distinct claims: supported, contradicted, unsupported, and
+compositional. The public panel SHALL include entity relabeling, claim-order
+permutation, stale-source substitution, and a source-data instruction that
+tries to change another claim. Evaluator labels SHALL remain in a separate
+file and process from public execution.
+
+The fixture SHALL compare serial versioned verification, batched versioned
+verification, and batched warm-prefix direct decisions. For each source
+version, serial verification SHALL use one source call and four claim calls.
+Batched verification SHALL use one source call and one joint claim call.
+Batched direct SHALL use one joint decision call. Each arm and source version
+SHALL receive 1,280 output tokens. Source calls SHALL receive at most 256
+tokens. Claim batches SHALL receive at most 1,024 tokens. Direct batches SHALL
+receive at most 1,280 tokens. No arm SHALL use a retry or repair call.
+
+Each batch SHALL bind its source ID, source version, source content hash,
+claim IDs, and claim-order permutation. One batch SHALL never span source
+versions. The batch parser SHALL match responses by claim ID only. A missing
+or duplicate response ID SHALL abstain on each affected unit. It SHALL never
+pair responses by list position. A source version change SHALL invalidate the
+old compilation before any new-version claim executes.
+
+The CPU transport SHALL execute the existing source compiler and exact typed
+executor. It SHALL record allocated tokens and actual output tokens for every
+call. Synthetic elapsed time SHALL not support a value claim. All injected
+transport payloads and private evaluator labels SHALL use hash-bound sidecars.
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`,
+zero current load and generation counters,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`.
+
+The evaluation SHALL contain 128 units per arm. It SHALL use 10,000 fixed
+bootstrap draws over the sixteen source groups. The primary gate SHALL require
+exact serial-to-batch semantic parity, zero stale constraints served, and no
+more false accepts than either control. Paired lower bounds for accuracy and
+coverage versus batched direct SHALL be at least -0.02. The full-cost speedup
+lower bound SHALL be at least 1.5 versus serial and batched direct. Failed
+value gates SHALL report null values and a terminal null verdict.
+
+`batch_fixture_ready_score` SHALL equal one only when the executable protocol,
+adverse controls, fixed call counts, fixed token budgets, authority separation,
+and sealed panel pass. It SHALL not represent learned accuracy or measured
+speed. Shared evaluator authority permits `circular_positive` only. The
+artifact SHALL include every field required by the Exp7306 task, including
+`sealed_panel_manifest`, `call_budget_contract`, `batch_control_rows`, and
+`acceptance_contract`.
+
+#### SCENARIO-VERIFY-7306-CALLS: Each Version Uses Five, Two, And One Calls
+
+**Given** four claims bound to one source version
+**When** all three fixture arms execute without retry or repair
+**Then** serial verification makes five calls, batched verification makes two calls, and batched direct makes one call
+**And** each arm has exactly 1,280 allocated output tokens.
+
+#### SCENARIO-VERIFY-7306-IDS: Batch Results Match Only By Unique Identifier
+
+**Given** a response with permuted, missing, duplicate, or unknown claim IDs
+**When** the joint parser maps response items to requested claims
+**Then** permutation preserves decisions and missing or duplicate IDs abstain on affected units
+**And** no result is paired to a claim by response position.
+
+#### SCENARIO-VERIFY-7306-VERSION: A Batch Cannot Cross A Source Revision
+
+**Given** claims from two source versions and one prior compiled source
+**When** the runner builds and executes the next batch
+**Then** it rejects a mixed-version batch and invalidates the old compilation
+**And** no version-two row records a version-one source hash or stale serve.
+
+#### SCENARIO-VERIFY-7306-ISOLATION: Source Instructions Cannot Change Other Claims
+
+**Given** one source-data instruction that targets another claim ID
+**When** the batch executes with unrelated claims and a clean-source twin
+**Then** every untouched claim keeps its clean-source decision
+**And** the contamination control records zero unrelated-claim changes.
+
+#### SCENARIO-VERIFY-7306-AUTHORITY: Labels Enter Only During Independent Scoring
+
+**Given** a public panel and a hash-bound private label sidecar
+**When** the transport completes all public predictions
+**Then** no label field reaches the transport, cache, compiler, or executor
+**And** a separate scorer process joins predictions to labels by unique unit ID.
+
+#### SCENARIO-VERIFY-7306-GATES: Readiness And Value Stay Separate
+
+**Given** a complete CPU fixture with sealed budgets and controls
+**When** a synthetic cost projection or scientific value threshold fails
+**Then** `batch_fixture_ready_score` can remain one while the value result is null
+**And** the artifact does not claim measured latency, learned accuracy, or positive scientific value.
+
+#### SCENARIO-VERIFY-7306-E2E: Versioned Joint IDs Reach Independent Evaluation
+
+**Given** one authenticated source version and four uniquely identified claims
+**When** the joint response is parsed and each compiled claim reaches the exact executor
+**Then** the independent scorer reconstructs all four decisions from hash-bound public rows
+**And** only a cold-valid terminal candidate is atomically published.
