@@ -1,0 +1,6 @@
+Exp7301 historical affected-suite receipt
+UTC date: 2026-09-14
+Command: PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7287_v640_capstone.py tests/python/test_experiment_7288_v641_source_contract.py tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-affected
+Exit code: 1
+Elapsed: 22.83 seconds
+Outcome: 32 passed; the V640 capstone suite produced 1 failure and 15 setup errors because it requires active research-roadmap.yaml milestone 2026.09.640 while the immutable active roster is V641. Historical tests and the active roster were not changed. The final affected_suites.log narrows the applicable active-contract check to V641 Exp7288 plus Exp7301 and passes 27 tests.

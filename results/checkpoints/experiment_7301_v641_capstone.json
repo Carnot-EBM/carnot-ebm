@@ -1,0 +1,2989 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "fourteen_task_dispositions",
+      "expected": 14,
+      "observed": 14,
+      "passed": true,
+      "principle": "Roster closure is independent of scientific value."
+    },
+    {
+      "criterion": "literal_contract_exact",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "YAML and Markdown are parsed independently."
+    },
+    {
+      "criterion": "same_milestone_gates",
+      "expected": 8,
+      "observed": 7,
+      "passed": false,
+      "principle": "Conductor readiness is not scientific efficacy."
+    },
+    {
+      "criterion": "required_captures_and_audits",
+      "expected": {
+        "arc_capture_complete_score": 1,
+        "board_continuity_complete_score": 1,
+        "mixture_audit_complete_score": 1,
+        "reuse_audit_complete_score": 1,
+        "snapshot_capture_complete_score": 1
+      },
+      "observed": {
+        "arc_capture_complete_score": null,
+        "board_continuity_complete_score": 1,
+        "mixture_audit_complete_score": 1,
+        "reuse_audit_complete_score": 1,
+        "snapshot_capture_complete_score": 1
+      },
+      "passed": false,
+      "principle": "Every required capture or audit must be present and authentic."
+    },
+    {
+      "criterion": "independent_branch_value",
+      "expected": "at least one positive",
+      "observed": {
+        "arc_method_value_score": null,
+        "mixture_promotion_score": 0,
+        "reuse_promotion_score": 0,
+        "snapshot_value_score": 0
+      },
+      "passed": false,
+      "principle": "A positive needs exact scope and no oracle or failed efficacy gate."
+    },
+    {
+      "criterion": "validation_receipts",
+      "expected": [
+        "focused_pytest",
+        "affected_suites",
+        "full_python_suite",
+        "scoped_coverage",
+        "ruff_check",
+        "ruff_format",
+        "changed_module_mypy",
+        "scoped_spec_coverage",
+        "independent_raw_reducer",
+        "adversarial_verify",
+        "verdict_row_consistency_lint",
+        "literal_contract_e2e"
+      ],
+      "observed": [
+        "focused_pytest",
+        "affected_suites",
+        "full_python_suite",
+        "scoped_coverage",
+        "ruff_check",
+        "ruff_format",
+        "changed_module_mypy",
+        "scoped_spec_coverage",
+        "independent_raw_reducer",
+        "adversarial_verify",
+        "verdict_row_consistency_lint",
+        "literal_contract_e2e",
+        "scoped_coverage_test",
+        "candidate_build",
+        "coverage_stale_data_failure",
+        "coverage_target_failures",
+        "affected_v640_historical_suite"
+      ],
+      "passed": false,
+      "principle": "Commands preserve real exit codes, elapsed time, and log hashes."
+    }
+  ],
+  "audit_score_rows": [
+    {
+      "artifact_field": "arc_capture_complete_score",
+      "check_kind": "completeness",
+      "expected_value": 1,
+      "observed_value": null,
+      "passed": false,
+      "source_authenticated": true,
+      "source_disposition_class": "blocked",
+      "source_path": "results/experiment_7290_arc_selfparse.json",
+      "source_sha256": "sha256:215d273299221e6b3db9516be29951d7448434aa3f65e8e658556cb1f84f006f",
+      "task_id": "exp7290-arc-selfparse"
+    },
+    {
+      "artifact_field": "arc_method_value_score",
+      "check_kind": "value",
+      "expected_value": 1,
+      "observed_value": null,
+      "passed": false,
+      "source_authenticated": true,
+      "source_disposition_class": "blocked",
+      "source_path": "results/experiment_7290_arc_selfparse.json",
+      "source_sha256": "sha256:215d273299221e6b3db9516be29951d7448434aa3f65e8e658556cb1f84f006f",
+      "task_id": "exp7290-arc-selfparse"
+    },
+    {
+      "artifact_field": "reuse_audit_complete_score",
+      "check_kind": "completeness",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "source_authenticated": true,
+      "source_disposition_class": "disqualified",
+      "source_path": "results/experiment_7294_v641_reuse_audit.json",
+      "source_sha256": "sha256:e3fee6d8bf31ee6f5fa8516de472fc71201c724c7418dbdbd2dcaed781113055",
+      "task_id": "exp7294-reuse-audit"
+    },
+    {
+      "artifact_field": "reuse_promotion_score",
+      "check_kind": "value",
+      "expected_value": 1,
+      "observed_value": 0,
+      "passed": false,
+      "source_authenticated": true,
+      "source_disposition_class": "disqualified",
+      "source_path": "results/experiment_7294_v641_reuse_audit.json",
+      "source_sha256": "sha256:e3fee6d8bf31ee6f5fa8516de472fc71201c724c7418dbdbd2dcaed781113055",
+      "task_id": "exp7294-reuse-audit"
+    },
+    {
+      "artifact_field": "mixture_audit_complete_score",
+      "check_kind": "completeness",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "source_authenticated": true,
+      "source_disposition_class": "null",
+      "source_path": "results/experiment_7297_v641_mixture_audit.json",
+      "source_sha256": "sha256:61241304c356b6a4c51b7efb744b8b738962cf6908f6c26ba7fd96a214e7e05c",
+      "task_id": "exp7297-mixture-audit"
+    },
+    {
+      "artifact_field": "mixture_promotion_score",
+      "check_kind": "value",
+      "expected_value": 1,
+      "observed_value": 0,
+      "passed": false,
+      "source_authenticated": true,
+      "source_disposition_class": "null",
+      "source_path": "results/experiment_7297_v641_mixture_audit.json",
+      "source_sha256": "sha256:61241304c356b6a4c51b7efb744b8b738962cf6908f6c26ba7fd96a214e7e05c",
+      "task_id": "exp7297-mixture-audit"
+    },
+    {
+      "artifact_field": "snapshot_capture_complete_score",
+      "check_kind": "completeness",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "source_authenticated": true,
+      "source_disposition_class": "null",
+      "source_path": "results/experiment_7299_v641_snapshot_cost.json",
+      "source_sha256": "sha256:f7f4130452d197aecacbd6c5d8ab5005f97ff2acccf335af84d0c5b67d2d47a5",
+      "task_id": "exp7299-snapshot-cost"
+    },
+    {
+      "artifact_field": "snapshot_value_score",
+      "check_kind": "value",
+      "expected_value": 1,
+      "observed_value": 0,
+      "passed": false,
+      "source_authenticated": true,
+      "source_disposition_class": "null",
+      "source_path": "results/experiment_7299_v641_snapshot_cost.json",
+      "source_sha256": "sha256:f7f4130452d197aecacbd6c5d8ab5005f97ff2acccf335af84d0c5b67d2d47a5",
+      "task_id": "exp7299-snapshot-cost"
+    },
+    {
+      "artifact_field": "board_continuity_complete_score",
+      "check_kind": "completeness",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "source_authenticated": true,
+      "source_disposition_class": "positive",
+      "source_path": "results/experiment_7300_v641_board_continuity.json",
+      "source_sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b",
+      "task_id": "exp7300-board-continuity"
+    }
+  ],
+  "branch_decisions": [
+    {
+      "allowed_claim_scope": "No V641 live self-discovery value claim; the required session did not run.",
+      "borrowed_as_learning_value": false,
+      "branch": "live_self_discovery",
+      "complete_score": null,
+      "failed_acceptance_gate_attached": false,
+      "next_falsifier": "An unquarantined boundary receipt followed by one authentic adapter-withheld session.",
+      "value_score": null,
+      "verdict_class": "blocked"
+    },
+    {
+      "allowed_claim_scope": "Versioned source materialization completed, but cost promotion failed.",
+      "borrowed_as_learning_value": false,
+      "branch": "source_materialization",
+      "complete_score": 1,
+      "failed_acceptance_gate_attached": true,
+      "next_falsifier": "A changed reuse mechanism that passes semantic parity and frozen full-cost gates.",
+      "value_score": 0,
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim_scope": "The bounded fixed-share learner is a complete efficacy null and is retired.",
+      "borrowed_as_learning_value": false,
+      "branch": "online_hypothesis_retention",
+      "complete_score": 1,
+      "failed_acceptance_gate_attached": true,
+      "next_falsifier": "A different hypothesis mechanism with better prospective error and protected recurrence.",
+      "value_score": 0,
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim_scope": "Persistent full-snapshot mechanics pass; frozen deployment value and NFR-01 do not.",
+      "borrowed_as_learning_value": false,
+      "branch": "host_durability",
+      "complete_score": 1,
+      "failed_acceptance_gate_attached": true,
+      "next_falsifier": "A changed storage mechanism whose paired lower bounds pass steady, interactive, and 10x gates.",
+      "value_score": 0,
+      "verdict_class": "null"
+    },
+    {
+      "allowed_claim_scope": "Authenticated board availability is context, not a scientific or throughput achievement.",
+      "borrowed_as_learning_value": false,
+      "branch": "board_continuity_context",
+      "complete_score": 1,
+      "failed_acceptance_gate_attached": false,
+      "next_falsifier": "A dated changed-state receipt and separately authorized device experiment.",
+      "value_score": null,
+      "verdict_class": "circular_positive"
+    }
+  ],
+  "capstone_complete_score": 1,
+  "completed_at_utc": "2026-09-14T11:26:25.542477+00:00",
+  "conductor_modified": false,
+  "contract_rows": [
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7288_v641_source_contract.json",
+        "gates": [],
+        "id": "exp7288-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V641 source ingestion and exact fourteen-task contract"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 1,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7288-source-contract",
+      "yaml": {
+        "deliverable": "results/experiment_7288_v641_source_contract.json",
+        "gates": [],
+        "id": "exp7288-source-contract",
+        "order": 1,
+        "phase": 1,
+        "title": "V641 source ingestion and exact fourteen-task contract"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7289_v641_arc_boundary.json",
+        "gates": [],
+        "id": "exp7289-arc-boundary",
+        "order": 2,
+        "phase": 1,
+        "title": "Preserve live ARC invocation evidence across timeout boundaries"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 2,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7289-arc-boundary",
+      "yaml": {
+        "deliverable": "results/experiment_7289_v641_arc_boundary.json",
+        "gates": [],
+        "id": "exp7289-arc-boundary",
+        "order": 2,
+        "phase": 1,
+        "title": "Preserve live ARC invocation evidence across timeout boundaries"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7290_v641_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7289-arc-boundary",
+            "value": 1
+          }
+        ],
+        "id": "exp7290-arc-selfparse",
+        "order": 3,
+        "phase": 1,
+        "title": "Accumulate one authentic adapter-withheld live selfparse session"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 3,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7290-arc-selfparse",
+      "yaml": {
+        "deliverable": "results/experiment_7290_v641_arc_selfparse.json",
+        "gates": [
+          {
+            "artifact_field": "arc_boundary_ready_score",
+            "op": "==",
+            "upstream": "exp7289-arc-boundary",
+            "value": 1
+          }
+        ],
+        "id": "exp7290-arc-selfparse",
+        "order": 3,
+        "phase": 1,
+        "title": "Accumulate one authentic adapter-withheld live selfparse session"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7291_v641_reuse_fixture.json",
+        "gates": [],
+        "id": "exp7291-reuse-fixture",
+        "order": 4,
+        "phase": 2,
+        "title": "Build a versioned source-compilation reuse fixture"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 4,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7291-reuse-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7291_v641_reuse_fixture.json",
+        "gates": [],
+        "id": "exp7291-reuse-fixture",
+        "order": 4,
+        "phase": 2,
+        "title": "Build a versioned source-compilation reuse fixture"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7292_v641_reuse_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7292-reuse-canary",
+        "order": 5,
+        "phase": 2,
+        "title": "Canary Qwen3.8 source reuse and warm-prefix comparators"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 5,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7292-reuse-canary",
+      "yaml": {
+        "deliverable": "results/experiment_7292_v641_reuse_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7292-reuse-canary",
+        "order": 5,
+        "phase": 2,
+        "title": "Canary Qwen3.8 source reuse and warm-prefix comparators"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7293_v641_reuse_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "reuse_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7292-reuse-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7293-reuse-measurement",
+        "order": 6,
+        "phase": 2,
+        "title": "Measure fresh-source reuse parity and end-to-end cost"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 6,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7293-reuse-measurement",
+      "yaml": {
+        "deliverable": "results/experiment_7293_v641_reuse_measurement.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7291-reuse-fixture",
+            "value": 1
+          },
+          {
+            "artifact_field": "reuse_canary_ready_score",
+            "op": "==",
+            "upstream": "exp7292-reuse-canary",
+            "value": 1
+          }
+        ],
+        "id": "exp7293-reuse-measurement",
+        "order": 6,
+        "phase": 2,
+        "title": "Measure fresh-source reuse parity and end-to-end cost"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7294_v641_reuse_audit.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7293-reuse-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7294-reuse-audit",
+        "order": 7,
+        "phase": 2,
+        "title": "Independently audit source reuse safety and amortization"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 7,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7294-reuse-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7294_v641_reuse_audit.json",
+        "gates": [
+          {
+            "artifact_field": "reuse_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7293-reuse-measurement",
+            "value": 1
+          }
+        ],
+        "id": "exp7294-reuse-audit",
+        "order": 7,
+        "phase": 2,
+        "title": "Independently audit source reuse safety and amortization"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7295_v641_mixture_prototype.json",
+        "gates": [],
+        "id": "exp7295-mixture-prototype",
+        "order": 8,
+        "phase": 3,
+        "title": "Prototype bounded delayed-feedback hypothesis mixtures"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 8,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7295-mixture-prototype",
+      "yaml": {
+        "deliverable": "results/experiment_7295_v641_mixture_prototype.json",
+        "gates": [],
+        "id": "exp7295-mixture-prototype",
+        "order": 8,
+        "phase": 3,
+        "title": "Prototype bounded delayed-feedback hypothesis mixtures"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7296_v641_mixture_learning.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7295-mixture-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7296-mixture-learning",
+        "order": 9,
+        "phase": 3,
+        "title": "Evaluate prospective self-learning under delayed labels"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 9,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7296-mixture-learning",
+      "yaml": {
+        "deliverable": "results/experiment_7296_v641_mixture_learning.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7295-mixture-prototype",
+            "value": 1
+          }
+        ],
+        "id": "exp7296-mixture-learning",
+        "order": 9,
+        "phase": 3,
+        "title": "Evaluate prospective self-learning under delayed labels"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7297_v641_mixture_audit.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7296-mixture-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7297-mixture-audit",
+        "order": 10,
+        "phase": 3,
+        "title": "Audit feedback causality and recurrence safety independently"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 10,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7297-mixture-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7297_v641_mixture_audit.json",
+        "gates": [
+          {
+            "artifact_field": "mixture_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7296-mixture-learning",
+            "value": 1
+          }
+        ],
+        "id": "exp7297-mixture-audit",
+        "order": 10,
+        "phase": 3,
+        "title": "Audit feedback causality and recurrence safety independently"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7298_v641_snapshot_journal.json",
+        "gates": [],
+        "id": "exp7298-snapshot-journal",
+        "order": 11,
+        "phase": 4,
+        "title": "Prototype persistent-journal full-snapshot acknowledgments"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 11,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7298-snapshot-journal",
+      "yaml": {
+        "deliverable": "results/experiment_7298_v641_snapshot_journal.json",
+        "gates": [],
+        "id": "exp7298-snapshot-journal",
+        "order": 11,
+        "phase": 4,
+        "title": "Prototype persistent-journal full-snapshot acknowledgments"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7299_v641_snapshot_cost.json",
+        "gates": [
+          {
+            "artifact_field": "snapshot_journal_ready_score",
+            "op": "==",
+            "upstream": "exp7298-snapshot-journal",
+            "value": 1
+          }
+        ],
+        "id": "exp7299-snapshot-cost",
+        "order": 12,
+        "phase": 4,
+        "title": "Measure persistent-journal latency and durable throughput"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 12,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7299-snapshot-cost",
+      "yaml": {
+        "deliverable": "results/experiment_7299_v641_snapshot_cost.json",
+        "gates": [
+          {
+            "artifact_field": "snapshot_journal_ready_score",
+            "op": "==",
+            "upstream": "exp7298-snapshot-journal",
+            "value": 1
+          }
+        ],
+        "id": "exp7299-snapshot-cost",
+        "order": 12,
+        "phase": 4,
+        "title": "Measure persistent-journal latency and durable throughput"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7300_v641_board_continuity.json",
+        "gates": [],
+        "id": "exp7300-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record board continuity and changed-state prerequisites"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 13,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7300-board-continuity",
+      "yaml": {
+        "deliverable": "results/experiment_7300_v641_board_continuity.json",
+        "gates": [],
+        "id": "exp7300-board-continuity",
+        "order": 13,
+        "phase": 4,
+        "title": "Record board continuity and changed-state prerequisites"
+      }
+    },
+    {
+      "abstention": false,
+      "arm": "markdown_vs_yaml",
+      "censored": false,
+      "checks": {
+        "deliverable": true,
+        "gates": true,
+        "id": true,
+        "order": true,
+        "phase": true,
+        "title": true
+      },
+      "cost": null,
+      "error": null,
+      "markdown": {
+        "deliverable": "results/experiment_7301_v641_capstone.json",
+        "gates": [],
+        "id": "exp7301-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile fourteen V641 dispositions and bounded research claims"
+      },
+      "metric": "exact_contract_agreement",
+      "order": 14,
+      "passed": true,
+      "seed": 728820260914,
+      "unit_id": "exp7301-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7301_v641_capstone.json",
+        "gates": [],
+        "id": "exp7301-capstone",
+        "order": 14,
+        "phase": 4,
+        "title": "Reconcile fourteen V641 dispositions and bounded research claims"
+      }
+    }
+  ],
+  "duration_s": 1.1960386040154845,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7301-capstone",
+  "external_message_performed": false,
+  "field_principles": {
+    "MODEL_SPECS": "Actual executable local model identities; keep historical models in hashed sidecars.",
+    "acceptance_gate_results": "Each completeness/value check names expected, observed, passed and principle.",
+    "audit_score_rows": "Retain all nine required producer score observations independently of verdict prose.",
+    "branch_decisions": "Independent ARC/source/learning/storage/board outcomes, allowed claim scope and next falsifier.",
+    "capstone_complete_score": "One for all fourteen exact dispositions and reconciled evidence, independent of scientific value.",
+    "completed_at_utc": "Record the actual UTC completion instant.",
+    "conductor_modified": "This task does not edit the conductor.",
+    "contract_rows": "Independent final Markdown/YAML comparison, including all gates and deliverables.",
+    "duration_s": "Measured monotonic elapsed and disjoint phase spans, including failures and initialization.",
+    "execution_host": "Record host identity without converting it into device execution.",
+    "execution_venue": "Host is host; identify actual GPU/native/device execution separately.",
+    "experiment_id": "Bind the result to the exact final V641 task identity.",
+    "external_message_performed": "This task sends no external message.",
+    "field_principles": "Store explanations here while consumer values remain ordinary top-level values.",
+    "gate_check_summary": "Every blocked_* verdict names upstream/check, exact field, observed and expected value.",
+    "historical_model_receipt_sidecar": "Keep upstream historical model facts outside current invocation metadata.",
+    "honest_verdict": "Complete findings start complete_ or complete:; external absence starts blocked_; state the actual finding.",
+    "inference_substrate": "Use the recognized literal for actual computation; never infer from intended task.",
+    "inference_substrate_class": "Full generation60s, bounded10s, load-only2s, or actual no-LLM class; never pad elapsed time.",
+    "invocation_counts": "Separate attempted/completed/failed loads and generation; retain in-flight events on timeout.",
+    "milestone": "Bind the result to the selected V641 contract.",
+    "model_invoked": "True for any actual attempted model load or generation, including failed and unusable work.",
+    "phase_spans_s": "Keep measured phase spans disjoint.",
+    "prd_gap_assessment": "Actual FR11/FR12 and NFR-01 progress without promoting local gates into broad requirements.",
+    "preconditions_checked": "Hash actual inputs, authority boundaries, resource ownership and failed checks.",
+    "production_default_changed": "This task changes no production default.",
+    "publication_performed": "This task performs no publication.",
+    "random_seed": "Freeze development and independent evaluation seeds before observing outcomes.",
+    "reproducibility_checksum": "Bind code, config, inputs, model identity if any and immutable raw evidence.",
+    "research_roadmap_modified": "This task reads but does not edit the active roster.",
+    "retirement_decisions": "Exact repeated verdict and scope, prior retirement signal and prerequisite needed before any new mechanism.",
+    "rows": "Every comparative unit/arm/seed with metric, cost, error, abstention and censoring; no aggregate-only claim.",
+    "run_date": "Use 20260914, real UTC start/end and monotonic timing.",
+    "same_milestone_gate_replay_rows": "Retain every structured V641 edge and exact observation.",
+    "sample_size_budget": "Planned, attempted, complete and censored units plus the frozen stopping rule.",
+    "schema": "Version the artifact; retain ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Keep exact producer identities, terminal classes, retirement and quarantine state.",
+    "started_at_utc": "Record the actual UTC start instant.",
+    "status": "Use a terminal complete or blocked record; unfinished own work belongs in separate checkpoints.",
+    "submission_performed": "This task performs no benchmark submission.",
+    "task_dispositions": "Exactly fourteen ordered task IDs, artifacts, hashes, classes, checks and own capstone row.",
+    "upload_performed": "This task performs no upload.",
+    "validation_receipts": "Command, exit code, elapsed time and log hash; preserve actual failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; failed efficacy gates forbid positive. Only own unfinished work is partial; unchanged external failure is terminal blocked.",
+    "verifier_is_oracle": "Expose shared verifier/evaluator authority; same-authority mechanics are not learned correctness."
+  },
+  "gate_check_summary": {
+    "artifact_field": "flagged_adversarial",
+    "expected_value": false,
+    "failed_check": "required_arc_boundary_not_quarantined",
+    "failures": [
+      {
+        "artifact_field": "flagged_adversarial",
+        "expected_value": false,
+        "failed_check": "required_arc_boundary_not_quarantined",
+        "observed_value": true,
+        "passed": false,
+        "terminal_blocking": true,
+        "upstream": "exp7289-arc-boundary"
+      },
+      {
+        "artifact_field": "status",
+        "expected_value": "complete",
+        "failed_check": "required_science_terminal_complete",
+        "observed_value": "blocked",
+        "passed": false,
+        "terminal_blocking": true,
+        "upstream": "exp7290-arc-selfparse"
+      },
+      {
+        "artifact_field": "arc_capture_complete_score",
+        "expected_value": 1,
+        "failed_check": "required_capture_or_audit_complete",
+        "observed_value": null,
+        "passed": false,
+        "terminal_blocking": true,
+        "upstream": "exp7290-arc-selfparse"
+      },
+      {
+        "artifact_field": "arc_method_value_score",
+        "expected_value": 1,
+        "failed_check": "scientific_value_gate",
+        "observed_value": null,
+        "passed": false,
+        "terminal_blocking": false,
+        "upstream": "exp7290-arc-selfparse"
+      },
+      {
+        "artifact_field": "reuse_promotion_score",
+        "expected_value": 1,
+        "failed_check": "scientific_value_gate",
+        "observed_value": 0,
+        "passed": false,
+        "terminal_blocking": false,
+        "upstream": "exp7294-reuse-audit"
+      },
+      {
+        "artifact_field": "mixture_promotion_score",
+        "expected_value": 1,
+        "failed_check": "scientific_value_gate",
+        "observed_value": 0,
+        "passed": false,
+        "terminal_blocking": false,
+        "upstream": "exp7297-mixture-audit"
+      },
+      {
+        "artifact_field": "snapshot_value_score",
+        "expected_value": 1,
+        "failed_check": "scientific_value_gate",
+        "observed_value": 0,
+        "passed": false,
+        "terminal_blocking": false,
+        "upstream": "exp7299-snapshot-cost"
+      }
+    ],
+    "observed_value": true,
+    "passed": false,
+    "retry_allowed": false,
+    "terminal_classification": "blocked",
+    "upstream": "exp7289-arc-boundary"
+  },
+  "historical_model_receipt_sidecar": {
+    "path": "results/raw/experiment_7301/historical-model-receipts.json",
+    "sha256": "sha256:3035eaaf16bd4f8f1482a39f691118775011e9689d3c9ab772a9721b9e83a4eb"
+  },
+  "honest_verdict": "blocked_required_v641_science_unavailable: all fourteen dispositions are represented; ARC boundary evidence is quarantined and Exp7290 stopped at its failed pre-gate; complete reuse, mixture, and storage branches have no promoted value",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.641",
+  "model_invoked": false,
+  "phase_spans_s": {
+    "authority_freeze": 0.012609951896592975,
+    "branch_reduction": 0.006791644962504506,
+    "contract_parse": 0.03489850112237036,
+    "dispositions_and_decisions": 0.00023192609660327435,
+    "final_assembly": 0.0035463778767734766,
+    "gate_and_score_reduction": 0.0001094259787350893,
+    "producer_authentication": 1.1378507760819048
+  },
+  "prd_gap_assessment": {
+    "FR11": {
+      "blocking_evidence": "null",
+      "closed": false,
+      "observed_progress": "A prospective delayed-label learner ran with fixed budgets.",
+      "remaining_gap": "No promoted autonomous hypothesis update lowers held-out error while preserving recurrence."
+    },
+    "FR12": {
+      "blocking_evidence": "blocked",
+      "closed": false,
+      "observed_progress": "Versioned source checks and deterministic audit mechanics exist.",
+      "remaining_gap": "The required authentic live selfparse capture and independent value are absent."
+    },
+    "NFR-01": {
+      "closed": false,
+      "observed_cold_lower_ci95": 1.5549724849050095,
+      "remaining_gap": "The persistent-journal comparison misses the original tenfold throughput target.",
+      "target_speedup": 10.0
+    },
+    "board_context": {
+      "achievement": false,
+      "decision": "retain_context_wait_for_changed_state"
+    },
+    "host_durability": {
+      "achievement": false,
+      "decision": "retain_protocol_retire_current_cost_claim"
+    },
+    "live_self_discovery": {
+      "achievement": false,
+      "decision": "blocked_until_clean_arc_boundary"
+    },
+    "online_hypothesis_retention": {
+      "achievement": false,
+      "decision": "retire_bounded_fixed_share_mechanism"
+    },
+    "source_materialization": {
+      "achievement": false,
+      "decision": "retain_fixture_retire_current_promotion_mechanism"
+    }
+  },
+  "preconditions_checked": [
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7287_v640_capstone.json"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "_bmad/prd.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "_bmad/architecture.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "_bmad/traceability.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "ops/north-star.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "research-references.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/conductor_gates.py"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "python/carnot/experiment_7301_v641_capstone.py"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7301_v641_capstone.py"
+    },
+    {
+      "artifact_field": "present_nonempty",
+      "check": "required_input",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7301_v641_capstone.py"
+    },
+    {
+      "artifact_field": "owner_and_writable",
+      "check": "owned_writable_output_parent",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results"
+    },
+    {
+      "artifact_field": "owner_and_writable",
+      "check": "owned_writable_output_parent",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/checkpoints"
+    },
+    {
+      "artifact_field": "REQ-REPORT-7301",
+      "check": "driving_requirement",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "milestone|ids|titles|paths|phases|gates",
+      "check": "independent_contract",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "upstream": "research-roadmap.yaml|openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "artifact_field": "terminal_artifacts_or_blocks",
+      "check": "producer_slots",
+      "expected_value": 13,
+      "observed_value": 13,
+      "passed": true,
+      "upstream": "2026.09.641"
+    }
+  ],
+  "production_default_changed": false,
+  "publication_performed": false,
+  "random_seed": 730120260914,
+  "reproducibility_checksum": "sha256:34b5eed14c08530c70e1359cfdb8c2604a231e1fa1e8404882092f52ba704bb0",
+  "research_roadmap_modified": false,
+  "retirement_decisions": [
+    {
+      "changed_prerequisite": [
+        "The staged V641 Markdown is actually rewritten and independently mutation-checked before handoff, instead of merely promising a replacement."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_disqualified_v641_contract_mismatched_or_invalid",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A new milestone with changed literal authorities, not another V641 summary.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "The staged V641 Markdown is actually rewritten and independently mutation-checked before handoff, instead of merely promising a replacement.",
+          "experiment_id": "exp7274-source-contract",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_v640_source_contract_mismatched_or_invalid"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7288-source-contract",
+      "task_id": "exp7288-source-contract"
+    },
+    {
+      "changed_prerequisite": [
+        "Replace returned-episode inference accounting with persisted call-boundary receipts and one direct live session; retain historical quarantine."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_disqualified_arc_boundary_validation_or_control_failed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A clean validation receipt and unquarantined durable boundary artifact.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Replace returned-episode inference accounting with persisted call-boundary receipts and one direct live session; retain historical quarantine.",
+          "experiment_id": "exp7280-arc-live",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_typed_witness_policy_use_gates_not_met"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7289-arc-boundary",
+      "task_id": "exp7289-arc-boundary"
+    },
+    {
+      "changed_prerequisite": [
+        "Single direct selfparse session with durable invocation events replaces four-arm timeout accounting; no token increase or typed-witness efficacy rerun."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "blocked_gate_check_failed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "arc_boundary_ready_score == 1 from unquarantined evidence.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Single direct selfparse session with durable invocation events replaces four-arm timeout accounting; no token increase or typed-witness efficacy rerun.",
+          "experiment_id": "exp7280-arc-live",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_typed_witness_policy_use_gates_not_met"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7290-arc-selfparse",
+      "task_id": "exp7290-arc-selfparse"
+    },
+    {
+      "changed_prerequisite": [
+        "Change from unattainable accuracy superiority to distinct-claim source reuse with freshness and complete-cost parity gates.",
+        "Use version changes and warm-prefix direct cost controls; preserve the prior negative accuracy audit."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_disqualified_reuse_fixture_ready_but_repository_full_suite_failed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A changed reuse mechanism and a new falsifiable cost contract.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Change from unattainable accuracy superiority to distinct-claim source reuse with freshness and complete-cost parity gates.",
+          "experiment_id": "exp7278-source-measurement",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_mention_pointer_does_not_exceed_equal_budget_direct"
+        },
+        {
+          "addressed_by": "Use version changes and warm-prefix direct cost controls; preserve the prior negative accuracy audit.",
+          "experiment_id": "exp7279-source-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_verifier_did_not_beat_matched_direct_self_consistency"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7291-reuse-fixture",
+      "task_id": "exp7291-reuse-fixture"
+    },
+    {
+      "changed_prerequisite": [
+        "Measure distinct-claim reuse efficiency under version changes and warm-prefix direct control instead of retrying accuracy superiority."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_disqualified_reuse_validation_failed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A changed source reuse mechanism, not renewed ranking superiority.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Measure distinct-claim reuse efficiency under version changes and warm-prefix direct control instead of retrying accuracy superiority.",
+          "experiment_id": "exp7278-source-measurement",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_mention_pointer_does_not_exceed_equal_budget_direct"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7293-reuse-measurement",
+      "task_id": "exp7293-reuse-measurement"
+    },
+    {
+      "changed_prerequisite": [
+        "Cold audit now tests versioned source reuse cost and semantic parity, retaining the previous negative superiority result."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_disqualified_reuse_audit_validation_failed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A changed reuse mechanism that can pass the frozen promotion gates.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Cold audit now tests versioned source reuse cost and semantic parity, retaining the previous negative superiority result.",
+          "experiment_id": "exp7279-source-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_verifier_did_not_beat_matched_direct_self_consistency"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7294-reuse-audit",
+      "task_id": "exp7294-reuse-audit"
+    },
+    {
+      "changed_prerequisite": [
+        "Replace sparse hard admission with fixed-share voting over complete hypotheses using the same total post-warmup label and byte budget; explicitly protect separated recurrence."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_circular_positive: bounded fixed-share fixture mechanics pass; prospective efficacy is not claimed; repository-wide suite retained unrelated failures",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A different bounded hypothesis update, not fixed-share retuning.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Replace sparse hard admission with fixed-share voting over complete hypotheses using the same total post-warmup label and byte budget; explicitly protect separated recurrence.",
+          "experiment_id": "exp7282-admission-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: admission learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,false_accept_vs_reset,false_accept_vs_unconditional_recognition,recurrence_degradation_vs_frozen_warmup,recurrence_error_vs_label_shuffled_admission"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7295-mixture-prototype",
+      "task_id": "exp7295-mixture-prototype"
+    },
+    {
+      "changed_prerequisite": [
+        "Different fixed-share hypothesis mechanism with exogenous delayed shared labels and a recurrence noninferiority gate replaces the failed admission policy."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_null: prospective fixed-share learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,non_feedback_error_vs_reset,non_feedback_error_vs_unconditional_recognition,separated_recurrence_vs_frozen_warmup,overlapping_recurrence_vs_frozen_warmup; repository-wide suite retained pre-existing collection failures",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A different learner with prospective and recurrence value.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Different fixed-share hypothesis mechanism with exogenous delayed shared labels and a recurrence noninferiority gate replaces the failed admission policy.",
+          "experiment_id": "exp7282-admission-learning",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: admission learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,false_accept_vs_reset,false_accept_vs_unconditional_recognition,recurrence_degradation_vs_frozen_warmup,recurrence_error_vs_label_shuffled_admission"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7296-mixture-learning",
+      "task_id": "exp7296-mixture-learning"
+    },
+    {
+      "changed_prerequisite": [
+        "Audit a fixed-share prospective learner with independent chronological reconstruction, rather than repeat the failed admission gate."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_null: independent mixture audit confirmed a complete efficacy null; retire bounded fixed-share selection over complete constraint hypotheses under delayed feedback (Exp7295/Exp7296 mechanism); failed gates:future_error_vs_reset,future_error_vs_unconditional_recognition,non_feedback_error_vs_reset,non_feedback_error_vs_unconditional_recognition,separated_recurrence_vs_frozen_warmup,overlapping_recurrence_vs_frozen_warmup; repository-wide suite retained 17 pre-existing collection errors",
+      "decision": "retire_exact_scope",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A different hypothesis family with changed causal efficacy evidence.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Audit a fixed-share prospective learner with independent chronological reconstruction, rather than repeat the failed admission gate.",
+          "experiment_id": "exp7283-admission-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: cold admission audit completed; upstream efficacy value gate failed"
+        }
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "bounded fixed-share selection over complete constraint hypotheses under delayed feedback (Exp7295/Exp7296 mechanism)",
+      "task_id": "exp7297-mixture-audit"
+    },
+    {
+      "changed_prerequisite": [
+        "Change atomic-replacement storage to a persistent SQLite full-snapshot transaction while holding group timer, queue and acknowledgment semantics fixed."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_circular_positive: persistent full-snapshot acknowledgment protocol passed",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A changed durable storage mechanism with lower paired cost.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Change atomic-replacement storage to a persistent SQLite full-snapshot transaction while holding group timer, queue and acknowledgment semantics fixed.",
+          "experiment_id": "exp7285-commit-frontier",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: measured host commit frontier does not meet every bounded deployment gate"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7298-snapshot-journal",
+      "task_id": "exp7298-snapshot-journal"
+    },
+    {
+      "changed_prerequisite": [
+        "Persistent full-snapshot journal replaces repeated file replacement; the old steady and interactive gates remain mandatory, with matched grouping."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete_null: persistent SQLite full snapshots do not meet every frozen V640 storage deployment bound",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A changed mechanism that passes all old deployment bounds and 10x.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Persistent full-snapshot journal replaces repeated file replacement; the old steady and interactive gates remain mandatory, with matched grouping.",
+          "experiment_id": "exp7285-commit-frontier",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null: measured host commit frontier does not meet every bounded deployment gate"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7299-snapshot-cost",
+      "task_id": "exp7299-snapshot-cost"
+    },
+    {
+      "changed_prerequisite": [
+        "Exp7286 now supplies authenticated three-board dispositions. This task hashes existing receipts and records changed-state prerequisites with zero hardware operations; it preserves the GateMate block instead of retrying DirtyJTAG timing.",
+        "Exp7286 preserves KV260 fabric graduation and hash-matched PolarFire CPU dispatch. This task audits those receipts without repeating unresolved GateMate diagnostics; only a dated physical-state change can qualify later integration."
+      ],
+      "changed_prerequisite_observed": true,
+      "current_honest_verdict": "complete: three authenticated board dispositions and exact next conditions are recorded. KV260 fabric execution remains preserved. PolarFire hash-matched CPU dispatch remains preserved and is not FPGA sampling. GateMate remains blocked_changed_physical_state because the operator receipt is absent. This invocation issued zero hardware operations.",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "A dated operator receipt of changed GateMate physical state.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Exp7286 now supplies authenticated three-board dispositions. This task hashes existing receipts and records changed-state prerequisites with zero hardware operations; it preserves the GateMate block instead of retrying DirtyJTAG timing.",
+          "experiment_id": "exp5166-hardware-continuity-board-timing-v473",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_hardware_continuity_board_timing_gatemate:blocked_gatemate_dirtyjtag_idcode_no_speedup_claim"
+        },
+        {
+          "addressed_by": "Exp7286 preserves KV260 fabric graduation and hash-matched PolarFire CPU dispatch. This task audits those receipts without repeating unresolved GateMate diagnostics; only a dated physical-state change can qualify later integration.",
+          "experiment_id": "exp5179-hardware-continuity-board-timing-v474",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7300-board-continuity",
+      "task_id": "exp7300-board-continuity"
+    },
+    {
+      "changed_prerequisite": [
+        "Use new branch evidence after the ARC boundary repair; retain terminal blocked for immutable external failures and separate closure from science."
+      ],
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": "blocked_current_capstone_synthesis",
+      "decision": "do_not_repeat_unchanged",
+      "exact_same_verdict": false,
+      "lawful_next_condition": "New unquarantined required science, not another capstone retry.",
+      "prior_retirement_signals": [
+        {
+          "addressed_by": "Use new branch evidence after the ARC boundary repair; retain terminal blocked for immutable external failures and separate closure from science.",
+          "experiment_id": "exp7287-capstone",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_required_arc_science_quarantined: all fourteen V640 dispositions are represented; Exp7280 has critical inference-provenance flags, while source, ARC, admission, and acknowledgment value scores remain zero"
+        }
+      ],
+      "producer_retirement_signal": false,
+      "retry_current_mechanism": false,
+      "scope": "exp7301-capstone",
+      "task_id": "exp7301-capstone"
+    },
+    {
+      "changed_prerequisite": null,
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": null,
+      "decision": "remain_retired",
+      "exact_same_verdict": true,
+      "lawful_next_condition": "A substantively changed prerequisite documented in a future roster.",
+      "prior_retirement_signals": [
+        "CLAUDE.md and ops/exclusion_manifest.yaml"
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "source-ranking superiority with unchanged equal-budget evidence",
+      "task_id": "protected-retirement-boundary"
+    },
+    {
+      "changed_prerequisite": null,
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": null,
+      "decision": "remain_retired",
+      "exact_same_verdict": true,
+      "lawful_next_condition": "A substantively changed prerequisite documented in a future roster.",
+      "prior_retirement_signals": [
+        "CLAUDE.md and ops/exclusion_manifest.yaml"
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "energy-guided generation without a changed nondegenerate lever",
+      "task_id": "protected-retirement-boundary"
+    },
+    {
+      "changed_prerequisite": null,
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": null,
+      "decision": "remain_retired",
+      "exact_same_verdict": true,
+      "lawful_next_condition": "A substantively changed prerequisite documented in a future roster.",
+      "prior_retirement_signals": [
+        "CLAUDE.md and ops/exclusion_manifest.yaml"
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "ARC budget raising without changed method evidence",
+      "task_id": "protected-retirement-boundary"
+    },
+    {
+      "changed_prerequisite": null,
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": null,
+      "decision": "remain_retired",
+      "exact_same_verdict": true,
+      "lawful_next_condition": "A substantively changed prerequisite documented in a future roster.",
+      "prior_retirement_signals": [
+        "CLAUDE.md and ops/exclusion_manifest.yaml"
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "GateMate diagnostics without dated changed physical state",
+      "task_id": "protected-retirement-boundary"
+    },
+    {
+      "changed_prerequisite": null,
+      "changed_prerequisite_observed": false,
+      "current_honest_verdict": null,
+      "decision": "remain_retired",
+      "exact_same_verdict": true,
+      "lawful_next_condition": "A substantively changed prerequisite documented in a future roster.",
+      "prior_retirement_signals": [
+        "CLAUDE.md and ops/exclusion_manifest.yaml"
+      ],
+      "producer_retirement_signal": true,
+      "retry_current_mechanism": false,
+      "scope": "handwritten per-game solver branches outside the live self-discovery path",
+      "task_id": "protected-retirement-boundary"
+    }
+  ],
+  "rows": [
+    {
+      "abstention": true,
+      "arm": "independent_upstream_row_reduction",
+      "branch": "live_self_discovery",
+      "censored": false,
+      "complete_score": null,
+      "cost": 0.0,
+      "denominators": {
+        "attempted_sessions": 0,
+        "complete_sessions": 0,
+        "session_rows": 0
+      },
+      "error": "required_evidence_unavailable",
+      "metric": "live_self_discovery_value_score",
+      "metric_value": null,
+      "positive_promoted": false,
+      "producer_disposition_class": "blocked",
+      "producer_task_id": "exp7290-arc-selfparse",
+      "seed": 730120260914,
+      "unit_id": "exp7301:live_self_discovery",
+      "value_score": null,
+      "verdict_class": "blocked",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_upstream_row_reduction",
+      "branch": "source_materialization",
+      "censored": false,
+      "complete_score": 1,
+      "cost": {
+        "cold_total_s": 789.7677396875806,
+        "steady_total_s": 640.0641341847368
+      },
+      "denominators": {
+        "censored_rows": 0,
+        "comparative_rows": 384,
+        "unique_claims": 128,
+        "unique_model_calls": 672
+      },
+      "error": null,
+      "metric": "source_materialization_value_score",
+      "metric_value": 0,
+      "positive_promoted": false,
+      "producer_disposition_class": "disqualified",
+      "producer_task_id": "exp7294-reuse-audit",
+      "seed": 730120260914,
+      "unit_id": "exp7301:source_materialization",
+      "value_score": 0,
+      "verdict_class": "null",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_upstream_row_reduction",
+      "branch": "online_hypothesis_retention",
+      "censored": false,
+      "complete_score": 1,
+      "cost": {
+        "prediction_cost_ns": 7895065495
+      },
+      "denominators": {
+        "censored_rows": 0,
+        "maximum_bounded_memory_bytes": 13831,
+        "maximum_reference_memory_bytes": 32748,
+        "prediction_rows": 150528,
+        "shared_label_arrivals": 6144,
+        "stream_arm_rows": 168,
+        "streams": 24
+      },
+      "error": null,
+      "metric": "online_hypothesis_retention_value_score",
+      "metric_value": 0,
+      "positive_promoted": false,
+      "producer_disposition_class": "null",
+      "producer_task_id": "exp7297-mixture-audit",
+      "seed": 730120260914,
+      "unit_id": "exp7301:online_hypothesis_retention",
+      "value_score": 0,
+      "verdict_class": "null",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_upstream_row_reduction",
+      "branch": "host_durability",
+      "censored": false,
+      "complete_score": 1,
+      "cost": {
+        "acknowledgment_latency_ns": 662566038871
+      },
+      "denominators": {
+        "acknowledged_rows": 36864,
+        "censored_rows": 0,
+        "event_rows": 36864,
+        "maximum_pending_bytes": 65536,
+        "trial_units": 144
+      },
+      "error": null,
+      "metric": "host_durability_value_score",
+      "metric_value": 0,
+      "positive_promoted": false,
+      "producer_disposition_class": "null",
+      "producer_task_id": "exp7299-snapshot-cost",
+      "seed": 730120260914,
+      "unit_id": "exp7301:host_durability",
+      "value_score": 0,
+      "verdict_class": "null",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_upstream_row_reduction",
+      "branch": "board_continuity_context",
+      "censored": false,
+      "complete_score": 1,
+      "cost": 0.10058920201845467,
+      "denominators": {
+        "board_rows": 3,
+        "hardware_operations_issued": []
+      },
+      "error": null,
+      "metric": "board_continuity_context_value_score",
+      "metric_value": null,
+      "positive_promoted": false,
+      "producer_disposition_class": "positive",
+      "producer_task_id": "exp7300-board-continuity",
+      "seed": 730120260914,
+      "unit_id": "exp7301:board_continuity_context",
+      "value_score": null,
+      "verdict_class": "circular_positive",
+      "verifier_is_oracle": true
+    }
+  ],
+  "run_date": "20260914",
+  "same_milestone_gate_replay_rows": [
+    {
+      "actual_artifact_path": "results/experiment_7289_v641_arc_boundary.json",
+      "artifact_field": "arc_boundary_ready_score",
+      "consumer": "exp7290-arc-selfparse",
+      "declared_artifact_path": "results/experiment_7289_v641_arc_boundary.json",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "quarantined",
+      "passed": false,
+      "producer_milestone": "2026.09.641",
+      "quarantined": true,
+      "same_milestone": true,
+      "upstream": "exp7289-arc-boundary"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "artifact_field": "reuse_fixture_ready_score",
+      "consumer": "exp7292-reuse-canary",
+      "declared_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7291-reuse-fixture"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "artifact_field": "reuse_fixture_ready_score",
+      "consumer": "exp7293-reuse-measurement",
+      "declared_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7291-reuse-fixture"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7292_v641_reuse_canary.json",
+      "artifact_field": "reuse_canary_ready_score",
+      "consumer": "exp7293-reuse-measurement",
+      "declared_artifact_path": "results/experiment_7292_v641_reuse_canary.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7292-reuse-canary"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7293_v641_reuse_measurement.json",
+      "artifact_field": "reuse_capture_complete_score",
+      "consumer": "exp7294-reuse-audit",
+      "declared_artifact_path": "results/experiment_7293_v641_reuse_measurement.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7293-reuse-measurement"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7295_v641_mixture_prototype.json",
+      "artifact_field": "mixture_fixture_ready_score",
+      "consumer": "exp7296-mixture-learning",
+      "declared_artifact_path": "results/experiment_7295_v641_mixture_prototype.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7295-mixture-prototype"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7296_v641_mixture_learning.json",
+      "artifact_field": "mixture_capture_complete_score",
+      "consumer": "exp7297-mixture-audit",
+      "declared_artifact_path": "results/experiment_7296_v641_mixture_learning.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7296-mixture-learning"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7298_v641_snapshot_journal.json",
+      "artifact_field": "snapshot_journal_ready_score",
+      "consumer": "exp7299-snapshot-cost",
+      "declared_artifact_path": "results/experiment_7298_v641_snapshot_journal.json",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_milestone": "2026.09.641",
+      "quarantined": false,
+      "same_milestone": true,
+      "upstream": "exp7298-snapshot-journal"
+    }
+  ],
+  "sample_size_budget": {
+    "branch_rows": {
+      "attempted": 5,
+      "censored": 0,
+      "complete": 5,
+      "planned": 5
+    },
+    "contract_rows": {
+      "attempted": 14,
+      "censored": 0,
+      "complete": 14,
+      "planned": 14
+    },
+    "producer_artifacts": {
+      "attempted": 13,
+      "censored": 0,
+      "complete": 13,
+      "planned": 13
+    },
+    "stopping_rule": "Stop after fourteen dispositions, eight gate replays, nine score checks, and five branch reductions; do not extend after null or block."
+  },
+  "schema": "carnot.exp7301.v641_capstone.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "terminal_class": null
+    },
+    "CLAUDE.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+      "terminal_class": null
+    },
+    "CODEX.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "terminal_class": null
+    },
+    "_bmad/architecture.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d5043257cb00a34d30520ca3d97c9f2b0331a94eab05d2d540248d36cb71e0c1",
+      "terminal_class": null
+    },
+    "_bmad/prd.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a",
+      "terminal_class": null
+    },
+    "_bmad/traceability.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5fa4dbfb1c6be88a6d4fe756e431c70d6ffdf13f2bfaacfeb6579276dc729214",
+      "terminal_class": null
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:420e3d38bff10a68bf2e0d06a9b84858307189b0c371bb681810c26a9ccdeb10",
+      "terminal_class": null
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+      "terminal_class": null
+    },
+    "ops/e2e-test-plan.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+      "terminal_class": null
+    },
+    "ops/exclusion_manifest.yaml": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "terminal_class": null
+    },
+    "ops/north-star.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "terminal_class": null
+    },
+    "python/carnot/experiment_7301_v641_capstone.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:8607f6df2b3201b767de5592c0633589fd55eac11b663e01004b98e24503a1fd",
+      "terminal_class": null
+    },
+    "research-program.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "terminal_class": null
+    },
+    "research-references.md": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:88ef3531959594c8f4c0d5dd5961372948c8316719d7eaa994c6932a4a0e5929",
+      "terminal_class": null
+    },
+    "research-roadmap.yaml": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28e46db86ac369a979f384cc610d9e04a9d9bc2756c947239214f92854a1ff9c",
+      "terminal_class": null
+    },
+    "results/experiment_7287_v640_capstone.json": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:235d82284e16addc16d17590ffcd6dc9a1d09bfba2d1cce7b673c85fee4ef889",
+      "terminal_class": null
+    },
+    "results/experiment_7288_v641_source_contract.json": {
+      "authority": "exp7288-source-contract",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5706bb65b4f0182dcefb7d42e1680c18382726a81ec310cb20cc345c1a6dd11d",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7289_v641_arc_boundary.json": {
+      "authority": "exp7289-arc-boundary",
+      "quarantined": true,
+      "retired": false,
+      "sha256": "sha256:5e3ffb6e9d1a524c07a10c1ac8d07b4eba55bb4c4b1ea2f7820521257a6a99c8",
+      "terminal_class": "quarantined"
+    },
+    "results/experiment_7290_arc_selfparse.json": {
+      "authority": "exp7290-arc-selfparse",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:215d273299221e6b3db9516be29951d7448434aa3f65e8e658556cb1f84f006f",
+      "terminal_class": "blocked"
+    },
+    "results/experiment_7291_v641_reuse_fixture.json": {
+      "authority": "exp7291-reuse-fixture",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ecf1888d12bb8eac85b66ccde765d5bf5ca1a5358422b23590585024a629a263",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7292_v641_reuse_canary.json": {
+      "authority": "exp7292-reuse-canary",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:918170e3e22e52a96ff46c2a27bb76573631d9b81330b9bed247a35c2f2c880f",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7293_v641_reuse_measurement.json": {
+      "authority": "exp7293-reuse-measurement",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5c9c08ddbf95de2e1d29f2109fa73b9bf81541b8059e3da2d4bd777beef2edb1",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7294_v641_reuse_audit.json": {
+      "authority": "exp7294-reuse-audit",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:e3fee6d8bf31ee6f5fa8516de472fc71201c724c7418dbdbd2dcaed781113055",
+      "terminal_class": "disqualified"
+    },
+    "results/experiment_7295_v641_mixture_prototype.json": {
+      "authority": "exp7295-mixture-prototype",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:44d2c1a43ad2d88ad2de1a88cd37f8439b529c4d78f81b10ab9de37c78d880e4",
+      "terminal_class": "circular_positive"
+    },
+    "results/experiment_7296_v641_mixture_learning.json": {
+      "authority": "exp7296-mixture-learning",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d3ced7528b24f69a0997c59fcc5874f7c1d3c57587883ea4ec3b9fbd44de1652",
+      "terminal_class": "null"
+    },
+    "results/experiment_7297_v641_mixture_audit.json": {
+      "authority": "exp7297-mixture-audit",
+      "quarantined": false,
+      "retired": true,
+      "sha256": "sha256:61241304c356b6a4c51b7efb744b8b738962cf6908f6c26ba7fd96a214e7e05c",
+      "terminal_class": "null"
+    },
+    "results/experiment_7298_v641_snapshot_journal.json": {
+      "authority": "exp7298-snapshot-journal",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:2f4deeb11ffe3f21f1800f3eeb41a952e1f6bc6625e3849eec33bf022a04d7d5",
+      "terminal_class": "circular_positive"
+    },
+    "results/experiment_7299_v641_snapshot_cost.json": {
+      "authority": "exp7299-snapshot-cost",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f7f4130452d197aecacbd6c5d8ab5005f97ff2acccf335af84d0c5b67d2d47a5",
+      "terminal_class": "null"
+    },
+    "results/experiment_7300_v641_board_continuity.json": {
+      "authority": "exp7300-board-continuity",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b",
+      "terminal_class": "positive"
+    },
+    "results/raw/experiment_7301/historical-model-receipts.json": {
+      "authority": "immutable_raw_sidecar",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:3035eaaf16bd4f8f1482a39f691118775011e9689d3c9ab772a9721b9e83a4eb",
+      "terminal_class": null
+    },
+    "results/raw/experiment_7301/independent-branch-reduction.json": {
+      "authority": "immutable_raw_sidecar",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:7e782b8b2feec6e2a11c6ffd82c6516662ba36ac1c6d16ae3a4402ee26c7fc16",
+      "terminal_class": null
+    },
+    "results/raw/experiment_7301/producer-evidence-manifest.json": {
+      "authority": "immutable_raw_sidecar",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d6febd8234c469e12bbf89b68ddf1befccf07941ccd554644bd0bcef8afeab77",
+      "terminal_class": null
+    },
+    "results/raw/experiment_7301/selected-roadmap.yaml": {
+      "authority": "immutable_raw_sidecar",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28e46db86ac369a979f384cc610d9e04a9d9bc2756c947239214f92854a1ff9c",
+      "terminal_class": null
+    },
+    "results/raw/experiment_7301/v641-design.md": {
+      "authority": "immutable_raw_sidecar",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a27856c91c202ed5972eee1634e151e35260a7f1e2a00342303e22ca5b8f438b",
+      "terminal_class": null
+    },
+    "results/raw/experiment_7301/validation_receipts.json": {
+      "authority": "validation_receipt_manifest",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:60998e03d8aa8ef19d6d5d46691395feb740eb455f8dc068eef08ecdf25a364b",
+      "terminal_class": null
+    },
+    "scripts/adversarial_verify.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+      "terminal_class": null
+    },
+    "scripts/conductor_gates.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d406171cde38a594a78e7bff8958212e722fced9fc583b2b1858f8fc9d3732ca",
+      "terminal_class": null
+    },
+    "scripts/experiments/experiment_7301_v641_capstone.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:0e1e1a471fa149e78b7fbe8c6c1f2667fb960281e4da4b72e4b555357d852780",
+      "terminal_class": null
+    },
+    "scripts/verdict_row_consistency_lint.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+      "terminal_class": null
+    },
+    "tests/python/test_experiment_7301_v641_capstone.py": {
+      "authority": "repository_input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:46d904d5221f4e34d5d37296af171a2479aa1f61753db16e9b94b1def424c4db",
+      "terminal_class": null
+    }
+  },
+  "started_at_utc": "2026-09-14T11:26:24.346436+00:00",
+  "status": "blocked",
+  "submission_performed": false,
+  "task_dispositions": [
+    {
+      "actual_artifact_path": "results/experiment_7288_v641_source_contract.json",
+      "artifact_sha256": "sha256:5706bb65b4f0182dcefb7d42e1680c18382726a81ec310cb20cc345c1a6dd11d",
+      "checks": {
+        "authenticated": false,
+        "identity_matches": true,
+        "producer_validation_errors": [
+          "source_hash_mismatch"
+        ],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7288_v641_source_contract.json",
+      "disposition_class": "disqualified",
+      "honest_verdict": "complete_disqualified_v641_contract_mismatched_or_invalid",
+      "order": 1,
+      "raw_evidence": {
+        "row_counts": {
+          "contract_rows": 14,
+          "gate_control_rows": 40,
+          "gate_producer_rows": 8,
+          "markdown_task_rows": 14,
+          "raw_authority_rows": 2,
+          "receipt_dependency_rows": 1,
+          "rows": 14,
+          "source_access_rows": 4,
+          "yaml_task_rows": 14
+        },
+        "sample_size_budget": {
+          "contract_rows": {
+            "attempted": 14,
+            "censored": 0,
+            "completed": 14,
+            "independent_units": 14,
+            "planned": 14
+          },
+          "gate_controls": {
+            "attempted": 40,
+            "censored": 0,
+            "completed": 40,
+            "independent_units": 40,
+            "planned": 40
+          },
+          "network_requests": {
+            "attempted": 4,
+            "censored": 0,
+            "completed": 4,
+            "independent_units": 4,
+            "planned": 4
+          },
+          "source_dispositions": {
+            "attempted": 4,
+            "censored": 0,
+            "completed": 4,
+            "independent_units": 4,
+            "planned": 4
+          },
+          "stopping_rule": "Stop after fourteen contract rows, five real controls for each of eight gates, four source dispositions, four bounded requests, and the declared validation sequence."
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7288-source-contract",
+      "title": "V641 source ingestion and exact fourteen-task contract",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7289_v641_arc_boundary.json",
+      "artifact_sha256": "sha256:5e3ffb6e9d1a524c07a10c1ac8d07b4eba55bb4c4b1ea2f7820521257a6a99c8",
+      "checks": {
+        "authenticated": false,
+        "identity_matches": true,
+        "producer_validation_errors": [
+          "field_principles_incomplete",
+          "reproducibility_checksum_mismatch"
+        ],
+        "quarantined": true,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7289_v641_arc_boundary.json",
+      "disposition_class": "quarantined",
+      "honest_verdict": "complete_disqualified_arc_boundary_validation_or_control_failed",
+      "order": 2,
+      "raw_evidence": {
+        "row_counts": {
+          "boundary_event_rows": 6,
+          "rows": 6
+        },
+        "sample_size_budget": {
+          "attempted_units": 6,
+          "censored_units": 2,
+          "completed_units": 6,
+          "planned_units": 6,
+          "stopping_rule": "run each frozen CPU lifecycle control once; timeout fixtures remain censored"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7289-arc-boundary",
+      "title": "Preserve live ARC invocation evidence across timeout boundaries",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7290_arc_selfparse.json",
+      "artifact_sha256": "sha256:215d273299221e6b3db9516be29951d7448434aa3f65e8e658556cb1f84f006f",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7290_v641_arc_selfparse.json",
+      "disposition_class": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "order": 3,
+      "raw_evidence": {
+        "row_counts": {},
+        "sample_size_budget": null
+      },
+      "status": "blocked",
+      "task_id": "exp7290-arc-selfparse",
+      "title": "Accumulate one authentic adapter-withheld live selfparse session",
+      "verdict_class": null
+    },
+    {
+      "actual_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "artifact_sha256": "sha256:ecf1888d12bb8eac85b66ccde765d5bf5ca1a5358422b23590585024a629a263",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7291_v641_reuse_fixture.json",
+      "disposition_class": "disqualified",
+      "honest_verdict": "complete_disqualified_reuse_fixture_ready_but_repository_full_suite_failed",
+      "order": 4,
+      "raw_evidence": {
+        "row_counts": {
+          "control_rows": 10,
+          "rows": 384
+        },
+        "sample_size_budget": {
+          "attempted_claim_units": 128,
+          "censored_claim_units": 0,
+          "claims_per_group": 8,
+          "complete_arm_rows": 384,
+          "complete_claim_units": 128,
+          "planned_arm_rows": 384,
+          "planned_claim_units": 128,
+          "planned_groups": 16,
+          "stopping_rule": "execute each fixed public claim once per arm; no adaptive stop"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7291-reuse-fixture",
+      "title": "Build a versioned source-compilation reuse fixture",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7292_v641_reuse_canary.json",
+      "artifact_sha256": "sha256:918170e3e22e52a96ff46c2a27bb76573631d9b81330b9bed247a35c2f2c880f",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7292_v641_reuse_canary.json",
+      "disposition_class": "disqualified",
+      "honest_verdict": "complete_disqualified_reuse_canary_ready_but_repository_full_suite_failed",
+      "order": 5,
+      "raw_evidence": {
+        "row_counts": {
+          "canary_control_rows": 8,
+          "per_call_rows": 44,
+          "rows": 24
+        },
+        "sample_size_budget": {
+          "attempted_calls": 44,
+          "censored_calls": 0,
+          "completed_calls": 44,
+          "completed_units": 8,
+          "failed_calls": 0,
+          "generation_call_ceiling": 44,
+          "live_window_ceiling_s_including_load": 900.0,
+          "output_token_ceiling_per_call": 128,
+          "planned_calls": 44,
+          "planned_groups": 2,
+          "planned_units": 8,
+          "stopping_rule": "attempt the frozen 44 calls once; stop at 900 seconds; never retry, repair, or tune"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7292-reuse-canary",
+      "title": "Canary Qwen3.8 source reuse and warm-prefix comparators",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7293_v641_reuse_measurement.json",
+      "artifact_sha256": "sha256:5c9c08ddbf95de2e1d29f2109fa73b9bf81541b8059e3da2d4bd777beef2edb1",
+      "checks": {
+        "authenticated": false,
+        "identity_matches": true,
+        "producer_validation_errors": [
+          "validation_receipts"
+        ],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7293_v641_reuse_measurement.json",
+      "disposition_class": "disqualified",
+      "honest_verdict": "complete_disqualified_reuse_validation_failed",
+      "order": 6,
+      "raw_evidence": {
+        "row_counts": {
+          "amortization_rows": 192,
+          "per_call_rows": 672,
+          "rows": 384
+        },
+        "sample_size_budget": {
+          "attempted_calls": 705,
+          "censored_calls": 0,
+          "complete_groups": 16,
+          "completed_calls": 704,
+          "failed_calls": 1,
+          "generation_call_ceiling": 672,
+          "live_window_ceiling_s_including_load": 2700.0,
+          "output_token_ceiling_per_call": 128,
+          "planned_calls": 672,
+          "planned_groups": 16,
+          "planned_units": 128,
+          "stopping_rule": "attempt each frozen group once within 2700 seconds; retain all 672 rows; never retry, repair, tune, expand, or shrink"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7293-reuse-measurement",
+      "title": "Measure fresh-source reuse parity and end-to-end cost",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7294_v641_reuse_audit.json",
+      "artifact_sha256": "sha256:e3fee6d8bf31ee6f5fa8516de472fc71201c724c7418dbdbd2dcaed781113055",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7294_v641_reuse_audit.json",
+      "disposition_class": "disqualified",
+      "honest_verdict": "complete_disqualified_reuse_audit_validation_failed",
+      "order": 7,
+      "raw_evidence": {
+        "row_counts": {
+          "group_condition_rows": 48,
+          "group_cost_rows": 48,
+          "rows": 384,
+          "source_integrity_control_rows": 5
+        },
+        "sample_size_budget": {
+          "attempted_calls": 672,
+          "censored_calls": 0,
+          "complete_calls": 672,
+          "complete_claim_arm_rows": 384,
+          "complete_groups": 16,
+          "planned_arms": 3,
+          "planned_calls": 672,
+          "planned_claims": 128,
+          "planned_groups": 16,
+          "stopping_rule": "audit the frozen 16 groups and 672 calls once; do not retry, tune, add, or remove rows"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7294-reuse-audit",
+      "title": "Independently audit source reuse safety and amortization",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7295_v641_mixture_prototype.json",
+      "artifact_sha256": "sha256:44d2c1a43ad2d88ad2de1a88cd37f8439b529c4d78f81b10ab9de37c78d880e4",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7295_v641_mixture_prototype.json",
+      "disposition_class": "circular_positive",
+      "honest_verdict": "complete_circular_positive: bounded fixed-share fixture mechanics pass; prospective efficacy is not claimed; repository-wide suite retained unrelated failures",
+      "order": 8,
+      "raw_evidence": {
+        "row_counts": {
+          "chronology_control_rows": 6,
+          "rows": 56
+        },
+        "sample_size_budget": {
+          "arms_per_stream": 7,
+          "attempted_development_stream_count": 8,
+          "censored_development_stream_count": 0,
+          "completed_comparative_rows": 56,
+          "completed_development_stream_count": 8,
+          "evaluation_streams_scored_by_this_prototype": 0,
+          "events_per_stream": 1024,
+          "frozen_evaluation_stream_count": 24,
+          "future_labels_per_stream_arm": 128,
+          "future_predictions_per_stream_arm": 896,
+          "outcome_based_extension": false,
+          "planned_comparative_rows": 56,
+          "planned_development_stream_count": 8,
+          "stopping_rule": "all eight development streams once; freeze all 24 evaluation streams",
+          "warmup_labels_per_stream_arm": 128
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7295-mixture-prototype",
+      "title": "Prototype bounded delayed-feedback hypothesis mixtures",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7296_v641_mixture_learning.json",
+      "artifact_sha256": "sha256:d3ced7528b24f69a0997c59fcc5874f7c1d3c57587883ea4ec3b9fbd44de1652",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7296_v641_mixture_learning.json",
+      "disposition_class": "null",
+      "honest_verdict": "complete_null: prospective fixed-share learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,non_feedback_error_vs_reset,non_feedback_error_vs_unconditional_recognition,separated_recurrence_vs_frozen_warmup,overlapping_recurrence_vs_frozen_warmup; repository-wide suite retained pre-existing collection failures",
+      "order": 9,
+      "raw_evidence": {
+        "row_counts": {
+          "comparison_rows": 39,
+          "e2e_control_rows": 6,
+          "feedback_update_rows": 3072,
+          "rows": 168
+        },
+        "sample_size_budget": {
+          "arms_per_stream": 7,
+          "attempted_stream_count": 24,
+          "bootstrap_resamples": 10000,
+          "censored_stream_count": 0,
+          "censored_stream_ids": [],
+          "completed_feedback_rows": 3072,
+          "completed_step_rows": 150528,
+          "completed_stream_arm_units": 168,
+          "completed_stream_count": 24,
+          "events_per_stream": 1024,
+          "fixed_evaluation_stream_count": 24,
+          "future_labels_per_stream_arm": 128,
+          "future_predictions_per_stream_arm": 896,
+          "measurement_limit_s": 1800.0,
+          "outcome_based_extension": false,
+          "planned_feedback_rows": 3072,
+          "planned_step_rows": 150528,
+          "planned_stream_arm_units": 168,
+          "planned_stream_count": 24,
+          "stopping_rule": "all 24 frozen streams once; retain timeout censoring; no outcome extension",
+          "warmup_labels_per_stream_arm": 128
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7296-mixture-learning",
+      "title": "Evaluate prospective self-learning under delayed labels",
+      "verdict_class": "null"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7297_v641_mixture_audit.json",
+      "artifact_sha256": "sha256:61241304c356b6a4c51b7efb744b8b738962cf6908f6c26ba7fd96a214e7e05c",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7297_v641_mixture_audit.json",
+      "disposition_class": "null",
+      "honest_verdict": "complete_null: independent mixture audit confirmed a complete efficacy null; retire bounded fixed-share selection over complete constraint hypotheses under delayed feedback (Exp7295/Exp7296 mechanism); failed gates:future_error_vs_reset,future_error_vs_unconditional_recognition,non_feedback_error_vs_reset,non_feedback_error_vs_unconditional_recognition,separated_recurrence_vs_frozen_warmup,overlapping_recurrence_vs_frozen_warmup; repository-wide suite retained 17 pre-existing collection errors",
+      "order": 10,
+      "raw_evidence": {
+        "row_counts": {
+          "causal_change_rows": 1002,
+          "causal_intervention_rows": 6,
+          "e2e_rows": 4,
+          "independent_interval_rows": 48,
+          "rows": 168
+        },
+        "sample_size_budget": {
+          "arms_per_stream": 7,
+          "attempted_stream_count": 24,
+          "bootstrap_resamples": 10000,
+          "censored_stream_count": 0,
+          "censored_stream_ids": [],
+          "completed_prediction_rows": 150528,
+          "completed_stream_arm_units": 168,
+          "completed_stream_count": 24,
+          "completed_transition_rows": 3072,
+          "fixed_evaluation_stream_count": 24,
+          "outcome_based_extension": false,
+          "planned_prediction_rows": 150528,
+          "planned_stream_arm_units": 168,
+          "planned_stream_count": 24,
+          "planned_transition_rows": 3072,
+          "stopping_rule": "audit all 24 frozen streams once; no outcome extension"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7297-mixture-audit",
+      "title": "Audit feedback causality and recurrence safety independently",
+      "verdict_class": "null"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7298_v641_snapshot_journal.json",
+      "artifact_sha256": "sha256:2f4deeb11ffe3f21f1800f3eeb41a952e1f6bc6625e3849eec33bf022a04d7d5",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7298_v641_snapshot_journal.json",
+      "disposition_class": "circular_positive",
+      "honest_verdict": "complete_circular_positive: persistent full-snapshot acknowledgment protocol passed",
+      "order": 11,
+      "raw_evidence": {
+        "row_counts": {
+          "crash_control_rows": 20,
+          "rows": 48,
+          "semantic_parity_rows": 3
+        },
+        "sample_size_budget": {
+          "attempted_crash_units": 20,
+          "attempted_event_units": 48,
+          "censored_crash_units": 0,
+          "censored_event_units": 0,
+          "completed_crash_units": 20,
+          "completed_event_units": 48,
+          "frozen_crash_seeds": [
+            7298001,
+            7298002,
+            7298003,
+            7298004
+          ],
+          "planned_crash_units": 20,
+          "planned_event_units": 48,
+          "stopping_rule": "Run three fixed group arms and five boundaries for four seeds once; do not expand after outcomes."
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7298-snapshot-journal",
+      "title": "Prototype persistent-journal full-snapshot acknowledgments",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7299_v641_snapshot_cost.json",
+      "artifact_sha256": "sha256:f7f4130452d197aecacbd6c5d8ab5005f97ff2acccf335af84d0c5b67d2d47a5",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7299_v641_snapshot_cost.json",
+      "disposition_class": "null",
+      "honest_verdict": "complete_null: persistent SQLite full snapshots do not meet every frozen V640 storage deployment bound",
+      "order": 12,
+      "raw_evidence": {
+        "row_counts": {
+          "independent_recovery_rows": 144,
+          "phase_cost_rows": 144,
+          "rows": 36864
+        },
+        "sample_size_budget": {
+          "arrival_processes": [
+            "burst",
+            "steady_paced",
+            "interactive_dependent"
+          ],
+          "attempted_event_units": 36864,
+          "attempted_trial_units": 144,
+          "benchmark_budget_s": 1800.0,
+          "bootstrap_draws": 10000,
+          "censored_event_units": 0,
+          "censored_trial_units": 0,
+          "completed_event_units": 36864,
+          "completed_trial_units": 144,
+          "events_per_trial": 256,
+          "frozen_evaluation_seeds": [
+            7299001,
+            7299002,
+            7299003,
+            7299004,
+            7299005,
+            7299006,
+            7299007,
+            7299008
+          ],
+          "group_sizes": [
+            1,
+            4,
+            16
+          ],
+          "planned_event_units": 36864,
+          "planned_trial_units": 144,
+          "stopping_rule": "Run the frozen eight-seed paired roster once; keep incomplete pairs censored and do not select or add arms after outcomes.",
+          "storage_arms": [
+            "atomic_replace",
+            "sqlite_persist"
+          ]
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7299-snapshot-cost",
+      "title": "Measure persistent-journal latency and durable throughput",
+      "verdict_class": "null"
+    },
+    {
+      "actual_artifact_path": "results/experiment_7300_v641_board_continuity.json",
+      "artifact_sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b",
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7300_v641_board_continuity.json",
+      "disposition_class": "positive",
+      "honest_verdict": "complete: three authenticated board dispositions and exact next conditions are recorded. KV260 fabric execution remains preserved. PolarFire hash-matched CPU dispatch remains preserved and is not FPGA sampling. GateMate remains blocked_changed_physical_state because the operator receipt is absent. This invocation issued zero hardware operations.",
+      "order": 13,
+      "raw_evidence": {
+        "row_counts": {
+          "board_rows": 3,
+          "rows": 3
+        },
+        "sample_size_budget": {
+          "attempted": 3,
+          "censored": 0,
+          "complete": 3,
+          "completed": 3,
+          "independent_units_completed": 3,
+          "independent_units_planned": 3,
+          "planned": 3,
+          "stopping_rule": "one authenticated read-only disposition per board"
+        }
+      },
+      "status": "complete",
+      "task_id": "exp7300-board-continuity",
+      "title": "Record board continuity and changed-state prerequisites",
+      "verdict_class": "positive"
+    },
+    {
+      "actual_artifact_path": null,
+      "artifact_sha256": null,
+      "checks": {
+        "authenticated": true,
+        "identity_matches": true,
+        "producer_validation_errors": [],
+        "quarantined": false,
+        "terminal": true
+      },
+      "declared_artifact_path": "results/experiment_7301_v641_capstone.json",
+      "disposition_class": "blocked",
+      "honest_verdict": "blocked_required_v641_science_unavailable: all fourteen dispositions are represented; ARC boundary evidence is quarantined and Exp7290 stopped at its failed pre-gate; complete reuse, mixture, and storage branches have no promoted value",
+      "order": 14,
+      "raw_evidence": {
+        "row_counts": {},
+        "sample_size_budget": null
+      },
+      "status": "blocked",
+      "task_id": "exp7301-capstone",
+      "title": "Reconcile fourteen V641 dispositions and bounded research claims",
+      "verdict_class": "blocked"
+    }
+  ],
+  "upload_performed": false,
+  "validation_receipts": [
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-focused",
+      "duration_s": 18.742948562,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/focused_pytest.log",
+      "log_sha256": "sha256:3d33fa97bd9cc51892b48591b3ce7c20585ee82ee302e2257a543590ac68e356",
+      "name": "focused_pytest",
+      "observed_log_sha256": "sha256:3d33fa97bd9cc51892b48591b3ce7c20585ee82ee302e2257a543590ac68e356"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7288_v641_source_contract.py tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-affected",
+      "duration_s": 20.448239368,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/affected_suites.log",
+      "log_sha256": "sha256:986ae9238e814ec1e421c3251a35a8c86eb9a76681f44ce18f3cf6d49725ab18",
+      "name": "affected_suites",
+      "observed_log_sha256": "sha256:986ae9238e814ec1e421c3251a35a8c86eb9a76681f44ce18f3cf6d49725ab18"
+    },
+    {
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-full",
+      "duration_s": 35.003,
+      "exit_code": 2,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/full_python_suite.log",
+      "log_sha256": "sha256:31517251e9646ef70b4e0cbc1aecf07496aaa59cd91f8b977192cc0a65840c47",
+      "name": "full_python_suite",
+      "observed_log_sha256": "sha256:31517251e9646ef70b4e0cbc1aecf07496aaa59cd91f8b977192cc0a65840c47"
+    },
+    {
+      "command": "COVERAGE_FILE=/tmp/carnot-exp7301-final.coverage .venv/bin/coverage report --include=*/experiment_7301_v641_capstone.py --show-missing --fail-under=100",
+      "duration_s": 0.311794019,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage.log",
+      "log_sha256": "sha256:01fa1351159bc0b2830b3fab873509ce084f448b0037267fd49fff6c68175a8c",
+      "name": "scoped_coverage",
+      "observed_log_sha256": "sha256:01fa1351159bc0b2830b3fab873509ce084f448b0037267fd49fff6c68175a8c"
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7301_v641_capstone.py scripts/experiments/experiment_7301_v641_capstone.py tests/python/test_experiment_7301_v641_capstone.py",
+      "duration_s": 0.1,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/ruff_check.log",
+      "log_sha256": "sha256:294fa9972c47c81b3c64ccd6cf0d37fc5ed162a7d857b9c855ffc0ee4336d9b8",
+      "name": "ruff_check",
+      "observed_log_sha256": "sha256:294fa9972c47c81b3c64ccd6cf0d37fc5ed162a7d857b9c855ffc0ee4336d9b8"
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7301_v641_capstone.py scripts/experiments/experiment_7301_v641_capstone.py tests/python/test_experiment_7301_v641_capstone.py",
+      "duration_s": 0.1,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/ruff_format.log",
+      "log_sha256": "sha256:f5809dde613032120a98e2be64060efee909333420efca91f594b4d3de4c702d",
+      "name": "ruff_format",
+      "observed_log_sha256": "sha256:f5809dde613032120a98e2be64060efee909333420efca91f594b4d3de4c702d"
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7301_v641_capstone.py",
+      "duration_s": 0.2,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/changed_module_mypy.log",
+      "log_sha256": "sha256:768cd03156227c9f1a98d96d4c76db4ca4cb1729d7577b45d2ed9e87e1b4e38e",
+      "name": "changed_module_mypy",
+      "observed_log_sha256": "sha256:768cd03156227c9f1a98d96d4c76db4ca4cb1729d7577b45d2ed9e87e1b4e38e"
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7301_v641_capstone.py",
+      "duration_s": 0.2,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:6debc68fa0ccdb6bc67d8b0040c6c4fa057803afcaa9cc4a94b3b210c8d6e795",
+      "name": "scoped_spec_coverage",
+      "observed_log_sha256": "sha256:6debc68fa0ccdb6bc67d8b0040c6c4fa057803afcaa9cc4a94b3b210c8d6e795"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7301_v641_capstone.py --root . --artifact-path results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json --validate",
+      "duration_s": 2.9,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/independent_raw_reducer.log",
+      "log_sha256": "sha256:fd3b2ebcf4ecb29f64d8eaeb4ff8551188f5c2fe77a0e20f5f54fdc6ab170058",
+      "name": "independent_raw_reducer",
+      "observed_log_sha256": "sha256:fd3b2ebcf4ecb29f64d8eaeb4ff8551188f5c2fe77a0e20f5f54fdc6ab170058"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/adversarial_verify.py results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json",
+      "duration_s": 0.2,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/adversarial_verify.log",
+      "log_sha256": "sha256:e0174d2d318cf7fb2a0f80251eee298716ec2d5ff5f6333f6672305276944c8d",
+      "name": "adversarial_verify",
+      "observed_log_sha256": "sha256:e0174d2d318cf7fb2a0f80251eee298716ec2d5ff5f6333f6672305276944c8d"
+    },
+    {
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/verdict_row_consistency_lint.py results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json",
+      "duration_s": 0.2,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/verdict_row_consistency_lint.log",
+      "log_sha256": "sha256:f1547d66db5cbd3b8731df0a5a6eb58681f2ba0ab96de4ebc6c26d57398a0fb5",
+      "name": "verdict_row_consistency_lint",
+      "observed_log_sha256": "sha256:f1547d66db5cbd3b8731df0a5a6eb58681f2ba0ab96de4ebc6c26d57398a0fb5"
+    },
+    {
+      "command": "load V641 contract -> 13 producers -> 8 gates -> 5 branches -> 14 dispositions -> terminal",
+      "duration_s": 2.862306417,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/literal_contract_e2e.log",
+      "log_sha256": "sha256:17e058eab108fa844eedf76fdd3fe610871e5a5d96617adec11ca5f95633baa7",
+      "name": "literal_contract_e2e",
+      "observed_log_sha256": "sha256:17e058eab108fa844eedf76fdd3fe610871e5a5d96617adec11ca5f95633baa7"
+    },
+    {
+      "command": "JAX_PLATFORMS=cpu COVERAGE_FILE=/tmp/carnot-exp7301-final.coverage PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-cov --cov=python/carnot --cov-report=",
+      "duration_s": 30.001087175,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage_test.log",
+      "log_sha256": "sha256:3792182259bcd9b8195d698a528f83fb7a69b9e93e0ddb1520b62ae4ed6f8596",
+      "name": "scoped_coverage_test",
+      "observed_log_sha256": "sha256:3792182259bcd9b8195d698a528f83fb7a69b9e93e0ddb1520b62ae4ed6f8596"
+    },
+    {
+      "command": "build measured prevalidation candidate under results/raw/experiment_7301",
+      "duration_s": 5.30502496,
+      "exit_code": 0,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/candidate_build.log",
+      "log_sha256": "sha256:f870a6335b2f403f816a6acbaf523799dcfa9726325c49ce684ee528245092f4",
+      "name": "candidate_build",
+      "observed_log_sha256": "sha256:f870a6335b2f403f816a6acbaf523799dcfa9726325c49ce684ee528245092f4"
+    },
+    {
+      "command": "coverage report against pre-format cached data",
+      "duration_s": 0.321179541,
+      "exit_code": 2,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage_stale_data_failure.log",
+      "log_sha256": "sha256:3c5db711857f52632394a51501e2fd4406b725b247f9d1801746ef89f6f8f173",
+      "name": "coverage_stale_data_failure",
+      "observed_log_sha256": "sha256:3c5db711857f52632394a51501e2fd4406b725b247f9d1801746ef89f6f8f173"
+    },
+    {
+      "command": "record filesystem-target zero-data failure and dotted-target native abort",
+      "duration_s": 23.0,
+      "exit_code": 1,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/coverage_target_failures.log",
+      "log_sha256": "sha256:902375698b28b1ebc449ba27e676cfa0d68d8d64a239f1426a1cb6a91e0c10bf",
+      "name": "coverage_target_failures",
+      "observed_log_sha256": "sha256:902375698b28b1ebc449ba27e676cfa0d68d8d64a239f1426a1cb6a91e0c10bf"
+    },
+    {
+      "command": "run V640, V641 source, and V641 capstone suites against the active V641 roster",
+      "duration_s": 22.834251253,
+      "exit_code": 1,
+      "log_hash_matches": true,
+      "log_path": "results/raw/experiment_7301/validation/affected_v640_historical_suite_failure.log",
+      "log_sha256": "sha256:b6e631ae912003abe986b6b2d02d58002589335f891f12756bfda59ad9be4517",
+      "name": "affected_v640_historical_suite",
+      "observed_log_sha256": "sha256:b6e631ae912003abe986b6b2d02d58002589335f891f12756bfda59ad9be4517"
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

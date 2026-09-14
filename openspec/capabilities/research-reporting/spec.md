@@ -91,6 +91,128 @@ disqualified, never partial.
 |---|---|---|
 | REQ-REPORT-7288 and SCENARIO-REPORT-7288-* | Planned: Exp7288 reusable module, thin CLI, raw sidecars, and terminal artifact | Planned: focused RED mutations, scoped 100% coverage, artifact validation, roadmap checks, adversarial verification, row consistency, spec coverage, and exact-plan E2E |
 
+## V641 independent dispositions and bounded branch claims — 2026-09-14
+
+**Status:** Implemented. The capstone closes roster accounting independently from
+the scientific result.
+
+### REQ-REPORT-7301: Authenticate and close all fourteen V641 tasks
+
+Exp7301 SHALL read the active `2026.09.641` YAML and its named Markdown
+authority as independent byte streams. It SHALL retain exactly fourteen
+ordered contract and disposition rows from `exp7288-source-contract` through
+`exp7301-capstone`. It SHALL resolve each of the thirteen producer paths only
+from that roster and SHALL distinguish absent, conductor-blocked, quarantined,
+complete-null, circular-positive, positive, and disqualified outcomes.
+
+Exp7301 SHALL authenticate producer identity, terminal lifecycle, exact byte
+hash, quarantine state, and the producer's cold validation result. It SHALL
+replay the selected YAML gates without treating conductor completion as
+scientific success. It SHALL independently reduce branch rows and the actual
+cost, label, and memory denominators from producer rows rather than copying a
+headline verdict.
+
+The required audit checks SHALL preserve expected and observed values for
+`exp7290.arc_capture_complete_score`, `exp7290.arc_method_value_score`,
+`exp7294.reuse_audit_complete_score`, `exp7294.reuse_promotion_score`,
+`exp7297.mixture_audit_complete_score`, `exp7297.mixture_promotion_score`,
+`exp7299.snapshot_capture_complete_score`, `exp7299.snapshot_value_score`, and
+`exp7300.board_continuity_complete_score`. Every external blocked condition
+SHALL appear in `gate_check_summary` with its upstream, check, field, observed
+value, and expected value.
+
+`capstone_complete_score=1` SHALL mean only that the fourteen exact
+dispositions and immutable provenance are represented. Scientific `positive`
+SHALL additionally require every required capture or audit to be authentic
+and at least one independently supported branch value with an exact scope and
+no failed acceptance gate attached to that claim. Complete branches whose
+value gates all fail SHALL remain `null`. Missing, blocked, retired, or
+quarantined required science SHALL make the capstone terminal `blocked`, even
+when closure is complete. Only unfinished Exp7301 work MAY be `partial`.
+Same-authority conformance SHALL remain `circular_positive` within its branch
+and SHALL not be borrowed as learning value.
+
+Exp7301 SHALL compare each producer's exact verdict with its declared
+`prior_failures`. Repeated verdicts SHALL retire only the exact mechanism and
+scope named by that rule. Each retirement SHALL preserve the prior signal,
+the changed prerequisite actually observed, and the lawful next condition.
+It SHALL not reopen retired source-ranking, energy-generation, ARC
+budget-raising, unchanged-state GateMate, or handwritten game-solver work.
+
+The artifact SHALL assess source materialization, live self-discovery, online
+hypothesis retention, host durability, and board context separately. It SHALL
+not close PRD FR11, FR12, or the original NFR-01 tenfold target unless those
+requirements actually pass. Literature and board availability SHALL remain
+context rather than achievements.
+
+The capstone SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model receipts SHALL remain in hashed sidecars. The terminal
+artifact SHALL contain every field and exact principle named in the Exp7301
+prompt, actual UTC timestamps, monotonic and disjoint phase durations, source
+hashes, measured rows, validation receipts, and a reproducibility checksum.
+Its validator SHALL recompute the roster, evidence, gates, branch claims,
+diagnostics, dispositions, decisions, PRD gaps, retirements, hashes, and
+checksum before atomic publication.
+
+#### SCENARIO-REPORT-7301-CONTRACT: Two authorities retain fourteen rows
+
+**Given** the selected V641 YAML and named Markdown byte streams
+**When** Exp7301 parses them independently
+**Then** exactly fourteen ordered IDs, paths, phases, titles, and gates remain
+in `contract_rows`
+**And** the capstone does not add an aspirational fifteenth task.
+
+#### SCENARIO-REPORT-7301-INTAKE: Exact producer outcomes remain distinct
+
+**Given** thirteen declared producer paths and canonical conductor blocks
+**When** Exp7301 authenticates the evidence
+**Then** each disposition retains its exact path, hash, lifecycle, class,
+quarantine state, and validation errors
+**And** absent, blocked, quarantined, complete-null, positive,
+circular-positive, and disqualified are not collapsed.
+
+#### SCENARIO-REPORT-7301-CLAIMS: Raw branch rows control promotion
+
+**Given** authenticated producer rows and audit score fields
+**When** Exp7301 recomputes branch values and denominators
+**Then** closure, conformance, scientific value, cost, labels, and memory remain
+separate claims
+**And** a failed branch efficacy gate cannot support a positive claim.
+
+#### SCENARIO-REPORT-7301-BLOCKED: External science fails closed once
+
+**Given** required science that is missing, producer-blocked, retired,
+quarantined, or unauthenticated
+**When** all fourteen dispositions are represented
+**Then** the artifact has `status=blocked`, `verdict_class=blocked`, and
+`capstone_complete_score=1`
+**And** every failed required check has exact expected and observed values in
+`gate_check_summary`, never a repeated partial verdict.
+
+#### SCENARIO-REPORT-7301-RETIREMENT: Repeated failures stay narrow
+
+**Given** the V641 tasks and their declared prior-failure rules
+**When** current exact verdicts are compared with prior signals
+**Then** only same-verdict mechanisms are retired
+**And** each row records the changed prerequisite and lawful next condition.
+
+#### SCENARIO-REPORT-7301-ARTIFACT: Mutations fail before publication
+
+**Given** a measured terminal candidate under `results/raw/`
+**When** a roster row, producer hash, audit score, diagnostic, branch claim,
+terminal class, or checksum changes
+**Then** independent validation rejects the candidate
+**And** only an exact terminal candidate reaches the declared result path.
+
+## Implementation Status (REQ-REPORT-7301)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7301 and SCENARIO-REPORT-7301-* | Implemented: `python/carnot/experiment_7301_v641_capstone.py`, thin CLI, immutable sidecars, and terminal artifact | Verified: focused RED mutations and 21 passing tests, scoped 100% new-module coverage, independent reduction, artifact validation, adversarial verification, row consistency, spec coverage, and literal-contract E2E; the required full suite preserves 17 pre-existing collection errors |
+
 ## V640 independent evidence matrix and branch decisions — 2026-09-14
 
 **Status:** Implemented. The capstone closes the milestone without converting

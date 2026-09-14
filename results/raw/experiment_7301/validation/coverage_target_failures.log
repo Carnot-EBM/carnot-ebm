@@ -1,0 +1,9 @@
+Exp7301 coverage command correction receipt
+UTC date: 2026-09-14
+Attempt 1 command: PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-cov --cov=python/carnot/experiment_7301_v641_capstone.py --cov-report=term-missing --cov-fail-under=100
+Attempt 1 exit code: 1
+Attempt 1 outcome: 13 tests passed, but pytest-cov treated the filesystem path as a module name, collected no data, and failed the 100% threshold at 0%.
+Attempt 2 command: JAX_PLATFORMS=cpu COVERAGE_FILE=/tmp/carnot-exp7301.coverage PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-cov4 --cov=carnot.experiment_7301_v641_capstone --cov-report=term-missing --cov-fail-under=100
+Attempt 2 exit code: 134
+Attempt 2 outcome: native abort before output; no success claimed.
+Resolution: instrument python/carnot as a directory into a private coverage data file, then report only */experiment_7301_v641_capstone.py. The final scoped_coverage.log records 484/484 statements and 100%.

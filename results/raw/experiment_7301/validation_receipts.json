@@ -1,0 +1,141 @@
+{
+  "schema": "carnot.exp7301.validation_receipts.v1",
+  "receipts": [
+    {
+      "name": "focused_pytest",
+      "command": "PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-focused",
+      "exit_code": 0,
+      "duration_s": 18.742948562,
+      "log_path": "results/raw/experiment_7301/validation/focused_pytest.log",
+      "log_sha256": "sha256:3d33fa97bd9cc51892b48591b3ce7c20585ee82ee302e2257a543590ac68e356"
+    },
+    {
+      "name": "affected_suites",
+      "command": "PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7288_v641_source_contract.py tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-affected",
+      "exit_code": 0,
+      "duration_s": 20.448239368,
+      "log_path": "results/raw/experiment_7301/validation/affected_suites.log",
+      "log_sha256": "sha256:986ae9238e814ec1e421c3251a35a8c86eb9a76681f44ce18f3cf6d49725ab18"
+    },
+    {
+      "name": "full_python_suite",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-full",
+      "exit_code": 2,
+      "duration_s": 35.003,
+      "log_path": "results/raw/experiment_7301/validation/full_python_suite.log",
+      "log_sha256": "sha256:31517251e9646ef70b4e0cbc1aecf07496aaa59cd91f8b977192cc0a65840c47"
+    },
+    {
+      "name": "scoped_coverage",
+      "command": "COVERAGE_FILE=/tmp/carnot-exp7301-final.coverage .venv/bin/coverage report --include=*/experiment_7301_v641_capstone.py --show-missing --fail-under=100",
+      "exit_code": 0,
+      "duration_s": 0.311794019,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage.log",
+      "log_sha256": "sha256:01fa1351159bc0b2830b3fab873509ce084f448b0037267fd49fff6c68175a8c"
+    },
+    {
+      "name": "ruff_check",
+      "command": ".venv/bin/ruff check python/carnot/experiment_7301_v641_capstone.py scripts/experiments/experiment_7301_v641_capstone.py tests/python/test_experiment_7301_v641_capstone.py",
+      "exit_code": 0,
+      "duration_s": 0.1,
+      "log_path": "results/raw/experiment_7301/validation/ruff_check.log",
+      "log_sha256": "sha256:294fa9972c47c81b3c64ccd6cf0d37fc5ed162a7d857b9c855ffc0ee4336d9b8"
+    },
+    {
+      "name": "ruff_format",
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7301_v641_capstone.py scripts/experiments/experiment_7301_v641_capstone.py tests/python/test_experiment_7301_v641_capstone.py",
+      "exit_code": 0,
+      "duration_s": 0.1,
+      "log_path": "results/raw/experiment_7301/validation/ruff_format.log",
+      "log_sha256": "sha256:f5809dde613032120a98e2be64060efee909333420efca91f594b4d3de4c702d"
+    },
+    {
+      "name": "changed_module_mypy",
+      "command": ".venv/bin/mypy python/carnot/experiment_7301_v641_capstone.py",
+      "exit_code": 0,
+      "duration_s": 0.2,
+      "log_path": "results/raw/experiment_7301/validation/changed_module_mypy.log",
+      "log_sha256": "sha256:768cd03156227c9f1a98d96d4c76db4ca4cb1729d7577b45d2ed9e87e1b4e38e"
+    },
+    {
+      "name": "scoped_spec_coverage",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7301_v641_capstone.py",
+      "exit_code": 0,
+      "duration_s": 0.2,
+      "log_path": "results/raw/experiment_7301/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:6debc68fa0ccdb6bc67d8b0040c6c4fa057803afcaa9cc4a94b3b210c8d6e795"
+    },
+    {
+      "name": "independent_raw_reducer",
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/experiments/experiment_7301_v641_capstone.py --root . --artifact-path results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json --validate",
+      "exit_code": 0,
+      "duration_s": 2.9,
+      "log_path": "results/raw/experiment_7301/validation/independent_raw_reducer.log",
+      "log_sha256": "sha256:fd3b2ebcf4ecb29f64d8eaeb4ff8551188f5c2fe77a0e20f5f54fdc6ab170058"
+    },
+    {
+      "name": "adversarial_verify",
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/adversarial_verify.py results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json",
+      "exit_code": 0,
+      "duration_s": 0.2,
+      "log_path": "results/raw/experiment_7301/validation/adversarial_verify.log",
+      "log_sha256": "sha256:e0174d2d318cf7fb2a0f80251eee298716ec2d5ff5f6333f6672305276944c8d"
+    },
+    {
+      "name": "verdict_row_consistency_lint",
+      "command": "PYTHONPATH=python:. .venv/bin/python -u scripts/verdict_row_consistency_lint.py results/raw/experiment_7301/prevalidation/measured-terminal-candidate.json",
+      "exit_code": 0,
+      "duration_s": 0.2,
+      "log_path": "results/raw/experiment_7301/validation/verdict_row_consistency_lint.log",
+      "log_sha256": "sha256:f1547d66db5cbd3b8731df0a5a6eb58681f2ba0ab96de4ebc6c26d57398a0fb5"
+    },
+    {
+      "name": "literal_contract_e2e",
+      "command": "load V641 contract -> 13 producers -> 8 gates -> 5 branches -> 14 dispositions -> terminal",
+      "exit_code": 0,
+      "duration_s": 2.862306417,
+      "log_path": "results/raw/experiment_7301/validation/literal_contract_e2e.log",
+      "log_sha256": "sha256:17e058eab108fa844eedf76fdd3fe610871e5a5d96617adec11ca5f95633baa7"
+    },
+    {
+      "name": "scoped_coverage_test",
+      "command": "JAX_PLATFORMS=cpu COVERAGE_FILE=/tmp/carnot-exp7301-final.coverage PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --basetemp=/tmp/carnot-exp7301-final-cov --cov=python/carnot --cov-report=",
+      "exit_code": 0,
+      "duration_s": 30.001087175,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage_test.log",
+      "log_sha256": "sha256:3792182259bcd9b8195d698a528f83fb7a69b9e93e0ddb1520b62ae4ed6f8596"
+    },
+    {
+      "name": "candidate_build",
+      "command": "build measured prevalidation candidate under results/raw/experiment_7301",
+      "exit_code": 0,
+      "duration_s": 5.30502496,
+      "log_path": "results/raw/experiment_7301/validation/candidate_build.log",
+      "log_sha256": "sha256:f870a6335b2f403f816a6acbaf523799dcfa9726325c49ce684ee528245092f4"
+    },
+    {
+      "name": "coverage_stale_data_failure",
+      "command": "coverage report against pre-format cached data",
+      "exit_code": 2,
+      "duration_s": 0.321179541,
+      "log_path": "results/raw/experiment_7301/validation/scoped_coverage_stale_data_failure.log",
+      "log_sha256": "sha256:3c5db711857f52632394a51501e2fd4406b725b247f9d1801746ef89f6f8f173"
+    },
+    {
+      "name": "coverage_target_failures",
+      "command": "record filesystem-target zero-data failure and dotted-target native abort",
+      "exit_code": 1,
+      "duration_s": 23.0,
+      "log_path": "results/raw/experiment_7301/validation/coverage_target_failures.log",
+      "log_sha256": "sha256:902375698b28b1ebc449ba27e676cfa0d68d8d64a239f1426a1cb6a91e0c10bf"
+    },
+    {
+      "name": "affected_v640_historical_suite",
+      "command": "run V640, V641 source, and V641 capstone suites against the active V641 roster",
+      "exit_code": 1,
+      "duration_s": 22.834251253,
+      "log_path": "results/raw/experiment_7301/validation/affected_v640_historical_suite_failure.log",
+      "log_sha256": "sha256:b6e631ae912003abe986b6b2d02d58002589335f891f12756bfda59ad9be4517"
+    }
+  ]
+}
