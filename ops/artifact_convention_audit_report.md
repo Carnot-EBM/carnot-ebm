@@ -9,26 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 4 |
+| AGGREGATE_ONLY | 2 |
+| CANNOT_DETERMINE | 2 |
 
-## experiment_7266_semantic_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `exp7265-mention-heldout.mention_capture_complete_score` was 0 but was required to equal 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7267_v639_recognition_prototype.json
+## experiment_7280_v640_arc_live.json
 
 **CHECKABLE**
 
@@ -36,7 +21,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The active recognition fixture is ready, while held-out learning value was not scored.
+The four-episode pilot completed evidence capture but produced a null result because the useful consumed-plan and scoped-validation gates were not met.
 
 ## WHAT IS MISSING
 nothing
@@ -44,23 +29,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7268_v639_recognition_learning.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Autonomous recognition completed, but one or more frozen value gates failed, yielding a null verdict.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7269_v639_recognition_audit.json
+## experiment_7281_v640_admission_prototype.json
 
 **CANNOT_DETERMINE**
 
@@ -68,15 +37,15 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-Several comparative acceptance gates passed or failed, including error and false-accept comparisons against reset, random, shuffle, and frozen arms.
+The artifact claims the admission-fixture mechanics passed all acceptance gates, while fixed eight-label bounds are often infeasible and no learning benefit is claimed.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-field at `"retained_co"`, so it is impossible to determine whether later fields contain per-unit rows for the aggregate metrics in `"future_error_vs_reset"`, `"recurrence_degradation_vs_frozen"`, `"recurrence_error_vs_random"`, and `"recurrence_error_vs_shuffle"`; the visible `"bound_rows"` provide per-unit `"false_accept_rate"` but not those other metrics.
+The artifact is truncated inside `"nomination_overlap_rows"`, so the complete `"rows"` field referenced by `"field_principles"`—including per-unit metrics for the claimed 168-row seven-arm panel—cannot be found; `"acceptance_gate_results"` records only its aggregate count.
 
 ## THE CHECK A READER CANNOT DO
-Do the recurrence-error comparisons hold broadly across streams, or are their reported aggregate bounds driven by a few outlier streams?
+Did all 168 stream-arm units produce valid, nondegenerate results supporting the passed gate, or does the aggregate hide missing, unchanged, or boundary-pinned units?
 
-## experiment_7270_v639_durable_profile.json
+## experiment_7282_v640_admission_learning.json
 
 **CHECKABLE**
 
@@ -84,7 +53,7 @@ Do the recurrence-error comparisons hold broadly across streams, or are their re
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Durable synchronization costs and insufficient replaceable snapshot work make the proposed delta-log prototype unwarranted.
+Admission learning completed, but all six frozen comparative value gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +61,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7271_delta_log.json
+## experiment_7283_v640_admission_audit.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The cold admission audit completed, but the admission-learning efficacy gate failed against the reset, unconditional-recognition, frozen-warmup, and label-shuffled controls.
+
+## WHAT IS MISSING
+The per-unit efficacy `rows` containing each stream/seed/arm’s future-error, false-accept, recurrence-degradation, recurrence-error, headroom, and censoring values; only summaries such as `efficacy_verdict`, `acceptance_gate_results`, `opportunity_reduction`, and `causal_intervention_rows` are present.
+
+## THE CHECK A READER CANNOT DO
+Did the efficacy comparisons fail broadly across independent streams/seeds, or was the pooled null driven by outliers or units with no headroom?
+
+## experiment_7284_v640_commit_prototype.json
 
 **CHECKABLE**
 
@@ -100,7 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `exp7270-durable-profile.journal_optimization_warranted_score` was 0 but was required to equal 1.
+Host group commit satisfies the changed acknowledgment contract and all acceptance gates.
 
 ## WHAT IS MISSING
 nothing
@@ -108,7 +93,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7272_v639_board_state.json
+## experiment_7285_v640_commit_frontier.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+Host-qualified batch acknowledgment achieved a best burst-throughput speedup of 15.324×, making the 10× target feasible.
+
+## WHAT IS MISSING
+A complete `"component_rows"` population: `"paired_seeds"` declares 20 seeds, but the artifact is truncated during seed 7285007, so rows for seeds 7285008–7285019 and the remainder of the artifact cannot be found.
+
+## THE CHECK A READER CANNOT DO
+Do the complete per-seed burst comparisons reproduce `"measured_best_burst_throughput_speedup": 15.324046170149051` and `"burst_throughput_lower_ci95": 11.076732511327313`?
+
+## experiment_7286_v640_board_state.json
 
 **CHECKABLE**
 
@@ -116,7 +117,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Three authenticated board dispositions are complete: KV260 FPGA and PolarFire CPU graduations remain preserved, while GateMate is blocked because the required post-Exp6559 operator receipt is missing.
+Three authenticated board dispositions are complete: KV260 fabric graduation and PolarFire CPU dispatch remain preserved, while GateMate is blocked because the required post-Exp6559 operator-authored physical-change receipt is missing.
 
 ## WHAT IS MISSING
 nothing
@@ -124,18 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7273_v639_capstone.json
+## experiment_7287_v640_capstone.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The V639 capstone is blocked because the required semantic audit is unavailable, with only 5 of 7 same-milestone gates passing and the independent Markdown/YAML contract mismatching.
+The capstone is blocked because required ARC evidence is quarantined and all four scientific-value families scored zero, including several claims that one arm did not outperform its comparator.
 
 ## WHAT IS MISSING
-nothing; the failed checks and observed values are recorded in `acceptance_gate_results`, while task-level outcomes appear in `branch_decisions`, per-task evidence in `evidence_matrix`, and contract mismatches in `contract_rows`.
+Per-unit metric rows for the comparative source, admission, ARC, and acknowledgment arms are missing; `"current_honest_verdict"`, `"recomputed_claims"`, `"raw_evidence.row_counts"`, and aggregate value scores are present, but only counts and conclusions—not each game/seed/cell/condition’s arm values. The blocker diagnostic itself is present in `"acceptance_gate_results"` and `"current_honest_verdict"`.
 
 ## THE CHECK A READER CANNOT DO
-none
+Did the claimed failure of the mention-pointer arm versus equal-budget direct hold broadly across units, or was the aggregate null caused by outliers, degenerate controls, or units pinned at floors or ceilings?

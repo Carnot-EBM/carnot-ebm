@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-09-13T17:32:09.422705+00:00
+- started: 2026-09-14T01:41:29.226653+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -16,12 +16,12 @@
 ## Generator failure reasons
 - codex_call_failed: codex exit 1: OpenAI Codex v0.149.1
 --------
-workdir: /tmp/autoresearch-codex-48uha8mi
+workdir: /tmp/autoresearch-codex-abylpb_6
 model: gpt-6-astra
 provider: openai
 approval: never
 sandbox: danger-full-access
 reasoning effort: xhigh
 reasoning summaries: no
-- Prior failure was codex infra exit, not a method result — nothing to route around scientifically.: Energy regression on: double_well, rosenbrock
+- Hypothesis: two-stage optimizer — seeded multi-start Adam finds global basin, then Levenberg-damped Newton polish drives energy to machine precision. Rosenbrock Hessian is tridiagonal-cheap, double-well separable, so Newton near-free. Real descent, deterministic seeds, no hardcoded coordinates. Prior failure was codex infra crash, not method — nothing methodological to avoid. Expect E ≤ 1e-20 both benchmarks, <1s wall clock.: Energy regression on: rosenbrock
 No hypothesis both won this round and committed cleanly.
