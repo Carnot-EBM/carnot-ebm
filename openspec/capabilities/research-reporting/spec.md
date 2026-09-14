@@ -1,5 +1,91 @@
 # Research Reporting Capability Specification
 
+## V642 scoped experiment validation — 2026-09-14
+
+**Status:** Planned. This control changes validation for new experiment entrypoints only.
+
+### REQ-REPORT-7303: Separate required checks from repository health
+
+Exp7303 SHALL provide a reusable runner at
+`python/carnot/reporting/experiment_7303_validation_scope.py`. The runner SHALL
+accept explicit test paths and changed-module paths. It SHALL reject an empty
+test list, an empty changed-module list, and any repository-wide pytest target.
+It SHALL not import or inherit a historical experiment's
+`validation_commands` function.
+
+The runner SHALL execute focused pytest, changed-module coverage, Ruff check,
+Ruff format check, changed-module mypy, and scoped specification coverage. It
+SHALL use worktree imports, disable configured pytest additions, disable
+coverage during ordinary pytest, run without xdist, and use a private pytest
+base directory. It SHALL record exact subprocess argument vectors, exit codes,
+elapsed times, log hashes, scopes, and resolved `carnot` module paths. Each
+named required command SHALL run exactly once. A missing command or nonzero
+exit code SHALL make `required_checks_passed=false`.
+
+Authenticated historical collection failures SHALL remain in
+`repository_health`. They SHALL retain their original command, date, path,
+hash, error list, and unresolved state. A historical observation SHALL not
+become a current validation receipt or make a required check pass. An unrelated
+historical failure SHALL not make a clean scoped run fail.
+
+The experiment SHALL authenticate Exp7289 and Exp7291 through Exp7294 artifacts
+and their preserved full-suite logs. It SHALL not rerun those full suites. It
+SHALL preserve the historical artifacts and scientific verdicts without
+rewriting them. Missing or hash-mismatched historical evidence SHALL produce a
+terminal `blocked` artifact. The exact failed upstream, check, field, observed
+value, and expected value SHALL remain in `gate_check_summary`.
+
+The experiment SHALL not invoke a model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counters,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. `validation_scope_ready_score` SHALL equal one only
+after all five controls pass and the real scoped command set runs end to end.
+Shared runner authority SHALL set `verifier_is_oracle=true`. A successful
+control receipt SHALL therefore use `circular_positive`, not `positive`.
+
+#### SCENARIO-REPORT-7303-AFFECTED: An affected test failure remains blocking
+
+**Given** an explicit affected test whose subprocess exits nonzero
+**When** the scoped runner records the command
+**Then** it preserves the actual argument vector and exit code
+**And** `required_checks_passed` remains false.
+
+#### SCENARIO-REPORT-7303-UNSCOPED: A repository-wide pytest target is rejected
+
+**Given** a pytest selection that names `tests/python` instead of test files
+**When** the runner validates the explicit scope
+**Then** it refuses the run before starting a subprocess
+**And** it emits no success-shaped receipt.
+
+#### SCENARIO-REPORT-7303-MISSING: A missing required command cannot pass
+
+**Given** receipts that omit one named required command
+**When** the runner reduces required validation
+**Then** the missing command is named
+**And** `required_checks_passed` is false.
+
+#### SCENARIO-REPORT-7303-HEALTH: Historical collection failure stays separate
+
+**Given** a hash-authenticated full-suite collection failure from V641
+**When** all current scoped commands pass
+**Then** `repository_health` keeps the unresolved historical failure
+**And** the historical observation does not change `required_checks_passed`.
+
+#### SCENARIO-REPORT-7303-CLEAN: A clean scoped run executes real commands
+
+**Given** explicit test and changed-module lists in a private repository
+**When** the runner executes its required command set
+**Then** all commands use the private worktree and propagate actual exits
+**And** `required_checks_passed` is true only when every required command passes.
+
+#### SCENARIO-REPORT-7303-ARTIFACT: Terminal scope evidence is atomic
+
+**Given** authenticated V641 logs and completed Exp7303 control rows
+**When** the terminal candidate passes strict artifact checks
+**Then** the declared result is written atomically with all required fields
+**And** prior collection debt remains open only in `repository_health`.
+
 ## V642 literature ingestion and exact execution contract — 2026-09-14
 
 **Status:** Implemented. This receipt is advisory. It does not gate a scientific branch.
