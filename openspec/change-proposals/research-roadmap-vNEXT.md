@@ -1,264 +1,357 @@
-# Carnot Research Roadmap v636: Qualified Source Semantics and Lossless Learning
+# Carnot Research Roadmap V641: Fresh source reuse, delayed-feedback constraint learning, and durable snapshot efficiency
 
-**Created:** 2026-09-11
-**Milestone:** 2026.09.636
-**Milestone title:** Qualified source semantics, lossless online constraint memory, and live tool evidence
-**Status:** Planned; fourteen tasks, exp7219 through exp7232, in four phases.
-**Supersedes:** V635 design for completed milestone 2026.09.635.
-**Execution file:** `research-roadmap-next.yaml`; activation is left to the conductor.
+**Created:** 2026-09-14 UTC (2026-09-13 operator local date)
+**Milestone:** 2026.09.641
+**Status:** Planned; activation-refusal repair, awaiting the unchanged guard
+**Supersedes:** Completed milestone 2026.09.640, experiments 7274–7287
+**Informed by:** V640 terminal artifacts, completion archive, conductor log, and the V641 research refresh
 
-## What V635 Proved
+## Activation Refusal and Repair Scope
 
-Task completion did not establish all scientific goals. This table reads the
-actual artifacts, rather than interpreting conductor `OK` as positive science.
-The completion archive still ends at V634; the active V635 roster, terminal
-artifacts and conductor log establish the more recent outcomes.
+The guard refused `exp7300-board-continuity` because two scope-matched failures
+had no `prior_failures` entries. The repaired YAML adds both exact ledger IDs
+and observed verdicts. Each entry includes `addressed_by` and
+`retire_if_same_verdict: true`. No operator override is claimed.
 
-| V635 evidence | Finding | Consequence |
+- `exp5166-hardware-continuity-board-timing-v473` encountered blocked GateMate DirtyJTAG IDCODE timing.
+- `exp5179-hardware-continuity-board-timing-v474` retained unresolved GateMate IDCODE diagnostics despite reachable KV260 and PolarFire.
+
+The changed prerequisite is Exp7286's authenticated three-board disposition.
+Exp7300 reads existing evidence and records the next physical-state condition.
+It issues zero hardware operations. GateMate remains blocked unless a dated
+operator receipt establishes changed physical state. Even then, this task
+only records eligibility for a later integration task. Repeating a prior
+verdict activates the declared retirement rule.
+
+The refused proposal is preserved at
+`ops/roadmap-quarantine/roadmap-2026.09.641-refusal1.yaml`. Its fourteen tasks,
+order, prompts, gates, budgets, titles and deliverables are unchanged. This
+repair also replaces the stale V636 design with their exact V641 contract,
+as required by the operator. The identical old design is already preserved
+at `openspec/change-proposals/research-roadmap-v636.md`.
+
+## What V640 Proved
+
+Conductor completion is not a scientific acceptance result. The completion
+archive ends at V640; the following findings come from its terminal artifacts.
+
+| Evidence | Finding | Consequence |
 |---|---|---|
-| Exp7205 source contract | Fourteen contract rows were available, but validation failed on an invented prior-capstone module path. | Validate every existing path and both complete contracts before handoff. Keep this receipt advisory. |
-| Exp7206/7207 ARC sessions; Exp7218 capstone | Seven unique induction receipts were reported, with no observed missing-tool demand. No useful-world-model or hidden-score gain was established. Some historical rows predate seed/receipt reducer repairs. | Continue the explicitly requested bounded volume collection using repaired current-session identity. Deduplicate authentic historical rows without rewriting them. |
-| Exp7208 fixture; Exp7209 canary | CPU fixture execution took 1.148 seconds. Its unrecognized free-text substrate triggered a 60-second model floor. Exp7209 correctly refused the quarantine before inference. Capture and audit cascade-blocked. | Re-execute the fixture under the existing recognized CPU substrate and validate it; this repairs measurement availability, not model quality. |
-| Exp7213 learning; Exp7214 audit | Learned commits affected later predictions and reduced future error versus frozen warmup. The random-query and false-accept CI gates failed. The full version-space comparator was about 9.83 percentage points more accurate than committed predicates. | Test a lossless representation of the stronger learner; retain full information and charge every delayed query/update. |
-| Exp7215/7216 down-up sampler | Ninety finite transition cells passed; the joint quality/cost gate did not. Some occupancy probes had positive exact probability but no observed variation. | Diagnose rare-event observability from saved traces. Do not rerun or promote the failed throughput comparison. |
-| Exp7217 native readiness | Real interpreter-bound PyO3 execution and state restore worked after rebuilding. No 10x result followed. KV260 graduation, GateMate physical block and PolarFire transcript uncertainty remained separate. | Use the working native recipe for a different lossless-memory core and recover missing board evidence within bounded scope. |
-| Exp7218 capstone | Matrix complete; semantic evidence blocked, learning/mixing value null. | External branch absence is terminal `blocked`, never a retryable capstone `partial`. |
+| Exp7274 source contract | Disqualified: the declared document still described V636. | Bind the full V641 Markdown and YAML before handoff. Keep Exp7288 advisory. |
+| Exp7275 replay and Exp7277 canary | Replay diagnosed the old measurement defect; the new comparator transport passed a mechanics gate. | Reuse the shipped parser and authenticated GGUF transport. |
+| Exp7278 capture and Exp7279 audit | Direct comparison was already correct on all 64 source units. Source-verifier value did not pass. | Test amortized source materialization and freshness against warm direct generation, with no accuracy-superiority rerun. |
+| Exp7276 identity and Exp7280 live ARC | Identity handoff passed its mechanics controls. Exp7280 was quarantined for inference-provenance contradiction and substrate mismatch. | Persist load/generation events at call boundaries, then run one actual selfparse session. Preserve the quarantine. |
+| Exp7281–7283 admission learning | The prototype passed mechanics. Future-error, false-accept and recurrence value gates failed; the independent audit retained the null. | Replace binary update admission with a bounded hypothesis mixture and shared delayed labels. |
+| Exp7284/7285 durable state | Group acknowledgment passed protocol controls; the measured deployment frontier missed its joint gate. | Hold grouping fixed and change the full-snapshot storage mechanism. |
+| Exp7286 board state | KV260 graduation and PolarFire CPU dispatch remained authenticated. GateMate lacked changed-state evidence. Zero hardware operations were issued. | Carry forward evidence and exact next conditions; no repeated physical diagnostics. |
+| Exp7287 capstone | All fourteen dispositions were recorded; required ARC evidence remained quarantined. Source, ARC, admission and acknowledgment value scores were zero. | Separate evidence closure from scientific value. External blocks are terminal `blocked`. |
 
 ## Three Largest Gaps to the PRD Vision
 
-1. **Faithful extraction and independently measured verifier value (FR-12).**
-   Exact arithmetic or relation execution cannot repair a wrong representation.
-   The next held-out measurement separates syntax, source fidelity, sufficiency
-   and decision value, with failed outputs in the full denominator.
-2. **Useful continuous learning at inference speed (FR-11).** A persistent
-   memory can be causal yet inferior to an available predictor. Compile the
-   entire surviving hypothesis set, preserve its decisions, and evaluate
-   future error, false accepts, recurrence and total update cost separately.
-3. **Live reasoning and deployable computation (FR-05/07/08, NFR-01).**
-   Tool engagement, stationary finite kernels and successful native import
-   are narrow capabilities. Live model validity, future-query utility and
-   measured end-to-end deployment gains remain open.
+1. **Faithful verification with useful total cost (FR-12).** Exact constraint
+   execution cannot certify a mistaken extraction. The recent direct baseline
+   has no observed accuracy headroom. Measure source freshness, semantic parity,
+   coverage, false accepts and amortized cost together.
+2. **Continuous learning that survives recurrence (FR-11).** A causal update
+   can still harm later predictions. Test mixtures over archived hypotheses
+   with equal revealed-label and byte budgets. Keep recurrence strata separate.
+3. **Live reasoning with deployable computation (FR-05/07/08, NFR-01).**
+   Correct wrappers and native transitions do not prove useful live induction
+   or faster durable updates. Measure actual policy consumption and the whole
+   acknowledgment path, including initialization and recovery.
 
 ## Research Inputs and Selection
 
-The V636 refresh in `research-references.md` was written before this design.
-It records dates, all eight arXiv topics and all six secondary channels,
-including access failures. These are hypotheses and controls, not local results.
+The V641 refresh and its refusal-recheck addendum in `research-references.md`
+precede this design. All eight requested arXiv themes and all six secondary
+channels were checked. The sources motivate bounded adaptations, not local
+scientific claims.
 
-| Source | Task use | Boundary |
+| Source | Use in this milestone | Boundary |
 |---|---|---|
-| [Symbolic grounding](https://arxiv.org/abs/2609.05025), [ChopChop](https://arxiv.org/abs/2509.00360), [premise sufficiency](https://arxiv.org/abs/2608.00585) | Exp7222–7225 recover the interrupted source-span experiment and test joint support. | Grammar and exact execution cannot certify source extraction. |
-| [Compact constraint networks](https://journals.sagepub.com/doi/10.3233/FAIA250893) and [interactive refinement](https://arxiv.org/abs/2509.24489) | Exp7226–7228 and Exp7230 preserve a full hypothesis vote in compact memory. | Bitset compilation is a local adaptation, not the paper's template-learning algorithm. |
-| [Memoir](https://arxiv.org/abs/2607.20792), from the EBT citation trail | Freeze prediction state; delayed feedback commits affect only later queries. | Its negative procedural recall finding motivates a control, not a universal theorem. |
-| [Down-up sampling](https://arxiv.org/abs/2609.08873) | Exp7229 separates exact rare-event probability from an observed chain's ESS. | Finite-law correctness and IID reference calculations do not certify MCMC mixing. |
-| [KANELÉ](https://arxiv.org/abs/2512.12850), [KAN-SAs](https://arxiv.org/abs/2512.00055), [Extropic Z1T](https://extropic.ai/writing/z1t) | Exp7230/7231 account for bounded table size, host transfers and device placement. | No KAN implementation or vendor speedup is claimed for bitset memory. |
-| [vLLM tool calling](https://docs.vllm.ai/en/latest/features/tool_calling/), [GGUF plugin](https://docs.vllm.ai/en/latest/features/quantization/gguf/), [world-model tool use](https://arxiv.org/abs/2601.03905) | Exp7220 fulfils the new local parser directive; Exp7221 separates actual calls from model validity. | Documentation for Qwen3-Coder does not prove Qwen3.8 compatibility. Serving support is measured. |
+| [GroundedCache](https://arxiv.org/abs/2605.27494) and [CacheWeaver](https://arxiv.org/abs/2606.19667) | Exp7291–7294 test versioned source compilations and a warm-prefix comparator. | Answer caching and a different serving stack do not prove Carnot cache value. |
+| [Symbolic grounding](https://arxiv.org/abs/2609.05025) and [Beyond Document Grounding](https://arxiv.org/abs/2607.00895) | Preserve source spans, provenance and unsupported claims. | Structured extraction remains fallible; every failed unit stays in the denominator. |
+| [When Validation Stops Learning](https://arxiv.org/abs/2609.10873) and [interactive constraint refinement](https://arxiv.org/abs/2509.24489) | Exp7295–7297 replace failed admission with delayed-feedback hypothesis mixtures. | Fixed-share voting is a local adaptation, not a claimed theorem for drifting streams. |
+| [SQLite atomic commit](https://www.sqlite.org/atomiccommit.html) and [persistent journal mode](https://www.sqlite.org/pragma.html#pragma_journal_mode) | Exp7298/7299 test complete snapshots in PERSIST/FULL transactions. | Process-kill recovery cannot establish physical power-loss behavior. |
+| [KAC](https://arxiv.org/abs/2503.21076), SparseKAN, HardNet++, ETS, and Ising FPGA work in the refresh | Retain future classifier, constraint and hardware ideas. | No new neural training or board integration branch is added during this repair. |
+| [Extropic Z1T](https://extropic.ai/writing/z1t) and [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models) | Track host/companion costs and hardware availability. | No local TSU access or compatible Kona checkpoint is established. |
 
-EBT/ARM–EBM and the OpenReview ICLR records remain architecture references.
-Semantic Scholar returned 35 EBT and eight ARM–EBM citation records, with no
-next page; these are not exhaustive citation counts. Hugging Face verification
-and GitHub weekly discovery were checked. Kona exposes no compatible local
-runner on the checked page. MPMMine is retained for later external validation.
-Retired external-text scorers, repair-stack variants, public-game re-solves,
-ARC token-budget increases and unchanged GateMate physical probes stay closed.
+The EBT/ARM–EBM citation checks retrieved 35 and eight records respectively,
+without next-page tokens; these are not exhaustive citation counts. OpenReview
+returned a browser challenge in this pass. Hugging Face grounding, GitHub weekly
+Python, Extropic and Kona pages were checked. No trending rank is inferred.
+Retired external-text scorers, energy-generation variants, hand-built game
+solvers and unchanged GateMate probes remain outside this plan.
 
 ## Architecture
 
 ```text
- public source + candidate          private evaluator authority
-           |                                   |
- source-only / claim-only Qwen3.8 calls         |
-           |                                   |
- bounded spans -> typed relations -> energy/unknown decision
-           |                                   |
-           +------ independent paired audit ---+
+ public source/version -> Qwen3.8 source extraction -> hashed compilation cache
+            |                         |                        |
+      distinct claim -> query extraction -> exact constraint verification
+            |                                                  |
+      warm direct comparator -----------------> independent parity/cost audit
+                                                               |
+                                                  bounded source-reuse verdict
 
- fresh public event -> read-only hypothesis vote -> prediction receipt
-                                                        |
- evaluator releases delayed feedback ------------------+
-           |
- transactional survivor/vote update -> packed persistent memory
-           |                                  |
-       future queries                    Rust/PyO3 parity + costs
+ public event -> weighted archived hypotheses -> pre-label prediction receipt
+                                                       |
+ evaluator releases only scheduled delayed feedback ----+
+            |
+      bounded fixed-share update -> future prediction -> cold causality audit
 
- Qwen3.8 GGUF -> vLLM XML canary (isolated serving experiment)
- Qwen3.8 GGUF -> existing llama.cpp -> LIVE E3AgentPolicy
-                                         |
-                              withheld-adapter session
-                                         |
-                   tool calls / valid models / banked progress
+ native controller -> complete state snapshot -> SQLite PERSIST/FULL commit
+                                                   |
+                                             acknowledgment
+                                                   |
+                                      kill/reopen -> exact state parity
 
- saved Ising chains -> rare-event audit       attached-board receipts
-                           \                       /
-                        independent evidence matrix
+ Qwen3.8 GGUF -> actual E3AgentPolicy -> own runtime induction/tool use
+                          |                        |
+                 persisted call events       environment feedback
+                          +------ current-session receipt
+
+ existing board receipts -> three dispositions -> changed-state prerequisites
+
+ all fourteen dispositions -> independent capstone + stable publication gate
 ```
 
-No parser canary enables a new default. No learned energy supplies its own
-hidden labels. CPU lookup and packed updates are the immediate learning path;
-Rust SIMD and FPGA table/bit operations are possible acceleration paths with
-explicit table-size and transfer costs. A 100x hardware gain is a target to
-measure, not a property assumed in the design.
+The model remains `unsloth/Qwen3.8-27B-GGUF`. The model's embedded tokenizer
+is loaded through the shipped llama.cpp path. Each LLM task declares it in
+`MODEL_SPECS`. CPU fixture/replay work has no current model invocation.
+Learning uses CPU counters, bounded vectors and system memory. Batch expert
+scoring has a GPU/NPU path; compact table operations could map to FPGA later.
+Hardware gains, including the program's 100x aspiration, require measurement.
+No source cache, mixture or storage adapter changes a production default.
 
 ## Exact Task Contract
 
-There are **14 tasks**, **exp7219 through exp7232**, in this exact order.
-The table is the contract with the YAML. Gates refer only to earlier tasks in
-this milestone. Every named gate field is in its producer's REQUIRED ARTIFACT
-FIELDS, at top level. Titles and deliverable paths are literal contract values.
+There are **14 tasks**, **exp7288 through exp7301**, in this exact order.
+The table is the literal contract with `research-roadmap-next.yaml`.
+Each gate field is declared at top level in its upstream task's REQUIRED
+ARTIFACT FIELDS. Phase numbers match the prompts.
 
-| Order | Task ID | Title | Deliverable | Structured gates |
-|---|---|---|---|---|
-| 1 | exp7219-source-contract | V636 source delta and exact execution contract | results/experiment_7219_v636_source_contract.json | None |
-| 2 | exp7220-xml-canary | Bounded local vLLM Qwen3 XML tool-parser canary | results/experiment_7220_v636_xml_canary.json | None |
-| 3 | exp7221-arc-session | Live ARC adapter-withheld cumulative discovery session | results/experiment_7221_v636_arc_session.json | None |
-| 4 | exp7222-span-fixture | Recognized-substrate source-span fixture qualification | results/experiment_7222_v636_span_fixture.json | None |
-| 5 | exp7223-span-canary | Bounded Qwen3.8 source-span semantic canary | results/experiment_7223_v636_span_canary.json | exp7222-span-fixture.span_fixture_ready_score == 1 |
-| 6 | exp7224-span-capture | Qwen3.8 held-out source-span grounding measurement | results/experiment_7224_v636_span_capture.json | exp7222-span-fixture.span_fixture_ready_score == 1; exp7223-span-canary.span_canary_ready_score == 1 |
-| 7 | exp7225-semantics-audit | Independent source fidelity and verifier-value audit | results/experiment_7225_v636_semantics_audit.json | exp7224-span-capture.span_capture_complete_score == 1 |
-| 8 | exp7226-belief-compiler | Lossless hypothesis-memory compiler and fresh stream | results/experiment_7226_v636_belief_compiler.json | None |
-| 9 | exp7227-belief-learning | Continuous self-learning with lossless delayed-feedback memory | results/experiment_7227_v636_belief_learning.json | exp7226-belief-compiler.belief_compiler_ready_score == 1 |
-| 10 | exp7228-belief-cold-audit | Cold hypothesis-memory causality and rollback audit | results/experiment_7228_v636_belief_cold_audit.json | exp7227-belief-learning.belief_run_complete_score == 1 |
-| 11 | exp7229-rare-event-audit | Fixed-cardinality rare-event observability audit | results/experiment_7229_v636_rare_event_audit.json | None |
-| 12 | exp7230-native-belief | Native lossless constraint-memory parity and amortized cost | results/experiment_7230_v636_native_belief.json | exp7226-belief-compiler.belief_compiler_ready_score == 1 |
-| 13 | exp7231-board-continuity | KV260 GateMate and PolarFire evidence continuity | results/experiment_7231_v636_board_continuity.json | None |
-| 14 | exp7232-capstone | V636 independent evidence matrix and branch decisions | results/experiment_7232_v636_capstone.json | None |
+| Order | Task ID | Exact title | Deliverable | Phase | Structured gate |
+|---|---|---|---|---|---|
+| 1 | exp7288-source-contract | V641 source ingestion and exact fourteen-task contract | results/experiment_7288_v641_source_contract.json | 1 | None |
+| 2 | exp7289-arc-boundary | Preserve live ARC invocation evidence across timeout boundaries | results/experiment_7289_v641_arc_boundary.json | 1 | None |
+| 3 | exp7290-arc-selfparse | Accumulate one authentic adapter-withheld live selfparse session | results/experiment_7290_v641_arc_selfparse.json | 1 | exp7289-arc-boundary.arc_boundary_ready_score == 1 |
+| 4 | exp7291-reuse-fixture | Build a versioned source-compilation reuse fixture | results/experiment_7291_v641_reuse_fixture.json | 2 | None |
+| 5 | exp7292-reuse-canary | Canary Qwen3.8 source reuse and warm-prefix comparators | results/experiment_7292_v641_reuse_canary.json | 2 | exp7291-reuse-fixture.reuse_fixture_ready_score == 1 |
+| 6 | exp7293-reuse-measurement | Measure fresh-source reuse parity and end-to-end cost | results/experiment_7293_v641_reuse_measurement.json | 2 | exp7291-reuse-fixture.reuse_fixture_ready_score == 1; exp7292-reuse-canary.reuse_canary_ready_score == 1 |
+| 7 | exp7294-reuse-audit | Independently audit source reuse safety and amortization | results/experiment_7294_v641_reuse_audit.json | 2 | exp7293-reuse-measurement.reuse_capture_complete_score == 1 |
+| 8 | exp7295-mixture-prototype | Prototype bounded delayed-feedback hypothesis mixtures | results/experiment_7295_v641_mixture_prototype.json | 3 | None |
+| 9 | exp7296-mixture-learning | Evaluate prospective self-learning under delayed labels | results/experiment_7296_v641_mixture_learning.json | 3 | exp7295-mixture-prototype.mixture_fixture_ready_score == 1 |
+| 10 | exp7297-mixture-audit | Audit feedback causality and recurrence safety independently | results/experiment_7297_v641_mixture_audit.json | 3 | exp7296-mixture-learning.mixture_capture_complete_score == 1 |
+| 11 | exp7298-snapshot-journal | Prototype persistent-journal full-snapshot acknowledgments | results/experiment_7298_v641_snapshot_journal.json | 4 | None |
+| 12 | exp7299-snapshot-cost | Measure persistent-journal latency and durable throughput | results/experiment_7299_v641_snapshot_cost.json | 4 | exp7298-snapshot-journal.snapshot_journal_ready_score == 1 |
+| 13 | exp7300-board-continuity | Record board continuity and changed-state prerequisites | results/experiment_7300_v641_board_continuity.json | 4 | None |
+| 14 | exp7301-capstone | Reconcile fourteen V641 dispositions and bounded research claims | results/experiment_7301_v641_capstone.json | 4 | None |
 
-## Phase 1: Qualified Execution and Live Evidence (Exp7219–7221)
+## Phase 1: Execution Contract and Live Self-Discovery (Exp7288–7290)
 
-Exp7219 checks the complete files, real validators, source deltas and existing
-paths. It gates no science. Exp7220 is the separately queued local vLLM XML
-canary: four tool-shaped prompts, 256 tokens each, bounded load and server
-lifetime. It uses the mandatory GGUF; absent packages/tokenizer support block
-honestly. The dated queue's AWQ suggestion does not override this request's
-GGUF mandate. Exp7221 runs one fresh adapter-withheld r11l session through the
-actual scored policy, using repaired current-session identity and raw receipts.
-One or two new inductions are plausible within 3600 seconds; ten remains a
-cumulative collection target. There is no new-solve, efficacy or submission claim.
+Exp7288 checks literal contract parity, prompt paths, prior failures, gates and
+source dispositions. It gates no science. Its control cases include missing,
+false and quarantined upstream artifacts plus mutated contract fields.
 
-## Phase 2: Source Fidelity and Verifier Value (Exp7222–7225)
+Exp7289 diagnoses the quarantined live attempt and persists event receipts at
+actual model call boundaries. Injected CPU children exercise pre-load failure,
+load-only success, in-flight timeout, unusable output, duplicate events and
+cleanup. Current model counters remain zero for this CPU diagnostic. A passing
+handoff requires the real live caller to use the lossless ledger.
 
-Exp7222 reconstructs the interrupted fixture using a recognized CPU substrate
-and unchanged artifact checks. It preserves the old quarantine and independent
-source authority. Exp7223 uses eight calibration units and separate source/claim
-calls. Its fixed readiness gate is at least seven parse-complete and six
-semantically correct units, with clean provenance. No repeated tuning is planned.
-Exp7224 measures 24 untouched base groups in four conditions, 96 total units,
-with fixed per-arm budgets and a 2700-second capture deadline. It writes raw
-checkpoints after each completion. Exp7225 independently compares direct,
-syntax-only, exact-energy and shuffled-source controls. The primary comparator
-is equal-budget direct-decision/self-consistency with a frozen tie-to-unknown
-rule; one-shot direct decisions remain secondary. Gold extraction is an
-upper bound only. The primary value gate requires positive lower paired CI95
-for accuracy, nonpositive upper CI95 for false-accept change, causal source
-controls and zero label leakage. Bootstrap bases, not correlated condition rows.
-The small pilot cannot support broad model or benchmark claims.
+Exp7290 follows that structured readiness gate. It uses the actual
+`E3AgentPolicy` selfparse path on one runtime-selected, adapter-withheld target.
+Registry checks precede target selection. The inherited session cap is 3000
+seconds including load, at most 192 actions, two completions and 4096 generated
+tokens. The load timeout is at most 600 seconds. Lower runtime limits still
+apply. One or two new inductions are plausible; ten is a cumulative evidence
+target, not a promise from one session. Hash-authenticated historical inductions
+remain separate from current calls. Policy consumption and runtime feedback
+establish method use; they do not establish broad efficacy or a hidden score.
+Any incidental solve requires `solve_provenance=live_agent_self_discovery` and
+registry novelty. The task does not submit or promote a registry entry.
 
-## Phase 3: Lossless Continuous Constraint Learning (Exp7226–7228)
+## Phase 2: Versioned Source Reuse (Exp7291–7294)
 
-Exp7226 compiles the full hypothesis vote rather than only committing singleton
-predicates. Supported-domain prediction, energy, query, tie and rollback
-semantics must match the strong reference exactly. It freezes twenty fresh
-1024-event streams, 128 warmup events each, with shared delayed-feedback and
-128-query ceilings. Exp7227 evaluates frozen, full-reference, packed, old
-committed and feedback-withheld arms. A prediction precedes label release.
-Primary learning value requires lower future error, controlled false accepts,
-recurrence retention and a causal memory effect. Zero packed/reference
-mismatches are a separate implementation condition; parity is not superiority.
-Exp7228 audits cold restore, hidden-future-label isolation and rollback even if
-the primary learning result is null. No model weights or default pipeline change.
+Exp7291 builds an opt-in cache of source compilations, never labels or answers.
+Keys bind content, source version, parser/schema and model configuration.
+Source changes invalidate the whole dependent compilation. Every distinct
+claim still receives query extraction and verification. Eight development
+groups are separate from sixteen evaluation groups. Each evaluation group
+has eight distinct claims and a revision before claim five: 128 claim units.
+The private construction oracle cannot feed extractor prompts or the cache.
 
-## Phase 4: Measured Deployment and Disposition (Exp7229–7232)
+The three arms are warm-prefix direct generation with two draws, fresh
+source/claim verification, and versioned source reuse with per-claim extraction.
+Exp7292 runs two development groups and eight claims: at most 44 generation
+calls, 128 output tokens per call, and 900 seconds including load. It qualifies
+freshness, parsing, receipts and a fair warm comparator. Failed readiness
+blocks measurement without another tuning canary.
 
-Exp7229 audits the old sampler's rare probes from authenticated saved chains;
-it cannot rescue the old gate by dropping probes or assigning ESS to constants.
-It records a fixed next measurement envelope or an infeasibility decision.
-Exp7230 ports only the packed memory core through PyO3, reusing the now-working
-interpreter recipe. It checks exact semantics before comparing full boundary
-costs for single queries and batches of 32 and 256. Positive speed requires a
-paired lower CI95 above one; NFR-01's 10x target is reported separately.
-This runs on compiler readiness even when the learning value is null.
-Exp7231 records all attached-board states. It preserves KV260 graduation,
-issues no unchanged-state GateMate operations and makes one bounded existing
-PolarFire CPU dispatch attempt to recover the missing raw transcript.
-Exp7232 independently recomputes claims, retains every blocked/null branch and
-writes concrete continue/retire/changed-prerequisite decisions.
+Exp7293 runs the frozen sixteen groups. The call ceiling is 256 direct, 256
+fresh-verifier and 160 reuse calls: 672 total, each capped at 128 output tokens.
+Capture is bounded to 2700 seconds including load. Incomplete groups remain
+censored across arms. Initialization, prefill, compilation, lookup, invalidation,
+verification and failed calls enter the complete cost. Report amortization at
+one, two, four and eight claims, with cold and steady totals separately.
+
+Exp7294 independently reconstructs raw decisions and resamples source groups
+with 10000 paired bootstrap draws. The joint gate requires zero cached/fresh
+semantic mismatches or stale serves; one-sided 95% accuracy and coverage lower
+differences versus direct of at least -0.02; no larger empirical false-accept
+count; and a full-cost speedup lower bound of at least 1.5 at eight claims.
+Cold initialization costs must pass too. Sixteen groups cannot certify rare-error
+safety. The complete audit runs even when preliminary scientific value is null.
+
+## Phase 3: Continuous Delayed-Feedback Learning (Exp7295–7297)
+
+Exp7295 implements fixed-share voting over at most four archived complete
+hypotheses plus a protected reset expert. After each revealed label, multiply
+weights by `exp(-0.5 * binary_error)`, normalize, then share 0.02 uniformly.
+Ties abstain. Nominate from already revealed labels every sixteen new labels;
+evict the lowest-weight archived expert, oldest on a tie. The V640 serialized
+archive/controller byte cap stays fixed. Reduce expert count if needed.
+
+Freeze eight development streams and 24 evaluation streams of 1024 steps:
+twelve separated and twelve overlapping recurrence streams. Warmup uses 128
+steps. Reveal 128 later labels at positions `128+7*j`, `j=0..127`, each delayed
+four steps. All arms get the same allowed schedule and nominees. Seven arms
+include fixed-share, frozen uniform voting, reset, unconditional recognition,
+shuffled-feedback fixed-share, an explicitly larger unbounded reference, and
+frozen warmup. Only bounded arms qualify for deployment comparisons.
+
+Exp7296 persists each prediction before label release and measures future
+outcomes, including the non-feedback subset. It records weights, expert births,
+evictions, labels, state hashes, bytes, latency and per-step metrics. Execution
+is capped at 1800 seconds; incomplete streams remain in the record.
+
+The frozen efficacy gate requires paired future-error upper deltas below zero
+versus reset and unconditional recognition; recurrence upper deltas versus
+frozen warmup at most 0.01 in both strata; false-accept upper deltas at most
+0.01 against each baseline; coverage lower deltas at least -0.02; and better
+true-feedback error than shuffled feedback. At least 24 later predictions must
+differ from frozen voting after changed weights. No chronology or byte violation
+is allowed. Exp7297 reconstructs all arms in a cold process and tests update,
+label, timestamp, memory and seed interventions. Same-step fitting cannot count
+as continuous learning. FR-11 remains open unless future outcomes pass.
+
+## Phase 4: Durable State, Board Continuity and Reconciliation (Exp7298–7301)
+
+Exp7298 changes storage to a single-writer SQLite full-snapshot transaction,
+with read-back verification of `journal_mode=PERSIST` and `synchronous=FULL`.
+Use the actual PyO3 controller and charge initialization. Hold V640 grouping
+at 1/4/16, maximum wait at 10 ms, and queue limits at sixteen events/65536 bytes.
+Acknowledge only after commit. Four seeded schedules test every exposed restart
+boundary, kill-during-commit, corrupt checksums, duplicate sequences and overflow.
+No missing acknowledged event, exact state parity and idempotent recovery are
+required for the readiness gate. Process kills do not prove power-loss safety.
+
+Exp7299 compares the old atomic replacement and new journal writers with eight
+seeds, identical groups and 256 events under burst, steady and interactive
+arrivals. The benchmark cap is 1800 seconds. The fixed group-16 candidate needs
+a burst throughput-ratio lower bound of at least 1.5, steady p95 acknowledgment
+at most 50 ms, and interactive-latency-ratio upper bound at most 1.05. It also
+needs exact state parity, queue compliance and zero missing acknowledged events.
+Use 10000 seed-cluster bootstrap draws. Cold costs and recovery are included;
+group 1/4 are sensitivity checks. NFR-01's original 10x target is reported
+separately and is not replaced by the pilot's 1.5x gate.
+
+Exp7300 performs the read-only, three-board audit described in the refusal
+repair. Its completeness score means three authenticated dispositions, not
+three ready boards. Missing evidence authenticity blocks the task once.
+
+Exp7301 reads thirteen outcomes plus its own disposition without structured
+gates. It independently reduces branch rows, preserves quarantines and nulls,
+records exact changed-prerequisite decisions, and computes the stable G1–G4
+publication gate. Evidence closure and scientific value remain separate fields.
+An absent or quarantined required branch is terminal `blocked`, never repeated
+`partial`. No external publication is part of this milestone.
 
 ## Dependency Graph
 
-Solid arrows below are the exact structured field gates. Dotted inputs in prose
-are historical evidence or independent optional evidence, never hidden gates.
+Arrows are the exact structured field gates. Historical artifacts are diagnostic
+inputs, not `requires` dependencies. The contract, board audit and capstone have
+no structured gates.
 
 ```mermaid
 flowchart LR
-  A[7219 advisory contract]
-  B[7220 XML canary]
-  C[7221 live ARC session]
-  D[7222 span fixture] -->|span_fixture_ready_score| E[7223 canary]
-  D -->|span_fixture_ready_score| F[7224 capture]
-  E -->|span_canary_ready_score| F
-  F -->|span_capture_complete_score| G[7225 semantic audit]
-  H[7226 belief compiler] -->|belief_compiler_ready_score| I[7227 learning]
-  I -->|belief_run_complete_score| J[7228 cold audit]
-  H -->|belief_compiler_ready_score| L[7230 native memory]
-  K[7229 rare-event audit]
-  M[7231 board continuity]
-  N[7232 ungated evidence matrix]
+  A[7288 advisory contract]
+  B[7289 ARC boundary] -->|arc_boundary_ready_score| C[7290 live selfparse]
+  D[7291 reuse fixture] -->|reuse_fixture_ready_score| E[7292 bounded canary]
+  D -->|reuse_fixture_ready_score| F[7293 reuse capture]
+  E -->|reuse_canary_ready_score| F
+  F -->|reuse_capture_complete_score| G[7294 independent audit]
+  H[7295 mixture prototype] -->|mixture_fixture_ready_score| I[7296 learning]
+  I -->|mixture_capture_complete_score| J[7297 cold audit]
+  K[7298 snapshot journal] -->|snapshot_journal_ready_score| L[7299 cost]
+  M[7300 board receipts]
+  N[7301 ungated evidence matrix]
 ```
 
-The capstone reads all fourteen task dispositions without structured gates.
-Historical Exp7208/7209/7210/7211 and prior nulls are diagnosis only, never
-`requires:` dependencies. Consumers separately reject quarantined artifacts;
-the field gate reader alone does not establish authenticity. Every comparative
-task has `per_unit_rows: true`. Every prior-failure entry names the real verdict,
-what changed and `retire_if_same_verdict: true`. No retired ID is reused.
+There are eight gate edges. Consumers independently authenticate upstream
+artifacts and reject quarantine. No gate references a retired experiment.
+Every task retains `per_unit_rows: true`, the closed `verdict_class` enum, and
+`gate_check_summary`. Every declared prior-failure entry has all four fields.
 
 ## Hardware and Runtime Requirements
 
-| Work | Hardware and memory | Budget and requirement |
+| Work | Required substrate | Measured-work budget |
 |---|---|---|
-| Exp7220 serving canary | One idle task-owned RTX 3090 on GPU 1; Qwen3.8 Q4_K_M roughly 16 GB plus measured KV headroom; installed vLLM/plugin | 40-minute estimate; 600-second load deadline; at most 1200-second server lifetime. Block on unavailable prerequisite, no install campaign. |
-| Exp7221 live session | One idle task-owned RTX 3090; existing native llama.cpp and validated KV allocation | 75-minute estimate; 3600-second session, 2400-second induction cap, 4096 completion tokens. |
-| Exp7223/7224 extraction | One idle task-owned RTX 3090; same mandated GGUF; embedded native chat template | 25/65-minute estimates; 1500/2700-second model deadlines respectively. |
-| Fixture, learning, audits | CPU and system RAM; finite hypothesis tables and raw/checkpoint disk | 20–45-minute estimates; compact tables and twenty fixed streams, no GPU dependency. |
-| Exp7230 native core | CPU, Rust/PyO3 toolchain tied to executing interpreter | 50-minute estimate; 300-second measured timing cap, scoped build. |
-| Exp7231 boards | KV260 SSH, unchanged GateMate physical receipt, PolarFire SSH/installed workload | 35-minute estimate; no GateMate operations; one PolarFire smoke <=60 seconds after <=10-second connect. |
+| Exp7290 live selfparse | Existing leased RTX 3090 and cached Qwen3.8-27B GGUF, approximately 16 GB plus measured KV headroom | 3000 s session including load; full generation class, 60 s floor |
+| Exp7292 canary | Same mandated GGUF and native loader; authenticate actual GPU offload | 900 s including load; bounded generation class, 10 s floor |
+| Exp7293 source capture | Same leased GPU and frozen model/configuration | 2700 s including load; full generation class, 60 s floor |
+| Exp7289 lifecycle fixtures | CPU and owned child processes with injected call events | No current model invocation; 45-minute task estimate |
+| Exp7295–7297 learning | CPU, system RAM, bounded archive and raw sidecar disk | 1800 s learning run; 40–50-minute task estimates |
+| Exp7298/7299 durability | Installed Rust/PyO3 toolchain, native controller, sqlite3 and local filesystem | 1800 s timing run; 50-minute task estimates |
+| Exp7300 boards | Existing authenticated KV260, PolarFire and GateMate receipts | 15-minute estimate; zero hardware commands |
+| Contract, fixture and reducers | CPU, Python environment, hash-bound inputs | Existing YAML estimates; no model dependency |
 
-The host inventory is two RTX 3090s (48 GB total) and CPU/system memory.
-Every run must recheck actual occupancy and ownership. The GPUs are not a
-single unrestricted pool: GPU 1's parser trial follows the explicit queue and
-must acquire its own lease. No task needs simultaneous model families.
-The RX 7900/NPU wishlist has stale blockers and supplies no guaranteed compute.
-Extropic Z1 is not an attached execution target. No purchase, vendor contact,
-external upload or publication is part of this milestone.
+The inventory provides two RTX 3090s, 48 GB total. Each run must check current
+occupancy and ownership; total inventory is not a free shared allocation.
+One leased GPU suffices when the actual quantization and KV footprint fit.
+The wishlist's NPU, TSU and future-board entries supply no guaranteed capacity.
+No purchase or vendor contact is required. PolarFire CPU dispatch is not FPGA
+sampling, and a host snapshot benchmark is not hardware sampler acceleration.
 
-Every prompt requires a flushed line at every phase boundary and before/after
-long calls, plus at least 60-second loop/heartbeat updates. Keep every output
-gap below 600 seconds, including during source authoring and validation.
-Estimates do not change the 4800-second hard cap. No artificial progress or
-sleep-to-floor is allowed. `model_full_generation` is reserved for real corpus
-or agent generation (60-second floor), `model_bounded_generation` for both
-canaries (10-second floor), and load-only work uses `model_load_no_generation`
-(2-second floor). CPU work uses the exact recognized CPU substrate and class;
-aggregation uses its recognized alias. Executed scope overrides intended scope.
+All fourteen prompts include a numbered flushed-progress step. Print at every
+phase boundary and before/after model load, generation, benchmark and subprocess
+calls. Print completed units and monotonic elapsed time inside long loops at
+least every 60 seconds. Blocking calls need truthful outstanding-call heartbeats.
+Every output gap stays below 600 seconds, including authoring and tests. Silence
+can kill at 1200 seconds; progress permits the 4800-second hard cap but never
+extends it. Do not sleep to satisfy a floor.
 
-## Verification and Stop Rules
+Actual execution determines substrate class. Load-only work uses
+`model_load_no_generation` (2 s); bounded generation uses
+`model_bounded_generation` (10 s); real corpus/agent generation uses
+`model_full_generation` (60 s). CPU execution uses
+`cpu_exact_solver_or_simulator`; a read-only reducer uses `aggregation` with
+`aggregation_from_upstream_artifacts`. Preserve attempted loads and generation
+on failure. Historical receipts are sidecars, not current calls.
 
-Implementation work must first add a driving REQ and meaningful failing tests.
-Use scoped unit/coverage, lint, type and spec checks. Future experiment prompts
-require applicable E2E-007 learning rollback, E2E-003/004 binding/serialization,
-E2E-009/010 ARC transport plus the real LLM-off environment smoke, and full
-source input-to-executor-to-independent-label checks. Preserve every failure.
+## Verification, Reconciliation and Stop Rules
 
-For this planning-only change, run existing roadmap schema/gate/path tests,
-activation lints, scoped spec traceability, independent Markdown/YAML parity and
-a temporary file-to-real-gate-evaluator E2E check. No implementation behavior or
-model/board experiment is claimed as tested during planning. Record check output
-in `/tmp`; reconcile the plan in `_bmad/traceability.md`, `ops/status.md` and
-`ops/changelog.md`. The active YAML and conductor source remain unchanged.
+Each implementation task first writes the relevant REQ and meaningful failing
+tests. Prompts require focused unit/coverage, Ruff, changed-module mypy and
+spec-coverage checks, then independent artifact and row validation. They require
+applicable E2E-009/010 ARC transport and memory checks, adapted E2E-007 delayed
+learning/rollback checks, E2E-003/004 native serialization, and source-to-verdict
+reconstruction. Use private temporary paths and preserve previous evidence.
 
-Positive infrastructure is not scientific value. Exact authority reused as a
-verifier requires `circular_positive`. Completed measured failure is `null`;
-external missing, gate-blocked or retired input is terminal `blocked` with the
-exact `gate_check_summary`; only unfinished own work is `partial`. New results
-never overwrite old terminal evidence. The final matrix stays useful if a
-branch stops early, and names the changed prerequisite needed before any rerun.
+For this planning-only repair, validate the real YAML schema, failure ledger,
+exclusion lint, ARC floor, prompt paths and declared gate fields. Independently
+compare all Markdown contract rows with YAML. Exercise actual `evaluate_gates`
+using temporary pass/false/missing/quarantined artifacts. Run the existing scoped
+validator tests and their spec coverage. Full GPU, board and scientific runs
+belong to the execution tasks; this plan does not claim their results.
+
+Record the repair and validation in `_bmad/traceability.md`, `ops/status.md`,
+`ops/changelog.md` and the session metrics. The active roadmap, exclusion manifest
+and `scripts/research_conductor.py` are unchanged. No push is authorized.
+
+A completed failed scientific gate is `null`; a shared-authority mechanics result
+is `circular_positive`. External absent, gate-blocked or quarantined prerequisites
+are terminal `blocked` with exact observed checks. Only unfinished work owned by
+the current task is `partial`. No repeat can silently weaken an acceptance gate,
+raise an inherited budget, reopen a retired chain or replace negative evidence.

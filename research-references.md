@@ -44402,3 +44402,32 @@ This refresh precedes the V641 experiment design. External results below are mot
 The refresh searched all eight requested arXiv themes (EBM reasoning, neural constraints, Ising ML, hallucinations, KANs, energy-guided generation, sampling hardware, and continual constraint learning), then checked OpenReview, Extropic writing, Semantic Scholar, Hugging Face Papers, GitHub, and Logical Intelligence. OpenReview's indexed EBT PDF was readable; forum access was inconsistent. GitHub's [weekly Python trending page](https://github.com/trending/python?since=weekly) rendered navigation without usable ranked results in this access path, so no trending rank is claimed; the author repositories above were checked directly.
 
 The Semantic Scholar Graph API returned **35 citation records for EBT and 8 for ARM-EBM**, with no next-page token in either response, for the requests `paper/ARXIV:<id>/citations?fields=title,year,externalIds,url&limit=100`. These are retrieved records, not a complete citation census. EBT's trail included [Revisiting Energy-based Tabular Anomaly Detection: Energy and Reconstruction are Complementary, 2608.14186](https://arxiv.org/abs/2608.14186), screened but deferred because its task differs from source verification. ARM-EBM's trail included Distributional EBMs. Primary paper pages were used for substantive claims; citation-index entries alone were not treated as experimental evidence.
+
+### V641 activation-refusal recheck — 2026-09-14 UTC
+
+Rechecked the research inputs before repairing the refused plan. The experiment
+roster remains unchanged. [GroundedCache](https://arxiv.org/abs/2605.27494),
+[CacheWeaver](https://arxiv.org/abs/2606.19667), and
+[When Validation Stops Learning](https://arxiv.org/abs/2609.10873) remain relevant
+to source freshness, fair cache comparisons, and delayed-feedback learning.
+These papers motivate experiments; they do not establish Carnot results.
+
+The eight requested arXiv themes were searched again. One retained finding is
+[KAC: Kolmogorov-Arnold Classifier for Continual Learning](https://arxiv.org/abs/2503.21076)
+(2025-03-27). Its RBF classifier is a possible future retention comparator.
+Defer it here: classifier retention does not establish constraint-memory safety,
+and this refusal repair does not add a new neural training branch.
+[HardNet++](https://arxiv.org/abs/2604.19669),
+[ETS](https://arxiv.org/abs/2601.21484), and
+[FPGA Ising decomposition](https://arxiv.org/abs/2602.15985) remain deferred under
+the mechanism and hardware boundaries above.
+
+All six secondary channels were checked again. The OpenReview EBT URL now
+returns a browser-verification challenge; the earlier readable result is
+historical, not a successful fetch in this pass. The Extropic Z1T, Hugging Face
+grounding, GitHub weekly Python, and Kona pages remain reachable. No trending
+rank, compatible Kona checkpoint, or local TSU access is inferred. Semantic
+Scholar again returned 35 EBT and eight ARM-EBM citation records with no next
+token. These retrieved counts do not establish an exhaustive citation census.
+No source update justifies repeating GateMate diagnostics without changed
+physical-state evidence.

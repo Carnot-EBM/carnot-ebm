@@ -1059,15 +1059,6 @@ tasks:
   per_unit_rows: true
   milestone: 2026.09.641
   deliverable: results/experiment_7300_v641_board_continuity.json
-  prior_failures:
-  - experiment_id: exp5166-hardware-continuity-board-timing-v473
-    verdict: complete_hardware_continuity_board_timing_gatemate:blocked_gatemate_dirtyjtag_idcode_no_speedup_claim
-    addressed_by: "Exp7286 now supplies authenticated three-board dispositions. This task hashes existing receipts and records changed-state prerequisites with zero hardware operations; it preserves the GateMate block instead of retrying DirtyJTAG timing."
-    retire_if_same_verdict: true
-  - experiment_id: exp5179-hardware-continuity-board-timing-v474
-    verdict: complete_hardware_continuity_board_timing_kv260:reachable_gatemate:blocked_gatemate_dirtyjtag_idcode_unresolved_after_diagnostics_polarfire:reachable_no_speedup_claim
-    addressed_by: "Exp7286 preserves KV260 fabric graduation and hash-matched PolarFire CPU dispatch. This task audits those receipts without repeating unresolved GateMate diagnostics; only a dated physical-state change can qualify later integration."
-    retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     KV260 fabric graduation and PolarFire hash-matched CPU dispatch remain established; PolarFire dispatch is not FPGA sampling. GateMate remains blocked on changed physical state. This read-only continuity task checks whether prerequisites changed and preserves the exact next actionable condition without repeating unchanged hardware probes.

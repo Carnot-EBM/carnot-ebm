@@ -17921,3 +17921,6 @@ code |
 | 2026-09-14 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_substrate_class age-week 0: OPEN 1 days: SILENT_NON |
 | 2026-09-14 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7267_v639_recognition_prototype.json age-week 0: OPEN 1 days: CLAIM_O |
 | 2026-09-14 00:36 UTC | V640 independent evidence matrix and next-branch d | OK | 102 passed, 1 warning in 23.65s |
+| 2026-09-14 02:18 UTC | Plan milestone 2026.09.641 | OK | 14 tasks proposed |
+| 2026-09-14 02:37 UTC | Activation REFUSED: milestone 2026.09.641 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7300-board-continuity. NEXT_ROADMAP_FILE left in place for operator inspection. |
+| 2026-09-14 02:37 UTC | Activation replan 1/2: 2026.09.641 | OK | refused roadmap quarantined to roadmap-2026.09.641-refusal1.yaml; replanning with lint report |
