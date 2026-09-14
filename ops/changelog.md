@@ -19973,3 +19973,4 @@ timed alternative is available.
 - 2026-09-14: Preserve live ARC invocation evidence across timeout boundaries (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_boundary_validation_or_control_failed; results/experiment_7289_v641_arc_boundary.json
 - 2026-09-14: Build a versioned source-compilation reuse fixture (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_fixture_ready_but_repository_full_suite_failed; results/experiment_7291_v641_reuse_fixture.json
 - 2026-09-14: Canary Qwen3.8 source reuse and warm-prefix comparators (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_canary_ready_but_repository_full_suite_failed; results/experiment_7292_v641_reuse_canary.json
+- 2026-09-14: Measure fresh-source reuse parity and end-to-end cost (⚠️ Research Finding) — honest_verdict=complete_disqualified_reuse_validation_failed; results/experiment_7293_v641_reuse_measurement.json
