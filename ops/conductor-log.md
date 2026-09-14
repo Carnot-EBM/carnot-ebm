@@ -17933,3 +17933,4 @@ code |
 | 2026-09-14 04:35 UTC | Build a versioned source-compilation reuse fixture | OK | 92 passed, 1 warning in 10.30s |
 | 2026-09-14 05:05 UTC | Canary Qwen3.8 source reuse and warm-prefix compar | OK | 93 passed, 1 warning in 7.63s |
 | 2026-09-14 05:28 UTC | Measure fresh-source reuse parity and end-to-end c | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (790s silence). Last out |
+| 2026-09-14 06:18 UTC | Measure fresh-source reuse parity and end-to-end c | OK | 87 passed, 1 warning in 7.47s |
