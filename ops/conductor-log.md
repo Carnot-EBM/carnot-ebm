@@ -17956,3 +17956,4 @@ code |
 | 2026-09-14 18:06 UTC | Measure batched source fidelity and complete infer | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7307-batch-canary.batch_canary_ready_score (actual=0 == expected=1) |
 | 2026-09-14 18:08 UTC | Independently audit batch semantics and cross-clai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7308-batch-measurement) |
 | 2026-09-14 18:34 UTC | Prototype factor-local revision from delayed const | OK | 91 passed, 1 warning in 24.62s |
+| 2026-09-14 19:58 UTC | Measure prospective continuous learning with local | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: int_dir / "eva |

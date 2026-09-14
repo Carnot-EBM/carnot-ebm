@@ -16088,3 +16088,96 @@ be reported as hardware execution or training.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7310 and SCENARIO-CL-7310-* | Implemented in `python/carnot/experiment_7310_v642_factor_prototype.py` with a thin script entrypoint: factor-owned survivor masks and retained suffixes, charged rollback, sealed independent streams, five bounded arms, mutation controls, and a default-off durable pipeline hook. | `tests/python/test_experiment_7310_v642_factor_prototype.py` (10 focused scenarios pass); scoped coverage is 844/844 statements (100%). |
+
+## REQ-CL-7311: Prospective Factor Learning On Frozen Streams
+
+Carnot SHALL measure the Exp7310 factor-local controller on only its 24 sealed
+evaluation streams. The measurement SHALL use all five frozen arms. Each arm
+SHALL make 896 post-warmup predictions per stream. Each arm SHALL receive the
+same 128 post-warmup feedback positions per stream. A prediction, state hash,
+prediction time, and abstention flag SHALL be sealed before evaluator truth or
+due feedback is read. Due feedback SHALL apply after the current prediction.
+
+The factor-local arm SHALL use the shipped, default-off pipeline hook for each
+prediction seal and transactional update. The run SHALL record every revealed
+label, factor-local byte change, before and after state hash, evidence use,
+reset scope, memory category count, and the first affected later prediction.
+Cold restart and rollback SHALL run on the same public sequence. No evaluation
+label SHALL enter controller state before its declared release index.
+
+The reducer SHALL retain overall, non-feedback, recurrence, poison, and
+stationary metrics for every stream and arm. It SHALL resample independent
+streams within each stratum with 10,000 paired bootstrap draws. It SHALL apply
+the exact Exp7310 error, false-accept, coverage, recurrence, causal-change,
+time, and byte gates without tuning. Errors and abstentions SHALL stay on the
+full denominator. Rejected and ambiguous cases SHALL remain charged.
+
+`factor_capture_complete_score` SHALL equal one only for complete chronology,
+exact row accounting, all five arms, all 107,520 post-warmup predictions,
+15,360 arm-specific future releases, complete restart and rollback controls,
+and zero owned-work censoring. `factor_value_score` SHALL equal one only when
+all frozen efficacy and safety gates pass and at least 24 later predictions
+change after due feedback. A complete efficacy failure SHALL be a terminal
+null. Shared finite evaluator authority SHALL forbid a positive verdict and
+limit favorable value evidence to `circular_positive`.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All current model load and generation counters SHALL be
+zero. Both substrate fields SHALL equal `cpu_exact_solver_or_simulator`.
+`execution_venue` SHALL equal `host`. The run SHALL mutate constraint memory
+only. It SHALL not change model weights or production defaults.
+
+### SCENARIO-CL-7311-PRECONDITIONS: Upstream And Seals Fail Closed
+
+- GIVEN the Exp7310 artifact, sealed manifest receipts, exclusions, task identity, and output paths
+- WHEN schema, terminal state, readiness, quarantine, disqualification, hashes, and ownership are checked
+- THEN any missing or failed external check produces a row-free terminal blocked artifact
+- AND `gate_check_summary` preserves the exact upstream, check, field, observed value, and expected value.
+
+### SCENARIO-CL-7311-CHRONOLOGY: Predictions Precede Truth And Feedback
+
+- GIVEN one frozen public stream and its separate authority and release views
+- WHEN every arm processes one post-warmup event
+- THEN its prediction and state receipt exist before evaluator scoring
+- AND feedback due at that index applies only after all current predictions are sealed.
+
+### SCENARIO-CL-7311-PIPELINE: Opt-In Hook Owns Learning Calls
+
+- GIVEN the default-off factor pipeline hook initialized from released warmup masks
+- WHEN the factor-local arm predicts and receives due feedback
+- THEN prediction seals and state updates use the hook's durable call surface
+- AND restart and rollback preserve the expected public-sequence behavior.
+
+### SCENARIO-CL-7311-ACCOUNTING: Every Event Label And Byte Is Counted
+
+- GIVEN 24 streams, five arms, and a fixed delayed feedback schedule
+- WHEN raw rows and update receipts are reduced
+- THEN 107,520 predictions and 15,360 arm-specific updates are present without censoring
+- AND pending, witness, deduplication, rollback, rejection, ambiguity, latency, and state bytes are charged.
+
+### SCENARIO-CL-7311-REDUCTION: Independent Strata Keep Safety Metrics
+
+- GIVEN immutable raw event and feedback rows
+- WHEN the cold reducer groups each independent stream and arm
+- THEN overall, non-feedback, recurrence, poison, and stationary metrics remain reproducible
+- AND paired 10,000-draw intervals never resample events as independent units.
+
+### SCENARIO-CL-7311-E2E: Due Feedback Changes A Later Pipeline Prediction
+
+- GIVEN a sealed pre-label prediction on the opted-in hook
+- WHEN exact feedback releases and commits transactionally
+- THEN any credited improvement uses only a later pre-label prediction
+- AND fitting the released label or changing state bytes alone earns no FR-11 progress.
+
+### SCENARIO-CL-7311-TERMINAL: Capture And Value Stay Separate
+
+- GIVEN complete prospective evidence and all frozen gate outcomes
+- WHEN the terminal scores are derived
+- THEN capture can equal one when value equals zero
+- AND a value score of one requires every efficacy and safety gate without a time or byte violation.
+
+## Implementation Status (REQ-CL-7311)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7311 and SCENARIO-CL-7311-* | Implemented in `python/carnot/experiment_7311_v642_factor_learning.py` with the thin entrypoint `scripts/experiments/experiment_7311_v642_factor_learning.py`. The run authenticates Exp7310, replays five durable hook arms on 24 sealed streams, records pre-label causal evidence, cold-reduces rows, and keeps finite-domain CPU scope explicit. | `tests/python/test_experiment_7311_v642_factor_learning.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 641/641 (100%). |
