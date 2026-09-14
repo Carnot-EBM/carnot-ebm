@@ -1,0 +1,1793 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "acceptance_gate_results": [
+    {
+      "criterion": "authenticated_current_capture",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "A mechanism result needs current model evidence and complete censoring."
+    },
+    {
+      "criterion": "tool_result_to_policy_action_chain",
+      "expected": 1,
+      "observed": 0,
+      "passed": false,
+      "principle": "Dispatch alone is not policy use; every later chain link must exist."
+    },
+    {
+      "criterion": "scoped_validation_passed",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "A failing affected check disqualifies the result without erasing evidence."
+    }
+  ],
+  "arc_capture_complete_score": 1,
+  "arc_tool_use_score": 0,
+  "cumulative_induction_ledger": {
+    "authenticated_unique_inductions": 10,
+    "evidence_goal": 10,
+    "historical_only": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/cumulative_inductions.json",
+    "remaining_gap": 0,
+    "schema": "carnot.experiment_7305.cumulative_induction_ledger.v1",
+    "sha256": "sha256:5896ecfd17cae25d41b5a0f33a425e00bdea569dec0917c392f7fbd9a6b89f45",
+    "source_receipts": [
+      {
+        "accepted_inductions": 4,
+        "arc_session_complete_score": 1,
+        "artifact_checksum_valid": true,
+        "consumed": true,
+        "observed": "available",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7206_v635_arc_volume_a.json",
+        "sha256": "sha256:349273156b96b7e27ce70b38c4c2c47de329543b8ab68b9fabcf68d01c21b07e",
+        "status": "complete"
+      },
+      {
+        "accepted_inductions": 7,
+        "arc_session_complete_score": 1,
+        "artifact_checksum_valid": true,
+        "consumed": true,
+        "observed": "available",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7207_v635_arc_volume_b.json",
+        "sha256": "sha256:1fb4fd12d4eb7a500d33fbccf97ee995f7d79d34707f677af730014d99fec00b",
+        "status": "complete"
+      },
+      {
+        "accepted_inductions": 10,
+        "arc_session_complete_score": 1,
+        "artifact_checksum_valid": true,
+        "consumed": true,
+        "observed": "available",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7221_v636_arc_session.json",
+        "sha256": "sha256:1c09dc454142b57201efa0da2d0af09b789bafdb90986d6257171472d93f03a9",
+        "status": "complete"
+      }
+    ]
+  },
+  "duration_s": 527.040554,
+  "ended_at_utc": "2026-09-14T15:35:11.353871+00:00",
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7305-arc-selfparse",
+  "field_principles": {
+    "MODEL_SPECS": "Actual current executable model identities; historical identities remain in sidecars.",
+    "acceptance_gate_results": "Every check has expected, observed, passed, and a principle explaining its purpose.",
+    "arc_capture_complete_score": "One requires authenticated current evidence and complete censoring, independent of tool success.",
+    "arc_tool_use_score": "One requires a new tool-result-to-policy-action chain; it is not a solve claim.",
+    "cumulative_induction_ledger": "Keep hash-bound historical inductions separate from current counters.",
+    "duration_s": "Measure total elapsed and disjoint phase spans including failed work.",
+    "ended_at_utc": "Keep this value explicit so the terminal record is auditable.",
+    "execution_host": "Keep this value explicit so the terminal record is auditable.",
+    "execution_venue": "Record actual host/device work; a CPU replay is not GPU or FPGA execution.",
+    "experiment_id": "Keep this value explicit so the terminal record is auditable.",
+    "field_principles": "Explain why each top-level field exists without changing its ordinary value.",
+    "gate_check_summary": "Every blocked result names upstream, check, field, observed value, and expected value.",
+    "honest_verdict": "Completed findings start complete_; external failure starts blocked_. State the finding.",
+    "inference_mode": "Keep this value explicit so the terminal record is auditable.",
+    "inference_substrate": "Describe actual computation with a recognized literal, not intended work.",
+    "inference_substrate_class": "Full generation has a 60s floor; bounded generation 10s; load-only 2s. Never pad time.",
+    "invocation_counts": "Separate attempted, completed, failed, cancelled, and in-flight loads and generations.",
+    "milestone": "Keep this value explicit so the terminal record is auditable.",
+    "model_invoked": "True for any attempted model load or generation, even when output is unusable.",
+    "new_solve_claimed": "Keep this value explicit so the terminal record is auditable.",
+    "official_score": "Remain null unless an actual official evaluation exists.",
+    "offline_reproduced": "True only after an actual replay for an incidental novel solve.",
+    "per_game_results": "Keep target, seed, actions, policy use, censoring, and runtime reachability per session.",
+    "phase_spans": "Keep this value explicit so the terminal record is auditable.",
+    "preconditions_checked": "Hash real inputs and record actual availability and failed checks.",
+    "production_default_changed": "Keep this value explicit so the terminal record is auditable.",
+    "random_seed": "Seal development and independent evaluation seeds before seeing outcomes.",
+    "registry_modified": "Keep this value explicit so the terminal record is auditable.",
+    "repository_health": "Keep this value explicit so the terminal record is auditable.",
+    "reproduced_levels": "Count only replayed novel levels, never a copied registry total.",
+    "reproducibility_checksum": "Bind code, inputs, config, model when used, and raw evidence.",
+    "rows": "Record every comparative unit with metrics, costs, errors, abstentions, and censoring.",
+    "run_date": "Use 20260914 with actual UTC start/end and monotonic phase timing.",
+    "runner_receipt": "Keep this value explicit so the terminal record is auditable.",
+    "sample_size_budget": "Keep planned, attempted, complete, and censored counts with the frozen stopping rule.",
+    "schema": "Version the record while keeping ordinary top-level experiment_id and milestone.",
+    "solve_provenance": "Use live_agent_self_discovery only for the live path and exclude transfer solves from headline credit.",
+    "source_artifact_hashes": "Authenticate producer identity, terminal class, and quarantine state.",
+    "started_at_utc": "Keep this value explicit so the terminal record is auditable.",
+    "status": "Write the terminal result only after the work and checks; checkpoints remain separate.",
+    "tool_use_chain": "Keep this value explicit so the terminal record is auditable.",
+    "validation_receipts": "Record exact commands, scope, exit codes, elapsed time, and log hashes; retain failures.",
+    "verdict_class": "Use the closed verdict enum; partial is only for unfinished work owned by this task.",
+    "verifier_is_oracle": "Shared evaluator authority permits circular_positive only, not positive scientific value."
+  },
+  "gate_check_summary": {
+    "failed_count": 0,
+    "failures": [],
+    "first_failure": null,
+    "passed": true
+  },
+  "honest_verdict": "complete_null_no_runtime_tool_result_to_policy_action_chain",
+  "inference_mode": "live_gpu",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_full_generation",
+  "invocation_counts": {
+    "generation_calls_attempted": 7,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 2,
+    "generation_calls_failed": 5,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.642",
+  "model_invoked": true,
+  "new_solve_claimed": false,
+  "official_score": null,
+  "offline_reproduced": false,
+  "per_game_results": [
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "direct_selfparse",
+      "banked_solution_disabled": true,
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 412.07646163809113
+      },
+      "disposition": "complete",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:direct_selfparse",
+      "error": "ValueError: invalid ARC evaluation provenance: null required field: lease_id; null required field: lease_hash; null required field: lease_issued_at; null required field: lease_expires_at; lease_hash must be a labeled SHA-256; lease_id must identify the live authority; lease timestamps must be timezone-aware ISO-8601",
+      "execution_order": 0,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:75422f6cdc13bb5977b9b7eb5e7534d5444624428bfc3524ab19ec8d7e9ff78d",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 169129428,
+              "observed_start_tick": 169129428,
+              "pid": 40204,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:babfb8535fde394a74910c638785fe8223fbf443d9dbb464fe922462a8ee02aa",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 1730520260914000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.00149,
+          "ended_at_utc": "2026-09-14T15:29:13+00:00",
+          "episode_id": "r11l:direct_selfparse",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14472,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_request.json",
+          "request_sha256": "sha256:b9b007a19b0ed0fadc7d0d7101347b8bf5bd23a16eacfb4d4f5989ca91ca03b7",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_response.json",
+          "response_sha256": "sha256:2e60bab0a15319fe97752fcf2a52d4f82057481c03da3c1d19d454a96ba00236",
+          "started_at_utc": "2026-09-14T15:28:15+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:43591/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 1730520260914001,
+            "temperature": 0.2
+          },
+          "duration_s": 52.605233,
+          "ended_at_utc": "2026-09-14T15:30:06+00:00",
+          "episode_id": "r11l:direct_selfparse",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7128,
+          "request_bytes": 14641,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_request.json",
+          "request_sha256": "sha256:21ca1ee4351d2ef1c4a3c87b10ff5aff8ce3ed452d8b2665dbfae2092fc5819a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_response.json",
+          "response_sha256": "sha256:ea74e155678131a160896eeba18567b1a44db7134568f5c582ff66256e708194",
+          "started_at_utc": "2026-09-14T15:29:13+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:43591/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 1730520260914,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "phase_spans": [
+    {
+      "duration_s": 8.60866039688699,
+      "phase": "preconditions"
+    },
+    {
+      "duration_s": 0.21185847697779536,
+      "phase": "target_freeze_and_history"
+    },
+    {
+      "duration_s": 466.4661217839457,
+      "phase": "live_window"
+    },
+    {
+      "duration_s": 51.1628079849761,
+      "phase": "scoped_validation"
+    },
+    {
+      "duration_s": 0.5862192770000547,
+      "phase": "terminal_validation"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results/experiment_7304_v642_arc_receipt.json"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/north-star.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_induction_tool_loop.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_inference_boundary.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/experiment_7305_v642_arc_selfparse.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "scripts/experiments/experiment_7305_v642_arc_selfparse.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "expected_value": true,
+      "field": "exists",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "tests/python/test_experiment_7305_v642_arc_selfparse.py"
+    },
+    {
+      "check": "driving_capability",
+      "expected": true,
+      "expected_value": true,
+      "field": "REQ-ARC-WMTE-7305",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "exp7304_dependency",
+      "expected": true,
+      "expected_value": true,
+      "field": "reproducibility_checksum_valid",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results/experiment_7304_v642_arc_receipt.json"
+    },
+    {
+      "check": "exp7304_caller_hash",
+      "expected": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "expected_value": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "field": "sha256",
+      "observed": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "observed_value": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "exp7304_caller_hash",
+      "expected": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "expected_value": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "field": "sha256",
+      "observed": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "observed_value": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "exp7304_caller_hash",
+      "expected": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "expected_value": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "field": "sha256",
+      "observed": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "observed_value": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_induction_tool_loop.py"
+    },
+    {
+      "check": "exp7304_caller_hash",
+      "expected": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "expected_value": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "field": "sha256",
+      "observed": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "observed_value": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "python/carnot/agentic/arc_inference_boundary.py"
+    },
+    {
+      "check": "exp7304_handoff",
+      "expected": "sha256:46996dc44e81951f6e86b9b3d06c638dd79d322794391a4791d40b0c28899e42",
+      "expected_value": "sha256:46996dc44e81951f6e86b9b3d06c638dd79d322794391a4791d40b0c28899e42",
+      "field": "handoff_sha256",
+      "observed": "sha256:46996dc44e81951f6e86b9b3d06c638dd79d322794391a4791d40b0c28899e42",
+      "observed_value": "sha256:46996dc44e81951f6e86b9b3d06c638dd79d322794391a4791d40b0c28899e42",
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results/experiment_7304_v642_arc_receipt.json"
+    },
+    {
+      "check": "exclusion_manifest",
+      "expected": false,
+      "expected_value": false,
+      "field": "exp7304_not_retired",
+      "observed": false,
+      "observed_value": false,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "output_path",
+      "expected": true,
+      "expected_value": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results"
+    },
+    {
+      "check": "output_path",
+      "expected": true,
+      "expected_value": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results/raw/experiment_7305_v642_arc_selfparse"
+    },
+    {
+      "check": "output_path",
+      "expected": true,
+      "expected_value": true,
+      "field": "owner_and_writable",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "results/checkpoints"
+    },
+    {
+      "check": "gpu_reservation",
+      "expected": true,
+      "expected_value": true,
+      "field": "idle_gpu_with_20GB",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "nvidia-smi"
+    },
+    {
+      "check": "cached_current_model",
+      "expected": true,
+      "expected_value": true,
+      "field": "Q4_K_M_path",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "unsloth/Qwen3.8-27B-GGUF"
+    },
+    {
+      "check": "embedded_tokenizer",
+      "expected": true,
+      "expected_value": true,
+      "field": "loadable",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+    },
+    {
+      "check": "native_runtime",
+      "expected": true,
+      "expected_value": true,
+      "field": "server_binary",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "llama.cpp"
+    },
+    {
+      "check": "registry_precheck_and_freeze",
+      "expected": true,
+      "expected_value": true,
+      "field": "r11l",
+      "observed": true,
+      "observed_value": true,
+      "passed": true,
+      "principle": "Reject unsafe evidence before it contributes to a score.",
+      "upstream": "ops/arc_solve_registry.yaml"
+    }
+  ],
+  "production_default_changed": false,
+  "random_seed": {
+    "development": 730520260914,
+    "independent_evaluation": 1730520260914,
+    "sealed_before_outcomes": true
+  },
+  "registry_modified": false,
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failures": [
+      {
+        "command": ".venv/bin/pytest -o addopts= tests/python -q --no-cov -n 0",
+        "exit_code": 2,
+        "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log",
+        "log_sha256": "sha256:6016a29aa53fd835cbaf1857e1f59fb2f598258edabb3b5d7f39b6ed16763d80",
+        "resolved": false,
+        "source_experiment": "exp7289-arc-boundary"
+      }
+    ]
+  },
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "sha256:32dcbd789d821b269726e072304e3a9eb46a103ef84da3c570423288bf273c00",
+  "rows": [
+    {
+      "abstentions": 1,
+      "arm": "direct_selfparse",
+      "censored": false,
+      "costs": {
+        "actions": 0,
+        "generated_tokens": 4096
+      },
+      "errors": [
+        "ValueError: invalid ARC evaluation provenance: null required field: lease_id; null required field: lease_hash; null required field: lease_issued_at; null required field: lease_expires_at; lease_hash must be a labeled SHA-256; lease_id must identify the live authority; lease timestamps must be timezone-aware ISO-8601"
+      ],
+      "metrics": {
+        "arc_tool_use_score": 0,
+        "levels": 0
+      },
+      "seed": 1730520260914,
+      "unit_id": "r11l:direct_selfparse"
+    }
+  ],
+  "run_date": "20260914",
+  "runner_receipt": {
+    "completion_limit_per_episode": 2,
+    "context_tokens": 49152,
+    "dual_gpu_runner_used": false,
+    "embedded_chat_template": true,
+    "embedded_tokenizer": true,
+    "generated_token_limit_per_episode": 4096,
+    "gpu_index": 1,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_samples": [
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [],
+        "sampled_at_utc": "2026-09-14T15:26:33+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:27:18+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:27:24+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:28:04+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:28:49+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:29:34+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:30:19+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:31:04+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:31:49+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:32:34+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:33:19+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:34:04+00:00"
+      }
+    ],
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "identity_authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+    "identity_authenticated_before_first_generation": true,
+    "identity_authentication_errors": [],
+    "identity_authentication_valid": true,
+    "identity_receipt_sha256": "sha256:babfb8535fde394a74910c638785fe8223fbf443d9dbb464fe922462a8ee02aa",
+    "kv_headroom_measurement": "idle_free_vram_before_minus_peak_task_owned_server_vram",
+    "kv_quantization": "q8_0",
+    "lease_owner": {
+      "acquired_monotonic_ns": 1691293372689756,
+      "argv_digest": "sha256:333634e1c229c42745783e09036aa6809436892dadfa0043082e31058ba4509f",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "expires_monotonic_ns": 1691834982938760,
+      "lease_id": "lease:aaf79a96f5ed324de1fb7ae7fc6dd8bc516cf44979994a26a71413ccd6c829e7",
+      "pid": 40106,
+      "pid_start_ticks": 169128411,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7305-arc-selfparse",
+      "token_digest": "sha256:2e353750b5b5f9f51e603f11f32bad7e8c72c74b4ec35c03af806497d843f0f0",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "lease_release": {
+      "checksum": "sha256:1046be0a6e1be9ad6524cdbeaecc5048bd76e617674c3cb287a3da037c0b432b",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:aaf79a96f5ed324de1fb7ae7fc6dd8bc516cf44979994a26a71413ccd6c829e7",
+      "phase": "terminal_complete",
+      "pid": 40106,
+      "pid_start_ticks": 169128411,
+      "released": true,
+      "signals_sent": []
+    },
+    "measured_kv_headroom_mb": 6068,
+    "measured_peak_owned_vram_mb": 18052,
+    "native_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "offload_layers_observed": null,
+    "offload_layers_requested": 999,
+    "parallel_slots": 1,
+    "raw_server_props": {
+      "bos_token": "<|endoftext|>",
+      "build_info": "b9606-9b4dae81f",
+      "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+      "chat_template_caps": {
+        "supports_object_arguments": true,
+        "supports_parallel_tool_calls": true,
+        "supports_preserve_reasoning": true,
+        "supports_string_content": true,
+        "supports_system_role": true,
+        "supports_tool_calls": true,
+        "supports_tools": true,
+        "supports_typed_content": false
+      },
+      "cors_proxy_enabled": false,
+      "default_generation_settings": {
+        "n_ctx": 49152,
+        "params": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": -1,
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "ignore_eos": false,
+          "lora": [],
+          "max_tokens": -1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": -1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "reasoning_format": "none",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 4294967295,
+          "speculative.types": "none",
+          "stream": false,
+          "temperature": 1.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        }
+      },
+      "endpoint_metrics": false,
+      "endpoint_props": false,
+      "endpoint_slots": true,
+      "eos_token": "<|im_end|>",
+      "is_sleeping": false,
+      "media_marker": "<__media_HyBnR7pZu6wOAazx3qGnRNk8czdNLACJ__>",
+      "modalities": {
+        "audio": false,
+        "video": false,
+        "vision": false
+      },
+      "model_alias": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "total_slots": 1,
+      "ui": true,
+      "ui_settings": {},
+      "webui": true,
+      "webui_settings": {}
+    },
+    "raw_server_props_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/raw_server_props.json",
+    "raw_server_props_sha256": "sha256:3f7641b6e38f4789b6dc01a46750e3b8ead4c2c88e065e3c7561d3dc14b3b415",
+    "runner": "LocalGGUFProposer_native_llama.cpp",
+    "server_command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "49152",
+      "--port",
+      "43591",
+      "--host",
+      "127.0.0.1",
+      "--parallel",
+      "1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "server_log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/server_logs/carnot_llama_server_logs/llama_server_p43591_1789399594.log",
+    "server_pid": 40204,
+    "server_pid_start_tick": 169129428,
+    "signals_sent": [],
+    "task_linked_cuda_execution": true,
+    "timed_out": false,
+    "tokens_per_call": 2048,
+    "vram_free_before_mb": 24120,
+    "vram_total_mb": 24576
+  },
+  "sample_size_budget": {
+    "action_limit": 192,
+    "attempted_units": 1,
+    "censored_units": 0,
+    "complete_units": 1,
+    "completion_limit": 2,
+    "generated_token_limit": 4096,
+    "model_load_limit_s": 600,
+    "outcome_based_extension": false,
+    "planned_units": 1,
+    "session_limit_s": 3000,
+    "stopping_rule": "one frozen target and seed; stop at the first inherited ceiling"
+  },
+  "schema": "carnot.experiment_7305.v642.arc_selfparse.v1",
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "terminal_class": "current_model"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:99c85dea720552b2cac7b702ba762e407620e5bf57c87fe13ca4aa9fbc8280b7",
+      "terminal_class": "input"
+    },
+    "ops/arc_solve_registry.yaml": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "terminal_class": "input"
+    },
+    "ops/e2e-test-plan.md": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+      "terminal_class": "input"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "terminal_class": "input"
+    },
+    "ops/known-issues.md": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:aba0e64467be2a888c6728eb20bd3440549cd17095c25690a9d9f756e348a9a8",
+      "terminal_class": "input"
+    },
+    "ops/north-star.md": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+      "terminal_class": "input"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "terminal_class": "input"
+    },
+    "python/carnot/agentic/arc_executable_world_model.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "terminal_class": "input"
+    },
+    "python/carnot/agentic/arc_induction_tool_loop.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "terminal_class": "input"
+    },
+    "python/carnot/agentic/arc_inference_boundary.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "terminal_class": "input"
+    },
+    "python/carnot/experiment_7305_v642_arc_selfparse.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:414c7e26e1ab27f7f5e4da57d09def8aac9d719f6fe5bf46fa9770dede60ec7c",
+      "terminal_class": "input"
+    },
+    "python/carnot/inference/sota_models.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+      "terminal_class": "input"
+    },
+    "research-program.md": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "terminal_class": "input"
+    },
+    "results/experiment_7304_v642_arc_receipt.json": {
+      "producer_identity": "exp7304-arc-receipt",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1220c1bd18340a151287037e6619dcd51614f983b549afc6434dde19f0e92b55",
+      "terminal_class": "circular_positive"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse/cumulative_inductions.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5896ecfd17cae25d41b5a0f33a425e00bdea569dec0917c392f7fbd9a6b89f45",
+      "terminal_class": "current_raw_sidecar"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse/independent_reduction_input.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:b25e62d9e2924e39ab1dedf14b411c2f40a30f4492310156eb245221b914874b",
+      "terminal_class": "current_raw_sidecar"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse/live_session.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5087ec06c4317b049a9356d94a4268838666bfe710a5db77dba6de31633e880e",
+      "terminal_class": "current_raw_sidecar"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse/receipt_events.jsonl": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a573ddb43d43c5be9ce885d287db3f8ae30b998d0dc652bfc9c6f59226bcf4fd",
+      "terminal_class": "current_raw_sidecar"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/checkpoint.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:468ed6e73eb48f79e03d2d060153a8b034de06cb384fe19c5851b9bfdb8e0000",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/cumulative_inductions.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:cf700cc67d07fb3ae31fa2cfc2e7cc48dee33e254179099a007475a85785ad9c",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/frozen_schedule.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:f3012bdd779e55b2339688c6016d70918af331625e24d2c7c1e59b9e1824f8b9",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/frozen_target.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:272d14cc625c321fab939aaee62791581c4f80b8d7c71461520c09ce96fb8dd9",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/gpu_lease/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:cd45757b8ed3418f846679bfd7f4e342eac092c480bae568e30106ff13f4ba7c",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/gpu_lease/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:510a8b511b7612feedfe04dc5a6a06ff3aae605ea87f419c630dbfa12cbeb1df",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/independent_reduction_input.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1f442a17ab6d393339958a6253b94449c86839772dcc050649a96f432e076d87",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/live_session.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:2de283be70165c4163b3ac24bf5240dd114f7e7d3ba39545c3df1b023c925c76",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/measured_terminal_candidate.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:95cf5ccfe47f8297cddcaf37d245f38b4220d91cc51da73fc7d20aed46761429",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/terminal_result.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:95cf5ccfe47f8297cddcaf37d245f38b4220d91cc51da73fc7d20aed46761429",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/terminal_validation/00_terminal_candidate_adversarial_verify.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/terminal_validation/01_terminal_candidate_row_consistency_strict.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/00_focused_exp7305.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:4e9444ccae8efa862afc18752863cf198f768a5a0ff350c0764cfb8e993f773c",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/01_affected_boundary_receipts.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:6ea6cbdd79bdf2e26170b4014433166534160bc07cae6f2d0e94e4fc7f063621",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/02_affected_live_policy.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:330648670bdbf49af0633657671ace95d18ec800ce5d04fb4a2d992f97347b9f",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/03_e2e_009_cross_call_persistence.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:dad9f7cbaac009fbb59056d3b39637bfc34f632c36a1849e5a57a84a43dc9473",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/04_e2e_010_tool_transport.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:35ca206ea5f467c63f1c448f6c79d8fcc95759c866deeddff238fc3b585ab2c5",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/05_e2e_009_llm_off_environment_smoke.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:be14fe31d37688fb425729f2909470f9f72929202a80e01e26e4f9e38cb16e58",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/06_changed_module_coverage.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5ec76c6b58d14151f1ee906666c05502a7a038da0b83252035f7e0204d82bf43",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/07_changed_module_coverage_report.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:5c1264043c89f5b231f6b30063513a43790a0eababc1b0870f20cda00245d2e1",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/08_ruff_check.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/09_ruff_format.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/10_changed_module_mypy.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/11_scoped_spec_coverage.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "results/raw/experiment_7305_v642_arc_selfparse_failed_date_override_20260914_1124/validation/12_independent_raw_reducer.log": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:0e392b88019d8dd83b9239938ab89968c49a1bdc302dd08a44bdda8c0ad56d85",
+      "terminal_class": "failed_pre_model_child_date_override_attempt"
+    },
+    "scripts/experiments/experiment_7305_v642_arc_selfparse.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:849e47a2e187e8cadfa23e954dab7f45542431feb00d54d5546d9192e8b4089f",
+      "terminal_class": "input"
+    },
+    "tests/python/test_experiment_7305_v642_arc_selfparse.py": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:8aa14edd562e71d8616d5a932b62144383ef3e6b8b7414b3479c249aa4b8d009",
+      "terminal_class": "input"
+    }
+  },
+  "started_at_utc": "2026-09-14T15:26:24.313333+00:00",
+  "status": "complete",
+  "tool_use_chain": {
+    "arc_tool_use_score": 0,
+    "policy_consumed_results": 0,
+    "results_in_later_request": 0,
+    "rows": [],
+    "subsequent_environment_actions": 0,
+    "successful_tool_results": 0
+  },
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/focused tests/python/test_experiment_7305_v642_arc_selfparse.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/focused",
+        "tests/python/test_experiment_7305_v642_arc_selfparse.py",
+        "-q"
+      ],
+      "duration_s": 2.507913458859548,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/00_focused_exp7305.log",
+      "log_sha256": "sha256:5554d7f19ac4af73e1c9afb2c5ffa67feff64d7fedca46c5de2ca3953b124695",
+      "name": "focused_exp7305",
+      "output_tail": ".......................                                                  [100%]\n23 passed in 0.86s\n",
+      "passed": true,
+      "scope": "explicit_test",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/boundary tests/python/test_experiment_7289_v641_arc_boundary.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/boundary",
+        "tests/python/test_experiment_7289_v641_arc_boundary.py",
+        "-q"
+      ],
+      "duration_s": 15.072923069819808,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/01_affected_boundary_receipts.log",
+      "log_sha256": "sha256:77d6384374a27f2efa8fd2bd2610c308acb7afe90451b6ec1da9ff83f194f6c0",
+      "name": "affected_boundary_receipts",
+      "output_tail": ".......................                                                  [100%]\n23 passed in 13.49s\n",
+      "passed": true,
+      "scope": "affected_boundary",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/policy tests/python/test_experiment_7234_v637_arc_scored_dryrun.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/policy",
+        "tests/python/test_experiment_7234_v637_arc_scored_dryrun.py",
+        "-q"
+      ],
+      "duration_s": 3.9751297880429775,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/02_affected_live_policy.log",
+      "log_sha256": "sha256:e8b66fae3b823f6b955d233a0f7475af96a0c9303668dc63de40056a2ea0ba17",
+      "name": "affected_live_policy",
+      "output_tail": ".............                                                            [100%]\n13 passed in 1.83s\n",
+      "passed": true,
+      "scope": "affected_policy",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/e2e009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/e2e009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "duration_s": 11.479782123118639,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/03_e2e_009_cross_call_persistence.log",
+      "log_sha256": "sha256:b32b02ea66671e290eb5be1275a365709029aab361530ba743da5e647e692596",
+      "name": "e2e_009_cross_call_persistence",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.63s\n",
+      "passed": true,
+      "scope": "e2e_009",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/e2e010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/e2e010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "duration_s": 9.933908730978146,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/04_e2e_010_tool_transport.log",
+      "log_sha256": "sha256:79f1d5fcd8386c3ec9940d1607a7bc968905c1df6742ab1abdb1441f04dcf942",
+      "name": "e2e_010_tool_transport",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.03s\n",
+      "passed": true,
+      "scope": "e2e_010",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7305-validation-7uuy8mc3/e2e009-llm-off.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7305-validation-7uuy8mc3/e2e009-llm-off.json"
+      ],
+      "duration_s": 3.2823540999088436,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/05_e2e_009_llm_off_environment_smoke.log",
+      "log_sha256": "sha256:428b5832a253d0da5cb2e5dd9b51ad76acdbe8e427aeea22a22019402981254f",
+      "name": "e2e_009_llm_off_environment_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-14 11:35:04 | INFO | Created new scorecard: 92b6b58e-d808-458e-850f-fa448353cabb\n2026-09-14 11:35:04 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-14 11:35:04 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7305-validation-7uuy8mc3/e2e009-llm-off.json\n",
+      "passed": true,
+      "scope": "e2e_009_llm_off_environment",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7305-validation-7uuy8mc3/.coverage '--include=*/experiment_7305_v642_arc_selfparse.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7305-validation-7uuy8mc3/coverage tests/python/test_experiment_7305_v642_arc_selfparse.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7305-validation-7uuy8mc3/.coverage",
+        "--include=*/experiment_7305_v642_arc_selfparse.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7305-validation-7uuy8mc3/coverage",
+        "tests/python/test_experiment_7305_v642_arc_selfparse.py",
+        "-q"
+      ],
+      "duration_s": 4.163899944862351,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/06_changed_module_coverage.log",
+      "log_sha256": "sha256:050e7cec819942df8f917086dcaf4a03912de88413793b4a379d5757a41bacf3",
+      "name": "changed_module_coverage",
+      "output_tail": ".......................                                                  [100%]\n23 passed in 1.66s\n",
+      "passed": true,
+      "scope": "changed_module_and_test",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7305-validation-7uuy8mc3/.coverage '--include=*/experiment_7305_v642_arc_selfparse.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7305-validation-7uuy8mc3/.coverage",
+        "--include=*/experiment_7305_v642_arc_selfparse.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.10097592207603157,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/07_changed_module_coverage_report.log",
+      "log_sha256": "sha256:9a5faf4768edcfd0118b2cdbb4cba297efdfbc4b9069510b001e1657ea1bb30e",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                        Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------\npython/carnot/experiment_7305_v642_arc_selfparse.py           303      0   100%\nscripts/experiments/experiment_7305_v642_arc_selfparse.py       3      0   100%\n-----------------------------------------------------------------------------------------\nTOTAL                                                         306      0   100%\n",
+      "passed": true,
+      "scope": "changed_module",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7305_v642_arc_selfparse.py scripts/experiments/experiment_7305_v642_arc_selfparse.py tests/python/test_experiment_7305_v642_arc_selfparse.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7305_v642_arc_selfparse.py",
+        "scripts/experiments/experiment_7305_v642_arc_selfparse.py",
+        "tests/python/test_experiment_7305_v642_arc_selfparse.py"
+      ],
+      "duration_s": 0.01201093103736639,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/08_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7305_v642_arc_selfparse.py scripts/experiments/experiment_7305_v642_arc_selfparse.py tests/python/test_experiment_7305_v642_arc_selfparse.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7305_v642_arc_selfparse.py",
+        "scripts/experiments/experiment_7305_v642_arc_selfparse.py",
+        "tests/python/test_experiment_7305_v642_arc_selfparse.py"
+      ],
+      "duration_s": 0.01121776201762259,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/09_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7305_v642_arc_selfparse.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7305_v642_arc_selfparse.py"
+      ],
+      "duration_s": 0.16072137700393796,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/10_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_module",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7305_v642_arc_selfparse.py tests/python/test_experiment_7289_v641_arc_boundary.py tests/python/test_experiment_7234_v637_arc_scored_dryrun.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7305_v642_arc_selfparse.py",
+        "tests/python/test_experiment_7289_v641_arc_boundary.py",
+        "tests/python/test_experiment_7234_v637_arc_scored_dryrun.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py"
+      ],
+      "duration_s": 0.01523127080872655,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/11_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "exact_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7305_v642_arc_selfparse.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/independent_reduction_input.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7305_v642_arc_selfparse.py",
+        "--reduce-raw",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/independent_reduction_input.json"
+      ],
+      "duration_s": 0.44311444996856153,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/validation/12_independent_raw_reducer.log",
+      "log_sha256": "sha256:f4dcbbadcc7b3c5c5a6a9cc2b79328183953e807472c66169c422194ccfef7e5",
+      "name": "independent_raw_reducer",
+      "output_tail": "{\"elapsed_s\": 0.0, \"event\": \"entrypoint\", \"phase\": \"startup\"}\n{\"arc_capture_complete_score\": 1, \"arc_tool_use_score\": 0, \"boundary_evidence_authenticated\": true, \"episode_accounted\": true, \"invocation_counts\": {\"generation_calls_attempted\": 7, \"generation_calls_cancelled\": 0, \"generation_calls_completed\": 2, \"generation_calls_failed\": 5, \"generation_calls_in_flight\": 0, \"model_loads_attempted\": 1, \"model_loads_cancelled\": 0, \"model_loads_completed\": 1, \"model_loads_failed\": 0, \"model_loads_in_flight\": 0, \"usable_answers\": 0}, \"tool_use_chain\": {\"arc_tool_use_score\": 0, \"policy_consumed_results\": 0, \"results_in_later_request\": 0, \"rows\": [], \"subsequent_environment_actions\": 0, \"successful_tool_results\": 0}, \"verdict_class\": \"null\"}\n",
+      "passed": true,
+      "scope": "raw_current_session",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.5560325141996145,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/terminal_validation/00_terminal_candidate_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "terminal_candidate_adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "measured_terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.029585683019831777,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7305_v642_arc_selfparse/terminal_validation/01_terminal_candidate_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_candidate_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "measured_terminal_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

@@ -47,9 +47,7 @@ def _episode(tmp_path: Path) -> dict[str, object]:
     request1 = tmp_path / "request1.json"
     request0.write_text(json.dumps({"messages": [{"content": "observe"}]}), encoding="utf-8")
     bounded = '<tool_response>\n{"ok": true}\n</tool_response>'
-    request1.write_text(
-        json.dumps({"messages": [{"content": bounded}]}), encoding="utf-8"
-    )
+    request1.write_text(json.dumps({"messages": [{"content": bounded}]}), encoding="utf-8")
     return {
         "episode_id": "r11l:direct_selfparse",
         "game": "r11l",
@@ -105,9 +103,7 @@ def test_req_7305_spec_and_frozen_live_contract() -> None:
     spec = (REPO / exp.SPEC_PATH).read_text(encoding="utf-8")
     assert "## REQ-ARC-WMTE-7305:" in spec
     assert "SCENARIO-ARC-WMTE-7305-TOOL-POLICY-ACTION" in spec
-    assert exp.MODEL_SPECS == [
-        {"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}
-    ]
+    assert exp.MODEL_SPECS == [{"hf_id": "unsloth/Qwen3.8-27B-GGUF", "quantization": "Q4_K_M"}]
     assert (exp.ACTION_LIMIT, exp.COMPLETION_LIMIT, exp.GENERATED_TOKEN_LIMIT) == (192, 2, 4096)
     assert (exp.SESSION_LIMIT_S, exp.MODEL_LOAD_LIMIT_S) == (3000, 600)
     assert exp.TARGET_GAME == "r11l"
@@ -161,13 +157,27 @@ def test_scenario_7305_caller_hash_mismatch_is_exact() -> None:
     ]
 
 
+def test_scenario_7305_dependency_checksum_and_missing_handoff_fail_closed() -> None:
+    """SCENARIO-ARC-WMTE-7305-DEPENDENCY-BLOCK authenticates the terminal bytes."""
+
+    dependency = {
+        "status": "complete",
+        "verdict_class": "circular_positive",
+        "arc_receipt_ready_score": 1,
+        "reproducibility_checksum": "",
+    }
+    dependency["reproducibility_checksum"] = exp.artifact_checksum(dependency)
+    assert exp.check_dependency(dependency)["passed"] is True
+    dependency.pop("reproducibility_checksum")
+    assert exp.check_dependency(dependency)["observed"] == "missing"
+    assert exp.authenticate_caller_hashes(Path("/repo"), {})[0]["observed"] == "missing"
+
+
 def test_scenario_7305_target_freezes_before_outcomes_and_withholds_adapter() -> None:
     """SCENARIO-ARC-WMTE-7305-FROZEN-LIVE-SESSION uses registry metadata only."""
 
     registry = {
-        "games": [
-            {"game": "r11l", "reproducibility": "reproduced", "levels_reproduced": 6}
-        ]
+        "games": [{"game": "r11l", "reproducibility": "reproduced", "levels_reproduced": 6}]
     }
     receipt = exp.freeze_target(registry, adaptered_games={"r11l"})
 
@@ -269,6 +279,19 @@ def test_scenario_7305_missing_chain_link_is_null(tmp_path: Path, mutation: str)
     assert chain["rows"][0]["passed"] is False
 
 
+def test_scenario_7305_malformed_request_and_non_text_content_are_not_delivery(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7305-TOOL-POLICY-ACTION rejects unreadable delivery evidence."""
+
+    episode = _episode(tmp_path)
+    request = Path(episode["raw_request_manifest"][1]["request_path"])
+    request.write_text("not json", encoding="utf-8")
+    assert exp.reduce_tool_use_chain(episode, _tool_events())["results_in_later_request"] == 0
+    request.write_text(json.dumps({"messages": [{"content": 7}]}), encoding="utf-8")
+    assert exp.reduce_tool_use_chain(episode, _tool_events())["results_in_later_request"] == 0
+
+
 def test_scenario_7305_historical_ledger_rejects_quarantine_and_deduplicates(
     tmp_path: Path,
 ) -> None:
@@ -285,9 +308,7 @@ def test_scenario_7305_historical_ledger_rejects_quarantine_and_deduplicates(
         "status": "complete",
         "arc_session_complete_score": 1,
         "flagged_adversarial": True,
-        "cumulative_induction_rows": [
-            {"induction_id": "sha256:" + "b" * 64, "engaged": True}
-        ],
+        "cumulative_induction_rows": [{"induction_id": "sha256:" + "b" * 64, "engaged": True}],
     }
     clean_path = tmp_path / "clean.json"
     rejected_path = tmp_path / "rejected.json"
@@ -295,9 +316,9 @@ def test_scenario_7305_historical_ledger_rejects_quarantine_and_deduplicates(
     rejected_path.write_text(json.dumps(rejected), encoding="utf-8")
 
     ledger = exp.build_cumulative_ledger(
-        tmp_path / "ledger.json", [clean_path, rejected_path], quarantine_check=lambda p: bool(
-            p.get("flagged_adversarial")
-        )
+        tmp_path / "ledger.json",
+        [clean_path, rejected_path],
+        quarantine_check=lambda p: bool(p.get("flagged_adversarial")),
     )
 
     assert ledger["authenticated_unique_inductions"] == 1
@@ -306,6 +327,59 @@ def test_scenario_7305_historical_ledger_rejects_quarantine_and_deduplicates(
     assert ledger["source_receipts"][0]["consumed"] is True
     assert ledger["source_receipts"][1]["observed"] == "quarantined"
     assert ledger["source_receipts"][1]["consumed"] is False
+
+
+def test_scenario_7305_historical_ledger_rejects_other_unsafe_shapes(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7305-CUMULATIVE-SEPARATION rejects malformed history."""
+
+    missing = tmp_path / "missing.json"
+    non_object = tmp_path / "non_object.json"
+    incomplete = tmp_path / "incomplete.json"
+    invalid_checksum = tmp_path / "invalid_checksum.json"
+    missing_rows = tmp_path / "missing_rows.json"
+    mixed_rows = tmp_path / "mixed_rows.json"
+    non_object.write_text("[]", encoding="utf-8")
+    incomplete.write_text(json.dumps({"status": "running"}), encoding="utf-8")
+    invalid_checksum.write_text(
+        json.dumps(
+            {
+                "status": "complete",
+                "arc_session_complete_score": 1,
+                "reproducibility_checksum": "sha256:" + "0" * 64,
+                "cumulative_induction_rows": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    missing_rows.write_text(
+        json.dumps({"status": "complete", "arc_session_complete_score": 1}),
+        encoding="utf-8",
+    )
+    mixed_rows.write_text(
+        json.dumps(
+            {
+                "status": "complete",
+                "arc_session_complete_score": 1,
+                "cumulative_induction_rows": ["bad", {"engaged": False}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    ledger = exp.build_cumulative_ledger(
+        tmp_path / "ledger.json",
+        [missing, non_object, incomplete, invalid_checksum, missing_rows, mixed_rows],
+    )
+
+    assert [row["observed"] for row in ledger["source_receipts"]] == [
+        "missing_or_unreadable",
+        "missing_or_unreadable",
+        "nonterminal_or_incomplete",
+        "checksum_invalid",
+        "induction_rows_missing",
+        "available",
+    ]
+    assert ledger["authenticated_unique_inductions"] == 0
 
 
 def test_scenario_7305_reduction_separates_capture_and_mechanism(tmp_path: Path) -> None:
@@ -355,7 +429,9 @@ def test_scenario_7305_terminal_artifact_validates_and_block_is_terminal(tmp_pat
     assert artifact["verdict_class"] == "circular_positive"
     assert exp.validate_artifact(artifact) == []
 
-    failed = exp.gate_check("dependency_gate", exp.EXP7304_PATH.as_posix(), "status", "complete", "missing")
+    failed = exp.gate_check(
+        "dependency_gate", exp.EXP7304_PATH.as_posix(), "status", "complete", "missing"
+    )
     blocked = exp.build_blocked_artifact(
         started_at_utc="2026-09-14T00:00:00+00:00",
         ended_at_utc="2026-09-14T00:00:01+00:00",
@@ -370,7 +446,97 @@ def test_scenario_7305_terminal_artifact_validates_and_block_is_terminal(tmp_pat
     assert exp.validate_artifact(blocked) == []
 
 
-def test_req_7305_validation_plan_and_thin_entrypoint(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_scenario_7305_terminal_validator_rejects_inconsistent_claims(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7305-TERMINAL-PUBLICATION rejects contradictory claims."""
+
+    episode = _episode(tmp_path)
+    selection = exp.freeze_target(
+        {"games": [{"game": "r11l", "reproducibility": "reproduced"}]},
+        adaptered_games=set(),
+    )
+    boundary = _boundary()
+    boundary["call_rows"] = [
+        {
+            "model_identity": {
+                "model_repository": exp.MODEL_ID,
+                "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                "model_revision": "a" * 40,
+                "model_path": "/cache/Qwen3.8-27B-Q4_K_M.gguf",
+            }
+        }
+    ]
+    complete = exp.build_terminal_artifact(
+        started_at_utc="2026-09-14T00:00:00+00:00",
+        ended_at_utc="2026-09-14T00:02:00+00:00",
+        duration_s=120.0,
+        preconditions=[exp.gate_check("fixture", "test", "ready", True, True)],
+        source_hashes={},
+        selection=selection,
+        episode=episode,
+        boundary=boundary,
+        runner={"task_linked_cuda_execution": True},
+        tool_events=_tool_events(),
+        cumulative_ledger={},
+        validation_receipts=[],
+        phase_spans=[],
+    )
+    assert complete["MODEL_SPECS"][0]["model_revision"] == "a" * 40
+    failed_validation = exp.build_terminal_artifact(
+        started_at_utc="2026-09-14T00:00:00+00:00",
+        ended_at_utc="2026-09-14T00:02:00+00:00",
+        duration_s=120.0,
+        preconditions=[exp.gate_check("fixture", "test", "ready", True, True)],
+        source_hashes={},
+        selection=selection,
+        episode=episode,
+        boundary=boundary,
+        runner={"task_linked_cuda_execution": True},
+        tool_events=_tool_events(),
+        cumulative_ledger={},
+        validation_receipts=[{"passed": False}],
+        phase_spans=[],
+    )
+    assert failed_validation["verdict_class"] == "disqualified"
+    assert failed_validation["acceptance_gate_results"][-1]["passed"] is False
+
+    mutations = [
+        ("schema", "bad", "identity_mismatch"),
+        ("run_date", "bad", "run_date_mismatch"),
+        ("status", "running", "status_not_terminal"),
+        ("verdict_class", "unknown", "verdict_class_invalid"),
+        ("honest_verdict", "bad", "honest_verdict_prefix_invalid"),
+        ("field_principles", {}, "field_principles_incomplete"),
+        ("official_score", 1, "official_score_must_be_null"),
+        ("registry_modified", True, "forbidden_state_change"),
+        ("per_game_results", [], "episode_accounting_invalid"),
+        ("arc_capture_complete_score", 0, "capture_score_inconsistent"),
+        ("arc_tool_use_score", 0, "tool_score_inconsistent"),
+        ("duration_s", 1, "substrate_duration_floor_failed"),
+    ]
+    for field, value, expected_error in mutations:
+        changed = deepcopy(complete)
+        changed[field] = value
+        assert expected_error in exp.validate_artifact(changed)
+
+    failed = exp.gate_check("dependency", "upstream", "ready", True, False)
+    blocked = exp.build_blocked_artifact(
+        started_at_utc="2026-09-14T00:00:00+00:00",
+        ended_at_utc="2026-09-14T00:00:01+00:00",
+        duration_s=1,
+        preconditions=[failed],
+        source_hashes={},
+    )
+    invoked = deepcopy(blocked)
+    invoked["model_invoked"] = True
+    assert "blocked_invocation_evidence_invalid" in exp.validate_artifact(invoked)
+    no_failure = deepcopy(blocked)
+    no_failure["gate_check_summary"]["first_failure"] = None
+    assert "blocked_failure_summary_missing" in exp.validate_artifact(no_failure)
+
+
+def test_req_7305_validation_plan_and_thin_entrypoint(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """REQ-ARC-WMTE-7305 scopes checks, E2E, strict lint, and the wrapper."""
 
     commands = exp.build_validation_commands(

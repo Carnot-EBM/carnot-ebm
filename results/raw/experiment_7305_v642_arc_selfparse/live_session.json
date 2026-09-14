@@ -1,0 +1,660 @@
+{
+  "duration_s": 463.5258537889458,
+  "episodes": [
+    {
+      "abstention": false,
+      "action_cost": 0,
+      "action_count": 0,
+      "action_limit": 192,
+      "adapter_disabled": true,
+      "arm": "direct_selfparse",
+      "candidate_valid": false,
+      "censored": false,
+      "compute_cost": {
+        "wall_s": 412.07646163809113
+      },
+      "disposition": "complete",
+      "elapsed_cap_s": 3000,
+      "episode_id": "r11l:direct_selfparse",
+      "error": "ValueError: invalid ARC evaluation provenance: null required field: lease_id; null required field: lease_hash; null required field: lease_issued_at; null required field: lease_expires_at; lease_hash must be a labeled SHA-256; lease_id must identify the live authority; lease timestamps must be timezone-aware ISO-8601",
+      "execution_order": 0,
+      "fresh_store": true,
+      "game": "r11l",
+      "generated_tokens": 4096,
+      "generation_calls_attempted": 2,
+      "generation_calls_completed": 2,
+      "heldout_accuracy": null,
+      "identity_baseline_accuracy": null,
+      "identity_obligation_rows": [
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "/props.model_path and absolute /props candidates",
+          "obligation": "absolute_raw_report",
+          "observed": {
+            "conflicting_absolute_fields": false,
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "requested path and /props.model_path strict resolution",
+          "obligation": "path_resolution",
+          "observed": {
+            "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+          "obligation": "selected_snapshot_relation",
+          "observed": "snapshot_alias",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "launch -m argument and /props.model_path",
+          "obligation": "launch_report_agreement",
+          "observed": {
+            "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+          "obligation": "content_hash",
+          "observed": {
+            "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "hub",
+          "observed": "unsloth/Qwen3.8-27B-GGUF",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected snapshot directory",
+          "obligation": "revision",
+          "observed": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "selected file name and raw report aliases",
+          "obligation": "requested_filename",
+          "observed": "Qwen3.8-27B-Q4_K_M.gguf",
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed": {
+            "captured_target": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "observed_device": 64770,
+            "observed_inode": 5370618110,
+            "observed_nlink": 2,
+            "requested_device": 64770,
+            "requested_inode": 5370618110,
+            "requested_nlink": 2
+          },
+          "status": "supported"
+        },
+        {
+          "authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+          "authenticated_before_first_generation": true,
+          "episode_id": "r11l:direct_selfparse",
+          "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+          "obligation": "source_provenance",
+          "observed": {
+            "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "raw_report_sha256": "sha256:75422f6cdc13bb5977b9b7eb5e7534d5444624428bfc3524ab19ec8d7e9ff78d",
+            "requested_path_fingerprint": {
+              "link_device": 64770,
+              "link_inode": 6444907433,
+              "link_mode": 41471,
+              "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+              "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+              "target_device": 64770,
+              "target_inode": 5370618110,
+              "target_mode": 33188,
+              "target_nlink": 2,
+              "target_size": 17106775008
+            },
+            "runtime_process": {
+              "launch_start_tick": 169129428,
+              "observed_start_tick": 169129428,
+              "pid": 40204,
+              "supported": true
+            },
+            "source_artifact_hash": null,
+            "source_artifact_path": null,
+            "source_kind": "live_server_props",
+            "source_reproducibility_checksum": null
+          },
+          "status": "supported"
+        }
+      ],
+      "identity_receipt_sha256": "sha256:babfb8535fde394a74910c638785fe8223fbf443d9dbb464fe922462a8ee02aa",
+      "installed_plans": 0,
+      "levels": 0,
+      "model_invoked": true,
+      "model_loaded": true,
+      "model_planned_actions": 0,
+      "non_identity_predictions": 0,
+      "policy_consumption_rows": [],
+      "raw_request_manifest": [
+        {
+          "call_index": 0,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 1730520260914000,
+            "temperature": 0.2
+          },
+          "duration_s": 58.00149,
+          "ended_at_utc": "2026-09-14T15:29:13+00:00",
+          "episode_id": "r11l:direct_selfparse",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7094,
+          "request_bytes": 14472,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_request.json",
+          "request_sha256": "sha256:b9b007a19b0ed0fadc7d0d7101347b8bf5bd23a16eacfb4d4f5989ca91ca03b7",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_response.json",
+          "response_sha256": "sha256:2e60bab0a15319fe97752fcf2a52d4f82057481c03da3c1d19d454a96ba00236",
+          "started_at_utc": "2026-09-14T15:28:15+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:43591/v1/chat/completions",
+          "usable_answer": false
+        },
+        {
+          "call_index": 1,
+          "completion_tokens": 2048,
+          "decoding_parameters": {
+            "max_tokens": 2048,
+            "seed": 1730520260914001,
+            "temperature": 0.2
+          },
+          "duration_s": 52.605233,
+          "ended_at_utc": "2026-09-14T15:30:06+00:00",
+          "episode_id": "r11l:direct_selfparse",
+          "error": null,
+          "finish_reason": "length",
+          "prompt_tokens": 7128,
+          "request_bytes": 14641,
+          "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_request.json",
+          "request_sha256": "sha256:21ca1ee4351d2ef1c4a3c87b10ff5aff8ce3ed452d8b2665dbfae2092fc5819a",
+          "requested_max_tokens": 2048,
+          "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_response.json",
+          "response_sha256": "sha256:ea74e155678131a160896eeba18567b1a44db7134568f5c582ff66256e708194",
+          "started_at_utc": "2026-09-14T15:29:13+00:00",
+          "transport_completed": true,
+          "url": "http://127.0.0.1:43591/v1/chat/completions",
+          "usable_answer": false
+        }
+      ],
+      "seed": 1730520260914,
+      "trust_accepted": false,
+      "usable_answers": 0
+    }
+  ],
+  "error": null,
+  "model_invoked": true,
+  "model_loaded": true,
+  "model_spec": {
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "model_file_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "quantization": "Q4_K_M",
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+  },
+  "phase_spans": [
+    {
+      "duration_s": 50.594335101079196,
+      "phase": "model_load"
+    }
+  ],
+  "requests": [
+    {
+      "call_index": 0,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 1730520260914000,
+        "temperature": 0.2
+      },
+      "duration_s": 58.00149,
+      "ended_at_utc": "2026-09-14T15:29:13+00:00",
+      "episode_id": "r11l:direct_selfparse",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 7094,
+      "request_bytes": 14472,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_request.json",
+      "request_sha256": "sha256:b9b007a19b0ed0fadc7d0d7101347b8bf5bd23a16eacfb4d4f5989ca91ca03b7",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/00_response.json",
+      "response_sha256": "sha256:2e60bab0a15319fe97752fcf2a52d4f82057481c03da3c1d19d454a96ba00236",
+      "started_at_utc": "2026-09-14T15:28:15+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:43591/v1/chat/completions",
+      "usable_answer": false
+    },
+    {
+      "call_index": 1,
+      "completion_tokens": 2048,
+      "decoding_parameters": {
+        "max_tokens": 2048,
+        "seed": 1730520260914001,
+        "temperature": 0.2
+      },
+      "duration_s": 52.605233,
+      "ended_at_utc": "2026-09-14T15:30:06+00:00",
+      "episode_id": "r11l:direct_selfparse",
+      "error": null,
+      "finish_reason": "length",
+      "prompt_tokens": 7128,
+      "request_bytes": 14641,
+      "request_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_request.json",
+      "request_sha256": "sha256:21ca1ee4351d2ef1c4a3c87b10ff5aff8ce3ed452d8b2665dbfae2092fc5819a",
+      "requested_max_tokens": 2048,
+      "response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/r11l__direct_selfparse/requests/01_response.json",
+      "response_sha256": "sha256:ea74e155678131a160896eeba18567b1a44db7134568f5c582ff66256e708194",
+      "started_at_utc": "2026-09-14T15:29:13+00:00",
+      "transport_completed": true,
+      "url": "http://127.0.0.1:43591/v1/chat/completions",
+      "usable_answer": false
+    }
+  ],
+  "runtime_receipt": {
+    "completion_limit_per_episode": 2,
+    "context_tokens": 49152,
+    "dual_gpu_runner_used": false,
+    "embedded_chat_template": true,
+    "embedded_tokenizer": true,
+    "generated_token_limit_per_episode": 4096,
+    "gpu_index": 1,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_samples": [
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [],
+        "sampled_at_utc": "2026-09-14T15:26:33+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:27:18+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:27:24+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18030
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:28:04+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:28:49+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:29:34+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:30:19+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:31:04+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:31:49+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:32:34+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:33:19+00:00"
+      },
+      {
+        "gpu_index": 1,
+        "owned_compute_apps": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40204,
+            "used_memory_mb": 18052
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 40172,
+            "used_memory_mb": 536
+          }
+        ],
+        "sampled_at_utc": "2026-09-14T15:34:04+00:00"
+      }
+    ],
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "identity_authenticated_at_utc": "2026-09-14T15:27:24+00:00",
+    "identity_authenticated_before_first_generation": true,
+    "identity_authentication_errors": [],
+    "identity_authentication_valid": true,
+    "identity_receipt_sha256": "sha256:babfb8535fde394a74910c638785fe8223fbf443d9dbb464fe922462a8ee02aa",
+    "kv_headroom_measurement": "idle_free_vram_before_minus_peak_task_owned_server_vram",
+    "kv_quantization": "q8_0",
+    "lease_owner": {
+      "acquired_monotonic_ns": 1691293372689756,
+      "argv_digest": "sha256:333634e1c229c42745783e09036aa6809436892dadfa0043082e31058ba4509f",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "expires_monotonic_ns": 1691834982938760,
+      "lease_id": "lease:aaf79a96f5ed324de1fb7ae7fc6dd8bc516cf44979994a26a71413ccd6c829e7",
+      "pid": 40106,
+      "pid_start_ticks": 169128411,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7305-arc-selfparse",
+      "token_digest": "sha256:2e353750b5b5f9f51e603f11f32bad7e8c72c74b4ec35c03af806497d843f0f0",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "lease_release": {
+      "checksum": "sha256:1046be0a6e1be9ad6524cdbeaecc5048bd76e617674c3cb287a3da037c0b432b",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:aaf79a96f5ed324de1fb7ae7fc6dd8bc516cf44979994a26a71413ccd6c829e7",
+      "phase": "terminal_complete",
+      "pid": 40106,
+      "pid_start_ticks": 169128411,
+      "released": true,
+      "signals_sent": []
+    },
+    "measured_kv_headroom_mb": 6068,
+    "measured_peak_owned_vram_mb": 18052,
+    "native_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "offload_layers_observed": null,
+    "offload_layers_requested": 999,
+    "parallel_slots": 1,
+    "raw_server_props": {
+      "bos_token": "<|endoftext|>",
+      "build_info": "b9606-9b4dae81f",
+      "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+      "chat_template_caps": {
+        "supports_object_arguments": true,
+        "supports_parallel_tool_calls": true,
+        "supports_preserve_reasoning": true,
+        "supports_string_content": true,
+        "supports_system_role": true,
+        "supports_tool_calls": true,
+        "supports_tools": true,
+        "supports_typed_content": false
+      },
+      "cors_proxy_enabled": false,
+      "default_generation_settings": {
+        "n_ctx": 49152,
+        "params": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": -1,
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "ignore_eos": false,
+          "lora": [],
+          "max_tokens": -1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": -1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "reasoning_format": "none",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 4294967295,
+          "speculative.types": "none",
+          "stream": false,
+          "temperature": 1.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        }
+      },
+      "endpoint_metrics": false,
+      "endpoint_props": false,
+      "endpoint_slots": true,
+      "eos_token": "<|im_end|>",
+      "is_sleeping": false,
+      "media_marker": "<__media_HyBnR7pZu6wOAazx3qGnRNk8czdNLACJ__>",
+      "modalities": {
+        "audio": false,
+        "video": false,
+        "vision": false
+      },
+      "model_alias": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "total_slots": 1,
+      "ui": true,
+      "ui_settings": {},
+      "webui": true,
+      "webui_settings": {}
+    },
+    "raw_server_props_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/raw_server_props.json",
+    "raw_server_props_sha256": "sha256:3f7641b6e38f4789b6dc01a46750e3b8ead4c2c88e065e3c7561d3dc14b3b415",
+    "runner": "LocalGGUFProposer_native_llama.cpp",
+    "server_command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "49152",
+      "--port",
+      "43591",
+      "--host",
+      "127.0.0.1",
+      "--parallel",
+      "1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "server_log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7305_v642_arc_selfparse/server_logs/carnot_llama_server_logs/llama_server_p43591_1789399594.log",
+    "server_pid": 40204,
+    "server_pid_start_tick": 169129428,
+    "signals_sent": [],
+    "task_linked_cuda_execution": true,
+    "timed_out": false,
+    "tokens_per_call": 2048,
+    "vram_free_before_mb": 24120,
+    "vram_total_mb": 24576
+  },
+  "timed_out": false
+}
