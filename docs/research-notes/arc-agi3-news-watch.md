@@ -294,3 +294,13 @@ CHECK_TIMED_OUT
 
 Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intelligence to fourth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-14 13:14 UTC -- NEW
+
+- Tufa Labs has taken #1 at 18.81%; Lord Han Solo is now #3 at 8.44%, while NVARC3 and Third Intelligence have moved to #4 at 8.40% and #5 at 8.21%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- ARC Prize reported GPT-6 Astra scoring 62.7% on Semi-Private with the Standard harness and 99.9% with a Provider Adapter harness. Future verified leaderboard results will label these harness types separately. [ARC Prize announcement](https://arcprize.org/blog/astra)
+
+- The host clarified that final-selected notebooks will not be rerun: private scores are fixed during each submission’s original run. Every run plays both hidden datasets, although only the public half affects the visible leaderboard. [Kaggle clarification](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- Kaggle acknowledged RTX 6000 capacity constraints in August; on September 10 it said the queue backups had cleared and confirmed that a submission shown as “queued” after finishing/scoring is experiencing a display glitch—the score remains valid. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/739674)
+
