@@ -1,0 +1,34 @@
+{
+  "arguments": [
+    "--date",
+    "20260914"
+  ],
+  "caller_code_hashes": {
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+    "python/carnot/agentic/arc_inference_boundary.py": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0"
+  },
+  "caller_reachability": {
+    "identity_rejection_preserved": true,
+    "load_boundary_reachable": true,
+    "selfparse_transport_reachable": true
+  },
+  "entrypoint": "scripts/experiments/experiment_7305_v642_arc_selfparse.py",
+  "environment": {
+    "CARNOT_ARC_BOUNDARY_LEDGER_PATH": "results/raw/experiment_7305_v642_arc_selfparse/receipt_events.jsonl",
+    "CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse"
+  },
+  "handoff_sha256": "sha256:46996dc44e81951f6e86b9b3d06c638dd79d322794391a4791d40b0c28899e42",
+  "load_caller": "carnot.agentic.arc_executable_world_model.LocalGGUFProposer._ensure_server",
+  "production_default_changed": false,
+  "selfparse_call_arguments": {
+    "grammar": null,
+    "messages": "current frozen tool-loop messages",
+    "selfparse": true,
+    "timeout_s": "minimum of proposer timeout and remaining bounded session time",
+    "tools_payload": null,
+    "turn": "current zero-based tool-loop turn"
+  },
+  "selfparse_caller": "carnot.agentic.arc_induction_tool_loop._post_chat"
+}

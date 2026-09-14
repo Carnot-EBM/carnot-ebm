@@ -32287,6 +32287,75 @@ through the real wrapper and caller seams.
 Implementation status: specified 2026-09-14. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7304: Keep model-shaped receipt evidence outside the current artifact
+
+Experiment 7304 SHALL authenticate the unchanged Experiment 7289 terminal artifact,
+its adversarial-verifier log, and the Experiment 7303 validation-scope artifact before
+it consumes any readiness score. It SHALL reject a missing, quarantined, disqualified,
+nonterminal, or numerically unready dependency. An external dependency failure SHALL
+produce a terminal `blocked_*` result. Its `gate_check_summary` SHALL retain the exact
+upstream, check, field, observed value, and expected value.
+
+The experiment SHALL reuse the shipped durable boundary ledger and the actual load and
+selfparse caller seams with CPU scripted transports. It SHALL exercise pre-load failure,
+load-only completion, in-flight generation timeout, completed unusable output, duplicate
+events, identity rejection, owned-child cleanup, sidecar tampering, and a missing-event
+control. It SHALL not change model identity validation, historical quarantine, request
+payloads, budgets, supervisor settings, or the authenticity classifier.
+
+All fixture, injected, and historical invocation-shaped event bytes SHALL remain in
+hash-bound sidecars. The terminal artifact SHALL contain only CPU control outcomes and
+sidecar references. It SHALL contain no nested attempted, completed, failed, cancelled,
+or in-flight model counters, model invocation booleans, call rows, event payloads, or
+model identities. Its current `MODEL_SPECS` SHALL be empty. Its current `model_invoked`
+SHALL be false. All current load and generation counters SHALL be zero. Both substrate
+fields SHALL equal `cpu_exact_solver_or_simulator`, and `execution_venue` SHALL equal
+`host`.
+
+`arc_receipt_ready_score` SHALL equal one only when all lifecycle and sidecar integrity
+controls pass, no owned child survives, both live caller seams are reachable, Experiment
+7303 is ready, historical quarantine remains intact, and the unchanged terminal
+verifiers pass. The receipt SHALL hash the reachable caller and exact selfparse arguments
+for Experiment 7305. It SHALL write the terminal result atomically after validation.
+
+### SCENARIO-ARC-WMTE-7304-DEPENDENCY-BLOCK
+
+- GIVEN a dependency that is missing, quarantined, disqualified, nonterminal, or unready
+- WHEN Experiment 7304 authenticates its inputs
+- THEN it publishes a terminal blocked receipt without running the CPU panel
+- AND `gate_check_summary` retains the exact failed comparison.
+
+### SCENARIO-ARC-WMTE-7304-LIFECYCLE-CONTROLS
+
+- GIVEN the shipped boundary ledger and CPU-only scripted transports
+- WHEN all lifecycle cases run through the durable boundary and real caller seams
+- THEN each case retains its true completed or in-flight state in a hashed sidecar
+- AND duplicates do not add calls and no owned child survives cleanup.
+
+### SCENARIO-ARC-WMTE-7304-SIDECAR-INTEGRITY
+
+- GIVEN authentic fixture sidecars plus tampered and missing-event controls
+- WHEN the receipt reducer verifies their hashes and expected event counts
+- THEN authentic sidecars pass and both negative controls fail closed
+- AND no invocation-shaped event payload enters the terminal artifact.
+
+### SCENARIO-ARC-WMTE-7304-CURRENT-PROVENANCE
+
+- GIVEN historical and injected invocation events stored only in sidecars
+- WHEN the terminal artifact declares CPU-only current work
+- THEN the unchanged verifier accepts the clean artifact
+- AND it still rejects a contradictory control that claims a current invocation.
+
+### SCENARIO-ARC-WMTE-7304-CALLER-HANDOFF
+
+- GIVEN reachable production load and selfparse call sites
+- WHEN Experiment 7304 builds the next-experiment handoff
+- THEN it binds the Experiment 7305 caller path, exact arguments, environment, and code hashes
+- AND it changes no production default.
+
+Implementation status: specified 2026-09-14. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition

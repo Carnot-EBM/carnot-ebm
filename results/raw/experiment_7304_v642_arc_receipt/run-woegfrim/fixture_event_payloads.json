@@ -1,0 +1,488 @@
+{
+  "all_controls_passed": true,
+  "rows": [
+    {
+      "abstention": false,
+      "case": "pre_load_failure",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.515584
+      },
+      "counter_reduction": {
+        "activity_known": false,
+        "call_rows": [
+          {
+            "call_id": "pre-load",
+            "child_pid": null,
+            "ended_monotonic_ns": 1688185669935855,
+            "error": "injected pre-load failure",
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": ""
+            },
+            "operation": "model_load",
+            "owner_pid": 20611,
+            "started_monotonic_ns": 1688185669221563,
+            "terminal_state": "failed",
+            "usable": null
+          }
+        ],
+        "disqualified": true,
+        "duplicate_event_count": 0,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ],
+        "inference_substrate": "disqualified_unknown_activity",
+        "invocation_counts": null,
+        "model_invoked": null,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "disqualified": true,
+        "model_revision_missing": true
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": true,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/pre_load_failure.jsonl",
+      "ledger_sha256": "sha256:7dd6fdc405bc996b6fbd22b27c3954193e997eea4ee12f9467e3abc0df9dcd86",
+      "metric": 1,
+      "observed": {
+        "disqualified": true,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ]
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 2,
+      "seed": 728920260915,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "load_no_generation",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465613
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "load-only",
+            "child_pid": 20635,
+            "ended_monotonic_ns": 1688186122411057,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 20635,
+            "started_monotonic_ns": 1688186120284912,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 0,
+        "model_loads_completed": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/load_no_generation.jsonl",
+      "ledger_sha256": "sha256:38767cbd328ed02895fd6678983bd09946d30973d25f4d51a1390e21a55889dd",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260916,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "generation_timeout",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.490793
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "timeout-generation",
+            "child_pid": 20663,
+            "ended_monotonic_ns": null,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 20663,
+            "started_monotonic_ns": 1688186608747177,
+            "terminal_state": "in_flight",
+            "usable": null
+          },
+          {
+            "call_id": "timeout-load",
+            "child_pid": 20663,
+            "ended_monotonic_ns": 1688186608268427,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 20663,
+            "started_monotonic_ns": 1688186607122835,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 1,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 4
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/generation_timeout.jsonl",
+      "ledger_sha256": "sha256:93aa9aff0a1cba08235a93acf9dc5774655bc4705a3162a2345b2b0b458def9b",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 1,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260917,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    },
+    {
+      "abstention": false,
+      "case": "generation_unusable",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465756
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "unusable-generation",
+            "child_pid": 20687,
+            "ended_monotonic_ns": 1688187076456220,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 20687,
+            "started_monotonic_ns": 1688187076115821,
+            "terminal_state": "completed",
+            "usable": false
+          },
+          {
+            "call_id": "unusable-load",
+            "child_pid": 20687,
+            "ended_monotonic_ns": 1688187075782254,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 20687,
+            "started_monotonic_ns": 1688187074696805,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 5
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_completed": 1,
+        "usable_answers": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/generation_unusable.jsonl",
+      "ledger_sha256": "sha256:08a7416187dea20f16511baebd02f17ff44efdf6513220271c8dafb3e5e4eda6",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 5,
+      "seed": 728920260918,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "duplicate_events",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465648
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "duplicate-generation",
+            "child_pid": 20711,
+            "ended_monotonic_ns": 1688187551987750,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 20711,
+            "started_monotonic_ns": 1688187551395347,
+            "terminal_state": "completed",
+            "usable": false
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 2,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/duplicate_events.jsonl",
+      "ledger_sha256": "sha256:0f3f7c86268f23346101dd73db88c4fd20f974c90289efa81a0e563fb3024eec",
+      "metric": 1,
+      "observed": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260919,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "orphan_cleanup",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.567586
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "cleanup-load",
+            "child_pid": 20738,
+            "ended_monotonic_ns": 1688188007559419,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 20738,
+            "started_monotonic_ns": 1688188006325380,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7304_v642_arc_receipt/run-woegfrim/fixtures/orphan_cleanup.jsonl",
+      "ledger_sha256": "sha256:9368bd36e668576569cdb5e806512ca6f7b911ec4b0c16d8500b8b34cbde4b9c",
+      "metric": 1,
+      "observed": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [
+        20762
+      ],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260920,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    }
+  ]
+}
