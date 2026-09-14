@@ -17953,3 +17953,5 @@ code |
 | 2026-09-14 17:57 UTC | Qualify bounded Qwen3.8 joint-claim transport | OK | 93 passed, 1 warning in 7.50s |
 | 2026-09-14 18:00 UTC | Measure batched source fidelity and complete infer | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7307-batch-canary.batch_canary_ready_score (actual=0 == expected=1) |
 | 2026-09-14 18:03 UTC | Measure batched source fidelity and complete infer | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7307-batch-canary.batch_canary_ready_score (actual=0 == expected=1) |
+| 2026-09-14 18:06 UTC | Measure batched source fidelity and complete infer | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7307-batch-canary.batch_canary_ready_score (actual=0 == expected=1) |
+| 2026-09-14 18:08 UTC | Independently audit batch semantics and cross-clai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7308-batch-measurement) |
