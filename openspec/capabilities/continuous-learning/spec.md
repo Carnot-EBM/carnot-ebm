@@ -15443,6 +15443,102 @@ Execution SHALL use `execution_venue=host`. The serial reference SHALL set
 |---|---|---|
 | REQ-CL-7285 and SCENARIO-CL-7285-* | Implemented: fixed paired frontier, complete event and cost rows, real-disk E2E restore, cold reduction, failure controls, and atomic terminal evidence. | `tests/python/test_experiment_7285_v640_commit_frontier.py`; focused pytest and scoped 100% coverage. |
 
+## REQ-CL-7298: Persistent SQLite Full-Snapshot Acknowledgments
+
+Carnot SHALL provide an opt-in, host-only storage adapter over the installed
+Exp7256 PyO3 controller. The adapter SHALL keep one complete serialized native
+state, schema version, sequence, and state checksum in one SQLite row. It SHALL
+use a task-owned, single-writer database. It SHALL read back effective
+`journal_mode=PERSIST` and `synchronous=FULL` settings before it accepts events.
+It SHALL record the SQLite library, VFS selection, and local filesystem
+identity. Missing syscall tracing SHALL remain an explicit limitation.
+
+The adapter SHALL durably persist its initial native state before it accepts an
+event. It SHALL charge this initialization time. Each group SHALL apply the
+installed native controller's one-event transition in order. It SHALL write the
+complete resulting snapshot in one rollback-journal transaction. It SHALL
+acknowledge events only after `commit()` returns. A failed or uncertain commit
+SHALL return no acknowledgment and require a fresh restore.
+
+The adapter SHALL preserve V640 maximum group sizes 1, 4, and 16. Groups 4 and
+16 SHALL wait at most 10 ms. Group 1 SHALL flush immediately. The queue SHALL
+hold at most 16 events and 65,536 canonical event bytes. Duplicate event IDs,
+duplicate or non-monotonic snapshot sequences, corrupt snapshot checksums, and
+queue overflow SHALL fail without crediting an acknowledgment. The adapter
+SHALL not store a delta-only log or change a production default.
+
+Four frozen seeds SHALL test process restart at these boundaries: before the
+transaction, after the row write and before commit, after commit and before
+acknowledgment, and after acknowledgment. Each seed SHALL also test a kill that
+races the write or commit call. Fresh processes SHALL load the database and
+compare the recovered bytes, state hash, sequence, and release IDs with seeded
+native references. An unacknowledged committed suffix MAY survive. It SHALL not
+be credited or applied twice. The result SHALL retain this timing uncertainty.
+
+`snapshot_journal_ready_score` SHALL equal one only when the installed native
+binding executed, all group endpoints match the serial native reference, no
+acknowledged event is missing, recovery is idempotent, queue and state bounds
+hold, corrupt checksums and duplicate sequences are rejected, and every fixed
+crash unit completes. This same-authority protocol result SHALL use
+`verifier_is_oracle=true` and `verdict_class=circular_positive`, never
+`positive`. It SHALL not claim physical power-loss safety, firmware fsync
+honesty, an end-to-end speedup, FPGA execution, or a production-default change.
+
+The task SHALL use run date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current load and generation counters SHALL be zero. CPU
+transition, replay, and test work SHALL use `cpu_exact_solver_or_simulator` for
+both substrate fields. Read-only reduction SHALL use
+`aggregation_from_upstream_artifacts` and class `aggregation`. Execution SHALL
+use `execution_venue=host`.
+
+### SCENARIO-CL-7298-STORAGE: One Durable Row Contains The Full Snapshot
+
+- GIVEN a task-owned empty database and a native initial state
+- WHEN the adapter initializes and commits one group
+- THEN exactly one snapshot row contains schema, sequence, bytes, and checksum
+- AND effective PERSIST and FULL settings are verified before acknowledgment.
+
+### SCENARIO-CL-7298-ACK: Commit Completion Precedes Acknowledgment
+
+- GIVEN accepted unique releases within both queue limits
+- WHEN their ordered native transitions and full-snapshot transaction succeed
+- THEN no event is acknowledged before `commit()` returns
+- AND any failed or uncertain commit acknowledges none and requires restore.
+
+### SCENARIO-CL-7298-CRASH: Fresh Processes Preserve Acknowledged Prefixes
+
+- GIVEN four frozen seeds and all five transaction or acknowledgment kill points
+- WHEN a child reaches its marker and receives `SIGKILL`
+- THEN a fresh child restores an exact old or new native state
+- AND acknowledged releases survive once while an unacknowledged suffix gets no credit.
+
+### SCENARIO-CL-7298-CONTROLS: Corruption Sequence And Queue Attacks Fail Closed
+
+- GIVEN a corrupt checksum, duplicate sequence, duplicate event, or full queue
+- WHEN recovery or admission evaluates the attack
+- THEN the adapter rejects it without an acknowledgment
+- AND bounded queue and complete-state byte limits remain observable.
+
+### SCENARIO-CL-7298-E2E: Python Through PyO3 And SQLite Restores Exactly
+
+- GIVEN a real Python caller, installed PyO3 controller, and task-owned database
+- WHEN a native transition commits its full snapshot and a new process reopens it
+- THEN state bytes, hash, sequence, release IDs, and next native decision match
+- AND the result states that process death does not prove physical power-loss safety.
+
+### SCENARIO-CL-7298-TERMINAL: Protocol Readiness Is Not A Speed Claim
+
+- GIVEN complete row, parity, crash, corruption, queue, and identity evidence
+- WHEN independent reduction evaluates every fixed gate
+- THEN readiness one has class `circular_positive`
+- AND no speed, hardware, or production-default claim follows.
+
+## Implementation Status (REQ-CL-7298)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7298 and SCENARIO-CL-7298-* | Implemented: opt-in SQLite full-snapshot adapter, native parity, five-boundary crash matrix, fail-closed controls, cold reduction, and terminal evidence. | `tests/python/test_experiment_7298_v641_snapshot_journal.py`; 18 focused tests pass and 835 of 835 scoped statements are covered. |
+
 ## REQ-CL-7295: Bounded Fixed-Share Selection Over Complete Hypotheses
 
 Carnot SHALL provide an opt-in fixed-share controller. The controller SHALL
