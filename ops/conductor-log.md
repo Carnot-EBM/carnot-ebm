@@ -17950,3 +17950,4 @@ code |
 | 2026-09-14 15:03 UTC | Run one adapter-withheld live selfparse generaliza | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (655s silence). Last out |
 | 2026-09-14 15:39 UTC | Run one adapter-withheld live selfparse generaliza | OK | 104 passed, 1 warning in 8.03s |
 | 2026-09-14 16:48 UTC | Build joint-claim source verification and matched  | OK | 97 passed, 1 warning in 8.39s |
+| 2026-09-14 17:57 UTC | Qualify bounded Qwen3.8 joint-claim transport | OK | 93 passed, 1 warning in 7.50s |
