@@ -1441,10 +1441,12 @@ def run_e2e_controls(views: prototype.StreamViews, root: Path) -> JsonDict:
     release = next(row for row in releases if row.get("role") == "future_feedback")
     public = {str(row["event_id"]): row for row in views.public if row["stream_id"] == stream_id}
     event = public[str(release["event_id"])]
+    state_dir = root / "pipeline"
+    controller = prototype._arm_controller(FACTOR_ARM, masks)
+    controller.save(state_dir / "factor_controller.json")
     hook = prototype.FactorPipelineHook(
-        root / "pipeline",
+        state_dir,
         enabled=True,
-        controller=prototype._arm_controller(FACTOR_ARM, masks),
     )
     prediction = str(
         hook.pre_label(event, release_index=int(release["release_index"]))["prediction"]

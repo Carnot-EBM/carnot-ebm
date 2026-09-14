@@ -219,6 +219,7 @@ def test_scenario_cl_7311_e2e_credits_only_later_prediction(tmp_path: Path) -> N
     """SCENARIO-CL-7311-E2E: the control credits a future pre-label prediction."""
 
     result = exp.run_e2e_controls(_real_views(), tmp_path)
+    repeated = exp.run_e2e_controls(_real_views(), tmp_path)
 
     assert result["prediction_before_release"] is not None
     assert result["release_state_hash_changed"] is True
@@ -226,6 +227,7 @@ def test_scenario_cl_7311_e2e_credits_only_later_prediction(tmp_path: Path) -> N
     assert result["later_prediction_was_pre_label"] is True
     assert result["cold_restart_parity"] is True
     assert result["rollback_byte_identical"] is True
+    assert repeated == result
 
 
 def test_scenario_cl_7311_terminal_keeps_capture_separate_from_value() -> None:
