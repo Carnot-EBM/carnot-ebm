@@ -1,5 +1,96 @@
 # Research Reporting Capability Specification
 
+## V641 source ingestion and exact execution contract — 2026-09-14
+
+**Status:** Planned. This receipt is advisory and makes no scientific claim.
+
+### REQ-REPORT-7288: Authenticate the rewritten V641 source and task contract
+
+Exp7288 SHALL select only a roadmap whose milestone is `2026.09.641`. It SHALL
+prefer `research-roadmap.yaml` after activation and MAY use
+`research-roadmap-next.yaml` before activation. It SHALL freeze and hash the
+original selected YAML bytes and the bytes at its `milestone_doc` path. It
+SHALL not edit, repair, or activate either authority.
+
+Exp7288 SHALL parse the literal Markdown table and YAML tasks independently.
+It SHALL require exactly fourteen ordered tasks from `exp7288-source-contract`
+through `exp7301-capstone`. IDs, titles, deliverables, phases, and every
+structured gate SHALL match. A readable stale milestone, changed count,
+reordered ID, changed path, changed field, or changed gate SHALL produce a
+terminal `disqualified` receipt with `contract_complete_score=0`.
+
+Exp7288 SHALL run the shipped roadmap schema, prior-failure, exclusion,
+prompt-path, and gate-field checks. For every real gate, it SHALL invoke
+`scripts.conductor_gates.evaluate_gates` on isolated passing, false,
+missing-field, missing-file, and quarantined fixtures. Each exact diagnostic
+SHALL remain in `gate_control_rows`. Contract mutations to count, ID,
+deliverable, phase, or gate fields SHALL fail independent reduction.
+
+Exp7288 SHALL ingest the dated V641 literature refresh with no more than four
+20-second primary requests. `source_dispositions` SHALL cover source freshness,
+fixed-budget hypothesis mixtures, SQLite persistent journals, and deferred
+KAN/TSU work. Each row SHALL preserve its primary URL, publication or version
+date, access result, implement/adapt/defer decision, adapted mechanism,
+falsifier, and retired or deferred boundary. A fetch failure SHALL remain a
+source observation and SHALL not block structurally valid local evidence.
+
+The artifact SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero attempted and completed load and generation
+counters, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. Its read-only reduction receipt SHALL instead use
+`aggregation_from_upstream_artifacts` and class `aggregation`. Historical or
+injected model receipts SHALL remain in authenticated sidecars.
+
+The terminal artifact SHALL include every field and exact principle named in
+the Exp7288 prompt. `rows` SHALL equal the fourteen literal `contract_rows`.
+`contract_complete_score` SHALL equal one only when both independently parsed
+authorities match exactly, all five controls for all eight gates are distinct,
+all four source dispositions are complete, and all scoped validation commands
+pass. Shared parser and gate authority SHALL set `verifier_is_oracle=true`, so
+an exact result SHALL use `circular_positive`, not `positive`. Missing,
+quarantined, or retired external prerequisites SHALL be terminal `blocked`
+with an exact `gate_check_summary`. Only unfinished Exp7288 work MAY be
+`partial`.
+
+#### SCENARIO-REPORT-7288-CONTRACT: Fourteen independent rows match exactly
+
+**Given** separate V641 Markdown and YAML byte streams
+**When** Exp7288 parses and compares their literal contracts
+**Then** fourteen ordered rows agree on ID, title, deliverable, phase, and gates
+**And** a count, ID, path, phase, or gate-field mutation is disqualified.
+
+#### SCENARIO-REPORT-7288-GATES: Five real evaluator controls remain distinct
+
+**Given** each of the eight structured V641 gate edges
+**When** the real conductor evaluator reads passing, false, missing-field,
+missing-file, and quarantined isolated fixtures
+**Then** all forty outcomes retain their exact observed values and diagnostics
+**And** none is treated as a learned or scientific result.
+
+#### SCENARIO-REPORT-7288-SOURCES: External claims remain non-local
+
+**Given** the dated V641 refresh and no more than four bounded primary requests
+**When** Exp7288 records the four required dispositions
+**Then** dates, access failures, adaptations, falsifiers, and deferred or
+retired boundaries remain visible
+**And** `local_evidence_claimed` remains false for every source row.
+
+#### SCENARIO-REPORT-7288-ARTIFACT: Stored evidence controls terminal state
+
+**Given** a measured terminal candidate under `results/raw/`
+**When** independent reduction and artifact validation recompute its rows,
+hashes, score, model counters, lifecycle, and checksum
+**Then** only an exact candidate reaches the declared terminal output
+**And** external absence is blocked while readable contract failure is
+disqualified, never partial.
+
+## Implementation Status (REQ-REPORT-7288)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7288 and SCENARIO-REPORT-7288-* | Planned: Exp7288 reusable module, thin CLI, raw sidecars, and terminal artifact | Planned: focused RED mutations, scoped 100% coverage, artifact validation, roadmap checks, adversarial verification, row consistency, spec coverage, and exact-plan E2E |
+
 ## V640 independent evidence matrix and branch decisions — 2026-09-14
 
 **Status:** Implemented. The capstone closes the milestone without converting
