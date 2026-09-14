@@ -1725,3 +1725,85 @@ Exp7286 SHALL emit `board_disposition_complete_score=1`. Its rows and source
 hashes SHALL reduce independently while GateMate remains blocked at row scope.
 
 **Implementation status:** Implemented and verified (Exp7286)
+
+### REQ-ISING-7300
+
+**The V641 board-continuity task MUST authenticate the V640 receipt and
+record one read-only disposition for each attached board.**
+
+**Rationale:**
+KV260 has completed FPGA-fabric execution. PolarFire has completed only a
+hash-matched CPU dispatch. GateMate needs a dated physical-state change after
+Exp6559 before a later integration task can act. Repeating unchanged hardware
+probes cannot add evidence.
+
+**Acceptance criteria:**
+- The tested implementation SHALL be
+  `python/carnot/experiment_7300_v641_board_continuity.py`. The executable
+  SHALL be the thin entrypoint
+  `scripts/experiments/experiment_7300_v641_board_continuity.py`.
+- Preconditions SHALL authenticate the V641 task contract, required source
+  bytes, writable output paths, exclusion state, the Exp7286 receipt, and all
+  KV260 and PolarFire evidence paths and hashes referenced by that receipt.
+- A missing, malformed, quarantined, hash-mismatched, or retired mandatory
+  input SHALL produce one terminal blocked artifact. Its
+  `gate_check_summary` SHALL name the upstream, check, field, observed value,
+  and expected value. It SHALL contain no board rows.
+- The task SHALL reuse the shipped board reader, receipt parser, reducer, and
+  validator chain. It SHALL issue zero hardware operations and zero external
+  actions.
+- Current invocation fields SHALL state `MODEL_SPECS=[]`,
+  `model_invoked=false`, and zero attempted, completed, and failed model loads
+  and generations. Historical model metadata SHALL remain in a hashed
+  sidecar.
+- The read-only reducer SHALL use `aggregation_from_upstream_artifacts` and
+  class `aggregation`. The execution venue SHALL be `host`.
+- Each board row SHALL name the observed venue, preserved capability,
+  prerequisite check, failed value, and exact next condition. The KV260 row
+  SHALL distinguish available hardware from completed fabric execution. The
+  PolarFire row SHALL distinguish CPU dispatch from FPGA sampling and host
+  emulation.
+- The GateMate search SHALL accept only an operator-authored cable, USB port,
+  power, board, JTAG, or DirtyJTAG change after Exp6559. Without one, its row
+  SHALL preserve `blocked_changed_physical_state`. The artifact
+  `gate_check_summary` SHALL hold the exact failed physical check and observed
+  value. With one, the row SHALL name a later eligible experiment and this
+  task SHALL still issue no command.
+- `board_continuity_complete_score=1` SHALL mean that all three authenticated
+  dispositions and exact next conditions are present. It SHALL not mean that
+  all three boards are ready.
+- Raw rows and validation candidates SHALL stay under `results/raw/`.
+  Provisional state SHALL stay under `results/checkpoints/`.
+- The producer SHALL independently reduce the raw rows. It SHALL validate the
+  measured terminal candidate before it atomically writes
+  `results/experiment_7300_v641_board_continuity.json`.
+
+### SCENARIO-ISING-7300-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine or retirement marker, malformed mandatory artifact,
+invalid referenced hash, or unwritable output, Exp7300 SHALL emit one terminal
+blocked result. It SHALL emit no board row and no hardware operation.
+
+### SCENARIO-ISING-7300-BOARDS
+
+**Current receipt to board scopes:** Given an authenticated Exp7286 receipt and
+its referenced hashes, Exp7300 SHALL preserve KV260 fabric execution and
+PolarFire CPU dispatch as distinct evidence classes. It SHALL mark PolarFire
+FPGA sampling as not observed.
+
+### SCENARIO-ISING-7300-GATEMATE
+
+**Changed-state boundary:** Given no valid operator-authored physical change
+after Exp6559, Exp7300 SHALL record `blocked_changed_physical_state`. Given a
+valid later change, it SHALL name one later integration experiment and issue
+no command.
+
+### SCENARIO-ISING-7300-ARTIFACT
+
+**Terminal host-only continuity receipt:** Given three authenticated board
+dispositions, Exp7300 SHALL emit `board_continuity_complete_score=1`. Its raw
+rows and source hashes SHALL reduce independently while GateMate remains
+blocked at row scope.
+
+**Implementation status:** Implemented and verified (Exp7300)

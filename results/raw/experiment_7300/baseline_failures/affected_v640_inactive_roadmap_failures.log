@@ -1,0 +1,222 @@
+F...FF.F...F..F.............                                             [100%]
+=================================== FAILURES ===================================
+___________ test_req_ising_7286_authenticates_current_receipt_chain ____________
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_req_ising_7286_authentica0')
+
+    def test_req_ising_7286_authenticates_current_receipt_chain(tmp_path: Path) -> None:
+        """REQ-ISING-7286: Exp7272 and its original transcripts authenticate."""
+    
+        checks, hashes, upstreams = experiment.collect_preconditions(
+            ROOT, experiment.ExperimentPaths.under(tmp_path)
+        )
+>       assert all(row["passed"] for row in checks)
+E       assert False
+E        +  where False = all(<generator object test_req_ising_7286_authenticates_current_receipt_chain.<locals>.<genexpr> at 0x7f874d0fa670>)
+
+tests/python/test_experiment_7286_v640_board_state.py:57: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+________ test_scenario_ising_7286_artifact_is_complete_host_aggregation ________
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_artif0')
+
+    def test_scenario_ising_7286_artifact_is_complete_host_aggregation(
+        tmp_path: Path,
+    ) -> None:
+        """SCENARIO-ISING-7286-ARTIFACT: visibility completes despite row block."""
+    
+        paths = experiment.ExperimentPaths.under(tmp_path)
+        artifact = experiment.build_artifact(ROOT, paths, candidate_paths=[tmp_path / "missing.json"])
+>       assert paths.checkpoint.is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_artif0/results/checkpoints/experiment_7286_v640_board_state.json').is_file
+E        +      where PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_artif0/results/checkpoints/experiment_7286_v640_board_state.json') = ExperimentPaths(artifact=PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_artif0/results/experiment_7286_v640...lidation_dir=PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_artif0/results/raw/experiment_7286/validation')).checkpoint
+
+tests/python/test_experiment_7286_v640_board_state.py:140: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+_____ test_scenario_ising_7286_valid_change_artifact_still_issues_nothing ______
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_scenario_ising_7286_valid0')
+
+    def test_scenario_ising_7286_valid_change_artifact_still_issues_nothing(
+        tmp_path: Path,
+    ) -> None:
+        """SCENARIO-ISING-7286-GATEMATE: a valid change keeps this task read-only."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[_valid_operator_receipt(tmp_path / "operator.json")],
+        )
+>       gate = next(row for row in artifact["board_rows"] if row["board"] == "GateMate")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests/python/test_experiment_7286_v640_board_state.py:170: StopIteration
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+___ test_req_ising_7286_validator_rejects_mutations[mutation0-board_reducer] ___
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_req_ising_7286_validator_0')
+mutation = {'board_disposition_complete_score': 0}, error = 'board_reducer'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_disposition_complete_score": 0}, "board_reducer"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"invocation_counts": {"model_loads_attempted": 1}}, "invocation_counts"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7286_validator_rejects_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7286: the inherited validator rejects unsafe mutations."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[tmp_path / "missing.json"],
+        )
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'board_reducer' in []
+E        +  where [] = <function validate_artifact at 0x7f874d088680>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_disposition_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f874d088680> = experiment.validate_artifact
+
+tests/python/test_experiment_7286_v640_board_state.py:219: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+_____ test_req_ising_7286_validator_rejects_mutations[mutation4-substrate] _____
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_req_ising_7286_validator_1')
+mutation = {'inference_substrate': 'cpu_exact_solver_or_simulator'}
+error = 'substrate'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_disposition_complete_score": 0}, "board_reducer"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"invocation_counts": {"model_loads_attempted": 1}}, "invocation_counts"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7286_validator_rejects_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7286: the inherited validator rejects unsafe mutations."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[tmp_path / "missing.json"],
+        )
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'substrate' in ['blocked_substrate']
+E        +  where ['blocked_substrate'] = <function validate_artifact at 0x7f874d088680>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_disposition_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f874d088680> = experiment.validate_artifact
+
+tests/python/test_experiment_7286_v640_board_state.py:219: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+_________ test_req_ising_7286_blocked_private_root_and_defensive_paths _________
+
+tmp_path = PosixPath('/tmp/exp7300-affected/test_req_ising_7286_blocked_pr0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f874eb32ea0>
+
+    def test_req_ising_7286_blocked_private_root_and_defensive_paths(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-ISING-7286: missing inputs and invalid builds remain terminal failures."""
+    
+        assert experiment.main(["--root", str(tmp_path), "--output", "private/result.json"]) == 0
+        saved = json.loads((tmp_path / "private/result.json").read_text(encoding="utf-8"))
+        assert saved["status"] == "blocked_external_precondition"
+        assert saved["board_rows"] == []
+        assert experiment._task_contract(tmp_path) is None
+        (tmp_path / experiment.ROADMAP_PATH).write_text("[]\n", encoding="utf-8")
+        assert experiment._task_contract(tmp_path) is None
+        (tmp_path / experiment.ROADMAP_PATH).write_text("tasks: []\n", encoding="utf-8")
+        assert experiment._task_contract(tmp_path) is None
+        assert experiment.validate_artifact({})[0].startswith("missing_fields:")
+        assert experiment.main(["--validate", str(tmp_path / "missing.json")]) == 2
+    
+        paths = experiment.ExperimentPaths.under(tmp_path / "run")
+        paths.validation_dir.mkdir(parents=True)
+        passed_log = paths.validation_dir / "passed.log"
+        passed_log.write_text("$ pytest focused\n1 passed\n[exit_code] 0\n", encoding="utf-8")
+        baseline_dir = paths.validation_dir.parent / "baseline_failures"
+        baseline_dir.mkdir()
+        failed_log = baseline_dir / "failed.log"
+        failed_log.write_text("$ pytest red\n1 failed\n[exit_code] 1\n", encoding="utf-8")
+        artifact = experiment.build_artifact(ROOT, paths, candidate_paths=[tmp_path / "missing.json"])
+>       assert artifact["validation_receipts"][0]["log_hash"] == experiment.sha256_file(passed_log)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/python/test_experiment_7286_v640_board_state.py:266: IndexError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 entry] Exp7286 host aggregation; model-loads=0 hardware-commands=0
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+[phase 5 before] final independent raw-row reducer and artifact validation
+[phase 5 after] validation errors=0
+[phase 6 before] atomic terminal write
+[phase 6 after] atomic terminal write bytes=19200
+experiment_complete status=blocked_external_precondition score=0 output=/tmp/exp7300-affected/test_req_ising_7286_blocked_pr0/private/result.json
+[phase 0 entry] Exp7286 host aggregation; model-loads=0 hardware-commands=0
+[phase 5 before] read-only validation path=/tmp/exp7300-affected/test_req_ising_7286_blocked_pr0/missing.json
+[phase 5 after] read-only validation errors=1
+validation_failed errors=['artifact_not_json_object']
+[phase 0 start] authenticate V640 sources before aggregation
+[phase 0 check start] source bytes, spec, and V640 task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and current receipt
+[phase 0 end] preconditions failed=1
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_req_ising_7286_authenticates_current_receipt_chain
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_scenario_ising_7286_artifact_is_complete_host_aggregation
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_scenario_ising_7286_valid_change_artifact_still_issues_nothing
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_req_ising_7286_validator_rejects_mutations[mutation0-board_reducer]
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_req_ising_7286_validator_rejects_mutations[mutation4-substrate]
+FAILED tests/python/test_experiment_7286_v640_board_state.py::test_req_ising_7286_blocked_private_root_and_defensive_paths
+6 failed, 22 passed in 3.04s
+[elapsed_s] 4
+[exit_code] 1
