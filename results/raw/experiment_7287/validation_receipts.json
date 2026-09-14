@@ -1,0 +1,93 @@
+{
+  "receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7287_v640_capstone.py -q -n 0 --no-cov --basetemp=/tmp/exp7287-receipt-focused",
+      "duration_s": 20.082714488031343,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/00_focused_pytest.log",
+      "log_sha256": "sha256:e4932475cf308c99d144034da57ebcc8c915ba378ab258361b0ad1c82c0fb36c",
+      "name": "focused_pytest"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7274_v640_source_contract.py -q -n 0 --no-cov --basetemp=/tmp/exp7287-receipt-affected",
+      "duration_s": 4.073095194064081,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/01_affected_source_contract_pytest.log",
+      "log_sha256": "sha256:0951d0f8af15f0d8430166dbd46d3464cc6154fd3617fb6620263c403ae45036",
+      "name": "affected_source_contract_pytest"
+    },
+    {
+      "command": "bash -lc '/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage erase --data-file=/tmp/exp7287-receipt.coverage && PYTHONPATH=python:. /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7287-receipt.coverage --include='\"'\"'*/experiment_7287_v640_capstone.py'\"'\"' -m pytest -o addopts= tests/python/test_experiment_7287_v640_capstone.py -q -n 0 --basetemp=/tmp/exp7287-receipt-coverage && /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7287-receipt.coverage --include='\"'\"'*/experiment_7287_v640_capstone.py'\"'\"' --show-missing --fail-under=100'",
+      "duration_s": 39.746034336974844,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/02_focused_coverage.log",
+      "log_sha256": "sha256:66346f4423033f4eb7fbceee438742348d1e608247f9211776ebd3022a8ef328",
+      "name": "focused_coverage"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7287_v640_capstone.py scripts/experiments/experiment_7287_v640_capstone.py tests/python/test_experiment_7287_v640_capstone.py",
+      "duration_s": 0.012178128119558096,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/03_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7287_v640_capstone.py scripts/experiments/experiment_7287_v640_capstone.py tests/python/test_experiment_7287_v640_capstone.py",
+      "duration_s": 0.01200726698152721,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/04_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7287_v640_capstone.py scripts/experiments/experiment_7287_v640_capstone.py",
+      "duration_s": 0.0987245449796319,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/05_changed_module_mypy.log",
+      "log_sha256": "sha256:e7a4937161cc04da275c1201ab144faf989a96c863dd0ed0a0b15f20acbd43ce",
+      "name": "changed_module_mypy"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7287_v640_capstone.py",
+      "duration_s": 0.020721097011119127,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/06_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7287_v640_capstone.py --root /home/ianblenke/github.com/ianblenke/carnot --artifact-path /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7287/measured-terminal-candidate.json --validate",
+      "duration_s": 3.85238626296632,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/07_independent_raw_row_reducer.log",
+      "log_sha256": "sha256:ecf92812d8fd68639b272e87bb684518854391a25f4f691583500224b5761852",
+      "name": "independent_raw_row_reducer"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7287/measured-terminal-candidate.json",
+      "duration_s": 0.5826178751885891,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/08_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7287/measured-terminal-candidate.json",
+      "duration_s": 0.028358794981613755,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/09_verdict_row_consistency_lint.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_lint"
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7287_v640_capstone.py -q -n 0 --no-cov --basetemp=/tmp/exp7287-receipt-e2e -k 'complete_matrix_is_terminal_blocked or missing_required_science_changes_conclusion or decisions_do_not_retire_scale_canary'",
+      "duration_s": 11.826026911847293,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7287/validation/10_aggregation_e2e.log",
+      "log_sha256": "sha256:73922edf83f2871b6dc7c269c613bb0a3ae895c479db353af5daf40649a5dc9d",
+      "name": "aggregation_e2e"
+    }
+  ],
+  "schema": "carnot.exp7287.validation_receipts.v1"
+}

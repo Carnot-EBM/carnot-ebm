@@ -1,5 +1,116 @@
 # Research Reporting Capability Specification
 
+## V640 independent evidence matrix and branch decisions — 2026-09-14
+
+**Status:** Implemented. The capstone closes the milestone without converting
+completed infrastructure checks into scientific value.
+
+### REQ-REPORT-7287: Authenticate and close all fourteen V640 tasks
+
+Exp7287 SHALL read the active `2026.09.640` YAML and the exact Markdown file
+that it names. It SHALL freeze both byte streams. It SHALL parse both contracts
+independently and retain fourteen ordered rows from `exp7274` through
+`exp7287`. Each row SHALL preserve its declared path. A missing declared
+deliverable MAY use only its canonical conductor block. A similarly named
+result SHALL not replace the declared evidence.
+
+Exp7287 SHALL authenticate each producer and record its hash, quarantine
+state, raw evidence, terminal class, gate observations, and final disposition.
+It SHALL replay all same-milestone gates from the selected YAML. Missing files,
+missing fields, quarantined values, mismatched values, and passing values SHALL
+remain distinct outcomes.
+
+Exp7287 SHALL independently reduce source authenticity and value, ARC identity
+and policy consumption, admission-learning efficacy, safety and opportunity
+loss, and complete acknowledgment cost. It SHALL keep source-capture
+completeness separate from semantic value. It SHALL keep infrastructure
+success separate from science. It SHALL keep public ARC proxy evidence
+separate from an absent official hidden score.
+
+Exp7287 SHALL compare each exact current verdict with all `prior_failures`
+entries for that task. It SHALL also record whether the declared changed cause
+occurred. An exact recurring verdict MAY retire only that task mechanism. A
+successful scale-only canary SHALL not create a scientific-failure retirement.
+The capstone SHALL not edit the exclusion manifest, active roadmap, or
+conductor. It SHALL not publish, upload, submit, send an external message, or
+change a production default.
+
+The artifact SHALL set `capstone_complete_score=1` only after all fourteen
+dispositions exist. Complete science that fails efficacy SHALL remain `null`.
+A missing, retired, or quarantined required science input SHALL produce a
+terminal `blocked` result with an exact `gate_check_summary`. It SHALL not
+produce `partial`, which is reserved for unfinished Exp7287 work. Overall
+`positive` requires authenticated raw evidence and all four producer scores:
+`source_promotion_score=1`, `arc_method_value_score=1`,
+`admission_promotion_score=1`, and `commit_cost_value_score=1`.
+
+The capstone SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model receipts and negative fixtures SHALL stay in hashed sidecars.
+The artifact SHALL retain actual UTC timestamps and monotonic phase durations.
+
+The terminal artifact SHALL contain every field and exact field principle from
+the frozen Exp7287 prompt. Its validator SHALL recompute the roster, gates,
+claims, dispositions, branch decisions, source hashes, publication-gate shape,
+and checksum from the measured candidate.
+
+#### SCENARIO-REPORT-7287-CONTRACT: Independent parsing preserves mismatch
+
+**Given** the selected V640 YAML and its named Markdown bytes
+**When** Exp7287 parses both authorities independently
+**Then** it retains fourteen ordered comparison rows
+**And** the stale Markdown remains a disqualified contract observation.
+
+#### SCENARIO-REPORT-7287-INTAKE: Exact paths and all dispositions survive
+
+**Given** declared artifacts and canonical conductor blocks
+**When** Exp7287 builds the evidence matrix
+**Then** all fourteen rows preserve declared and actual paths and hashes
+**And** null, blocked, disqualified, flagged, and self-synthesis rows remain.
+
+#### SCENARIO-REPORT-7287-CLAIMS: Raw evidence controls milestone value
+
+**Given** authenticated producer evidence
+**When** Exp7287 independently reduces each claim family
+**Then** source, ARC, learning, and acknowledgment claims remain separate
+**And** all four required value scores control overall positive promotion.
+
+#### SCENARIO-REPORT-7287-DECISIONS: Retirement stays narrow
+
+**Given** exact prior verdicts and their declared changed causes
+**When** Exp7287 emits one branch decision per task
+**Then** same-verdict recurrence retires only the repeated mechanism
+**And** scale-only canary success does not become a broad retirement.
+
+#### SCENARIO-REPORT-7287-TERMINAL: Complete failed efficacy is null
+
+**Given** all required producer science is available and authenticated
+**When** one or more required scientific value scores are zero
+**Then** Exp7287 is terminal `complete` with `verdict_class=null`
+**And** `capstone_complete_score=1` records disposition coverage only.
+
+#### SCENARIO-REPORT-7287-BLOCKED: Required external evidence fails closed
+
+**Given** required science is missing, retired, or quarantined
+**When** Exp7287 determines its terminal state
+**Then** it emits `blocked_` with the exact upstream check and values
+**And** it never classifies the terminal external block as `partial`.
+
+#### SCENARIO-REPORT-7287-ARTIFACT: Evidence mutations change the conclusion
+
+**Given** a measured terminal candidate under `results/raw/`
+**When** a producer is missing or its evidence, gate, hash, or score changes
+**Then** independent validation rejects the old conclusion
+**And** only a validated measured candidate reaches the declared result path.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7287_v640_capstone.py`,
+`scripts/experiments/experiment_7287_v640_capstone.py`, and
+`tests/python/test_experiment_7287_v640_capstone.py`. The terminal receipt is
+`results/experiment_7287_v640_capstone.json`.
+
 ## V640 source ingestion and exact execution contract — 2026-09-13
 
 **Status:** Implemented. This receipt is advisory and makes no scientific claim.

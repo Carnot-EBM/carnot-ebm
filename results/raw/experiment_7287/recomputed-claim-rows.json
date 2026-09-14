@@ -1,0 +1,773 @@
+{
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_contract_exact",
+      "claim_class": "null",
+      "cost": 30.638188,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "contract_rows",
+        "source_contract_complete_score"
+      ],
+      "matches": true,
+      "metric": "source_contract_exact",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_authority_rows": {
+            "row_count": 2
+          }
+        },
+        "row_counts": {
+          "contract_rows": 14,
+          "gate_control_rows": 32,
+          "gate_producer_rows": 8,
+          "markdown_task_rows": 14,
+          "raw_authority_rows": 2,
+          "receipt_dependency_rows": 1,
+          "rows": 14,
+          "source_access_rows": 4,
+          "yaml_task_rows": 14
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7274-source-contract",
+      "unit_id": "exp7274-source-contract:source_contract_exact",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "semantic_replay_authenticity",
+      "claim_class": "null",
+      "cost": 24.275081852916628,
+      "declared_value": true,
+      "error": "declared_value_mismatch",
+      "evidence_fields": [
+        "call_replay_rows",
+        "first_divergence_rows"
+      ],
+      "matches": false,
+      "metric": "semantic_replay_authenticity",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {},
+        "row_counts": {
+          "call_replay_rows": 320,
+          "first_divergence_rows": 320,
+          "rows": 192,
+          "semantic_cause_rows": 49
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7275-semantic-replay",
+      "unit_id": "exp7275-semantic-replay:semantic_replay_authenticity",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "comparator_canary_ready",
+      "claim_class": "null",
+      "cost": 41.60753711499274,
+      "declared_value": true,
+      "error": "declared_value_mismatch",
+      "evidence_fields": [
+        "canary_rows",
+        "replay_discrepancies"
+      ],
+      "matches": false,
+      "metric": "comparator_canary_ready",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_call_manifest": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7277/raw_call_manifest.json"
+          }
+        },
+        "row_counts": {
+          "canary_rows": 16,
+          "request_grammar_rows": 16,
+          "rows": 16,
+          "semantic_accuracy_rows": 16
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7277-comparator-canary",
+      "unit_id": "exp7277-comparator-canary:comparator_canary_ready",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_capture_authenticity",
+      "claim_class": "circular_positive",
+      "cost": 283.0046813439112,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "replay_rows",
+        "rows",
+        "replay_discrepancies"
+      ],
+      "matches": true,
+      "metric": "source_capture_authenticity",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "private_authority_manifest_path": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7278/private_authority_manifest.json",
+            "sha256": "sha256:b621ad6749baf95344957719fb48bef4784201a0679d1123addf662918bfedc0"
+          },
+          "public_manifest_path": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7278/public_manifest.json",
+            "sha256": "sha256:c090b18fd9f7d7a22912735ffa3b2a673de2f9f4378c27ceeb88bad45ee9a2d4"
+          },
+          "raw_call_manifest": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7278/raw_call_manifest.json"
+          }
+        },
+        "row_counts": {
+          "replay_rows": 256,
+          "representation_metric_rows": 2,
+          "rows": 128,
+          "source_fidelity_rows": 128,
+          "source_intervention_rows": 64,
+          "token_latency_rows": 256
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7278-source-measurement",
+      "unit_id": "exp7278-source-measurement:source_capture_authenticity",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_semantic_perfection",
+      "claim_class": "null",
+      "cost": 44.17661439720541,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "arm_summaries.verifier.accuracy"
+      ],
+      "matches": true,
+      "metric": "source_semantic_perfection",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_replay_rows": {
+            "row_count": 256
+          }
+        },
+        "row_counts": {
+          "causal_control_rows": 5,
+          "raw_replay_rows": 256,
+          "rows": 256
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7279-source-audit",
+      "unit_id": "exp7279-source-audit:source_semantic_perfection",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "source_promotion",
+      "claim_class": "null",
+      "cost": 44.17661439720541,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "paired_comparisons",
+        "causal_control_rows"
+      ],
+      "matches": true,
+      "metric": "source_promotion",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_replay_rows": {
+            "row_count": 256
+          }
+        },
+        "row_counts": {
+          "causal_control_rows": 5,
+          "raw_replay_rows": 256,
+          "rows": 256
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7279-source-audit",
+      "unit_id": "exp7279-source-audit:source_promotion",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_identity_ready",
+      "claim_class": "circular_positive",
+      "cost": 59.701323,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "identity_obligation_rows",
+        "unsupported_controls"
+      ],
+      "matches": true,
+      "metric": "arc_identity_ready",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "historical_receipt_sidecar": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7276_v640_arc_identity/identity_evidence_sidecar.json",
+            "sha256": "sha256:0d596d9f3c4ebe70f8bb05aae8b87c100e244f25065014ef21fa25a734ac85f5"
+          },
+          "raw_evidence": {
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7276_v640_arc_identity/identity_rows.json",
+            "sha256": "sha256:21e543f92c8e81471782956b93ecd103b11348d1d323d96c6c57fa051cf522d0"
+          }
+        },
+        "row_counts": {
+          "historical_episode_rows": 4,
+          "identity_obligation_rows": 110,
+          "rows": 7
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7276-arc-identity",
+      "unit_id": "exp7276-arc-identity:arc_identity_ready",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_public_proxy_complete",
+      "claim_class": "blocked",
+      "cost": 596.308144,
+      "declared_value": true,
+      "error": "quarantined_producer_artifact",
+      "evidence_fields": [
+        "rows",
+        "per_game_results"
+      ],
+      "matches": true,
+      "metric": "arc_public_proxy_complete",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_request_manifest": {
+            "row_count": 0
+          }
+        },
+        "row_counts": {
+          "identity_obligation_rows": 40,
+          "policy_consumption_rows": 0,
+          "rows": 4
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7280-arc-live",
+      "unit_id": "exp7280-arc-live:arc_public_proxy_complete",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_method_value",
+      "claim_class": "blocked",
+      "cost": 596.308144,
+      "declared_value": false,
+      "error": "quarantined_producer_artifact",
+      "evidence_fields": [
+        "rows",
+        "per_game_results"
+      ],
+      "matches": true,
+      "metric": "arc_method_value",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_request_manifest": {
+            "row_count": 0
+          }
+        },
+        "row_counts": {
+          "identity_obligation_rows": 40,
+          "policy_consumption_rows": 0,
+          "rows": 4
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7280-arc-live",
+      "unit_id": "exp7280-arc-live:arc_method_value",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "arc_policy_consumption",
+      "claim_class": "blocked",
+      "cost": 596.308144,
+      "declared_value": false,
+      "error": "quarantined_producer_artifact",
+      "evidence_fields": [
+        "rows",
+        "policy_consumption_rows"
+      ],
+      "matches": true,
+      "metric": "arc_policy_consumption",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_request_manifest": {
+            "row_count": 0
+          }
+        },
+        "row_counts": {
+          "identity_obligation_rows": 40,
+          "policy_consumption_rows": 0,
+          "rows": 4
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7280-arc-live",
+      "unit_id": "exp7280-arc-live:arc_policy_consumption",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "official_hidden_score",
+      "claim_class": "blocked",
+      "cost": 596.308144,
+      "declared_value": null,
+      "error": "quarantined_producer_artifact",
+      "evidence_fields": [
+        "official_score",
+        "new_solve_claimed",
+        "solve_provenance"
+      ],
+      "matches": true,
+      "metric": "official_hidden_score",
+      "metric_value": null,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_request_manifest": {
+            "row_count": 0
+          }
+        },
+        "row_counts": {
+          "identity_obligation_rows": 40,
+          "policy_consumption_rows": 0,
+          "rows": 4
+        }
+      },
+      "recomputed_value": null,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7280-arc-live",
+      "unit_id": "exp7280-arc-live:official_hidden_score",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "admission_run_complete",
+      "claim_class": "circular_positive",
+      "cost": 7.533314764034003,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "admission_run_complete_score"
+      ],
+      "matches": true,
+      "metric": "admission_run_complete",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "e2e_sidecar_receipt": {
+            "bytes": 369,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7282/e2e_receipts.json",
+            "sha256": "sha256:8164833686372deae9d27b42f7447dba5b6cc2f6f4bbaa8e18795be85e935280"
+          }
+        },
+        "row_counts": {
+          "comparison_rows": 24,
+          "opportunity_summary_rows": 63,
+          "rows": 168
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7282-admission-learning",
+      "unit_id": "exp7282-admission-learning:admission_run_complete",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "admission_learning_efficacy",
+      "claim_class": "null",
+      "cost": 7.533314764034003,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "acceptance_gate_results.future_error_vs_reset",
+        "acceptance_gate_results.future_error_vs_unconditional_recognition",
+        "acceptance_gate_results.false_accept_vs_reset",
+        "acceptance_gate_results.false_accept_vs_unconditional_recognition",
+        "acceptance_gate_results.recurrence_degradation_vs_frozen_warmup",
+        "acceptance_gate_results.recurrence_error_vs_label_shuffled_admission",
+        "acceptance_gate_results.admitted_causal_change",
+        "acceptance_gate_results.chronology_and_resource_safety"
+      ],
+      "matches": true,
+      "metric": "admission_learning_efficacy",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "e2e_sidecar_receipt": {
+            "bytes": 369,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7282/e2e_receipts.json",
+            "sha256": "sha256:8164833686372deae9d27b42f7447dba5b6cc2f6f4bbaa8e18795be85e935280"
+          }
+        },
+        "row_counts": {
+          "comparison_rows": 24,
+          "opportunity_summary_rows": 63,
+          "rows": 168
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7282-admission-learning",
+      "unit_id": "exp7282-admission-learning:admission_learning_efficacy",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "admission_mechanical_safety",
+      "claim_class": "circular_positive",
+      "cost": 3.0128007230814546,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "mutation_sidecar_receipt",
+        "mechanical_safety_verdict"
+      ],
+      "matches": true,
+      "metric": "admission_mechanical_safety",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "e2e_sidecar_receipt": {
+            "bytes": 809,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/e2e_receipts.json",
+            "sha256": "sha256:bf3c70f6f88ee1a0d881f502c89f4850edbf7930360be71f32b92fc422243061"
+          },
+          "mutation_sidecar_receipt": {
+            "bytes": 1805,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/mutation_receipts.json",
+            "sha256": "sha256:b1844beab8554430a666d627c7a9cfdf9fa3a9037631c7348c1ed5d60c38debe"
+          },
+          "raw_summary_receipt": {
+            "bytes": 295624,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/audit_summary.json",
+            "sha256": "sha256:a1d7841e6a9372b5ed30199681ca5798382e5cf896d0b3358428fb4f759f04ee"
+          }
+        },
+        "row_counts": {
+          "causal_intervention_rows": 2,
+          "cold_restore_rows": 16,
+          "rows": 168,
+          "stream_numerator_rows": 168
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7283-admission-audit",
+      "unit_id": "exp7283-admission-audit:admission_mechanical_safety",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "admission_opportunity_loss",
+      "claim_class": "positive",
+      "cost": 3.0128007230814546,
+      "declared_value": 57,
+      "error": null,
+      "evidence_fields": [
+        "opportunity_reduction",
+        "opportunity_accounting_verdict"
+      ],
+      "matches": true,
+      "metric": "admission_opportunity_loss",
+      "metric_value": 57,
+      "positive_promoted": true,
+      "raw_evidence": {
+        "references": {
+          "e2e_sidecar_receipt": {
+            "bytes": 809,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/e2e_receipts.json",
+            "sha256": "sha256:bf3c70f6f88ee1a0d881f502c89f4850edbf7930360be71f32b92fc422243061"
+          },
+          "mutation_sidecar_receipt": {
+            "bytes": 1805,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/mutation_receipts.json",
+            "sha256": "sha256:b1844beab8554430a666d627c7a9cfdf9fa3a9037631c7348c1ed5d60c38debe"
+          },
+          "raw_summary_receipt": {
+            "bytes": 295624,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/audit_summary.json",
+            "sha256": "sha256:a1d7841e6a9372b5ed30199681ca5798382e5cf896d0b3358428fb4f759f04ee"
+          }
+        },
+        "row_counts": {
+          "causal_intervention_rows": 2,
+          "cold_restore_rows": 16,
+          "rows": 168,
+          "stream_numerator_rows": 168
+        }
+      },
+      "recomputed_value": 57,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7283-admission-audit",
+      "unit_id": "exp7283-admission-audit:admission_opportunity_loss",
+      "verifier_is_oracle": false
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "admission_promotion",
+      "claim_class": "null",
+      "cost": 3.0128007230814546,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "acceptance_gate_results",
+        "efficacy_verdict"
+      ],
+      "matches": true,
+      "metric": "admission_promotion",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "e2e_sidecar_receipt": {
+            "bytes": 809,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/e2e_receipts.json",
+            "sha256": "sha256:bf3c70f6f88ee1a0d881f502c89f4850edbf7930360be71f32b92fc422243061"
+          },
+          "mutation_sidecar_receipt": {
+            "bytes": 1805,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/mutation_receipts.json",
+            "sha256": "sha256:b1844beab8554430a666d627c7a9cfdf9fa3a9037631c7348c1ed5d60c38debe"
+          },
+          "raw_summary_receipt": {
+            "bytes": 295624,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7283/audit_summary.json",
+            "sha256": "sha256:a1d7841e6a9372b5ed30199681ca5798382e5cf896d0b3358428fb4f759f04ee"
+          }
+        },
+        "row_counts": {
+          "causal_intervention_rows": 2,
+          "cold_restore_rows": 16,
+          "rows": 168,
+          "stream_numerator_rows": 168
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7283-admission-audit",
+      "unit_id": "exp7283-admission-audit:admission_promotion",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "commit_protocol_ready",
+      "claim_class": "circular_positive",
+      "cost": 6.563795196125284,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "crash_rows",
+        "semantic_parity_rows",
+        "queue_bounds"
+      ],
+      "matches": true,
+      "metric": "commit_protocol_ready",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_rows_receipt": {
+            "bytes": 76129,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7284_v640_commit_prototype_rows.json",
+            "sha256": "sha256:9d5b7de8b9fa197dd356468bd1053bce147b3cd77ff5163502129030bc968f96"
+          }
+        },
+        "row_counts": {
+          "crash_rows": 6,
+          "rows": 96,
+          "semantic_parity_rows": 3
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7284-commit-prototype",
+      "unit_id": "exp7284-commit-prototype:commit_protocol_ready",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "commit_acknowledgment_complete",
+      "claim_class": "circular_positive",
+      "cost": 360.47292650397867,
+      "declared_value": true,
+      "error": null,
+      "evidence_fields": [
+        "rows",
+        "component_rows",
+        "parity_rows"
+      ],
+      "matches": true,
+      "metric": "commit_acknowledgment_complete",
+      "metric_value": true,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_rows_receipt": {
+            "bytes": 23753317,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7285_v640_commit_frontier_rows.json",
+            "sha256": "sha256:289e75cf02d15a6332b80f7222c1da48f7a247b05aa23ebe73a00f314f2ab361"
+          }
+        },
+        "row_counts": {
+          "component_rows": 180,
+          "latency_throughput_rows": 180,
+          "parity_rows": 180,
+          "rows": 23040
+        }
+      },
+      "recomputed_value": true,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7285-commit-frontier",
+      "unit_id": "exp7285-commit-frontier:commit_acknowledgment_complete",
+      "verifier_is_oracle": true
+    },
+    {
+      "abstention": false,
+      "arm": "independent_raw_artifact_reduction",
+      "censored": false,
+      "claim": "commit_cost_value",
+      "claim_class": "null",
+      "cost": 360.47292650397867,
+      "declared_value": false,
+      "error": null,
+      "evidence_fields": [
+        "latency_throughput_rows",
+        "component_rows",
+        "acceptance_gate_results"
+      ],
+      "matches": true,
+      "metric": "commit_cost_value",
+      "metric_value": false,
+      "positive_promoted": false,
+      "raw_evidence": {
+        "references": {
+          "raw_rows_receipt": {
+            "bytes": 23753317,
+            "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7285_v640_commit_frontier_rows.json",
+            "sha256": "sha256:289e75cf02d15a6332b80f7222c1da48f7a247b05aa23ebe73a00f314f2ab361"
+          }
+        },
+        "row_counts": {
+          "component_rows": 180,
+          "latency_throughput_rows": 180,
+          "parity_rows": 180,
+          "rows": 23040
+        }
+      },
+      "recomputed_value": false,
+      "seed": 728720260914,
+      "source_authenticated": true,
+      "task_id": "exp7285-commit-frontier",
+      "unit_id": "exp7285-commit-frontier:commit_cost_value",
+      "verifier_is_oracle": true
+    }
+  ],
+  "schema": "carnot.exp7287.recomputed_claim_rows.v1"
+}
