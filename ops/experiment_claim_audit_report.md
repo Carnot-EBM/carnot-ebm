@@ -11,38 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
+| CLAIM_SUPPORTED | 7 |
 | CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7280_v640_arc_live.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7281_v640_admission_prototype.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-For the limited fixture-mechanics statement, any failed acceptance gate, lifecycle stage, mutation rejection, reducer mismatch, censored stream, or missing arm would refute readiness; no learning or comparative-value claim is made.
-
-## WAS THAT CHECKED
-Yes. The acceptance gates, eight lifecycle stages, mutation tests, independent reduction, all 24 prospective streams, and all seven arms were checked; these establish fixture conformance only.
-
-## EVIDENCE
-`honest_verdict` `complete_circular_positive: admission fixture mechanics pass; fixed eight-label bounds are often infeasible and no learning value is claimed` `verdict_class` `circular_positive` `verifier_is_oracle` `true` `model_invoked` `false` `admission_fixture_ready_score` `1` `failed_checks` `[]` `censored_stream_count` `0` `completed_stream_arm_rows` `168`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7282_v640_admission_learning.json
+## experiment_7294_v641_reuse_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -50,21 +22,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Admission learning completed, but the frozen value gates failed.
+The reuse audit completed but failed validation and is therefore disqualified from promotion.
 
 ## WHAT WOULD REFUTE IT
-A complete run in which every frozen value gate passed—particularly statistically favorable future-error and false-accept comparisons against reset and unconditional recognition, plus passing recurrence controls—would refute the null headline.
+All required validation checks passing, with no failed receipt and the reuse promotion gate satisfied, would refute the disqualification.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports explicit expected values, observed values, and pass statuses for run completeness and each frozen value gate, including serious reset, unconditional-recognition, and frozen-warmup controls. The gates failed. The oracle-defined verifier therefore supports the execution-grounded null, not a positive value claim.
+Yes. The validation receipts include the full Python suite, and the artifact records both the audit-completeness and promotion outcomes.
 
 ## EVIDENCE
-`"honest_verdict": "complete_null: admission learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,false_accept_vs_reset,false_accept_vs_unconditional_recognition,recurrence_degradation_vs_frozen_warmup,recurrence_error_vs_label_shuffled_admission"`; `"admission_run_complete_score": 1`; `"admission_value_score": 0`; `"future_error_vs_reset"`; `"observed": 0.007952008928571433`; `"pass": false`; `"false_accept_vs_reset"`; `"observed": 0.025065104166666668`; `"pass": false`; `"recurrence_degradation_vs_frozen_warmup"`; `"observed": 0.07112630208333333`; `"pass": false`; `"verdict_class": "null"`; `"verifier_is_oracle": true`
+`"honest_verdict"`: `"complete_disqualified_reuse_audit_validation_failed"`; `"status"`: `"complete"`; `"name"`: `"full_python_suite"`; `"exit_code"`: `2`; `"passed"`: `false`; `"reuse_audit_complete_score"`: `1`; `"reuse_promotion_score"`: `0`; `"verdict_class"`: `"disqualified"`; `"verifier_is_oracle"`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7283_v640_admission_audit.json
+## experiment_7295_v641_mixture_prototype.json
 
 **CLAIM_SUPPORTED**
 
@@ -72,21 +44,85 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The cold admission audit completed, but the admission method failed the frozen upstream efficacy value gate.
+The bounded fixed-share fixture passed its declared mechanical, causal-order, state-size, and prediction-change gates, without claiming prospective efficacy.
 
 ## WHAT WOULD REFUTE IT
-A passed upstream efficacy gate or an incomplete/censored audit would refute the headline.
+A state exceeding 69,632 bytes, chronology or future-label-read violations, fewer than 24 changed predictions, a reducer mismatch, or any declared mechanical gate failing would refute the headline.
 
 ## WAS THAT CHECKED
-Yes. The upstream-efficacy gate explicitly failed, while planned and completed stream counts matched, all 168 stream-arm units completed, and zero streams were censored.
+Yes. The acceptance gates, chronology controls, per-arm rows, and cold reduction checked those failure modes and report no such failure. The oracle does not independently establish efficacy, but that value claim is explicitly excluded.
 
 ## EVIDENCE
-`honest_verdict` `complete_null: cold admission audit completed; upstream efficacy value gate failed` `upstream_efficacy` `observed` `0` `pass` `false` `upstream_admission_value_score` `0` `planned_stream_count` `24` `completed_stream_count` `24` `planned_stream_arm_units` `168` `completed_stream_arm_units` `168` `censored_stream_count` `0`
+`honest_verdict` is `complete_circular_positive: bounded fixed-share fixture mechanics pass; prospective efficacy is not claimed; repository-wide suite retained unrelated failures`. `prospective_efficacy_claimed` is `false`. `verifier_is_oracle` is `true`. `bounded_serialized_state` reports `expected` `<=69632`, `observed` `11594`, and `pass` `true`. `changed_weight_predictions` reports `expected` `>=24`, `observed` `324`, and `pass` `true`. The displayed rows report `chronology_violation_count` `0`, `future_label_read_count` `0`, and `censored` `false`. `evaluation_streams_scored_by_this_prototype` is `0`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7284_v640_commit_prototype.json
+## experiment_7296_v641_mixture_learning.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Prospective fixed-share learning completed, but its frozen value gates failed.
+
+## WHAT WOULD REFUTE IT
+All frozen value comparisons meeting their prespecified thresholds—or the named failed gates actually having passing results—would refute the null headline.
+
+## WAS THAT CHECKED
+Yes. The artifact evaluates fixed-share learning against reset, unconditional-recognition, and frozen-warmup controls across 24 completed, uncensored prospective streams; six named value gates fail. The oracle defines correctness, but the headline makes no positive claim about the verifier’s added value.
+
+## EVIDENCE
+`honest_verdict`: `complete_null: prospective fixed-share learning completed but frozen value gates failed: future_error_vs_reset,future_error_vs_unconditional_recognition,non_feedback_error_vs_reset,non_feedback_error_vs_unconditional_recognition,separated_recurrence_vs_frozen_warmup,overlapping_recurrence_vs_frozen_warmup; repository-wide suite retained pre-existing collection failures`
+
+`mixture_value_score`: `0`
+
+`future_error_vs_reset`: `ci95_upper<0`, `0.005533854166666665`, `false`
+
+`future_error_vs_unconditional_recognition`: `ci95_upper<0`, `0.005394345238095237`, `false`
+
+`non_feedback_error_vs_reset`: `ci95_upper<0`, `0.004394531250000004`, `false`
+
+`non_feedback_error_vs_unconditional_recognition`: `ci95_upper<0`, `0.004503038194444447`, `false`
+
+`separated_recurrence_vs_frozen_warmup`: `ci95_upper<=0.01`, `0.15071614583333334`, `false`
+
+`overlapping_recurrence_vs_frozen_warmup`: `ci95_upper<=0.01`, `0.0361328125`, `false`
+
+`completed_stream_count`: `24`
+
+`censored_stream_count`: `0`
+
+`outcome_based_extension`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7297_v641_mixture_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Bounded fixed-share selection provides no qualifying efficacy benefit under delayed feedback and should be retired for the stated Exp7295/Exp7296 scope.
+
+## WHAT WOULD REFUTE IT
+A paired stream-level interval showing lower prospective future error than a serious baseline—reset or unconditional recognition—with its 95% upper bound below zero, including on non-feedback future outcomes and without material recurrence harm.
+
+## WAS THAT CHECKED
+Yes. The artifact reports paired comparisons against reset and unconditional recognition across all-future, non-feedback, recurrence, and feedback-selected subsets, split across overall and both recurrence strata. The qualifying efficacy comparisons failed; only the shuffled-label sanity control was beaten.
+
+## EVIDENCE
+`"mixture_promotion_score": 0`; `"future_error_vs_reset"`; `"ci95_upper": 0.005533854166666662`; `"future_error_vs_unconditional_recognition"`; `"observed": 0.005487351190476185`; `"non_feedback_error_vs_reset"`; `"observed": 0.004557291666666668`; `"non_feedback_error_vs_unconditional_recognition"`; `"observed": 0.004503038194444445`; `"true_feedback_future_error_vs_shuffled"`; `"pass": true`; `"independent_unit": "stream"`; `"independent_unit_count": 24`; `"count": 48`; `"censored_stream_count": 0`; `"retirement_triggered": true`; `"verdict_class": "null"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7298_v641_snapshot_journal.json
 
 **CLAIM_OVERSTATED**
 
@@ -94,21 +130,21 @@ KEEP
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The host group-commit prototype satisfies the changed acknowledgment contract.
+The persistent full-snapshot acknowledgment protocol passed as a positive correctness/readiness result.
 
 ## WHAT WOULD REFUTE IT
-A lost acknowledged event, duplicate application, partial recovered state, serial-transition mismatch, leaked queued state, or unbounded producer disposition would refute operational conformance; an independent verifier rejecting the result would refute the positive value claim.
+An independently judged recovery showing any acknowledged event missing, duplicated, reordered, or restored to the wrong state would refute the claim; disagreement between an independent oracle and the protocol’s verifier would also refute its claimed value.
 
 ## WAS THAT CHECKED
-No, not independently. The operational failure modes were checked across six crash boundaries, 96 event rows, semantic-parity rows, and queue controls, but correctness was judged by the oracle that defines the contract itself.
+No. Mechanical loss, duplication, parity, corruption, and capacity failures were exercised, but correctness was defined by the same oracle used to verify success; no independent correctness check was present.
 
 ## EVIDENCE
-`honest_verdict` `complete_circular_positive: host group commit satisfies the changed acknowledgment contract` `verifier_is_oracle` `true` `verdict_class` `circular_positive` `lost_acknowledged_event_count` `0` `duplicate_apply_count` `0` `invalid_partial_state` `false` `parity_failure_count` `0` `all_controls_passed` `true` `completed_event_count` `96` `completed_crash_units` `6`
+`honest_verdict` is `complete_circular_positive: persistent full-snapshot acknowledgment protocol passed`; `verifier_is_oracle` is `true`; `verdict_class` is `circular_positive`. The execution-grounded checks report `lost_acknowledged_event_count` of `0`, `duplicate_apply_count` of `0`, `valid_complete_state` of `true`, and `parity_failure_count` of `0`.
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
-## experiment_7285_v640_commit_frontier.json
+## experiment_7299_v641_snapshot_cost.json
 
 **CLAIM_SUPPORTED**
 
@@ -116,43 +152,21 @@ NARROW_CLAIM
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The measured host commit frontier does not satisfy every bounded deployment gate.
+Persistent SQLite full snapshots do not meet every frozen V640 storage deployment bound.
 
 ## WHAT WOULD REFUTE IT
-Every declared deployment gate passing, including steady acknowledgment p95 being at or below 50,000,000 ns, would falsify the claim.
+All frozen deployment gates passing, including the paired group-16 throughput lower CI95 reaching 1.5 and the full-boundary cold lower CI95 reaching 10.0.
 
 ## WAS THAT CHECKED
-Yes. The acceptance-gate results directly compare steady acknowledgment p95 with its declared threshold, and the independent reducer reports the overall value gate result.
+Yes. The acceptance gates directly tested those thresholds using eight paired seeds against the `atomic_replace` baseline; both required throughput gates failed. The oracle relationship does not circularly establish this negative performance claim.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null: measured host commit frontier does not meet every bounded deployment gate`; `steady_acknowledgment_p95`: `expected`: `<=50000000 ns`, `observed`: `220197149.6`, `passed`: `false`; `value_gate_passed`: `false`; `verdict_class`: `null`
+`honest_verdict`: `complete_null: persistent SQLite full snapshots do not meet every frozen V640 storage deployment bound`; `fixed_group16_burst_throughput`; `lower_ci95`: `1.4558337555069685`; `passed`: `false`; `nfr01_full_boundary_10x`; `observed`: `1.5549724849050095`; `passed`: `false`; `snapshot_value_score`: `0`; `paired_seeds`: `8`; `storage_arms`: `atomic_replace`, `sqlite_persist`; `censored_trial_units`: `0`; `capture_complete`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7286_v640_board_state.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-As a receipt, it would be internally contradicted if any board lacked an authenticated disposition or exact next condition, if KV260 lacked its preserved fabric evidence, if PolarFire were represented as FPGA sampling rather than CPU dispatch, if a qualifying GateMate change receipt existed, or if this invocation issued a hardware operation.
-
-## WAS THAT CHECKED
-Yes. The three board rows expose authentication, disposition, next-condition, terminal-state, processor-class, and hardware-operation fields; the acceptance gates reduce those records, and two negative receipt fixtures exercised fail-closed behavior. These checks establish receipt consistency, not comparative method value.
-
-## EVIDENCE
-`inference_substrate` `aggregation_from_upstream_artifacts` `model_invoked` `false` `hardware_operations_issued_count` `observed` `0` `three_dispositions_reduce` `passed` `true` `latest_receipt_authenticated` `exact_next_condition` `graduated_preserved` `blocked_changed_physical_state` `graduated_cpu_dispatch_preserved` `processor_class` `cpu` `programmable_logic_sampling_observed` `false` `negative_receipt_fixtures_fail_closed` `all_failed_closed` `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7287_v640_capstone.json
+## experiment_7300_v641_board_continuity.json
 
 **CLAIM_SUPPORTED**
 
@@ -160,16 +174,38 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The capstone is blocked because Exp7280 carries critical inference-provenance flags, despite all fourteen dispositions being represented, and all four scientific value scores remain zero.
+The artifact records authenticated dispositions and exact next conditions for all three boards, preserves prior KV260 fabric execution and PolarFire CPU dispatch without mislabeling it as FPGA sampling, and correctly blocks GateMate because no later physical-change receipt exists.
 
 ## WHAT WOULD REFUTE IT
-An Exp7280 observation of `flagged_adversarial` equal to `false`, making the required science authentic and eligible rather than quarantined, would refute the stated reason for blocking promotion.
+An unauthenticated or missing board disposition; a missing next condition; KV260 evidence showing no fabric execution or host emulation; PolarFire showing failed dispatch/hash matching or FPGA sampling; a qualifying later GateMate receipt despite the blocked disposition; or any hardware operation issued by this invocation.
 
 ## WAS THAT CHECKED
-Yes. `gate_check_summary` directly compares Exp7280’s `flagged_adversarial` field with the expected value and records the contrary observed value; the acceptance gates separately test required-science authenticity and the four value scores.
+Yes. The per-board rows check authentication, execution venue, processor class, execution/hash state, exact next conditions, abstention, and censoring. The receipt search checks whether a qualifying GateMate change exists, while the acceptance gates and operation records check fail-closed behavior and zero hardware operations.
 
 ## EVIDENCE
-`"upstream": "exp7280-arc-live"`; `"artifact_field": "flagged_adversarial"`; `"expected_value": false`; `"observed_value": true`; `"passed": false`; `"terminal_classification": "blocked"`; `"criterion": "required_science_authentic"`; `"observed": false`; `"source_promotion_score": 0`; `"arc_method_value_score": 0`; `"admission_promotion_score": 0`; `"commit_cost_value_score": 0`; `"criterion": "fourteen_task_dispositions"`; `"observed": 14`; `"passed": true`; `"verifier_is_oracle": false`
+`"three_continuity_rows_reduce"` has `"observed": 1` and `"passed": true`. All three rows have `"latest_receipt_authenticated": true`, `"censored": false`, and an `"exact_next_condition"`. KV260 records `"fabric_execution_completed": true`, `"host_emulation": false`, and `"observed_venue": "kv260_fpga_fabric"`. PolarFire records `"dispatch_completed": true`, `"input_hash_matches": true`, `"output_hash_matches": true`, `"processor_class": "cpu"`, and `"programmable_logic_sampling_observed": false`. GateMate records `"disposition": "blocked_changed_physical_state"`, `"abstention": true`, `"terminal_criterion_met": false`, and `"exists": false`. `"hardware_operations_issued_count"` has `"observed": 0` and `"passed": true`. `"negative_receipt_fixtures_fail_closed"` has `"all_failed_closed": true`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7301_v641_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Required V641 science is blocked: ARC evidence is quarantined, the self-parse session stopped at its pre-gate, and the completed reuse, mixture, and storage branches yielded no promoted value.
+
+## WHAT WOULD REFUTE IT
+An authenticated, unquarantined ARC boundary followed by a completed self-parse session, or a positive value score for any completed reuse, mixture, or storage branch, would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The ARC gate replay checked for an unquarantined readiness score, the self-parse disposition checked completion, and the independent-branch gate checked the reuse, mixture, and snapshot value scores against a positive target.
+
+## EVIDENCE
+`"honest_verdict": "blocked_required_v641_science_unavailable: all fourteen dispositions are represented; ARC boundary evidence is quarantined and Exp7290 stopped at its failed pre-gate; complete reuse, mixture, and storage branches have no promoted value"`; `"arc_boundary_ready_score"`; `"expected_value": 1`; `"observed_value": 0`; `"quarantined": true`; `"status": "blocked"`; `"arc_method_value_score": null`; `"reuse_promotion_score": 0`; `"mixture_promotion_score": 0`; `"snapshot_value_score": 0`; `"positive_promoted": false`; `"verifier_is_oracle": false`
 
 ## RECOMMENDATION
 KEEP

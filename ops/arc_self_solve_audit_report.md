@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (91 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (92 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,11 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (91 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — zero recent solve artifacts exist, so there is no evidence of new live self-discovery capability.**
+**TL;DR: NO RECENT SOLVES TO CREDIT OR CLASSIFY.** Reachability lint passes, but proves only modules are callable—not that hidden games are solved through live self-discovery.
 
-Per-artifact: None. The reachability lint passing only proves solver modules are callable from live entrypoints; it does **not** prove the live agent discovered hidden-game solutions through its own attempts and runtime reverse-engineering.
+Per-artifact: none (`0` artifacts in the last 7 days).
 
-Recommended action: Produce auditable live-run artifacts recording observations, agent-selected actions, runtime hypotheses/model updates, and successful completion—without source inspection, offline ground-truth search, or handcrafted per-game logic.
+**Recommended action:** Produce live-run artifacts recording the agent’s observations, attempts, runtime deductions, and resulting solve. Include provenance sufficient to rule out source inspection, offline ground-truth search, and hand-built per-game logic.
 
-**Pattern watch:** No artifact-level outer-loop drift is visible because there are no artifacts. Do not treat “91 modules reachable” as progress toward autonomous solving; architecture reachability without live solve traces is non-evidence.
+**Pattern watch:** No demonstrated outer-loop drift this period, but also no evidence of capability advancement. Do not treat “92 modules reachable” as proof that the live agent autonomously discovers solutions.
 

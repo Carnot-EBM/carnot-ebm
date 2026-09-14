@@ -44431,3 +44431,106 @@ Scholar again returned 35 EBT and eight ARM-EBM citation records with no next
 token. These retrieved counts do not establish an exhaustive citation census.
 No source update justifies repeating GateMate diagnostics without changed
 physical-state evidence.
+
+## V642 planning refresh — 2026-09-14
+
+This source review precedes the V642 design. External findings motivate tests;
+they do not establish Carnot results. Dates below distinguish first submission
+from the version inspected. Existing references were rechecked where relevant.
+
+### Findings selected for bounded adaptation
+
+| Source and checked version | Finding | Carnot adaptation and falsifier |
+|---|---|---|
+| [Batch prompting and overthinking](https://arxiv.org/abs/2511.04108v4), first submitted 2025-11-06; v4 2026-02-20 | Joint prompts can reduce repeated reasoning. The current author list differs from the search index. | Batch claim extraction within one source version. Give direct generation the same batching opportunity. Reject value if complete cost or semantic parity fails. This changes call multiplicity, rather than repeating the V641 source-cache mechanism. |
+| [BATCHSAFEBENCH](https://arxiv.org/abs/2503.15551v2), first submitted 2025-03-18; v2 2025-06-20 | One malicious query can affect other queries in a batch. | Include mixed valid/invalid claims, permuted identifiers, and an adversarial instruction inside source data. Measure contamination of untouched claims. Do not assume delimiters establish isolation. |
+| [CacheWeaver](https://arxiv.org/abs/2606.19667), 2026-06-18 | Evidence ordering and prefix reuse affect serving cost. | Retain a warm-prefix direct comparator and measure actual cache hits. Treat batched direct generation as a required comparator. |
+| [Low-level symbolic grounding](https://arxiv.org/abs/2609.05025), 2026-09-04 | SQL materialization offers a structured route from documents to hallucination checks. | Preserve source/claim extraction as separate fallible operations. Reuse existing exact execution. Joint extraction is a local adaptation, not a reproduction of the paper. |
+| [Interactive constraint refinement](https://arxiv.org/abs/2509.24489), 2025-09-29 | Rejected global constraints can contain valid substructures. Query-driven refinement can recover them. | Test revision of only the factor contradicted by released feedback. Retain unaffected factors. Compare against resetting all factors, local reset without retained evidence, frozen memory, and shuffled feedback. Failure to improve future error with protected coverage rejects the mechanism. |
+| [Memoir](https://arxiv.org/abs/2607.20792), 2026-07-22 | Coupling memory writes to the same reasoning iteration harmed learning speed in its bounded recall study. | Make prediction read-only. Apply delayed feedback between queries. Require interventions that change future predictions but cannot change sealed past predictions. This is a design caution, not evidence for the proposed learner. |
+| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), 2026-07-19 | Solver difficulty and model error need not agree; surface relabeling can change accuracy. | Include entity/identifier permutations in source and memory fixtures. Measure actual baseline headroom. Do not label a panel difficult from solver statistics alone. |
+| [World models as tools](https://arxiv.org/abs/2601.03905v2), first submitted 2026-01-07; v2 2026-01-08 | Tool availability does not establish useful invocation or correct downstream use. | Trace the live ARC chain from model call through tool result to policy action. A generated engine or parsed tool call alone does not pass a reasoning-value gate. |
+
+### Other required themes and disposition
+
+- **EBM verification/reasoning:** rechecked [EBT](https://arxiv.org/abs/2507.02092),
+  [ARM–EBM](https://arxiv.org/abs/2512.15605), and
+  [distributional verification](https://arxiv.org/abs/2605.18871).
+  Energy compatibility does not certify faithful source extraction. The last
+  mechanism overlaps retired PHASE D; it does not reopen that branch.
+- **Neural constraint satisfaction:** [T-SKM-Net](https://arxiv.org/abs/2512.10461)
+  (2025-12-11) handles mixed linear constraints through iterative projection.
+  [PAL](https://arxiv.org/abs/2503.19466) (2025-03-25) uses a probabilistic
+  algebraic layer. Both assume supplied constraints; defer until extraction
+  and the complete deployment cost justify a new neural layer.
+- **Energy-guided decoding:** [Uni-E](https://arxiv.org/abs/2606.09159)
+  (2026-06-08) addresses dependencies and invariance in diffusion decoding.
+  Its backbone differs from the mandated autoregressive GGUF. Keep it as
+  future work; no retired energy-generation rerun is justified.
+- **KANs and Ising hardware:** [KANELÉ](https://arxiv.org/abs/2512.12850)
+  (2025-12-14) maps KAN functions to FPGA lookup tables.
+  [Dense-to-sparse Ising connectivity](https://arxiv.org/abs/2503.01177)
+  (2025-03-03) exposes copy-node and convergence costs.
+  [Optical KAN/Ising primitives](https://arxiv.org/abs/2508.17440)
+  (2025-08-24) need unavailable photonic hardware. Preserve these as deployment
+  options. Local factor updates offer a CPU bitset and future FPGA path;
+  no speedup is inferred from their asymptotic operation count.
+- **Durability:** rechecked [SQLite atomic commit](https://www.sqlite.org/atomiccommit.html).
+  Persistent journals retain synchronization costs. Use existing measured
+  stage rows to bound further acceleration before another storage variant.
+
+### Secondary-source coverage and access limits
+
+- **OpenReview:** searched NeurIPS/ICML/ICLR EBM work. Indexed ICLR 2026 PDFs
+  exposed [VFScale](https://openreview.net/pdf?id=8ta0xgtsJK) and EBT material.
+  VFScale's forum returned a browser challenge. Its energy-quality alignment
+  motivates independent calibration checks, but no implementation is selected.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned
+  navigation. The [Z1T article](https://extropic.ai/writing/z1t), dated
+  2026-09-04, was readable. It describes sparse computation split between Z1
+  and a companion processor. Its system efficiency estimates are vendor
+  projections, not Carnot measurements. No local device access was established.
+- **Semantic Scholar:** direct Graph API citation requests for EBT and ARM–EBM
+  returned 35 and eight records, respectively, with no next token. These are
+  retrieved records, not an exhaustive citation census. Browser API opens
+  failed; bounded HTTPS requests succeeded. Relevant citing papers independently
+  rechecked on arXiv include Memoir, Solver-Hard Is Not Model-Hard, and World
+  Models as Tools. Citation association is discovery evidence only.
+- **Hugging Face Papers:** [Beyond Document Grounding](https://huggingface.co/papers/2607.00895)
+  was readable. The symbolic-grounding paper page failed to load; its arXiv
+  record was checked directly. Keep document/code/tool source types separate.
+- **GitHub:** opened monthly [Python](https://github.com/trending/python?since=monthly)
+  and [Rust](https://github.com/trending/rust?since=monthly) trending lists.
+  No relevant new dependency was selected from the displayed lists. This is
+  not a claim that no EBM, constraint, or KAN repository exists.
+- **Logical Intelligence:** the [Kona architecture page](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  was readable. It remains first-party architecture information; the checked
+  material establishes no locally runnable Kona adapter or checkpoint.
+
+### Local evidence that constrains selection
+
+The completion archive ends at V640. V641's active roster and terminal artifacts
+establish its fourteen dispositions. Exp7288's literal contract check passed;
+its disqualification came from validation, including missing prior-failure
+metadata on Exp7292. Do not misdescribe this as another stale document.
+
+Exp7289 passed its six CPU lifecycle controls. Its terminal candidate still
+contained invocation-shaped fixture evidence and failed the unchanged
+authenticity checker. Exp7290 then stopped at its pre-gate. A new receipt must
+separate current counters from immutable fixture sidecars before live capture.
+
+Exp7294 reconstructed 672 calls and 384 arm rows. Its cold full-cost speedup
+was 0.5780, with one-sided bootstrap lower bound 0.5753. Source reuse was slower
+than warm direct generation. The audit itself was disqualified by repository
+validation, so these remain diagnostic rows, not a promoted result.
+
+Exp7297 independently confirmed 1,002 later changed predictions without
+chronology or memory-cap violations. The fixed-share learner still failed
+future-error and recurrence gates. Its complete-hypothesis mechanism is retired.
+Factor-local revision is a different hypothesis; it must earn its own result.
+
+Exp7299 recorded snapshot_capture_complete_score=1 and snapshot_value_score=0.
+Do not replace another storage engine before evaluating the remaining cost
+envelope. Exp7300 preserves KV260 fabric graduation and PolarFire CPU dispatch.
+GateMate still lacks a changed-physical-state receipt. Preserve all three
+dispositions without another unchanged hardware probe.
