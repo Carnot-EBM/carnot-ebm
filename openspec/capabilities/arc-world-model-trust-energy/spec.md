@@ -32356,6 +32356,97 @@ for Experiment 7305. It SHALL write the terminal result atomically after validat
 Implementation status: specified 2026-09-14. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7305: Measure direct selfparse policy use with durable current receipts
+
+Experiment 7305 SHALL authenticate the unchanged Experiment 7304 terminal artifact before
+it reads `arc_receipt_ready_score`. It SHALL reject a missing, quarantined, disqualified,
+nonterminal, checksum-invalid, or numerically unready dependency. It SHALL also match every
+caller hash in the Experiment 7304 handoff to the current source bytes. An external failure
+SHALL produce a terminal `blocked_*` result. `gate_check_summary` SHALL retain the exact
+upstream, check, field, observed value, and expected value.
+
+The experiment SHALL freeze one registered public transfer target and one evaluation seed
+before interaction. It SHALL construct the target through `make_carnot_agent` and the live
+`E3AgentPolicy` path. It SHALL set `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` and
+`CARNOT_FORCE_LIVE=1`. It SHALL withhold game adapters, banked solutions, registry details,
+game source, ground-truth paths, and offline search from the policy. Registered levels SHALL
+receive no new solve credit.
+
+The live session SHALL resolve `unsloth/Qwen3.8-27B-GGUF` Q4_K_M only through
+`cached_current_model()`. It SHALL load that exact GGUF with native llama.cpp and its embedded
+tokenizer and chat template. It SHALL reserve one idle GPU without interrupting another user.
+The complete window SHALL stop within 3000 seconds, including a load cap of 600 seconds. The
+session SHALL permit at most 192 environment actions, two completion calls, and 4096 generated
+tokens. It SHALL not use a smaller, simulated, remote, or supervisor-loop fallback.
+
+The shipped inference boundary SHALL persist each load or generation attempt before its
+blocking call. The parent SHALL retain completed, failed, cancelled, and in-flight calls after
+normal exit or timeout. Raw evidence SHALL preserve requests, replies, selfparse tool attempts,
+tool results, induction rows, action provenance, and environment transitions. A load attempt
+SHALL set `model_invoked=true`, even if no generation follows. Substrate, class, mode, and CUDA
+claims SHALL describe only work supported by current receipts.
+
+The reducer SHALL award `arc_capture_complete_score=1` only when current load or generation
+evidence is authentic and every planned unit and attempted call has a terminal or censored
+disposition. It SHALL award `arc_tool_use_score=1` only when a current successful tool result is
+present in a later model request, the resulting induction installs a policy plan, and a later
+environment action consumes that plan. Tool dispatch without this complete chain SHALL score
+zero and produce a complete null, not an efficacy claim.
+
+The experiment SHALL hash-authenticate earlier nonquarantined direct-selfparse induction rows
+into a separate cumulative ledger. Historical calls SHALL never enter current invocation
+counters. Ten cumulative unique inductions are an evidence goal, not a session success gate.
+The artifact SHALL report the remaining gap. Any incidental novel solve SHALL require recorded
+live replay and registry novelty before credit. The experiment SHALL not submit, publish, or
+change the solve registry or a production default.
+
+### SCENARIO-ARC-WMTE-7305-DEPENDENCY-BLOCK
+
+- GIVEN an Experiment 7304 receipt that is missing, quarantined, disqualified, nonterminal,
+  checksum-invalid, unready, or bound to changed caller bytes
+- WHEN Experiment 7305 authenticates the dependency before model work
+- THEN it publishes a terminal blocked artifact with zero invocation counts
+- AND `gate_check_summary` preserves the exact failed comparison.
+
+### SCENARIO-ARC-WMTE-7305-FROZEN-LIVE-SESSION
+
+- GIVEN a clean Experiment 7304 receipt, cached current GGUF, native llama.cpp, and idle GPU
+- WHEN the frozen adapter-withheld transfer session runs
+- THEN the actual `make_carnot_agent` and `E3AgentPolicy` route uses direct selfparse
+- AND the session enforces 192 actions, two completions, 4096 generated tokens, and 3000 seconds.
+
+### SCENARIO-ARC-WMTE-7305-DURABLE-CENSORING
+
+- GIVEN a load or generation that completes, fails, or remains active at the session timeout
+- WHEN the parent reduces the durable boundary ledger
+- THEN every attempt retains its actual terminal or in-flight state
+- AND model invocation, substrate class, CUDA evidence, and censored unit counts agree.
+
+### SCENARIO-ARC-WMTE-7305-TOOL-POLICY-ACTION
+
+- GIVEN a current selfparse turn that dispatches a successful tool
+- WHEN a later model request contains that exact bounded result
+- AND the returned induction installs a plan that emits a later environment action
+- THEN `arc_tool_use_score` equals one
+- AND a missing link in that chain leaves the score zero and the finding null.
+
+### SCENARIO-ARC-WMTE-7305-CUMULATIVE-SEPARATION
+
+- GIVEN authenticated historical direct-selfparse induction rows and current boundary events
+- WHEN Experiment 7305 builds its cumulative ledger
+- THEN historical induction IDs are deduplicated in hash-bound sidecars
+- AND historical calls do not change current load, generation, action, or token counters.
+
+### SCENARIO-ARC-WMTE-7305-TERMINAL-PUBLICATION
+
+- GIVEN the live or censored row, independent reduction, scoped checks, and both terminal linters
+- WHEN the measured terminal candidate passes cold validation
+- THEN the result reports capture and mechanism scores separately and writes atomically
+- AND official score, reproduced novel levels, registry changes, and publication remain absent.
+
+Implementation status: specified 2026-09-14. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition

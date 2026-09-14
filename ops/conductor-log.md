@@ -17947,3 +17947,4 @@ code |
 | 2026-09-14 13:45 UTC | V642 literature ingestion and exact fourteen-task  | OK | 90 passed, 1 warning in 8.27s |
 | 2026-09-14 14:11 UTC | Separate required experiment checks from repositor | OK | 86 passed, 1 warning in 7.86s |
 | 2026-09-14 14:40 UTC | Qualify current ARC invocation receipts without fi | OK | 97 passed, 1 warning in 23.38s |
+| 2026-09-14 15:03 UTC | Run one adapter-withheld live selfparse generaliza | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (655s silence). Last out |
