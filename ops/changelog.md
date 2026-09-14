@@ -19986,3 +19986,4 @@ timed alternative is available.
 - 2026-09-14: V642 literature ingestion and exact fourteen-task receipt (⚠️ Research Finding) — honest_verdict=complete_disqualified_v642_contract_mismatched_or_invalid; results/experiment_7302_v642_source_contract.json
 - 2026-09-14: Separate required experiment checks from repository health (⚠️ Research Finding) — honest_verdict=complete_scoped_validation_ready_with_historical_repository_health_open; results/experiment_7303_v642_validation_scope.json
 - 2026-09-14: Qualify current ARC invocation receipts without fixture contamination (⚠️ Research Finding) — honest_verdict=complete_circular_positive_arc_receipt_boundary_clean; results/experiment_7304_v642_arc_receipt.json
+- 2026-09-14: Run one adapter-withheld live selfparse generalization session (⚠️ Research Finding) — honest_verdict=complete_null_no_runtime_tool_result_to_policy_action_chain; results/experiment_7305_v642_arc_selfparse.json
