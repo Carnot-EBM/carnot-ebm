@@ -15973,3 +15973,118 @@ cold reducer SHALL use `aggregation_from_upstream_artifacts` with class
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7297 and SCENARIO-CL-7297-* | Implemented in `python/carnot/experiment_7297_v641_mixture_audit.py` with a thin script entrypoint: authenticated dual-upstream evidence, fresh-process seven-arm replay, exact prediction and transition parity, six invalid-copy controls, paired stream intervals, causal future-change accounting, and atomic terminal evidence. | `tests/python/test_experiment_7297_v641_mixture_audit.py` (8 focused scenarios pass); scoped coverage is 574/574 statements (100%). |
+
+## REQ-CL-7310: Bounded Factor-Local Revision From Released Feedback
+
+Carnot SHALL provide a default-off factor controller for the shipped finite
+`family_id` and `numeric_value` interface. Each family SHALL own one survivor
+bitset and at most 16 released witnesses. A prediction SHALL be `accept` or
+`reject` only when every surviving predicate agrees. All other predictions
+SHALL abstain. The controller SHALL not vote across complete hypotheses, select
+active queries, route by a phase label, or read evaluator-owned regime data.
+
+The controller SHALL seal a prediction before it accepts a delayed release.
+It SHALL reject early, future, duplicate, malformed, or cross-event releases
+before state changes. A contradictory release SHALL rebuild only its family.
+The rebuild SHALL select the longest chronological suffix of retained released
+witnesses with at least one consistent predicate. An ambiguous suffix SHALL
+remain a multi-predicate survivor set and SHALL abstain where those predicates
+disagree. All unaffected family bytes SHALL remain exact.
+
+The charged state SHALL include survivor masks, witness bytes, pending release
+rows, deduplication identifiers, and rollback state. The total SHALL stay at or
+below 69,632 bytes. Witness, pending, deduplication, and rollback history SHALL
+expire by deterministic oldest-first rules. No live pointer to uncharged parent
+state is permitted. Save, cold restart, rollback, and read-only prediction SHALL
+preserve canonical state bytes. The existing transactional memory and pipeline
+interfaces SHALL expose this controller only through an explicit opt-in hook.
+
+The fixture SHALL freeze eight development streams and 24 independent
+evaluation streams before controller execution. Each stream SHALL contain 1,024
+events, 128 warmup releases, and 128 post-warmup releases at indices
+`128 + 7*j` for `j=0..127`. Each post-warmup label SHALL release four steps
+later. Evaluation SHALL contain eight isolated-factor drift streams, eight
+overlapping-factor drift streams, and eight stationary controls. Seeds, drift
+times, recurrence, target parameters, labels, and shuffled labels SHALL remain
+evaluator-owned.
+
+The five bounded arms SHALL be factor-local retained witnesses, global reset on
+contradiction, local reset without retained witnesses, frozen warmup, and
+label-shuffled factor-local revision. The fixture readiness score SHALL require
+an executable bounded representation, a sealed independent panel, all mutation
+controls, and the opt-in E2E path. It SHALL not require favorable efficacy.
+Shared exact evaluator authority SHALL set `verifier_is_oracle=true`; readiness
+therefore SHALL use `verdict_class=circular_positive`, never `positive`.
+
+The preregistered later learning evaluation SHALL use paired whole-stream CI95
+intervals. Future and non-feedback error upper deltas SHALL be below zero versus
+both reset controls. Recurrence error upper delta SHALL be at most 0.02 versus
+frozen warmup. False-accept upper delta SHALL be at most zero and coverage lower
+delta at least -0.02 versus controls. It SHALL require at least 24 legitimate
+later changed predictions and zero time or byte violations. These gates SHALL
+remain frozen in the prototype artifact and SHALL not determine fixture
+readiness.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All attempted, completed, failed, cancelled, and
+in-flight model load and generation counters SHALL be zero. CPU bitset replay
+SHALL use `cpu_exact_solver_or_simulator` for both substrate fields. Execution
+SHALL use `execution_venue=host`. CPU operations, bytes, and update latency SHALL
+be measured. A contiguous fixed-width table MAY define a future Rust/PyO3 and
+FPGA lookup path. A 100x target SHALL remain explicitly unverified and SHALL not
+be reported as hardware execution or training.
+
+### SCENARIO-CL-7310-PRECONDITIONS: Historical Evidence Fails Closed
+
+- GIVEN Exp7297, repository inputs, exclusions, and task-owned output paths
+- WHEN availability, hashes, terminal class, quarantine state, task identity, and ownership are checked
+- THEN missing, quarantined, disqualified, or malformed evidence produces a row-free terminal block
+- AND `gate_check_summary` preserves the exact upstream, check, field, observed value, and expected value.
+
+### SCENARIO-CL-7310-REVISION: Contradiction Rebuilds One Factor
+
+- GIVEN independent factor masks and chronological released witnesses
+- WHEN one due label contradicts its factor survivor set
+- THEN only that factor rebuilds from the longest consistent witness suffix
+- AND unaffected factor bytes remain exact while ambiguity causes abstention.
+
+### SCENARIO-CL-7310-BOUNDS: Every Durable Byte Is Charged
+
+- GIVEN witnesses, pending labels, deduplication IDs, and rollback state near the cap
+- WHEN a release, poison row, expiration, rollback, save, or cold restart occurs
+- THEN state stays within 69,632 bytes or rejects atomically
+- AND no uncharged parent pointer or unbounded history survives.
+
+### SCENARIO-CL-7310-STREAMS: The Evaluator Owns Frozen Transitions
+
+- GIVEN eight development and 24 evaluation streams with three equal strata
+- WHEN public, release, authority, and shuffled-label views are sealed
+- THEN every arm has the same 1,024 events and delayed 128-label schedule
+- AND private seeds, drift times, recurrence, targets, and labels never enter prediction input.
+
+### SCENARIO-CL-7310-CONTROLS: Five Arms And Attacks Stay Distinct
+
+- GIVEN the five frozen bounded arms and task-owned development copies
+- WHEN independence, delayed contradiction, ambiguity, poison, byte, rollback, restart, and read-only controls run
+- THEN every required valid path passes and every invalid mutation fails before publication
+- AND the retired fixed-share learner is not retrained or reactivated.
+
+### SCENARIO-CL-7310-E2E: Opt-In Released Feedback Changes A Later Query
+
+- GIVEN the default-off pipeline hook and transactional memory
+- WHEN an opted-in request seals its prediction, its matching label releases, and durable local revision commits
+- THEN a later prediction reads the revised durable factor state after restart
+- AND no model weight, production default, active query, or unreleased label changes.
+
+### SCENARIO-CL-7310-TERMINAL: Readiness And Efficacy Stay Separate
+
+- GIVEN a sealed panel, bounded controller, controls, costs, and frozen learning gates
+- WHEN the prototype artifact is classified
+- THEN `factor_fixture_ready_score` equals one for complete mechanics without an efficacy claim
+- AND exact shared authority makes the complete readiness verdict circular-positive.
+
+## Implementation Status (REQ-CL-7310)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7310 and SCENARIO-CL-7310-* | Implemented in `python/carnot/experiment_7310_v642_factor_prototype.py` with a thin script entrypoint: factor-owned survivor masks and retained suffixes, charged rollback, sealed independent streams, five bounded arms, mutation controls, and a default-off durable pipeline hook. | `tests/python/test_experiment_7310_v642_factor_prototype.py` (10 focused scenarios pass); scoped coverage is 844/844 statements (100%). |
