@@ -15580,3 +15580,97 @@ use `execution_venue=host`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7295 and SCENARIO-CL-7295-* | Implemented in `python/carnot/experiment_7295_v641_mixture_prototype.py` with the thin executable in `scripts/experiments/experiment_7295_v641_mixture_prototype.py`: bounded fixed-share controller, shared delayed-label replay, sealed scorer-only streams, causal controls, cold reduction, and atomic terminal evidence. | `tests/python/test_experiment_7295_v641_mixture_prototype.py` (15 focused scenarios pass); scoped coverage is 920/920 statements (100%). |
+
+## REQ-CL-7296: Prospective Fixed-Share Value Under Recurring Drift
+
+Carnot SHALL evaluate the Exp7295 fixed-share fixture once on all 24 frozen
+evaluation streams. Each stream SHALL keep 1,024 observations, 128 warmup
+labels, 128 selected future labels, a four-step release delay, seven frozen
+arms, and the 69,632-byte bounded-state limit. The run SHALL not select,
+extend, or remove streams after it reads an outcome.
+
+For each of the 896 post-warmup steps, every arm SHALL make and seal its
+prediction before the evaluator releases a due past label. The evaluator SHALL
+then score the sealed prediction. It SHALL expose only due releases to the
+controller. The controller SHALL not receive evaluator truth, recurrence
+truth, change-point truth, or an unreleased label. Raw rows SHALL retain the
+prediction, evaluator truth, full-denominator error, non-feedback-subset role,
+false acceptance, abstention, coverage, charged bytes, feedback count, cost,
+state hash, seed, arm, stream, step, and recurrence stratum.
+
+Each due release SHALL have a causal update receipt. The receipt SHALL bind the
+revealed label ID, prediction-before-release order, state hashes and weights
+before and after the update, nominee birth and eviction, serialized memory,
+and the next changed prediction. The unbounded reference SHALL retain full
+history. It SHALL report its real larger bytes and time. It SHALL remain
+outside bounded deployment eligibility.
+
+An independent disk reducer SHALL rebuild each stream-arm result. It SHALL
+report future error on all post-warmup steps and on steps not selected for
+feedback. It SHALL also report recurrence error, false acceptance, abstention,
+coverage, label charges, memory, and cost. Paired bootstrap intervals SHALL
+resample whole streams 10,000 times with a frozen seed. Pooled, separated, and
+overlapping results SHALL remain distinct.
+
+`mixture_capture_complete_score` SHALL equal one only when all 24 streams,
+seven arms, chronological step rows, update receipts, cold reductions, and
+restart controls are complete. `mixture_value_score` SHALL equal one only when
+all Exp7295 efficacy, recurrence, safety, coverage, causal-change, and byte
+gates pass. A complete failed efficacy test SHALL use `verdict_class=null`.
+Exact evaluator authority SHALL set `verifier_is_oracle=true`. A favorable
+complete result SHALL therefore use `verdict_class=circular_positive`, never
+`positive`.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counters SHALL be
+zero. CPU replay SHALL use `cpu_exact_solver_or_simulator` for both substrate
+fields. Cold reduction SHALL use `aggregation_from_upstream_artifacts` and
+class `aggregation`. Execution SHALL use `execution_venue=host`.
+
+### SCENARIO-CL-7296-PRECONDITIONS: Exact Fixture Or Terminal Block
+
+- GIVEN Exp7295, its scorer manifest, source hashes, exclusions, and output paths
+- WHEN readiness, stream seeds, update constants, byte limit, hashes, and ownership are checked
+- THEN only exact available evidence can start evaluation
+- AND an external failure produces row-free terminal blocked evidence with the exact failed field.
+
+### SCENARIO-CL-7296-CHRONOLOGY: Prediction Precedes Delayed Learning
+
+- GIVEN one frozen evaluation stream and the seven fixed arms
+- WHEN a selected label becomes due four steps after its source
+- THEN every current prediction is sealed before release and update
+- AND only that due past label can change later predictions and expert weights.
+
+### SCENARIO-CL-7296-ROWS: Future Outcomes And Costs Stay Recomputable
+
+- GIVEN complete chronological rows and update receipts
+- WHEN the cold reducer rebuilds every stream-arm unit
+- THEN all-step and non-feedback future errors match the raw rows
+- AND safety, abstention, coverage, memory, labels, and time remain charged.
+
+### SCENARIO-CL-7296-GATES: Whole Streams Drive Frozen Intervals
+
+- GIVEN 24 independent stream pairs across both recurrence strata
+- WHEN 10,000 frozen bootstrap draws score every preregistered comparison
+- THEN no event row is treated as an independent unit
+- AND a harmed stratum, shuffled-feedback failure, or safety failure cannot be averaged away.
+
+### SCENARIO-CL-7296-E2E: Restart Preserves The Causal Path
+
+- GIVEN an observation, sealed prediction, delayed release, and bounded update
+- WHEN the controller is checkpointed and restored before a later unrevealed event
+- THEN state bytes and the later prediction match exactly
+- AND the result is prospective future-outcome evidence, not same-step fitting.
+
+### SCENARIO-CL-7296-TERMINAL: Capture And Value Stay Separate
+
+- GIVEN complete immutable raw evidence and an independent reduction
+- WHEN the frozen gates are classified and validation commands finish
+- THEN capture completeness does not imply efficacy
+- AND only external failure is blocked while a complete scientific failure is null.
+
+## Implementation Status (REQ-CL-7296)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7296 and SCENARIO-CL-7296-* | Implemented in `python/carnot/experiment_7296_v641_mixture_learning.py` with a thin script entrypoint: authenticated scorer views, causal delayed updates, complete future rows, cold stream reduction, paired bootstrap gates, and restart parity. | `tests/python/test_experiment_7296_v641_mixture_learning.py` (10 focused scenarios pass); scoped coverage is 668/668 statements (100%). |
