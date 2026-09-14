@@ -1,0 +1,51 @@
+{
+  "experiment": 7290,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-14",
+  "started_at": "2026-09-14T04:07:52.146591+00:00",
+  "finished_at": "2026-09-14T04:07:52.146591+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Accumulate one authentic adapter-withheld live selfparse session",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7289-arc-boundary",
+  "failed_field": "arc_boundary_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7289_v641_arc_boundary.json",
+  "failed_evidence_sha256": "sha256:5e3ffb6e9d1a524c07a10c1ac8d07b4eba55bb4c4b1ea2f7820521257a6a99c8",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7289-arc-boundary",
+    "failed_field": "arc_boundary_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7289_v641_arc_boundary.json",
+    "failed_evidence_sha256": "sha256:5e3ffb6e9d1a524c07a10c1ac8d07b4eba55bb4c4b1ea2f7820521257a6a99c8"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7289-arc-boundary.arc_boundary_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7289-arc-boundary",
+      "artifact_field": "arc_boundary_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7289_v641_arc_boundary.json",
+      "artifact_sha256": "sha256:5e3ffb6e9d1a524c07a10c1ac8d07b4eba55bb4c4b1ea2f7820521257a6a99c8"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

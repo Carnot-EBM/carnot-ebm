@@ -1649,5 +1649,24 @@
     }
   ],
   "verdict_class": "disqualified",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-14T04:05:51Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+      "severity": "critical",
+      "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='cpu_exact_solver_or_simulator', live_evidence_count=66, negative_evidence_count=37. The duration check fails closed until the invocation scope agrees."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=cpu_exact_solver_or_simulator says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked', 'model_loads_attempted']). Contradictory."
+    }
+  ]
 }

@@ -17928,3 +17928,4 @@ code |
 | 2026-09-14 03:07 UTC | Milestone 2026.09.641 activated | OK | 14 tasks queued |
 | 2026-09-14 03:10 UTC | V641 source ingestion and exact fourteen-task cont | FAIL | Codex CLI error: Use plain words. Avoid jargon the reader has not seen befor |
 | 2026-09-14 03:31 UTC | V641 source ingestion and exact fourteen-task cont | OK | 87 passed, 1 warning in 8.90s |
+| 2026-09-14 04:05 UTC | Preserve live ARC invocation evidence across timeo | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 125 passed, 1 warning in 20.93s |
