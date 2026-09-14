@@ -1,0 +1,182 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": true,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 729220260932,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "versioned_reuse_verifier",
+    "attempted": true,
+    "call_id": "sha256:e61d532cf3391abc9c66f1362a1ec8c0a3c88e2dc7621adf840dd496d6145aee",
+    "call_order": 18,
+    "call_type": "claim",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 38,
+          "object_start": 33,
+          "object_surface": "Aaaaa",
+          "polarity": "positive",
+          "predicate": "follows",
+          "relation_end": 53,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 24,
+          "subject_start": 19,
+          "subject_surface": "Aaaab"
+        }
+      ]
+    },
+    "completion_tokens": 36,
+    "cuda_offload_confirmed": true,
+    "draw": null,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "group_id": "dev-g00",
+    "latency_s": 1.2197068759705871,
+    "lease_id": "lease:23bae57703fc451a80d022e41a72c64428453950d66e3eccfaea534f8668f219",
+    "model_response_error": null,
+    "native_cache_receipt": {
+      "cache_n": 16,
+      "cache_n_field_present": true,
+      "cache_policy": "cache_prompt_true",
+      "cached_tokens": 16,
+      "cached_tokens_field_present": true,
+      "evidence_present": true,
+      "measured_absence": false
+    },
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "follows",
+          "subject_pointer": "m000"
+        }
+      ]
+    },
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+    "prompt_sha256": "sha256:16536de9a3b1756cc578565ca590dac7b1e83696c25144e8bfefb4e55c68caac",
+    "prompt_tokens": 178,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"follows\",\"subject_pointer\":\"m000\"}]}",
+    "raw_completion_sha256": "sha256:d17e3d00d513d42999fb2b95ca004a3ca6fd9b0ce77568c2c49f5114b7e8383f",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOnRydWUsImdyYW1tYXIiOiJyb290IDo6PSB1bmtub3duIHwga25vd25cbnVua25vd24gOjo9IFwie1xcXCJvdXRjb21lXFxcIjpcXFwidW5rbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W119XCJcbmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcImtub3duXFxcIixcXFwicmVsYXRpb25zXFxcIjpbXCIgcmVsYXRpb24tbGlzdCBcIl19XCJcbnJlbGF0aW9uLWxpc3QgOjo9IHJlbGF0aW9uXG5yZWxhdGlvbiA6Oj0gXCJ7XFxcIm9iamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwiLFxcXCJwb2xhcml0eVxcXCI6XCIgcG9sYXJpdHkgXCIsXFxcInByZWRpY2F0ZVxcXCI6XCIgcHJlZGljYXRlIFwiLFxcXCJzdWJqZWN0X3BvaW50ZXJcXFwiOlwiIHBvaW50ZXIgXCJ9XCJcbnBvaW50ZXIgOjo9IFwiXFxcIm0wMDBcXFwiXCIgfCBcIlxcXCJtMDAxXFxcIlwiXG5wcmVkaWNhdGUgOjo9IFwiXFxcInByZWNlZGVzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImVuZHMgYmVmb3JlXFxcIlwiIHwgXCJcXFwib2NjdXJzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImZvbGxvd3NcXFwiXCIgfCBcIlxcXCJzdGFydHMgYWZ0ZXJcXFwiXCIgfCBcIlxcXCJlbmRzIGFmdGVyXFxcIlwiIHwgXCJcXFwib2NjdXJzIGFmdGVyXFxcIlwiXG5wb2xhcml0eSA6Oj0gXCJcXFwicG9zaXRpdmVcXFwiXCIgfCBcIlxcXCJuZWdhdGl2ZVxcXCJcIlxuIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCB0aGUgb25lIHN0YXRlZCByZWxhdGlvbiBmcm9tIHRoZSBjbGFpbS4gU2VsZWN0IHN1YmplY3RfcG9pbnRlciBhbmQgb2JqZWN0X3BvaW50ZXIgb25seSBmcm9tIHRoZSBwdWJsaWMgbWVudGlvbiB0YWJsZS4gUHJlZGljdCBwcmVkaWNhdGUgYW5kIHBvbGFyaXR5LiBSZXR1cm4gb25lIEpTT04gb2JqZWN0IHdpdGggb3V0Y29tZSBhbmQgcmVsYXRpb25zLCBvciB1bmtub3duIHdpdGggYW4gZW1wdHkgbGlzdC5cbkNMQUlNOlxuYXQgY2hlY2twb2ludCB0d28sIEFhYWFiIGZvbGxvd3MgQWFhYWEgYnkgZm91ciB0aWNrcy5cblBVQkxJQ19NRU5USU9OX1RBQkxFOlxuW3tcImJ5dGVfZW5kXCI6MjQsXCJieXRlX3N0YXJ0XCI6MTksXCJkb2N1bWVudF9pZFwiOlwiZGV2LWcwMC11MDItY2xhaW1cIixcIm1lbnRpb25faWRcIjpcIm0wMDBcIixcInN1cmZhY2VfdGV4dFwiOlwiQWFhYWJcIn0se1wiYnl0ZV9lbmRcIjozOCxcImJ5dGVfc3RhcnRcIjozMyxcImRvY3VtZW50X2lkXCI6XCJkZXYtZzAwLXUwMi1jbGFpbVwiLFwibWVudGlvbl9pZFwiOlwibTAwMVwiLFwic3VyZmFjZV90ZXh0XCI6XCJBYWFhYVwifV0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI5MjIwMjYwOTMyLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcImZvbGxvd3NcIixcInN1YmplY3RfcG9pbnRlclwiOlwibTAwMFwifV19In19XSwiY3JlYXRlZCI6MTc4OTM2MjAzNSwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjozNiwicHJvbXB0X3Rva2VucyI6MTc4LCJ0b3RhbF90b2tlbnMiOjIxNCwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjE2fX0sImlkIjoiY2hhdGNtcGwtNTVjOWxzenIxOTdJOGZRczNGcWJ4VzNFNk9WWE1qbUEiLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjE2LCJwcm9tcHRfbiI6MTYyLCJwcm9tcHRfbXMiOjIzNy43NDcsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNDY3NTc0MDc0MDc0MDc0MSwicHJvbXB0X3Blcl9zZWNvbmQiOjY4MS4zOTY2MTA2ODI3ODQ1LCJwcmVkaWN0ZWRfbiI6MzYsInByZWRpY3RlZF9tcyI6ODkzLjg3NSwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjQuODI5ODYxMTExMTExMTEsInByZWRpY3RlZF9wZXJfc2Vjb25kIjo0MC4yNzQwODc1NDAyMDQxNjR9fQ==",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:d15b6125c5a91f93a4b548ceba2832816a02fd196f5b9c20562f2bf599586249",
+    "request_started_at_utc": null,
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:8ac97f01c244cff4629610c892b096e614ae4642dc449a7c2e9b5501540ded18",
+    "response_observed_at_utc": "2026-09-14T05:00:35Z",
+    "row_sha256": "sha256:b2553fd1e579ce36fa3bb2f78e79cf6f261abf2bf6b0020ec1fc771f60bf0601",
+    "seed": 729220260932,
+    "seed_join_valid": true,
+    "server_pid": 3996264,
+    "server_pid_start_ticks": 165370851,
+    "source_id": "source-dev-g00",
+    "source_version": 1,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 729220260932,
+    "transport_arm": "mention_pointer",
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "dev-g00-u02",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:e61d532cf3391abc9c66f1362a1ec8c0a3c88e2dc7621adf840dd496d6145aee",
+    "call_order": 18,
+    "call_type": "claim",
+    "comparison_arm": "versioned_reuse_verifier",
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": true,
+      "seed": 729220260932,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "document": {
+      "document_id": "dev-g00-u02-claim",
+      "mentions": [
+        {
+          "byte_end": 24,
+          "byte_start": 19,
+          "document_id": "dev-g00-u02-claim",
+          "mention_id": "m000",
+          "surface_text": "Aaaab"
+        },
+        {
+          "byte_end": 38,
+          "byte_start": 33,
+          "document_id": "dev-g00-u02-claim",
+          "mention_id": "m001",
+          "surface_text": "Aaaaa"
+        }
+      ],
+      "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+    },
+    "draw": null,
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "group_id": "dev-g00",
+    "held_out_eligible": false,
+    "input_sha256": "sha256:f9ed7957e8aa666ec9491079ed87477bac30a752cd7ece7184b3bbb43d5491c3",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 24,
+          "byte_start": 19,
+          "document_id": "dev-g00-u02-claim",
+          "mention_id": "m000",
+          "surface_text": "Aaaab"
+        },
+        {
+          "byte_end": 38,
+          "byte_start": 33,
+          "document_id": "dev-g00-u02-claim",
+          "mention_id": "m001",
+          "surface_text": "Aaaaa"
+        }
+      ],
+      "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+    "prompt_sha256": "sha256:16536de9a3b1756cc578565ca590dac7b1e83696c25144e8bfefb4e55c68caac",
+    "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "request_timeout_s": 90.0,
+    "retry_budget": 0,
+    "seed": 729220260932,
+    "source_id": "source-dev-g00",
+    "source_version": 1,
+    "unit_id": "dev-g00-u02",
+    "warm_cache_policy": "cache_prompt_true"
+  }
+}

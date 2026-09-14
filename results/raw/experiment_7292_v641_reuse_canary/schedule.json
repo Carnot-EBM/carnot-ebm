@@ -1,0 +1,3284 @@
+{
+  "schedule": [
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:c7d5dca90d36159c3e8537345ff938496937079d2d1b22ccbd6f9af8e4ae6bd9",
+      "call_order": 0,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260914,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u01-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u01-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g00-u01-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "at checkpoint one, Aaaaa precedes Aaaab."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "Aaaaa precedes Aaaab."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bab992626af40fa4bdde6fd851d15db55356c122c778f9ea24aee4bd0d72e2ef",
+      "model_input": {
+        "claim": "at checkpoint one, Aaaaa precedes Aaaab.",
+        "source": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaa precedes Aaaab.\nCLAIM:\nat checkpoint one, Aaaaa precedes Aaaab.",
+      "prompt_sha256": "sha256:66546562f788a5389dc318f8ede11617e61bb4de9860c32e4c8e798fd43d2097",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260914,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:137c9ff712c275a6402161adc17a8925fd3a147b83f7e69317adcc328ae0c66d",
+      "call_order": 1,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260915,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u01-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u01-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g00-u01-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "at checkpoint one, Aaaaa precedes Aaaab."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "Aaaaa precedes Aaaab."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bab992626af40fa4bdde6fd851d15db55356c122c778f9ea24aee4bd0d72e2ef",
+      "model_input": {
+        "claim": "at checkpoint one, Aaaaa precedes Aaaab.",
+        "source": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaa precedes Aaaab.\nCLAIM:\nat checkpoint one, Aaaaa precedes Aaaab.",
+      "prompt_sha256": "sha256:66546562f788a5389dc318f8ede11617e61bb4de9860c32e4c8e798fd43d2097",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260915,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:ba72b1904c27508dd0705d574c35d5b3939970602195469cd540daca523a8310",
+      "call_order": 2,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260916,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u02-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u02-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 38,
+              "byte_start": 33,
+              "document_id": "dev-g00-u02-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "Aaaaa precedes Aaaab."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:63a671aa7c82b92b0e825001b9b03932b7da66251c519cc1c0771f8e44eaf47d",
+      "model_input": {
+        "claim": "at checkpoint two, Aaaab follows Aaaaa by four ticks.",
+        "source": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaa precedes Aaaab.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.",
+      "prompt_sha256": "sha256:31809110844a7b8e3e96c470fface0bc606603b4f2e64df245f39a4fa21fc3aa",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260916,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:24aa0e5c42b53f805535a37f280fef89d1205ef60c2ddbbb2b82b8f408000b5a",
+      "call_order": 3,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260917,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u02-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u02-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 38,
+              "byte_start": 33,
+              "document_id": "dev-g00-u02-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "Aaaaa precedes Aaaab."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:63a671aa7c82b92b0e825001b9b03932b7da66251c519cc1c0771f8e44eaf47d",
+      "model_input": {
+        "claim": "at checkpoint two, Aaaab follows Aaaaa by four ticks.",
+        "source": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaa precedes Aaaab.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.",
+      "prompt_sha256": "sha256:31809110844a7b8e3e96c470fface0bc606603b4f2e64df245f39a4fa21fc3aa",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260917,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:b2cbd5e287e984caef9afef80ad7251a560ad4421f0c7e986fbafc231e28e8e9",
+      "call_order": 4,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260918,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u05-claim",
+          "mentions": [
+            {
+              "byte_end": 25,
+              "byte_start": 20,
+              "document_id": "dev-g00-u05-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 40,
+              "byte_start": 35,
+              "document_id": "dev-g00-u05-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "at checkpoint five, Aaaab precedes Aaaaa."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "Aaaab precedes Aaaaa."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:1ab61f42bfd9e088690d56c9d2201d4fea6571975bb514e16d09ed147aca9280",
+      "model_input": {
+        "claim": "at checkpoint five, Aaaab precedes Aaaaa.",
+        "source": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaab precedes Aaaaa.\nCLAIM:\nat checkpoint five, Aaaab precedes Aaaaa.",
+      "prompt_sha256": "sha256:951bcbf665881373927d38a19c55fa3ada856889e54b2b8de4a15f86939ab207",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260918,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:d60fdda5f102a2e0de71f6058a6bd282836d7e07a4e48ab0effbd30293c925cf",
+      "call_order": 5,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260919,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u05-claim",
+          "mentions": [
+            {
+              "byte_end": 25,
+              "byte_start": 20,
+              "document_id": "dev-g00-u05-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 40,
+              "byte_start": 35,
+              "document_id": "dev-g00-u05-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "at checkpoint five, Aaaab precedes Aaaaa."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "Aaaab precedes Aaaaa."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:1ab61f42bfd9e088690d56c9d2201d4fea6571975bb514e16d09ed147aca9280",
+      "model_input": {
+        "claim": "at checkpoint five, Aaaab precedes Aaaaa.",
+        "source": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaab precedes Aaaaa.\nCLAIM:\nat checkpoint five, Aaaab precedes Aaaaa.",
+      "prompt_sha256": "sha256:951bcbf665881373927d38a19c55fa3ada856889e54b2b8de4a15f86939ab207",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260919,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:6edc71a7dbbda059ca51dc2cf26af8cfc78205b7b4ba344f56cc356d42a0f69d",
+      "call_order": 6,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260920,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u06-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u06-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g00-u06-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "at checkpoint six, Aaaaa precedes Aaaab."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "Aaaab precedes Aaaaa."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:6e5315ce5348eae9e0cb0211619500a29a46f1220633d9bc3ce55fd312f6d5b9",
+      "model_input": {
+        "claim": "at checkpoint six, Aaaaa precedes Aaaab.",
+        "source": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaab precedes Aaaaa.\nCLAIM:\nat checkpoint six, Aaaaa precedes Aaaab.",
+      "prompt_sha256": "sha256:f89f84166259ab6761fcbb7c9982ab5b12fe5f187702e422653cac2748fa4e5c",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260920,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:24a05e329f71e96e2b1ee5069aa5b892cdc1df7f22e3bd0bb942324e094b9307",
+      "call_order": 7,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260921,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g00-u06-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g00-u06-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaa"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g00-u06-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaab"
+            }
+          ],
+          "text": "at checkpoint six, Aaaaa precedes Aaaab."
+        },
+        "source": {
+          "document_id": "source-dev-g00-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaab"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g00-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaaa"
+            }
+          ],
+          "text": "Aaaab precedes Aaaaa."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:6e5315ce5348eae9e0cb0211619500a29a46f1220633d9bc3ce55fd312f6d5b9",
+      "model_input": {
+        "claim": "at checkpoint six, Aaaaa precedes Aaaab.",
+        "source": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaab precedes Aaaaa.\nCLAIM:\nat checkpoint six, Aaaaa precedes Aaaab.",
+      "prompt_sha256": "sha256:f89f84166259ab6761fcbb7c9982ab5b12fe5f187702e422653cac2748fa4e5c",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260921,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:4256d230df5dd0a657a75de72eb6078ec4a1321d3a811654ec57f20ca395cc3e",
+      "call_order": 8,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260922,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:5e730113ca3cfa50de530accf3f357556af827e20376458b9e9b6671a331a801",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:8c1c9bd8dedf5bfdffb45cdd4454642927e2ef225f166cc9b00af9c8f0034453",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260922,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:a6480009831562a316bf16b69f58ffd3cdcf3881293b856cb8ee2060d256a1bb",
+      "call_order": 9,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260923,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u01-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint one, Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:1a0b879104cc3f45e75c70b117b0a44cae138253139605bce28b44c255360087",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint one, Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint one, Aaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u01-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g00-u01-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:86f23d7269c19419723b6dc7d2aab5461a296bca65e0273f566985feae561bb5",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260923,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:26fb4a465f5305d2a4bea18783a42c173d759065f6135ff56b4a22b4ef353838",
+      "call_order": 10,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260924,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:5e730113ca3cfa50de530accf3f357556af827e20376458b9e9b6671a331a801",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:8c1c9bd8dedf5bfdffb45cdd4454642927e2ef225f166cc9b00af9c8f0034453",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260924,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:50a9ca545197303881dd710f72f7bf59aa2d876ebe8874c952ed420ab94be587",
+      "call_order": 11,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260925,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u02-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:f9ed7957e8aa666ec9491079ed87477bac30a752cd7ece7184b3bbb43d5491c3",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:16536de9a3b1756cc578565ca590dac7b1e83696c25144e8bfefb4e55c68caac",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260925,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:ceea0828c769ec5c2731ef523ad895f56e1aaa4bcab86541f3b25e9e796e1f07",
+      "call_order": 12,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260926,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:87a318eb462672c60e9b191c535240c0158fdfdb634fefe4e677606b31248587",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:545c2f50ac712c81982f460fadc5f086dc8ef4301bc1cab0fdbca81f0be870a6",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260926,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:b1bedf75ff1452832a76b2158e5f215bdb0fae2617ba005bbc62a885aff60451",
+      "call_order": 13,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260927,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u05-claim",
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint five, Aaaab precedes Aaaaa."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:3b555a706a9fff85dd63a0e5f000ee4ea2edca49499ae18c2cedbd8a40ef27bf",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint five, Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint five, Aaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":25,\"byte_start\":20,\"document_id\":\"dev-g00-u05-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":40,\"byte_start\":35,\"document_id\":\"dev-g00-u05-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:27ccc5c96d8fbcf25e4eb68f7aa142bd9fbbbc0d8b138559eeffc61857f66713",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260927,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:66c1652bb2fa3d790dae4ae1cc7c6debcbe0bc862c1f6c87e13ce425ea0d62b0",
+      "call_order": 14,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260928,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:87a318eb462672c60e9b191c535240c0158fdfdb634fefe4e677606b31248587",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:545c2f50ac712c81982f460fadc5f086dc8ef4301bc1cab0fdbca81f0be870a6",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260928,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:349513d8a795c290f30d986313750d62d4189278ce973ceac5d2af90f956b41e",
+      "call_order": 15,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260929,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u06-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint six, Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:6c19af251312f2de431a9f2afecaef89055b2a3c90131293125ede24cf7c93a4",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint six, Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint six, Aaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u06-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g00-u06-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:f27db99d127b746ced30891b9f980a2afea440c67e065b89ac68429928396c90",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260929,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:1167f5491dcc91ddd5c335f056451ede3fa13bd1b26ad660f712912259f16f44",
+      "call_order": 16,
+      "call_type": "source",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260930,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:5e730113ca3cfa50de530accf3f357556af827e20376458b9e9b6671a331a801",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:8c1c9bd8dedf5bfdffb45cdd4454642927e2ef225f166cc9b00af9c8f0034453",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260930,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:267a31920ca5b7c5531730d30e609ad0c1aaef0ff4f14039f211835498ae2db2",
+      "call_order": 17,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260931,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u01-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint one, Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:1a0b879104cc3f45e75c70b117b0a44cae138253139605bce28b44c255360087",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint one, Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint one, Aaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u01-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g00-u01-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:86f23d7269c19419723b6dc7d2aab5461a296bca65e0273f566985feae561bb5",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260931,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:e61d532cf3391abc9c66f1362a1ec8c0a3c88e2dc7621adf840dd496d6145aee",
+      "call_order": 18,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260932,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u02-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:f9ed7957e8aa666ec9491079ed87477bac30a752cd7ece7184b3bbb43d5491c3",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g00-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint two, Aaaab follows Aaaaa by four ticks."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaab follows Aaaaa by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g00-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:16536de9a3b1756cc578565ca590dac7b1e83696c25144e8bfefb4e55c68caac",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260932,
+      "source_id": "source-dev-g00",
+      "source_version": 1,
+      "unit_id": "dev-g00-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:3b7768ad5a7e69a71c26fde6ec7f2c200872f3b1ce29b46922ca77277c338cef",
+      "call_order": 19,
+      "call_type": "source",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260933,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g00-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:87a318eb462672c60e9b191c535240c0158fdfdb634fefe4e677606b31248587",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g00-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:545c2f50ac712c81982f460fadc5f086dc8ef4301bc1cab0fdbca81f0be870a6",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260933,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:6bda302ac42fedd6b6dc581abebe1fadee1838d95b5ca7955453e4f01fb35ffa",
+      "call_order": 20,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260934,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u05-claim",
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint five, Aaaab precedes Aaaaa."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:3b555a706a9fff85dd63a0e5f000ee4ea2edca49499ae18c2cedbd8a40ef27bf",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaab"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g00-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaa"
+          }
+        ],
+        "text": "at checkpoint five, Aaaab precedes Aaaaa."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint five, Aaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":25,\"byte_start\":20,\"document_id\":\"dev-g00-u05-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":40,\"byte_start\":35,\"document_id\":\"dev-g00-u05-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+      "prompt_sha256": "sha256:27ccc5c96d8fbcf25e4eb68f7aa142bd9fbbbc0d8b138559eeffc61857f66713",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260934,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:0a785e7949596bf8e8c920c2fd04e11aa469de9421b93c0c0fb825363bb927be",
+      "call_order": 21,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260935,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g00-u06-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint six, Aaaaa precedes Aaaab."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g00",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:6c19af251312f2de431a9f2afecaef89055b2a3c90131293125ede24cf7c93a4",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaa"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g00-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaab"
+          }
+        ],
+        "text": "at checkpoint six, Aaaaa precedes Aaaab."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint six, Aaaaa precedes Aaaab.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g00-u06-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaa\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g00-u06-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaab\"}]",
+      "prompt_sha256": "sha256:f27db99d127b746ced30891b9f980a2afea440c67e065b89ac68429928396c90",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260935,
+      "source_id": "source-dev-g00",
+      "source_version": 2,
+      "unit_id": "dev-g00-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:80d05c9a287730574cf62958a19cafcd2f8c17b32641aaab1bead408c15e5b86",
+      "call_order": 22,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260936,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u01-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u01-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g01-u01-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "at checkpoint one, Aaaai precedes Aaaaj."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "Aaaai precedes Aaaaj."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:85f8dcdd22616396bf3133addc8248fc30bf35421ec467557e031c7c755897c8",
+      "model_input": {
+        "claim": "at checkpoint one, Aaaai precedes Aaaaj.",
+        "source": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaai precedes Aaaaj.\nCLAIM:\nat checkpoint one, Aaaai precedes Aaaaj.",
+      "prompt_sha256": "sha256:297b6a45207e4ec4e53f51f3e9aa4b0b93a298f6f15094ed39efacbee3f91399",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260936,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:e2879a091891742f245cf510582bbc6d1de2be46ba1717236ef841a6d77b8cfe",
+      "call_order": 23,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260937,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u01-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u01-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g01-u01-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "at checkpoint one, Aaaai precedes Aaaaj."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "Aaaai precedes Aaaaj."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:85f8dcdd22616396bf3133addc8248fc30bf35421ec467557e031c7c755897c8",
+      "model_input": {
+        "claim": "at checkpoint one, Aaaai precedes Aaaaj.",
+        "source": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaai precedes Aaaaj.\nCLAIM:\nat checkpoint one, Aaaai precedes Aaaaj.",
+      "prompt_sha256": "sha256:297b6a45207e4ec4e53f51f3e9aa4b0b93a298f6f15094ed39efacbee3f91399",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260937,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:dd12ef2a852c115191269ea872f672df030de0c58dfd1924625bb857f07b6fc8",
+      "call_order": 24,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260938,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u02-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u02-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 38,
+              "byte_start": 33,
+              "document_id": "dev-g01-u02-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "Aaaai precedes Aaaaj."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bbb1f698cae7147daf1cae785d3c606739702b1a09edff1b9e455bbad4c13be3",
+      "model_input": {
+        "claim": "at checkpoint two, Aaaaj follows Aaaai by four ticks.",
+        "source": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaai precedes Aaaaj.\nCLAIM:\nat checkpoint two, Aaaaj follows Aaaai by four ticks.",
+      "prompt_sha256": "sha256:6f4914be1f19d6e0c5064aec7b2d78f800907a5db956f588db3431b52a8e698d",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260938,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:6897bf2d84cf281d89d8dd29b7e1e8c3d1b58a3596b33c632cc422e8d18b0d2a",
+      "call_order": 25,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260939,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u02-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u02-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 38,
+              "byte_start": 33,
+              "document_id": "dev-g01-u02-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v1",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v1",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "Aaaai precedes Aaaaj."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bbb1f698cae7147daf1cae785d3c606739702b1a09edff1b9e455bbad4c13be3",
+      "model_input": {
+        "claim": "at checkpoint two, Aaaaj follows Aaaai by four ticks.",
+        "source": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaai precedes Aaaaj.\nCLAIM:\nat checkpoint two, Aaaaj follows Aaaai by four ticks.",
+      "prompt_sha256": "sha256:6f4914be1f19d6e0c5064aec7b2d78f800907a5db956f588db3431b52a8e698d",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260939,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:c7fd7686b36da17c760eebe05c52bb3e77b94c352647ca11fee4fd27b1be15de",
+      "call_order": 26,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260940,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u05-claim",
+          "mentions": [
+            {
+              "byte_end": 25,
+              "byte_start": 20,
+              "document_id": "dev-g01-u05-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 40,
+              "byte_start": 35,
+              "document_id": "dev-g01-u05-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "at checkpoint five, Aaaaj precedes Aaaai."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "Aaaaj precedes Aaaai."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:fae6bde4cf7dcb8b53ca75fed1a9448a789d5cc8b3216f8e61f8d049f5323e81",
+      "model_input": {
+        "claim": "at checkpoint five, Aaaaj precedes Aaaai.",
+        "source": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaj precedes Aaaai.\nCLAIM:\nat checkpoint five, Aaaaj precedes Aaaai.",
+      "prompt_sha256": "sha256:6933904b960f6b87c0466b79ecd6a2066e477e575c5e0981148cee4b18d1728b",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260940,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:c89c6096b4a561a17c7f6c3194a25a71e4caa7242a5c37aedabd6f6c9dd9b56a",
+      "call_order": 27,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260941,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u05-claim",
+          "mentions": [
+            {
+              "byte_end": 25,
+              "byte_start": 20,
+              "document_id": "dev-g01-u05-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 40,
+              "byte_start": 35,
+              "document_id": "dev-g01-u05-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "at checkpoint five, Aaaaj precedes Aaaai."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "Aaaaj precedes Aaaai."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:fae6bde4cf7dcb8b53ca75fed1a9448a789d5cc8b3216f8e61f8d049f5323e81",
+      "model_input": {
+        "claim": "at checkpoint five, Aaaaj precedes Aaaai.",
+        "source": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaj precedes Aaaai.\nCLAIM:\nat checkpoint five, Aaaaj precedes Aaaai.",
+      "prompt_sha256": "sha256:6933904b960f6b87c0466b79ecd6a2066e477e575c5e0981148cee4b18d1728b",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260941,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:528872db8908fde5072ed6c223dd72e1f2b8472962fc2ec905e78b007db56d34",
+      "call_order": 28,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260942,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u06-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u06-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g01-u06-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "at checkpoint six, Aaaai precedes Aaaaj."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "Aaaaj precedes Aaaai."
+        }
+      },
+      "draw": 1,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:b099c3811779fd913e3a3e02ec0d9f0f176ed408cd358b1fd429b9a974996298",
+      "model_input": {
+        "claim": "at checkpoint six, Aaaai precedes Aaaaj.",
+        "source": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaj precedes Aaaai.\nCLAIM:\nat checkpoint six, Aaaai precedes Aaaaj.",
+      "prompt_sha256": "sha256:6e4d80e440d0ddd8205a6339e5df6a809ead61416df4fab0d660c900c8430962",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260942,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "direct_judge",
+      "call_id": "sha256:4c591016d123e3ef76ab09295533808767e0c4f235c9ca1c8e0db0d23bf7a0e9",
+      "call_order": 29,
+      "call_type": "direct",
+      "comparison_arm": "warm_prefix_direct",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260943,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "claim": {
+          "document_id": "dev-g01-u06-claim",
+          "mentions": [
+            {
+              "byte_end": 24,
+              "byte_start": 19,
+              "document_id": "dev-g01-u06-claim",
+              "mention_id": "m000",
+              "surface_text": "Aaaai"
+            },
+            {
+              "byte_end": 39,
+              "byte_start": 34,
+              "document_id": "dev-g01-u06-claim",
+              "mention_id": "m001",
+              "surface_text": "Aaaaj"
+            }
+          ],
+          "text": "at checkpoint six, Aaaai precedes Aaaaj."
+        },
+        "source": {
+          "document_id": "source-dev-g01-v2",
+          "mentions": [
+            {
+              "byte_end": 5,
+              "byte_start": 0,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m000",
+              "surface_text": "Aaaaj"
+            },
+            {
+              "byte_end": 20,
+              "byte_start": 15,
+              "document_id": "source-dev-g01-v2",
+              "mention_id": "m001",
+              "surface_text": "Aaaai"
+            }
+          ],
+          "text": "Aaaaj precedes Aaaai."
+        }
+      },
+      "draw": 2,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:b099c3811779fd913e3a3e02ec0d9f0f176ed408cd358b1fd429b9a974996298",
+      "model_input": {
+        "claim": "at checkpoint six, Aaaai precedes Aaaaj.",
+        "source": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaaaj precedes Aaaai.\nCLAIM:\nat checkpoint six, Aaaai precedes Aaaaj.",
+      "prompt_sha256": "sha256:6e4d80e440d0ddd8205a6339e5df6a809ead61416df4fab0d660c900c8430962",
+      "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260943,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:2f9377663973b8214ed77b04bc3e1232c68f5a6362e6cb4d6d2dd319dc9434a7",
+      "call_order": 30,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260944,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ddd18147b7c1d9f3ed4908e9bd4d742c2beffd66e21a188d47e35323bd4dafe1",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:ec303e379dfcf8ddc5084d93e32ef5178e126f509c37d763e964168c45248c31",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260944,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:945040ab3301c25ccd4b9a5331a17869ea9aa68605854e156f684931eccce449",
+      "call_order": 31,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260945,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u01-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint one, Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:0199a75f68bf7c410f605abe1a5f3ac755394f6ccdfe26350a9d1b79dd5d5ea2",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint one, Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint one, Aaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u01-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g01-u01-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:9dee08dd6e9539592a2ea5ae8983b5484c2cf4121823fffa2fc4d73d1b970b4a",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260945,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:156de752e414a0a0bbf42a399b5c71fc25e369c24abcc055ee36fbbade1eafb8",
+      "call_order": 32,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260946,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ddd18147b7c1d9f3ed4908e9bd4d742c2beffd66e21a188d47e35323bd4dafe1",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:ec303e379dfcf8ddc5084d93e32ef5178e126f509c37d763e964168c45248c31",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260946,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:0ba417852b8f0fb29a358e036a92d2601a75b1d7f687750514c4c8d05a7cd9a2",
+      "call_order": 33,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260947,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u02-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ab48435ebc4f7ef1aa1128474ea06ad9b50cb8509e010dfa192cff0cf1f3e787",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaaj follows Aaaai by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g01-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:6551f69482fe0478a43c9af788ad4b7cea2d983603fecdbc9e8e404eca80f06c",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260947,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:5170717e898913932d2baf0627d150a2d3e2e8a36499bb6805e13f821202d9bb",
+      "call_order": 34,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260948,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ccedad287bc5e16ab8db6d1f5d61932edc30bd40bc740d141f6409a458173b73",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaj precedes Aaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:54383f63e09c7d0c89a61fefc9c21784664d41f29c8f85132b95f40a2a285f01",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260948,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:8952eba6b33a57c748fb29deb25275b892fc919f90f5d9f3bd0ddf1f550d26fe",
+      "call_order": 35,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260949,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u05-claim",
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint five, Aaaaj precedes Aaaai."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:7d75db478cc99f4e53490bbc49396c14f0a04611fc4dad3988f6cf74f1dc2b88",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint five, Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint five, Aaaaj precedes Aaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":25,\"byte_start\":20,\"document_id\":\"dev-g01-u05-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":40,\"byte_start\":35,\"document_id\":\"dev-g01-u05-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:d84ea4d145bc2c9c4c228ff32e2fd84ac687ac5c303adc66a2ebbd18ec35b1e9",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260949,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:6309226c1bfd9260c6058992fc3ace246b4751613fd89966b4326eb089de037b",
+      "call_order": 36,
+      "call_type": "source",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260950,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ccedad287bc5e16ab8db6d1f5d61932edc30bd40bc740d141f6409a458173b73",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaj precedes Aaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:54383f63e09c7d0c89a61fefc9c21784664d41f29c8f85132b95f40a2a285f01",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260950,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:1013f0d10d8a8cd641ba4003422278976a1e4c19c1520b7e764bc8fc2aaa824c",
+      "call_order": 37,
+      "call_type": "claim",
+      "comparison_arm": "fresh_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260951,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u06-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint six, Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bb811882b47604904f1121df1b0e36de198be4f268a27924d45c1b651aff02d8",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint six, Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint six, Aaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u06-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g01-u06-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:81ed481b957ff977a51750ef3c12f6c10bb8c3c48f0577a2196646a6cdbf3593",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260951,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:30d06e6509c87231ad27acac1cd5076c84f5b0846e700d7f07c40674b7541839",
+      "call_order": 38,
+      "call_type": "source",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260952,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ddd18147b7c1d9f3ed4908e9bd4d742c2beffd66e21a188d47e35323bd4dafe1",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v1\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:ec303e379dfcf8ddc5084d93e32ef5178e126f509c37d763e964168c45248c31",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260952,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:de04b79689c3d8a57eee356c3c591820c05724966e8ede3229762fcf22bb8366",
+      "call_order": 39,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260953,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u01-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint one, Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:0199a75f68bf7c410f605abe1a5f3ac755394f6ccdfe26350a9d1b79dd5d5ea2",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint one, Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint one, Aaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u01-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g01-u01-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:9dee08dd6e9539592a2ea5ae8983b5484c2cf4121823fffa2fc4d73d1b970b4a",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260953,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u01",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:01c169d78988ea7c5dd8e3a00047a465474a8e093a59331d1a17cfa6d6bc8851",
+      "call_order": 40,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260954,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u02-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ab48435ebc4f7ef1aa1128474ea06ad9b50cb8509e010dfa192cff0cf1f3e787",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 38,
+            "byte_start": 33,
+            "document_id": "dev-g01-u02-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint two, Aaaaj follows Aaaai by four ticks."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint two, Aaaaj follows Aaaai by four ticks.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u02-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":38,\"byte_start\":33,\"document_id\":\"dev-g01-u02-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:6551f69482fe0478a43c9af788ad4b7cea2d983603fecdbc9e8e404eca80f06c",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260954,
+      "source_id": "source-dev-g01",
+      "source_version": 1,
+      "unit_id": "dev-g01-u02",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:15606aefdc3e587ebc3125028e13481cbacb0d8276803b0c5b4c8d3cc3ac0bc5",
+      "call_order": 41,
+      "call_type": "source",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260955,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "source-dev-g01-v2",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:ccedad287bc5e16ab8db6d1f5d61932edc30bd40bc740d141f6409a458173b73",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-dev-g01-v2",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaaj precedes Aaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g01-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:54383f63e09c7d0c89a61fefc9c21784664d41f29c8f85132b95f40a2a285f01",
+      "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260955,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:3f0f2ab304f922e5ad269c6b8ebaf67eaafb188e9a33d9d98b4cbd55f4c6de74",
+      "call_order": 42,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260956,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u05-claim",
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint five, Aaaaj precedes Aaaai."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:7d75db478cc99f4e53490bbc49396c14f0a04611fc4dad3988f6cf74f1dc2b88",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 25,
+            "byte_start": 20,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaaj"
+          },
+          {
+            "byte_end": 40,
+            "byte_start": 35,
+            "document_id": "dev-g01-u05-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaai"
+          }
+        ],
+        "text": "at checkpoint five, Aaaaj precedes Aaaai."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint five, Aaaaj precedes Aaaai.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":25,\"byte_start\":20,\"document_id\":\"dev-g01-u05-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaaj\"},{\"byte_end\":40,\"byte_start\":35,\"document_id\":\"dev-g01-u05-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaai\"}]",
+      "prompt_sha256": "sha256:d84ea4d145bc2c9c4c228ff32e2fd84ac687ac5c303adc66a2ebbd18ec35b1e9",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260956,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u05",
+      "warm_cache_policy": "cache_prompt_true"
+    },
+    {
+      "arm": "mention_pointer",
+      "call_id": "sha256:a82983c8ff5dbf09c8118b84b6a5b55f496b797cac2d7b4107555795399b461d",
+      "call_order": 43,
+      "call_type": "claim",
+      "comparison_arm": "versioned_reuse_verifier",
+      "context_token_budget": 8192,
+      "decoding_parameters": {
+        "cache_prompt": true,
+        "seed": 729220260957,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "development_only": true,
+      "document": {
+        "document_id": "dev-g01-u06-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint six, Aaaai precedes Aaaaj."
+      },
+      "draw": null,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "group_id": "dev-g01",
+      "held_out_eligible": false,
+      "input_sha256": "sha256:bb811882b47604904f1121df1b0e36de198be4f268a27924d45c1b651aff02d8",
+      "model_input": {
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaaai"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "dev-g01-u06-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaaaj"
+          }
+        ],
+        "text": "at checkpoint six, Aaaai precedes Aaaaj."
+      },
+      "output_token_budget": 128,
+      "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint six, Aaaai precedes Aaaaj.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":24,\"byte_start\":19,\"document_id\":\"dev-g01-u06-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaai\"},{\"byte_end\":39,\"byte_start\":34,\"document_id\":\"dev-g01-u06-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaj\"}]",
+      "prompt_sha256": "sha256:81ed481b957ff977a51750ef3c12f6c10bb8c3c48f0577a2196646a6cdbf3593",
+      "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+      "request_timeout_s": 90.0,
+      "retry_budget": 0,
+      "seed": 729220260957,
+      "source_id": "source-dev-g01",
+      "source_version": 2,
+      "unit_id": "dev-g01-u06",
+      "warm_cache_policy": "cache_prompt_true"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": true,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 729220260933,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "versioned_reuse_verifier",
+    "attempted": true,
+    "call_id": "sha256:3b7768ad5a7e69a71c26fde6ec7f2c200872f3b1ce29b46922ca77277c338cef",
+    "call_order": 19,
+    "call_type": "source",
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 20,
+          "object_start": 15,
+          "object_surface": "Aaaaa",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "relation_end": 21,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 5,
+          "subject_start": 0,
+          "subject_surface": "Aaaab"
+        }
+      ]
+    },
+    "completion_tokens": 36,
+    "cuda_offload_confirmed": true,
+    "draw": null,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "group_id": "dev-g00",
+    "latency_s": 1.3029076009988785,
+    "lease_id": "lease:23bae57703fc451a80d022e41a72c64428453950d66e3eccfaea534f8668f219",
+    "model_response_error": null,
+    "native_cache_receipt": {
+      "cache_n": 16,
+      "cache_n_field_present": true,
+      "cache_policy": "cache_prompt_true",
+      "cached_tokens": 16,
+      "cached_tokens_field_present": true,
+      "evidence_present": true,
+      "measured_absence": false
+    },
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "subject_pointer": "m000"
+        }
+      ]
+    },
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+    "prompt_sha256": "sha256:545c2f50ac712c81982f460fadc5f086dc8ef4301bc1cab0fdbca81f0be870a6",
+    "prompt_tokens": 165,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"precedes\",\"subject_pointer\":\"m000\"}]}",
+    "raw_completion_sha256": "sha256:72d244a96d0564976fabae5d67d36c6dca255aba5ef8bfd508fc9686fd1c92f2",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOnRydWUsImdyYW1tYXIiOiJyb290IDo6PSB1bmtub3duIHwga25vd25cbnVua25vd24gOjo9IFwie1xcXCJvdXRjb21lXFxcIjpcXFwidW5rbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W119XCJcbmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcImtub3duXFxcIixcXFwicmVsYXRpb25zXFxcIjpbXCIgcmVsYXRpb24tbGlzdCBcIl19XCJcbnJlbGF0aW9uLWxpc3QgOjo9IHJlbGF0aW9uIHwgcmVsYXRpb24gXCIsXCIgcmVsYXRpb24gfCByZWxhdGlvbiBcIixcIiByZWxhdGlvbiBcIixcIiByZWxhdGlvbiB8IHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uIFwiLFwiIHJlbGF0aW9uXG5yZWxhdGlvbiA6Oj0gXCJ7XFxcIm9iamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwiLFxcXCJwb2xhcml0eVxcXCI6XCIgcG9sYXJpdHkgXCIsXFxcInByZWRpY2F0ZVxcXCI6XCIgcHJlZGljYXRlIFwiLFxcXCJzdWJqZWN0X3BvaW50ZXJcXFwiOlwiIHBvaW50ZXIgXCJ9XCJcbnBvaW50ZXIgOjo9IFwiXFxcIm0wMDBcXFwiXCIgfCBcIlxcXCJtMDAxXFxcIlwiXG5wcmVkaWNhdGUgOjo9IFwiXFxcInByZWNlZGVzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImVuZHMgYmVmb3JlXFxcIlwiIHwgXCJcXFwib2NjdXJzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImZvbGxvd3NcXFwiXCIgfCBcIlxcXCJzdGFydHMgYWZ0ZXJcXFwiXCIgfCBcIlxcXCJlbmRzIGFmdGVyXFxcIlwiIHwgXCJcXFwib2NjdXJzIGFmdGVyXFxcIlwiXG5wb2xhcml0eSA6Oj0gXCJcXFwicG9zaXRpdmVcXFwiXCIgfCBcIlxcXCJuZWdhdGl2ZVxcXCJcIlxuIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCBhbGwgc3RhdGVkIHJlbGF0aW9ucyBmcm9tIHRoZSBzb3VyY2UuIFNlbGVjdCBzdWJqZWN0X3BvaW50ZXIgYW5kIG9iamVjdF9wb2ludGVyIG9ubHkgZnJvbSB0aGUgcHVibGljIG1lbnRpb24gdGFibGUuIFByZWRpY3QgcHJlZGljYXRlIGFuZCBwb2xhcml0eS4gUmV0dXJuIG9uZSBKU09OIG9iamVjdCB3aXRoIG91dGNvbWUgYW5kIHJlbGF0aW9ucywgb3IgdW5rbm93biB3aXRoIGFuIGVtcHR5IGxpc3QuXG5TT1VSQ0U6XG5BYWFhYiBwcmVjZWRlcyBBYWFhYS5cblBVQkxJQ19NRU5USU9OX1RBQkxFOlxuW3tcImJ5dGVfZW5kXCI6NSxcImJ5dGVfc3RhcnRcIjowLFwiZG9jdW1lbnRfaWRcIjpcInNvdXJjZS1kZXYtZzAwLXYyXCIsXCJtZW50aW9uX2lkXCI6XCJtMDAwXCIsXCJzdXJmYWNlX3RleHRcIjpcIkFhYWFiXCJ9LHtcImJ5dGVfZW5kXCI6MjAsXCJieXRlX3N0YXJ0XCI6MTUsXCJkb2N1bWVudF9pZFwiOlwic291cmNlLWRldi1nMDAtdjJcIixcIm1lbnRpb25faWRcIjpcIm0wMDFcIixcInN1cmZhY2VfdGV4dFwiOlwiQWFhYWFcIn1dIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyOTIyMDI2MDkzMywic3RyZWFtIjpmYWxzZSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInByZWNlZGVzXCIsXCJzdWJqZWN0X3BvaW50ZXJcIjpcIm0wMDBcIn1dfSJ9fV0sImNyZWF0ZWQiOjE3ODkzNjIwMzcsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6MzYsInByb21wdF90b2tlbnMiOjE2NSwidG90YWxfdG9rZW5zIjoyMDEsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjoxNn19LCJpZCI6ImNoYXRjbXBsLXhKcmFnb2pLeUphYk80UUloelRqbzJDUUVNbk1DblBZIiwidGltaW5ncyI6eyJjYWNoZV9uIjoxNiwicHJvbXB0X24iOjE0OSwicHJvbXB0X21zIjoyMzQuNjk4LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoxLjU3NTE1NDM2MjQxNjEwNzUsInByb21wdF9wZXJfc2Vjb25kIjo2MzQuODU4NDEzNzkxMzQwNCwicHJlZGljdGVkX24iOjM2LCJwcmVkaWN0ZWRfbXMiOjg5OC41NDksInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI0Ljk1OTY5NDQ0NDQ0NDQ0NSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjQwLjA2NDU5MzAyNzIwMjc1fX0=",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:cf5f48133b9b736eb1bd48d634249e18173599c95924172b9398572671ed2169",
+    "request_started_at_utc": null,
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:8129bc9062d969233ed78f7687cb6c89b8d60880eafd2519df813b2fc044720d",
+    "response_observed_at_utc": "2026-09-14T05:00:37Z",
+    "row_sha256": "sha256:8174c8c4c75d7210fe09fbccc7f03259e0dde5ee0bdf8bd9ddf2e7b22910764d",
+    "seed": 729220260933,
+    "seed_join_valid": true,
+    "server_pid": 3996264,
+    "server_pid_start_ticks": 165370851,
+    "source_id": "source-dev-g00",
+    "source_version": 2,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 729220260933,
+    "transport_arm": "mention_pointer",
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "dev-g00-u05",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:3b7768ad5a7e69a71c26fde6ec7f2c200872f3b1ce29b46922ca77277c338cef",
+    "call_order": 19,
+    "call_type": "source",
+    "comparison_arm": "versioned_reuse_verifier",
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": true,
+      "seed": 729220260933,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": true,
+    "document": {
+      "document_id": "source-dev-g00-v2",
+      "mentions": [
+        {
+          "byte_end": 5,
+          "byte_start": 0,
+          "document_id": "source-dev-g00-v2",
+          "mention_id": "m000",
+          "surface_text": "Aaaab"
+        },
+        {
+          "byte_end": 20,
+          "byte_start": 15,
+          "document_id": "source-dev-g00-v2",
+          "mention_id": "m001",
+          "surface_text": "Aaaaa"
+        }
+      ],
+      "text": "Aaaab precedes Aaaaa."
+    },
+    "draw": null,
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "group_id": "dev-g00",
+    "held_out_eligible": false,
+    "input_sha256": "sha256:87a318eb462672c60e9b191c535240c0158fdfdb634fefe4e677606b31248587",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 5,
+          "byte_start": 0,
+          "document_id": "source-dev-g00-v2",
+          "mention_id": "m000",
+          "surface_text": "Aaaab"
+        },
+        {
+          "byte_end": 20,
+          "byte_start": 15,
+          "document_id": "source-dev-g00-v2",
+          "mention_id": "m001",
+          "surface_text": "Aaaaa"
+        }
+      ],
+      "text": "Aaaab precedes Aaaaa."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract all stated relations from the source. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nSOURCE:\nAaaab precedes Aaaaa.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":5,\"byte_start\":0,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m000\",\"surface_text\":\"Aaaab\"},{\"byte_end\":20,\"byte_start\":15,\"document_id\":\"source-dev-g00-v2\",\"mention_id\":\"m001\",\"surface_text\":\"Aaaaa\"}]",
+    "prompt_sha256": "sha256:545c2f50ac712c81982f460fadc5f086dc8ef4301bc1cab0fdbca81f0be870a6",
+    "reference_grammar_sha256": "sha256:77ea82f7afe1302c10a635d2ee7e701b81dcaf5a8923b42c882c54f76406fc6a",
+    "request_timeout_s": 90.0,
+    "retry_budget": 0,
+    "seed": 729220260933,
+    "source_id": "source-dev-g00",
+    "source_version": 2,
+    "unit_id": "dev-g00-u05",
+    "warm_cache_policy": "cache_prompt_true"
+  }
+}

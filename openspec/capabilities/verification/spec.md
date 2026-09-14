@@ -42397,3 +42397,87 @@ adversarial verification, verdict-row consistency, and atomic publication.
 **When** an independent reducer and focused validation check their exact hashes
 **Then** all required schema fields and readiness gates reconstruct from raw evidence
 **And** only a cold-valid terminal candidate is atomically published.
+
+### REQ-VERIFY-7292: Live Reuse Canary SHALL Measure Native Cache Work
+
+Exp7292 SHALL authenticate the exact Exp7291 fixture artifact and its frozen
+development manifest. It SHALL require `reuse_fixture_ready_score=1`. It SHALL
+not read the scorer-only authority before every model response is captured.
+Missing, retired, quarantined, or invalid external evidence SHALL produce a
+terminal blocked artifact with an exact `gate_check_summary`.
+
+The canary SHALL select two development source groups with four distinct claims
+per group. Each group SHALL change to source version two after claim two. It
+SHALL run the three frozen arms over the same eight claim units. Direct SHALL
+use two draws per claim. Fresh SHALL extract the source and claim for each unit.
+Reuse SHALL extract each source version once and each claim once. The schedule
+SHALL contain exactly 44 calls. Each call SHALL use at most 128 output tokens,
+temperature zero, a fixed seed, no retry, and no prompt repair after capture.
+
+The live path SHALL resolve only `unsloth/Qwen3.8-27B-GGUF` from
+`scripts.experiment_template.cached_sota_pair()` and select Q4_K_M. It SHALL
+use the GGUF tokenizer and chat template through the shipped native llama.cpp
+server. It SHALL acquire an idle task-owned GPU lease without eviction. Model
+load and all calls SHALL stop after 900 seconds. Any load attempt SHALL set
+`model_invoked=true`. A successful load without generation SHALL use
+`model_load_no_generation`. No load attempt SHALL use `blocked_no_run`.
+
+The reducer SHALL retain every invalid, empty, failed, and censored response.
+It SHALL reconstruct requests and responses from raw bytes. It SHALL compile
+fresh and reused pointer outputs through the shipped compiler and typed
+executor. It SHALL prove that a version change invalidates the old source
+compilation. It SHALL require fresh and reused serialized constraints to match
+for every comparable unit. It SHALL evaluate direct draws with the frozen
+disagreement-to-unknown rule.
+
+The canary SHALL retain native prompt-cache counters from each raw response.
+It SHALL report observed cached tokens or an explicit measured absence for each
+arm. It SHALL not claim a cost comparison unless direct, fresh, and reuse calls
+receive the same warm-cache policy. `reuse_canary_ready_score` SHALL equal one
+only when the actual-model transport, raw replay, source-version invalidation,
+fresh/reuse parity, comparator decisions, native cache receipt, full call
+accounting, and fair warm comparator checks all pass.
+
+The terminal artifact SHALL contain all fields required by the Exp7292 task.
+It SHALL use `inference_substrate=live_llm_inference` and
+`inference_substrate_class=model_bounded_generation` after generation starts.
+It SHALL make no efficacy or rare-error claim. A measured candidate SHALL first
+exist under `results/raw/experiment_7292_v641_reuse_canary/`. Focused tests,
+affected suites, scoped coverage, Ruff, mypy, exact-test spec coverage,
+independent raw reduction, adversarial verification, and verdict-row
+consistency SHALL pass before atomic publication.
+
+#### SCENARIO-VERIFY-7292-SCHEDULE: Revision Splits Forty-Four Calls
+
+**Given** two development groups with four claims and a revision after claim two
+**When** Exp7292 freezes all direct, fresh, and reuse requests
+**Then** it creates sixteen direct, sixteen fresh, and twelve reuse calls
+**And** all calls use fixed seeds, equal token ceilings, and public fields only.
+
+#### SCENARIO-VERIFY-7292-INVALIDATION: Changed Source Cannot Reuse Version One
+
+**Given** a compiled version-one source and a later version-two claim
+**When** the reuse reducer selects the current source compilation
+**Then** it invalidates version one before it can serve the later claim
+**And** the fresh and reused serialized constraints match for that claim.
+
+#### SCENARIO-VERIFY-7292-COST: Native Cache Evidence Defines Warm Fairness
+
+**Given** authentic llama.cpp usage and timing objects for every returned call
+**When** Exp7292 compares per-arm work
+**Then** it records cached tokens or an explicit measured absence per call
+**And** readiness fails if the three arms do not share one cache policy.
+
+#### SCENARIO-VERIFY-7292-FAILURE: Boundary Events Define The Terminal Class
+
+**Given** a load or generation failure before all forty-four calls complete
+**When** Exp7292 creates its terminal record
+**Then** invocation counters retain every attempted and completed boundary
+**And** substrate fields describe actual load and generation events, not intent.
+
+#### SCENARIO-VERIFY-7292-E2E: GGUF Bytes Replay Through The Verdict
+
+**Given** one exact GGUF and immutable native request and response bytes
+**When** the independent reducer runs source, claim, cache, and verdict checks
+**Then** each comparative row reconstructs its decision and actual token cost
+**And** only a cold-valid terminal candidate is atomically published.
