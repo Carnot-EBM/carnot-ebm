@@ -15442,3 +15442,141 @@ Execution SHALL use `execution_venue=host`. The serial reference SHALL set
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7285 and SCENARIO-CL-7285-* | Implemented: fixed paired frontier, complete event and cost rows, real-disk E2E restore, cold reduction, failure controls, and atomic terminal evidence. | `tests/python/test_experiment_7285_v640_commit_frontier.py`; focused pytest and scoped 100% coverage. |
+
+## REQ-CL-7295: Bounded Fixed-Share Selection Over Complete Hypotheses
+
+Carnot SHALL provide an opt-in fixed-share controller. The controller SHALL
+keep the shipped warmup reset hypothesis and at most four archived complete
+constraint hypotheses. For each released binary label, it SHALL multiply each
+expert weight by `exp(-0.5 * binary_error)`. It SHALL normalize the weights.
+It SHALL then mix `0.02` uniformly across all available experts. Predictions
+SHALL use a deterministic weighted vote before the current release. An exact
+accept/reject tie SHALL abstain.
+
+The controller SHALL form one nominee after every 16 new released labels. It
+SHALL use the shipped source-distinct finite constraint induction. Nominee
+input SHALL contain only the current 16-label released buffer. The controller
+SHALL not keep a full label history. When the archive is full, it SHALL evict
+the lowest-weight archived expert. An equal-weight tie SHALL evict the oldest
+expert. The reset expert SHALL never be evicted. The new expert SHALL receive
+one uniform expert share before all weights are normalized.
+
+The serialized archive and controller state SHALL not exceed 69,632 bytes.
+This is the V640 bounded-archive limit. The complete charged bytes SHALL
+include expert masks, weights, the current nomination buffer, counters, and
+pending delayed feedback. The controller SHALL reduce its archive capacity if
+five experts cannot fit. It SHALL not increase the byte cap. An unbounded
+reference SHALL report its larger measured memory. It SHALL remain outside
+bounded deployment eligibility.
+
+The fixture SHALL freeze eight development streams and 24 independent
+evaluation streams before evaluation. Each stream SHALL contain 1,024 events
+and 128 warmup events. Each split SHALL contain equal separated and overlapping
+recurrence strata. Development and evaluation symbol and constraint seeds
+SHALL be disjoint. Public input, delayed releases, and evaluator authority
+SHALL remain separate.
+
+Each arm SHALL receive 128 warmup labels. After warmup, it SHALL request exactly
+128 labels at indices `128 + 7*j` for `j=0..127`. Each requested label SHALL
+release four steps later. Every future prediction SHALL be sealed before any
+release or update at that step. All arms SHALL receive the same request
+schedule and nominees. Bounded arms SHALL receive the same byte limit.
+
+The fixture SHALL include fixed-share mixture, frozen uniform voting, reset,
+unconditional recognition, label-shuffled fixed-share, unbounded-memory
+reference, and frozen-warmup arms. The uniform arm SHALL use the mixture arm's
+experts and eviction decisions. The shuffled arm SHALL use a frozen injected
+feedback permutation. The learner SHALL not read future labels, private
+change-points, or evaluator authority. No arm SHALL use a post-hoc best expert.
+
+The frozen downstream efficacy gates SHALL require all of these conditions:
+
+- Future error paired-bootstrap upper delta is below zero versus reset.
+- Future error paired-bootstrap upper delta is below zero versus unconditional recognition.
+- Separated recurrence and overlapping recurrence upper deltas versus frozen warmup are at most 0.01.
+- False-accept upper delta versus each baseline is at most 0.01.
+- Coverage lower delta versus each baseline is at least -0.02.
+- True-feedback future-error upper delta versus shuffled feedback is below zero.
+- At least 24 later predictions differ from frozen uniform voting after weights change.
+- Chronology and bounded-memory violation counts are zero.
+
+The fixture SHALL seal a scorer-only evaluation manifest at
+`results/raw/experiment_7295_v641_mixture_prototype/manifest.json`. The manifest
+SHALL bind public, release, and private-authority bytes with label hashes. It
+SHALL not expose evaluation labels as controller input. Counterfactual scores
+SHALL be computed online without changing controller state.
+
+`mixture_fixture_ready_score` SHALL equal one only when stream, feedback,
+nominee, archive, chronology, byte, restart, and scorer-manifest controls pass.
+Readiness SHALL not claim prospective efficacy. The exact evaluator SHALL set
+`verifier_is_oracle=true`. A ready fixture SHALL therefore use
+`verdict_class=circular_positive`, never `positive`.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counters SHALL be
+zero. CPU replay SHALL use `cpu_exact_solver_or_simulator` for both substrate
+fields. Independent reduction SHALL use
+`aggregation_from_upstream_artifacts` and class `aggregation`. Execution SHALL
+use `execution_venue=host`.
+
+### SCENARIO-CL-7295-PRECONDITIONS: Exact V640 Boundary Or Terminal Block
+
+- GIVEN the active task, V640 bounded-archive evidence, exclusions, and outputs
+- WHEN status, hash, byte-limit, retirement, quarantine, and ownership are checked
+- THEN only exact available evidence can start the fixture
+- AND an external failure produces row-free terminal blocked evidence.
+
+### SCENARIO-CL-7295-UPDATE: Released Labels Drive Fixed-Share Weights
+
+- GIVEN a prediction made from public input and a later released binary label
+- WHEN the fixed-share controller updates its experts
+- THEN it applies the frozen exponential loss and uniform share exactly
+- AND the current label cannot change its already sealed prediction.
+
+### SCENARIO-CL-7295-NOMINEE: Birth And Eviction Are Causal And Bounded
+
+- GIVEN 16 new released labels and a full four-entry archive
+- WHEN source-distinct induction creates the next complete hypothesis
+- THEN its birth follows the sixteenth release and the reset expert remains
+- AND the lowest-weight archived expert, oldest on a tie, is evicted.
+
+### SCENARIO-CL-7295-STREAMS: Development And Evaluation Stay Independent
+
+- GIVEN eight development and 24 evaluation streams of 1,024 events
+- WHEN the three authority views and scorer-only manifest are sealed
+- THEN seeds, identities, strata, schedule, and label hashes are complete
+- AND private authority does not enter controller input.
+
+### SCENARIO-CL-7295-FEEDBACK: The Shared Delayed Schedule Is Exact
+
+- GIVEN the 128 warmup labels and 128 fixed future request indices
+- WHEN each arm replays one stream
+- THEN every future prediction precedes each due release and update
+- AND all arms receive identical requests and nominees with no future-label read.
+
+### SCENARIO-CL-7295-MEMORY: Serialized State Enforces The V640 Limit
+
+- GIVEN bounded mixture state and an unbounded reference
+- WHEN nominees, pending feedback, and weights change
+- THEN every bounded serialized state stays at or below 69,632 bytes
+- AND the reference reports actual larger memory outside eligibility.
+
+### SCENARIO-CL-7295-CONTROLS: Restart And Counterfactuals Preserve State
+
+- GIVEN changed weights, deterministic eviction, and a saved controller
+- WHEN uniform counterfactual prediction and cold restart run
+- THEN counterfactual scoring does not mutate bytes and restart is byte-identical
+- AND injected early or future feedback fails before mutation.
+
+### SCENARIO-CL-7295-TERMINAL: Fixture Readiness Is Not Efficacy
+
+- GIVEN complete development rows, causal controls, and frozen evaluation bytes
+- WHEN independent reduction and terminal validation complete
+- THEN readiness records only fixture mechanics and bounded execution
+- AND downstream efficacy remains a preregistered test, not a prototype claim.
+
+## Implementation Status (REQ-CL-7295)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7295 and SCENARIO-CL-7295-* | Implemented in `python/carnot/experiment_7295_v641_mixture_prototype.py` with the thin executable in `scripts/experiments/experiment_7295_v641_mixture_prototype.py`: bounded fixed-share controller, shared delayed-label replay, sealed scorer-only streams, causal controls, cold reduction, and atomic terminal evidence. | `tests/python/test_experiment_7295_v641_mixture_prototype.py` (15 focused scenarios pass); scoped coverage is 920/920 statements (100%). |
