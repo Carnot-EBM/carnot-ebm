@@ -6794,3 +6794,10 @@ The critical path for milestone .250:
 - theme: compute-heavy ARC and source-comparison work led runtime while causal phase and device attribution remained unavailable
 - key result: honest operational negative — duration leaders are known, but no data available this milestone explains their internal cost, establishes inefficient compute-task GPU use, or identifies an eligible multi-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.641
+
+- exp_range: no data available this milestone
+- theme: source-reuse compute and durable-storage synthesis led runtime while phase and device attribution remained incomplete
+- key result: honest operational negative — the longest compute-bound entry is known, but no data available this milestone explains its internal cost, establishes compute-window GPU efficiency, or identifies an eligible parallel-model DualGPURunner miss
+- acceptance: no data available this milestone

@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.641",
+  "generated_at": "2026-09-14T11:35:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 33.4,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure fresh-source reuse parity and end-to-end cost",
+      "duration_minutes": 13.38,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure persistent-journal latency and durable throughput",
+      "duration_minutes": 7.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Prototype bounded delayed-feedback hypothesis mixtures",
+      "duration_minutes": 2.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Canary Qwen3.8 source reuse and warm-prefix comparators",
+      "duration_minutes": 1.99,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Preserve live ARC invocation evidence across timeout boundaries",
+      "duration_minutes": 1.95,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 33.4 minutes, including 2 compute-bound experiments. Measure fresh-source reuse parity and end-to-end cost took 13.38 minutes, while Canary Qwen3.8 source reuse and warm-prefix comparators took 1.99 minutes. The supplied data does not identify why the first compute-bound experiment took longer.",
+  "bottlenecks_identified": [
+    "Measure fresh-source reuse parity and end-to-end cost set the critical path at 13.38 minutes. No phase-level timing is available to explain why it took longest.",
+    "Measure persistent-journal latency and durable throughput was the longest synthesis-only entry at 7.5 minutes. This is not a GPU bottleneck, and no stage-level timing is available.",
+    "The GPU snapshot is not aligned to compute-task execution windows. It cannot establish compute-task efficiency or identify a missed eligible parallel-model dispatch."
+  ],
+  "improvements_suggested": [
+    "Add structured phase timers and restart checkpoints to each experiment. Record setup, model load, inference, validation, and artifact-write time when those phases apply.",
+    "Sample GPU utilization during each compute-task window. Join each sample to the task, process, model count, device, and runner choice.",
+    "Add readiness-aware device scheduling for independent compute tasks. Reclaim stale model allocations before launch, and use the second GPU when dependencies permit.",
+    "Cache validated source-compilation and preparation outputs with explicit validity keys. Reuse them only when the experiment contract permits it."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument task-scoped phase timing and GPU telemetry.",
+    "Add readiness-aware scheduling and stale-allocation cleanup across the two GPUs.",
+    "Add validated preparation caches and restart checkpoints to the source-reuse workflow."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Disk-mtime reconstruction establishes duration order but not causal phase costs or task-aligned device use. The 0% savings estimate reflects the absence of a measured counterfactual; it does not claim that the suggested changes have no value."
+}
