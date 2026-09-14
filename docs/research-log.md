@@ -6787,3 +6787,10 @@ The critical path for milestone .250:
 - theme: a single compute comparison defined the critical path while experiment-scoped timing and device attribution remained incomplete
 - key result: honest operational negative — the compute duration order is established, but no data available this milestone explains the internal cost or demonstrates an eligible concurrent multi-model DualGPURunner miss; the locked compute-task GPU-idle assessment is false
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.640
+
+- exp_range: no data available this milestone
+- theme: compute-heavy ARC and source-comparison work led runtime while causal phase and device attribution remained unavailable
+- key result: honest operational negative — duration leaders are known, but no data available this milestone explains their internal cost, establishes inefficient compute-task GPU use, or identifies an eligible multi-model DualGPURunner miss
+- acceptance: no data available this milestone

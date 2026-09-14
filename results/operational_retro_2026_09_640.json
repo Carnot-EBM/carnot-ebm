@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.640",
+  "generated_at": "2026-09-14T00:44:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 24.4,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC generalization after strict identity repair",
+      "duration_minutes": 9.94,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Matched durability throughput and acknowledgment-latency frontier",
+      "duration_minutes": 6.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Fresh Qwen3.8 source comparison with valid equal-budget controls",
+      "duration_minutes": 4.72,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Repair live ARC identity handoff without relaxing evidence",
+      "duration_minutes": 1.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent source fidelity and matched-coverage value audit",
+      "duration_minutes": 0.74,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 24.4 minutes, including 4 compute-bound experiments. The compute-bound experiments in the locked slowest list were the 9.94-minute Live ARC generalization task, the 4.72-minute Qwen3.8 source comparison, and the 1.0-minute live ARC identity repair. No data available this milestone explains their internal phase costs.",
+  "bottlenecks_identified": [
+    "Live ARC generalization after strict identity repair was the longest listed experiment at 9.94 minutes; no data available this milestone identifies which internal phase caused that duration.",
+    "Fresh Qwen3.8 source comparison with valid equal-budget controls was the next-longest listed compute-bound experiment at 4.72 minutes; no data available this milestone separates model loading, inference, validation, or artifact overhead.",
+    "Matched durability throughput and acknowledgment-latency frontier took 6.01 minutes but was synthesis-only, so its duration is not a GPU-utilization bottleneck.",
+    "The point-in-time GPU state is not joined to experiment execution windows, so it cannot establish compute-task utilization efficiency or whether any task was eligible for multi-model parallel dispatch."
+  ],
+  "improvements_suggested": [
+    "Emit experiment-scoped phase timers for model loading, inference, validation, and artifact writing so the cause of long compute-bound runs is measurable.",
+    "Capture GPU utilization samples only within compute-task boundaries and join them to the experiment name, process, model count, and runner choice.",
+    "Add a launch receipt that records whether a task loads one model or at least two models in parallel; select DualGPURunner only for the latter case.",
+    "Use an eligibility-aware device queue to place independent single-model compute tasks on separate GPUs when dependencies permit, and release task-owned model memory after completion."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-window GPU telemetry and phase timers to every compute-bound experiment.",
+    "Record model count, concurrency eligibility, selected runner, and dispatch reason at launch.",
+    "Schedule independent single-model compute tasks across separate GPUs when ready, without forcing DualGPURunner onto single-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timings rank the expensive work but do not explain its internal cost, and the endpoint GPU snapshot cannot be attributed to compute-task windows. No data available this milestone shows a compute-bound task with at least two parallel models that failed to engage DualGPURunner."
+}
