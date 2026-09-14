@@ -15674,3 +15674,97 @@ class `aggregation`. Execution SHALL use `execution_venue=host`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7296 and SCENARIO-CL-7296-* | Implemented in `python/carnot/experiment_7296_v641_mixture_learning.py` with a thin script entrypoint: authenticated scorer views, causal delayed updates, complete future rows, cold stream reduction, paired bootstrap gates, and restart parity. | `tests/python/test_experiment_7296_v641_mixture_learning.py` (10 focused scenarios pass); scoped coverage is 668/668 statements (100%). |
+
+## REQ-CL-7297: Independent Cold Audit Of Delayed-Feedback Mixtures
+
+Carnot SHALL audit the complete Exp7296 capture without requiring a favorable
+efficacy result. The audit SHALL authenticate Exp7296 capture completeness and
+the exact Exp7295 learning contract. An absent, quarantined, retired, or
+incomplete external prerequisite SHALL produce a terminal blocked artifact.
+
+A fresh process SHALL reconstruct all seven arms from the frozen stream seeds,
+public observations, and scheduled label releases. It SHALL not receive the
+producer learner object or producer aggregates. It SHALL recompute every
+prediction, state hash, state transition, label charge, and serialized byte
+charge before it reads the held-out label for scoring. Every mismatch SHALL be
+retained in `cold_replay_parity`.
+
+The audit SHALL independently reduce stream-level paired intervals for all
+frozen criteria. It SHALL preserve separated and overlapping recurrence strata.
+It SHALL also preserve feedback-selected and non-feedback future subsets. No
+pooled result SHALL hide a harmed stratum or an increased false-accept rate.
+
+Development copies SHALL run these interventions: zero updates, shuffled
+revealed labels, future-label timestamp injection, unchanged weights with a
+claimed changed prediction, hidden full-history memory, and swapped stream seed
+identities. The audit SHALL reject each invalid copy independently. Real
+evaluation rows SHALL remain immutable.
+
+A later changed prediction SHALL count only after a legitimate feedback update
+and before that prediction's own label is revealed. Promotion SHALL require the
+real-feedback arm to improve on shuffled feedback. It SHALL also require every
+frozen efficacy, recurrence, safety, coverage, chronology, label, and memory
+gate. Audit completeness SHALL remain one when a complete efficacy result is
+null. A repeated null SHALL identify the fixed-share mixture scope for
+retirement.
+
+The terminal artifact SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All model load and generation counters SHALL be zero.
+Replay SHALL use `cpu_exact_solver_or_simulator` for both substrate fields. The
+cold reducer SHALL use `aggregation_from_upstream_artifacts` with class
+`aggregation`. Execution SHALL use `execution_venue=host`.
+
+### SCENARIO-CL-7297-PRECONDITIONS: Exact Upstreams Or Terminal Block
+
+- GIVEN Exp7296, Exp7295, their raw evidence, exclusions, and output ownership
+- WHEN hashes, terminal state, capture score, contract constants, and quarantine state are checked
+- THEN only exact complete evidence can start the audit
+- AND an external failure produces row-free blocked evidence with the exact failed field.
+
+### SCENARIO-CL-7297-COLD-REPLAY: Rebuild All Arms Before Scoring
+
+- GIVEN only frozen seeds, public observations, and the release ledger
+- WHEN a fresh process replays each chronological stream
+- THEN every arm prediction and state transition matches or records its mismatch
+- AND no held-out label or producer aggregate enters a pre-prediction state.
+
+### SCENARIO-CL-7297-INTERVALS: Frozen Strata And Subsets Stay Separate
+
+- GIVEN reconstructed stream-arm rows
+- WHEN paired intervals reduce the frozen efficacy criteria
+- THEN streams are the independent units and both recurrence strata remain visible
+- AND feedback-selected and non-feedback future outcomes remain separate.
+
+### SCENARIO-CL-7297-INTERVENTIONS: Invalid Learning Copies Fail Independently
+
+- GIVEN development copies of the authenticated mixture controller
+- WHEN update deletion, label shuffle, timestamp leakage, false change claims, hidden history, and seed swaps are injected
+- THEN every invalid copy is rejected by an independent expected-versus-observed check
+- AND task-owned evaluation evidence remains byte-identical.
+
+### SCENARIO-CL-7297-CAUSALITY: Count Only Legitimate Future Changes
+
+- GIVEN an accepted delayed-feedback update and later sealed predictions
+- WHEN causal change rows are joined by event time and release time
+- THEN changes before the update or after their own label reveal do not count
+- AND real-versus-shuffled improvement and charged memory distinguish learning from activity.
+
+### SCENARIO-CL-7297-E2E: Immutable Capture Through Independent Reduction
+
+- GIVEN immutable chronological capture
+- WHEN cold replay, intervention, and independent future-outcome reduction run
+- THEN the four stages retain exact input and output hashes
+- AND no model, GPU, publication, or production-default action occurs.
+
+### SCENARIO-CL-7297-TERMINAL: Completeness And Promotion Stay Separate
+
+- GIVEN a complete audit of an upstream efficacy null
+- WHEN terminal scores are classified
+- THEN `mixture_audit_complete_score` equals one and `mixture_promotion_score` equals zero
+- AND the null verdict names the exact fixed-share mixture scope to retire.
+
+## Implementation Status (REQ-CL-7297)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7297 and SCENARIO-CL-7297-* | Implemented in `python/carnot/experiment_7297_v641_mixture_audit.py` with a thin script entrypoint: authenticated dual-upstream evidence, fresh-process seven-arm replay, exact prediction and transition parity, six invalid-copy controls, paired stream intervals, causal future-change accounting, and atomic terminal evidence. | `tests/python/test_experiment_7297_v641_mixture_audit.py` (8 focused scenarios pass); scoped coverage is 574/574 statements (100%). |

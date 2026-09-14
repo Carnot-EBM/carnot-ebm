@@ -1,0 +1,83 @@
+{
+  "rows": [
+    {
+      "control": "zero_updates",
+      "detection": "no_feedback_state_transition",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": "a claimed learner must change state after due feedback",
+      "invalid_copy_rejected": true,
+      "observed": {
+        "prediction": "accept",
+        "state_changed": false
+      },
+      "passed": true
+    },
+    {
+      "control": "shuffled_revealed_labels",
+      "detection": "release_label_ledger_mismatch",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": "accept",
+      "invalid_copy_rejected": true,
+      "observed": "reject",
+      "passed": true
+    },
+    {
+      "control": "future_label_timestamp_injection",
+      "detection": "release_timestamp_guard",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": "release_not_due",
+      "invalid_copy_rejected": true,
+      "observed": "release_not_due",
+      "passed": true
+    },
+    {
+      "control": "unchanged_weights_claimed_changed_prediction",
+      "detection": "state_prediction_claim_contradiction",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": "changed prediction requires a preceding changed state",
+      "invalid_copy_rejected": true,
+      "observed": {
+        "claimed_changed_prediction": true,
+        "weights_unchanged": true
+      },
+      "passed": true
+    },
+    {
+      "control": "hidden_full_history_memory",
+      "detection": "uncharged_label_history_detected",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": "bounded arms retain no full label history",
+      "invalid_copy_rejected": true,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "control": "swapped_seed_identities",
+      "detection": "manifest_seed_identity_mismatch",
+      "evaluation_rows_immutable": true,
+      "evaluation_rows_sha256_after": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "evaluation_rows_sha256_before": "sha256:60c4d610fe4f0adcdb5b2d3cb6698f84db0a9973060aa2270c93a502062cd064",
+      "expected": {
+        "development-01": 7295001,
+        "development-02": 7295002
+      },
+      "invalid_copy_rejected": true,
+      "observed": {
+        "development-01": 7295002,
+        "development-02": 7295001
+      },
+      "passed": true
+    }
+  ],
+  "schema": "carnot.exp7297.v641_mixture_audit.v1"
+}

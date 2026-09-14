@@ -1,0 +1,47 @@
+SIM105 Use `contextlib.suppress(ValueError)` instead of `try`-`except`-`pass`
+   --> tests/python/coverage_experiment_7297.py:103:9
+    |
+101 |           changed["schema"] = "wrong"
+102 |           audit.validate_artifact(changed)
+103 | /         try:
+104 | |             audit.attach_validation_receipts({}, [{"command": "invalid"}])
+105 | |         except ValueError:
+106 | |             pass
+    | |________________^
+107 |           try:
+108 |               audit.write_artifact(paths.artifact, changed)
+    |
+help: Replace `try`-`except`-`pass` with `with contextlib.suppress(ValueError): ...`
+
+SIM105 Use `contextlib.suppress(ValueError)` instead of `try`-`except`-`pass`
+   --> tests/python/coverage_experiment_7297.py:107:9
+    |
+105 |           except ValueError:
+106 |               pass
+107 | /         try:
+108 | |             audit.write_artifact(paths.artifact, changed)
+109 | |         except ValueError:
+110 | |             pass
+    | |________________^
+111 |           original_capture = audit.UPSTREAM_CAPTURE
+112 |           audit.UPSTREAM_CAPTURE = root / "missing-for-build.json"
+    |
+help: Replace `try`-`except`-`pass` with `with contextlib.suppress(ValueError): ...`
+
+SIM105 Use `contextlib.suppress(RuntimeError)` instead of `try`-`except`-`pass`
+   --> tests/python/coverage_experiment_7297.py:147:9
+    |
+145 |           failed_receipt = {**receipt, "exit_code": 1, "classification": "failed"}
+146 |           audit.fixture._command_receipt = lambda command: (failed_receipt.copy(), "failed log")
+147 | /         try:
+148 | |             audit.main(["--date", audit.RUN_DATE, "--output-root", str(root / "failed-main")])
+149 | |         except RuntimeError:
+150 | |             pass
+    | |________________^
+151 |           audit.build_and_seal = original_build
+152 |           audit.write_artifact = original_write
+    |
+help: Replace `try`-`except`-`pass` with `with contextlib.suppress(RuntimeError): ...`
+
+Found 3 errors.
+No fixes available (3 hidden fixes can be enabled with the `--unsafe-fixes` option).
