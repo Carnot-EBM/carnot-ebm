@@ -10,6 +10,8 @@ from collections import Counter
 from copy import deepcopy
 from itertools import groupby
 
+import pytest
+
 from carnot import experiment_7291_v641_reuse_fixture as fixture
 from carnot import experiment_7293_v641_reuse_measurement as mod
 
@@ -173,9 +175,10 @@ def test_scenario_verify_7293_cost_uses_elapsed_work_not_cached_tokens() -> None
     assert by_arm["fresh_verifier"]["unique_generation_calls"] == 16
     assert by_arm["versioned_reuse_verifier"]["unique_generation_calls"] == 10
     assert {row["model_initialization_allocation_s"] for row in at_eight} == {3.0}
-    assert by_arm["versioned_reuse_verifier"]["steady_total_s"] < by_arm["fresh_verifier"][
-        "steady_total_s"
-    ]
+    assert (
+        by_arm["versioned_reuse_verifier"]["steady_total_s"]
+        < by_arm["fresh_verifier"]["steady_total_s"]
+    )
     assert all(row["cold_total_s"] == row["steady_total_s"] + 3.0 for row in at_eight)
     assert all("cached_tokens" not in row["measured_cost_components_s"] for row in at_eight)
     assert reduced["cost_accounting"]["cached_tokens_used_as_wall_time"] is False
@@ -231,3 +234,98 @@ def test_scenario_verify_7293_capture_and_terminal_classes_fail_closed() -> None
         "expected_value": 1,
         "observed_value": 0,
     }
+
+
+def test_req_verify_7293_defensive_boundaries_remain_explicit() -> None:
+    """REQ-VERIFY-7293 rejects schedule drift and keeps empty-cost boundaries visible."""
+
+    groups, _labels = _evaluation_bundle()
+    one_group = groups[:1]
+    orders = mod.freeze_arm_orders(one_group)
+    schedule = mod.build_schedule(one_group, orders, require_full_denominator=False)
+
+    assert mod.gate_summary([])["failed_check"] is None
+    assert mod.artifact_checksum({"answer": 1, "duration_s": 2.0}) == mod.artifact_checksum(
+        {"answer": 1, "duration_s": 9.0}
+    )
+    with pytest.raises(ValueError, match="evaluation_group_denominator"):
+        mod.build_schedule(one_group, orders)
+    with pytest.raises(ValueError, match="source_version_identity"):
+        mod._source_for(one_group[0], 3)
+    with pytest.raises(ValueError, match="comparison_arm"):
+        mod._append_arm_block([], one_group[0], "not_an_arm")
+
+    bad_claims = deepcopy(one_group)
+    bad_claims[0]["claims"] = bad_claims[0]["claims"][:-1]
+    with pytest.raises(ValueError, match="evaluation_claim_denominator"):
+        mod.build_schedule(bad_claims, orders, require_full_denominator=False)
+    with pytest.raises(ValueError, match="group_arm_order"):
+        mod.build_schedule(one_group, {}, require_full_denominator=False)
+    bad_revision = deepcopy(one_group[0])
+    bad_revision["claims"][0]["source_version"] = 2
+    with pytest.raises(ValueError, match="revision_claim_denominator"):
+        mod._append_arm_block([], bad_revision, "versioned_reuse_verifier")
+    assert mod.schedule_errors(schedule, one_group, {})[0].startswith("schedule_rebuild:")
+
+    short = schedule[:-1]
+    short_errors = mod.schedule_errors(short, one_group, orders)
+    assert {"call_denominator", "rebuilt_denominator", "arm_call_denominators"}.issubset(
+        short_errors
+    )
+    leaked = deepcopy(schedule)
+    leaked[0]["expected_decision"] = "supported"
+    assert "authority_leakage" in mod.schedule_errors(leaked, one_group, orders)
+
+    assert mod._compiled(None)["errors"] == ["missing_call"]
+    assert mod._row_errors(None, "missing") == ["missing"]
+    error_row = {
+        "compiled_completion": {"outcome": "unknown", "relations": []},
+        "errors": [],
+        "model_response_error": "transport_failed",
+    }
+    assert mod._row_errors(error_row, "fallback") == ["transport_failed"]
+    assert mod._decision({}, error_row | {"usable": True}, None)["errors"] == [
+        "claim_call_unusable"
+    ]
+    assert mod._call_cost(None)["failed_calls"] == 1
+    missing_cost, missing_total = mod._aggregate_unique_cost(
+        ["missing"],
+        {},
+        extra_lookup_s=0.0,
+        extra_verification_s=0.0,
+        extra_synchronization_s=0.0,
+    )
+    assert missing_cost["failed_or_censored_generation_calls"] == 1
+    assert missing_total == 0.0
+    assert mod._latency_distribution([])["count"] == 0
+
+    passing = [mod.acceptance_row(name, True, True, True) for name in mod.GATE_PRINCIPLES]
+    assert mod.classify_verdict(passing, verifier_is_oracle=True)[0] == "circular_positive"
+    assert mod.classify_verdict(passing, verifier_is_oracle=False)[0] == "positive"
+
+
+def test_scenario_verify_7293_raw_replay_projects_measurement_metadata() -> None:
+    """SCENARIO-VERIFY-7293-CAPTURE replays native bytes before cost annotations."""
+
+    retained = {
+        "call_id": "call-1",
+        "transport_complete": True,
+        "attempted": True,
+        "censored": False,
+        "censoring_reason": None,
+        "measured_processing_s": {"source_compilation": 0.125},
+        "row_sha256": "measurement-row-hash",
+    }
+
+    projected = mod._canary_replay_projection(retained)
+
+    assert projected == {
+        "call_id": "call-1",
+        "transport_complete": True,
+        "attempted": True,
+        "row_sha256": mod.heldout.capture._row_hash(
+            {"call_id": "call-1", "transport_complete": True, "attempted": True}
+        ),
+    }
+    assert retained["attempted"] is True
+    assert retained["measured_processing_s"] == {"source_compilation": 0.125}

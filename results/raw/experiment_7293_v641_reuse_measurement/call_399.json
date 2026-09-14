@@ -1,0 +1,193 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": true,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint three, Aaoxl precedes Aaoxk.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":26,\"byte_start\":21,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaoxl\"},{\"byte_end\":41,\"byte_start\":36,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaoxk\"}]",
+          "role": "user"
+        }
+      ],
+      "seed": 729320261313,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "fresh_verifier",
+    "attempted": true,
+    "call_id": "sha256:560554c8616419fc59de697972d0d15c7cdaf476431c36997b68fa091c024fc9",
+    "call_order": 399,
+    "call_type": "claim",
+    "censored": false,
+    "censoring_reason": null,
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "known",
+      "relations": [
+        {
+          "object_end": 41,
+          "object_start": 36,
+          "object_surface": "Aaoxk",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "relation_end": 42,
+          "relation_start": 0,
+          "sentence_index": 0,
+          "subject_end": 26,
+          "subject_start": 21,
+          "subject_surface": "Aaoxl"
+        }
+      ]
+    },
+    "completion_tokens": 36,
+    "cuda_offload_confirmed": true,
+    "draw": null,
+    "errors": [],
+    "explicit_unknown": false,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "group_id": "eval-g09",
+    "latency_s": 1.2968719268683344,
+    "lease_id": "lease:65d0d41df99f090834146dbb151a3a712bacf84878c9076d1f1f26a5d7b9e1a3",
+    "measured_processing_s": {
+      "lookup_or_invalidation": 0.0,
+      "prefix_prefill": 0.239264,
+      "query_extraction": 0.00032548210583627224,
+      "source_compilation": 0.0,
+      "synchronization": 0.0,
+      "verification": 0.0
+    },
+    "model_response_error": null,
+    "native_cache_receipt": {
+      "cache_n": 16,
+      "cache_n_field_present": true,
+      "cache_policy": "cache_prompt_true",
+      "cached_tokens": 16,
+      "cached_tokens_field_present": true,
+      "evidence_present": true,
+      "measured_absence": false
+    },
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "known",
+      "relations": [
+        {
+          "object_pointer": "m001",
+          "polarity": "positive",
+          "predicate": "precedes",
+          "subject_pointer": "m000"
+        }
+      ]
+    },
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint three, Aaoxl precedes Aaoxk.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":26,\"byte_start\":21,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaoxl\"},{\"byte_end\":41,\"byte_start\":36,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaoxk\"}]",
+    "prompt_sha256": "sha256:9dd89bd28fe78eeae0aa0877b3abe913d93ffe9064b60582178b77c83425707d",
+    "prompt_tokens": 180,
+    "raw_completion": "{\"outcome\":\"known\",\"relations\":[{\"object_pointer\":\"m001\",\"polarity\":\"positive\",\"predicate\":\"precedes\",\"subject_pointer\":\"m000\"}]}",
+    "raw_completion_sha256": "sha256:72d244a96d0564976fabae5d67d36c6dca255aba5ef8bfd508fc9686fd1c92f2",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOnRydWUsImdyYW1tYXIiOiJyb290IDo6PSB1bmtub3duIHwga25vd25cbnVua25vd24gOjo9IFwie1xcXCJvdXRjb21lXFxcIjpcXFwidW5rbm93blxcXCIsXFxcInJlbGF0aW9uc1xcXCI6W119XCJcbmtub3duIDo6PSBcIntcXFwib3V0Y29tZVxcXCI6XFxcImtub3duXFxcIixcXFwicmVsYXRpb25zXFxcIjpbXCIgcmVsYXRpb24tbGlzdCBcIl19XCJcbnJlbGF0aW9uLWxpc3QgOjo9IHJlbGF0aW9uXG5yZWxhdGlvbiA6Oj0gXCJ7XFxcIm9iamVjdF9wb2ludGVyXFxcIjpcIiBwb2ludGVyIFwiLFxcXCJwb2xhcml0eVxcXCI6XCIgcG9sYXJpdHkgXCIsXFxcInByZWRpY2F0ZVxcXCI6XCIgcHJlZGljYXRlIFwiLFxcXCJzdWJqZWN0X3BvaW50ZXJcXFwiOlwiIHBvaW50ZXIgXCJ9XCJcbnBvaW50ZXIgOjo9IFwiXFxcIm0wMDBcXFwiXCIgfCBcIlxcXCJtMDAxXFxcIlwiXG5wcmVkaWNhdGUgOjo9IFwiXFxcInByZWNlZGVzXFxcIlwiIHwgXCJcXFwic3RhcnRzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImVuZHMgYmVmb3JlXFxcIlwiIHwgXCJcXFwib2NjdXJzIGJlZm9yZVxcXCJcIiB8IFwiXFxcImZvbGxvd3NcXFwiXCIgfCBcIlxcXCJzdGFydHMgYWZ0ZXJcXFwiXCIgfCBcIlxcXCJlbmRzIGFmdGVyXFxcIlwiIHwgXCJcXFwib2NjdXJzIGFmdGVyXFxcIlwiXG5wb2xhcml0eSA6Oj0gXCJcXFwicG9zaXRpdmVcXFwiXCIgfCBcIlxcXCJuZWdhdGl2ZVxcXCJcIlxuIiwibWF4X3Rva2VucyI6MTI4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCBhY2NlcHRlZCBieSB0aGUgc3VwcGxpZWQgZ3JhbW1hci4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiRXh0cmFjdCB0aGUgb25lIHN0YXRlZCByZWxhdGlvbiBmcm9tIHRoZSBjbGFpbS4gU2VsZWN0IHN1YmplY3RfcG9pbnRlciBhbmQgb2JqZWN0X3BvaW50ZXIgb25seSBmcm9tIHRoZSBwdWJsaWMgbWVudGlvbiB0YWJsZS4gUHJlZGljdCBwcmVkaWNhdGUgYW5kIHBvbGFyaXR5LiBSZXR1cm4gb25lIEpTT04gb2JqZWN0IHdpdGggb3V0Y29tZSBhbmQgcmVsYXRpb25zLCBvciB1bmtub3duIHdpdGggYW4gZW1wdHkgbGlzdC5cbkNMQUlNOlxuYXQgY2hlY2twb2ludCB0aHJlZSwgQWFveGwgcHJlY2VkZXMgQWFveGsuXG5QVUJMSUNfTUVOVElPTl9UQUJMRTpcblt7XCJieXRlX2VuZFwiOjI2LFwiYnl0ZV9zdGFydFwiOjIxLFwiZG9jdW1lbnRfaWRcIjpcImV2YWwtZzA5LXUwMy1jbGFpbVwiLFwibWVudGlvbl9pZFwiOlwibTAwMFwiLFwic3VyZmFjZV90ZXh0XCI6XCJBYW94bFwifSx7XCJieXRlX2VuZFwiOjQxLFwiYnl0ZV9zdGFydFwiOjM2LFwiZG9jdW1lbnRfaWRcIjpcImV2YWwtZzA5LXUwMy1jbGFpbVwiLFwibWVudGlvbl9pZFwiOlwibTAwMVwiLFwic3VyZmFjZV90ZXh0XCI6XCJBYW94a1wifV0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzI5MzIwMjYxMzEzLCJzdHJlYW0iOmZhbHNlLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wib3V0Y29tZVwiOlwia25vd25cIixcInJlbGF0aW9uc1wiOlt7XCJvYmplY3RfcG9pbnRlclwiOlwibTAwMVwiLFwicG9sYXJpdHlcIjpcInBvc2l0aXZlXCIsXCJwcmVkaWNhdGVcIjpcInByZWNlZGVzXCIsXCJzdWJqZWN0X3BvaW50ZXJcIjpcIm0wMDBcIn1dfSJ9fV0sImNyZWF0ZWQiOjE3ODkzNjUyNjYsIm1vZGVsIjoiUXdlbjMuOC0yN0ItUTRfS19NLmdndWYiLCJzeXN0ZW1fZmluZ2VycHJpbnQiOiJiOTYwNi05YjRkYWU4MWYiLCJvYmplY3QiOiJjaGF0LmNvbXBsZXRpb24iLCJ1c2FnZSI6eyJjb21wbGV0aW9uX3Rva2VucyI6MzYsInByb21wdF90b2tlbnMiOjE4MCwidG90YWxfdG9rZW5zIjoyMTYsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjoxNn19LCJpZCI6ImNoYXRjbXBsLTdTdGNQVld4elVTaGxyREZyUGhWZ2RhRTI4ZTBNOUpMIiwidGltaW5ncyI6eyJjYWNoZV9uIjoxNiwicHJvbXB0X24iOjE2NCwicHJvbXB0X21zIjoyMzkuMjY0LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoxLjQ1ODkyNjgyOTI2ODI5MjYsInByb21wdF9wZXJfc2Vjb25kIjo2ODUuNDM1MzM1MDI3NDE3NCwicHJlZGljdGVkX24iOjM2LCJwcmVkaWN0ZWRfbXMiOjkwMC4wOTksInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI1LjAwMjc1MDAwMDAwMDAwMiwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM5Ljk5NTYwMDQ4Mzk0Njc3fX0=",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:d7a40dfa9330eda8b73271a949476f8f343325a6856865469f5906e607da19dd",
+    "request_started_at_utc": null,
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:5d40523f22a936f694768ad37b303bdaa2d73b27c52843accf2d20597bee8191",
+    "response_observed_at_utc": "2026-09-14T05:54:26Z",
+    "row_sha256": "sha256:4e9b246494f3556b009fc386adcca0ad9288e3d3df24af36eafb7850a5f9ff87",
+    "seed": 729320261313,
+    "seed_join_valid": true,
+    "server_pid": 4007834,
+    "server_pid_start_ticks": 165657399,
+    "source_id": "source-eval-g09",
+    "source_version": 1,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 729320261313,
+    "transport_arm": "mention_pointer",
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "eval-g09-u03",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "mention_pointer",
+    "call_id": "sha256:560554c8616419fc59de697972d0d15c7cdaf476431c36997b68fa091c024fc9",
+    "call_order": 399,
+    "call_type": "claim",
+    "claim_index": 3,
+    "comparison_arm": "fresh_verifier",
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": true,
+      "seed": 729320261313,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": false,
+    "document": {
+      "document_id": "eval-g09-u03-claim",
+      "mentions": [
+        {
+          "byte_end": 26,
+          "byte_start": 21,
+          "document_id": "eval-g09-u03-claim",
+          "mention_id": "m000",
+          "surface_text": "Aaoxl"
+        },
+        {
+          "byte_end": 41,
+          "byte_start": 36,
+          "document_id": "eval-g09-u03-claim",
+          "mention_id": "m001",
+          "surface_text": "Aaoxk"
+        }
+      ],
+      "text": "at checkpoint three, Aaoxl precedes Aaoxk."
+    },
+    "draw": null,
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"object_pointer\\\":\" pointer \",\\\"polarity\\\":\" polarity \",\\\"predicate\\\":\" predicate \",\\\"subject_pointer\\\":\" pointer \"}\"\npointer ::= \"\\\"m000\\\"\" | \"\\\"m001\\\"\"\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\n",
+    "grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "group_id": "eval-g09",
+    "held_out_eligible": true,
+    "input_sha256": "sha256:4cdca3d9c0309dcd5c93281c0e544df644f00a08b627013902607c379eb5a4a1",
+    "model_input": {
+      "mentions": [
+        {
+          "byte_end": 26,
+          "byte_start": 21,
+          "document_id": "eval-g09-u03-claim",
+          "mention_id": "m000",
+          "surface_text": "Aaoxl"
+        },
+        {
+          "byte_end": 41,
+          "byte_start": 36,
+          "document_id": "eval-g09-u03-claim",
+          "mention_id": "m001",
+          "surface_text": "Aaoxk"
+        }
+      ],
+      "text": "at checkpoint three, Aaoxl precedes Aaoxk."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Select subject_pointer and object_pointer only from the public mention table. Predict predicate and polarity. Return one JSON object with outcome and relations, or unknown with an empty list.\nCLAIM:\nat checkpoint three, Aaoxl precedes Aaoxk.\nPUBLIC_MENTION_TABLE:\n[{\"byte_end\":26,\"byte_start\":21,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m000\",\"surface_text\":\"Aaoxl\"},{\"byte_end\":41,\"byte_start\":36,\"document_id\":\"eval-g09-u03-claim\",\"mention_id\":\"m001\",\"surface_text\":\"Aaoxk\"}]",
+    "prompt_sha256": "sha256:9dd89bd28fe78eeae0aa0877b3abe913d93ffe9064b60582178b77c83425707d",
+    "reference_grammar_sha256": "sha256:bdbb7bfc0e630f79d503a573148c853daf39ee311d86c23a1efbde3073b4546c",
+    "request_timeout_s": 90.0,
+    "retry_budget": 0,
+    "seed": 729320261313,
+    "source_id": "source-eval-g09",
+    "source_version": 1,
+    "unit_id": "eval-g09-u03",
+    "warm_cache_policy": "cache_prompt_true"
+  }
+}

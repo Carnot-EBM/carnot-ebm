@@ -1,0 +1,176 @@
+{
+  "completion": {
+    "actual_parameters": {
+      "cache_prompt": true,
+      "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaowe precedes Aaowf.\nCLAIM:\nat checkpoint one, Aaowe precedes Aaowf.",
+          "role": "user"
+        }
+      ],
+      "seed": 729320261124,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "arm": "warm_prefix_direct",
+    "attempted": true,
+    "call_id": "sha256:dae148d3f286533e56e7470c1f5e871764871cd6dad7b745e79ad820bbe7aafc",
+    "call_order": 210,
+    "call_type": "direct",
+    "censored": false,
+    "censoring_reason": null,
+    "compiled_completion": {
+      "decision": "unknown"
+    },
+    "completion_tokens": 7,
+    "cuda_offload_confirmed": true,
+    "draw": 1,
+    "errors": [],
+    "explicit_unknown": true,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+    "group_id": "eval-g05",
+    "latency_s": 0.5217325261328369,
+    "lease_id": "lease:65d0d41df99f090834146dbb151a3a712bacf84878c9076d1f1f26a5d7b9e1a3",
+    "measured_processing_s": {
+      "lookup_or_invalidation": 0.0,
+      "prefix_prefill": 0.187238,
+      "query_extraction": 0.0,
+      "source_compilation": 0.0,
+      "synchronization": 0.0,
+      "verification": 0.0
+    },
+    "model_response_error": null,
+    "native_cache_receipt": {
+      "cache_n": 16,
+      "cache_n_field_present": true,
+      "cache_policy": "cache_prompt_true",
+      "cached_tokens": 16,
+      "cached_tokens_field_present": true,
+      "evidence_present": true,
+      "measured_absence": false
+    },
+    "parse_valid": true,
+    "parsed_completion": {
+      "decision": "unknown"
+    },
+    "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaowe precedes Aaowf.\nCLAIM:\nat checkpoint one, Aaowe precedes Aaowf.",
+    "prompt_sha256": "sha256:047eeff1139aa42af36ad53ba96ed1f1b5985b362eb9a67b21ebcabf33b9c211",
+    "prompt_tokens": 101,
+    "raw_completion": "{\"decision\":\"c\"}",
+    "raw_completion_sha256": "sha256:540c7c1d38bcedfc2dce2c801311bbddf5f92a8ee144a076b0f32f8ea6a5aa64",
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOnRydWUsImdyYW1tYXIiOiJyb290IDo6PSBrbm93blxua25vd24gOjo9IFwie1xcXCJkZWNpc2lvblxcXCI6XCIgZGVjaXNpb24gXCJ9XCJcbmRlY2lzaW9uIDo6PSBcIlxcXCJhXFxcIlwiIHwgXCJcXFwiYlxcXCJcIiB8IFwiXFxcImNcXFwiXCJcbiIsIm1heF90b2tlbnMiOjEyOCwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgYWNjZXB0ZWQgYnkgdGhlIHN1cHBsaWVkIGdyYW1tYXIuIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHRoZSBjbGFpbSBmcm9tIHRoZSBzb3VyY2UuIFJldHVybiBkZWNpc2lvbiBhIHdoZW4gdGhlIGNsYWltIGlzIHN1cHBvcnRlZCwgYiB3aGVuIGl0IGlzIGNvbnRyYWRpY3RlZCwgYW5kIGMgd2hlbiB0aGUgc291cmNlIGlzIGluc3VmZmljaWVudC4gUmV0dXJuIG9ubHkgb25lIEpTT04gb2JqZWN0IHdpdGggdGhlIGRlY2lzaW9uIGtleS5cblNPVVJDRTpcbkFhb3dlIHByZWNlZGVzIEFhb3dmLlxuQ0xBSU06XG5hdCBjaGVja3BvaW50IG9uZSwgQWFvd2UgcHJlY2VkZXMgQWFvd2YuIiwicm9sZSI6InVzZXIifV0sInNlZWQiOjcyOTMyMDI2MTEyNCwic3RyZWFtIjpmYWxzZSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1wiZGVjaXNpb25cIjpcImNcIn0ifX1dLCJjcmVhdGVkIjoxNzg5MzY1MDg2LCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjcsInByb21wdF90b2tlbnMiOjEwMSwidG90YWxfdG9rZW5zIjoxMDgsInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjoxNn19LCJpZCI6ImNoYXRjbXBsLUVBWmNCekZaRllwVHBQU0MwMzd5enJ1NEFxeE1vSWJEIiwidGltaW5ncyI6eyJjYWNoZV9uIjoxNiwicHJvbXB0X24iOjg1LCJwcm9tcHRfbXMiOjE4Ny4yMzgsInByb21wdF9wZXJfdG9rZW5fbXMiOjIuMjAyOCwicHJvbXB0X3Blcl9zZWNvbmQiOjQ1My45Njc2Nzc1MDEzNjE5NSwicHJlZGljdGVkX24iOjcsInByZWRpY3RlZF9tcyI6MTc5Ljk1LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS43MDcxNDI4NTcxNDI4NTYsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOC44OTk2OTQzNTk1NDQzMn19",
+    "request_bytes_match": true,
+    "request_bytes_sha256": "sha256:44c0a13f1782f03790c022af72ccc2967a0bbe38e00d2e71923a5b28364a91be",
+    "request_started_at_utc": null,
+    "response_bytes_match": true,
+    "response_bytes_sha256": "sha256:dd959e7b4fbde5e8a488558a3024726d960e061837f36543ab667ad4e651a4d9",
+    "response_observed_at_utc": "2026-09-14T05:51:26Z",
+    "row_sha256": "sha256:294fa24b598243c819fddb679629185499020233f3fbfe838eead95cbdf8a823",
+    "seed": 729320261124,
+    "seed_join_valid": true,
+    "server_pid": 4007834,
+    "server_pid_start_ticks": 165657399,
+    "source_id": "source-eval-g05",
+    "source_version": 1,
+    "terminal_state": "complete",
+    "timeout": false,
+    "transmitted_seed": 729320261124,
+    "transport_arm": "direct_judge",
+    "transport_complete": true,
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "eval-g05-u01",
+    "usable": true
+  },
+  "schedule": {
+    "arm": "direct_judge",
+    "call_id": "sha256:dae148d3f286533e56e7470c1f5e871764871cd6dad7b745e79ad820bbe7aafc",
+    "call_order": 210,
+    "call_type": "direct",
+    "claim_index": 1,
+    "comparison_arm": "warm_prefix_direct",
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": true,
+      "seed": 729320261124,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "development_only": false,
+    "document": {
+      "claim": {
+        "document_id": "eval-g05-u01-claim",
+        "mentions": [
+          {
+            "byte_end": 24,
+            "byte_start": 19,
+            "document_id": "eval-g05-u01-claim",
+            "mention_id": "m000",
+            "surface_text": "Aaowe"
+          },
+          {
+            "byte_end": 39,
+            "byte_start": 34,
+            "document_id": "eval-g05-u01-claim",
+            "mention_id": "m001",
+            "surface_text": "Aaowf"
+          }
+        ],
+        "text": "at checkpoint one, Aaowe precedes Aaowf."
+      },
+      "source": {
+        "document_id": "source-eval-g05-v1",
+        "mentions": [
+          {
+            "byte_end": 5,
+            "byte_start": 0,
+            "document_id": "source-eval-g05-v1",
+            "mention_id": "m000",
+            "surface_text": "Aaowe"
+          },
+          {
+            "byte_end": 20,
+            "byte_start": 15,
+            "document_id": "source-eval-g05-v1",
+            "mention_id": "m001",
+            "surface_text": "Aaowf"
+          }
+        ],
+        "text": "Aaowe precedes Aaowf."
+      }
+    },
+    "draw": 1,
+    "grammar": "root ::= known\nknown ::= \"{\\\"decision\\\":\" decision \"}\"\ndecision ::= \"\\\"a\\\"\" | \"\\\"b\\\"\" | \"\\\"c\\\"\"\n",
+    "grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+    "group_id": "eval-g05",
+    "held_out_eligible": true,
+    "input_sha256": "sha256:c43f3d775d0632968a915c9343b1c48637959bd9c6420f9ce64706301ab32e7e",
+    "model_input": {
+      "claim": "at checkpoint one, Aaowe precedes Aaowf.",
+      "source": "Aaowe precedes Aaowf."
+    },
+    "output_token_budget": 128,
+    "prompt": "Judge the claim from the source. Return decision a when the claim is supported, b when it is contradicted, and c when the source is insufficient. Return only one JSON object with the decision key.\nSOURCE:\nAaowe precedes Aaowf.\nCLAIM:\nat checkpoint one, Aaowe precedes Aaowf.",
+    "prompt_sha256": "sha256:047eeff1139aa42af36ad53ba96ed1f1b5985b362eb9a67b21ebcabf33b9c211",
+    "reference_grammar_sha256": "sha256:679016f0cbdbb0addd84a809d9782a3193175b3d1872f09324ec184191a66335",
+    "request_timeout_s": 90.0,
+    "retry_budget": 0,
+    "seed": 729320261124,
+    "source_id": "source-eval-g05",
+    "source_version": 1,
+    "unit_id": "eval-g05-u01",
+    "warm_cache_policy": "cache_prompt_true"
+  }
+}
