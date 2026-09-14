@@ -32213,6 +32213,80 @@ failures and SHALL not write a success-shaped placeholder.
 Implementation status: specified 2026-09-13. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7289: Preserve live ARC calls across process loss
+
+Experiment 7289 SHALL add an append-only receipt at each shipped ARC model-load
+and generation boundary. The receipt SHALL persist an attempted event before the
+blocking call starts. It SHALL append completion or failure after the call returns.
+Each event SHALL include one call ID, the operation, a monotonic timestamp, the
+model identity, the owner process ID, and the model-server child PID when known.
+Duplicate identical events SHALL not increase counters. Conflicting duplicates,
+malformed events, unknown operations, or unsupported model identity SHALL
+disqualify the affected reduction instead of producing invented zero activity.
+
+The reducer SHALL count attempted, completed, failed, and in-flight model loads
+and generations separately. Any attempted load or generation SHALL set the
+historical receipt's `model_invoked` value to true. A completed load with no
+generation SHALL reduce to `model_load_no_generation`. A parent SHALL merge the
+child ledger after normal exit, timeout, cancellation, and exception. It SHALL
+terminate only the process group that it started and verify that no owned child
+survives.
+
+The shipped `LocalGGUFProposer` launch boundary and the selfparse tool transport
+SHALL write the shared receipt when `CARNOT_ARC_BOUNDARY_LEDGER_PATH` names a
+sidecar. The variable SHALL be optional. When it is absent, request payloads,
+model budgets, supervisor flags, and policy behavior SHALL remain unchanged.
+The existing typed identity validator SHALL remain authoritative. Boundary
+receipts SHALL not turn rejected identity into accepted identity.
+
+Experiment 7289 SHALL use CPU child fixtures only. Historical and injected model
+events SHALL stay in hashed sidecars. The experiment's own `MODEL_SPECS`,
+`model_invoked`, and load and generation counters SHALL remain empty or zero.
+The result SHALL freeze the current Exp7280 terminal bytes and present raw bytes.
+It SHALL distinguish observations from hypotheses and SHALL not rewrite Exp7280.
+It SHALL publish readiness only after the load, no-generation, timeout, unusable
+response, duplicate, identity rejection, and owned-child cleanup controls pass
+through the real wrapper and caller seams.
+
+### SCENARIO-ARC-WMTE-7289-IN-FLIGHT-TIMEOUT
+
+- GIVEN a CPU child that appends a generation attempt and blocks inside the call
+- WHEN the owning wrapper reaches its timeout and terminates its process group
+- THEN the parent reducer reports one attempted and zero completed generations
+- AND the receipt remains available even though the child writes no episode.
+
+### SCENARIO-ARC-WMTE-7289-LOAD-ONLY-AND-UNUSABLE
+
+- GIVEN one child completes load without generation and another gets an unusable response
+- WHEN their ledgers are reduced independently
+- THEN load-only reduces to `model_load_no_generation`
+- AND the unusable response counts as completed generation with zero usable answers.
+
+### SCENARIO-ARC-WMTE-7289-DUPLICATE-AND-IDENTITY-REJECTION
+
+- GIVEN an identical event is appended twice and another row has unsupported identity
+- WHEN the reducer merges the ledgers
+- THEN the duplicate does not increase a counter
+- AND the unsupported identity remains disqualified with its exact reason.
+
+### SCENARIO-ARC-WMTE-7289-LIVE-CALLER-REACHABILITY
+
+- GIVEN the actual `LocalGGUFProposer` load seam and selfparse `_post_chat` seam
+- WHEN injected CPU transports exercise those seams with the ledger variable set
+- THEN an attempt exists before each blocking call and its terminal state follows
+- AND no request payload, budget, supervisor setting, or identity rule changes.
+
+### SCENARIO-ARC-WMTE-7289-TERMINAL-EVIDENCE
+
+- GIVEN the Exp7280 artifact, present raw files, six CPU fixture rows, and scoped checks
+- WHEN the independent reducer and terminal validators run
+- THEN the result is complete or externally blocked, never partial for external absence
+- AND the current task reports no LLM call, exact source hashes, validation failures,
+  the unresolved historical timeout boundary, and atomic publication.
+
+Implementation status: specified 2026-09-14. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7248: Give selfparse refinement transition witnesses
 
 The scored `E3AgentPolicy` refinement path SHALL support an optional transition

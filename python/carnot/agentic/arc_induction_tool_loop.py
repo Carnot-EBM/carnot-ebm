@@ -430,8 +430,21 @@ def _post_chat(
         data=json.dumps(payload).encode(),
         headers={"Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=timeout_s) as r:
-        raw = json.load(r)
+    from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+    boundary = boundary_call_for_proposer(proposer, "generation")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout_s) as r:
+            raw = json.load(r)
+    except BaseException as exc:
+        boundary.fail(exc)
+        raise
+    choices = raw.get("choices") if isinstance(raw, dict) else None
+    choice = choices[0] if isinstance(choices, list) and choices else {}
+    message = choice.get("message", {}) if isinstance(choice, dict) else {}
+    message = message if isinstance(message, dict) else {}
+    usable = bool(message.get("content") or message.get("tool_calls"))
+    boundary.complete(usable=usable)
     return raw
 
 

@@ -1,0 +1,381 @@
+{
+  "captured_at_utc": "2026-09-14T03:59:14.705259+00:00",
+  "diagnosis": {
+    "cause": "unresolved_external_timeout_boundary",
+    "hypotheses": [
+      "the owning harness was externally cancelled after its child stopped updating the checkpoint",
+      "the child or parent exceeded a timeout outside the persisted episode accounting boundary"
+    ],
+    "observed_active_call": "not_authenticatable",
+    "observed_failures": [
+      "terminal artifact says one completed load while model_invoked is false",
+      "terminal artifact has four synthetic censored rows with no request lineage",
+      "present checkpoint is nonterminal after one later episode",
+      "present raw rows contain two attempted and zero completed generations",
+      "present raw tree does not contain live_session.json",
+      "terminal artifact raw hashes and present raw bytes describe different executions"
+    ],
+    "observed_last_event": "later checkpoint stage=episodes completed_units=1"
+  },
+  "present_checkpoint": {
+    "path": "results/checkpoints/experiment_7280_v640_arc_live.json",
+    "sha256": "sha256:a821f9e36272e77e28c4de23a9557e81f86345e1ce8fd04ef13e8e798e505bcf",
+    "value": {
+      "completed_units": 1,
+      "model_loaded": true,
+      "server_pid": 3768859,
+      "stage": "episodes",
+      "status": "running",
+      "total_units": 4
+    }
+  },
+  "present_raw_hashes": {
+    "results/raw/experiment_7280_v640_arc_live/episode_rows.json": {
+      "sha256": "sha256:c31e537b6ff6cf53de7b774d0759fe3b87da5cfed9c4ec6f06ba3257205c883f",
+      "size_bytes": 3618
+    },
+    "results/raw/experiment_7280_v640_arc_live/frozen_schedule.json": {
+      "sha256": "sha256:a58de02d8c8613d94602f606d74b10aade7f0281bcd738f2c7ad4ded964f9219",
+      "size_bytes": 1959
+    },
+    "results/raw/experiment_7280_v640_arc_live/model_identity.json": {
+      "sha256": "sha256:aba14b062df8cf9839270550c4a1dbb9bae1e720f12f94859a307b7c323b76c4",
+      "size_bytes": 23420
+    },
+    "results/raw/experiment_7280_v640_arc_live/raw_server_props.json": {
+      "sha256": "sha256:8b838d1cd32ba639fc6347744af0d032ad0a39c7075fa135fdc670c4f3f35308",
+      "size_bytes": 12132
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/prompt.raw": {
+      "sha256": "sha256:f358865868f9d22f2d5616fac83af164b18ee602f64fa61ed139aea06859113e",
+      "size_bytes": 19607
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_656281-5128e827e65c/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+      "size_bytes": 915665
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/prompt.raw": {
+      "sha256": "sha256:70bb5873403eed14c571eb80738369c70bb70c8b239a9bbe3fe8b2276aed760a",
+      "size_bytes": 16517
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205838_840664-51495112c9b8/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+      "size_bytes": 915665
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/environment_receipt.json": {
+      "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/prompt.raw": {
+      "sha256": "sha256:e19c1a91d55f53f710c6bb41690cfcf23a16e0257c86a99b9a7cb22edf51fc44",
+      "size_bytes": 16521
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205917_878544-47cbc6a1b038/transitions.jsonl": {
+      "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26",
+      "size_bytes": 915665
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/environment_receipt.json": {
+      "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/prompt.raw": {
+      "sha256": "sha256:6550df71621aaabc34dd68a116f1e7affad55df0c4edc8e1efcccf722f3345a6",
+      "size_bytes": 23323
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_749711-59285cf78d04/transitions.jsonl": {
+      "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+      "size_bytes": 1135568
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/environment_receipt.json": {
+      "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/prompt.raw": {
+      "sha256": "sha256:4efb4152a8f9ddc31b03a456280ca16cf6b4eef1a4c7d31f7fa03a3eeb305a45",
+      "size_bytes": 20413
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210036_963270-786d7c2d0be4/transitions.jsonl": {
+      "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+      "size_bytes": 1135568
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/agent_factory.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/environment_receipt.json": {
+      "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8",
+      "size_bytes": 107
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/live_policy.py": {
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "size_bytes": 545689
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/prompt.raw": {
+      "sha256": "sha256:44e7e2d70cadc407705e2d8e4365c06b61910a55c324111b67185f690923c037",
+      "size_bytes": 20417
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/scorer.py": {
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "size_bytes": 3934
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T210116_200698-22a155a96647/transitions.jsonl": {
+      "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f",
+      "size_bytes": 1135568
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/00_request.json": {
+      "sha256": "sha256:ee5fda7cb8ba1caaed07229534901df74ebe0eba6b423692bf51578a1f9d6656",
+      "size_bytes": 20011
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/01_request.json": {
+      "sha256": "sha256:fa9fb8d067a864ecb63c6baafa85047b968fda051c13048fea0349c6b8ff1373",
+      "size_bytes": 16892
+    },
+    "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/run_progress.json": {
+      "sha256": "sha256:8c8233bc744d82ed822447fb8c8c4672c03e572f5ee5b4cd697527b3fa43f934",
+      "size_bytes": 1176
+    },
+    "results/raw/experiment_7280_v640_arc_live/server_logs/carnot_llama_server_logs/llama_server_p58269_1789333014.log": {
+      "sha256": "sha256:8cd5eb1994bfd0c650f7d834f54e185a2d990332368dd7807d41be2eb1b68061",
+      "size_bytes": 3045
+    }
+  },
+  "present_raw_observations": {
+    "completed_units": 1,
+    "episode_dispositions": [
+      "complete"
+    ],
+    "generation_calls_attempted": 2,
+    "generation_calls_completed": 0,
+    "last_completed_phase": "episodes",
+    "last_request_started_at_utc": "2026-09-13T20:59:17+00:00",
+    "last_request_transport_completed": false,
+    "live_session_present": false,
+    "model_loaded": true,
+    "server_pid": 3768859,
+    "server_pid_alive_at_freeze": true,
+    "total_units": 4
+  },
+  "quarantine": {
+    "critical_findings": [
+      "INFERENCE_PROVENANCE_CONTRADICTION",
+      "SUBSTRATE_CLASS_MISMATCH"
+    ],
+    "preserved": true,
+    "scientific_claims_included": false,
+    "source_artifact_rewritten": false
+  },
+  "schema": "carnot.exp7280_historical_freeze.v1",
+  "terminal_artifact_path": "results/experiment_7280_v640_arc_live.json",
+  "terminal_artifact_sha256": "sha256:6cd87540c26cefffa9c4dd1553b774aff955877ca09f7c4066a2bf06840e364d",
+  "terminal_artifact_size_bytes": 155607,
+  "terminal_observations": {
+    "all_rows_censored": true,
+    "artifact_raw_hashes": {
+      "results/raw/experiment_7280_v640_arc_live/episode_rows.json": {
+        "sha256": "sha256:96045ffebb971ef295bba2c53a8a94966b0a31a80365ca28eaeae8fc165a49d0"
+      },
+      "results/raw/experiment_7280_v640_arc_live/failure_receipts/preflight_path_type_blocked.json": {
+        "sha256": "sha256:5e53707ec2b326b633932f4ee03c6bfdbdd8037400c677a670426cfa16e99c0e"
+      },
+      "results/raw/experiment_7280_v640_arc_live/frozen_schedule.json": {
+        "sha256": "sha256:a58de02d8c8613d94602f606d74b10aade7f0281bcd738f2c7ad4ded964f9219"
+      },
+      "results/raw/experiment_7280_v640_arc_live/live_session.json": {
+        "sha256": "sha256:7f1f7fa9a61493d2575ffb672df3f75bf6584d1931a11ad6fbea32083e2e9b36"
+      },
+      "results/raw/experiment_7280_v640_arc_live/model_identity.json": {
+        "sha256": "sha256:eb75480aaa8821f442ca8d139fc24ae7de2f9230b5ad6414924d11b1ca3b0a44"
+      },
+      "results/raw/experiment_7280_v640_arc_live/raw_server_props.json": {
+        "sha256": "sha256:a708ca0d5172c4c321d800d207d1299648f36d6fbb2c74304daf4da2070caf90"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/agent_factory.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/environment_receipt.json": {
+        "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/live_policy.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/prompt.raw": {
+        "sha256": "sha256:f358865868f9d22f2d5616fac83af164b18ee602f64fa61ed139aea06859113e"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/scorer.py": {
+        "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204752_623222-c43ee661d1f8/transitions.jsonl": {
+        "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/agent_factory.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/environment_receipt.json": {
+        "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/live_policy.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/prompt.raw": {
+        "sha256": "sha256:70bb5873403eed14c571eb80738369c70bb70c8b239a9bbe3fe8b2276aed760a"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/scorer.py": {
+        "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T204855_283714-a1ca0ad4ad97/transitions.jsonl": {
+        "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/agent_factory.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/environment_receipt.json": {
+        "sha256": "sha256:7f6c082db08978663f0ac6d571a7dd8b576032faba15d25e469d82d68bfa1e5d"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/live_policy.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/prompt.raw": {
+        "sha256": "sha256:e19c1a91d55f53f710c6bb41690cfcf23a16e0257c86a99b9a7cb22edf51fc44"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/scorer.py": {
+        "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205116_125458-bdd07fe94e7c/transitions.jsonl": {
+        "sha256": "sha256:d4b5c4734420899c93293e9ac49043f944e43508d4a45129e73ee752d1d1cc26"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/agent_factory.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/environment_receipt.json": {
+        "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/live_policy.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/prompt.raw": {
+        "sha256": "sha256:6550df71621aaabc34dd68a116f1e7affad55df0c4edc8e1efcccf722f3345a6"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/scorer.py": {
+        "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_610542-5795e76b5e4a/transitions.jsonl": {
+        "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/agent_factory.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/environment_receipt.json": {
+        "sha256": "sha256:f78ed0fc4241ef4d0d055cb7781183d5279116a3c36ae1040813d161d1be41e8"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/live_policy.py": {
+        "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/prompt.raw": {
+        "sha256": "sha256:4efb4152a8f9ddc31b03a456280ca16cf6b4eef1a4c7d31f7fa03a3eeb305a45"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/scorer.py": {
+        "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/e3/re86/attempts/.evidence-staging/arc-20260913T205351_802734-7872eefc8fea/transitions.jsonl": {
+        "sha256": "sha256:e1ac085522fea801b1a9f306d7780cc00f3d5f1dac395abc0191a9fa6fddef5f"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/00_request.json": {
+        "sha256": "sha256:ee5fda7cb8ba1caaed07229534901df74ebe0eba6b423692bf51578a1f9d6656"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/00_response.json": {
+        "sha256": "sha256:26ea7d5b30b787c9ac908d861da8c60eaed0c5a41accd2d1d090174be9004127"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/01_request.json": {
+        "sha256": "sha256:fa9fb8d067a864ecb63c6baafa85047b968fda051c13048fea0349c6b8ff1373"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/requests/01_response.json": {
+        "sha256": "sha256:1cc1d4f6b84d042de961ac2d3909c3997c20d8ca3c35948b13071568c2f8e6f8"
+      },
+      "results/raw/experiment_7280_v640_arc_live/re86__current_feedback/run_progress.json": {
+        "sha256": "sha256:24e5e36a0685b6f321ba96574525f70b4b4bdc289a2cab210e427d1e11a157c4"
+      },
+      "results/raw/experiment_7280_v640_arc_live/server_logs/carnot_llama_server_logs/llama_server_p59419_1789332330.log": {
+        "sha256": "sha256:8000cef238493e665fefff76ede034c71b24c61f1b56a00b5673cc789d1e7b40"
+      }
+    },
+    "duration_s": 596.308144,
+    "ended_at_utc": "2026-09-13T20:55:16+00:00",
+    "experiment_id": "exp7280-arc-live",
+    "generation_calls_attempted": 0,
+    "honest_verdict": "complete_null_typed_witness_policy_use_gates_not_met",
+    "model_invoked": false,
+    "model_loads_attempted": 1,
+    "model_loads_completed": 1,
+    "started_at_utc": "2026-09-13T20:45:20+00:00",
+    "status": "complete",
+    "verdict_class": "null"
+  }
+}

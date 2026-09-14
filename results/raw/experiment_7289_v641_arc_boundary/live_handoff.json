@@ -1,0 +1,49 @@
+{
+  "arguments": [
+    "--date",
+    "20260914"
+  ],
+  "caller_reachability": {
+    "current_model_calls": {
+      "generation_calls_attempted": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0,
+      "usable_answers": 0
+    },
+    "identity_rejection_ledger_sha256": "sha256:155f19d7aaf766fb169e7aaa0cede81f7fffed97af329aba9177372bb26a2f93",
+    "identity_rejection_preserved": true,
+    "load_boundary_reachable": true,
+    "load_ledger_sha256": "sha256:2ebf2dcd862b2097fd92db139513e2e54920b2cd2639c4857f815dbd92c188b1",
+    "selfparse_generation_boundary_reachable": true,
+    "selfparse_ledger_sha256": "sha256:72b315c75d55f9f92c2fef66988f566fc67c36813a23fa785caae96057416fcd"
+  },
+  "changed_code_hashes": {
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+    "python/carnot/agentic/arc_inference_boundary.py": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+    "python/carnot/experiment_7289_v641_arc_boundary.py": "sha256:aa91ab1a3d0334cbbb5bca13d02213f6326b9c3051f8fc58bdb7e9655aebc319",
+    "scripts/experiments/experiment_7289_v641_arc_boundary.py": "sha256:bdaaa588683f69e134fd2fb723489fae3060a34053383d9371afcdfdb85404d7"
+  },
+  "cleanup_ownership": "the wrapper owns and terminates only its start_new_session process group",
+  "entrypoint": "scripts/experiments/experiment_7290_v641_arc_selfparse.py",
+  "entrypoint_state": "declared_future_output_not_a_precondition",
+  "environment": {
+    "CARNOT_ARC_BOUNDARY_LEDGER_PATH": "results/raw/experiment_7290_v641_arc_selfparse/inference_boundary_events.jsonl",
+    "CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse"
+  },
+  "existing_budget_constants": {
+    "actions": 192,
+    "generated_tokens": 4096,
+    "generation_calls": 2,
+    "model_load_limit_s": 600,
+    "session_limit_s": 3000
+  },
+  "generation_caller": "carnot.agentic.arc_induction_tool_loop._post_chat",
+  "handoff_sha256": "sha256:c2c5f55648bbf8aab00009fe4dfd0fbf0b6daa7e78bdcb98dfd024a6437dcf74",
+  "load_caller": "carnot.agentic.arc_executable_world_model.LocalGGUFProposer._ensure_server"
+}

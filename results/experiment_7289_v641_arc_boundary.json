@@ -1,0 +1,1653 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "criterion": "six_lifecycle_controls",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Every named lifecycle control must pass from persisted rows."
+    },
+    {
+      "criterion": "no_surviving_owned_child",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Cancellation is complete only after task-owned children stop."
+    },
+    {
+      "criterion": "identity_rejection_preserved",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Lifecycle evidence cannot weaken strict model identity."
+    },
+    {
+      "criterion": "actual_load_and_selfparse_callers_reachable",
+      "expected": true,
+      "observed": {
+        "load": true,
+        "selfparse": true
+      },
+      "passed": true,
+      "principle": "Readiness requires the production call sites, not only the ledger class."
+    },
+    {
+      "criterion": "historical_quarantine_preserved",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "A provenance repair does not rehabilitate historical science."
+    },
+    {
+      "criterion": "scoped_validation_passed",
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "Publication retains every actual command result."
+    }
+  ],
+  "arc_boundary_ready_score": 0,
+  "boundary_event_rows": [
+    {
+      "abstention": false,
+      "case": "pre_load_failure",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.515762
+      },
+      "counter_reduction": {
+        "activity_known": false,
+        "call_rows": [
+          {
+            "call_id": "pre-load",
+            "child_pid": null,
+            "ended_monotonic_ns": 1650055323805857,
+            "error": "injected pre-load failure",
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": ""
+            },
+            "operation": "model_load",
+            "owner_pid": 3975624,
+            "started_monotonic_ns": 1650055323221049,
+            "terminal_state": "failed",
+            "usable": null
+          }
+        ],
+        "disqualified": true,
+        "duplicate_event_count": 0,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ],
+        "inference_substrate": "disqualified_unknown_activity",
+        "invocation_counts": null,
+        "model_invoked": null,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "disqualified": true,
+        "model_revision_missing": true
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": true,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/pre_load_failure.jsonl",
+      "ledger_sha256": "sha256:0a2284dd67c42e689a43c6e1544f5f08746a54bf39d55a9ef83582d1fd135729",
+      "metric": 1,
+      "observed": {
+        "disqualified": true,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ]
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 2,
+      "seed": 728920260915,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "load_no_generation",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465491
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "load-only",
+            "child_pid": 3975648,
+            "ended_monotonic_ns": 1650055817575118,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975648,
+            "started_monotonic_ns": 1650055816227256,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 0,
+        "model_loads_completed": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/load_no_generation.jsonl",
+      "ledger_sha256": "sha256:fe95ec895237fd6ac5a2a65836a7ba8f97224b271f18e682f095848d357afca1",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260916,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "generation_timeout",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.470463
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "timeout-generation",
+            "child_pid": 3975672,
+            "ended_monotonic_ns": null,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975672,
+            "started_monotonic_ns": 1650056272483779,
+            "terminal_state": "in_flight",
+            "usable": null
+          },
+          {
+            "call_id": "timeout-load",
+            "child_pid": 3975672,
+            "ended_monotonic_ns": 1650056272195257,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975672,
+            "started_monotonic_ns": 1650056271043013,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 1,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 4
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/generation_timeout.jsonl",
+      "ledger_sha256": "sha256:0395e531650cbf625dfa1faecce84195708dd34ac551d7d16b96a32fdaee4835",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 1,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260917,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    },
+    {
+      "abstention": false,
+      "case": "generation_unusable",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465698
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "unusable-generation",
+            "child_pid": 3975696,
+            "ended_monotonic_ns": 1650056737123410,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975696,
+            "started_monotonic_ns": 1650056736861949,
+            "terminal_state": "completed",
+            "usable": false
+          },
+          {
+            "call_id": "unusable-load",
+            "child_pid": 3975696,
+            "ended_monotonic_ns": 1650056736566103,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975696,
+            "started_monotonic_ns": 1650056735370708,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 5
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_completed": 1,
+        "usable_answers": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/generation_unusable.jsonl",
+      "ledger_sha256": "sha256:4f6ff3e99fbdf7f8f5c72d1963910970751686c8e7280d78f47dcbae5e7b4408",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 5,
+      "seed": 728920260918,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "duplicate_events",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.466093
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "duplicate-generation",
+            "child_pid": 3975720,
+            "ended_monotonic_ns": 1650057202657812,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975720,
+            "started_monotonic_ns": 1650057202003383,
+            "terminal_state": "completed",
+            "usable": false
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 2,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/duplicate_events.jsonl",
+      "ledger_sha256": "sha256:994f6c3e7742e693d46f67f4f28eb4917130de3a6bdf2e11ca021728b02b8a6b",
+      "metric": 1,
+      "observed": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260919,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "orphan_cleanup",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.567545
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "cleanup-load",
+            "child_pid": 3975744,
+            "ended_monotonic_ns": 1650057676412415,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975744,
+            "started_monotonic_ns": 1650057675348938,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/orphan_cleanup.jsonl",
+      "ledger_sha256": "sha256:57f2c7a4be59d4f406dabfbe04a0b0a0a89d13cd88b493e452c743841a29e2af",
+      "metric": 1,
+      "observed": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [
+        3975768
+      ],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260920,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    }
+  ],
+  "current_scientific_claim": null,
+  "duration_s": 117.070744,
+  "ended_at_utc": "2026-09-14T04:01:11.753902+00:00",
+  "execution_venue": "host",
+  "experiment_id": "exp7289-arc-boundary",
+  "field_principles": {
+    "MODEL_SPECS": "Actual executable local model identities; keep historical models in hashed sidecars.",
+    "acceptance_gate_results": "Each completeness/value check names expected, observed, passed and principle.",
+    "arc_boundary_ready_score": "One only when the real live caller uses the tested lossless boundary ledger and identity checks.",
+    "boundary_event_rows": "Each injected lifecycle event, persisted evidence, counter reduction and expected result.",
+    "current_scientific_claim": "Retain this supporting value as ordinary machine-readable evidence.",
+    "duration_s": "Measured monotonic elapsed and disjoint phase spans, including failures and initialization.",
+    "ended_at_utc": "Retain this supporting value as ordinary machine-readable evidence.",
+    "execution_venue": "Host is host; identify actual GPU/native/device execution separately.",
+    "experiment_id": "Retain this supporting value as ordinary machine-readable evidence.",
+    "field_principles": "Store explanations here while consumer values remain ordinary top-level values.",
+    "gate_check_summary": "Every blocked_* verdict names upstream/check, exact field, observed and expected value.",
+    "historical_scientific_claim_included": "Retain this supporting value as ordinary machine-readable evidence.",
+    "historical_timeout_diagnosis": "Observed last event and unresolved cause, linked to immutable Exp7280 evidence.",
+    "honest_verdict": "Complete findings start complete_ or complete:; external absence starts blocked_; state the actual finding.",
+    "inference_substrate": "Use the recognized literal for actual computation; never infer from intended task.",
+    "inference_substrate_class": "Full generation60s, bounded10s, load-only2s, or actual no-LLM class; never pad elapsed time.",
+    "invocation_counts": "Separate attempted/completed/failed loads and generation; retain in-flight events on timeout.",
+    "live_handoff": "Actual caller/arguments, changed code hashes, cleanup ownership and existing budget constants.",
+    "milestone": "Retain this supporting value as ordinary machine-readable evidence.",
+    "model_invoked": "True for any actual attempted model load or generation, including failed and unusable work.",
+    "official_score": "Retain this supporting value as ordinary machine-readable evidence.",
+    "phase_spans": "Retain this supporting value as ordinary machine-readable evidence.",
+    "preconditions_checked": "Hash actual inputs, authority boundaries, resource ownership and failed checks.",
+    "quarantine_preserved": "Confirm historical Exp7280 remains unchanged and excluded from scientific claims.",
+    "random_seed": "Freeze development and independent evaluation seeds before observing outcomes.",
+    "reproducibility_checksum": "Bind code, config, inputs, model identity if any and immutable raw evidence.",
+    "rows": "Every comparative unit/arm/seed with metric, cost, error, abstention and censoring; no aggregate-only claim.",
+    "run_date": "Use 20260914, real UTC start/end and monotonic timing.",
+    "sample_size_budget": "Planned, attempted, complete and censored units plus the frozen stopping rule.",
+    "schema": "Version the artifact; retain ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Keep exact producer identities, terminal classes, retirement and quarantine state.",
+    "started_at_utc": "Retain this supporting value as ordinary machine-readable evidence.",
+    "status": "Use a terminal complete or blocked record; unfinished own work belongs in separate checkpoints.",
+    "validation_receipts": "Command, exit code, elapsed time and log hash; preserve actual failures.",
+    "verdict_class": "Exactly positive | circular_positive | null | blocked | disqualified | partial. Oracle=true forbids positive; failed efficacy gates forbid positive. Only own unfinished work is partial; unchanged external failure is terminal blocked.",
+    "verifier_is_oracle": "Expose shared verifier/evaluator authority; same-authority mechanics are not learned correctness."
+  },
+  "gate_check_summary": [],
+  "historical_scientific_claim_included": false,
+  "historical_timeout_diagnosis": {
+    "cause": "unresolved_external_timeout_boundary",
+    "hypotheses": [
+      "the owning harness was externally cancelled after its child stopped updating the checkpoint",
+      "the child or parent exceeded a timeout outside the persisted episode accounting boundary"
+    ],
+    "observed_active_call": "not_authenticatable",
+    "observed_failures": [
+      "terminal artifact says one completed load while model_invoked is false",
+      "terminal artifact has four synthetic censored rows with no request lineage",
+      "present checkpoint is nonterminal after one later episode",
+      "present raw rows contain two attempted and zero completed generations",
+      "present raw tree does not contain live_session.json",
+      "terminal artifact raw hashes and present raw bytes describe different executions"
+    ],
+    "observed_last_event": "later checkpoint stage=episodes completed_units=1"
+  },
+  "honest_verdict": "complete_disqualified_arc_boundary_validation_or_control_failed",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "live_handoff": {
+    "arguments": [
+      "--date",
+      "20260914"
+    ],
+    "caller_reachability": {
+      "current_model_calls": {
+        "generation_calls_attempted": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "identity_rejection_ledger_sha256": "sha256:155f19d7aaf766fb169e7aaa0cede81f7fffed97af329aba9177372bb26a2f93",
+      "identity_rejection_preserved": true,
+      "load_boundary_reachable": true,
+      "load_ledger_sha256": "sha256:2ebf2dcd862b2097fd92db139513e2e54920b2cd2639c4857f815dbd92c188b1",
+      "selfparse_generation_boundary_reachable": true,
+      "selfparse_ledger_sha256": "sha256:72b315c75d55f9f92c2fef66988f566fc67c36813a23fa785caae96057416fcd"
+    },
+    "changed_code_hashes": {
+      "python/carnot/agentic/arc_executable_world_model.py": "sha256:7c61e3463ce3cc7737acf9d380c888b66dd6521b0daaadfab66cebb7b2bed693",
+      "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:b956a94a17c559f563e1ab63b5983b0ffe7f96b42401311c19cd96621fe9e37f",
+      "python/carnot/agentic/arc_inference_boundary.py": "sha256:53858aec81f9319f24479a024410282e3d5c561912963756d01525f072c15bc0",
+      "python/carnot/experiment_7289_v641_arc_boundary.py": "sha256:aa91ab1a3d0334cbbb5bca13d02213f6326b9c3051f8fc58bdb7e9655aebc319",
+      "scripts/experiments/experiment_7289_v641_arc_boundary.py": "sha256:bdaaa588683f69e134fd2fb723489fae3060a34053383d9371afcdfdb85404d7"
+    },
+    "cleanup_ownership": "the wrapper owns and terminates only its start_new_session process group",
+    "entrypoint": "scripts/experiments/experiment_7290_v641_arc_selfparse.py",
+    "entrypoint_state": "declared_future_output_not_a_precondition",
+    "environment": {
+      "CARNOT_ARC_BOUNDARY_LEDGER_PATH": "results/raw/experiment_7290_v641_arc_selfparse/inference_boundary_events.jsonl",
+      "CARNOT_ARC_INDUCE_TOOL_LOOP": "selfparse"
+    },
+    "existing_budget_constants": {
+      "actions": 192,
+      "generated_tokens": 4096,
+      "generation_calls": 2,
+      "model_load_limit_s": 600,
+      "session_limit_s": 3000
+    },
+    "generation_caller": "carnot.agentic.arc_induction_tool_loop._post_chat",
+    "handoff_sha256": "sha256:c2c5f55648bbf8aab00009fe4dfd0fbf0b6daa7e78bdcb98dfd024a6437dcf74",
+    "load_caller": "carnot.agentic.arc_executable_world_model.LocalGGUFProposer._ensure_server"
+  },
+  "milestone": "2026.09.641",
+  "model_invoked": false,
+  "official_score": null,
+  "phase_spans": [
+    {
+      "duration_s": 0.009308356093242764,
+      "phase": "preconditions"
+    },
+    {
+      "duration_s": 0.012730713933706284,
+      "phase": "historical_freeze"
+    },
+    {
+      "duration_s": 2.9524924450088292,
+      "phase": "cpu_boundary_panel"
+    },
+    {
+      "duration_s": 0.0395715341437608,
+      "phase": "caller_reachability"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "upstream": "AGENTS.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "upstream": "CODEX.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "upstream": "research-program.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:aba0e64467be2a888c6728eb20bd3440549cd17095c25690a9d9f756e348a9a8",
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:ddbd328992a647f6da99fe9c2f336aa3ec1ee233a4ec7408501ab12dbc5404ed",
+      "upstream": "python/carnot/experiment_7280_v640_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:d47950a16c0f09957ed5cde605d68bcde4c95d72fd69bd58276fd2af1777a2e2",
+      "upstream": "python/carnot/experiment_7276_v640_arc_identity.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:a655c0eeb4917c9713b671ab0c09abe54fab1be8e6bd1b55d3a5335d8c2df625",
+      "upstream": "python/carnot/experiment_7263_v639_arc_live.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:79daea4437faa06a511d9cffb24cd80393c390380d1c9e427e0cb4b4042feee4",
+      "upstream": "python/carnot/agentic/arc_eval_provenance.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:6cd87540c26cefffa9c4dd1553b774aff955877ca09f7c4066a2bf06840e364d",
+      "upstream": "results/experiment_7280_v640_arc_live.json"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+      "upstream": "tests/python/test_arc_eval_provenance_contract_20260905.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704",
+      "upstream": "tests/python/test_arc_tool_grammar_transport.py"
+    },
+    {
+      "check": "required_input",
+      "expected": true,
+      "field": "regular_file",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1ad596217e07f153e5c6b78af39a85becd6437a66b3ff0bd197f5f765c1fe354",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "driving_capability",
+      "expected": true,
+      "field": "REQ-ARC-WMTE-7289",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1ad596217e07f153e5c6b78af39a85becd6437a66b3ff0bd197f5f765c1fe354",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "declared_output_path",
+      "expected": true,
+      "field": "parent_writable",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:a31542e1c50ce402255de04441e4cbe24f9db90360014f10d7be0b03b796e50a",
+      "upstream": "results/experiment_7289_v641_arc_boundary.json"
+    },
+    {
+      "check": "declared_output_path",
+      "expected": true,
+      "field": "parent_writable",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1f22e2b4256645bbe21ec48295a2b3b06421992100be3c9c8723c7367cd33165",
+      "upstream": "results/checkpoints/experiment_7289_v641_arc_boundary.json"
+    },
+    {
+      "check": "declared_output_path",
+      "expected": true,
+      "field": "parent_writable",
+      "observed": true,
+      "passed": true,
+      "sha256": "sha256:1ab229adaea7c05b35867310a58d5d335b9cfaa9bd18543ee07ee68645eb7e27",
+      "upstream": "results/raw/experiment_7289_v641_arc_boundary"
+    }
+  ],
+  "quarantine_preserved": true,
+  "random_seed": {
+    "development": 728920260914,
+    "independent_evaluation": 1728920260914
+  },
+  "reproducibility_checksum": "sha256:2ab9b23b9368b47828315a107efb1484828b5896604070f710af393bbba765ef",
+  "rows": [
+    {
+      "abstention": false,
+      "case": "pre_load_failure",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.515762
+      },
+      "counter_reduction": {
+        "activity_known": false,
+        "call_rows": [
+          {
+            "call_id": "pre-load",
+            "child_pid": null,
+            "ended_monotonic_ns": 1650055323805857,
+            "error": "injected pre-load failure",
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": ""
+            },
+            "operation": "model_load",
+            "owner_pid": 3975624,
+            "started_monotonic_ns": 1650055323221049,
+            "terminal_state": "failed",
+            "usable": null
+          }
+        ],
+        "disqualified": true,
+        "duplicate_event_count": 0,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ],
+        "inference_substrate": "disqualified_unknown_activity",
+        "invocation_counts": null,
+        "model_invoked": null,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "disqualified": true,
+        "model_revision_missing": true
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": true,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/pre_load_failure.jsonl",
+      "ledger_sha256": "sha256:0a2284dd67c42e689a43c6e1544f5f08746a54bf39d55a9ef83582d1fd135729",
+      "metric": 1,
+      "observed": {
+        "disqualified": true,
+        "errors": [
+          "model_revision_missing:pre-load"
+        ]
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 2,
+      "seed": 728920260915,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "load_no_generation",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465491
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "load-only",
+            "child_pid": 3975648,
+            "ended_monotonic_ns": 1650055817575118,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975648,
+            "started_monotonic_ns": 1650055816227256,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 0,
+        "model_loads_completed": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/load_no_generation.jsonl",
+      "ledger_sha256": "sha256:fe95ec895237fd6ac5a2a65836a7ba8f97224b271f18e682f095848d357afca1",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260916,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "generation_timeout",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.470463
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "timeout-generation",
+            "child_pid": 3975672,
+            "ended_monotonic_ns": null,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975672,
+            "started_monotonic_ns": 1650056272483779,
+            "terminal_state": "in_flight",
+            "usable": null
+          },
+          {
+            "call_id": "timeout-load",
+            "child_pid": 3975672,
+            "ended_monotonic_ns": 1650056272195257,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975672,
+            "started_monotonic_ns": 1650056271043013,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 1,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 4
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/generation_timeout.jsonl",
+      "ledger_sha256": "sha256:0395e531650cbf625dfa1faecce84195708dd34ac551d7d16b96a32fdaee4835",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 1,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260917,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    },
+    {
+      "abstention": false,
+      "case": "generation_unusable",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.465698
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "unusable-generation",
+            "child_pid": 3975696,
+            "ended_monotonic_ns": 1650056737123410,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975696,
+            "started_monotonic_ns": 1650056736861949,
+            "terminal_state": "completed",
+            "usable": false
+          },
+          {
+            "call_id": "unusable-load",
+            "child_pid": 3975696,
+            "ended_monotonic_ns": 1650056736566103,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975696,
+            "started_monotonic_ns": 1650056735370708,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 5
+      },
+      "error": null,
+      "expected": {
+        "generation_calls_completed": 1,
+        "usable_answers": 0
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/generation_unusable.jsonl",
+      "ledger_sha256": "sha256:4f6ff3e99fbdf7f8f5c72d1963910970751686c8e7280d78f47dcbae5e7b4408",
+      "metric": 1,
+      "observed": {
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 5,
+      "seed": 728920260918,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "duplicate_events",
+      "censored": false,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.466093
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "duplicate-generation",
+            "child_pid": 3975720,
+            "ended_monotonic_ns": 1650057202657812,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "generation",
+            "owner_pid": 3975720,
+            "started_monotonic_ns": 1650057202003383,
+            "terminal_state": "completed",
+            "usable": false
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 2,
+        "errors": [],
+        "inference_substrate": "model_full_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 1,
+          "generation_calls_completed": 1,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 2
+      },
+      "error": null,
+      "expected": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/duplicate_events.jsonl",
+      "ledger_sha256": "sha256:994f6c3e7742e693d46f67f4f28eb4917130de3a6bdf2e11ca021728b02b8a6b",
+      "metric": 1,
+      "observed": {
+        "duplicate_event_count": 2,
+        "generation_calls_attempted": 1,
+        "generation_calls_completed": 1,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [],
+      "passed": true,
+      "persisted_event_count": 4,
+      "seed": 728920260919,
+      "signals_sent": []
+    },
+    {
+      "abstention": false,
+      "case": "orphan_cleanup",
+      "censored": true,
+      "cost": {
+        "current_generations": 0,
+        "current_model_loads": 0,
+        "wall_s": 0.567545
+      },
+      "counter_reduction": {
+        "activity_known": true,
+        "call_rows": [
+          {
+            "call_id": "cleanup-load",
+            "child_pid": 3975744,
+            "ended_monotonic_ns": 1650057676412415,
+            "error": null,
+            "model_identity": {
+              "model_filename": "fixture.gguf",
+              "model_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "model_path": "/injected-history/fixture.gguf",
+              "model_repository": "historical-fixture/model",
+              "model_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "operation": "model_load",
+            "owner_pid": 3975744,
+            "started_monotonic_ns": 1650057675348938,
+            "terminal_state": "completed",
+            "usable": null
+          }
+        ],
+        "disqualified": false,
+        "duplicate_event_count": 0,
+        "errors": [],
+        "inference_substrate": "model_load_no_generation",
+        "invocation_counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 1,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0,
+          "usable_answers": 0
+        },
+        "model_invoked": true,
+        "unique_event_count": 3
+      },
+      "error": null,
+      "expected": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "historical_fixture_only": true,
+      "identity_rejection_preserved": false,
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/fixtures/orphan_cleanup.jsonl",
+      "ledger_sha256": "sha256:57f2c7a4be59d4f406dabfbe04a0b0a0a89d13cd88b493e452c743841a29e2af",
+      "metric": 1,
+      "observed": {
+        "owned_child_alive_after_cleanup": false
+      },
+      "owned_child_alive_after_cleanup": false,
+      "owned_child_pids": [
+        3975768
+      ],
+      "passed": true,
+      "persisted_event_count": 3,
+      "seed": 728920260920,
+      "signals_sent": [
+        "SIGTERM:owned_process_group"
+      ]
+    }
+  ],
+  "run_date": "20260914",
+  "sample_size_budget": {
+    "attempted_units": 6,
+    "censored_units": 2,
+    "completed_units": 6,
+    "planned_units": 6,
+    "stopping_rule": "run each frozen CPU lifecycle control once; timeout fixtures remain censored"
+  },
+  "schema": "carnot.experiment_7289.v641.arc_boundary.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+    },
+    "CODEX.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1ad596217e07f153e5c6b78af39a85becd6437a66b3ff0bd197f5f765c1fe354"
+    },
+    "ops/e2e-test-plan.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "ops/known-issues.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:aba0e64467be2a888c6728eb20bd3440549cd17095c25690a9d9f756e348a9a8"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "python/carnot/agentic/arc_eval_provenance.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:79daea4437faa06a511d9cffb24cd80393c390380d1c9e427e0cb4b4042feee4"
+    },
+    "python/carnot/experiment_7263_v639_arc_live.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a655c0eeb4917c9713b671ab0c09abe54fab1be8e6bd1b55d3a5335d8c2df625"
+    },
+    "python/carnot/experiment_7276_v640_arc_identity.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:d47950a16c0f09957ed5cde605d68bcde4c95d72fd69bd58276fd2af1777a2e2"
+    },
+    "python/carnot/experiment_7280_v640_arc_live.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:ddbd328992a647f6da99fe9c2f336aa3ec1ee233a4ec7408501ab12dbc5404ed"
+    },
+    "research-program.md": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7280_v640_arc_live.json": {
+      "authority": "historical_diagnostic_only",
+      "quarantined": true,
+      "retired": false,
+      "sha256": "sha256:6cd87540c26cefffa9c4dd1553b774aff955877ca09f7c4066a2bf06840e364d"
+    },
+    "results/raw/experiment_7289_v641_arc_boundary/boundary_event_rows.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:cbdf736175378549c67770043d519b679ac33eae11fbf20ff76b706c5985ffdb"
+    },
+    "results/raw/experiment_7289_v641_arc_boundary/historical_exp7280_freeze.json": {
+      "experiment_id": "exp7280-arc-live",
+      "quarantined": true,
+      "retired": false,
+      "sha256": "sha256:ee738317dbccf8e6d39333d9e7932e024bf514c7fb5d01f4102b26ce6a7d4af5",
+      "terminal_class": "null"
+    },
+    "results/raw/experiment_7289_v641_arc_boundary/live_handoff.json": {
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:3585d677e13b0528e4b6625972a23740b656f332fd860bf1f94b021d5277e068"
+    },
+    "tests/python/test_arc_eval_provenance_contract_20260905.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc"
+    },
+    "tests/python/test_arc_tool_grammar_transport.py": {
+      "authority": "input",
+      "quarantined": false,
+      "retired": false,
+      "sha256": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704"
+    }
+  },
+  "started_at_utc": "2026-09-14T03:59:14.683178+00:00",
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_experiment_7289_v641_arc_boundary.py -q --no-cov -n 0 --basetemp=/tmp/exp7289-focused",
+      "duration_s": 14.845495,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/00_focused_exp7289.log",
+      "log_sha256": "sha256:7e56a4a529a5ce6db2f555cf1b7b3c2528ae8b316af86b1bafd4f07d68d9c2b0",
+      "name": "focused_exp7289",
+      "output_tail": ".......................                                                  [100%]\n23 passed in 13.36s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_eval_provenance_contract_20260905.py -q --no-cov -n 0 --basetemp=/tmp/exp7289-provenance",
+      "duration_s": 3.78054,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/01_affected_arc_eval_provenance.log",
+      "log_sha256": "sha256:0a7b785000809ed5c480bedfcf792425918c0ac1eae5c729458108e62fa5daa5",
+      "name": "affected_arc_eval_provenance",
+      "output_tail": ".....................                                                    [100%]\n21 passed in 2.25s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_induction_state_persistence.py -q --no-cov -n 0 --basetemp=/tmp/exp7289-e2e009",
+      "duration_s": 11.363941,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/02_e2e_009_cross_call_persistence.log",
+      "log_sha256": "sha256:1ec53f1355e11ee17d3c830fa98791543154ba0b5a83bcbab57ec9f30527159b",
+      "name": "e2e_009_cross_call_persistence",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.41s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_arc_tool_grammar_transport.py tests/python/test_experiment_7289_v641_arc_boundary.py -q --no-cov -n 0 --basetemp=/tmp/exp7289-e2e010",
+      "duration_s": 22.993527,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/03_e2e_010_transport_and_cancellation.log",
+      "log_sha256": "sha256:0757f5de2edb8ccd4bdd53e0039d1eeb401b15e753a22a2ab5ae32f75ffe782a",
+      "name": "e2e_010_transport_and_cancellation",
+      "output_tail": "........................................................................ [ 98%]\n.                                                                        [100%]\n73 passed in 20.03s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python -q --no-cov -n 0 --basetemp=/tmp/exp7289-full",
+      "duration_s": 42.288237,
+      "exit_code": 2,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log",
+      "log_sha256": "sha256:6016a29aa53fd835cbaf1857e1f59fb2f598258edabb3b5d7f39b6ed16763d80",
+      "name": "full_python_suite",
+      "output_tail": "; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\npython/carnot/autoresearch/transpile.py:58\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:58: PytestCollectionWarning: cannot collect test class 'TestVector' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\npython/carnot/autoresearch/transpile.py:75\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/autoresearch/transpile.py:75: PytestCollectionWarning: cannot collect test class 'TestVectorSet' because it has a __init__ constructor (from: tests/python/test_autoresearch_transpile.py)\n    @dataclass\n\ntests/python/test_energy_premise_v3_3437.py:26\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_energy_premise_v3_3437.py:26: PytestUnknownMarkWarning: Unknown pytest.mark.kona - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    pytestmark = pytest.mark.kona\n\n.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings\n  /home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.\n    warnings.warn(\n\ntests/python/test_respawn_queue.py:68\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:68: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\ntests/python/test_respawn_queue.py:97\n  /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_respawn_queue.py:97: PytestUnknownMarkWarning: Unknown pytest.mark.no_cov - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html\n    @pytest.mark.no_cov\n\npython/carnot/verify/python_types.py:305\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/python_types.py:305: PytestCollectionWarning: cannot collect test class 'TestPassConstraint' because it has a __init__ constructor (from: tests/python/test_verify_python_types.py)\n    class TestPassConstraint(BaseConstraint):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_5500_sota_concept_claim_panel_v499.py - Ke...\nERROR tests/python/test_experiment_5512_structured_output_positive_control.py\nERROR tests/python/test_experiment_5513_sota_hard_soft_structured_panel.py - ...\nERROR tests/python/test_experiment_5525_sota_schema_failure_taxonomy.py - Key...\nERROR tests/python/test_experiment_5526_sota_structured_repair_loop.py - KeyE...\nERROR tests/python/test_experiment_5527_sota_hard_soft_panel_v2.py - KeyError...\nERROR tests/python/test_experiment_5538_sota_panel_duration_substrate_corrigendum.py\nERROR tests/python/test_experiment_5539_gram2token_grammar_table_preflight.py\nERROR tests/python/test_experiment_5540_sota_hard_soft_live_panel_v3.py - Key...\nERROR tests/python/test_experiment_5552_automaton_schema_row_completion_receipt.py\nERROR tests/python/test_experiment_5759_sota_exact_proposal_utility_panel.py\nERROR tests/python/test_experiment_5786_sota_constraint_stream.py - KeyError:...\nERROR tests/python/test_experiment_5799_sota_answer_channel_canary.py - KeyEr...\nERROR tests/python/test_experiment_5811_exp5799_event_provenance_audit.py - K...\nERROR tests/python/test_experiment_5812_split_budget_channel_contract.py - Ke...\nERROR tests/python/test_experiment_6607_gemma4_26b_direct_headroom.py - Index...\nERROR tests/python/test_experiment_7131_v626_model_facing_csl.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 17 errors during collection !!!!!!!!!!!!!!!!!!!\n5 skipped, 21 warnings, 17 errors in 21.32s\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7289.coverage --include=*/arc_inference_boundary.py,*/experiment_7289_v641_arc_boundary.py -m pytest -o addopts= tests/python/test_experiment_7289_v641_arc_boundary.py -q -n 0 --basetemp=/tmp/exp7289-coverage",
+      "duration_s": 16.886293,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/05_scoped_coverage_run.log",
+      "log_sha256": "sha256:7a779018262a3da222d32776bfdb514cc3517b15b5c0d97e0dd7ebe115ad1dea",
+      "name": "scoped_coverage_run",
+      "output_tail": ".......................                                                  [100%]\n23 passed in 14.41s\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7289.coverage --include=*/arc_inference_boundary.py,*/experiment_7289_v641_arc_boundary.py --show-missing --fail-under=100",
+      "duration_s": 0.100831,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/06_scoped_coverage_report.log",
+      "log_sha256": "sha256:7014180fb6493855dfc32f4852e4502910a415c4abd29d4c926b07147245899f",
+      "name": "scoped_coverage_report",
+      "output_tail": "Name                                                 Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------\npython/carnot/agentic/arc_inference_boundary.py        206      0   100%\npython/carnot/experiment_7289_v641_arc_boundary.py     320      0   100%\n----------------------------------------------------------------------------------\nTOTAL                                                  526      0   100%\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/agentic/arc_inference_boundary.py python/carnot/experiment_7289_v641_arc_boundary.py python/carnot/agentic/arc_executable_world_model.py python/carnot/agentic/arc_induction_tool_loop.py scripts/experiments/experiment_7289_v641_arc_boundary.py tests/python/test_experiment_7289_v641_arc_boundary.py",
+      "duration_s": 0.011849,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/07_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/agentic/arc_inference_boundary.py python/carnot/experiment_7289_v641_arc_boundary.py python/carnot/agentic/arc_executable_world_model.py python/carnot/agentic/arc_induction_tool_loop.py scripts/experiments/experiment_7289_v641_arc_boundary.py tests/python/test_experiment_7289_v641_arc_boundary.py",
+      "duration_s": 0.010818,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/08_ruff_format.log",
+      "log_sha256": "sha256:ef7d13d02214e98ca902b05257cdbe6a8e84f3b4714508efdc19766460b54209",
+      "name": "ruff_format",
+      "output_tail": "6 files already formatted\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/agentic/arc_inference_boundary.py python/carnot/experiment_7289_v641_arc_boundary.py python/carnot/agentic/arc_executable_world_model.py python/carnot/agentic/arc_induction_tool_loop.py",
+      "duration_s": 0.516482,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/09_changed_module_mypy.log",
+      "log_sha256": "sha256:2c351be2d1372b0ed603cb295d6e6cf711fe0b394d2e8776de2aca205e30704e",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 4 source files\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7289_v641_arc_boundary.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py",
+      "duration_s": 0.019527,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/10_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7289_v641_arc_boundary.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/boundary_event_rows.json",
+      "duration_s": 0.457901,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/11_independent_raw_row_reducer.log",
+      "log_sha256": "sha256:073e1975fa28b4ea373078241b90110b8f9bb84d1db06e82a20445045f0416ce",
+      "name": "independent_raw_row_reducer",
+      "output_tail": "{\"experiment\": \"exp7289-arc-boundary\", \"phase\": \"startup\", \"event\": \"entrypoint\"}\n{\"all_controls_passed\": true, \"arc_boundary_ready_score\": 1, \"attempted_units\": 6, \"case_set_complete\": true, \"censored_units\": 2, \"completed_units\": 6, \"identity_rejection_preserved\": true, \"no_surviving_owned_child\": true, \"planned_units\": 6}\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/terminal_candidate.json",
+      "duration_s": 0.579555,
+      "exit_code": 1,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/00_terminal_candidate_adversarial_verify.log",
+      "log_sha256": "sha256:e6b63579ca60487ad380e9da59d79f0d654ae9d597416013c2d334be35bd811a",
+      "name": "terminal_candidate_adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7289-arc-boundary () -- 2 flag(s)\n  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='cpu_exact_solver_or_simulator', live_evidence_count=66, negative_evidence_count=37. The duration check fails closed until the invocation scope agrees.\n  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=cpu_exact_solver_or_simulator says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked', 'model_loads_attempted']). Contradictory.\n\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7289_v641_arc_boundary/terminal_candidate.json",
+      "duration_s": 0.025624,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/01_terminal_candidate_row_consistency.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_candidate_row_consistency",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}

@@ -6838,8 +6838,28 @@ class LocalGGUFProposer:
             data=_json.dumps(payload).encode(),
             headers={"Content-Type": "application/json"},
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as r:
-            raw = _json.load(r)
+        from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+        boundary = boundary_call_for_proposer(self, "generation")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                raw = _json.load(r)
+        except BaseException as exc:
+            boundary.fail(exc)
+            raise
+        response_choices = raw.get("choices") if isinstance(raw, dict) else None
+        response_choice = (
+            response_choices[0]
+            if isinstance(response_choices, list)
+            and response_choices
+            and isinstance(response_choices[0], dict)
+            else {}
+        )
+        response_message = response_choice.get("message") or {}
+        response_message = response_message if isinstance(response_message, dict) else {}
+        boundary.complete(
+            usable=bool(response_message.get("content") or response_message.get("tool_calls"))
+        )
         if memory_receipt is not None:
             memory_receipt.delivered(memory_bytes)
         choice = (raw.get("choices") or [{}])[0]
@@ -7361,8 +7381,24 @@ class LocalGGUFProposer:
         req = urllib.request.Request(
             self._url() + "/v1/completions", data=body, headers={"Content-Type": "application/json"}
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as r:
-            d = _json.load(r)
+        from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+        boundary = boundary_call_for_proposer(self, "generation")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                d = _json.load(r)
+        except BaseException as exc:
+            boundary.fail(exc)
+            raise
+        response_choices = d.get("choices") if isinstance(d, dict) else None
+        response_choice = (
+            response_choices[0]
+            if isinstance(response_choices, list)
+            and response_choices
+            and isinstance(response_choices[0], dict)
+            else {}
+        )
+        boundary.complete(usable=bool(response_choice.get("text")))
         ch = (d.get("choices") or [{}])[0]
         fr = str(ch.get("finish_reason") or "")
         usage = d.get("usage") or {}
@@ -7593,9 +7629,17 @@ class LocalGGUFProposer:
         # is worse than a failed launch.
         self._terminate_stale_proc("terminated before launching a replacement llama-server")
         self.last_launch_argv = tuple(args)
-        self._proc = subprocess.Popen(
-            args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
-        )
+        from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+        load_boundary = boundary_call_for_proposer(self, "model_load")
+        try:
+            self._proc = subprocess.Popen(
+                args, stdout=subprocess.DEVNULL, stderr=_err_sink, env=launch_env
+            )
+        except BaseException as exc:
+            load_boundary.fail(exc)
+            raise
+        load_boundary.child_started(self._proc.pid)
         self.server_pid_start_tick = process_start_tick(getattr(self._proc, "pid", None))
         load_wait_attempts = max(90, int(self.timeout / 2))  # large full-precision models (e.g.
         # a 62GB BF16 GGUF) can take far longer than the 180s the fixed 90-attempt budget allows
@@ -7608,6 +7652,7 @@ class LocalGGUFProposer:
         for _ in range(load_wait_attempts):
             if self._healthy():
                 self._verify_mtp_engaged()
+                load_boundary.complete()
                 return True
             time.sleep(2)
         # WAIT EXHAUSTED: the server never answered /health in time. It may still be loading, or
@@ -7616,6 +7661,7 @@ class LocalGGUFProposer:
         # the next time this method Popens a replacement. Stop it now instead of hoping a later
         # call remembers to.
         self._terminate_stale_proc("terminated: never became healthy within the wait budget")
+        load_boundary.fail("model server did not become healthy within the load wait budget")
         return False
 
     # The POSITIVE marker llama.cpp prints when `--spec-type draft-mtp` is genuinely wired up. Read
@@ -8111,8 +8157,16 @@ class LocalGGUFProposer:
                         data=body,
                         headers={"Content-Type": "application/json"},
                     )
-                    with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                        _response = _json.load(r)
+                    from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+                    boundary = boundary_call_for_proposer(self, "generation")
+                    try:
+                        with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                            _response = _json.load(r)
+                    except BaseException as exc:
+                        boundary.fail(exc)
+                        raise
+                    boundary.complete(usable=bool(_response.get("content")))
                     if memory_receipt is not None:
                         memory_receipt.delivered(prompt_extra_tokens)
                     text = _response.get("content", "")
@@ -8318,8 +8372,16 @@ class LocalGGUFProposer:
                     data=body,
                     headers={"Content-Type": "application/json"},
                 )
-                with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                    _response = _json.load(r)
+                from carnot.agentic.arc_inference_boundary import boundary_call_for_proposer
+
+                boundary = boundary_call_for_proposer(self, "generation")
+                try:
+                    with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                        _response = _json.load(r)
+                except BaseException as exc:
+                    boundary.fail(exc)
+                    raise
+                boundary.complete(usable=bool(_response.get("content")))
         except Exception as e:
             msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
             if _is_timeout_error(e):
