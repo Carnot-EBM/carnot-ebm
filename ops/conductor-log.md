@@ -17991,3 +17991,4 @@ code |
 | 2026-09-15 08:32 UTC | Qualify bounded Qwen3.8 joint-claim calls | OK | 90 passed, 1 warning in 8.36s |
 | 2026-09-15 09:20 UTC | Measure joint-claim fidelity and complete inferenc | OK | 89 passed, 1 warning in 11.97s |
 | 2026-09-15 09:48 UTC | Audit source semantics and cross-claim interferenc | OK | 90 passed, 1 warning in 12.32s |
+| 2026-09-15 11:11 UTC | Prototype structural constraint addition across ve | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: yload["additio |

@@ -16383,3 +16383,117 @@ injected invocation payloads SHALL remain in hash-bound sidecars.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7312 and SCENARIO-CL-7312-* | Implemented in `python/carnot/experiment_7312_v642_factor_audit.py` with the thin entrypoint `scripts/experiments/experiment_7312_v642_factor_audit.py`. The audit authenticates Exp7311 and its immutable inputs. A fresh worker reconstructs all five arms from public events and due labels. Five hostile controls test label timing, factor-name invariance, witness erasure, feedback removal, and corrupt rollback rejection. | `tests/python/test_experiment_7312_v642_factor_audit.py` covers exact blocking, replay parity, controls, independent intervals, causal outcome credit, terminal separation, and atomic evidence. Scoped statement coverage is 568/568 (100%). |
+
+## REQ-CL-7323: Versioned Pairwise And Capacity Constraint Addition
+
+Carnot SHALL provide a default-off structural learner for a finite scheduling
+language. Public requests SHALL contain at most six named activities. Each
+activity SHALL have at most four allowed integer slots. Private executor rules
+SHALL contain selected pairwise minimum separations and one global concurrent
+capacity from a six-value domain. Each pair SHALL retain no more than 16
+separation hypotheses. A separate executor SHALL reveal only one Boolean for a
+complete proposed schedule. Learner code SHALL receive no private rule map or
+evaluator implementation.
+
+The learner SHALL persist only justified atoms. Each atom SHALL include its
+authenticated executor version, witness, and charged query receipts. A rejected
+compound plan SHALL remain uncertain until charged subqueries isolate a sound
+pairwise or capacity bound. Every admitted atom SHALL preserve all retained
+accepted schedules. Contradictory, early, stale-version, over-cap, or malformed
+evidence SHALL fail atomically. Deterministic proposal solving SHALL finish in
+two seconds per invocation.
+
+The executor SHALL expose an authenticated version. Rules SHALL stay fixed
+inside that version. A version change SHALL remove old atoms from active
+authority. Archived atoms MAY reactivate only for the same authenticated
+version. An unannounced private rule change under one public version SHALL be a
+negative control. It SHALL expose the stable-version assumption limit and SHALL
+not receive a learned-recovery claim.
+
+Each request SHALL have a total budget of 24 executor calls. Main, localization,
+capacity, final, cache-miss, and failed calls SHALL count. Every returned plan
+SHALL receive a charged final executor check. An exact cache MAY reuse only a
+byte-identical plan and version pair. All learner, witness, receipt, cache, and
+deduplication state SHALL fit within 69,632 bytes. No uncharged durable state is
+permitted.
+
+The prototype SHALL implement persistent acquisition, reset-each-request,
+exact-plan-cache with reset learning, and frozen-after-four-request arms. A
+label-shuffled arm SHALL remain diagnostic. The fixture SHALL seal eight
+development environments and 24 held-out environments of 24 requests each.
+The held-out split SHALL contain eight stationary, eight announced-version
+change, and eight return-to-known-version streams. A disjoint unannounced-change
+challenge SHALL remain separate.
+
+Before held-out execution, the prototype SHALL freeze paired upper CI95 oracle
+call ratios below 0.90 against reset and cache. It SHALL freeze a utility lower
+CI95 difference of at least -0.02 of attainable reward, a feasibility coverage
+difference of at least -0.02, zero returned infeasible plans, no stale-version
+atoms, exact cold-restart parity, and one causal later distinct-request use.
+These unmeasured efficacy gates SHALL not determine fixture readiness.
+`addition_fixture_ready_score` SHALL equal one only for an executable bounded
+learner, isolated Boolean executor, sealed splits, lifecycle E2E, and all
+adversarial controls. Shared executor authority SHALL restrict a complete
+readiness verdict to `circular_positive`.
+
+The task SHALL use date `20260915`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counts SHALL be zero.
+It SHALL declare `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL not change model weights, production defaults,
+publication surfaces, historical determinations, or the research roadmap.
+
+### SCENARIO-CL-7323-LANGUAGE: Rejected Compounds Stay Uncertain
+
+- GIVEN a public request and a rejected schedule with several possible conflicts
+- WHEN the learner receives only the whole-schedule Boolean
+- THEN no pair or capacity atom is admitted from that Boolean alone
+- AND charged pair and capacity subqueries can admit only the bounds they isolate.
+
+### SCENARIO-CL-7323-VERSION: Authority Follows Authenticated Versions
+
+- GIVEN admitted atoms under one stable executor version
+- WHEN an announced version change or authenticated return occurs
+- THEN stale atoms lose active authority and same-version archived atoms can reactivate
+- AND an unannounced rule change reports an assumption-limit failure without a recovery claim.
+
+### SCENARIO-CL-7323-BOUNDS: Calls, Hypotheses, And Bytes Stay Finite
+
+- GIVEN localization, capacity probes, final checks, exact-cache activity, and durable receipts
+- WHEN any request or commit reaches its resource boundary
+- THEN every external and failed call is charged within 24 and durable state stays within 69,632 bytes
+- AND byte exhaustion, contradictory feedback, early evidence, and cache-key changes reject safely.
+
+### SCENARIO-CL-7323-STREAMS: Development And Held-Out Views Are Sealed
+
+- GIVEN independent development and evaluation seeds
+- WHEN eight development and 24 held-out environments are created
+- THEN each has 24 public requests with the declared activity and slot limits
+- AND private rules, announced transitions, return transitions, and challenge identity have hash-bound seals.
+
+### SCENARIO-CL-7323-ARMS: Persistent Addition Faces Three Controls
+
+- GIVEN four primary arms and one shuffled-label diagnostic
+- WHEN the development panel executes successive requests
+- THEN rows retain calls, failures, abstentions, costs, utility, feasibility, state bytes, and censoring
+- AND at least one admitted atom changes a later distinct-request proposal.
+
+### SCENARIO-CL-7323-E2E: Opt-In Addition Survives A Crash Boundary
+
+- GIVEN the default-off adapter and shipped transactional constraint memory
+- WHEN predict, charged feedback, structural addition, later prediction, commit, crash/reload, and version invalidation run
+- THEN same-version durable atoms survive exactly and stale-version atoms do not affect prediction
+- AND every returned plan still receives a charged final executor check.
+
+### SCENARIO-CL-7323-TERMINAL: Fixture Readiness Is Not Efficacy
+
+- GIVEN current scoped validation, adversarial checks, sealed splits, controls, and lifecycle receipts
+- WHEN the terminal artifact is classified
+- THEN fixture readiness can equal one before held-out efficacy execution
+- AND any affected validation failure sets readiness and promotion scores to zero with an exact terminal reason.
+
+## Implementation Status (REQ-CL-7323)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7323 and SCENARIO-CL-7323-* | Implemented in `python/carnot/experiment_7323_v643_addition_prototype.py` with a thin script entrypoint. The prototype isolates a Boolean executor, conservatively adds versioned pair and capacity atoms, seals bounded streams, compares four arms plus one diagnostic, and uses transactional memory for the default-off lifecycle. | `tests/python/test_experiment_7323_v643_addition_prototype.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 710/710 (100%). |
