@@ -32713,3 +32713,71 @@ may be added to `ops/verifier_gaps.md` only when real audited rows support it.
 
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
+## REQ-ARC-WMTE-7319: Measure one authority-backed live selfparse session
+
+Experiment 7319 SHALL authenticate the complete Experiment 7318 authority
+artifact and its live caller hashes before model work. It SHALL reject a
+missing, quarantined, blocked, partial, or disqualified dependency even when
+`arc_authority_ready_score` is one. The first failed comparison SHALL retain
+the upstream path, check, artifact field, expected value, and observed value.
+
+The experiment SHALL freeze one target from `r11l` and `re86` before current
+outcomes are visible. It SHALL select the least recently measured target,
+withhold the target's adapter and banked solution, and use the shipped
+`make_carnot_agent` factory to construct `E3AgentPolicy`. It SHALL use the
+current cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M file through native llama.cpp
+CUDA transport. A cache, authority, or owned-GPU failure SHALL produce a
+terminal blocked artifact without model substitution.
+
+The live session SHALL use a fresh store, one owned GPU, and one model. It
+SHALL keep the inherited grammar, sampler, context, and decode settings. It
+SHALL set `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`,
+`CARNOT_ARC_CEGIS_TOOL_LOOP=1`, and `CARNOT_FORCE_LIVE=1`. The complete session,
+including model load, SHALL stop at 3000 seconds. It SHALL also stop at 192
+environment actions, two completions, or 4096 generated tokens when an earlier
+limit applies. The model load SHALL stop at 600 seconds.
+
+The terminal reducer SHALL distinguish a parsed tool call from causal tool
+use. `arc_tool_use_score` SHALL equal one only when one tool name and argument
+record links to its runtime result, a later request containing that result, a
+policy-consumed plan, and an observed environment action. Each missing link and
+actual exception SHALL remain explicit. Learned next-frame predictions SHALL
+be compared with the identity baseline on the same later observed changed
+cells when such rows exist.
+
+The experiment SHALL authenticate the ten unique induction identities retained
+by Experiment 7305 before adding current evidence. It SHALL report the
+historical count, historical duplicates, new authentic count, current
+duplicates, censored attempts, and cumulative total separately.
+`arc_session_complete_score` SHALL mean the bounded attempt is fully accounted,
+including an honest null or censored outcome. It SHALL not grant an official
+score, solve credit, registry credit, a population improvement claim, or a
+production-default change.
+
+### SCENARIO-ARC-WMTE-7319-DEPENDENCY-BLOCK
+
+- GIVEN Experiment 7318 is missing, quarantined, blocked, partial, or disqualified
+- WHEN Experiment 7319 checks authority before model work
+- THEN the result is terminal blocked with zero readiness scores
+- AND `gate_check_summary` retains the exact first failed comparison.
+
+### SCENARIO-ARC-WMTE-7319-FROZEN-WITHHELD-TARGET
+
+- GIVEN registered `r11l` and `re86` rows and the prior measured target
+- WHEN the target selection receipt is sealed before current outcomes
+- THEN the least recently measured target is selected
+- AND game source, banked solutions, adapters, and offline ground-truth search remain unavailable to the policy.
+
+### SCENARIO-ARC-WMTE-7319-CAUSAL-TOOL-USE
+
+- GIVEN a durable successful runtime tool result
+- WHEN a later model request contains that result and the installed plan reaches the policy
+- THEN `arc_tool_use_score` becomes one only after a matching environment action is observed
+- AND a missing later request, plan consumption, or action keeps the score at zero.
+
+### SCENARIO-ARC-WMTE-7319-TERMINAL-ACCOUNTING
+
+- GIVEN one bounded authority-backed live session and ten authenticated historical inductions
+- WHEN the session completes or reaches an inherited limit
+- THEN the terminal artifact separately reports current invocation counts, action and compute costs, prediction metrics, induction counts, censoring, and all validation receipts
+- AND `arc_session_complete_score` reflects complete accounting rather than scientific success.
