@@ -15648,6 +15648,106 @@ SHALL therefore use `verdict_class=circular_positive`, never `positive`.
 |---|---|---|
 | REQ-CL-7299 and SCENARIO-CL-7299-* | Implemented: fixed paired atomic-versus-SQLite benchmark, complete phase costs, fixed group-16 cluster bootstrap reduction, independent measured-artifact restart checks, and atomic terminal evidence. | `tests/python/test_experiment_7299_v641_snapshot_cost.py`; 14 focused tests pass and 768 of 768 scoped statements are covered. |
 
+## REQ-CL-7313: Same-Acknowledgment Cost Envelope
+
+Carnot SHALL authenticate the exact Exp7299 terminal artifact, its raw row
+sidecar, and the historical Exp7270 durable profile before reduction. Complete
+null evidence is admissible. Missing, changed, quarantined, retired,
+disqualified, or malformed external evidence SHALL produce a row-free terminal
+blocked artifact. Its `gate_check_summary` SHALL preserve the upstream, check,
+exact field, observed value, and expected value.
+
+The reducer SHALL use only the fixed SQLite group-16 candidate and its matched
+atomic rows. It SHALL retain all eight original seeds. It SHALL keep burst,
+steady-paced, and interactive-dependent arrival processes separate. It SHALL
+verify event streams, schedules, initial states, storage identity, queue limits,
+acknowledgment semantics, recovery, native parity, row hashes, and censoring.
+It SHALL preserve the Exp7299 warm burst lower bound of
+`1.4558337555069685` and the separate cold lower bound of
+`1.5549724849050095`. It SHALL not hide the failed NFR-01 tenfold gate.
+
+For each seed and arrival process, the reducer SHALL reconstruct measured wall
+time, initialization, recovery, synchronization, native update, write,
+serialization, queue-wait, and acknowledgment costs. Shared group stages SHALL
+be counted once. Queue-wait and acknowledgment rows that overlap group work
+SHALL remain latency-area observations. Serialization SHALL use explicit bounds
+when the saved event rows cannot identify its shared and per-event portions.
+Unknown wall-time components SHALL remain unknown. No Amdahl fraction SHALL
+double-count overlapping time.
+
+For each arrival process, Carnot SHALL resample the eight original paired seeds
+with 10,000 fixed bootstrap draws. It SHALL report the measured paired ratio and
+the counterfactual upper envelope `S_max = T_total / T_irreducible` for the
+SQLite candidate. `T_irreducible` SHALL preserve measured synchronization and
+native update work. It SHALL also preserve the fixed arrival span by using the
+larger of that span and the two serial work totals. The counterfactual MAY set
+all residual wall time to zero only as a labeled bound. It SHALL not present a
+removed measured stage as an implemented speedup.
+
+`cost_envelope_complete_score=1` SHALL require exact input parity, all 24
+seed-arrival rows, row-hash validity, recovery and acknowledgment parity,
+separate arrival processes, explicit overlap labels, and bounded assumptions.
+`next_mechanism_warrant` SHALL name a technique only when an identifiable
+replaceable cost is large enough to close the fixed warm group-16 gap. Otherwise
+the decision SHALL defer or retire more storage work and name the changed
+prerequisite required to continue.
+
+The task SHALL use date `20260914`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. All attempted, completed, failed, cancelled, and
+in-flight model load and generation counters SHALL be zero. The top-level
+substrate SHALL be `aggregation_from_upstream_artifacts` with class
+`aggregation`. Execution SHALL use `execution_venue=host`. No benchmark, model,
+database engine, Rust port, board probe, weaker acknowledgment contract,
+production-default change, or external action is permitted.
+
+### SCENARIO-CL-7313-PRECONDITIONS: Historical Evidence Fails Closed
+
+- GIVEN Exp7299, its raw rows, Exp7270, exclusions, source bytes, and output paths
+- WHEN hashes, checksums, terminal classes, quarantine, retirement, and required fields are checked
+- THEN only exact complete evidence can enter the reducer
+- AND an external failure produces a row-free blocked artifact with the exact failed check.
+
+### SCENARIO-CL-7313-RECONSTRUCTION: Shared Timers Are Counted Once
+
+- GIVEN event rows that repeat one native, write, or synchronization stage for each event in a durable group
+- WHEN one seed-arrival group-16 unit is reconstructed
+- THEN repeated group work is counted once and event serialization receives explicit bounds
+- AND queue and acknowledgment latency areas are not added to exclusive wall time.
+
+### SCENARIO-CL-7313-ENVELOPE: Counterfactual Bounds Preserve Semantics
+
+- GIVEN deduplicated synchronization, native work, and the fixed arrival schedule
+- WHEN the SQLite counterfactual removes all residual measured wall time
+- THEN `S_max` uses the larger of serial work and arrival span as its denominator
+- AND the record labels this as an upper bound rather than an implemented speedup.
+
+### SCENARIO-CL-7313-UNCERTAINTY: Original Paired Seeds Stay Independent
+
+- GIVEN eight matched group-16 seeds for each arrival process
+- WHEN measured and counterfactual ratios are resampled
+- THEN 10,000 fixed draws use whole paired seeds as independent units
+- AND burst, steady, and interactive results are never pooled.
+
+### SCENARIO-CL-7313-E2E: Measured Rows Lead To A Decision
+
+- GIVEN authenticated measured rows and recovery evidence
+- WHEN independent totals, counterfactual bounds, and mechanism sufficiency are reduced
+- THEN every stage is hash-bound from input through terminal decision
+- AND no new measurement or weaker durability contract enters the result.
+
+### SCENARIO-CL-7313-TERMINAL: Completeness Is Not Performance
+
+- GIVEN a faithful complete cost reduction whose measured local and NFR gates can fail
+- WHEN the terminal result is classified
+- THEN `cost_envelope_complete_score=1` records reduction completeness only
+- AND the complete verdict states the cost finding and names a changed prerequisite.
+
+## Implementation Status (REQ-CL-7313)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7313 and SCENARIO-CL-7313-* | Implemented: authenticated read-only group-16 cost reconstruction, overlap-safe envelopes, fixed paired bootstrap, thin entrypoint, and atomic terminal evidence. | `tests/python/test_experiment_7313_v642_cost_envelope.py` covers input rejection, timer reconstruction, per-arrival uncertainty, counterfactual bounds, terminal classification, orchestration, and the command surface. Scoped statement coverage is 390/390 (100%). |
+
 ## REQ-CL-7295: Bounded Fixed-Share Selection Over Complete Hypotheses
 
 Carnot SHALL provide an opt-in fixed-share controller. The controller SHALL

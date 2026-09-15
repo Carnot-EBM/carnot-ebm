@@ -17960,3 +17960,21 @@ code |
 | 2026-09-14 20:55 UTC | Measure prospective continuous learning with local | OK | 94 passed, 1 warning in 21.21s |
 | 2026-09-14 22:18 UTC | Audit factor-learning causality retention and roll | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: eceipt = { + |
 | 2026-09-14 23:40 UTC | Audit factor-learning causality retention and roll | OK | cache hit: 94 passed, 1 warning in 22.72s |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/test_suite_mutation_check.py age-week 3: OPEN 21 days: SILENT_NON_FIRING |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_docs_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRIN |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | commit 288ea485f9 (REQ-ARC-WMTE-6710) age-week 3: OPEN 21 days: PREVALENCE_FIGUR |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6587_v573_constraint_first_method_contract.json age-week 3: OPEN 21 d |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/operator_curated_doc_guard.py age-week 3: OPEN 21 days: SILENT_NON_FIRIN |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/child_results_guard.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on sc |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/artifact_freshness_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING o |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | scripts/arc_artifact_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on scri |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | operator_curated_doc_guard.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on ope |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | child_results_guard.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on child_resu |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | artifact_freshness_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on artifa |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_artifact_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on arc_artifact |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | determination_preservation_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING o |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 3: OPEN 21 days |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 2: OPE |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7130_v626_verifier_committed_routing.json age-week 1: OPEN 7 days: CL |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7284_v640_commit_prototype.json age-week 0: OPEN 1 days: CLAIM_OVERST |
+| 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7298_v641_snapshot_journal.json age-week 0: OPEN 1 days: CLAIM_OVERST |
