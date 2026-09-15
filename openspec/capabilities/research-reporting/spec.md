@@ -1,5 +1,110 @@
 # Research Reporting Capability Specification
 
+## V642 capstone reconciliation — 2026-09-15
+
+**Status:** Implemented. This reducer closes the roster record, not the open science.
+
+### REQ-REPORT-7315: Reconcile fourteen V642 dispositions without claim promotion
+
+Exp7315 SHALL select the active or staged YAML only when its milestone is
+`2026.09.642`. It SHALL read the Markdown path named by that YAML as an
+independent authority. It SHALL enumerate exactly fourteen ordered tasks from
+`exp7302-source-contract` through `exp7315-capstone`. It SHALL resolve the
+thirteen earlier deliverables only from the selected YAML. It SHALL use a
+canonical conductor gate block only when the declared deliverable is absent.
+
+Every producer disposition SHALL record the declared path, actual path, byte
+hash, terminal class, quarantine state, identity check, and producer validation
+errors. An absent producer SHALL remain `absent`. A blocked producer SHALL
+remain `blocked`. A disqualified producer SHALL remain `disqualified`, even if
+one of its numeric readiness fields equals one. The final row SHALL represent
+Exp7315 without recursively hashing the terminal output.
+
+Exp7315 SHALL authenticate these exact field pairs from their named producers:
+Exp7305 `arc_capture_complete_score` and `arc_tool_use_score`; Exp7309
+`batch_audit_complete_score` and `batch_promotion_score`; Exp7312
+`factor_audit_complete_score` and `factor_promotion_score`; Exp7313
+`cost_envelope_complete_score`; and Exp7314
+`board_continuity_complete_score`. Each score row SHALL bind the producer hash,
+terminal class, authentication result, and quarantine state. A missing,
+quarantined, blocked, disqualified, or unauthenticated required science source
+SHALL create a terminal blocking row with the exact upstream, check, field,
+observed value, and expected value.
+
+The reducer SHALL compute separate rows for ARC tool reachability, batched
+source value, factor learning, durable-state cost context, and board context.
+It SHALL keep scientific efficacy, mechanism reachability, repository health,
+and closure as separate conclusions. ARC tool use, validation controls,
+durability receipts, and board availability SHALL not supply FR-11 or FR-12
+scientific value. Same-authority evidence SHALL be `circular_positive`, not
+`positive`.
+
+`capstone_complete_score` SHALL equal one when all fourteen dispositions exist.
+This score SHALL not mean that required science ran or passed. Missing,
+quarantined, blocked, disqualified, or unauthenticated required science SHALL
+produce `status=blocked`, `verdict_class=blocked`, and an `honest_verdict` that
+starts with `blocked_`. If all required science is complete and authentic but
+no independent branch passes its value gate, the artifact SHALL use
+`status=complete` and `verdict_class=null`. A positive SHALL require an
+independently accepted source or learning branch with no failed acceptance gate.
+
+The artifact SHALL preserve the exact V641 null and quarantine conclusions. It
+SHALL evaluate every V642 `prior_failures` entry using `experiment_id`,
+`verdict`, `addressed_by`, and `retire_if_same_verdict`. A repeated verdict or
+producer retirement signal SHALL retire only the named mechanism. Every
+retirement row SHALL state the changed prerequisite needed before continuation.
+FR-11, FR-12, dual-language deployment, and NFR-01 SHALL remain open unless
+their own evidence closes them.
+
+Exp7315 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current load and generation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+invocation facts SHALL stay in hash-bound sidecars. The terminal artifact SHALL
+contain every field and principle named in the Exp7315 prompt. It SHALL be
+written atomically only after independent validation succeeds.
+
+#### SCENARIO-REPORT-7315-ROSTER: Closure includes absent and blocked producers
+
+**Given** the selected V642 YAML contains fourteen ordered tasks
+**When** one declared science artifact is absent and another is a conductor block
+**Then** the capstone records thirteen real outcomes plus its own row
+**And** `capstone_complete_score` is one while the terminal verdict remains blocked.
+
+#### SCENARIO-REPORT-7315-SCORES: Numeric readiness cannot bypass provenance
+
+**Given** a producer has a required numeric field equal to one
+**When** its terminal class is disqualified or its bytes are quarantined
+**Then** the score row records the numeric value and rejects the source
+**And** the exact provenance failure appears in `gate_check_summary`.
+
+#### SCENARIO-REPORT-7315-NULL: Complete failed efficacy remains null
+
+**Given** every required science source is complete, authentic, and unquarantined
+**When** no independent source or learning value gate passes
+**Then** the capstone is terminal complete with `verdict_class=null`
+**And** circular controls and mechanism receipts do not promote the claim.
+
+#### SCENARIO-REPORT-7315-REPLAY: Reloaded evidence controls the stored verdict
+
+**Given** a terminal candidate and its hash-bound producer evidence
+**When** the cold validator reloads the selected roster and producer bytes
+**Then** it recomputes contract rows, score rows, branches, dispositions, and blocks
+**And** a changed source byte, class, field, or checksum fails validation.
+
+#### SCENARIO-REPORT-7315-RETIREMENT: Repeated verdicts retire only exact scope
+
+**Given** a task declares a complete four-field `prior_failures` entry
+**When** its current verdict repeats the named prior verdict
+**Then** the capstone retires only that task mechanism
+**And** it records a changed prerequisite before any future continuation.
+
+## Implementation Status (REQ-REPORT-7315)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7315 and SCENARIO-REPORT-7315-* | Implemented by the reusable V642 reducer and thin experiment entrypoint | Verified by focused behavior tests, scoped 100% coverage, lint, typing, spec coverage, literal-roster reduction, and strict artifact checks recorded in the terminal receipt |
+
 ## V642 scoped experiment validation — 2026-09-14
 
 **Status:** Planned. This control changes validation for new experiment entrypoints only.

@@ -1,0 +1,124 @@
+{
+  "schema": "carnot.validation-receipts.v1",
+  "experiment_id": "exp7315",
+  "milestone": "2026.09.642",
+  "receipts": [
+    {
+      "name": "focused_pytest",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python/test_experiment_7315_v642_capstone.py -q -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7315-final-focused-3",
+      "scope": "new V642 capstone behavior",
+      "exit_code": 0,
+      "duration_s": 16.691,
+      "log_path": "results/raw/experiment_7315/validation/focused_pytest_pass.log",
+      "log_sha256": "sha256:989d361d503644732d52b40839d8d3beb15d31960d54b3878ec4f68615ab2a05"
+    },
+    {
+      "name": "affected_suites",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python/test_experiment_7301_v641_capstone.py -q -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7315-affected",
+      "scope": "historical V641 reducer compatibility under the active V642 roadmap",
+      "exit_code": 1,
+      "duration_s": 4.576,
+      "log_path": "results/raw/experiment_7315/validation/affected_suites.log",
+      "log_sha256": "sha256:3051f08fa18a372a3b6f8efacd959e2f9a01310134848d18fa970ee220da940f"
+    },
+    {
+      "name": "full_python_suite",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python -q",
+      "scope": "repository-wide Python suite; bounded after established nonzero failures and setup errors",
+      "exit_code": 130,
+      "duration_s": 2877.0,
+      "log_path": "results/raw/experiment_7315/validation/full_python_suite.log",
+      "log_sha256": "sha256:d27e587f29c993814a8d6840ae6d83abf96b8056a3caa535112aa0c81fa11e02"
+    },
+    {
+      "name": "scoped_coverage",
+      "command": "COVERAGE_FILE=/tmp/exp7315-final2.coverage PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_7315_v642_capstone.py -q --no-cov -n 0 -o addopts= --basetemp=/tmp/exp7315-final-cov-2 && COVERAGE_FILE=/tmp/exp7315-final2.coverage .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_7315_v642_capstone.py --show-missing --fail-under=100",
+      "scope": "new reusable V642 capstone module",
+      "exit_code": 0,
+      "duration_s": 30.925,
+      "log_path": "results/raw/experiment_7315/validation/scoped_coverage.log",
+      "log_sha256": "sha256:42a99c77f052f1ed21c9d647da453b509078ebb153dddbf84ed52c7a3880d517"
+    },
+    {
+      "name": "ruff_check",
+      "command": ".venv/bin/ruff check python/carnot/experiment_7315_v642_capstone.py scripts/experiments/experiment_7315_v642_capstone.py tests/python/test_experiment_7315_v642_capstone.py",
+      "scope": "changed Python source, entrypoint, and tests",
+      "exit_code": 0,
+      "duration_s": 0.019,
+      "log_path": "results/raw/experiment_7315/validation/ruff_check.log",
+      "log_sha256": "sha256:9257a26b0f20b0cbd6b8da9411b524267a1c8b9654f6456c147e46ac89c478ed"
+    },
+    {
+      "name": "ruff_format",
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7315_v642_capstone.py scripts/experiments/experiment_7315_v642_capstone.py tests/python/test_experiment_7315_v642_capstone.py",
+      "scope": "changed Python source, entrypoint, and tests",
+      "exit_code": 0,
+      "duration_s": 0.015,
+      "log_path": "results/raw/experiment_7315/validation/ruff_format.log",
+      "log_sha256": "sha256:0cde31b051bb43290a299c2085cfddb3f71d314161c76c2ace214997607f86e9"
+    },
+    {
+      "name": "changed_module_mypy",
+      "command": "PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/mypy python/carnot/experiment_7315_v642_capstone.py scripts/experiments/experiment_7315_v642_capstone.py",
+      "scope": "new reusable V642 capstone module and thin entrypoint",
+      "exit_code": 0,
+      "duration_s": 0.192,
+      "log_path": "results/raw/experiment_7315/validation/changed_module_mypy.log",
+      "log_sha256": "sha256:d563fdbcc9b768be8c44d56d73e314705df7956f707ba84c7cfc9015b014233a"
+    },
+    {
+      "name": "scoped_spec_coverage",
+      "command": ".venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7315_v642_capstone.py",
+      "scope": "REQ-REPORT-7315 and SCENARIO-REPORT-7315 references in new tests",
+      "exit_code": 0,
+      "duration_s": 0.025,
+      "log_path": "results/raw/experiment_7315/validation/scoped_spec_coverage.log",
+      "log_sha256": "sha256:93af917ab69e23e6362eaf63789d8a6235df62b69fb16eb48cca91f56f1d8f34"
+    },
+    {
+      "name": "literal_contract_e2e",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/python -u scripts/experiments/experiment_7315_v642_capstone.py --date 20260915 --artifact-path /tmp/experiment_7315_v642_capstone_e2e.json",
+      "scope": "fourteen literal contract rows through independent reduction",
+      "exit_code": 0,
+      "duration_s": 4.902,
+      "log_path": "results/raw/experiment_7315/validation/literal_contract_e2e.log",
+      "log_sha256": "sha256:ebd9d5da2012a48e4fc1566ee21c9916d7feb01c0cbebf5518ddff9d035cf6b1"
+    },
+    {
+      "name": "independent_raw_reducer",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/python -u scripts/experiments/experiment_7315_v642_capstone.py --validate",
+      "scope": "cold reconstruction of the terminal candidate from authenticated inputs",
+      "exit_code": 0,
+      "duration_s": 2.879,
+      "log_path": "results/raw/experiment_7315/validation/independent_raw_reducer.log",
+      "log_sha256": "sha256:b921591663133e5484db4412b983779dab5e05ac9d142eba9686ddefc4a0d187"
+    },
+    {
+      "name": "adversarial_verify",
+      "command": ".venv/bin/python scripts/adversarial_verify.py results/experiment_7315_v642_capstone.json",
+      "scope": "measured terminal candidate",
+      "exit_code": 0,
+      "duration_s": 0.745,
+      "log_path": "results/raw/experiment_7315/validation/adversarial_verify.log",
+      "log_sha256": "sha256:c6170e14dba88b87510342337c7e40d956a89d0e3e5f3f1ddcb4d20cd4028cfd"
+    },
+    {
+      "name": "verdict_row_consistency_lint",
+      "command": ".venv/bin/python scripts/verdict_row_consistency_lint.py --strict results/experiment_7315_v642_capstone.json",
+      "scope": "measured terminal candidate",
+      "exit_code": 0,
+      "duration_s": 0.033,
+      "log_path": "results/raw/experiment_7315/validation/verdict_row_consistency_lint.log",
+      "log_sha256": "sha256:a4d6c659e3decd4edbbd0649947414ec2f29882f2a438af0dac17b4e8911df19"
+    },
+    {
+      "name": "candidate_build",
+      "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/python -u scripts/experiments/experiment_7315_v642_capstone.py --date 20260915",
+      "scope": "pre-manifest measured terminal candidate used by independent checks",
+      "exit_code": 0,
+      "duration_s": 4.91,
+      "log_path": "results/raw/experiment_7315/validation/candidate_build.log",
+      "log_sha256": "sha256:262a76fbd74cba946733cc9ea95a1e28d801babcb5460ca8f319f4490d3e1caf"
+    }
+  ]
+}
