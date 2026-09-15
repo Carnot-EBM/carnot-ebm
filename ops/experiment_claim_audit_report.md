@@ -11,76 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 5 |
+| CLAIM_OVERSTATED | 2 |
+| NO_CLAIM | 1 |
 
-## experiment_7307_v642_batch_canary.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify. The artifact’s blocked/no-run characterization would be refuted by any model invocation, generation, replay, or completed comparative row in its own data.
-
-## WAS THAT CHECKED
-Yes. Invocation counts, comparative rows, replay status, model invocation, and inference status are explicitly recorded; all show that no qualifying computation occurred.
-
-## EVIDENCE
-`"methodology_note"`: `"This is a bounded transport canary with no source-verification value claim. The disqualified fixture stopped work before model resolution, loading, generation, or replay."`; `"status"`: `"blocked"`; `"verdict_class"`: `"blocked"`; `"model_invoked"`: `false`; `"inference_mode"`: `"not_invoked"`; `"generation_calls_attempted"`: `0`; `"complete_comparative_rows"`: `0`; `"rows"`: `[]`; `"per_call_rows"`: `[]`; `"status"`: `"not_attempted_external_block"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7308_batch_measurement.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked prerequisite gate and makes no measurement or comparative claim.
-
-## WAS THAT CHECKED
-No; the experiment stopped at the prerequisite gate before the titled measurement ran.
-
-## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_observed": 0`, `"failed_expected": 1`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7310_v642_factor_prototype.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A prospective evaluation in which factor-local revision ties or loses to global or local reset on future and non-feedback error would refute an efficacy claim, but this artifact explicitly makes no such claim.
-
-## WAS THAT CHECKED
-No. The evaluation panel was sealed but not scored; only fixture-readiness checks and development rows were completed.
-
-## EVIDENCE
-`honest_verdict`: `complete_circular_positive: bounded factor-local revision fixture is ready; prospective efficacy remains unmeasured`; `verdict_class`: `circular_positive`; `prototype_readiness_depends_on_efficacy`: `false`; `evaluation_stream_arm_units_measured`: `0`; `evaluation_panel_sealed_not_scored`; `observed`: `24`; `model_invoked`: `false`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7311_v642_factor_learning.json
+## experiment_7321_v643_batch_measurement.json
 
 **CLAIM_SUPPORTED**
 
@@ -88,37 +23,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Prospective factor-local learning completed, but it failed the frozen recurrence-error and false-accept value gates.
+The batched verifier failed the frozen value gates relative to the direct comparator.
 
 ## WHAT WOULD REFUTE IT
-The claim would be refuted if the method showed no prospective learning, or if both named gates passed—recurrence-error confidence bounds at or below 0.02 in every drift stratum and the false-accept confidence bound at or below zero versus the serious local-reset baseline.
+All value gates passing—particularly an accuracy-difference lower bound of at least -0.02 versus the direct arm—and a batch value score of 1 would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. Prospective capture, pre-label prediction, state changes, and changed later predictions were checked. The prespecified value gates directly compared the method with frozen and local-reset controls, and both named gates failed. Thus the null result had a real chance not to occur.
+Yes. The artifact reports the paired accuracy comparison against the direct arm, its prespecified threshold, the observed lower bound, and the resulting value-gate score.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null: prospective factor-local learning completed but frozen value gates failed: recurrence_error_vs_frozen,false_accept_vs_local_reset`
-
-`factor_capture_complete_score`: `1`
-
-`factor_value_score`: `0`
-
-`legitimate_later_changed_predictions`: `989`; `pass`: `true`
-
-`recurrence_error_vs_frozen`: `each drift-stratum ci95_upper<=0.02`; `isolated_factor_changes`: `0.05419921875`; `overlapping_factor_changes`: `0.142578125`; `pass`: `false`
-
-`false_accept_vs_local_reset`: `ci95_upper<=0`; `observed`: `0.003952752976190476`; `pass`: `false`
-
-`later_prediction_was_pre_label`: `true`
-
-`chronology_violations`: `count`: `0`
-
-`verdict_class`: `Exactly positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial; unchanged external failure is blocked.`
+`complete_null_batch_value_gates_failed`; `batch_value_score`; `0`; `accuracy_difference_lower_vs_direct`; `paired_intervals.accuracy_difference_vs_direct.one_sided_95_lower`; `expected_value`; `-0.02`; `observed_value`; `-0.296875`; `estimate`; `-0.171875`; `evaluation_labels_read_during_prediction`; `false`; `predictions_sealed_before_labels`; `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7312_v642_factor_audit.json
+## experiment_7322_v643_batch_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -126,43 +45,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Retained factor witnesses improved some future errors but failed the complete promotion contract, warranting retirement of the tested revision mechanism.
+The same-mechanism batched verifier failed to demonstrate value over the direct comparator and should not be promoted.
 
 ## WHAT WOULD REFUTE IT
-All preregistered promotion gates passing—especially no recurrence harm versus frozen and no excess false accepts versus the serious local-reset baseline—would refute the failure-and-retirement claim.
+A passing promotion result—most concretely, the batched verifier’s one-sided 95% accuracy-difference lower bound meeting or exceeding the frozen −0.02 threshold, alongside acceptable coverage and cost—would refute the null headline.
 
 ## WAS THAT CHECKED
-Yes. The acceptance gates directly compared the method with global reset, local reset without retained witnesses, and frozen warmup across 24 completed, uncensored streams; two required gates failed.
+Yes. The artifact compares the batched verifier against the serious joint-direct baseline over 128 units and 16 source groups, applies a paired bootstrap, and reports the failed accuracy gate. The oracle relationship does not make this negative value finding circular.
 
 ## EVIDENCE
-`"verdict_class": "null"`; `"factor_promotion_score": 0`; `"retirement_triggered": true`; `"false_accept_vs_local_reset"` with `"pass": false`; `"recurrence_error_vs_frozen"` with `"pass": false`; `"completed_stream_count": 24`; `"censored_stream_count": 0`; `"outcome_based_extension": false`; `"headline_llm_accuracy_gain_established": false`
+`"honest_verdict": "complete_null_same_mechanism_batch_value_comparison_failed"`; `"comparison": "batched_verifier_vs_joint_direct"`; `"unit_denominator": 128`; `"group_count": 16`; `"accuracy_difference": -0.171875`; `"coverage_difference": -0.1875`; `"expected_value": -0.02`; `"observed_value": -0.296875`; `"failed_check": "accuracy_difference_lower_vs_direct"`; `"batch_promotion_score": 0`; `"verdict_class": "null"`; `"decision": "stop"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7313_v642_cost_envelope.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-No point-identified replaceable group-16 cost is large enough to justify another same-acknowledgment implementation.
-
-## WHAT WOULD REFUTE IT
-A valid same-acknowledgment group-16 result whose measured exclusive replaceable lower CI95 met or exceeded the required warm-savings fraction of 0.02944416299535435, thereby making a specific future technique warranted.
-
-## WAS THAT CHECKED
-Yes. The explicit warrant gate compared the measured identifiable replaceable lower CI95 of 0.024195805711275806 against the required warm-savings fraction of 0.02944416299535435 and failed. All 24 planned units completed without censoring. The criterion and measured cost come from distinct quantities, so the refuting outcome was possible. The oracle flag does not circularly establish a positive verifier-value claim here; this is an execution-grounded null.
-
-## EVIDENCE
-`honest_verdict` = `complete_null: no point-identified replaceable group-16 cost is large enough to warrant another same-acknowledgment implementation`; `specific_future_technique_warrant`; `expected` = `measured exclusive replaceable lower bound closes warm gap`; `observed` = `false`; `passed` = `false`; `measured_identifiable_replaceable_lower_ci95` = `0.024195805711275806`; `required_warm_savings_fraction` = `0.02944416299535435`; `warranted` = `false`; `serialization_identifiability` = `bounded_not_point_identified`; `completed_paired_seed_arrival_units` = `24`; `censored_paired_seed_arrival_units` = `0`; `verdict_class` = `null`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7314_v642_board_continuity.json
+## experiment_7323_v643_addition_prototype.json
 
 **NO_CLAIM**
 
@@ -170,21 +67,65 @@ KEEP
 NO_CLAIM
 
 ## THE HEADLINE CLAIM
-no claim
+No comparative efficacy claim; the artifact claims only that a bounded addition fixture is ready for later held-out evaluation.
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact records authenticated board dispositions and prerequisites but makes no comparative, performance, generalization, or added-value claim.
+A failed fixture-readiness requirement—such as broken stream isolation, failed controls, exceeded resource bounds, or no causal later use—would refute readiness. If efficacy were claimed, a held-out cache/reset comparator tying or beating the method while preserving coverage and utility would refute it.
 
 ## WAS THAT CHECKED
-No; there is no headline value claim requiring a rival or falsification arm. The artifact only checks receipt integrity and disposition completeness.
+Yes for fixture readiness, through the development acceptance gates and controls. No for efficacy: all held-out comparisons were unexecuted. Development data also shows the frozen and label-shuffled arms exactly tying the method on oracle calls and utility, so those rows cannot establish learning value.
 
 ## EVIDENCE
-`inference_substrate`: `aggregation_from_upstream_artifacts`; `model_invoked`: `false`; `hardware_operations_issued`: `[]`; `availability_is_scientific_result`: `false`; `local_performance_claim`: `false`; `status`: `complete`.
+`honest_verdict`: `complete: bounded addition fixture ready under shared Boolean executor authority; held-out efficacy not executed`; `addition_fixture_ready_score`: `1`; `addition_promotion_score`: `0`; `held_out_oracle_ratio_vs_cache`: `not_executed`; `held_out_oracle_ratio_vs_reset`: `not_executed`; `held_out_utility`: `not_executed`; `attempted_environments`: `0`; `executed`: `false`; `persistent_structural_acquisition`; `frozen_after_four_request_warmup`; `label_shuffled_diagnostic`; `total_oracle_calls`: `504`; `mean_utility_fraction`: `1.0`; `verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7315_v642_capstone.json
+## experiment_7324_v643_addition_learning.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+Persistent structural addition reduced held-out executor work and therefore demonstrated positive value.
+
+## WHAT WOULD REFUTE IT
+A paired work ratio at or above 1.0 against a serious baseline, or reduced work accompanied by worse coverage, utility, or feasibility, would refute the execution claim; an independent correctness authority is required to support the broader value claim.
+
+## WAS THAT CHECKED
+No, not fully. Work, coverage, utility, and feasibility were checked against reset and exact-cache controls, and the work reduction could have failed there. But correctness used the same exact executor that generated the feedback, so the positive value claim received no independent test. Moreover, the frozen-after-warmup rival actually won on aggregate executor work.
+
+## EVIDENCE
+`honest_verdict`: `complete: persistent structural addition reduced held-out executor work under shared exact executor authority`; `verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`; `oracle_work_vs_cache`: `estimate` `0.14898810929994488`, `ci95_upper` `0.15715804394046776`; `oracle_work_vs_frozen`: `estimate` `1.6458333333333333`, `ci95_lower` `1.4375`, `ci95_upper` `1.8489583333333333`; `model_invoked`: `false`; `censored_stream_count`: `0`.
+
+## RECOMMENDATION
+NARROW_CLAIM
+
+## experiment_7325_v643_addition_audit.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+Persistent structural acquisition reduces total calls without weakening utility, coverage, feasibility, causality, or version safety.
+
+## WHAT WOULD REFUTE IT
+A verifier-independent evaluator finding no call reduction or weaker outcomes would refute the value claim; an aggregate tie or loss against the cheap serious baseline that freezes learned structure after warmup would also refute added value.
+
+## WAS THAT CHECKED
+No. Call reduction versus reset and cache controls was checked, but correctness and utility remained under shared executor authority, so the verifier-independent refutation could not occur. The artifact includes a frozen-after-warmup comparator, but the visible data show it tying the learned method, and no aggregate comparison against that arm is reported.
+
+## EVIDENCE
+`verifier_is_oracle`; `Shared executor authority forbids a positive scientific class.`; `persistent_structural_acquisition`; `frozen_after_four_request_warmup`; `total_query_attempts`: `40`; `mean_utility_fraction`: `1.0`; `control_arm`: `reset_each_request_acquisition`; `control_arm`: `exact_plan_cache_reset_learner`; `further_work_condition`: `independent non-oracle executor replication or a changed information contract`
+
+## RECOMMENDATION
+NARROW_CLAIM
+
+## experiment_7326_v643_constraint_kernel.json
 
 **CLAIM_SUPPORTED**
 
@@ -192,16 +133,60 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Required V642 science is unavailable because the batch audit is absent, ARC and factor branches are null, and durability and board receipts do not establish efficacy, despite closure of all fourteen dispositions.
+The Rust kernel achieved bit-exact parity with Python, but failed the predeclared 10× paired host service-boundary performance gate.
 
 ## WHAT WOULD REFUTE IT
-Authenticated batch-audit evidence completing the blocked branch, a positive ARC or factor value score, durability or board evidence establishing scientific efficacy, or fewer than fourteen represented dispositions would falsify the claim.
+Any Rust/Python mismatch would refute the parity claim; lower 95% speedup bounds of at least 10 at every tested batch size would refute the performance-null claim.
 
 ## WAS THAT CHECKED
-Yes. The acceptance gates, authenticated audit-score rows, five branch reductions, and capstone dimensions separately checked disposition closure, required evidence availability, and scientific value; the batch branch was allowed to be absent or positive rather than silently counted as zero.
+Yes. Parity was checked across 3,304 rows, and performance was checked in 30 paired blocks at each batch size of 1, 32, and 256. The Python comparator is a serious direct baseline; Rust did not merely fail 10×, but had lower-bound speedups below 1 at every size. The oracle relationship limits the result to Python/Rust parity, but the headline makes no independent-correctness or added-value claim.
 
 ## EVIDENCE
-`"fourteen_task_dispositions"`; `"observed": 14`; `"passed": true`; `"batch_audit_complete_score"`; `"observed_value": null`; `"source_authenticated": false`; `"source_disposition_class": "absent"`; `"arc_tool_use_score"`; `"observed_value": 0`; `"factor_promotion_score"`; `"observed_value": 0`; `"positive_branch_count": 0`; `"required_science_complete": false`; `"positive_promoted": false`; `"verdict_class": "blocked"`; `"verdict_class": "null"`; `"verdict_class": "circular_positive"`; `"scientific_efficacy_positive": false`
+The artifact reports `complete_null: acquired integer constraints have bit-exact Rust parity, but the predeclared 10x paired host service-boundary gate did not pass`; `mismatches`: `0`; `rows`: `3304`; `all_outputs_matched`: `true`; `paired_rows`: `90`; `expected`: `>=10 at sizes 1, 32, and 256`; observed lower bounds `0.5869928629436495`, `0.39793675305710036`, and `0.43296225006025074`; `ten_x_lower_bound_passed`: `false`; `verifier_is_oracle`: `true`; `verdict_class`: `null`; `whole_learning_speedup_claimed`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7327_v643_board_continuity.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The task is blocked because no qualifying post-Exp6559 GateMate physical-change receipt exists, while prior KV260 fabric and PolarFire CPU results remain preserved without asserting present availability or performing new hardware operations.
+
+## WHAT WOULD REFUTE IT
+A qualifying operator-authored GateMate receipt dated after 20260823, an authentication or quarantine failure in the preserved upstream evidence, a row asserting present board availability, or any newly issued hardware operation would refute the corresponding part of the claim.
+
+## WAS THAT CHECKED
+Yes. The artifact searched the specified receipt sources under an explicit eligibility contract, authenticated the upstream artifact and hash chains, recorded per-board availability assertions, and counted hardware operations. These checks could have returned a qualifying receipt, failed authentication, asserted current availability, or recorded nonzero operations.
+
+## EVIDENCE
+`"accepted_receipt_count": 0`; `"exists": false`; `"newer_than_exp6559": false`; `"gatemate_changed_physical_state_receipt"`; `"passed": false`; `"terminal_criterion_met": true`; `"historical_graduation_preserved": true`; `"present_availability_asserted": false`; `"checksum_matches": true`; `"quarantined": false`; `"hardware_operations_issued_count": 0`; `"status": "blocked"`; `"verdict_class": "blocked"`; `"inference_substrate": "aggregation_from_upstream_artifacts"`; `"verifier_is_oracle": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7328_v643_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+All thirteen task dispositions are complete, but capstone readiness remains blocked because the required changed-physical-state GateMate receipt is unavailable.
+
+## WHAT WOULD REFUTE IT
+Any incomplete or censored disposition, or an accepted post-Exp6559 operator-authored GateMate physical-state-change receipt, would refute the headline.
+
+## WAS THAT CHECKED
+Yes. The artifact checks planned, attempted, completed, and censored disposition counts, and separately checks the GateMate receipt gate. The oracle-defined structural-learning result is explicitly classified as circular and does not promote scientific efficacy, so it is not used to turn the blocked headline into a value claim.
+
+## EVIDENCE
+`"honest_verdict": "blocked_exp7327_board_continuity: all thirteen dispositions are complete; the named external prerequisite remains unavailable"`; `"attempted": 13`; `"complete": 13`; `"planned": 13`; `"censored": 0`; `"accepted_receipt_count": 0`; `"selected_source_path": null`; `"terminal_blocking": true`; `"verdict_class": "circular_positive"`; `"promotes_scientific_efficacy": false`; `"capstone_promotion_score": 0`; `"capstone_readiness_score": 0`
 
 ## RECOMMENDATION
 KEEP

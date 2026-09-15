@@ -44675,3 +44675,119 @@ comparisons. Exp7312 retired the longest-consistent-suffix factor mechanism.
 Exp7313 found no justified same-acknowledgment storage implementation. Carry
 those boundaries forward. Exp7314 preserves KV260 fabric graduation, PolarFire
 CPU dispatch, and GateMate's missing physical-state receipt.
+
+## 2026-09-15 — V644 planning scan: acquired constraints in a live request path
+
+This scan precedes the V644 experiment design. Paper findings below are external
+evidence and candidate methods, not Carnot measurements. Primary pages were
+checked on 2026-09-15. The completed archive currently ends at V642; V643 is
+represented by its active roster, thirteen terminal artifacts, and conductor log.
+
+### Findings selected for design
+
+- **Conservative Constraint Acquisition**, [arXiv 2604.13283](https://arxiv.org/abs/2604.13283),
+  April 2026; [full method](https://arxiv.org/html/2604.13283v1).
+  Alternating optimization and Boolean feasibility queries can acquire useful
+  separation and capacity constraints before learning a full model. The paper
+  uses synthetic schedules and a restricted constraint language. Its main-query
+  count is not a complete accounting of localization calls. Candidate follow-up:
+  test the already useful Carnot learner on fresh local-model proposals through
+  a separately implemented executor. Charge every query and retain unsupported
+  constraint cases. Independent implementation alone does not make an executor
+  verifier oracle-distinct.
+- **When Does Continual Learning Require Learning**, [arXiv 2607.07847](https://arxiv.org/abs/2607.07847),
+  2026-07-08. The paper separates adaptation across domains from changes within
+  a task and compares parameter updates with external memory. Candidate use:
+  separate unchanged, announced-version-change, and unannounced-change cohorts.
+  Measure later distinct requests against reset, exact-cache, and frozen-memory
+  controls. An efficiency result must not be called improved general competence.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?**,
+  [arXiv 2607.20792](https://arxiv.org/abs/2607.20792), 2026-07-22.
+  A paired procedural-recall study reports a fixed-budget learning penalty from
+  coupling memory writes to the same reasoning iteration. The longer control
+  saturates, so it does not establish a universal capability limit. Candidate
+  use: freeze constraint memory within a request, commit verified updates between
+  requests, and compare frozen-prefix, withheld-feedback, and erased-atom arms.
+- **Solver-Hard Is Not Model-Hard**, [arXiv 2607.17047](https://arxiv.org/abs/2607.17047),
+  2026-07-19. Near-matched SAT families separate solver difficulty from model
+  accuracy; proof-preserving relabeling exposes sensitivity to surface form.
+  Candidate use: seal identifier-renaming and request-order controls before
+  local-model capture. Do not use solver runtime as a proxy for LLM difficulty.
+- **AMTFV: Agentic Mathematical Tool-Flow Verification**,
+  [arXiv 2607.29549](https://arxiv.org/abs/2607.29549), 2026-07-31.
+  The method separates a verification request, exact tool execution, and resumed
+  reasoning. Candidate use: trace the ARC runtime result into the next actual
+  model request and later policy action. This is an interface hypothesis; its
+  mathematics results do not establish ARC transfer.
+- **Current Agents Fail to Leverage World Model as Tool for Foresight**,
+  [arXiv 2601.03905v2](https://arxiv.org/abs/2601.03905), revised 2026-01-08.
+  Tool availability and even enforced use can fail to improve decisions.
+  Candidate use: distinguish invocation, result delivery, consumption, and
+  utility; retain a result-withheld control and a no-tool-needed control.
+- **Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures**,
+  [arXiv 2608.02645](https://arxiv.org/abs/2608.02645), submitted 2026-07-31.
+  Postcondition checks and idempotency keys reduce duplicate actions in a
+  simulated failure study. Candidate use: bind pending ARC results to request,
+  episode, and attempt identifiers; reject stale or repeated delivery. This
+  does not authorize replaying an environment action after an uncertain timeout.
+
+### Required topic sweep and deferred methods
+
+| Topic | Primary source checked | Decision and limit |
+|---|---|---|
+| EBM reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605) | Retain architecture context. Compatibility energies and function-space equivalence do not prove correctness of extracted constraints. |
+| Neural constraint satisfaction | [Lagrange oscillatory networks, 2505.07179](https://arxiv.org/abs/2505.07179) | Supplied SAT constraints and oscillator optimization do not solve the current extraction or feedback boundary. No new solver branch. |
+| Ising learning and sampling | [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752) | Parameter learning and efficient sampling have different limits. Do not infer sampling speed from constraint-learning success. |
+| Hallucination detection | [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895); [Hugging Face entry](https://huggingface.co/papers/2607.00895) | Preserve source-type and span-level fidelity controls. The retired joint-claim comparison is not reopened. |
+| KAN deployment | [KANELÉ, 2512.12850](https://arxiv.org/abs/2512.12850), revised 2026-06-16; [SparseKAN, 2608.00859](https://arxiv.org/abs/2608.00859) | LUT compilation and physical compaction are future options for a useful learned predictor. The current exact integer constraints need no KAN replacement. |
+| Energy-guided decoding | [Object decoding, 2507.07731](https://arxiv.org/abs/2507.07731); [Token-Guard, 2601.21969](https://arxiv.org/abs/2601.21969) | Hidden-state access, visual domains, and self-checking assumptions differ from this local GGUF path. No logit-steering capability inferred. |
+| Continual constraint acquisition | [Machine Learning-Guided Interactive Constraint Acquisition](https://www.jair.org/index.php/jair/article/view/19524), 2026-05-15 | Query ranking is a possible later optimization. First establish full-cost value of the shipped learner with fresh proposals and isolated executor authority. |
+| Agentic planning cost | [Step-wise PDDL simulation, 2603.06064](https://arxiv.org/abs/2603.06064), 2026-03-06 | A modest agentic improvement can cost substantially more tokens. Include generation, feedback, localization, and final checks in the comparison. |
+
+### Secondary-source access record
+
+- **Semantic Scholar:** direct Graph API requests to the citations endpoints for
+  `ARXIV:2507.02092` and `ARXIV:2512.15605` requested title, year, and external IDs,
+  with limit 100. EBT returned 36 records and no next token. ARM–EBM returned
+  HTTP 429; no current citation census is claimed for it. EBT discoveries
+  followed to primary pages were Solver-Hard, Memoir, and the world-model-tool
+  study above. A `2609.14934` record was not adopted because this scan did not
+  establish that its publication preceded the planning cutoff. Counts describe
+  this response, not an exhaustive literature census.
+- **OpenReview:** searched 2026 EBM/reasoning submissions. The indexed
+  [On the Emergence of Reasoning PDF](https://openreview.net/pdf?id=bYkfHTcR1v)
+  describes reasoning as energy optimization, but direct retrieval hit a browser
+  challenge. The EBT ICLR PDF also hit that challenge. Use the readable arXiv EBT
+  source; do not infer acceptance or a deployable method from search snippets.
+- **GitHub trending:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Retrieved pages
+  did not expose usable ranked entries. No new trending claim. The author
+  [SparseKAN repository](https://github.com/OSU-STARLAB/SparseKAN) was readable;
+  it remains a deferred deployment reference.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T report](https://extropic.ai/writing/z1t), dated 2026-09-04. The report
+  describes sparse computation split between Z1 and FPGA. Its energy projections
+  exclude dense final readout and inter-device movement; its latency comparison
+  also excludes vocabulary readout. Include boundary and orchestration costs in
+  Carnot measurements. No local TSU availability or measured Carnot gain follows.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  describes an underlying constraint-enforcement system. The inspected page
+  supplies no compatible checkpoint or reproducible implementation. Product
+  context only; no new implementation premise.
+
+### Local evidence to carry into design
+
+Exp7324 and Exp7325 report 24 streams, 576 requests, 2,304 arm rows, and an upper
+paired CI95 query ratio of 0.157158 against reset and exact caching. These are
+**circular_positive**, with a shared Boolean executor defining correctness.
+Exp7325 explicitly records that the producer import path exposes private rules;
+the auditor avoided importing it. Isolate those rules before live integration.
+
+Exp7319 completed live actions and successful runtime tool results, but recorded
+zero results in later requests and zero policy-consumed results. This differs
+from V642's missing lease fields. A changed result-delivery mechanism must earn
+readiness before another live trial. Exp7322 retires the same joint-claim source
+comparison. Exp7326 proves 3,304-row Rust parity but lower speedup bounds are
+0.587, 0.398, and 0.433 at batch sizes 1, 32, and 256 through the persistent
+newline-delimited service. A new in-process boundary is a distinct question.
+Exp7327 remains blocked on a dated operator physical-change receipt for GateMate.

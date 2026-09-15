@@ -9,26 +9,27 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 4 |
+| AGGREGATE_ONLY | 3 |
+| CANNOT_DETERMINE | 1 |
 
-## experiment_7307_v642_batch_canary.json
+## experiment_7321_v643_batch_measurement.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The canary was blocked before model work because upstream experiment `exp7306-batch-fixture` had `verdict_class` equal to `disqualified`.
+The batch measurement was capture-complete but failed the value gate, first because its accuracy lower bound versus direct generation was −0.296875 against a required −0.02.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` records `"failed_check": "upstream_terminal_class"`, `"field": "verdict_class"`, `"observed_value": "disqualified"`, and `"expected_value": "not blocked or disqualified"`.
+The artifact is truncated mid-field, so the actual `"per_source_group_results"` and `"rows"` cannot be found; they appear only inside `"field_principles"`. The visible `"gate_check_summary"` does provide the failed check, expected value, and observed value.
 
 ## THE CHECK A READER CANNOT DO
-none
+Do the per-source-group or per-row results show a broad accuracy degradation, or is the failed aggregate gate driven by a small number of outliers?
 
-## experiment_7308_batch_measurement.json
+## experiment_7322_v643_batch_audit.json
 
 **CHECKABLE**
 
@@ -36,23 +37,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `exp7307-batch-canary.batch_canary_ready_score` was 0 instead of the required 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7310_v642_factor_prototype.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The bounded factor-local revision fixture is ready, while prospective efficacy remains unmeasured.
+The completed audit claims batch promotion failed because the preregistered accuracy, coverage, and speedup lower-bound gates were not met.
 
 ## WHAT IS MISSING
 nothing
@@ -60,7 +45,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7311_v642_factor_learning.json
+## experiment_7323_v643_addition_prototype.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The bounded addition fixture is ready under shared Boolean executor authority, while held-out efficacy was not executed.
+
+## WHAT IS MISSING
+nothing; comparative per-request evidence is present in `"rows"`, and check outcomes and observed values are recorded in `"acceptance_gate_results"` and `"gate_check_summary"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7324_v643_addition_learning.json
 
 **AGGREGATE_ONLY**
 
@@ -68,15 +69,31 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The factor-local retained-witness arm reduced future and non-feedback error versus both reset controls, although the false-accept and recurrence gates failed.
+Persistent structural acquisition reduced primary oracle calls versus reset and exact-cache controls while preserving utility and coverage, so the acceptance gates were met.
 
 ## WHAT IS MISSING
-Per-stream treatment and control metric values keyed by `stream_id`, `seed`, and `stratum`; `"comparison_rows"` contains estimates, confidence intervals, and anonymous `"paired_differences"`, while `"feedback_update_rows"` does not contain the compared outcome metrics.
+Per-stream arm-level values for `"primary_oracle_calls"`, `"mean_utility_fraction"`, and `"coverage_rate"` are missing; `"comparison_rows"` contains only aggregate `"estimate"`, `"ci95_lower"`, `"ci95_upper"`, and `"paired_stream_count"` values, while `"constraint_update_rows"` does not provide those comparative metrics.
 
 ## THE CHECK A READER CANNOT DO
-For each stream, were zero or favorable differences caused by genuine improvement, identical arms, or one arm already being pinned at a metric floor or ceiling?
+Did the oracle-work advantage occur broadly across the 24 paired streams, or was the pooled ratio driven by a few outlier or degenerate streams?
 
-## experiment_7312_v642_factor_audit.json
+## experiment_7325_v643_addition_audit.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+Persistent structural acquisition used fewer total queries than reset and exact-cache controls without reducing utility, coverage, or feasibility.
+
+## WHAT IS MISSING
+Per-stream or per-request arm-level metric rows for `total_query_attempts`, `mean_utility_fraction`, `feasibility_coverage`, and feasibility outcomes; `"independent_comparison_rows"` contains only pooled estimates and confidence intervals, while the promised top-level `"rows"` field is absent.
+
+## THE CHECK A READER CANNOT DO
+Did query savings occur broadly across the 24 streams, or were the pooled ratios driven by a few outliers or degenerate control streams?
+
+## experiment_7326_v643_constraint_kernel.json
 
 **CHECKABLE**
 
@@ -84,15 +101,15 @@ For each stream, were zero or favorable differences caused by genuine improvemen
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Retained factor witnesses improved some future-error metrics but failed the promotion contract because `recurrence_error_vs_frozen` and `false_accept_vs_local_reset` failed.
+Rust achieved bit-exact parity with Python, but failed the predeclared 10× speedup gate at every tested batch size.
 
 ## WHAT IS MISSING
-nothing; per-unit metrics are recorded in `rows` and `independent_stream_intervals.paired_differences`, while failed checks and observed values appear in `acceptance_gate_results` and `honest_verdict`.
+nothing; `"kernel_rows.cost"` provides 90 paired per-block timing rows, `"kernel_rows.parity"` provides per-fixture comparisons, and `"acceptance_gate_results.speedup_lower_ci95"` records the failed check, expected threshold, observed values, and pass status.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7313_v642_cost_envelope.json
+## experiment_7327_v643_board_continuity.json
 
 **CHECKABLE**
 
@@ -100,7 +117,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The measured and counterfactual evidence failed the 10× target, the warm group-16 1.5× gate, and the technique-warrant check, so further implementation was deferred.
+The task was blocked because no qualifying operator-authored GateMate physical-state change was recorded after Exp6559, while prior KV260 fabric and PolarFire CPU evidence remained preserved.
 
 ## WHAT IS MISSING
 nothing
@@ -108,34 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7314_v642_board_continuity.json
+## experiment_7328_v643_capstone.json
 
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-Three authenticated board dispositions and exact next conditions were recorded: KV260 FPGA-fabric graduation and PolarFire CPU dispatch remain preserved, while GateMate is blocked because no qualifying changed-physical-state receipt exists.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7315_v642_capstone.json
-
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The capstone is blocked because Exp7309 batch-audit evidence is absent, while ARC tool use and factor value are null and the remaining receipts do not establish scientific efficacy.
+The capstone claims structural addition reduced query work, Rust achieved bit-exact parity but missed the 10× cost gate, batch value gates failed, and overall readiness remains blocked by a missing GateMate physical-state receipt.
 
 ## WHAT IS MISSING
-nothing
+Per-unit metric rows for the comparative claims—especially each of the 24 paired structural-learning streams, each batch comparison unit, and each of the 90 paired Rust cost rows; `"claim_matrix"`, `"paired_stream_count"`, `"paired_cost_rows"`, `"paired_speedup_intervals"`, and aggregate `"metrics"` are present, while the GateMate blocker is fully diagnosed in `"gate_check_summary"`.
 
 ## THE CHECK A READER CANNOT DO
-none
+Was the reported structural-learning query reduction broad across the 24 paired streams, or driven by a few outliers or units with unequal headroom?

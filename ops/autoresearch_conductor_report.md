@@ -1,6 +1,6 @@
 # Autoresearch conductor round
 
-- started: 2026-09-15T04:47:53.980241+00:00
+- started: 2026-09-15T22:14:51.281708+00:00
 - model: gpt-6-astra
 - max_iterations: 5
 
@@ -16,15 +16,12 @@
 ## Generator failure reasons
 - codex_call_failed: codex exit 1: OpenAI Codex v0.149.1
 --------
-workdir: /tmp/autoresearch-codex-a3qjlsqx
+workdir: /tmp/autoresearch-codex-jq07_yn6
 model: gpt-6-astra
 provider: openai
 approval: never
 sandbox: danger-full-access
 reasoning effort: xhigh
 reasoning summaries: no
-- - Analytic gradients for both energies. Double_well separable, saddle at 0 — any descent from random init falls to ±1 per coordinate. Rosenbrock valley kills plain GD — L-BFGS curvature approximation is standard fix.
-- 8 random restarts from N(0, 2), keep best by locally recomputed energy. Restarts dodge Rosenbrock's second basin (x₀≈−1, dim≥4) and double_well saddle.
-- scipy L-BFGS-B primary; pure-numpy Adam fallback if scipy missing. Fixed seed for reproducibility.
-- Prior failure was codex infrastructure exit, not science — nothing to route around.: Energy regression on: double_well
+- Both benchmarks couple only neighbor coordinates. Hessian is tridiagonal (diagonal for double_well). So exact Newton step costs O(dim) via Thomas solver, not O(dim^3). Procedure: 8 seeded random starts in [-2,2]^dim, short Adam warm-up finds basin, then Levenberg-damped Newton converges quadratically to gradient norm < 1e-12. Damping handles indefinite Hessian regions (double_well |x|<0.577, rosenbrock valley walls). Multi-start dodges rosenbrock's x1≈-1 local minimum and double_well saddle at 0. Best restart wins by recomputed energy. Deterministic seed, no hardcoded coordinates — every final_state is derived by descent from a random point.: Energy regression on: rosenbrock
 No hypothesis both won this round and committed cleanly.
