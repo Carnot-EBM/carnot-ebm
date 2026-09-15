@@ -172,6 +172,16 @@ def test_scenario_cl_7323_e2e_adapter_is_default_off_and_durable(tmp_path: Path)
     assert receipt["version_invalidated"] is True
 
 
+def test_scenario_cl_7323_e2e_control_can_rerun_in_one_output_root(tmp_path: Path) -> None:
+    """SCENARIO-CL-7323-E2E: prior control state cannot poison a later run."""
+
+    first = exp.run_development_controls(tmp_path / "state")
+    second = exp.run_development_controls(tmp_path / "state")
+
+    assert all(row["passed"] for row in first)
+    assert all(row["passed"] for row in second)
+
+
 def test_scenario_cl_7323_terminal_is_complete_before_held_out_efficacy(tmp_path: Path) -> None:
     """SCENARIO-CL-7323-TERMINAL: fixture readiness and unmeasured efficacy stay separate."""
 

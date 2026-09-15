@@ -1035,7 +1035,9 @@ def run_development_controls(state_root: Path) -> list[JsonDict]:
         tiny.admit_atom(contradiction_atom, current_query_index=2)
     except AdditionRejected as error:
         exhausted = str(error) == "persistent_state_cap"
-    e2e = run_adapter_e2e(state_root / "adapter-control")
+    state_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="adapter-control-", dir=state_root) as directory:
+        e2e = run_adapter_e2e(Path(directory))
     challenge = run_unannounced_change_challenge()
     return [
         _control_row("compound_conflict", compound, len(learner.active_atoms())),
