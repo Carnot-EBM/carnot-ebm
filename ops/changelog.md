@@ -20003,3 +20003,4 @@ timed alternative is available.
 - 2026-09-15: Qualify bounded Qwen3.8 joint-claim calls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_batch_canary_transport_qualified; results/experiment_7320_v643_batch_canary.json
 - 2026-09-15: Measure joint-claim fidelity and complete inference cost (⚠️ Research Finding) — honest_verdict=complete_null_batch_value_gates_failed; results/experiment_7321_v643_batch_measurement.json
 - 2026-09-15: Audit source semantics and cross-claim interference (⚠️ Research Finding) — honest_verdict=complete_null_same_mechanism_batch_value_comparison_failed; results/experiment_7322_v643_batch_audit.json
+- 2026-09-15: Prototype structural constraint addition across versioned plans (⚠️ Research Finding) — honest_verdict=complete: bounded addition fixture ready under shared Boolean executor authority; held-out efficacy not executed; results/experiment_7323_v643_addition_prototype.json
