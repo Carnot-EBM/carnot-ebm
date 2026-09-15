@@ -20000,3 +20000,4 @@ timed alternative is available.
 - 2026-09-15: Qualify the batch fixture through the shipped scoped runner (⚠️ Research Finding) — honest_verdict=complete_circular_positive_batch_harness_qualified; results/experiment_7317_v643_batch_harness.json
 - 2026-09-15: Carry the owned runtime lease into ARC evaluation provenance (⚠️ Research Finding) — honest_verdict=complete_arc_authority_handoff_mechanism_ready_no_efficacy_claim; results/experiment_7318_v643_arc_authority.json
 - 2026-09-15: Measure live selfparse generalization after authority repair (⚠️ Research Finding) — honest_verdict=complete_null_no_runtime_tool_result_to_policy_action_chain; results/experiment_7319_v643_arc_session.json
+- 2026-09-15: Qualify bounded Qwen3.8 joint-claim calls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_batch_canary_transport_qualified; results/experiment_7320_v643_batch_canary.json
