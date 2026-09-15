@@ -42879,6 +42879,119 @@ no-model substrate.
 **Then** those decisions remain in the rows and readiness can still equal one
 **And** the verdict is at most `circular_positive` with no source-value claim.
 
+### REQ-VERIFY-7317: V643 Batch Harness SHALL Use Scoped Validation
+
+Exp7317 SHALL requalify the unchanged V642 batch fixture through the shipped
+Exp7303 scoped validation runner. It SHALL pass explicit test files, changed
+modules, and static files. It SHALL not call an old experiment launcher,
+validation command builder, terminal artifact validator, or a repository-wide
+pytest target. A failed or missing required scoped check SHALL set
+`batch_harness_ready_score` to zero and produce a disqualified terminal result.
+
+The harness SHALL authenticate the scoped runner, fixture implementation,
+verification specification, artifact checks, V642 panel bytes, and historical
+failure logs. Historical Exp7306 and Exp7307 terminal classes SHALL remain
+diagnostic evidence. Their readiness values SHALL not authorize current work.
+A missing, quarantined, blocked, partial, or disqualified current dependency
+SHALL produce a blocked result. Its `gate_check_summary` SHALL preserve the
+exact check, upstream, artifact field, expected value, and observed value.
+
+The harness SHALL preserve eight development groups and sixteen held-out
+groups. Each group SHALL contain two source versions and four distinct claims
+per version. The claims SHALL cover supported, contradicted, unsupported, and
+compositional cases. Public source data, evaluator labels, injected outputs,
+injected costs, predictions, and call order SHALL have separate hash-bound
+sidecars. Evaluator labels SHALL not enter the prediction path.
+
+The harness SHALL preserve the serial versioned verifier, batched versioned
+verifier, and batched warm-prefix direct arms. For each source version, their
+call counts SHALL be five, two, and one. Each arm SHALL receive 1,280 output
+tokens. No arm SHALL use repair or retry calls. The harness SHALL preserve
+query-specific work, source-version binding, claim-ID matching, and cache
+invalidation.
+
+The acceptance witness SHALL use separately labeled injected outputs and
+costs. Accuracy and coverage lower bounds versus joint direct SHALL each be at
+least -0.02. False accepts SHALL not increase against serial or joint direct.
+Joint-verifier speedup lower bounds SHALL each be at least 1.5 against serial
+and joint direct. Semantic mismatches and stale constraints SHALL equal zero.
+These injected controls prove that the frozen contract has a pass region. They
+SHALL not claim model performance or measured live cost.
+
+The harness SHALL test duplicate claim IDs, mixed source versions, absent
+source spans, unsupported claims, reordered claims, and one altered neighbor.
+It SHALL seal development selection and held-out order. Proposed V643 canary
+and capture builders SHALL return explicit validation scopes that use the same
+Exp7303 runner. `batch_harness_ready_score` SHALL equal one only when the full
+fixture contract, all adversarial controls, independent labels, terminal
+artifact checks, and every required scoped command pass.
+
+The terminal artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`,
+zero current load and generation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL include all fields required by the Exp7317
+task. The artifact SHALL preserve unrelated repository collection failures as
+health observations. Those observations SHALL not become required pass
+receipts.
+
+#### SCENARIO-VERIFY-7317-SCOPE: Affected Failure Disqualifies Readiness
+
+**Given** explicit V643 test, module, and static-file scopes
+**When** one affected subprocess exits with a failure
+**Then** the receipt retains its real argument vector and exit code
+**And** `batch_harness_ready_score` is zero with a disqualified verdict.
+
+#### SCENARIO-VERIFY-7317-MISSING: Missing Required Checks Cannot Pass
+
+**Given** a receipt set without one required Exp7303 command
+**When** the harness reduces current validation
+**Then** it names the missing command and rejects readiness
+**And** no historical pass receipt can replace the missing command.
+
+#### SCENARIO-VERIFY-7317-HEALTH: Historical Collection Failure Stays Diagnostic
+
+**Given** an authenticated repository-wide collection failure from V641 or V642
+**When** every current scoped command passes
+**Then** repository health remains degraded with the dated failure preserved
+**And** the current harness can qualify without running the unscoped suite.
+
+#### SCENARIO-VERIFY-7317-FIXTURE: Existing Fixture Semantics Stay Fixed
+
+**Given** the authenticated V642 panel satisfies the V643 group contract
+**When** the harness runs the three exact CPU arms
+**Then** it reuses those panel bytes and preserves 384 claim-arm rows
+**And** each source version keeps five, two, and one calls at equal budgets.
+
+#### SCENARIO-VERIFY-7317-CONTROLS: Corrupt Batches Fail Closed
+
+**Given** duplicate IDs, mixed versions, absent spans, reordered claims, an
+unsupported claim, and an altered neighbor
+**When** the parser, compiler, and exact executor process each injected case
+**Then** identity or provenance faults abstain or reject as declared
+**And** order and neighbor changes do not alter unrelated claim decisions.
+
+#### SCENARIO-VERIFY-7317-GATES: Injected Witness Reaches The Pass Region
+
+**Given** separately labeled injected outputs, labels, and full-cost values
+**When** the frozen V642 acceptance contract is reduced
+**Then** every semantic, coverage, false-acceptance, and speed lower bound passes
+**And** the result remains protocol evidence with no live-model value claim.
+
+#### SCENARIO-VERIFY-7317-CONSUMERS: Future Entrypoints Use Explicit Scope
+
+**Given** a qualified harness artifact and sealed panel manifest
+**When** the V643 canary or capture input builder runs
+**Then** it rejects every failure terminal class even when readiness equals one
+**And** it returns explicit test and module paths for the Exp7303 runner.
+
+#### SCENARIO-VERIFY-7317-E2E: Scoped Checks Reach One Atomic Result
+
+**Given** raw rows, sidecar hashes, and passing current scoped checks
+**When** the entrypoint reloads and independently reduces its candidate
+**Then** adversarial verification and strict row consistency validate the same bytes
+**And** only the validated terminal artifact is published atomically.
+
 #### SCENARIO-VERIFY-7307-E2E: One Command Produces A Cold-Valid Terminal Record
 
 **Given** authenticated dependencies and task-owned raw and checkpoint paths
