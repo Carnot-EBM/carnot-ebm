@@ -17994,3 +17994,4 @@ code |
 | 2026-09-15 11:11 UTC | Prototype structural constraint addition across ve | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: yload["additio |
 | 2026-09-15 12:30 UTC | Prototype structural constraint addition across ve | OK | 95 passed, 1 warning in 18.78s |
 | 2026-09-15 13:53 UTC | Measure prospective learning from acquired plan co | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: exp.build_ |
+| 2026-09-15 15:13 UTC | Measure prospective learning from acquired plan co | OK | cache hit: 92 passed, 1 warning in 23.62s |
