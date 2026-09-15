@@ -16604,3 +16604,103 @@ or the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7324 and SCENARIO-CL-7324-* | Planned: `python/carnot/experiment_7324_v643_addition_learning.py` with a thin script entrypoint and terminal result `results/experiment_7324_v643_addition_learning.json`. | Planned: `tests/python/test_experiment_7324_v643_addition_learning.py`. |
+
+## REQ-CL-7325: Independent Audit Of Versioned Structural Addition
+
+Carnot SHALL authenticate the terminal Exp7324 artifact and each raw evidence
+receipt before audit work starts. Exp7324 SHALL have
+`addition_capture_complete_score=1`. Its verdict class SHALL not be `blocked`,
+`disqualified`, or `partial`. Missing, quarantined, changed, or failed external
+evidence SHALL produce a row-free blocked result. Each precondition row SHALL
+retain the exact upstream, check, artifact field, expected value, and observed
+value. A score of one SHALL not override an ineligible terminal class.
+
+The audit SHALL reload request, query, intervention, and evaluator process
+evidence from their authenticated files. It SHALL not call the Exp7324 gate
+reducer. It SHALL reconstruct all 2,304 arm-request rows and each stream
+interval from raw evidence. The reconstruction SHALL count distinct invocation
+identities. It SHALL include unsuccessful localization, cache misses, delayed
+duplicates, hidden counters, and final checks. It SHALL recheck the fixed
+sample budget, optimum censoring, utility, feasibility coverage, returned
+infeasible plans, state bytes, rollback bytes, stale versions, and all version
+strata. Returning-version rows SHALL stay evaluation-only and SHALL not tune
+the memory policy.
+
+The audit SHALL cold-replay saved prefixes with feedback withheld, labels
+permuted, and newly acquired atoms erased. At least one later distinct request
+or query sequence SHALL depend on genuine feedback. The exact-plan-cache arm
+SHALL remain a separate control. A cached exact plan alone SHALL not authorize
+the total-call reduction claim.
+
+The audit SHALL challenge stale versions, fabricated witnesses,
+over-specific pair prohibitions, hidden query counters, delayed duplicate
+responses, memory overflow, corrupted snapshots, and unannounced executor
+changes. Each challenge SHALL reject or invalidate authority. The
+unannounced-change row SHALL retain the failure of the stable-oracle
+assumption. The audit SHALL also run update, later request, persistence, cold
+restart, rollback, and version invalidation through the current transactional
+memory. It SHALL account for initialized bytes, serialized bytes, and
+transient rollback bytes.
+
+`addition_audit_complete_score` SHALL equal one only after independent
+reduction, hostile controls, lifecycle checks, scoped validation, and terminal
+validation pass. `addition_promotion_score` SHALL equal one only when total
+query work, utility, coverage, feasibility, causality, and version gates pass
+together. A favorable bounded result SHALL use `circular_positive` because the
+executable evaluator is the oracle. A repeated substantive null SHALL retire
+this acquisition mechanism under the declared Boolean feedback contract.
+
+The task SHALL use date `20260915`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counts SHALL be zero.
+It SHALL declare `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL not mutate model weights, production defaults,
+publication surfaces, historical determinations, or the research roadmap.
+
+### SCENARIO-CL-7325-PRECONDITIONS: External Failure Blocks Exactly
+
+- GIVEN the declared Exp7324 artifact, its raw receipts, and the exclusion manifest
+- WHEN capture, class, quarantine, hashes, schemas, and ownership are checked
+- THEN only exact complete eligible evidence can start the audit
+- AND the first failure keeps its exact upstream, field, expected value, and observed value.
+
+### SCENARIO-CL-7325-REDUCTION: Raw Rows Own Every Comparison
+
+- GIVEN request and query rows from the authenticated Exp7324 files
+- WHEN the audit rebuilds calls, costs, censoring, utilities, coverage, and paired intervals
+- THEN all arms, streams, strata, failed calls, and final checks stay in the denominator
+- AND producer aggregates or its gate reducer do not authorize the audit result.
+
+### SCENARIO-CL-7325-CAUSALITY: Cold Prefixes Separate Learning From Caching
+
+- GIVEN authenticated warmup prefixes and later requests
+- WHEN feedback is withheld, labels are permuted, or acquired atoms are erased
+- THEN each intervention has the same prefix identity and distinct later opportunities
+- AND exact-plan caching alone cannot explain a successful total-call reduction.
+
+### SCENARIO-CL-7325-HOSTILE: Invalid Authority Fails Closed
+
+- GIVEN stale, fabricated, broad, hidden, duplicate, overflowing, corrupt, and changed-oracle evidence
+- WHEN each attack is applied independently
+- THEN the proposed authority rejects or becomes invalid
+- AND unannounced change preserves the failed stable-oracle assumption.
+
+### SCENARIO-CL-7325-LIFECYCLE: Current Memory Survives And Invalidates Exactly
+
+- GIVEN one certified update and a later distinct request
+- WHEN memory persists, cold restarts, rolls back, and changes version
+- THEN same-version state survives, rollback restores exact bytes, and stale authority becomes inactive
+- AND initialized, serialized, and transient rollback bytes remain visible.
+
+### SCENARIO-CL-7325-TERMINAL: Completion And Promotion Stay Independent
+
+- GIVEN complete independent evidence and current validation receipts
+- WHEN joint scientific and safety gates are reduced
+- THEN audit completion can equal one for a favorable or null result
+- AND blocked or disqualified output sets every readiness and promotion score to zero.
+
+## Implementation Status (REQ-CL-7325)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7325 and SCENARIO-CL-7325-* | Implemented in `python/carnot/experiment_7325_v643_addition_audit.py` with a thin script entrypoint and terminal result `results/experiment_7325_v643_addition_audit.json`. The audit reloads raw producer evidence, rebuilds every comparison and update, checks three causal interventions, runs eight hostile controls, and exercises the current transactional lifecycle. | `tests/python/test_experiment_7325_v643_addition_audit.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 490/490 (100%). |
