@@ -1331,6 +1331,7 @@ def run_game(
         solve_provenance=_solve_provenance,
         factory_path=Path(__file__),
         repo_root=REPO,
+        lease=getattr(getattr(policy, "proposer", None), "arc_eval_authority", None),
         lease_checked_at=_iso(_t_end),
     )
     return row

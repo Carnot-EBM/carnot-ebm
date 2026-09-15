@@ -1147,11 +1147,9 @@ def collect_preconditions(
 
     current = cached_current_model(preferred_quant=QUANTIZATION)
     model_path = Path(str(current.get("model_path"))) if current else None
-    observed_quantization = (
-        current.get("quantization")
-        if current
-        else None
-    ) or (QUANTIZATION if model_path and QUANTIZATION in model_path.name else None)
+    observed_quantization = (current.get("quantization") if current else None) or (
+        QUANTIZATION if model_path and QUANTIZATION in model_path.name else None
+    )
     model_ok = bool(
         current
         and current.get("hf_id") == MODEL_ID
@@ -1449,6 +1447,25 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - liv
     raw_dir = Path(args.raw_dir)
     raw_dir.mkdir(parents=True, exist_ok=True)
     schedule = json.loads(Path(args.schedule_path).read_text(encoding="utf-8"))["rows"]
+    authority_model_identity = {
+        "hf_id": MODEL_ID,
+        "model_path": str(Path(args.model_path).absolute()),
+        "model_hash": str(args.model_hash),
+        "quantization": QUANTIZATION,
+    }
+    from carnot.experiment_7318_v643_arc_authority import (
+        attach_episode_authority,
+        select_episode_authority,
+        validate_authority_bundle_before_model_load,
+    )
+
+    authority_preflight = validate_authority_bundle_before_model_load(
+        os.environ, schedule, authority_model_identity
+    )
+    if authority_preflight.get("allowed") is not True:
+        raise RuntimeError(
+            f"ARC episode authority rejected before model load: {authority_preflight.get('reason')}"
+        )
     checkpoint = Path(args.checkpoint_path)
     session_path = Path(args.session_path)
     capture = RequestCapture(raw_dir)
@@ -1543,6 +1560,9 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - liv
                 gpu_index=int(args.gpu_index),
                 port=int(args.port),
             )
+            episode_authority, environment = select_episode_authority(
+                environment, schedule_row, authority_model_identity
+            )
             old_environment = dict(os.environ)
             old_e3_dir = e3.E3_DIR
             episode_start = time.monotonic()
@@ -1560,6 +1580,7 @@ def run_live_session(args: argparse.Namespace) -> int:  # pragma: no cover - liv
                 policy, factory = scored.build_disposable_submitted_policy(
                     str(schedule_row["game"]), proposer
                 )
+                attach_episode_authority(policy.proposer, episode_authority)
                 policy.think_arm_fallback_enabled = False
                 policy.induction_progress_hook = lambda kind, payload: _progress(
                     "episode_generation", kind, episode_id=episode_id, **payload
@@ -1693,6 +1714,7 @@ def run_child_with_lease(
 ) -> JsonDict:  # pragma: no cover - live process and lease.
     """Own one GPU lease and one process group for the complete live window."""
 
+    from carnot.experiment_7318_v643_arc_authority import authority_bundle_environment
     from carnot.gpu_lease_phase_journal import GpuLease
 
     gpu = dict(resources["gpu"])
@@ -1741,6 +1763,33 @@ def run_child_with_lease(
     )
     env["CARNOT_ARC_GGUF_PATH"] = str(resources["model_path"])
     env["CARNOT_LLAMA_SERVER"] = str(resources["server"])
+    schedule = json.loads(schedule_path.read_text(encoding="utf-8"))["rows"]
+    model_identity = {
+        "hf_id": MODEL_ID,
+        "model_path": str(Path(str(resources["model_path"])).absolute()),
+        "model_hash": str(resources["model_hash"]),
+        "quantization": QUANTIZATION,
+    }
+    authority_valid_for_s = min(float(remaining_s), float(LIVE_WINDOW_S)) + 60.0
+    authorities = [
+        lease.issue_arc_episode_authority(
+            episode_id=str(row["episode_id"]),
+            game=str(row["game"]),
+            model_identity=model_identity,
+            resource_bounds={
+                "action_limit": ACTION_LIMIT,
+                "completion_limit": COMPLETION_LIMIT,
+                "generated_token_limit": GENERATED_TOKEN_LIMIT,
+                "session_limit_s": LIVE_WINDOW_S,
+            },
+            nonce_ledger_path=(
+                raw_dir / "authority_nonces" / str(row["episode_id"]).replace(":", "__")
+            ),
+            valid_for_s=authority_valid_for_s,
+        )
+        for row in schedule
+    ]
+    env = authority_bundle_environment(env, authorities)
     _progress("live_subprocess", "BEFORE subprocess", command=command)
     process = subprocess.Popen(
         command,

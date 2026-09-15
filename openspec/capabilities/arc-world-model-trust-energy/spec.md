@@ -31915,6 +31915,86 @@ through the shipped reproduction gate.
 Implementation status: specified 2026-09-12. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7318: Carry owner-issued episode authority to scored ARC provenance
+
+Experiment 7318 SHALL repair the observed Experiment 7305 authority handoff. The
+kernel-backed `GpuLease` owner SHALL issue each episode authority while it holds the
+resource lock. The grant SHALL bind the lease journal, owner PID and process start
+tick, model identity, exact episode and game scope, resource bounds, issue and expiry
+times, and a one-use nonce. The owner SHALL record the grant in its journal before the
+child receives it. The child SHALL receive no issuer secret and SHALL not issue,
+broaden, refresh, or re-sign a grant.
+
+The live launcher SHALL carry the owner-issued grants through its bounded child
+environment. The live child SHALL validate every scheduled grant before model load.
+For each episode, it SHALL select the exact scoped grant and attach it to the shared
+proposer. The existing `arc_leaderboard_eval.run_game` caller SHALL pass that mapping
+to `build_arc_eval_provenance_for_policy`. The unchanged ARC provenance validator
+SHALL remain the final record validator. GPU resource ownership and episode authority
+SHALL remain distinct receipts.
+
+The authority validator SHALL reject a missing, expired, tampered, wrong-owner,
+wrong-game, wrong-model, or replayed grant. It SHALL authenticate the current issuer
+journal and its recorded grant. A denial SHALL happen before model load or before a
+provenance record is accepted. Expiry during a call SHALL fail at the scored caller;
+an earlier preflight SHALL not make a later expired grant valid.
+
+Experiment 7318 SHALL use isolated CPU fixtures and the actual `E3AgentPolicy` path.
+One conformance row SHALL use two scripted HTTP completions, a successful tool result,
+the same result in the later request, an installed plan, and a later environment
+action. No-tool-needed and malformed-tool controls SHALL remain separate. Scripted
+model-shaped events SHALL stay in hash-bound sidecars and SHALL not count as current
+model invocations.
+
+The terminal result SHALL use run date `20260915`, milestone `2026.09.643`,
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current load and generation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. `arc_authority_ready_score` SHALL equal one only when the
+real issuer-to-child-to-proposer-to-caller path passes, every denial control rejects,
+E2E-009 and E2E-010 plus the prescribed LLM-off smoke pass, no owned child survives,
+changed code has complete scoped validation and coverage, and both terminal linters
+pass. A failing affected check SHALL disqualify readiness. An unavailable current
+issuer SHALL produce a terminal blocked result with its exact failed comparison.
+
+### SCENARIO-ARC-WMTE-7318-OWNER-ISSUE-AND-HANDOFF
+
+- GIVEN a current `GpuLease` owner and an exact scheduled ARC episode
+- WHEN the owner records a bounded authority grant and launches the live child
+- THEN the child environment, episode environment, proposer, and scored provenance caller carry the same grant hash
+- AND the final ARC provenance contains the grant's required lease fields without changing its validator.
+
+### SCENARIO-ARC-WMTE-7318-DENIAL-MATRIX
+
+- GIVEN missing, expired, tampered, wrong-owner, wrong-game, wrong-model, and replayed grants
+- WHEN each grant uses the same isolated authority transport
+- THEN every invalid grant is rejected with its exact reason
+- AND no rejected grant reaches a model load or an accepted provenance record.
+
+### SCENARIO-ARC-WMTE-7318-EXPIRY-DURING-CALL
+
+- GIVEN a grant that is valid at preflight and expires before provenance construction
+- WHEN the scored caller checks the authority after the scripted call
+- THEN it rejects the expired grant
+- AND the preflight result does not extend or refresh the authority.
+
+### SCENARIO-ARC-WMTE-7318-E3-CONFORMANCE
+
+- GIVEN an adapter-free `E3AgentPolicy` with isolated scripted HTTP completions
+- WHEN one tool result is returned to the next request and a valid engine installs a plan
+- THEN a later policy step emits an environment action from that plan
+- AND no-tool-needed and malformed-tool controls retain their distinct outcomes.
+
+### SCENARIO-ARC-WMTE-7318-TERMINAL-RECEIPT
+
+- GIVEN the CPU panel, E2E checks, scoped validation, independent artifact validation, and terminal linters
+- WHEN Experiment 7318 builds its measured terminal candidate
+- THEN it atomically writes a complete, blocked, or disqualified result with ordinary required fields
+- AND it records zero current model invocations, the exact former field-drop location, and the Exp7319 live-entrypoint receipt.
+
+Implementation status: specified 2026-09-15. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7263: Measure typed transition-witness value in the live scored policy
 
 Experiment 7263 SHALL authenticate the clean terminal bytes of Experiment 7262.

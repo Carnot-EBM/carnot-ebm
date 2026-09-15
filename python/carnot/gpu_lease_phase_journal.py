@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
+from datetime import UTC, datetime, timedelta
 import fcntl
 import hashlib
 import json
@@ -28,13 +29,34 @@ import sys
 import tempfile
 import time
 from typing import Any
-from datetime import UTC, datetime
 
 from carnot.inference.llama_server_supervisor import parse_proc_stat
 
 
 JsonDict = dict[str, Any]
 SCHEMA = "carnot.gpu_lease_phase_journal.v1"
+ARC_EPISODE_AUTHORITY_SCHEMA = "carnot.arc.eval_episode_authority.v1"
+ARC_AUTHORITY_BUNDLE_ENV = "CARNOT_ARC_EVAL_AUTHORITY_BUNDLE_JSON"
+ARC_AUTHORITY_ENV = "CARNOT_ARC_EVAL_LEASE_JSON"
+ARC_AUTHORITY_REQUIRED_FIELDS = frozenset(
+    {
+        "schema",
+        "lease_id",
+        "lease_hash",
+        "lease_issued_at",
+        "lease_expires_at",
+        "lease_checked_at",
+        "issued_monotonic_ns",
+        "expires_monotonic_ns",
+        "issuer_record",
+        "model_identity",
+        "episode_scope",
+        "resource_bounds",
+        "nonce",
+        "nonce_ledger_path",
+        "authority_hash",
+    }
+)
 PHASES = (
     "preflight",
     "admitted",
@@ -187,6 +209,179 @@ def journal_checksum(document: Mapping[str, Any]) -> str:
     """Hash a journal without its final self-referential field."""
 
     return sha256_json(_without_checksum(document, "checksum"))
+
+
+def arc_episode_authority_hash(authority: Mapping[str, Any]) -> str:
+    """Hash one grant without either field that carries the same digest."""
+
+    core = {
+        key: value
+        for key, value in authority.items()
+        if key not in {"authority_hash", "lease_hash"}
+    }
+    return sha256_json(core)
+
+
+def _authority_time(value: Any) -> datetime | None:
+    """Read an aware ISO time so a local clock string cannot grant authority."""
+
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
+
+
+def _consume_authority_nonce(authority: Mapping[str, Any]) -> bool:
+    """Create one durable marker; an existing marker proves a replay."""
+
+    ledger = Path(str(authority["nonce_ledger_path"]))
+    ledger.mkdir(parents=True, exist_ok=True, mode=0o700)
+    marker = ledger / str(authority["authority_hash"]).removeprefix("sha256:")
+    try:
+        descriptor = os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError:
+        return False
+    with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+        stream.write(str(authority["nonce"]))
+        stream.flush()
+        os.fsync(stream.fileno())
+    return True
+
+
+def validate_arc_episode_authority(
+    authority: Mapping[str, Any] | None,
+    *,
+    expected_game: str,
+    expected_model_identity: Mapping[str, Any],
+    expected_episode_id: str | None = None,
+    expected_owner_pid: int | None = None,
+    expected_owner_start_ticks: int | None = None,
+    now_utc: datetime | None = None,
+    now_monotonic_ns: int | None = None,
+    consume: bool = False,
+) -> JsonDict:
+    """Authenticate one owner-recorded grant without changing provenance rules."""
+
+    def denied(reason: str) -> JsonDict:
+        return {"allowed": False, "reason": reason}
+
+    if not isinstance(authority, Mapping):
+        return denied("missing_authority")
+    missing = sorted(ARC_AUTHORITY_REQUIRED_FIELDS - set(authority))
+    if missing:
+        return denied(f"missing_authority_field:{missing[0]}")
+    if authority.get("schema") != ARC_EPISODE_AUTHORITY_SCHEMA:
+        return denied("wrong_authority_schema")
+    expected_hash = arc_episode_authority_hash(authority)
+    if (
+        authority.get("authority_hash") != expected_hash
+        or authority.get("lease_hash") != expected_hash
+    ):
+        return denied("authority_hash_mismatch")
+
+    issuer = authority.get("issuer_record")
+    if not isinstance(issuer, Mapping):
+        return denied("issuer_record_invalid")
+    try:
+        journal = read_journal(Path(str(issuer["journal_path"])))
+    except (KeyError, JournalError):
+        return denied("issuer_journal_unavailable")
+    owner = journal.get("owner")
+    owner = owner if isinstance(owner, Mapping) else {}
+    owner_pid = owner.get("pid")
+    owner_ticks = owner.get("pid_start_ticks")
+    if (
+        authority.get("lease_id") != journal.get("lease_id")
+        or issuer.get("task_id") != journal.get("task_id")
+        or issuer.get("device_uuid") != journal.get("device_uuid")
+        or issuer.get("owner_pid") != owner_pid
+        or issuer.get("owner_pid_start_ticks") != owner_ticks
+        or not isinstance(owner_pid, int)
+        or not isinstance(owner_ticks, int)
+        or not process_start_matches(owner_pid, owner_ticks)
+        or journal.get("released") is True
+    ):
+        return denied("wrong_owner")
+    if expected_owner_pid is not None and owner_pid != expected_owner_pid:
+        return denied("wrong_owner")
+    if expected_owner_start_ticks is not None and owner_ticks != expected_owner_start_ticks:
+        return denied("wrong_owner")
+
+    grants = journal.get("arc_episode_authority_grants")
+    grants = grants if isinstance(grants, list) else []
+    grant = next(
+        (
+            row
+            for row in grants
+            if isinstance(row, Mapping) and row.get("authority_hash") == expected_hash
+        ),
+        None,
+    )
+    if not isinstance(grant, Mapping):
+        return denied("authority_not_issued")
+    if (
+        grant.get("episode_scope_hash") != sha256_json(authority["episode_scope"])
+        or grant.get("model_identity_hash") != sha256_json(authority["model_identity"])
+        or grant.get("resource_bounds_hash") != sha256_json(authority["resource_bounds"])
+        or grant.get("nonce_hash") != sha256_json(authority["nonce"])
+    ):
+        return denied("issuer_grant_mismatch")
+
+    checked_utc = datetime.now(UTC) if now_utc is None else now_utc
+    checked_ns = time.monotonic_ns() if now_monotonic_ns is None else int(now_monotonic_ns)
+    issued_utc = _authority_time(authority.get("lease_issued_at"))
+    expires_utc = _authority_time(authority.get("lease_expires_at"))
+    issued_ns = authority.get("issued_monotonic_ns")
+    expires_ns = authority.get("expires_monotonic_ns")
+    if (
+        checked_utc.tzinfo is None
+        or issued_utc is None
+        or expires_utc is None
+        or not isinstance(issued_ns, int)
+        or not isinstance(expires_ns, int)
+    ):
+        return denied("authority_time_invalid")
+    if not (issued_utc <= checked_utc < expires_utc and issued_ns <= checked_ns < expires_ns):
+        return denied("authority_expired")
+    if checked_ns >= int(journal.get("expires_monotonic_ns", 0)):
+        return denied("resource_lease_expired")
+
+    scope = authority.get("episode_scope")
+    if not isinstance(scope, Mapping) or scope.get("game") != expected_game:
+        return denied("wrong_game")
+    if expected_episode_id is not None and scope.get("episode_id") != expected_episode_id:
+        return denied("wrong_episode")
+    if dict(authority.get("model_identity") or {}) != dict(expected_model_identity):
+        return denied("wrong_model_identity")
+    if journal.get("expected_model") != authority["model_identity"].get("model_path"):
+        return denied("wrong_model_identity")
+    bounds = authority.get("resource_bounds")
+    if not isinstance(bounds, Mapping) or not {
+        "action_limit",
+        "completion_limit",
+        "generated_token_limit",
+        "session_limit_s",
+    } <= set(bounds):
+        return denied("resource_bounds_invalid")
+    if consume and not _consume_authority_nonce(authority):
+        return denied("authority_replayed")
+    return {
+        "allowed": True,
+        "reason": "allowed",
+        "lease_fields": {
+            key: authority[key]
+            for key in (
+                "lease_id",
+                "lease_hash",
+                "lease_issued_at",
+                "lease_expires_at",
+                "lease_checked_at",
+            )
+        },
+    }
 
 
 def _device_key(device_uuid: str) -> str:
@@ -1007,6 +1202,91 @@ class GpuLease:
             "recovery": deepcopy(self.document["recovery"]),
             "signals_sent": [],
         }
+
+    def issue_arc_episode_authority(
+        self,
+        *,
+        episode_id: str,
+        game: str,
+        model_identity: Mapping[str, Any],
+        resource_bounds: Mapping[str, Any],
+        nonce_ledger_path: Path,
+        valid_for_s: float,
+        nonce: str | None = None,
+        now_utc: datetime | None = None,
+        now_monotonic_ns: int | None = None,
+    ) -> JsonDict:
+        """Record one bounded episode grant while this owner holds the kernel lock.
+
+        The returned record contains no lease token. A child can validate the
+        journal entry, but it cannot create another entry through this owner API.
+        """
+
+        self._refresh()
+        self._verify_owner(
+            token=None,
+            device_uuid=None,
+            expected_model=None,
+            pid_start_ticks=None,
+        )
+        observed_ns = time.monotonic_ns() if now_monotonic_ns is None else int(now_monotonic_ns)
+        self._ensure_fresh(observed_ns)
+        if self.document["phase"] in TERMINAL_PHASES:
+            raise TransitionError("terminal_already_set")
+        if not episode_id or not game or not model_identity or not resource_bounds:
+            raise ValueError("episode_game_model_and_bounds_required")
+        seconds = float(valid_for_s)
+        if seconds <= 0:
+            raise ValueError("authority_validity_must_be_positive")
+        issued_utc = datetime.now(UTC) if now_utc is None else now_utc
+        if issued_utc.tzinfo is None:
+            raise ValueError("authority_issue_time_must_be_aware")
+        expires_ns = observed_ns + int(seconds * 1_000_000_000)
+        core: JsonDict = {
+            "schema": ARC_EPISODE_AUTHORITY_SCHEMA,
+            "lease_id": self.lease_id,
+            "lease_issued_at": issued_utc.isoformat(),
+            "lease_expires_at": (issued_utc + timedelta(seconds=seconds)).isoformat(),
+            "lease_checked_at": issued_utc.isoformat(),
+            "issued_monotonic_ns": observed_ns,
+            "expires_monotonic_ns": expires_ns,
+            "issuer_record": {
+                "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+                "journal_path": str(self.journal_path.absolute()),
+                "journal_schema": self.document["schema"],
+                "journal_checksum_before_issue": self.document["checksum"],
+                "task_id": self.document["task_id"],
+                "owner_pid": self.pid,
+                "owner_pid_start_ticks": self.pid_start_ticks,
+                "device_uuid": self.device_uuid,
+                "child_can_issue": False,
+                "child_can_broaden": False,
+                "child_can_refresh": False,
+            },
+            "model_identity": deepcopy(dict(model_identity)),
+            "episode_scope": {"episode_id": str(episode_id), "game": str(game)},
+            "resource_bounds": deepcopy(dict(resource_bounds)),
+            "nonce": nonce or secrets.token_urlsafe(32),
+            "nonce_ledger_path": str(Path(nonce_ledger_path).absolute()),
+        }
+        authority_hash = arc_episode_authority_hash(core)
+        authority = {**core, "lease_hash": authority_hash, "authority_hash": authority_hash}
+        grant = {
+            "authority_hash": authority_hash,
+            "lease_id": self.lease_id,
+            "issued_monotonic_ns": observed_ns,
+            "expires_monotonic_ns": expires_ns,
+            "episode_scope_hash": sha256_json(authority["episode_scope"]),
+            "model_identity_hash": sha256_json(authority["model_identity"]),
+            "resource_bounds_hash": sha256_json(authority["resource_bounds"]),
+            "nonce_hash": sha256_json(authority["nonce"]),
+        }
+        grants = self.document.setdefault("arc_episode_authority_grants", [])
+        if not isinstance(grants, list):
+            raise JournalError("authority_grant_ledger_invalid")
+        grants.append(grant)
+        self._commit()
+        return authority
 
     def _refresh(self) -> None:
         disk = read_journal(self.journal_path)

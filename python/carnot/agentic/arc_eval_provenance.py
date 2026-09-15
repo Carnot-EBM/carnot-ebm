@@ -1381,6 +1381,42 @@ def _git_commit(root: Path) -> str:
     return completed.stdout.strip()
 
 
+def _consume_live_episode_authority(
+    policy: Any,
+    authority: Mapping[str, Any],
+    *,
+    model_repository: Any,
+    model_path: Any,
+    model_hash: Any,
+    lease_checked_at: str | None,
+) -> None:
+    """Consume a rich owner grant only after binding it to scored producer facts."""
+
+    if authority.get("schema") != "carnot.arc.eval_episode_authority.v1":
+        return
+    from carnot.gpu_lease_phase_journal import validate_arc_episode_authority
+
+    authority_model = dict(authority.get("model_identity") or {})
+    authority_model.update(
+        {
+            "hf_id": model_repository,
+            "model_path": str(model_path),
+            "model_hash": model_hash,
+        }
+    )
+    decision = validate_arc_episode_authority(
+        authority,
+        expected_game=str(getattr(policy, "short", "")),
+        expected_model_identity=authority_model,
+        now_utc=(
+            datetime.fromisoformat(lease_checked_at) if lease_checked_at is not None else None
+        ),
+        consume=True,
+    )
+    if decision.get("allowed") is not True:
+        raise ValueError(f"ARC episode authority rejected: {decision.get('reason')}")
+
+
 def build_arc_eval_provenance_for_policy(
     policy: Any,
     *,
@@ -1561,6 +1597,14 @@ def build_arc_eval_provenance_for_policy(
     except Exception:  # noqa: BLE001 - unreadable state must reject, not acquire a guessed value
         endpoint = None
     authority = _explicit_lease(lease)
+    _consume_live_episode_authority(
+        policy,
+        authority,
+        model_repository=model_repository,
+        model_path=model_path,
+        model_hash=model_hash,
+        lease_checked_at=lease_checked_at,
+    )
     source = ArcEvalProvenanceInput(
         inference_substrate=LIVE_LLM_INFERENCE_SUBSTRATE,
         gpu_uuid=selected.get("gpu_uuid"),

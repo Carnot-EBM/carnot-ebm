@@ -1,0 +1,1695 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "check": "owner_issued_denials",
+      "expected": [
+        "expired",
+        "missing",
+        "replayed",
+        "tampered",
+        "wrong_game",
+        "wrong_model",
+        "wrong_owner"
+      ],
+      "observed": [
+        "expired",
+        "missing",
+        "replayed",
+        "tampered",
+        "wrong_game",
+        "wrong_model",
+        "wrong_owner"
+      ],
+      "passed": true,
+      "principle": "All invalid authority cases must fail before model work."
+    },
+    {
+      "check": "issuer_to_caller_handoff",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Every runtime hop must retain the exact owner-recorded grant."
+    },
+    {
+      "check": "expiry_during_scored_call",
+      "expected": {
+        "expired_after_call": "authority_expired",
+        "missing_before_launch": "missing_authority_bundle"
+      },
+      "observed": {
+        "expired_after_call": "authority_expired",
+        "missing_before_launch": "missing_authority_bundle"
+      },
+      "passed": true,
+      "principle": "Preflight cannot authorize a missing or later-expired grant."
+    },
+    {
+      "check": "strict_provenance_validator_unchanged",
+      "expected": "sha256:b9c4888df96ee80331c3fd6d0ac07b2f9ba8cf601f52a5f2a75ab8775c400a0c",
+      "observed": "sha256:b9c4888df96ee80331c3fd6d0ac07b2f9ba8cf601f52a5f2a75ab8775c400a0c",
+      "passed": true,
+      "principle": "The repair may hand authority to the validator but may not weaken it."
+    },
+    {
+      "check": "e3_tool_result_to_action",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Mechanism readiness requires the actual E3 policy and both controls."
+    },
+    {
+      "check": "zero_current_model_invocations",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Scripted model-shaped bytes are fixtures, not current inference."
+    },
+    {
+      "check": "affected_scoped_validation",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Affected tests, coverage, lint, types, spec checks, and E2E smoke must pass."
+    },
+    {
+      "check": "terminal_candidate_linters",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Both independent terminal checks must accept the measured candidate."
+    },
+    {
+      "check": "owned_child_cleanup",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "No task-owned child can remain after the bounded probe."
+    }
+  ],
+  "arc_authority_ready_score": 1,
+  "authority_handoff_rows": [
+    {
+      "authority_fields": {
+        "episode_scope": {
+          "episode_id": "r11l:direct_selfparse",
+          "game": "r11l"
+        },
+        "issuer_record": {
+          "child_can_broaden": false,
+          "child_can_issue": false,
+          "child_can_refresh": false,
+          "device_uuid": "GPU-exp7318-cpu-fixture",
+          "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+          "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+          "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+          "owner_pid": 492042,
+          "owner_pid_start_ticks": 174835589,
+          "task_id": "exp7318-arc-authority"
+        },
+        "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+        "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+        "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+        "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+        "model_identity": {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+          "quantization": "Q4_K_M"
+        },
+        "resource_bounds": {
+          "action_limit": 192,
+          "completion_limit": 2,
+          "generated_token_limit": 4096,
+          "session_limit_s": 3000
+        }
+      },
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "field_dropped": false,
+      "hop": "gpu_lease_issuer",
+      "required_fields_present": true
+    },
+    {
+      "authority_fields": {
+        "episode_scope": {
+          "episode_id": "r11l:direct_selfparse",
+          "game": "r11l"
+        },
+        "issuer_record": {
+          "child_can_broaden": false,
+          "child_can_issue": false,
+          "child_can_refresh": false,
+          "device_uuid": "GPU-exp7318-cpu-fixture",
+          "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+          "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+          "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+          "owner_pid": 492042,
+          "owner_pid_start_ticks": 174835589,
+          "task_id": "exp7318-arc-authority"
+        },
+        "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+        "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+        "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+        "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+        "model_identity": {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+          "quantization": "Q4_K_M"
+        },
+        "resource_bounds": {
+          "action_limit": 192,
+          "completion_limit": 2,
+          "generated_token_limit": 4096,
+          "session_limit_s": 3000
+        }
+      },
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "field_dropped": false,
+      "hop": "child_environment",
+      "required_fields_present": true
+    },
+    {
+      "authority_fields": {
+        "episode_scope": {
+          "episode_id": "r11l:direct_selfparse",
+          "game": "r11l"
+        },
+        "issuer_record": {
+          "child_can_broaden": false,
+          "child_can_issue": false,
+          "child_can_refresh": false,
+          "device_uuid": "GPU-exp7318-cpu-fixture",
+          "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+          "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+          "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+          "owner_pid": 492042,
+          "owner_pid_start_ticks": 174835589,
+          "task_id": "exp7318-arc-authority"
+        },
+        "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+        "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+        "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+        "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+        "model_identity": {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+          "quantization": "Q4_K_M"
+        },
+        "resource_bounds": {
+          "action_limit": 192,
+          "completion_limit": 2,
+          "generated_token_limit": 4096,
+          "session_limit_s": 3000
+        }
+      },
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "field_dropped": false,
+      "hop": "episode_environment",
+      "required_fields_present": true
+    },
+    {
+      "authority_fields": {
+        "episode_scope": {
+          "episode_id": "r11l:direct_selfparse",
+          "game": "r11l"
+        },
+        "issuer_record": {
+          "child_can_broaden": false,
+          "child_can_issue": false,
+          "child_can_refresh": false,
+          "device_uuid": "GPU-exp7318-cpu-fixture",
+          "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+          "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+          "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+          "owner_pid": 492042,
+          "owner_pid_start_ticks": 174835589,
+          "task_id": "exp7318-arc-authority"
+        },
+        "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+        "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+        "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+        "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+        "model_identity": {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+          "quantization": "Q4_K_M"
+        },
+        "resource_bounds": {
+          "action_limit": 192,
+          "completion_limit": 2,
+          "generated_token_limit": 4096,
+          "session_limit_s": 3000
+        }
+      },
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "field_dropped": false,
+      "hop": "E3AgentPolicy.proposer",
+      "required_fields_present": true
+    },
+    {
+      "authority_fields": {
+        "episode_scope": {
+          "episode_id": "r11l:direct_selfparse",
+          "game": "r11l"
+        },
+        "issuer_record": {
+          "child_can_broaden": false,
+          "child_can_issue": false,
+          "child_can_refresh": false,
+          "device_uuid": "GPU-exp7318-cpu-fixture",
+          "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+          "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+          "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+          "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+          "owner_pid": 492042,
+          "owner_pid_start_ticks": 174835589,
+          "task_id": "exp7318-arc-authority"
+        },
+        "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+        "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+        "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+        "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+        "model_identity": {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+          "quantization": "Q4_K_M"
+        },
+        "resource_bounds": {
+          "action_limit": 192,
+          "completion_limit": 2,
+          "generated_token_limit": 4096,
+          "session_limit_s": 3000
+        }
+      },
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "field_dropped": false,
+      "hop": "arc_eval_provenance_caller",
+      "required_fields_present": true
+    }
+  ],
+  "denial_control_rows": [
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "missing",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "missing_authority",
+      "unit": "missing"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "expired",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_expired",
+      "unit": "expired"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "tampered",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_hash_mismatch",
+      "unit": "tampered"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_owner",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_owner",
+      "unit": "wrong_owner"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_game",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_game",
+      "unit": "wrong_game"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_model",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_model_identity",
+      "unit": "wrong_model"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "replayed",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_replayed",
+      "unit": "replayed"
+    },
+    {
+      "abstentions": 0,
+      "allowed": true,
+      "arm": "authority_denial_control",
+      "case": "valid",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": false,
+      "disposition": "complete",
+      "failures": [
+        "allowed"
+      ],
+      "generation_count": 0,
+      "lease_fields": {
+        "lease_checked_at": "2026-09-15T07:17:36.406950+00:00",
+        "lease_expires_at": "2026-09-15T07:18:36.406950+00:00",
+        "lease_hash": "sha256:e6aa63f0a121e44243fa949774b2fbeda34edd22610b48e44f4880eba8856a2a",
+        "lease_id": "lease:f4657a0fdc07e329ae44813f8679798cad94d5370875a575d5d1172171c68d03",
+        "lease_issued_at": "2026-09-15T07:17:36.406950+00:00"
+      },
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": false,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "allowed",
+      "unit": "valid"
+    }
+  ],
+  "duration_s": 74.94452640390955,
+  "ended_at_utc": "2026-09-15T07:18:51.145630+00:00",
+  "execution_venue": "host",
+  "experiment_id": "exp7318-arc-authority",
+  "field_principles": {
+    "MODEL_SPECS": "List only models executed by this invocation.",
+    "acceptance_gate_results": "Retain expected, observed, pass, and principle per gate.",
+    "arc_authority_ready_score": "Require the real handoff and every denial control.",
+    "authority_handoff_rows": "Show the same grant at each issuer-to-caller hop.",
+    "denial_control_rows": "Show invalid grants remain rejected.",
+    "duration_s": "Use measured monotonic elapsed time without padding.",
+    "ended_at_utc": "Record when terminal construction ended.",
+    "execution_venue": "This task executes on the host.",
+    "experiment_id": "Bind the receipt to the authority repair task.",
+    "field_principles": "Explain why every top-level field exists.",
+    "gate_check_summary": "A block names the exact upstream field and comparison.",
+    "honest_verdict": "State the terminal mechanism finding with the required prefix.",
+    "inference_substrate": "Describe the CPU-only mechanism checks that ran.",
+    "inference_substrate_class": "Use the recognized class for the actual computation.",
+    "invocation_counts": "Separate every current load and generation disposition.",
+    "live_entrypoint_receipt": "Hash the real launcher, child environment, and caller.",
+    "milestone": "Bind the receipt to milestone 2026.09.643.",
+    "model_invoked": "Any attempted current load or generation must set this true.",
+    "phase_spans": "Retain disjoint measured phases and completed units.",
+    "preconditions_checked": "Authenticate required inputs and preserve exact failures.",
+    "random_seed": "Freeze separate development and evaluation seeds before outcomes.",
+    "repository_health": "Keep unrelated suite failures separate from affected checks.",
+    "reproducibility_checksum": "Bind code, inputs, settings, and raw evidence.",
+    "rows": "Keep every mechanism and control unit with costs and failures.",
+    "run_date": "Use the directed execution date and retain actual UTC bounds.",
+    "sample_size_budget": "Freeze planned and observed control counts and stopping rule.",
+    "schema": "Version the artifact while keeping ordinary top-level values.",
+    "source_artifact_hashes": "Authenticate producers without treating history as readiness.",
+    "started_at_utc": "Record when current CPU work started.",
+    "status": "Publish only a terminal complete, blocked, or disqualified state.",
+    "validation_receipts": "Keep exact commands, exits, elapsed times, and log hashes.",
+    "verdict_class": "Use the closed verdict vocabulary.",
+    "verifier_is_oracle": "Shared execution authority forbids a positive scientific class."
+  },
+  "gate_check_summary": {
+    "all_passed": true,
+    "failed_count": 0,
+    "first_failure": null
+  },
+  "honest_verdict": "complete_arc_authority_handoff_mechanism_ready_no_efficacy_claim",
+  "inference_substrate": "cpu_exact_solver_or_simulator",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "live_entrypoint_receipt": {
+    "bounded_runtime_environment": {
+      "action_limit": 192,
+      "completion_limit": 2,
+      "generated_token_limit": 4096,
+      "session_limit_s": 3000
+    },
+    "child_entrypoint": "carnot.experiment_7263_v639_arc_live.run_live_session",
+    "entrypoint": "carnot.experiment_7263_v639_arc_live.run_child_with_lease",
+    "environment_function": "carnot.experiment_7318_v643_arc_authority.authority_bundle_environment",
+    "episode_authority": {
+      "authority_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "episode_scope": {
+        "episode_id": "r11l:direct_selfparse",
+        "game": "r11l"
+      },
+      "expires_monotonic_ns": 1748417237577469,
+      "issued_monotonic_ns": 1748357237577469,
+      "issuer_record": {
+        "child_can_broaden": false,
+        "child_can_issue": false,
+        "child_can_refresh": false,
+        "device_uuid": "GPU-exp7318-cpu-fixture",
+        "issuer_kind": "current_kernel_backed_gpu_lease_owner",
+        "journal_checksum_before_issue": "sha256:09871082aafc4e06fd1aa35740ae040af0903d4dcdf0d12904c3dacc4b8ab23d",
+        "journal_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/gpu-lease/device-bd6ea3cd9c1e4a817e2ec7d32cfa15c56cbaf02085b644c5d8b8e976076b11cb.journal.json",
+        "journal_schema": "carnot.gpu_lease_phase_journal.v1",
+        "owner_pid": 492042,
+        "owner_pid_start_ticks": 174835589,
+        "task_id": "exp7318-arc-authority"
+      },
+      "lease_checked_at": "2026-09-15T07:17:37.002586+00:00",
+      "lease_expires_at": "2026-09-15T07:18:37.002586+00:00",
+      "lease_hash": "sha256:8bcb9a8857f8a300a1c33a7fc6bfbba90a7fbdb5150b495c5a13920e513d2f62",
+      "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+      "lease_issued_at": "2026-09-15T07:17:37.002586+00:00",
+      "model_identity": {
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_hash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "model_path": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+        "quantization": "Q4_K_M"
+      },
+      "nonce": "exp7318-child-nonce",
+      "nonce_ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/nonce-ledgers/child",
+      "resource_bounds": {
+        "action_limit": 192,
+        "completion_limit": 2,
+        "generated_token_limit": 4096,
+        "session_limit_s": 3000
+      },
+      "schema": "carnot.arc.eval_episode_authority.v1"
+    },
+    "episode_environment_function": "carnot.experiment_7318_v643_arc_authority.select_episode_authority",
+    "expiry_controls": {
+      "expired_after_call": {
+        "allowed": false,
+        "provenance_accepted": false,
+        "reason": "authority_expired"
+      },
+      "missing_before_launch": {
+        "allowed": false,
+        "model_load_count": 0,
+        "reason": "missing_authority_bundle"
+      },
+      "valid_before_call": {
+        "allowed": true,
+        "reason": "allowed"
+      }
+    },
+    "file_hashes": {
+      "environment_construction": {
+        "path": "python/carnot/experiment_7318_v643_arc_authority.py",
+        "sha256": "sha256:9570f02871494af9ddd238acc79d07c0154c7b5ee33f3629b1e12679badcdae7"
+      },
+      "live_launcher": {
+        "path": "python/carnot/experiment_7263_v639_arc_live.py",
+        "sha256": "sha256:826fc5b7be776cd4fb1da9abd0eff73882684de353aa65f6e2db8e14365cd1cf"
+      },
+      "provenance_construction": {
+        "path": "python/carnot/agentic/arc_eval_provenance.py",
+        "sha256": "sha256:70a8a778c3c4428c201ef8836397946ffdd7b457c18327b4999160910d2c62f6"
+      },
+      "scored_caller": {
+        "path": "scripts/arc_leaderboard_eval.py",
+        "sha256": "sha256:fa18c7d76acecc08870b571ca589a779b6d5c151d548653cb9d849e7cf4d75ed"
+      }
+    },
+    "former_field_drop_location": "carnot.experiment_7263_v639_arc_live.run_child_with_lease:child_environment_before_subprocess",
+    "gpu_resource_ownership": {
+      "acquired_monotonic_ns": 1748356846162158,
+      "argv_digest": "sha256:a53ed97da9a65a9b655c0fc9f54590cfdda3fc2a253a05daddf04ffe9a71e5e8",
+      "device_uuid": "GPU-exp7318-cpu-fixture",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf",
+      "expires_monotonic_ns": 1748476846162158,
+      "lease_id": "lease:12460731a7537d63c143c19aee0f2baf676dc02cd4a178d14d3dbcc1a2444908",
+      "pid": 492042,
+      "pid_start_ticks": 174835589,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7318-arc-authority",
+      "token_digest": "sha256:bdf9fa194f7cea113a6971a82bdc4d860ce2373a5afda3539ba0e72151ca212e",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "production_defaults_changed": false,
+    "provenance_builder": "carnot.agentic.arc_eval_provenance.build_arc_eval_provenance_for_policy",
+    "provenance_caller": "scripts.arc_leaderboard_eval.run_game",
+    "tested_child_command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-u",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7318_v643_arc_authority.py",
+      "--role",
+      "authority-child",
+      "--date",
+      "20260915",
+      "--episode-id",
+      "r11l:direct_selfparse",
+      "--expected-game",
+      "r11l",
+      "--expected-model-json",
+      "{\"hf_id\": \"unsloth/Qwen3.8-27B-GGUF\", \"model_hash\": \"sha256:7777777777777777777777777777777777777777777777777777777777777777\", \"model_path\": \"/fixture/unsloth-Qwen3.8-27B-Q4_K_M.gguf\", \"quantization\": \"Q4_K_M\"}",
+      "--authority-output",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/handoff/child-receipt.json"
+    ]
+  },
+  "milestone": "2026.09.643",
+  "model_invoked": false,
+  "phase_spans": [
+    {
+      "checkpoint_boundary": "authority_controls_complete",
+      "ended_monotonic_s": 1748359.549242726,
+      "pending_operations": [],
+      "phase": "authority_panel",
+      "started_monotonic_s": 1748356.469222644,
+      "units": 9
+    },
+    {
+      "checkpoint_boundary": "e3_controls_complete",
+      "ended_monotonic_s": 1748363.605615218,
+      "pending_operations": [],
+      "phase": "e3_cpu_conformance",
+      "started_monotonic_s": 1748359.54937776,
+      "units": 3
+    },
+    {
+      "checkpoint_boundary": "full_python_suite_complete",
+      "ended_monotonic_s": 1748363.606163958,
+      "pending_operations": [],
+      "phase": "full_python_suite",
+      "started_monotonic_s": 1748363.605666003,
+      "units": 1
+    },
+    {
+      "checkpoint_boundary": "affected_checks_complete",
+      "ended_monotonic_s": 1748430.774234494,
+      "pending_operations": [],
+      "phase": "scoped_validation",
+      "started_monotonic_s": 1748363.606180409,
+      "units": 10
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "research-references.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/experiment_7305_v642_arc_selfparse.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/experiment_7280_v640_arc_live.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/agentic/arc_eval_provenance.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/experiment_6973_lease_aware_gguf_runtime.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/gpu_lease_phase_journal.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "results/experiment_7304_v642_arc_receipt.json"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "results/experiment_7305_v642_arc_selfparse.json"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "tests/python/test_arc_eval_provenance_contract_20260905.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "tests/python/test_arc_induction_state_persistence.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "tests/python/test_arc_tool_grammar_transport.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "python/carnot/experiment_7318_v643_arc_authority.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "scripts/experiments/experiment_7318_v643_arc_authority.py"
+    },
+    {
+      "artifact_field": "exists",
+      "check": "required_input",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The task cannot authenticate a missing source or specification.",
+      "upstream": "tests/python/test_experiment_7318_v643_arc_authority.py"
+    },
+    {
+      "artifact_field": "current_task_rejected",
+      "check": "exclusion_manifest",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "A quarantined or retired current task cannot report readiness.",
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "REQ-ARC-WMTE-7318",
+      "check": "driving_capability",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Implementation must remain anchored to its named requirement.",
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "issuer_available",
+      "check": "current_authorized_issuer",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Only the current kernel-lock owner can record an episode grant.",
+      "upstream": "gpu_lease_phase_journal.GpuLease"
+    }
+  ],
+  "random_seed": {
+    "development": 731820260915,
+    "independent_evaluation": 1731820260915
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "current_full_suite_passed": false,
+    "historical_failures": [
+      {
+        "command": ".venv/bin/pytest -o addopts= tests/python -q --no-cov -n 0",
+        "exit_code": 2,
+        "log_path": "results/raw/experiment_7289_v641_arc_boundary/validation/04_full_python_suite.log",
+        "log_sha256": "sha256:6016a29aa53fd835cbaf1857e1f59fb2f598258edabb3b5d7f39b6ed16763d80",
+        "resolved": false,
+        "source_experiment": "exp7289-arc-boundary"
+      },
+      {
+        "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+        "exit_code": -15,
+        "log_path": "results/raw/experiment_7318_v643_arc_authority/full-suite/00_full_python_suite.log",
+        "log_sha256": "sha256:24b03ff04212dfa77485026bd643798154040359e9f9c04b33a6cd0857a821f6",
+        "observed_at_run_date": "20260915",
+        "output_tail": "..................................................................... [ 10%]\n.....FFFFFF.FFFF.FFFF.FFF.FF......F.FFFFFFFFF..FF........F.............. [ 10%]\n.............F..................F.............FF........................ [ 10%]\n........................................................................ [ 10%]\n................................................FF...................... [ 10%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n.............F.......................................................... [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n.........................................F.............................. [ 12%]\n.....................................................................s.. [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n............F.FFFF.F...................................F................ [ 12%]\n..............FF.F...................................................... [ 12%]\n..............................................F......................... [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 14%]\n........................./home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140002410739616, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140168859805664, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139960988845168, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+        "resolved": false,
+        "source_experiment": "exp7318-arc-authority",
+        "timed_out": false
+      }
+    ],
+    "incident_open": true,
+    "status": "degraded_open"
+  },
+  "reproducibility_checksum": "sha256:4e24127b6d8be0bb2e5862166c4b5e3bf6b1d102e93c608656ff3d2fe3bdc55e",
+  "rows": [
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "missing",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "missing_authority",
+      "unit": "missing"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "expired",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_expired",
+      "unit": "expired"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "tampered",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_hash_mismatch",
+      "unit": "tampered"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_owner",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_owner",
+      "unit": "wrong_owner"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_game",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_game",
+      "unit": "wrong_game"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "wrong_model",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "wrong_model_identity",
+      "unit": "wrong_model"
+    },
+    {
+      "abstentions": 0,
+      "allowed": false,
+      "arm": "authority_denial_control",
+      "case": "replayed",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": true,
+      "disposition": "complete",
+      "failures": [],
+      "generation_count": 0,
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "authority_replayed",
+      "unit": "replayed"
+    },
+    {
+      "abstentions": 0,
+      "allowed": true,
+      "arm": "authority_denial_control",
+      "case": "valid",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "denied_before_model_load": false,
+      "disposition": "complete",
+      "failures": [
+        "allowed"
+      ],
+      "generation_count": 0,
+      "lease_fields": {
+        "lease_checked_at": "2026-09-15T07:17:36.406950+00:00",
+        "lease_expires_at": "2026-09-15T07:18:36.406950+00:00",
+        "lease_hash": "sha256:e6aa63f0a121e44243fa949774b2fbeda34edd22610b48e44f4880eba8856a2a",
+        "lease_id": "lease:f4657a0fdc07e329ae44813f8679798cad94d5370875a575d5d1172171c68d03",
+        "lease_issued_at": "2026-09-15T07:17:36.406950+00:00"
+      },
+      "metrics": {
+        "generation_count": 0,
+        "mechanism_passed": false,
+        "model_load_count": 0
+      },
+      "model_load_count": 0,
+      "reason": "allowed",
+      "unit": "valid"
+    },
+    {
+      "abstentions": 0,
+      "arm": "e3_cpu_conformance",
+      "case": "tool_result_to_action",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 1
+      },
+      "disposition": "complete",
+      "environment_action": {
+        "action": 1,
+        "data": null
+      },
+      "failures": [],
+      "http_completion_count": 2,
+      "later_request_contains_first_tool_result": true,
+      "metrics": {
+        "generation_count": 2,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "passed": true,
+      "plan_installed": true,
+      "policy_class": "E3AgentPolicy",
+      "subsequent_environment_action": true,
+      "successful_tool_result_count": 2,
+      "tool_dispatch_count": 2,
+      "unit": "tool_result_to_action"
+    },
+    {
+      "abstentions": 0,
+      "arm": "e3_cpu_conformance",
+      "case": "no_tool_needed",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 1
+      },
+      "disposition": "complete",
+      "environment_action": {
+        "action": 1,
+        "data": null
+      },
+      "failures": [],
+      "http_completion_count": 1,
+      "later_request_contains_first_tool_result": false,
+      "metrics": {
+        "generation_count": 1,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "passed": true,
+      "plan_installed": true,
+      "policy_class": "E3AgentPolicy",
+      "subsequent_environment_action": true,
+      "successful_tool_result_count": 1,
+      "tool_dispatch_count": 1,
+      "unit": "no_tool_needed"
+    },
+    {
+      "abstentions": 0,
+      "arm": "e3_cpu_conformance",
+      "case": "malformed_tool",
+      "censored": false,
+      "costs": {
+        "current_model_generations": 0,
+        "current_model_loads": 0,
+        "environment_actions": 0
+      },
+      "disposition": "complete",
+      "failures": [],
+      "http_completion_count": 1,
+      "later_request_contains_first_tool_result": false,
+      "metrics": {
+        "generation_count": 1,
+        "mechanism_passed": true,
+        "model_load_count": 0
+      },
+      "passed": true,
+      "plan_installed": false,
+      "policy_class": "E3AgentPolicy",
+      "subsequent_environment_action": false,
+      "successful_tool_result_count": 0,
+      "tool_dispatch_count": 0,
+      "unit": "malformed_tool"
+    }
+  ],
+  "run_date": "20260915",
+  "sample_size_budget": {
+    "attempted": 11,
+    "censored": 0,
+    "complete": 11,
+    "planned": 11,
+    "stopping_rule": "one valid grant, seven denial controls, and three fixed E3 mechanism cases"
+  },
+  "schema": "carnot.experiment_7318.v643.arc_authority.v1",
+  "source_artifact_hashes": {
+    "CLAUDE.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4"
+    },
+    "CODEX.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:3309dc72292ee999985e62db4c6ff670b2c04ddaf139998e3d01ea9ef6a51d63"
+    },
+    "ops/e2e-test-plan.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "python/carnot/agentic/arc_eval_provenance.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:70a8a778c3c4428c201ef8836397946ffdd7b457c18327b4999160910d2c62f6"
+    },
+    "python/carnot/experiment_6973_lease_aware_gguf_runtime.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:0467f03c5fce4330f3d13dea37d62460c4547a6a207b97d744fb250f4a527deb"
+    },
+    "python/carnot/experiment_7263_v639_arc_live.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:826fc5b7be776cd4fb1da9abd0eff73882684de353aa65f6e2db8e14365cd1cf"
+    },
+    "python/carnot/experiment_7280_v640_arc_live.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:ddbd328992a647f6da99fe9c2f336aa3ec1ee233a4ec7408501ab12dbc5404ed"
+    },
+    "python/carnot/experiment_7305_v642_arc_selfparse.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:414c7e26e1ab27f7f5e4da57d09def8aac9d719f6fe5bf46fa9770dede60ec7c"
+    },
+    "python/carnot/experiment_7318_v643_arc_authority.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:9570f02871494af9ddd238acc79d07c0154c7b5ee33f3629b1e12679badcdae7"
+    },
+    "python/carnot/gpu_lease_phase_journal.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:4308c325d2489c64503b9cbdbddc03ef3f02f422f746b77bf1a1ced461fbfa08"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "research-references.md": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:989efe99447326ab05658b5de9a7cd91589063b0c9970cc6be4a95141ffe1d3d"
+    },
+    "results/experiment_7304_v642_arc_receipt.json": {
+      "authorizes_readiness": false,
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:1220c1bd18340a151287037e6619dcd51614f983b549afc6434dde19f0e92b55"
+    },
+    "results/experiment_7305_v642_arc_selfparse.json": {
+      "authorizes_readiness": false,
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:66841c8f724eabc397fab22c0643f61b24ccfa9dae8d81e8c7efd6fd92e43d14"
+    },
+    "scripts/arc_leaderboard_eval.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:fa18c7d76acecc08870b571ca589a779b6d5c151d548653cb9d849e7cf4d75ed"
+    },
+    "scripts/experiments/experiment_7318_v643_arc_authority.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:c761e703ef70e2e44b398d5b6bb92a665e0a03b14e04d625b0ac1f5d9296e60a"
+    },
+    "tests/python/test_arc_eval_provenance_contract_20260905.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc"
+    },
+    "tests/python/test_arc_induction_state_persistence.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:566dbf6f4f2a2b8b71df4bfa96ac79cb82ffd3fd1053eafc649751f9d0346a64"
+    },
+    "tests/python/test_arc_tool_grammar_transport.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:1e050874107cfc3f23cd74e4d589f13a377e9c216ab3ee4ffa8cb0eb89a66704"
+    },
+    "tests/python/test_experiment_7318_v643_arc_authority.py": {
+      "authorizes_readiness": true,
+      "role": "current_source_or_spec",
+      "sha256": "sha256:6d8dfc7ce6a820f81ec1c1053024b8224f6fc7e9ebe1504392de81d672a43b65"
+    }
+  },
+  "started_at_utc": "2026-09-15T07:17:36.201175+00:00",
+  "status": "complete",
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "current_required_check": false,
+      "duration_s": 526.1023703310639,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/full-suite/00_full_python_suite.log",
+      "log_sha256": "sha256:24b03ff04212dfa77485026bd643798154040359e9f9c04b33a6cd0857a821f6",
+      "name": "full_python_suite",
+      "output_tail": "..................................................................... [ 10%]\n.....FFFFFF.FFFF.FFFF.FFF.FF......F.FFFFFFFFF..FF........F.............. [ 10%]\n.............F..................F.............FF........................ [ 10%]\n........................................................................ [ 10%]\n................................................FF...................... [ 10%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 11%]\n.............F.......................................................... [ 11%]\n........................................................................ [ 11%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n.........................................F.............................. [ 12%]\n.....................................................................s.. [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n........................................................................ [ 12%]\n............F.FFFF.F...................................F................ [ 12%]\n..............FF.F...................................................... [ 12%]\n..............................................F......................... [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 13%]\n........................................................................ [ 14%]\n........................./home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140002410739616, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140168859805664, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139960988845168, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "reused_as_repository_health_observation": true,
+      "scope": "repository_python_suite_required_by_exp7318",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7318_v643_arc_authority",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7318_v643_arc_authority"
+      ],
+      "duration_s": 0.4512068049516529,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/00_worktree_imports.log",
+      "log_sha256": "sha256:665ed6a87420accac29a7290e072df0b2dd63cc51b8f9a9c1a83f0df85c4dd6c",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7318_v643_arc_authority\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7318_v643_arc_authority.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7318_v643_arc_authority": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7318_v643_arc_authority.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7318-validation-zc5tk6h8/focused tests/python/test_experiment_7318_v643_arc_authority.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_7263_v639_arc_live.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7318-validation-zc5tk6h8/focused",
+        "tests/python/test_experiment_7318_v643_arc_authority.py",
+        "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7263_v639_arc_live.py",
+        "-q"
+      ],
+      "duration_s": 26.52506971801631,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/01_focused_pytest.log",
+      "log_sha256": "sha256:938661f0332124bf6a346fbb3626c50b37b5f4f3df7a87128ea9a4a4ef66c189",
+      "name": "focused_pytest",
+      "output_tail": "........................................................................ [ 50%]\n........................................................................ [100%]\n144 passed in 23.68s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7318-validation-zc5tk6h8/.coverage '--include=*/experiment_7318_v643_arc_authority.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7318-validation-zc5tk6h8/coverage tests/python/test_experiment_7318_v643_arc_authority.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_7263_v639_arc_live.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7318-validation-zc5tk6h8/.coverage",
+        "--include=*/experiment_7318_v643_arc_authority.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7318-validation-zc5tk6h8/coverage",
+        "tests/python/test_experiment_7318_v643_arc_authority.py",
+        "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7263_v639_arc_live.py",
+        "-q"
+      ],
+      "duration_s": 36.633704722858965,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/02_changed_module_coverage.log",
+      "log_sha256": "sha256:ed5a1a3c7e2e191edc1e343fdf518e10f1a87378532f98a7f9b85f738ff12c26",
+      "name": "changed_module_coverage",
+      "output_tail": "........................................................................ [ 50%]\n........................................................................ [100%]\n144 passed in 32.82s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7318-validation-zc5tk6h8/.coverage '--include=*/experiment_7318_v643_arc_authority.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7318-validation-zc5tk6h8/.coverage",
+        "--include=*/experiment_7318_v643_arc_authority.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.10944255301728845,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:ee7a10a71f7cc2c4bfa9e45bee80188e42a8ee95ac084973be526e0ef9907847",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                  Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------\npython/carnot/experiment_7318_v643_arc_authority.py     430      0   100%\n-----------------------------------------------------------------------------------\nTOTAL                                                   430      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7318_v643_arc_authority.py scripts/experiments/experiment_7318_v643_arc_authority.py python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_7263_v639_arc_live.py python/carnot/agentic/arc_eval_provenance.py scripts/arc_leaderboard_eval.py tests/python/test_experiment_7318_v643_arc_authority.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_7263_v639_arc_live.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7318_v643_arc_authority.py",
+        "scripts/experiments/experiment_7318_v643_arc_authority.py",
+        "python/carnot/gpu_lease_phase_journal.py",
+        "python/carnot/experiment_7263_v639_arc_live.py",
+        "python/carnot/agentic/arc_eval_provenance.py",
+        "scripts/arc_leaderboard_eval.py",
+        "tests/python/test_experiment_7318_v643_arc_authority.py",
+        "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7263_v639_arc_live.py"
+      ],
+      "duration_s": 0.012119042919948697,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7318_v643_arc_authority.py scripts/experiments/experiment_7318_v643_arc_authority.py python/carnot/gpu_lease_phase_journal.py python/carnot/experiment_7263_v639_arc_live.py python/carnot/agentic/arc_eval_provenance.py scripts/arc_leaderboard_eval.py tests/python/test_experiment_7318_v643_arc_authority.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_7263_v639_arc_live.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7318_v643_arc_authority.py",
+        "scripts/experiments/experiment_7318_v643_arc_authority.py",
+        "python/carnot/gpu_lease_phase_journal.py",
+        "python/carnot/experiment_7263_v639_arc_live.py",
+        "python/carnot/agentic/arc_eval_provenance.py",
+        "scripts/arc_leaderboard_eval.py",
+        "tests/python/test_experiment_7318_v643_arc_authority.py",
+        "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7263_v639_arc_live.py"
+      ],
+      "duration_s": 0.01161629892885685,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/05_ruff_format.log",
+      "log_sha256": "sha256:cfe5c6461b42a90595a492aed11f2c8e6eb98b7c4caf2cc9f47e3333185e3f33",
+      "name": "ruff_format",
+      "output_tail": "12 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7318_v643_arc_authority.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7318_v643_arc_authority.py"
+      ],
+      "duration_s": 0.20877982187084854,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/06_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7318_v643_arc_authority.py tests/python/test_arc_eval_provenance_contract_20260905.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_grammar_transport.py tests/python/test_gpu_lease_phase_journal.py tests/python/test_experiment_7263_v639_arc_live.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7318_v643_arc_authority.py",
+        "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "tests/python/test_gpu_lease_phase_journal.py",
+        "tests/python/test_experiment_7263_v639_arc_live.py"
+      ],
+      "duration_s": 0.023463079938665032,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/validation/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7318-e2e009-llm-off.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7318-e2e009-llm-off.json"
+      ],
+      "duration_s": 3.188442287966609,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/environment-smoke/00_e2e_009_llm_off_environment_smoke.log",
+      "log_sha256": "sha256:6c7566d71e0a047df75083ffa9cdc656c96462aca0b5489e98285e5c7c480734",
+      "name": "e2e_009_llm_off_environment_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-15 03:18:49 | INFO | Created new scorecard: 6d884232-ad8b-4cce-ba81-9a36197ff8ec\n2026-09-15 03:18:49 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-15 03:18:49 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7318-e2e009-llm-off.json\n",
+      "passed": true,
+      "scope": "E2E-009 prescribed LLM-off environment smoke",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.5513565230648965,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/terminal-validation/00_terminal_candidate_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "terminal_candidate_adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "measured terminal candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7318_v643_arc_authority/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.03442212590016425,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7318_v643_arc_authority/terminal-validation/01_terminal_candidate_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "terminal_candidate_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "measured terminal candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
