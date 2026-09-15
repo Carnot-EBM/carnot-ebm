@@ -16,11 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (92 modul
 
 ## Hostile LLM review
 
-**TL;DR: NO RECENT SOLVES TO CREDIT OR CLASSIFY.** Reachability lint passes, but proves only modules are callable—not that hidden games are solved through live self-discovery.
+**TL;DR: UNCLEAR — zero recent solve artifacts means no demonstrated self-discovery advance; reachability alone proves nothing about provenance.**
 
-Per-artifact: none (`0` artifacts in the last 7 days).
+Per-artifact: none in the last seven days.
 
-**Recommended action:** Produce live-run artifacts recording the agent’s observations, attempts, runtime deductions, and resulting solve. Include provenance sufficient to rule out source inspection, offline ground-truth search, and hand-built per-game logic.
+**Recommended action:** Produce live-entrypoint run artifacts recording the agent’s attempts, runtime observations, model updates, and eventual solve. Reject claims lacking this provenance.
 
-**Pattern watch:** No demonstrated outer-loop drift this period, but also no evidence of capability advancement. Do not treat “92 modules reachable” as proof that the live agent autonomously discovers solutions.
+**Pattern watch:** No current outer-loop evidence, but the empty artifact set prevents auditing. “All modules reachable” must not be mistaken for proof that the live agent independently discovered hidden-game solutions.
 

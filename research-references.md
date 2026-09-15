@@ -44534,3 +44534,144 @@ Do not replace another storage engine before evaluating the remaining cost
 envelope. Exp7300 preserves KV260 fabric graduation and PolarFire CPU dispatch.
 GateMate still lacks a changed-physical-state receipt. Preserve all three
 dispositions without another unchanged hardware probe.
+## V643 planning research — 2026-09-15
+
+This entry precedes the V643 experiment design. External findings motivate
+tests; they are not Carnot results. The archive currently ends at V641.
+V642 completion and findings come from its active roster, terminal artifacts,
+and conductor log. Its design document still describes V641.
+
+### Findings selected for adaptation
+
+- **Conservative Constraint Acquisition / Learn&Optimize**, Mohamed-Bachir
+  Belaid, submitted 2026-04-14,
+  [paper](https://arxiv.org/abs/2604.13283),
+  [full method](https://arxiv.org/html/2604.13283v1).
+  The method interleaves optimization with binary feasibility queries.
+  Its constraint language covers pairwise separation and sliding-window
+  capacity. It is domain-specific. The authors distinguish main queries from
+  acquisition subqueries. Carnot adaptation: learn new constraint structure
+  across successive small plans under one stable, versioned executor. Charge
+  **every** oracle call, including localization, capacity probes, final checks,
+  and failed queries. Compare persistent learning with reset and exact-answer
+  caching. A changed version invalidates old authority. This tests Tier 2
+  constraint addition, not hidden-drift recovery or autonomous satellite control.
+- **Cascaded Batch Prompting**, Sho Hoshino and Peinan Zhang, submitted
+  2026-08-27, [paper](https://arxiv.org/abs/2608.27038).
+  Separating reasoning from symbol grounding is relevant to the existing
+  source/claim split. Use it as context for the unmeasured batch branch.
+  First repair that branch's validation launcher and measure its frozen
+  serial, joint-claim, and joint-direct arms. Do not add a fourth generation
+  stage before those costs are known.
+- **Efficient but Vulnerable: Benchmarking and Defending LLM Batch Prompting
+  Attack**, submitted 2025-03-18,
+  [paper](https://arxiv.org/abs/2503.15551), and **Safety in Batches?**,
+  submitted 2026-08-03, [paper](https://arxiv.org/abs/2608.02681).
+  These studies report interference between queries placed in one prompt.
+  Adapt the experimental concern to source verification: permute claim order,
+  replace one neighboring claim, inject unsupported neighboring instructions,
+  and measure collateral changes. These controls concern semantic isolation;
+  Carnot will not reproduce a broad safety benchmark.
+- **Repair, Not Improvement: Decomposing Constrained Decoding in Tool-Call
+  Abstention**, submitted 2026-08-14,
+  [paper](https://arxiv.org/abs/2608.13959).
+  Separate parseability, stop behavior, tool necessity, and downstream utility.
+  ARC transport success cannot substitute for a tool result consumed by a later
+  policy action. Keep a no-tool-needed control in the CPU handoff checks.
+- **Overcoming Over-Fitting in Constraint Acquisition via Query-Driven
+  Interactive Refinement**, submitted 2025-09-29,
+  [paper](https://arxiv.org/abs/2509.24489).
+  Candidate refinement and recovering valid substructures support testing
+  constraint addition with explicit uncertainty. A single rejected plan must
+  not license an arbitrary pairwise prohibition. Preserve compound-conflict
+  and unrepresentable-constraint controls.
+
+### Other requested research themes
+
+- **EBM verification/reasoning:** rechecked
+  [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) and its
+  [ICLR 2026 paper](https://openreview.net/pdf/608231a168a72d241775e5d1d28a092f5532becb.pdf).
+  Learned compatibility and inference-time minimization remain architectural
+  context. They do not certify a source translation. Rechecked
+  [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605), revised 2026-05-25.
+  Its function-space equivalence is not a correctness guarantee.
+- **Neural constraint satisfaction:**
+  [HardNet++, 2604.19669](https://arxiv.org/abs/2604.19669) enforces supplied
+  nonlinear constraints under regularity assumptions. It does not identify
+  missing constraints. Carnot's retired repair-stack scope stays closed.
+- **Ising ML and hardware sampling:**
+  [FPGA decomposition, 2602.15985](https://arxiv.org/abs/2602.15985) separates
+  decomposition work from an analog solver. Keep host, communication, and
+  evaluator costs separate. This external system is not Carnot's KV260.
+- **Hallucination mitigation:**
+  [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895)
+  and its [Hugging Face entry](https://huggingface.co/papers/2607.00895)
+  support span-level evidence and source-type controls. No detector training
+  or external-text scorer rerun is selected.
+- **KANs:**
+  [SparseKAN, 2608.00859](https://arxiv.org/abs/2608.00859) and its
+  [author repository](https://github.com/OSU-STARLAB/SparseKAN) compress basis
+  functions, neurons, and precision. Retain for a future useful learned
+  predictor. Exact acquired constraints need no new neural classifier here.
+- **Energy-guided generation:**
+  [ETS, 2601.21484](https://arxiv.org/abs/2601.21484) and
+  [energy-guided object decoding, 2507.07731](https://arxiv.org/abs/2507.07731)
+  were screened. Their domains and access requirements differ. No local GGUF
+  logit-steering capability or value is inferred.
+- **Continual learning:**
+  [AiGAS-dEVL-RC, 2504.05761](https://arxiv.org/abs/2504.05761) stores compact
+  memories for recurring drift; [SiameseDuo++, 2504.04613](https://arxiv.org/abs/2504.04613)
+  selects labels under memory and query budgets. Both motivate resource
+  accounting. Neither removes ambiguity before delayed feedback arrives.
+  Defer another drift-memory architecture after V642's recurrence regression.
+
+### Secondary-source access record
+
+- **OpenReview:** the EBT forum returned a browser challenge. The indexed ICLR
+  2026 PDF was readable. A separate ICLR 2026 submission,
+  [On the Emergence of Reasoning](https://openreview.net/pdf?id=bYkfHTcR1v),
+  treats intermediate reasoning as energy optimization. Submission status and
+  a conceptual interpretation do not establish a deployable Carnot mechanism.
+- **Semantic Scholar:** the Graph API citation request for EBT returned HTTP
+  429. Its [indexed record](https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b)
+  was discoverable. The same API request for ARM–EBM returned eight records
+  with no next-page token. This is a retrieved set, not an exhaustive census.
+  Followed two records to primary pages:
+  [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871) and
+  [False First Steps, 2602.02991](https://arxiv.org/abs/2602.02991).
+  Keep uncertainty and planning-failure controls; do not reopen retired scoring.
+- **Hugging Face Papers:** the grounding page above was readable. Feed presence
+  is discovery evidence, not independent validation.
+- **GitHub trending:** weekly
+  [Python](https://github.com/trending/python?since=weekly) and
+  [Rust](https://github.com/trending/rust?since=weekly) pages returned navigation
+  without usable ranked repository entries. No trending rank is claimed.
+  SparseKAN's author repository was checked directly.
+- **Extropic:** the [writing index](https://extropic.ai/writing) returned
+  navigation. The [Z1T report](https://extropic.ai/writing/z1t), dated
+  2026-09-04, was readable. It describes sparse probabilistic computation with
+  an FPGA companion. Its energy figures are vendor estimates. No local TSU
+  device, credentials, benchmark, or purchase is established.
+- **Logical Intelligence:** the [Kona 1.0 page](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  describes a constraint-enforcement layer. The reviewed page supplies no
+  compatible local checkpoint or reproducible training recipe. Retain product
+  context only.
+
+### Local evidence that changes the next plan
+
+Exp7306 has `batch_fixture_ready_score=1` but is **disqualified** because its
+launcher still runs `full_python_suite`. Exp7307 rejects that terminal class
+and invokes the same unscoped suite. Reuse Exp7303's scoped runner explicitly;
+changing prose alone did not fix the actual call path. Preserve old artifacts.
+
+Exp7305 completed two generations and zero environment actions. Its episode
+error names missing `lease_id`, `lease_hash`, `lease_issued_at`, and
+`lease_expires_at`. This is a handoff failure, not evidence of absent tool
+demand. Its authenticated cumulative ledger already contains ten historical
+inductions; do not restart that count or treat them as current work.
+
+Exp7311 reduced some future errors but failed recurrence and false-acceptance
+comparisons. Exp7312 retired the longest-consistent-suffix factor mechanism.
+Exp7313 found no justified same-acknowledgment storage implementation. Carry
+those boundaries forward. Exp7314 preserves KV260 fabric graduation, PolarFire
+CPU dispatch, and GateMate's missing physical-state receipt.
