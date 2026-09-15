@@ -43092,3 +43092,113 @@ publish only a cold-valid terminal result.
 **When** the Exp7303 runner and terminal artifact checks complete
 **Then** every command retains its exact scope, exit, elapsed time, and log hash
 **And** any affected failure sets readiness to zero and disqualifies the result.
+
+### REQ-VERIFY-7321: V643 Batch Measurement SHALL Compare Frozen Held-Out Arms
+
+Exp7321 SHALL authenticate the current Exp7317 harness and Exp7320 canary
+artifacts before model work. Each artifact SHALL have readiness one. Neither
+artifact SHALL be missing, quarantined, blocked, partial, or disqualified. A
+failed dependency SHALL produce a blocked terminal result before model load.
+The result SHALL keep the exact check, upstream, artifact field, expected
+value, and observed value.
+
+The measurement SHALL use all sixteen sealed held-out source groups. Each group
+SHALL contain two source versions and four distinct claims per version. It
+SHALL run the serial versioned verifier, batched versioned verifier, and batched
+warm-prefix direct arms for every version. The frozen schedule SHALL contain
+384 claim-arm rows, 256 calls, and at most 122,880 allocated output tokens. It
+SHALL preserve the sealed balanced arm order and neighboring-claim rotations.
+It SHALL not retry, repair, tune, replace the model, increase the sample, or
+narrow the primary panel after outcomes are visible.
+
+The prediction process SHALL read public held-out input only. It SHALL seal all
+current predictions before a separate evaluator process receives labels. Every
+row SHALL keep its decision, evidence spans, support state, false accept,
+failure, abstention, truncation, censoring, and allocated share of full cost. A
+failed batch SHALL contribute failed rows for every affected claim.
+
+The live path SHALL resolve `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model()` at Q4_K_M. It SHALL use the embedded GGUF tokenizer and
+chat template. It SHALL use an authenticated native llama.cpp CUDA server with
+`CARNOT_FORCE_LIVE=1` on one available owned GPU. It SHALL record exact model,
+runner, process, lease, offload, request, token, and task-window evidence. A
+cache miss SHALL block and SHALL not authorize model substitution. The model
+session SHALL stop at 3,000 seconds.
+
+The result SHALL charge initialization, source calls, claim calls, parsing,
+exact verification, source invalidation, failed calls, and serialization. It
+SHALL report cold wall time, warm wall time, summed call time, and shared
+initialization separately. Joint direct SHALL receive the same native prefix
+cache opportunity. Shared initialization SHALL not be counted twice.
+
+Paired intervals SHALL resample sixteen source groups with 10,000 draws and the
+sealed evaluation seed. The frozen value contract SHALL require accuracy and
+coverage lower bounds of at least -0.02 against joint direct. False accepts
+SHALL not increase against serial or joint direct. Batched verifier full-cost
+speedup lower bounds SHALL be at least 1.5 against both controls. Semantic
+mismatches and stale constraints SHALL equal zero.
+
+`batch_capture_complete_score` SHALL equal one only for a complete,
+authenticated, validated measurement. A clean efficacy null can satisfy this
+capture score. `batch_value_score` SHALL equal one only when every frozen value
+gate passes. Failed validation SHALL set both scores to zero and disqualify the
+result. The result SHALL publish raw rows for independent audit and SHALL not
+enable a production path.
+
+The terminal artifact SHALL declare `inference_substrate=model_full_generation`,
+`inference_substrate_class=model_full_generation`, `execution_venue=host`, and
+`inference_mode=live_gpu` after live generation. Load-only work SHALL declare
+`model_load_no_generation`. It SHALL include the required schema, provenance,
+timing, rows, paired intervals, budgets, validation receipts, repository health,
+and field principles. The entrypoint SHALL publish only a cold-valid terminal
+artifact after scoped validation, independent reduction, adversarial checking,
+and strict row-consistency checking.
+
+#### SCENARIO-VERIFY-7321-DEPENDENCY: Failed Qualified Input Blocks Exactly
+
+**Given** either upstream has readiness one but a failed or quarantined terminal state
+**When** Exp7321 authenticates both current artifacts and their sealed sidecars
+**Then** it performs no model load or generation
+**And** its gate summary keeps the exact failed terminal comparison.
+
+#### SCENARIO-VERIFY-7321-SCHEDULE: Held-Out Schedule Keeps Frozen Denominators
+
+**Given** the sixteen sealed held-out groups and the sealed canary settings
+**When** Exp7321 builds the public prediction schedule
+**Then** it emits 256 no-retry calls and 384 claim-arm units
+**And** every arm-version receives 1,280 allocated output tokens.
+
+#### SCENARIO-VERIFY-7321-AUTHORITY: Labels Enter Only After Prediction Seal
+
+**Given** public inputs and a private evaluator authority
+**When** all native responses and public predictions are durable
+**Then** a separate evaluator process receives the private labels
+**And** prediction code never reads expected decisions.
+
+#### SCENARIO-VERIFY-7321-COST: Complete Cost Does Not Double Count Initialization
+
+**Given** one resident model serves all three arms with native prefix caching
+**When** cold and warm costs are reduced
+**Then** all calls, failures, parsing, execution, invalidation, and serialization are charged
+**And** shared model initialization appears once in cold total and separately from warm cost.
+
+#### SCENARIO-VERIFY-7321-INTERVALS: Bootstrap Unit Is The Source Group
+
+**Given** 384 correlated claim-arm rows from sixteen independent source groups
+**When** the paired bootstrap runs for 10,000 seeded draws
+**Then** every draw resamples whole source groups
+**And** no claim-level resampling or post-hoc larger panel replaces the primary result.
+
+#### SCENARIO-VERIFY-7321-TERMINAL: Capture And Value Scores Stay Separate
+
+**Given** a complete authenticated run with all required validation receipts
+**When** one or more frozen efficacy or cost gates fail
+**Then** `batch_capture_complete_score` is one and `batch_value_score` is zero
+**And** the null result remains terminal without enabling production.
+
+#### SCENARIO-VERIFY-7321-E2E: One Command Publishes Auditable Measurement
+
+**Given** task-owned checkpoints, raw rows, and an unpublished candidate
+**When** the declared unbuffered entrypoint completes
+**Then** scoped checks, independent reduction, adversarial verification, and strict row lint inspect the candidate
+**And** only the validated terminal JSON is written to the declared result path.
