@@ -1,0 +1,218 @@
+{
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "KV260",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "current_evidence": "read_only_artifact_aggregation",
+      "disposition": "graduated_preserved",
+      "error": null,
+      "exact_next_condition": "none; any future access uses ssh kria only",
+      "execution_venue": "kv260",
+      "fabric_execution_completed": true,
+      "failed_value": null,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "observed_state": {
+        "median_latency_ms": 0.025465,
+        "programmable_logic_latency_transcript": true,
+        "sample_count": 32,
+        "synthesis_and_overlay_confirmed": true
+      },
+      "observed_venue": "kv260_fpga_fabric",
+      "prerequisite_check": "authenticated V640 row and fabric evidence hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "processor_class": "fpga_fabric",
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+          "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+        },
+        {
+          "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+          "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+        }
+      ],
+      "row_sha256": "sha256:66a4062f790365550dff1eabc8c1c203a9422f55ae8e8a47b7733dc99b56ebb3",
+      "seed": null,
+      "source_artifact_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_artifact_path": "results/experiment_7314_v642_board_continuity.json",
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": true,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "GateMate",
+      "board_availability": "attached_not_rechecked",
+      "censored": false,
+      "current_evidence": "read_only_artifact_aggregation",
+      "disposition": "blocked_changed_physical_state",
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_condition": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "execution_venue": "gatemate",
+      "fabric_execution_completed": false,
+      "failed_value": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": false,
+      "host_emulation": false,
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:cb820c013771ceeffeb0cb2ee1849b10c5be1cd6a7357a00ea1a6583469d2ab4",
+      "latest_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7327_v643_board_continuity/gatemate_physical_state_receipt_search.json",
+      "metric": false,
+      "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_state": "operator_changed_physical_state_receipt_missing",
+      "observed_venue": "none_read_only",
+      "operator_author_evidence": null,
+      "operator_changed_conditions": {},
+      "operator_date_evidence": null,
+      "operator_evidence_hash": null,
+      "operator_source_path": null,
+      "physical_receipt_contract": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "prerequisite_check": "operator-authored USB/JTAG/cabling/board/power change after Exp6559",
+      "present_availability_asserted": false,
+      "preserved_capability": "attached GateMate board; fabric execution not graduated",
+      "processor_class": "unavailable",
+      "row_sha256": "sha256:b0a5308a23859c9252f6c11c1eaec25a1d30986c57b2c28d05671f992f9402b8",
+      "seed": null,
+      "source_artifact_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_artifact_path": "results/experiment_7314_v642_board_continuity.json",
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    },
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "PolarFire",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "current_evidence": "read_only_artifact_aggregation",
+      "disposition": "graduated_cpu_dispatch_preserved",
+      "error": null,
+      "exact_next_condition": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "execution_venue": "polarfire",
+      "fabric_execution_completed": false,
+      "failed_value": null,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "observed_state": {
+        "binary_sha256": "sha256:756f9e6bb80a1af495a1d37e40356f166f0fc3c50a6bffe9a9af8721b45ac27c",
+        "dispatch_completed": true,
+        "input_hash_matches": true,
+        "input_sha256": "sha256:1afb4db70c81817af732c457a9c2e5653250e4d7e6ccc57232536107a2bf3596",
+        "output_hash_matches": true,
+        "output_sha256": "sha256:220fade2b4c13e1b1a4ba300a5fe81acd7dfe9ec93c4fcb090c7573ed2f3af66",
+        "transport_exit_code": 0,
+        "workload_exit_code": 0
+      },
+      "observed_venue": "polarfire_linux_cpu",
+      "prerequisite_check": "authenticated V640 row and CPU dispatch hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "processor_class": "cpu",
+      "programmable_logic_sampling_observed": false,
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+          "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+        },
+        {
+          "path": "results/experiment_7231_v636_board_continuity.json",
+          "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+        }
+      ],
+      "row_sha256": "sha256:b4413ca150890a22386eaa539ddf0c1b1a86719e462ba42eb19e7d309bc3c561",
+      "seed": null,
+      "smoke_repeated": false,
+      "source_artifact_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "source_artifact_path": "results/experiment_7314_v642_board_continuity.json",
+      "terminal_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": true,
+      "unit_id": "board:PolarFire"
+    }
+  ]
+}
