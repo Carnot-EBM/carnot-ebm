@@ -71095,3 +71095,126 @@ hashes, branch actions, publication-gate shape, and reproducibility checksum.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7245 and SCENARIO-REPORT-7245-* | Implemented: Exp7245 aggregation module, thin entrypoint, and terminal artifact | Verified by focused RED/GREEN tests, scoped coverage, full Python tests, artifact replay, adversarial verification, row consistency, spec coverage, and aggregation E2E |
+
+## V643 Capstone Evidence Matrix
+
+### REQ-REPORT-7328: V643 capstone SHALL preserve all dispositions and claim boundaries
+
+The system SHALL write `results/experiment_7328_v643_capstone.json` for run
+date `20260915`. It SHALL independently parse the active or staged V643 YAML
+and `openspec/change-proposals/research-roadmap-vNEXT.md`. Both sources SHALL
+contain exactly 13 ordered tasks from `exp7316-contract` through
+`exp7328-capstone`. Title, phase, deliverable, and every structured gate SHALL
+match. A source mismatch SHALL disqualify the capstone contract.
+
+The capstone SHALL load each earlier task from its exact declared deliverable.
+It MAY use only the canonical conductor block for that full task ID when the
+declared file is absent. It SHALL record the selected path, exact SHA-256,
+identity result, producer validation result, quarantine result, terminal
+class, and gate-skip evidence. A missing file is missing evidence. It is not a
+zero. A quarantined or disqualified producer cannot authorize a claim even
+when a score is one.
+
+The capstone SHALL include its own final aggregation row. It SHALL classify
+source cost, live tool causality, structural learning, Rust software parity,
+and board evidence separately. Each claim row SHALL cite authenticated
+producer bytes and recompute its conclusion from producer rows or independent
+producer reductions. Readiness, contract completion, transport qualification,
+software parity, and board receipts SHALL not become scientific efficacy.
+
+The capstone SHALL list complete nulls, quarantines, external blocks, and
+conditional skips. A conditional kernel skip after an authenticated learning
+null is complete expected control flow. It is not partial capstone work. A
+complete authentic null SHALL remain `null`. An unchanged external absence or
+blocked prerequisite SHALL remain `blocked`.
+
+Every `prior_failures` row SHALL retain the exact declared verdict bytes. The
+capstone SHALL compare those bytes with the current exact `honest_verdict`.
+Each branch SHALL receive exactly one action from `retain`, `retire`,
+`implement`, or `blocked_pending_prerequisite`. Each row SHALL give its scope,
+evidence, and reopening condition. The V642 longest-consistent-suffix
+retirement and same-acknowledgment storage sweep retirement SHALL remain
+closed unless their named conditions change.
+
+The workflow SHALL run `scripts/publication_gate.py --json` and preserve G1,
+G2, G3, G4, `paper_ready`, and `unmet_gates`. These values describe the stable
+historical FoVer gate. They SHALL not authorize upload, submission,
+publication, a new V643 headline, or a production default change.
+
+The artifact SHALL contain `schema`, `status`, `run_date`,
+`preconditions_checked`, `MODEL_SPECS`, `model_invoked`, `invocation_counts`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `phase_spans`, `random_seed`, `reproducibility_checksum`,
+`source_artifact_hashes`, `rows`, `sample_size_budget`,
+`acceptance_gate_results`, `gate_check_summary`, `verifier_is_oracle`,
+`honest_verdict`, `verdict_class`, `validation_receipts`,
+`repository_health`, `field_principles`, `capstone_complete_score`,
+`task_dispositions`, `claim_matrix`, `publication_gate`, and
+`next_branch_decisions`. It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+all current invocation counters to zero,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+
+`capstone_complete_score` SHALL equal one when all 13 task dispositions are
+present, the capstone self-row is terminal, and every derived row is internally
+consistent. This score states closure only. If required external science is
+blocked, the artifact SHALL keep `status=complete`, use
+`verdict_class=blocked`, start `honest_verdict` with `blocked_`, and name the
+exact upstream, check, artifact field, expected value, and observed value in
+`gate_check_summary`. Only unfinished capstone-owned work MAY use `partial`.
+
+#### SCENARIO-REPORT-7328-CONTRACT: Independent sources preserve thirteen exact rows
+
+**Given** the V643 Markdown design and selected V643 YAML bytes
+**When** Exp7328 compares both parsers
+**Then** exactly 13 rows match in order, ID, title, phase, deliverable, and gates
+**And** the last row is the ungated capstone self-row.
+
+#### SCENARIO-REPORT-7328-EVIDENCE: Exact producers outrank numeric scores
+
+**Given** a declared producer, canonical block, quarantine, or missing file
+**When** Exp7328 builds task dispositions
+**Then** it selects only the declared path or exact canonical block
+**And** identity, validator, hash, terminal class, and quarantine checks precede reduction.
+
+#### SCENARIO-REPORT-7328-CLAIMS: Five evidence classes remain separate
+
+**Given** authenticated V643 rows
+**When** Exp7328 recomputes the claim matrix
+**Then** source cost, tool causality, structural learning, Rust parity, and board evidence have separate rows
+**And** completion, readiness, parity, or historical board state cannot become efficacy.
+
+#### SCENARIO-REPORT-7328-RETIREMENTS: Exact repeats and old retirements stay bounded
+
+**Given** every V643 `prior_failures` entry and the V642 capstone and cost envelope
+**When** Exp7328 makes branch decisions
+**Then** exact verdict bytes control repeat detection
+**And** suffix learning, storage sweep, and same-mechanism batch work keep precise reopening conditions.
+
+#### SCENARIO-REPORT-7328-BLOCKED: Complete aggregation reports an external block
+
+**Given** all 13 dispositions and an authenticated externally blocked branch
+**When** Exp7328 reaches terminal reduction
+**Then** `status` is complete and `capstone_complete_score` is one
+**And** `verdict_class` is blocked with the exact failed check and observed value
+**And** every readiness and promotion score owned by the capstone is zero.
+
+#### SCENARIO-REPORT-7328-PUBLICATION: Stable gates do not authorize an action
+
+**Given** the actual JSON output from `scripts/publication_gate.py --json`
+**When** Exp7328 stores the stable G1 through G4 result
+**Then** it preserves `paper_ready` and `unmet_gates` exactly
+**And** upload, submission, publication, external messaging, and production changes remain false.
+
+#### SCENARIO-REPORT-7328-ARTIFACT: Cold replay detects any forged conclusion
+
+**Given** a terminal Exp7328 artifact
+**When** its validator reloads contract bytes and authenticated producer evidence
+**Then** it recomputes dispositions, claims, blocks, decisions, publication gates, and checksum
+**And** a changed hash, row, class, score, decision, gate, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7328)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7328 and SCENARIO-REPORT-7328-* | Planned: Exp7328 aggregation module, thin entrypoint, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, full Python tests, artifact replay, adversarial verification, row consistency, and spec coverage |
