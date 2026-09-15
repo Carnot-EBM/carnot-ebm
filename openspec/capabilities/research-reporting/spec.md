@@ -1,5 +1,104 @@
 # Research Reporting Capability Specification
 
+## V644 source ingestion and exact execution contract — 2026-09-15
+
+**Status:** Implemented. This receipt is advisory and gates no science.
+
+### REQ-REPORT-7329: Authenticate the V644 sources and fourteen-task contract
+
+Exp7329 SHALL select `research-roadmap-next.yaml` only when it names milestone
+`2026.09.644`. Otherwise, it SHALL require `research-roadmap.yaml` to name that
+milestone. It SHALL resolve the authority once. It SHALL hash-copy the selected
+YAML and its named Markdown before parsing either source. It SHALL not activate,
+archive, or edit a roadmap roster.
+
+Exp7329 SHALL parse the Markdown table and YAML tasks independently. It SHALL
+require fourteen ordered tasks from `exp7329-contract` through
+`exp7342-capstone`. It SHALL compare IDs, titles, integer phases, substrate
+classes, deliverable paths, and all structured gates. The Markdown parser SHALL
+accept `in` only with a JSON list. Missing tasks, changed order, stale milestone,
+changed title, changed phase, changed path, changed gate field, and malformed
+operators SHALL fail the contract.
+
+Every YAML gate field SHALL appear verbatim in its producer prompt's
+`REQUIRED ARTIFACT FIELDS` block. No V644 science task SHALL gate on Exp7329.
+The workflow SHALL exercise the real conductor gate reader for every gate edge.
+It SHALL retain passing, zero-score, missing-file, missing-field,
+missing-`verdict_class`, and disqualified-score-one cases. Every adverse combined
+case SHALL fail before its score can authorize a consumer.
+
+Exp7329 SHALL check four primary sources: CCA `2604.13283`, Memoir
+`2607.20792`, Solver-Hard `2607.17047`, and AMTFV `2607.29549`. Each source
+row SHALL record the URL, source date, access outcome, adopted method, V644 task
+mapping, and limits. HTTP 429, browser challenges, and other access failures
+SHALL remain source observations. They SHALL not become model or science results.
+
+Exp7329 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical or scripted model-shaped data SHALL remain in labeled hash-bound
+sidecars.
+
+The workflow SHALL run schema, prior-failure, exclusion, prompt-path, and gate
+audits against the selected YAML. It SHALL use the Exp7303 scoped runner for the
+exact test and changed-module files. It SHALL run an independent reducer,
+adversarial verification, and strict verdict-row consistency against the
+measured candidate. The terminal artifact SHALL contain every required prompt
+field and its exact principle. `rows` SHALL equal `contract_rows`.
+`contract_complete_score` SHALL equal one only when parity, negative controls,
+source dispositions, and all affected checks pass. This accounting score SHALL
+not authorize science. Shared parser and conductor authority SHALL set
+`verifier_is_oracle=true` and use `circular_positive` for an exact result.
+
+#### SCENARIO-REPORT-7329-AUTHORITY: Select and freeze the V644 sources
+
+**Given** staged and active roadmap candidates
+**When** Exp7329 resolves milestone `2026.09.644`
+**Then** a matching staged file wins and a matching active file is the fallback
+**And** exact YAML and Markdown bytes are copied and hash-bound before parsing.
+
+#### SCENARIO-REPORT-7329-CONTRACT: Fourteen independent rows match exactly
+
+**Given** separate V644 Markdown and YAML byte streams
+**When** Exp7329 parses both contracts
+**Then** fourteen ordered rows agree on ID, title, phase, substrate, path, and gates
+**And** every named mutation, including malformed `in`, fails closed.
+
+#### SCENARIO-REPORT-7329-GATES: Actual gate controls reject adverse producers
+
+**Given** each V644 gate edge and isolated temporary producer artifacts
+**When** the real conductor reader evaluates all six cases
+**Then** only the authenticated passing case authorizes its consumer
+**And** missing terminal class or disqualified score-one evidence fails.
+
+#### SCENARIO-REPORT-7329-FIELDS: Producers declare every consumed field
+
+**Given** a V644 gate and its named producer
+**When** Exp7329 inspects the producer's required-field block
+**Then** the artifact field appears as an exact declaration
+**And** no science task names Exp7329 as an upstream gate.
+
+#### SCENARIO-REPORT-7329-SOURCES: Four bounded checks remain advisory
+
+**Given** the V644 reference ledger and four selected primary pages
+**When** Exp7329 performs bounded source access
+**Then** every source retains its access outcome, method, task mapping, and limit
+**And** access failure cannot fail contract completion or create science evidence.
+
+#### SCENARIO-REPORT-7329-ARTIFACT: Stored evidence controls terminal state
+
+**Given** hash-bound source copies, control rows, and validation receipts
+**When** an independent reducer reloads the measured candidate
+**Then** only a complete validated candidate reaches the terminal result path
+**And** a changed row, hash, score, verdict, summary, or checksum fails validation.
+
+## Implementation Status (REQ-REPORT-7329)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7329 and SCENARIO-REPORT-7329-* | `python/carnot/experiment_7329_v644_contract.py`; thin entrypoint; hash-bound source and control sidecars | `tests/python/test_experiment_7329_v644_contract.py`; scoped 100% coverage; selected-roadmap audits; real-file E2E; adversarial and strict row checks |
+
 ## V643 literature ingestion and exact execution contract — 2026-09-15
 
 **Status:** Implemented. This receipt is advisory and gates no science.

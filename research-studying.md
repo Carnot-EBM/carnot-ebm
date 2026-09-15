@@ -5790,3 +5790,18 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Boundary: this is advisory source ingestion. It activates no task and makes
   no local science claim.
 <!-- EXP7316-V643-SOURCE-INGESTION-20260915-END -->
+
+<!-- EXP7329-V644-SOURCE-INGESTION-20260915-START -->
+## 2026-09-15 Exp7329 V644 source ingestion — INGESTED
+
+- CCA (`arXiv:2604.13283`) maps to Exp7330 and Exp7334. Use a restricted
+  acquisition language and charge every executor query.
+- Memoir (`arXiv:2607.20792`) maps to Exp7331, Exp7334, and Exp7335. Keep
+  prediction read-only. Commit verified memory changes between requests.
+- Solver-Hard (`arXiv:2607.17047`) maps to Exp7330 and Exp7333. Freeze
+  identifier relabeling and request order before model outcomes are visible.
+- AMTFV (`arXiv:2607.29549`) maps to Exp7336 through Exp7338. Record request,
+  execution, delivery, resumed reasoning, and later action as separate events.
+- Boundary: these are advisory method choices. Access failures remain source
+  outcomes. They do not create a model result or a local science result.
+<!-- EXP7329-V644-SOURCE-INGESTION-20260915-END -->
