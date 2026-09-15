@@ -1,0 +1,21 @@
+Script started on 2026-09-14 20:20:35-04:00 [COMMAND="PYTHONUNBUFFERED=1 PYTHONPATH=python:. .venv/bin/pytest tests/python/test_experiment_7314_v642_board_continuity.py -q --no-cov -n 0 -o addopts= --basetemp /tmp/exp7314-before-implementation" <not executed on terminal>]
+
+==================================== ERRORS ====================================
+_ ERROR collecting tests/python/test_experiment_7314_v642_board_continuity.py __
+ImportError while importing test module '/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7314_v642_board_continuity.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/python/test_experiment_7314_v642_board_continuity.py:16: in <module>
+    from carnot import experiment_7314_v642_board_continuity as experiment
+E   ImportError: cannot import name 'experiment_7314_v642_board_continuity' from 'carnot' (/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py)
+------------------------------- Captured stderr --------------------------------
+An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
+=========================== short test summary info ============================
+ERROR tests/python/test_experiment_7314_v642_board_continuity.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.82s
+
+Script done on 2026-09-14 20:20:37-04:00 [COMMAND_EXIT_CODE="2"]

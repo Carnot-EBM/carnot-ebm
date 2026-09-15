@@ -1,0 +1,199 @@
+$ PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python/test_experiment_7300_v641_board_continuity.py tests/python/test_experiment_7314_v642_board_continuity.py -q --no-cov -n 0 -o addopts= --basetemp /tmp/exp7314-affected
+F.FF.F...F..F.............                                               [100%]
+=================================== FAILURES ===================================
+_________ test_req_ising_7300_authenticates_v640_and_original_evidence _________
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_req_ising_7300_authentica0')
+
+    def test_req_ising_7300_authenticates_v640_and_original_evidence(tmp_path: Path) -> None:
+        """REQ-ISING-7300: the source receipt and original evidence authenticate."""
+    
+        checks, hashes, upstreams = experiment.collect_preconditions(
+            ROOT, experiment.ExperimentPaths.under(tmp_path)
+        )
+>       assert all(row["passed"] for row in checks)
+E       assert False
+E        +  where False = all(<generator object test_req_ising_7300_authenticates_v640_and_original_evidence.<locals>.<genexpr> at 0x7f6d99e73780>)
+
+tests/python/test_experiment_7300_v641_board_continuity.py:55: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+_______ test_scenario_ising_7300_artifact_completes_with_row_scope_block _______
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_artif0')
+
+    def test_scenario_ising_7300_artifact_completes_with_row_scope_block(
+        tmp_path: Path,
+    ) -> None:
+        """SCENARIO-ISING-7300-ARTIFACT: three dispositions complete continuity."""
+    
+        paths = experiment.ExperimentPaths.under(tmp_path)
+        artifact = experiment.build_artifact(ROOT, paths, candidate_paths=[tmp_path / "missing.json"])
+>       assert paths.checkpoint.is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_artif0/results/checkpoints/experiment_7300_v641_board_continuity.json').is_file
+E        +      where PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_artif0/results/checkpoints/experiment_7300_v641_board_continuity.json') = ExperimentPaths(artifact=PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_artif0/results/experiment_7300_v641...lidation_dir=PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_artif0/results/raw/experiment_7300/validation')).checkpoint
+
+tests/python/test_experiment_7300_v641_board_continuity.py:94: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V641 sources before aggregation
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+[phase 0 end] preconditions failed=1
+______ test_scenario_ising_7300_changed_state_only_names_later_experiment ______
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_scenario_ising_7300_chang0')
+
+    def test_scenario_ising_7300_changed_state_only_names_later_experiment(
+        tmp_path: Path,
+    ) -> None:
+        """SCENARIO-ISING-7300-GATEMATE: a change only enables later work."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[_valid_operator_receipt(tmp_path / "operator.json")],
+        )
+>       gate = next(row for row in artifact["board_rows"] if row["board"] == "GateMate")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests/python/test_experiment_7300_v641_board_continuity.py:129: StopIteration
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V641 sources before aggregation
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+[phase 0 end] preconditions failed=1
+_ test_req_ising_7300_validator_rejects_unsafe_mutations[mutation0-board_continuity_score] _
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_req_ising_7300_validator_0')
+mutation = {'board_continuity_complete_score': 0}
+error = 'board_continuity_score'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_continuity_complete_score": 0}, "board_continuity_score"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"invocation_counts": {"model_loads_attempted": 1}}, "invocation_counts"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7300_validator_rejects_unsafe_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7300: the validator rejects unsafe receipt mutations."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[tmp_path / "missing.json"],
+        )
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'board_continuity_score' in []
+E        +  where [] = <function validate_artifact at 0x7f6d99f6ac00>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_continuity_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f6d99f6ac00> = experiment.validate_artifact
+
+tests/python/test_experiment_7300_v641_board_continuity.py:180: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V641 sources before aggregation
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+[phase 0 end] preconditions failed=1
+_ test_req_ising_7300_validator_rejects_unsafe_mutations[mutation4-substrate] __
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_req_ising_7300_validator_1')
+mutation = {'inference_substrate': 'cpu_exact_solver_or_simulator'}
+error = 'substrate'
+
+    @pytest.mark.parametrize(
+        ("mutation", "error"),
+        (
+            ({"board_continuity_complete_score": 0}, "board_continuity_score"),
+            ({"hardware_operations_issued": ["jtag"]}, "hardware_operations"),
+            ({"MODEL_SPECS": ["model"]}, "model_declaration"),
+            ({"invocation_counts": {"model_loads_attempted": 1}}, "invocation_counts"),
+            ({"inference_substrate": "cpu_exact_solver_or_simulator"}, "substrate"),
+            ({"reproducibility_checksum": "sha256:bad"}, "reproducibility_checksum"),
+        ),
+    )
+    def test_req_ising_7300_validator_rejects_unsafe_mutations(
+        tmp_path: Path, mutation: dict[str, Any], error: str
+    ) -> None:
+        """REQ-ISING-7300: the validator rejects unsafe receipt mutations."""
+    
+        artifact = experiment.build_artifact(
+            ROOT,
+            experiment.ExperimentPaths.under(tmp_path),
+            candidate_paths=[tmp_path / "missing.json"],
+        )
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        if "reproducibility_checksum" not in mutation:
+            changed["reproducibility_checksum"] = experiment.artifact_checksum(changed)
+>       assert error in experiment.validate_artifact(changed)
+E       AssertionError: assert 'substrate' in ['blocked_substrate']
+E        +  where ['blocked_substrate'] = <function validate_artifact at 0x7f6d99f6ac00>({'MODEL_SPECS': [], 'acceptance_gate_results': {}, 'baseline_validation_failures': [], 'board_continuity_complete_score': 0, ...})
+E        +    where <function validate_artifact at 0x7f6d99f6ac00> = experiment.validate_artifact
+
+tests/python/test_experiment_7300_v641_board_continuity.py:180: AssertionError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V641 sources before aggregation
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+[phase 0 end] preconditions failed=1
+__________ test_req_ising_7300_defensive_validation_and_receipt_logs ___________
+
+tmp_path = PosixPath('/tmp/exp7314-affected/test_req_ising_7300_defensive_0')
+
+    def test_req_ising_7300_defensive_validation_and_receipt_logs(tmp_path: Path) -> None:
+        """REQ-ISING-7300: malformed metadata fails and command timing is retained."""
+    
+        roadmap = tmp_path / experiment.ROADMAP_PATH
+        roadmap.write_text("[]\n", encoding="utf-8")
+        assert experiment._task_contract(tmp_path) is None
+        roadmap.write_text("tasks: []\n", encoding="utf-8")
+        assert experiment._task_contract(tmp_path) is None
+    
+        paths = experiment.ExperimentPaths.under(tmp_path / "receipts")
+        paths.validation_dir.mkdir(parents=True)
+        log = paths.validation_dir / "focused.log"
+        log.write_text(
+            "$ pytest focused\n12 passed\n[elapsed_s] 3.5\n[exit_code] 0\n",
+            encoding="utf-8",
+        )
+        artifact = experiment.build_artifact(ROOT, paths, candidate_paths=[tmp_path / "missing.json"])
+>       assert artifact["validation_receipts"][0]["elapsed_s"] == 3.5
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/python/test_experiment_7300_v641_board_continuity.py:240: IndexError
+----------------------------- Captured stdout call -----------------------------
+[phase 0 start] authenticate V641 sources before aggregation
+[phase 0 check start] V641 sources, spec, and task contract
+[phase 0 check start] authority separation and writable outputs
+[phase 0 check start] exclusion state and V640 receipt
+[phase 0 end] preconditions failed=1
+=========================== short test summary info ============================
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_req_ising_7300_authenticates_v640_and_original_evidence
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_scenario_ising_7300_artifact_completes_with_row_scope_block
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_scenario_ising_7300_changed_state_only_names_later_experiment
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_req_ising_7300_validator_rejects_unsafe_mutations[mutation0-board_continuity_score]
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_req_ising_7300_validator_rejects_unsafe_mutations[mutation4-substrate]
+FAILED tests/python/test_experiment_7300_v641_board_continuity.py::test_req_ising_7300_defensive_validation_and_receipt_logs
+6 failed, 20 passed in 3.14s
+[elapsed_s] 4.772386
+[exit_code] 1

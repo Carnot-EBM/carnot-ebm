@@ -1,0 +1,11 @@
+$ COVERAGE_FILE=/tmp/exp7314.coverage PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/coverage run --rcfile=/dev/null -m pytest tests/python/test_experiment_7314_v642_board_continuity.py -q --no-cov -n 0 -o addopts= --basetemp /tmp/exp7314-coverage && COVERAGE_FILE=/tmp/exp7314.coverage .venv/bin/coverage report --rcfile=/dev/null --include=python/carnot/experiment_7314_v642_board_continuity.py --show-missing --fail-under=100
+.............                                                            [100%]
+13 passed in 3.70s
+Name                                                     Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------------------
+python/carnot/experiment_7314_v642_board_continuity.py     368     16    96%   213, 219, 260-261, 717-719, 856, 1087, 1089, 1094-1095, 1122, 1147, 1150-1151
+--------------------------------------------------------------------------------------
+TOTAL                                                      368     16    96%
+Coverage failure: total of 96 is less than fail-under=100
+[elapsed_s] 6.303030
+[exit_code] 2

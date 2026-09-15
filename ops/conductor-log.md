@@ -17979,3 +17979,4 @@ code |
 | 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7284_v640_commit_prototype.json age-week 0: OPEN 1 days: CLAIM_OVERST |
 | 2026-09-15 00:09 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7298_v641_snapshot_journal.json age-week 0: OPEN 1 days: CLAIM_OVERST |
 | 2026-09-15 00:12 UTC | Bound remaining durable-state acceleration from me | OK | 92 passed, 1 warning in 16.64s |
+| 2026-09-15 01:35 UTC | Record GateMate prerequisites and graduated-board  | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: ksum" in exper |

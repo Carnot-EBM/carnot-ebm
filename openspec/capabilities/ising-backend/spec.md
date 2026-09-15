@@ -1807,3 +1807,97 @@ rows and source hashes SHALL reduce independently while GateMate remains
 blocked at row scope.
 
 **Implementation status:** Implemented and verified (Exp7300)
+
+### REQ-ISING-7314
+
+**The V642 board-continuity task MUST authenticate Exp7300 and its original
+terminal evidence before it records one read-only disposition for each board.**
+
+**Rationale:**
+KV260 graduated through FPGA-fabric execution. PolarFire graduated only through
+hash-matched CPU dispatch. GateMate still needs an operator-authored physical
+change after Exp6559. The V642 record keeps these scopes visible without
+repeating a blocked board procedure or converting hardware availability into a
+new result.
+
+**Acceptance criteria:**
+- The tested implementation SHALL be
+  `python/carnot/experiment_7314_v642_board_continuity.py`. The executable
+  SHALL be the thin entrypoint
+  `scripts/experiments/experiment_7314_v642_board_continuity.py`.
+- Preconditions SHALL authenticate the V642 task contract, required source
+  bytes, writable output paths, exclusion state, Exp7300, and every KV260 and
+  PolarFire evidence path and hash named by Exp7300.
+- A missing, malformed, quarantined, disqualified, retired, or hash-mismatched
+  mandatory input SHALL produce one terminal blocked artifact. Its
+  `gate_check_summary` SHALL retain the exact check, upstream, field, expected
+  value, and observed value. It SHALL contain no board row.
+- Current invocation fields SHALL state `MODEL_SPECS=[]`,
+  `model_invoked=false`, and zero attempted, completed, failed, cancelled, and
+  in-flight model loads and generations. Historical invocation data SHALL stay
+  in a hash-bound sidecar.
+- The task SHALL use `aggregation_from_upstream_artifacts`, class
+  `aggregation`, and venue `host`. It SHALL issue no JTAG, SSH, reset, flash,
+  sampling, installation, purchase, vendor contact, upload, publication, or
+  external message.
+- `board_rows` SHALL contain exactly one row for KV260, GateMate, and PolarFire.
+  The KV260 row SHALL preserve FPGA-fabric graduation and future SSH-only
+  access. The PolarFire row SHALL preserve CPU dispatch and state that FPGA
+  sampling was not observed.
+- The GateMate search SHALL use only the approved local operator-record
+  sources. A qualifying receipt SHALL be operator-authored, dated after
+  20260823, and name a cable, USB port, power, board, JTAG, or DirtyJTAG change.
+  Without one, the row SHALL use `blocked_changed_physical_state`.
+- A missing GateMate receipt SHALL appear in `gate_check_summary` with the
+  required date, author, changed-field, and local provenance contract. The
+  observed value SHALL state that no qualifying receipt was found. A valid
+  receipt SHALL only name one bounded future integration step.
+- The artifact SHALL record Extropic and KAN deployment relevance from the
+  V642 reference refresh and hardware wishlist. It SHALL preserve unavailable
+  device access, deferred prerequisites, and zero procurement or contact
+  actions. External availability SHALL not become a scientific result.
+- `board_continuity_complete_score=1` SHALL mean that all three authenticated
+  dispositions and next conditions are recorded. It SHALL not mean that all
+  boards are ready or that a new device benchmark ran.
+- Raw rows and the measured terminal candidate SHALL stay under `results/raw/`.
+  Provisional state SHALL stay under `results/checkpoints/`. The producer SHALL
+  validate the candidate before it atomically writes
+  `results/experiment_7314_v642_board_continuity.json`.
+
+### SCENARIO-ISING-7314-PREFLIGHT
+
+**Authenticated fail-closed intake:** Given a missing source, changed task
+contract, quarantine or disqualification marker, invalid producer receipt,
+invalid referenced hash, or unwritable output, Exp7314 SHALL emit one terminal
+blocked result. It SHALL emit no board row and no hardware operation.
+
+### SCENARIO-ISING-7314-BOARDS
+
+**Original evidence to distinct scopes:** Given authenticated Exp7300 and all
+of its terminal references, Exp7314 SHALL preserve KV260 FPGA-fabric execution
+and PolarFire CPU dispatch as different evidence classes. It SHALL not treat
+PolarFire CPU work as FPGA sampling or host emulation.
+
+### SCENARIO-ISING-7314-GATEMATE
+
+**Changed-state authorization boundary:** Given no approved local
+operator-authored physical change after Exp6559, Exp7314 SHALL retain the exact
+receipt contract and record `blocked_changed_physical_state` at row scope.
+Given a valid later receipt, it SHALL name one future integration step and
+still issue no command.
+
+### SCENARIO-ISING-7314-DEPLOYMENT
+
+**External deployment context:** Given the V642 reference refresh and current
+hardware wishlist, Exp7314 SHALL record Extropic and KAN relevance, unavailable
+or deferred prerequisites, and zero procurement or vendor-contact actions. It
+SHALL make no local performance claim from external sources.
+
+### SCENARIO-ISING-7314-ARTIFACT
+
+**Terminal host-only continuity receipt:** Given three authenticated board
+dispositions, Exp7314 SHALL emit `board_continuity_complete_score=1`. Its raw
+rows and source hashes SHALL reduce independently while GateMate remains
+blocked at board-row scope.
+
+**Implementation status:** Planned
