@@ -43202,3 +43202,105 @@ and strict row-consistency checking.
 **When** the declared unbuffered entrypoint completes
 **Then** scoped checks, independent reduction, adversarial verification, and strict row lint inspect the candidate
 **And** only the validated terminal JSON is written to the declared result path.
+
+### REQ-VERIFY-7322: V643 Batch Audit SHALL Independently Reduce Complete Capture
+
+Exp7322 SHALL authenticate the current Exp7321 measurement before audit work.
+The measurement SHALL have `batch_capture_complete_score=1`. Its terminal
+class SHALL not be blocked, partial, disqualified, or quarantined. A missing,
+quarantined, or failed dependency SHALL produce a blocked result. The result
+SHALL keep the exact check, upstream, artifact field, expected value, and
+observed value. A clean Exp7321 null remains eligible for audit.
+
+The audit SHALL authenticate all 256 raw calls, the public panel, the private
+evaluator authority, the frozen schedule, public predictions, scored rows, and
+cost receipt. It SHALL verify the expected group, version, claim, arm, and call
+identities before it reads producer aggregate fields. It SHALL preserve failed,
+abstaining, and censored rows in all 128-unit arm denominators. Public prediction
+bytes and evaluator labels SHALL remain separate hash-bound inputs.
+
+The audit SHALL parse raw response bytes and execute source relations without
+calling the Exp7321 headline reducer. It SHALL independently recompute fidelity,
+coverage, false accepts, serial-to-joint discrepancies, stale-version use,
+cold and warm cost, and 10,000-draw paired source-group intervals. It SHALL
+reconstruct complete cost from disjoint measured spans. It SHALL verify that
+joint direct had the same native cache opportunity as the verifier arms.
+
+The audit SHALL retain live order evidence from the sealed Exp7321 rows. It
+SHALL keep this evidence separate from CPU parser and exact-executor controls.
+The CPU controls SHALL mutate one claim, duplicate one claim identifier, swap
+one source version, and inject one unsupported neighboring instruction. They
+SHALL not invent counterfactual model output. Shared exact-executor authority
+SHALL set `verifier_is_oracle=true` and cap a successful audit at
+`circular_positive`.
+
+The audit SHALL try six altered bundles: a missing slow row, a relabeled
+abstention, an excluded malformed batch, a wrong group denominator, a forged
+source version, and an adjusted cost. Every altered bundle SHALL fail its
+authenticity or parity check. A zero-error sample SHALL not claim population
+zero risk.
+
+`batch_audit_complete_score` SHALL equal one after all independent work and
+required validation completes, whether the audited value is positive or null.
+`batch_promotion_score` SHALL equal one only when current raw parity, clean
+authenticity, all controls, every frozen value gate, and required validation
+pass. A failed same-mechanism comparison SHALL record a stop decision. A future
+rerun SHALL require a measured new mechanism or a newly satisfied prerequisite;
+batch-size sweeps alone SHALL not replace the result.
+
+The audit SHALL make no current model call. It SHALL declare `MODEL_SPECS=[]`,
+`model_invoked=false`, zero load and generation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL use the Exp7303 scoped validation runner with
+explicit files. It SHALL atomically publish only after cold reload, independent
+raw reduction, adversarial verification, and strict row-consistency checks.
+
+#### SCENARIO-VERIFY-7322-DEPENDENCY: Null Capture Reaches The Audit
+
+**Given** Exp7321 has capture score one and a null terminal class
+**When** Exp7322 authenticates the current artifact and its sidecars
+**Then** the independent audit runs with zero current model calls
+**And** the producer value score does not block audit completion.
+
+#### SCENARIO-VERIFY-7322-RAW: Raw Calls Rebuild Every Denominator
+
+**Given** 256 authenticated raw calls and 384 expected claim-arm rows
+**When** the audit parses native bytes and joins the private authority
+**Then** it independently emits 384 rows with 128 units in each arm
+**And** failures, abstentions, and censoring stay in those denominators.
+
+#### SCENARIO-VERIFY-7322-COST: Disjoint Spans Rebuild Cold And Warm Cost
+
+**Given** retained call latencies and separate measured overhead spans
+**When** the audit reconstructs per-group and total costs
+**Then** each span is charged once and shared initialization is excluded from warm cost
+**And** joint direct has the same declared native cache opportunity.
+
+#### SCENARIO-VERIFY-7322-INTERFERENCE: Live And CPU Evidence Stay Distinct
+
+**Given** sealed live order variants and public exact-executor fixtures
+**When** the audit mutates claims, identifiers, versions, and neighboring instructions
+**Then** live order effects are measured only from retained model outputs
+**And** CPU interventions claim parser or executor behavior only.
+
+#### SCENARIO-VERIFY-7322-ATTACKS: Six Altered Bundles Fail Closed
+
+**Given** one authentic measurement bundle and six named single-fault variants
+**When** each variant enters the audit checker
+**Then** every missing, relabeled, excluded, denominator, version, or cost fault fails
+**And** no altered bundle can retain promotion eligibility.
+
+#### SCENARIO-VERIFY-7322-TERMINAL: Complete Null Stops Same Mechanism
+
+**Given** all audit work passes but one or more frozen value bounds fail
+**When** Exp7322 classifies the result
+**Then** audit completion is one, promotion is zero, and the verdict is complete null
+**And** the retirement record requires a measured new mechanism or prerequisite.
+
+#### SCENARIO-VERIFY-7322-E2E: Scoped Checks Publish One Atomic Audit
+
+**Given** a complete independent candidate and explicit validation scope
+**When** the declared unbuffered entrypoint runs
+**Then** scoped checks, cold raw replay, adversarial verification, and strict row lint pass
+**And** only the terminal validated JSON is published at the declared path.
