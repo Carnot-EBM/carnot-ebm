@@ -42998,3 +42998,97 @@ unsupported claim, and an altered neighbor
 **When** the unbuffered Exp7307 entrypoint runs
 **Then** it streams phase and slow-call boundaries through validation
 **And** it atomically publishes only the validated terminal result.
+
+### REQ-VERIFY-7320: V643 Batch Canary SHALL Qualify Bounded Native Transport
+
+Exp7320 SHALL authenticate the current Exp7317 harness artifact before model
+work. The artifact SHALL have `batch_harness_ready_score=1`. Its terminal class
+SHALL not be blocked, partial, disqualified, or quarantined. A failed dependency
+check SHALL produce a blocked result before model load. The result SHALL retain
+the exact check, upstream, field, expected value, and observed value.
+
+The canary SHALL use the first two sealed development groups from Exp7317. It
+SHALL preserve two source versions and four claims per version. It SHALL run the
+serial versioned verifier, batched versioned verifier, and batched warm-prefix
+direct arms once. The frozen schedule SHALL contain at most 32 calls and 15,360
+allocated output tokens. Each arm-version SHALL receive 1,280 tokens. The run
+SHALL not retry, repair, tune stops, inspect held-out labels, or substitute a
+model after a cache miss.
+
+The live path SHALL resolve `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model()` at Q4_K_M. It SHALL use the embedded GGUF tokenizer and
+chat template. It SHALL use an authenticated native llama.cpp CUDA server with
+`CARNOT_FORCE_LIVE=1`. It SHALL reserve one available GPU without terminating
+foreign work. It SHALL record the exact revision, cache path, content identity,
+runner identity, process identity, lease, GPU offload, request settings, token
+counts, and task-window use.
+
+Every attempted call SHALL retain its prompt, request bytes, response bytes,
+parser result, source version, claim identities, model evidence, latency, token
+counts, failure, abstention, truncation, and censoring state. The runner SHALL
+persist progress after each group and stop at 900 seconds of model-session time.
+Incomplete own work SHALL remain resumable and SHALL not receive readiness.
+
+After live capture, Exp7320 SHALL cold-replay the stored responses through the
+shipped Exp7317 builders, parser, compiler, and exact executor. Readiness SHALL
+require all 32 transport receipts, zero required-field omissions, zero
+truncations, zero source or claim identity swaps, and passing scoped validation.
+The model results SHALL include supported, contradicted, and unknown decisions.
+This rejection and abstention exercise is a semantic control, not a value claim.
+
+`batch_canary_ready_score` SHALL equal one only for complete usable development
+transport with the declared semantic controls and all affected checks passing.
+The run SHALL use the Exp7303 scoped validation runner with explicit files. A
+failed affected check SHALL disqualify the current result. Shared executor
+authority permits `circular_positive` only. A complete semantic failure SHALL be
+null. An unavailable external dependency SHALL be blocked.
+
+The terminal artifact SHALL declare `inference_substrate=model_bounded_generation`,
+`inference_substrate_class=model_bounded_generation`, `execution_venue=host`, and
+`inference_mode=live_gpu` after live generation. Load-only work SHALL use
+`model_load_no_generation`. The artifact SHALL include the task-required schema,
+counts, raw rows, sealed transport configuration, call budget, timing, validation,
+repository health, and field-principle records. The entrypoint SHALL atomically
+publish only a cold-valid terminal result.
+
+#### SCENARIO-VERIFY-7320-DEPENDENCY: Failed Harness Blocks Before Model Load
+
+**Given** Exp7317 has readiness one but a blocked, partial, disqualified, or quarantined terminal state
+**When** Exp7320 authenticates the current harness
+**Then** it records zero model-load and generation attempts
+**And** its gate summary preserves the exact failed terminal comparison.
+
+#### SCENARIO-VERIFY-7320-SCHEDULE: Two Groups Preserve Equal Arm Budgets
+
+**Given** the eight sealed Exp7317 development groups
+**When** Exp7320 selects the first two groups
+**Then** it freezes 32 calls across four source versions and three arms
+**And** each arm-version receives 1,280 tokens with no retry or repair.
+
+#### SCENARIO-VERIFY-7320-REPLAY: Cold Bytes Preserve Identity And Decisions
+
+**Given** one retained native receipt for every attempted call
+**When** the parser and exact executor replay those bytes without model calls
+**Then** every response remains bound to its source version and claim IDs
+**And** omissions, truncations, parse failures, rejections, and abstentions remain visible.
+
+#### SCENARIO-VERIFY-7320-PROVENANCE: Readiness Requires Owned CUDA Generation
+
+**Given** the mandated cached GGUF and one available owned GPU
+**When** the native server loads and serves the frozen development schedule
+**Then** the result binds its model, runner, process, lease, offload, and request evidence
+**And** a cache miss, load-only attempt, or CPU execution cannot set readiness to one.
+
+#### SCENARIO-VERIFY-7320-SEMANTICS: The Canary Exercises Rejection And Abstention
+
+**Given** complete usable transport for the sealed four-case claim sets
+**When** cold replay reduces the three arms
+**Then** supported, contradicted, and unknown decisions all occur
+**And** transport readiness does not claim verification value or speedup.
+
+#### SCENARIO-VERIFY-7320-VALIDATION: Scoped Checks Control The Terminal Class
+
+**Given** explicit Exp7320 tests, changed modules, and static entrypoint files
+**When** the Exp7303 runner and terminal artifact checks complete
+**Then** every command retains its exact scope, exit, elapsed time, and log hash
+**And** any affected failure sets readiness to zero and disqualifies the result.
