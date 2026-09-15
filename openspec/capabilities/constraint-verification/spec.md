@@ -7717,3 +7717,140 @@ And readiness never becomes held-out verifier value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7223 and SCENARIO-VERIFY-7223-* | `python/carnot/experiment_7223_v636_span_canary.py` and its thin executable reuse the V635 capture runner and V636 fixture authority. | `tests/python/test_experiment_7223_v636_span_canary.py` covers all new statements and the Exp7209 adapter regression tests stay green. |
+
+### REQ-VERIFY-7326: Acquired Integer Constraints SHALL Have A Parity-Tested Rust Kernel
+
+Exp7326 SHALL authenticate the terminal Exp7325 audit before adding a production
+kernel. Exp7325 SHALL have `addition_promotion_score=1`; its verdict class SHALL
+not be `blocked`, `disqualified`, or `partial`; and it SHALL not be quarantined.
+The exact Exp7324 request rows named by Exp7325 SHALL remain available at their
+declared hash. Every acquired atom SHALL retain its original identifier,
+executor version, kind, payload, witness, and receipts, and its identifier SHALL
+be recomputed before use. A missing value or failed external check SHALL produce
+a row-free terminal blocked result whose gate summary retains the upstream,
+check, field, expected value, and exact observed value.
+
+The `carnot-constraints` crate SHALL expose a serialized integer schedule
+evaluator for only two term kinds. A pairwise separation term with minimum `m`
+SHALL have energy `max(0, m - abs(left_slot - right_slot))^2`. A sliding-window
+capacity term with width `w` and maximum `c` SHALL have energy equal to the sum,
+over every integer window start in the inclusive slot domain, of
+`max(0, occupancy - c)^2`; windows SHALL use the half-open interval
+`[start, start + w)`. The acquired global same-slot capacity SHALL translate to
+the width-one form without changing its decision. Each term energy and their
+checked sum SHALL be a nonnegative integer. Boundary equality SHALL have zero
+energy. A fully supplied, valid request SHALL be feasible exactly when every
+term has zero energy.
+
+The evaluator SHALL reject empty or duplicate schedules, missing constrained
+activities, invalid slot domains or assignments, nonpositive windows, negative
+bounds, arithmetic overflow, malformed term kinds, and inconsistent executor
+versions. Invalid input SHALL not be represented as a zero-energy feasible
+decision. Wider synthetic windows MAY overlap and each window excess SHALL be
+charged exactly once. A zero acquired energy SHALL remain an acquired-language
+decision, not a complete oracle certificate, because learned constraints can be
+incomplete.
+
+Python and Rust SHALL produce bit-exact decisions, errors, total energies, and
+ordered per-term energies for all 2,304 captured arm-request rows plus 1,000
+seeded valid and malformed finite fixtures. Returned schedule hashes SHALL be
+recovered only from the frozen finite public request domain and SHALL match the
+captured hash; abstentions SHALL remain explicit invalid empty schedules. The
+round trip SHALL cross a newline-delimited serialized subprocess boundary. Its
+Rust fixture SHALL live in a task-owned example or test file whose name contains
+7326.
+
+After warmup, Exp7326 SHALL measure batch sizes 1, 32, and 256 in at least 30
+paired blocks. Python and Rust SHALL receive byte-equivalent requests through
+the same persistent subprocess service boundary. Process startup and JSON
+serialization SHALL be reported separately from steady request/response time.
+`constraint_kernel_complete_score` SHALL equal one only when parity is exact
+and every required cost row is complete. `kernel_speedup_score` SHALL equal one
+only when every fixed size has a paired speedup lower CI95 of at least 10.
+Measured speedup and uncertainty SHALL remain visible when that target fails.
+A faster kernel SHALL not establish whole-learning speedup.
+
+The artifact SHALL project exact sparse coefficient count, integer bit width,
+serialized memory bytes, and maximum coupling degree from the measured fixture.
+This SHALL be labeled a software projection. Exp7326 SHALL issue no hardware
+command, claim no FPGA or TSU timing, change no deployment or storage
+acknowledgment behavior, and make no production-default or publication change.
+It SHALL run current scoped Python checks, Rust tests, format, Clippy, the
+Python-to-Rust round trip, and both terminal artifact validators before its
+atomic terminal write. Any affected validation failure SHALL set readiness and
+promotion scores to zero.
+
+Exp7326 SHALL use date `20260915`, `MODEL_SPECS=[]`, `model_invoked=false`, zero
+model loads and generations, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. Duration and disjoint phase spans SHALL measure actual
+monotonic work without sleeping or padding.
+
+#### SCENARIO-VERIFY-7326-PREFLIGHT: Promoted Atoms Fail Closed
+
+Given Exp7325 and its declared raw acquired-atom evidence,
+When promotion, class, quarantine, file hash, row count, and atom hashes are checked,
+Then only exact complete eligible evidence can start implementation measurement,
+And the first external failure remains a terminal blocked result with its exact value.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-ENERGY: Integer Terms Have Exact Zero Boundaries
+
+Given a fully supplied integer schedule and same-version terms,
+When pair deficits and sliding-window excesses are evaluated,
+Then equality at each minimum or maximum has zero energy and violations have squared energy,
+And overlapping windows retain one ordered nonnegative energy for each declared term.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-INVALID: Malformed Schedules Never Look Feasible
+
+Given empty schedules, invalid slots, inconsistent versions, missing activities, or overflow,
+When either implementation evaluates the serialized request,
+Then both return the same fail-closed error and infeasible decision,
+And no invalid request is treated as a zero-energy oracle certificate.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-PARITY: Captured And Seeded Rows Agree Bit For Bit
+
+Given all 2,304 authenticated capture rows and 1,000 frozen finite fixtures,
+When Python and the Rust 7326 fixture evaluate the same serialized batches,
+Then every validity decision, error, feasibility decision, total, and per-term energy agrees,
+And acquired incompleteness remains explicit even when every acquired energy is zero.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-COST: Equivalent Service Boundaries Own Speedup
+
+Given persistent Python and Rust services after warmup,
+When sizes 1, 32, and 256 run for at least 30 paired blocks,
+Then each block retains both elapsed times, order, ratio, failures, and censoring,
+And startup, serialization, steady-kernel speedup, and whole-learning claims stay separate.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-HARDWARE: Placement Is A Software Projection
+
+Given the exact measured constraints and schedules,
+When sparse placement characteristics are reduced,
+Then coefficient count, bit width, bytes, and degree derive from those records,
+And no host measurement is labeled FPGA, TSU, board, or deployment performance.
+
+**Spec traces:** REQ-VERIFY-7326
+
+#### SCENARIO-VERIFY-7326-TERMINAL: Correctness And Performance Stay Separate
+
+Given complete parity, cost rows, scoped checks, Rust checks, and terminal validators,
+When terminal scores are derived,
+Then kernel completeness can equal one even if the 10x lower-bound gate fails,
+And blocked or disqualified output sets both scores to zero before atomic publication.
+
+**Spec traces:** REQ-VERIFY-7326
+
+## Implementation Status (REQ-VERIFY-7326)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7326 and SCENARIO-VERIFY-7326-* | `python/carnot/experiment_7326_v643_constraint_kernel.py` reuses the scoped validation runner, and `crates/carnot-constraints/src/schedule.rs` exposes the integer kernel through a task-owned example; no binding or storage change. | `tests/python/test_experiment_7326_v643_constraint_kernel.py` covers every new Python statement, while `crates/carnot-constraints/tests/experiment_7326_constraint_kernel.rs` and the serialized round trip cover Rust boundaries and parity. |

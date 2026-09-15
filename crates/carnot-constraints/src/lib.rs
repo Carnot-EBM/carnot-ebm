@@ -18,6 +18,7 @@
 //! - [`EqualityConstraint`] — value at index `i` must equal `target` (with tolerance)
 //! - [`IsingConstraint`] — wraps a `carnot_ising::IsingModel` as a constraint term,
 //!   useful for encoding SAT/logic problems as pairwise energy
+//! - [`evaluate_schedule`] — bit-exact integer separation and capacity evaluation
 //!
 //! **Verification certificates:**
 //! - [`VerificationCertificate`] — a serializable record proving that a specific
@@ -30,6 +31,7 @@
 pub mod constraint;
 pub mod extract;
 pub mod pipeline;
+pub mod schedule;
 pub mod verify;
 
 // Re-export core verification types so users don't need to depend on carnot-core directly.
@@ -42,4 +44,8 @@ pub use extract::{
     ArithmeticExtractor, AutoExtractor, ConstraintExtractor, ConstraintResult, LogicExtractor,
 };
 pub use pipeline::{PipelineResult, VerifyPipeline};
+pub use schedule::{
+    evaluate_schedule, evaluate_schedule_batch, ScheduleAssignment, ScheduleConstraint,
+    ScheduleEvaluation, ScheduleRequest, ScheduleTermEnergy, SCHEDULE_REQUEST_SCHEMA,
+};
 pub use verify::VerificationCertificate;

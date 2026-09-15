@@ -1,0 +1,127 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (target/debug/deps/carnot_constraints-488da21b31ac7af7)
+
+running 57 tests
+test constraint::tests::test_bound_gradient_below ... ok
+test constraint::tests::test_bound_gradient_inside ... ok
+test constraint::tests::test_bound_gradient_above ... ok
+test constraint::tests::test_bound_violated_above ... ok
+test constraint::tests::test_bound_satisfied_inside ... ok
+test constraint::tests::test_bound_gradient_finite_difference ... ok
+test constraint::tests::test_bound_satisfied_at_boundary ... ok
+test constraint::tests::test_bound_invalid_range - should panic ... ok
+test constraint::tests::test_equality_gradient ... ok
+test constraint::tests::test_equality_gradient_finite_difference ... ok
+test constraint::tests::test_equality_satisfied_within_tolerance ... ok
+test constraint::tests::test_equality_satisfied ... ok
+test constraint::tests::test_bound_violated_below ... ok
+test constraint::tests::test_equality_violated ... ok
+test constraint::tests::test_ising_constraint_satisfied ... ok
+test constraint::tests::test_ising_constraint_gradient_when_violated ... ok
+test constraint::tests::test_ising_constraint_violated ... ok
+test constraint::tests::test_ising_constraint_zero_grad_when_satisfied ... ok
+test extract::tests::test_correct_addition ... ok
+test extract::tests::test_wrong_addition ... ok
+test extract::tests::test_domain_filter_skip ... ok
+test extract::tests::test_multiple_claims ... ok
+test extract::tests::test_empty_text ... ok
+test pipeline::tests::test_epoch_days_to_ymd ... ok
+test extract::tests::test_domain_filter_match ... ok
+test extract::tests::test_no_arithmetic ... ok
+test extract::tests::test_wrong_subtraction ... ok
+test extract::tests::test_subtraction ... ok
+test extract::tests::test_negative_operand ... ok
+test extract::tests::test_logic_empty_text ... ok
+test extract::tests::test_disjunction ... ok
+test verify::tests::test_certificate_from_result ... ok
+test verify::tests::test_certificate_json_roundtrip ... ok
+test extract::tests::test_auto_domain_filter ... ok
+test verify::tests::test_certificate_verified ... ok
+test verify::tests::test_certificate_violated ... ok
+test extract::tests::test_logic_domain_filter ... ok
+test extract::tests::test_negation ... ok
+test extract::tests::test_auto_supported_domains ... ok
+test extract::tests::test_auto_deduplication ... ok
+test extract::tests::test_if_then ... ok
+test extract::tests::test_if_comma ... ok
+test extract::tests::test_auto_empty_text ... ok
+test pipeline::tests::test_verify_correct_arithmetic ... ok
+test extract::tests::test_multiple_implications ... ok
+test extract::tests::test_exclusion ... ok
+test pipeline::tests::test_verify_with_logic ... ok
+test extract::tests::test_no_logic ... ok
+test extract::tests::test_universal ... ok
+test pipeline::tests::test_verify_wrong_arithmetic ... ok
+test pipeline::tests::test_verify_domain_filter ... ok
+test pipeline::tests::test_verify_multiple_constraints ... ok
+test extract::tests::test_auto_combines_arithmetic_and_logic ... ok
+test pipeline::tests::test_verify_no_constraints ... ok
+test pipeline::tests::test_extract_constraints_convenience ... ok
+test pipeline::tests::test_certificate_json_roundtrip ... ok
+test pipeline::tests::test_certificate_fields ... ok
+
+test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/experiment_7326_constraint_kernel.rs (target/debug/deps/experiment_7326_constraint_kernel-5c8a6db0d4659921)
+
+running 3 tests
+test boundary_equality_and_overlapping_windows_have_exact_energy ... ok
+test zero_acquired_energy_never_claims_complete_oracle_authority ... ok
+test empty_invalid_slot_version_and_overflow_fail_closed ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration.rs (target/debug/deps/integration-e01897cfdb3b05f0)
+
+running 8 tests
+test test_composed_all_satisfied ... ok
+test test_decomposition_consistency ... ok
+test test_composed_with_violations ... ok
+test test_deterministic_results ... ok
+test test_ising_in_composed_energy ... ok
+test test_certificate_full_workflow ... ok
+test test_repair_with_equality_constraints ... ok
+test test_repair_with_bound_constraints ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_pipeline.rs (target/debug/deps/test_pipeline-1da454f085132d1c)
+
+running 27 tests
+test cross_lang_09_domain_filter_skip ... ok
+test cross_lang_10_domain_filter_match ... ok
+test pipeline_custom_extractor ... ok
+test cross_lang_01_correct_addition ... ok
+test cross_lang_04_wrong_subtraction ... ok
+test cross_lang_02_wrong_addition ... ok
+test cross_lang_07_no_arithmetic ... ok
+test cross_lang_08_empty_text_arithmetic ... ok
+test cross_lang_06_multiple_arithmetic ... ok
+test cross_lang_03_subtraction ... ok
+test cross_lang_05_negative_operand ... ok
+test cross_lang_20_logic_domain_filter ... ok
+test cross_lang_18_empty_text_logic ... ok
+test cross_lang_11_if_then ... ok
+test cross_lang_12_if_comma ... ok
+test cross_lang_14_disjunction ... ok
+test cross_lang_15_negation ... ok
+test pipeline_auto_extractor_union ... ok
+test cross_lang_19_multiple_implications ... ok
+test cross_lang_13_exclusion ... ok
+test cross_lang_16_universal ... ok
+test pipeline_certificate_json_roundtrip ... ok
+test cross_lang_17_no_logic ... ok
+test pipeline_mixed_constraints ... ok
+test pipeline_wrong_arithmetic_violated ... ok
+test pipeline_correct_arithmetic_verified ... ok
+test pipeline_no_constraints_vacuous ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Doc-tests carnot_constraints
+
+running 1 test
+test crates/carnot-constraints/src/pipeline.rs - pipeline (line 21) ... ignored
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
