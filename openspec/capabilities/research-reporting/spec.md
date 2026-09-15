@@ -1,5 +1,102 @@
 # Research Reporting Capability Specification
 
+## V643 literature ingestion and exact execution contract — 2026-09-15
+
+**Status:** Implemented. This receipt is advisory and gates no science.
+
+### REQ-REPORT-7316: Authenticate the V643 sources and thirteen-task contract
+
+Exp7316 SHALL prefer `research-roadmap-next.yaml` only when it exists and names
+milestone `2026.09.643`. Otherwise, it SHALL select `research-roadmap.yaml` only
+when that file names the same milestone. It SHALL resolve the authority once.
+It SHALL preserve and hash the exact selected YAML and its `milestone_doc`
+bytes. It SHALL not activate, archive, or edit either roster.
+
+Exp7316 SHALL parse the Markdown table and YAML tasks independently. It SHALL
+require exactly thirteen ordered tasks from `exp7316-contract` through
+`exp7328-capstone`. It SHALL compare exact IDs, titles, phases, deliverables,
+and every structured gate. Count, order, ID, title, phase, path, and gate
+mutations SHALL fail the contract. A readable mismatch SHALL finish as
+`disqualified` with `contract_complete_score=0`.
+
+The workflow SHALL run the roadmap schema, prior-failure, exclusion-manifest,
+gate, and prompt-path checks against the one selected YAML. It SHALL use the
+Exp7303 scoped runner for explicit test and changed-module files. It SHALL
+exercise the actual conductor gate reader for every declared gate. Each gate
+SHALL retain passing, false, missing-file, missing-field, and
+disqualified-with-score-one controls. A combined score and verdict check SHALL
+reject disqualified evidence even when its numeric score equals one.
+
+Exp7316 SHALL ingest four V643 source dispositions. It SHALL check no more than
+four primary URLs, in sequence, with a 20-second request limit. The sources
+SHALL include arXiv `2604.13283`, `2608.27038`, `2503.15551`, and the primary
+EBT page. Each disposition SHALL keep its source date, URL, access result,
+implementation choice, boundary, and falsifier. Access failure SHALL remain a
+source observation and SHALL not become a fabricated result.
+
+Exp7316 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current load and generation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical and injected model evidence SHALL remain in hash-bound sidecars.
+
+The terminal artifact SHALL contain every field and exact principle in the
+Exp7316 prompt. `rows` SHALL equal `contract_rows`.
+`contract_complete_score` SHALL equal one only when literal contract checks,
+metadata checks, gate controls, source dispositions, and affected validation
+all pass. Shared parser and gate authority SHALL set `verifier_is_oracle=true`.
+An exact advisory result SHALL therefore use `circular_positive`, not
+`positive`. External absence SHALL be terminal `blocked`. Only unfinished
+Exp7316 work MAY use `partial`.
+
+#### SCENARIO-REPORT-7316-AUTHORITY: Staging is optional after activation
+
+**Given** staged and active roadmap candidates
+**When** Exp7316 resolves the V643 YAML authority
+**Then** a matching staged file wins and a missing staged file permits a matching active file
+**And** a stale or missing pair produces an exact terminal block.
+
+#### SCENARIO-REPORT-7316-CONTRACT: Thirteen independent rows match exactly
+
+**Given** separate V643 Markdown and YAML byte streams
+**When** Exp7316 parses both literal contracts
+**Then** thirteen ordered rows agree on ID, title, phase, deliverable, and gates
+**And** count, order, ID, title, phase, path, and gate mutations fail.
+
+#### SCENARIO-REPORT-7316-GATES: Provenance controls score consumption
+
+**Given** every structured V643 gate and isolated temporary artifacts
+**When** the actual conductor reader evaluates the five declared controls
+**Then** passing, false, missing-file, missing-field, and disqualified outcomes remain visible
+**And** combined score and verdict gates reject disqualified score-one evidence.
+
+#### SCENARIO-REPORT-7316-SOURCES: Four bounded source checks remain advisory
+
+**Given** the filed V643 references and four selected primary pages
+**When** Exp7316 performs sequential bounded access checks
+**Then** each source disposition keeps its access result, choice, boundary, and falsifier
+**And** a rate limit or unavailable page does not create a local science claim.
+
+#### SCENARIO-REPORT-7316-VALIDATION: Scoped checks control the result
+
+**Given** explicit Exp7316 tests, modules, and roadmap checks
+**When** the Exp7303 runner records each subprocess
+**Then** every required affected check has one exact receipt
+**And** an affected failure disqualifies the contract while historical repository debt stays separate.
+
+#### SCENARIO-REPORT-7316-ARTIFACT: Stored evidence controls terminal state
+
+**Given** a measured terminal candidate and hash-bound raw sidecars
+**When** an independent reducer reloads its rows and hashes
+**Then** only an exact validated candidate reaches the declared result path
+**And** a changed row, source hash, score, verdict, gate summary, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7316)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7316 and SCENARIO-REPORT-7316-* | `python/carnot/experiment_7316_v643_contract.py`; `scripts/experiments/experiment_7316_v643_contract.py`; hash-bound raw sidecars and terminal receipt | `tests/python/test_experiment_7316_v643_contract.py`; scoped 100% changed-module coverage; selected-roadmap checks; exact-contract E2E; adversarial verification; strict row consistency; spec coverage; full Python tests |
+
 ## V642 capstone reconciliation — 2026-09-15
 
 **Status:** Implemented. This reducer closes the roster record, not the open science.

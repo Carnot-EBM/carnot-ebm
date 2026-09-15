@@ -5774,3 +5774,19 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Boundary: this is an advisory source map. It makes no science claim and
   activates no task.
 <!-- EXP7246-V638-SOURCE-INGESTION-20260912-END -->
+
+<!-- EXP7316-V643-SOURCE-INGESTION-20260915-START -->
+## 2026-09-15 Exp7316 V643 source ingestion — INGESTED
+
+- Adopted Conservative Constraint Acquisition (`arXiv:2604.13283`) as a
+  bounded design for versioned structural constraint learning. Charge every
+  oracle query. Compare persistent learning with reset and exact-answer cache.
+- Adopted Cascaded Batch Prompting (`arXiv:2608.27038`) as context for the
+  existing three-arm batch measurement. Repair its scoped launcher first.
+- Adopted BATCHSAFEBENCH (`arXiv:2503.15551`) controls for claim order,
+  changed neighbors, and unsupported neighboring instructions.
+- Retained EBT (`arXiv:2507.02092`) as architecture context only. It does not
+  certify source translation and does not reopen energy-generation work.
+- Boundary: this is advisory source ingestion. It activates no task and makes
+  no local science claim.
+<!-- EXP7316-V643-SOURCE-INGESTION-20260915-END -->
