@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.643",
+  "generated_at": "2026-09-15T21:21:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 172.5,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 13,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure prospective learning from acquired plan constraints",
+      "duration_minutes": 70.92,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prototype structural constraint addition across versioned plans",
+      "duration_minutes": 69.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure joint-claim fidelity and complete inference cost",
+      "duration_minutes": 18.36,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure live selfparse generalization after authority repair",
+      "duration_minutes": 7.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify bounded Qwen3.8 joint-claim calls",
+      "duration_minutes": 2.64,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone's 13 compute-bound completions occupied 172.5 minutes. Optimization should start with the 70.92- and 69.26-minute entries; neither their expensive stages nor an accelerator fault are demonstrated, and the locked compute-task idle field is false.",
+  "bottlenecks_identified": [
+    "Elapsed work is concentrated in the 70.92- and 69.26-minute compute-bound entries, while missing stage spans leave the cause of each long path unknown.",
+    "The clock source fell back to disk modification times because the live git-log path found zero commits, obscuring waits, overlap, and the actual critical path.",
+    "The accelerator sample has no experiment or compute-stage correlation, so it cannot establish whole-task device efficiency; the locked classification records no accelerator-efficiency fault.",
+    "Launch cardinality and dispatch choice were not captured, leaving no basis to identify a two-or-more-model launch that should have used the dual-GPU runner."
+  ],
+  "improvements_suggested": [
+    "Give every experiment durable stage spans for preparation, queueing, inference, and finalization instead of deriving elapsed time from commits or file timestamps.",
+    "Attach experiment and stage identifiers to timestamped device utilization, memory, and process samples; evaluate zero utilization only during a declared compute span.",
+    "Persist model cardinality, dispatch implementation, device assignment, and fallback cause at launch, selecting the dual-GPU runner only when at least two models execute concurrently.",
+    "Let the queue place independent one-model jobs on separate devices when both are runnable, without changing the correct single-device semantics of each job.",
+    "Insert resumable boundaries and stage budgets into the two longest paths to expose repeated initialization, waiting, or inference."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Enable two-device queue placement for independent one-model runs.",
+    "Correlate durable stage spans with process-level accelerator telemetry.",
+    "Add resume points and stage budgets to the 70.92- and 69.26-minute paths before rerunning them."
+  ],
+  "estimated_time_savings_pct": 40,
+  "meta_reflection": "The 40% estimate is conditional: placing the 69.26-minute run entirely beneath the 70.92-minute run would subtract 69.26 minutes from 172.5 minutes if the jobs are independent and device-separable. Independence is not recorded, so only future queue and telemetry receipts can convert this scheduling bound into measured savings."
+}

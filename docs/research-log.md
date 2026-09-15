@@ -6808,3 +6808,10 @@ The critical path for milestone .250:
 - theme: long synthesis paths and compute-bound work concentrated reconstructed execution while task-level telemetry remained incomplete
 - key result: honest operational negative — the compute duration leader is known and no compute-task GPU-idle fault is recorded, but no data available this milestone explains its phases, proves GPU efficiency, or establishes a parallel-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.643
+
+- exp_range: no data available this milestone
+- theme: structural-constraint workloads dominated an all-compute cycle whose reconstructed clock lacks stage boundaries
+- key result: honest operational negative — elapsed-time ordering is available, but causal stages, task-synchronized accelerator behavior, and eligibility for the dual-model dispatch path have no data available this milestone
+- acceptance: no data available this milestone
