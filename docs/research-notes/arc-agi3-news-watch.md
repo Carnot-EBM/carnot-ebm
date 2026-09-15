@@ -304,3 +304,5 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Kaggle acknowledged RTX 6000 capacity constraints in August; on September 10 it said the queue backups had cleared and confirmed that a submission shown as “queued” after finishing/scoring is experiencing a display glitch—the score remains valid. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/739674)
 
+## 2026-09-15 13:12 UTC -- checked, nothing new
+

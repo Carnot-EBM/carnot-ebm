@@ -16497,3 +16497,110 @@ publication surfaces, historical determinations, or the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7323 and SCENARIO-CL-7323-* | Implemented in `python/carnot/experiment_7323_v643_addition_prototype.py` with a thin script entrypoint. The prototype isolates a Boolean executor, conservatively adds versioned pair and capacity atoms, seals bounded streams, compares four arms plus one diagnostic, and uses transactional memory for the default-off lifecycle. | `tests/python/test_experiment_7323_v643_addition_prototype.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 710/710 (100%). |
+
+## REQ-CL-7324: Prospective Value Of Versioned Structural Addition
+
+Carnot SHALL authenticate the terminal Exp7323 prototype before evaluation.
+The prototype SHALL have `addition_fixture_ready_score=1`. Its verdict SHALL
+not be `blocked`, `disqualified`, or `partial`. Missing, quarantined, changed,
+or otherwise failed external evidence SHALL produce a row-free blocked result.
+The result SHALL retain the exact upstream field, expected value, and observed
+value for each gate check.
+
+A separate evaluator process SHALL materialize the 24 sealed held-out streams.
+It SHALL expose only public requests, authenticated executor versions, and the
+Boolean responses due for submitted plans. Each arm SHALL seal its prediction
+and query request before the evaluator exposes the response. Exact optimum
+labels and exhaustive checks SHALL stay inside the evaluator. Their calls and
+time SHALL be diagnostic costs and SHALL not enter learner inputs.
+
+The run SHALL execute 24 requests for each held-out stream and each of four
+primary arms. Each request SHALL have the same 24-call executor cap. Main,
+localization, capacity, failed, cache-miss, and final checks SHALL count. The
+result SHALL retain 576 request units and 2,304 arm-request rows. Requests one
+through four SHALL be warmup. Primary value SHALL use requests five through
+24. Timeouts and exhausted units SHALL remain as censored rows.
+
+The learner SHALL retain its complete memory, witnesses, cache, pending query
+identities, and rollback image within 69,632 bytes. The result SHALL measure
+update, lookup, solver, executor, and total request time separately. Each stream
+job SHALL stop after 2,400 seconds. It SHALL checkpoint after each request.
+
+The reducer SHALL use streams as independent units. It SHALL compute paired
+95% confidence intervals with 10,000 seeded whole-stream resamples. It SHALL
+report overall, stationary, announced-version-change, and returning-version
+results. The sealed oracle-work, utility, feasibility coverage,
+returned-infeasible, and stale-version gates SHALL apply jointly. The frozen
+arm SHALL remain visible for forgetting and opportunity measurement.
+
+Feedback-withheld, label-shuffled, and learned-atom-erasure interventions SHALL
+start from the same saved warmup prefixes. Each admitted atom SHALL link its
+witnesses to later distinct requests that it affects. A structural state change
+without a changed later decision SHALL not count as learning value.
+`addition_capture_complete_score` SHALL remain independent of
+`addition_value_score`. A complete null SHALL retain full audit evidence.
+
+The task SHALL use date `20260915`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counts SHALL be zero.
+It SHALL declare `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. The exact evaluator SHALL set
+`verifier_is_oracle=true`. Therefore a favorable complete result SHALL use
+`circular_positive`, not `positive`. The learner SHALL not mutate model
+weights, production defaults, publication surfaces, historical determinations,
+or the research roadmap.
+
+### SCENARIO-CL-7324-PRECONDITIONS: Prototype Failure Blocks Exactly
+
+- GIVEN the declared Exp7323 artifact and exclusion manifest
+- WHEN readiness, status, verdict, hashes, and quarantine state are checked
+- THEN only exact complete eligible evidence can start held-out execution
+- AND a failed external check produces a row-free blocked terminal result.
+
+### SCENARIO-CL-7324-ISOLATION: Predictions Exist Before Boolean Responses
+
+- GIVEN a public request and a private executor in a separate process
+- WHEN an arm submits a main, auxiliary, cache-miss, failed, or final check
+- THEN the prediction and query bytes persist before the Boolean response arrives
+- AND private rules, optimum labels, and exhaustive diagnostics never enter learner state.
+
+### SCENARIO-CL-7324-PANEL: Four Arms Share Every Held-Out Opportunity
+
+- GIVEN 24 sealed streams, 24 requests, four arms, and a 24-call cap
+- WHEN the fixed panel runs once without outcome-based extension
+- THEN 576 request units and 2,304 arm-request rows are accounted
+- AND warmup, censoring, failures, abstentions, final checks, and costs stay visible.
+
+### SCENARIO-CL-7324-REDUCTION: Streams Own Paired Intervals
+
+- GIVEN complete post-warmup stream-arm summaries
+- WHEN the reducer makes 10,000 seeded paired resamples
+- THEN streams, not requests or executor calls, are independent units
+- AND overall plus all three declared strata retain their intervals and denominators.
+
+### SCENARIO-CL-7324-INTERVENTIONS: Saved Prefixes Test Causal Learning
+
+- GIVEN one exact warmup prefix per stream
+- WHEN feedback is withheld, labels are shuffled, or learned atoms are erased
+- THEN each intervention starts from the same prefix identity
+- AND only later distinct decisions linked to admitted atoms count as learning effects.
+
+### SCENARIO-CL-7324-ACCOUNTING: Every Byte And Executor Call Is Charged
+
+- GIVEN bounded learner state, cache, pending IDs, rollback bytes, and evaluator diagnostics
+- WHEN request and stream accounting is reduced
+- THEN every executor invocation and every retained state category is charged
+- AND optimum work remains separate, exact, and censored when incomplete.
+
+### SCENARIO-CL-7324-TERMINAL: Capture And Value Stay Independent
+
+- GIVEN complete raw rows, cold reduction, scoped validation, and terminal checks
+- WHEN the frozen gates are jointly scored
+- THEN capture can equal one for a complete positive or null measurement
+- AND blocked or disqualified output sets all readiness and promotion scores to zero.
+
+## Implementation Status (REQ-CL-7324)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7324 and SCENARIO-CL-7324-* | Planned: `python/carnot/experiment_7324_v643_addition_learning.py` with a thin script entrypoint and terminal result `results/experiment_7324_v643_addition_learning.json`. | Planned: `tests/python/test_experiment_7324_v643_addition_learning.py`. |
