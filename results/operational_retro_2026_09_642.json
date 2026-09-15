@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.642",
+  "generated_at": "2026-09-15T03:16:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 185.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Audit factor-learning causality retention and rollback",
+      "duration_minutes": 73.77,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify bounded Qwen3.8 joint-claim transport",
+      "duration_minutes": 52.05,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure prospective continuous learning with local factor revision",
+      "duration_minutes": 46.67,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Run one adapter-withheld live selfparse generalization session",
+      "duration_minutes": 8.78,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V642 literature ingestion and exact fourteen-task receipt",
+      "duration_minutes": 1.17,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 185.8 minutes, including 2 compute-bound experiments. The compute-bound entries were Qualify bounded Qwen3.8 joint-claim transport at 52.05 minutes and Run one adapter-withheld live selfparse generalization session at 8.78 minutes; the supplied data gives no reason for either duration. Audit factor-learning causality retention and rollback was the longest listed experiment at 73.77 minutes, and the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Elapsed time was concentrated in Audit factor-learning causality retention and rollback at 73.77 minutes, Qualify bounded Qwen3.8 joint-claim transport at 52.05 minutes, and Measure prospective continuous learning with local factor revision at 46.67 minutes; no phase-level cause is available in the supplied data.",
+    "The point-in-time GPU report is not aligned to individual compute-bound execution windows, so it cannot establish utilization efficiency across those tasks.",
+    "No model-count or runner-selection data is available, so DualGPURunner eligibility and dispatch cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Emit phase-level elapsed-time spans and restartable checkpoints for every experiment, with time-budget warnings on long synthesis phases.",
+    "Capture GPU utilization and memory only within each compute-bound task window, and attach process ownership to the experiment artifact.",
+    "Record concurrent model count, selected runner, and selection reason at launch; route to DualGPURunner only when at least two models are loaded in parallel.",
+    "Add lease-aware cleanup for inactive GPU processes after their owning task ends, with an explicit keep-alive override."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase spans, time-budget warnings, and restartable checkpoints to the experiment harness.",
+    "Join task-window GPU telemetry and process ownership to compute-bound experiment receipts.",
+    "Emit concurrent-model and runner-choice launch receipts, with conditional DualGPURunner routing only for parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing identifies where elapsed time accumulated, but the supplied data does not explain why those paths were slow. Without phase spans, task-aligned GPU telemetry, launch receipts, or a measured counterfactual, a nonzero time-savings estimate would not be defensible."
+}

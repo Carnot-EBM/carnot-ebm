@@ -6801,3 +6801,10 @@ The critical path for milestone .250:
 - theme: source-reuse compute and durable-storage synthesis led runtime while phase and device attribution remained incomplete
 - key result: honest operational negative — the longest compute-bound entry is known, but no data available this milestone explains its internal cost, establishes compute-window GPU efficiency, or identifies an eligible parallel-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.642
+
+- exp_range: no data available this milestone
+- theme: long synthesis paths and compute-bound work concentrated reconstructed execution while task-level telemetry remained incomplete
+- key result: honest operational negative — the compute duration leader is known and no compute-task GPU-idle fault is recorded, but no data available this milestone explains its phases, proves GPU efficiency, or establishes a parallel-model runner miss
+- acceptance: no data available this milestone
