@@ -1900,4 +1900,4 @@ dispositions, Exp7314 SHALL emit `board_continuity_complete_score=1`. Its raw
 rows and source hashes SHALL reduce independently while GateMate remains
 blocked at board-row scope.
 
-**Implementation status:** Planned
+**Implementation status:** Implemented and verified (Exp7314)
