@@ -17989,3 +17989,4 @@ code |
 | 2026-09-15 07:23 UTC | Carry the owned runtime lease into ARC evaluation  | OK | 135 passed, 1 warning in 18.27s |
 | 2026-09-15 08:05 UTC | Measure live selfparse generalization after author | OK | 99 passed, 1 warning in 7.68s |
 | 2026-09-15 08:32 UTC | Qualify bounded Qwen3.8 joint-claim calls | OK | 90 passed, 1 warning in 8.36s |
+| 2026-09-15 09:20 UTC | Measure joint-claim fidelity and complete inferenc | OK | 89 passed, 1 warning in 11.97s |
