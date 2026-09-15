@@ -44791,3 +44791,45 @@ comparison. Exp7326 proves 3,304-row Rust parity but lower speedup bounds are
 0.587, 0.398, and 0.433 at batch sizes 1, 32, and 256 through the persistent
 newline-delimited service. A new in-process boundary is a distinct question.
 Exp7327 remains blocked on a dated operator physical-change receipt for GateMate.
+
+### V644 refusal replan: source refresh and scope decision
+
+Rechecked the sources before restoring the refused V644 plan. The archive now
+contains V643. The earlier archive cutoff above records the first planning scan.
+The replan retains the fourteen experiments and their existing scientific gates.
+
+- Reopened [CCA](https://arxiv.org/abs/2604.13283),
+  [continual-learning evaluation](https://arxiv.org/abs/2607.07847), and
+  [Memoir](https://arxiv.org/abs/2607.20792). Their restricted acquisition,
+  separate change cohorts, and between-request memory controls still motivate
+  Exp7330 through Exp7335. These are method choices, not evidence of a Carnot win.
+- New deployment reference: [Kolmogorov--Arnold Networks for Small Language
+  Models](https://arxiv.org/abs/2607.15525), submitted 2026-07-17. Its tested
+  replacements show no consistent quality or latency advantage over strong MLP
+  controls. Keep KAN deployment deferred until a useful predictor and matched
+  benchmark justify it. Interpretability alone does not justify replacement.
+- New hardware reference: [Scaling Up Thermodynamic AI
+  Models](https://arxiv.org/abs/2607.00170), submitted 2026-06-30. It trains
+  convolutional networks for high-temperature Ising inference and analyzes
+  autocorrelation and inference cost. Retain for a future sampler study; it
+  does not establish hardware gains for acquired integer constraints.
+- Reopened [EBT](https://arxiv.org/abs/2507.02092),
+  [ARM--EBM](https://arxiv.org/abs/2512.15605),
+  [Lagrange oscillatory networks](https://arxiv.org/abs/2505.07179),
+  [Token-Guard](https://arxiv.org/abs/2601.21969),
+  [span-level grounding](https://arxiv.org/abs/2607.00895), and
+  [AMTFV](https://arxiv.org/abs/2607.29549). Keep the preceding scope decisions.
+  The tool-result handoff remains the ARC experiment's concrete hypothesis.
+- Secondary checks repeated: OpenReview's indexed reasoning PDF still returned
+  a browser challenge. Semantic Scholar citation endpoints for both anchor
+  papers were unavailable through the browser tool; no refreshed citation count
+  is claimed. Hugging Face's grounding entry and Extropic's writing/Z1T pages
+  were readable. GitHub's Python/Rust trending pages exposed navigation without
+  usable ranked entries. Kona remains product context. These access limits do
+  not reopen a retired mechanism or change the experiment roster.
+
+The unchanged exclusion lint identified four historical scope matches for
+Exp7334: Exp5867, Exp6193, Exp6553, and Exp6614. The restored task records their
+exact artifact verdicts, changed prerequisites, and retirement on recurrence.
+Its existing structural-addition, isolated-executor, and causal controls supply
+the scientific distinction. No operator override is needed.

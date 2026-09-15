@@ -480,35 +480,6 @@ tasks:
   per_unit_rows: true
   milestone: 2026.09.644
   deliverable: results/experiment_7334_v644_prospective_learning.json
-  prior_failures:
-  - experiment_id: exp5867-prospective-certified-continuous-learning
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp5867 never ran because the Exp5866 adapter artifact was absent. This attempt requires
-      same-roadmap Exp7331.learning_adapter_ready_score=1 and an eligible terminal class, after Exp7330
-      executor isolation; it uses the V643 structural-addition learner through the real opt-in pipeline.
-    retire_if_same_verdict: true
-  - experiment_id: exp6193-prospective-continuous-strategy-learning-ab
-    verdict: blocked_gate_check_failed
-    addressed_by: Exp6193 blocked on Exp6192.seed_stream_ready_score=0. Exp7332 now qualifies the mandated
-      Qwen transport and Exp7333 seals the fresh candidate stream; this attempt gates on plan_capture_complete_score=1
-      and its terminal class, with independent rows and no substitution of a failed historical seed stream.
-    retire_if_same_verdict: true
-  - experiment_id: exp6553-prospective-sota-continuous-self-learning
-    verdict: 'blocked: current, retention, and future-support not evaluated; safety not promoted; receipts
-      failed gpu_vram_contract'
-    addressed_by: Exp6553 failed GPU VRAM/model readiness and left retention and restart gates unevaluated.
-      Exp7332/Exp7333 isolate owned Qwen3.8 bounded generation; Exp7334 performs CPU replay with zero new
-      loads. Exp7331 must qualify version invalidation and cold-restart rollback first; Exp7334 retains
-      per-cohort safety, utility and coverage gates.
-    retire_if_same_verdict: true
-  - experiment_id: exp6614-prospective-invariant-self-learning
-    verdict: 'blocked_tests: failed tests with observed=False'
-    addressed_by: Exp6614 failed tests and showed no held-future gain over static or shuffled controls.
-      This attempt uses the V643 acquired separation/capacity constraints, an isolated executor and fresh
-      distinct requests instead of invariant-priority updates. The shipped Exp7303 scoped runner must pass
-      affected tests; frozen-memory, feedback-withheld, shuffled and atom-erasure controls retain the causal
-      falsifier.
-    retire_if_same_verdict: true
   gated_on:
   - upstream: exp7331-learning-adapter
     artifact_field: learning_adapter_ready_score

@@ -18001,3 +18001,6 @@ code |
 | 2026-09-15 19:41 UTC | Preserve board evidence and GateMate changed-state | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ll not chase u |
 | 2026-09-15 20:53 UTC | Preserve board evidence and GateMate changed-state | OK | cache hit: 89 passed, 1 warning in 8.25s |
 | 2026-09-15 21:15 UTC | Reconcile thirteen outcomes and decide the next re | OK | 98 passed, 1 warning in 12.63s |
+| 2026-09-15 22:45 UTC | Plan milestone 2026.09.644 | OK | 14 tasks proposed |
+| 2026-09-15 23:06 UTC | Activation REFUSED: milestone 2026.09.644 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on exp7334-prospective-learning. NEXT_ROADMAP_FILE left in place for operator inspection. |
+| 2026-09-15 23:06 UTC | Activation replan 1/2: 2026.09.644 | OK | refused roadmap quarantined to roadmap-2026.09.644-refusal1.yaml; replanning with lint report |
