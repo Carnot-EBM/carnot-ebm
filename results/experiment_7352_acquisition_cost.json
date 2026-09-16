@@ -1,0 +1,81 @@
+{
+  "experiment": 7352,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-16",
+  "started_at": "2026-09-16T20:19:28.129572+00:00",
+  "finished_at": "2026-09-16T20:19:28.129572+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Compare acquisition strategies at the full execution boundary",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7351-acquisition-prototype",
+  "failed_field": "acquisition_prototype_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7351_v645_acquisition_prototype.json",
+  "failed_evidence_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7351-acquisition-prototype",
+    "failed_field": "acquisition_prototype_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7351_v645_acquisition_prototype.json",
+    "failed_evidence_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7351-acquisition-prototype.acquisition_prototype_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7351-acquisition-prototype",
+      "artifact_field": "acquisition_prototype_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7"
+    },
+    {
+      "upstream": "exp7351-acquisition-prototype",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7"
+    },
+    {
+      "upstream": "exp7351-acquisition-prototype",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": false,
+      "actual_type": "bool",
+      "passed": true,
+      "reason": "actual=False == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
