@@ -1,5 +1,105 @@
 # Research Reporting Capability Specification
 
+## V645 source ingestion and exact execution contract — 2026-09-16
+
+**Status:** Implemented. This receipt is advisory and gates no science.
+
+### REQ-REPORT-7343: Authenticate V645 research inputs and the fourteen-task contract
+
+Exp7343 SHALL select `research-roadmap-next.yaml` only when it names milestone
+`2026.09.645`. Otherwise, it SHALL require `research-roadmap.yaml` to name that
+milestone. It SHALL hash-copy the selected YAML and the V645 Markdown contract
+before parsing either source. It SHALL not activate, archive, or edit a roadmap.
+
+Exp7343 SHALL use the shipped independent Markdown and YAML parsers. It SHALL
+require fourteen ordered tasks from `exp7343-contract` through
+`exp7356-capstone`. It SHALL compare each ID, title, phase, deliverable,
+substrate class, and structured gate. Missing tasks, reordered IDs, stale
+milestones, changed titles, phases, paths, or gate fields, misspelled gate
+keys, and malformed operators SHALL fail the contract.
+
+Each gate SHALL name an earlier V645 producer. The producer SHALL declare the
+exact bare `artifact_field` in its `REQUIRED ARTIFACT FIELDS` block. The
+workflow SHALL exercise the real conductor gate reader in a private result
+tree. It SHALL retain passing evidence, zero scores, missing producers,
+missing fields, missing terminal classes, disqualified score-one evidence,
+and quarantined score-one evidence. Only the passing case MAY authorize work.
+
+Exp7343 SHALL refresh primary sources `2609.12267`, `2604.13283`,
+`2607.20792`, and `2607.29549`. It SHALL map their bounded methods to Exp7351,
+Exp7349, and Exp7354. It SHALL retain HTTP 429 and browser-challenge outcomes.
+It SHALL record neural-oracle and shared-executor limits. Source access failure
+SHALL remain separate from contract validity.
+
+Exp7343 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical and scripted model-shaped evidence SHALL remain in labeled,
+hash-bound sidecars.
+
+The workflow SHALL run the shipped schema, prior-failure, gate, exclusion,
+prompt-path, ARC-generalization, and overdue-priority checks against the
+selected YAML. It SHALL use the Exp7303 scoped runner for exact tests and
+changed modules. It SHALL run the independent reducer, adversarial verifier,
+and strict verdict-row consistency check against the terminal candidate.
+
+The terminal artifact SHALL contain every required prompt field and exact
+field principle. `rows` SHALL equal `contract_rows` and retain all fourteen
+independently parsed tasks. `contract_complete_score` SHALL equal one only
+when source parity, adverse gate controls, and affected checks pass. This
+accounting score SHALL not authorize science. The shared executor defines gate
+correctness, so `verifier_is_oracle` SHALL be true. An exact result SHALL use
+`verdict_class=circular_positive`.
+
+#### SCENARIO-REPORT-7343-AUTHORITY: Select and freeze the V645 sources
+
+**Given** staged and active roadmap candidates
+**When** Exp7343 resolves milestone `2026.09.645`
+**Then** a matching staged file wins and a matching active file is the fallback
+**And** exact YAML and Markdown bytes are hash-copied before parsing.
+
+#### SCENARIO-REPORT-7343-CONTRACT: Fourteen independent task rows match
+
+**Given** separate V645 Markdown and YAML byte streams
+**When** Exp7343 parses both contracts
+**Then** fourteen ordered rows agree on all task and gate fields
+**And** each named contract mutation fails closed.
+
+#### SCENARIO-REPORT-7343-GATES: Unusable producer evidence fails closed
+
+**Given** each structured V645 gate and isolated producer fixtures
+**When** the real conductor reader evaluates all seven cases
+**Then** only passing terminal evidence authorizes the consumer
+**And** quarantined or disqualified score-one evidence cannot authorize work.
+
+#### SCENARIO-REPORT-7343-SOURCES: Advisory methods retain their limits
+
+**Given** the V645 source ledger and four bounded primary-source requests
+**When** Exp7343 records access and method mappings
+**Then** every source keeps its access outcome, task mapping, and limit
+**And** source access failure cannot create science evidence or fail parity.
+
+#### SCENARIO-REPORT-7343-VALIDATION: Current checks control completion
+
+**Given** the selected V645 YAML and the changed module and tests
+**When** Exp7343 runs the declared structural, scoped, and terminal checks
+**Then** each exact command, scope, exit code, elapsed time, and log hash remains
+**And** any affected failure keeps `contract_complete_score` at zero.
+
+#### SCENARIO-REPORT-7343-ARTIFACT: Stored evidence recomputes terminal state
+
+**Given** hash-bound sources, contract rows, controls, and validation receipts
+**When** an independent reducer reloads the candidate
+**Then** unchanged evidence recomputes the stored score and verdict
+**And** changed rows, hashes, state, or checks fail validation.
+
+## Implementation Status (REQ-REPORT-7343)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7343 and SCENARIO-REPORT-7343-* | Implemented: Exp7343 module, thin entrypoint, hash-bound source copies, and terminal artifact | Verified by focused RED/GREEN tests, scoped 100% changed-module coverage, selected-roadmap checks, real-file E2E, adversarial verification, strict row consistency, and full Python tests |
+
 ## V644 source ingestion and exact execution contract — 2026-09-15
 
 **Status:** Implemented. This receipt is advisory and gates no science.

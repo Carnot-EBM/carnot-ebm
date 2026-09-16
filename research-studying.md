@@ -5805,3 +5805,20 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Boundary: these are advisory method choices. Access failures remain source
   outcomes. They do not create a model result or a local science result.
 <!-- EXP7329-V644-SOURCE-INGESTION-20260915-END -->
+
+<!-- EXP7343-V645-SOURCE-INGESTION-20260916-START -->
+## 2026-09-16 Exp7343 V645 source ingestion — INGESTED
+
+- FastCA and T-Oracle (`arXiv:2609.12267`) map to Exp7351. Compare full
+  acquisition time and exact query count. Do not use the neural oracle as
+  authority. Do not assume known target scopes.
+- Conservative Constraint Acquisition (`arXiv:2604.13283`) maps to Exp7349
+  and Exp7351. Keep bounded structural additions and charge every exact
+  executor query. Record the shared-executor circularity.
+- Memoir (`arXiv:2607.20792`) maps to Exp7349. Keep prediction read-only and
+  commit verified changes between distinct future requests.
+- AMTFV (`arXiv:2607.29549`) maps to Exp7354. Record request, execution,
+  delivery, resumed reasoning, and later action as separate events.
+- Boundary: this map is advisory. HTTP 429 and browser challenges remain
+  access outcomes. They do not create a model result or a local science result.
+<!-- EXP7343-V645-SOURCE-INGESTION-20260916-END -->
