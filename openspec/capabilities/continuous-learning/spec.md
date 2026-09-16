@@ -16807,3 +16807,102 @@ publication surfaces, historical determinations, or the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7330 and SCENARIO-CL-7330-* | Implemented in `python/carnot/experiment_7330_v644_public_learner.py` and `python/carnot/experiment_7330_v644_executor_isolation.py`. The private evaluator lives in its separate executable script and the old V643 producer remains unchanged. | `tests/python/test_experiment_7330_v644_executor_isolation.py` covers serialization, process isolation, independent semantics, sealed panels, compound uncertainty, cold reduction, fail-closed classification, and atomic publication. |
+
+## REQ-CL-7344: Scoped Requalification Of The Isolated Executor Fixture
+
+Carnot SHALL requalify the existing public learner and private Boolean executor
+through a new reusable V645 orchestration module and a thin executable wrapper.
+The wrapper SHALL not call the V644 launcher or any repository-wide test
+command. It SHALL use the shipped Exp7303 scoped validation runner with one
+explicit affected test file, the changed module, worktree imports, serial
+pytest without inherited addopts or coverage, separate 100-percent changed-
+module coverage, scoped Ruff, changed-module mypy, and exact spec coverage.
+Every private pytest base-temp parent SHALL exist before its subprocess starts.
+
+The fixture SHALL freeze independent development, evaluation, and resampling
+seeds before outcomes. It SHALL seal 32 synthetic streams of 12 distinct
+requests. Eight streams SHALL belong to each of stable rules, announced
+changes, recurrence, and unannounced changes. Requests zero through three in
+each stream SHALL be warmup. It SHALL separately seal 32 public model requests
+in eight streams of four requests, plus one identifier-renamed twin for each
+request. Requests zero and one in each model stream SHALL be warmup. Public
+requests, opaque versions, twin mappings, private rules, witnesses, and labels
+SHALL have hash-bound receipts. Learner execution SHALL not open evaluation
+labels.
+
+The learner and evaluator SHALL run as separate processes through the existing
+Boolean protocol. The learner SHALL receive no private rule map, evaluator
+predicate, private file path, or prompt containing private rules. Process IDs,
+source hashes, import closures, opened paths, query rows, and response keys
+SHALL remain auditable. These controls establish an audited process boundary.
+They SHALL not claim an operating-system security sandbox. The executable
+evaluator remains the correctness authority, so `verifier_is_oracle` SHALL be
+true.
+
+At least 48 development or control rows SHALL execute. The retained evidence
+SHALL include accepted and rejected witnesses, malformed replies, stale
+versions, a compound-only conflict whose pair projections accept, learner
+restart, and mismatched request identifiers. The compound case SHALL admit no
+pair atom. All retained controls SHALL report zero private-rule reads and zero
+unsound learned atoms. A failing affected check, changed raw reduction, private
+read, unsound atom, missing witness, or failed process E2E SHALL set
+`executor_fixture_ready_score=0` and use a disqualified terminal class.
+
+`executor_fixture_ready_score` SHALL equal one only after current mechanism
+controls, fresh seals, scoped validation, independent raw reduction, strict
+terminal validation, and the real process E2E all pass. A dated V644
+repository-wide exit `-15` SHALL remain in `repository_health` with
+`affects_required_checks=false`. It SHALL not authorize or disqualify current
+readiness. Readiness authorizes later measurement only. It SHALL not claim
+learning value or promotion.
+
+The terminal artifact SHALL be
+`results/experiment_7344_v645_executor_fixture.json`. It SHALL use date
+`20260916`, `MODEL_SPECS=[]`, `model_invoked=false`, and zero current load and
+generation counts. It SHALL declare
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL preserve the V644 artifact, production
+defaults, publication surfaces, historical determinations, and the research
+roadmap.
+
+### SCENARIO-CL-7344-SCOPE: Explicit Affected Commands Own Readiness
+
+- GIVEN one explicit affected test file and one changed production module
+- WHEN the shipped scoped runner builds and executes its command plan
+- THEN every pytest target is an explicit file and no command runs the full Python suite
+- AND unrelated dated repository failures cannot change current readiness.
+
+### SCENARIO-CL-7344-PANEL: Fresh Streams And Twins Stay Sealed
+
+- GIVEN frozen independent development, evaluation, and resampling seeds
+- WHEN 32 synthetic streams and eight four-request public model streams are built
+- THEN all four cohorts, warmup cutoffs, request identities, and renamed twins match the contract
+- AND evaluator-only rules, witnesses, and labels stay outside the learner-visible manifest.
+
+### SCENARIO-CL-7344-BOUNDARY: Existing Boolean Processes Remain Isolated
+
+- GIVEN the existing public learner and private executor implementations
+- WHEN the development panel runs end to end in separate processes
+- THEN only query identities and Boolean decisions cross the evaluator response boundary
+- AND learner imports, opened files, messages, and prompts contain no private rules.
+
+### SCENARIO-CL-7344-CONTROLS: Hostile And Lifecycle Cases Fail Closed
+
+- GIVEN accepted and rejected witnesses, malformed replies, stale versions, restart, request mismatch, and a compound-only conflict
+- WHEN each control executes against the current learner or executor behavior
+- THEN each expected rejection or persistence result is retained in a row
+- AND unsupported compound feedback creates zero invented pair atoms.
+
+### SCENARIO-CL-7344-TERMINAL: Current Evidence Replaces The Old Score Zero
+
+- GIVEN fresh seals, current mechanism rows, affected validation, terminal linters, and independent reduction
+- WHEN the terminal artifact is derived
+- THEN readiness is one only when every current required check passes
+- AND the preserved V644 exit `-15` remains repository-health evidence without becoming a current required check.
+
+## Implementation Status (REQ-CL-7344)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7344 and SCENARIO-CL-7344-* | Implemented in `python/carnot/experiment_7344_v645_executor_fixture.py` with a thin script wrapper. The module reuses the V644 public learner and private Boolean executor, seals the V645 panels, and excludes repository-wide pytest from its command plan. | `tests/python/test_experiment_7344_v645_executor_fixture.py` covers stream and twin seals, hostile and lifecycle controls, process E2E, exact command scope, historical-health separation, raw reduction, terminal classification, blocked output, and 582/582 changed-module statements. |
