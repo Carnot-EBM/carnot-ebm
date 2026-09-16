@@ -1,8 +1,8 @@
 {
-  "kernel_version": "66",
+  "kernel_version": "67",
   "note": "v53 verified by hand (2026-09-03) after the prep script's own short poll exited with save_run='?' and parquet=MISSING -- the same false alarm seen on v9/v22/v27/v37. Ground truth from `kaggle kernels status` (COMPLETE) and `kaggle kernels output` (submission.parquet present, 2648 bytes, 1x4, columns row_id/game_id/end_of_game/score). The kernel log shows the save-run took ~770s, so the old 24x15s (6 min) poll could never see it finish. Root cause fixed the same day: poll_save_run now waits up to 3600s and records an explicit still_running_after_<N>s instead of '?' (REQ-HARNESS-6054). Prepared only -- submission is operator-only per CLAUDE.md Operator-Only External Publication.",
   "parquet_ok": true,
-  "prepped_at": "2026-09-15T13:37Z",
+  "prepped_at": "2026-09-16T13:37Z",
   "prior_submission_scores": {
     "2026-06-30": 0.08,
     "2026-07-15": 0.12,
@@ -55,5 +55,5 @@
       "what_changed_vs_prior_submission": "One fix, commit 1086c7e7cc: the scored kernel now sets CARNOT_ARC_E3_DIR to a writable path. E3_DIR defaulted to REPO/results/arc_e3 with REPO derived from __file__, which on Kaggle resolves inside the read-only dataset mount, so EVERY induction raised OSError(30, 'Read-only file system') at the persist step -- AFTER the LLM had generated the full world model (310k-485k tokens per game, 99.8% of wall clock). The engine was discarded and each game played on with no world model. Measured on the Blackwell card over ar25/tr87/tu93, all three games, every attempt."
     }
   ],
-  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 66"
+  "submit_command": ".venv/bin/python scripts/kaggle/prep_daily_submission.py --submit-only --kver 67"
 }

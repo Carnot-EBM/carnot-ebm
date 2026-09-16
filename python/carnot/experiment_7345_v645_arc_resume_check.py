@@ -422,7 +422,7 @@ def _artifact_rows(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
             },
             "costs": {
                 "completion_calls": int(row.get("completion_calls") or 0),
-                "generated_tokens": int(row.get("generated_tokens") or 0),
+                "output_tokens": int(row.get("generated_tokens") or 0),
                 "current_model_calls": 0,
             },
             "failures": list(row.get("failures") or []),

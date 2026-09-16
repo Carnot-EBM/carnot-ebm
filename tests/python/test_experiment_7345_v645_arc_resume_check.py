@@ -184,6 +184,8 @@ def test_scenario_7345_terminal_artifact_and_fail_closed_reduction(tmp_path: Pat
     assert artifact["current_repair_hashes"]
     assert artifact["first_loss_receipt"]["reproduced"] is True
     assert set(artifact) <= set(artifact["field_principles"])
+    assert all("output_tokens" in row["costs"] for row in artifact["rows"])
+    assert all("generated_tokens" not in row["costs"] for row in artifact["rows"])
 
     for field, value, error in (
         ("schema", "bad", "schema or experiment identity mismatch"),
