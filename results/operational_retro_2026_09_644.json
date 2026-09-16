@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.644",
+  "generated_at": "2026-09-16T08:36:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 72.7,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 7,
+  "slowest_experiments": [
+    {
+      "experiment": "Build an isolated executor and a fresh versioned request panel",
+      "duration_minutes": 70.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind V644 sources and the exact fourteen-task contract",
+      "duration_minutes": 0.65,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prototype a result-resume contract in the live ARC policy",
+      "duration_minutes": 0.6,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure complete in-process constraint cost and parity",
+      "duration_minutes": 0.39,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prototype in-process acquired-constraint evaluation",
+      "duration_minutes": 0.23,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven compute-bound experiments completed in 72.7 minutes. The 70.42-minute isolated-executor and request-panel task dominated measured wall time; the locked accelerator-idle assessment is false.",
+  "bottlenecks_identified": [
+    "Build an isolated executor and a fresh versioned request panel consumed 70.42 of 72.7 measured minutes, but the timing data does not identify which internal phase caused the delay.",
+    "The available timing has no phase boundaries, so setup, execution, waiting, and teardown costs cannot be separated.",
+    "Model concurrency and runner-choice receipts are absent, so DualGPURunner eligibility and any missed parallel dispatch cannot be determined."
+  ],
+  "improvements_suggested": [
+    "Add phase timers and resumable checkpoints to the isolated-executor and request-panel path so the next long run exposes its costly stage and can continue after interruption.",
+    "Capture task-scoped GPU utilization, memory, process, and device samples throughout every compute window instead of relying on one monitor snapshot.",
+    "Record model count, concurrency intent, selected runner, and device assignment at launch; use DualGPURunner only when two or more models are loaded in parallel.",
+    "Add readiness-aware placement for independent compute tasks so a second available GPU can be used when concurrent work actually exists."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the 70.42-minute isolated-executor and request-panel task with phase timers and resumable checkpoints.",
+    "Join experiment phases to task-window GPU and process telemetry.",
+    "Emit model-cardinality, runner-choice, and device-assignment receipts, then schedule concurrent ready work across available GPUs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Disk-mtime reconstruction reveals runtime concentration but not its cause. A point-in-time GPU snapshot and absent launch-cardinality receipts cannot establish sustained accelerator efficiency or a DualGPURunner miss, so the estimated savings remains 0%."
+}

@@ -6815,3 +6815,10 @@ The critical path for milestone .250:
 - theme: structural-constraint workloads dominated an all-compute cycle whose reconstructed clock lacks stage boundaries
 - key result: honest operational negative — elapsed-time ordering is available, but causal stages, task-synchronized accelerator behavior, and eligibility for the dual-model dispatch path have no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.644
+
+- exp_range: no data available this milestone
+- theme: isolated executor and request-panel construction dominated an all-compute reconstructed execution window
+- key result: honest operational negative — the longest task consumed 70.42 of 72.7 minutes, but no data available this milestone identifies its costly phase or an eligible multi-model runner miss
+- acceptance: no data available this milestone
