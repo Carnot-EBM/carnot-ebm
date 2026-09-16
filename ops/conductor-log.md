@@ -18029,3 +18029,7 @@ code |
 | 2026-09-16 01:27 UTC | Build an isolated executor and a fresh versioned r | SKIP | Pre-tests failing, self-heal failed: 1 failed, 103 passed, 2 warnings in 11.53s |
 | 2026-09-16 02:45 UTC | Build an isolated executor and a fresh versioned r | OK | cache hit: 81 passed, 1 warning in 6.68s |
 | 2026-09-16 02:48 UTC | Connect acquired constraints to the opt-in verific | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7330-executor-isolation.executor_fixture_ready_score (actual=0 == expected=1) |
+| 2026-09-16 02:51 UTC | Qualify bounded Qwen3.8 plan proposals and identit | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7330-executor-isolation.executor_fixture_ready_score (actual=0 == expected=1) |
+| 2026-09-16 02:53 UTC | Capture fresh Qwen3.8 proposals with source-fideli | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7332-plan-canary, exp7332-plan-canary) |
+| 2026-09-16 02:53 UTC | Measure continuous learning on fresh plans and cha | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7331-learning-adapter, exp7331-learning-adapter, exp7333-plan-capture, exp7333-plan-capture) |
+| 2026-09-16 02:53 UTC | Audit executor independence learning causality and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7334-prospective-learning, exp7334-prospective-learning) |
