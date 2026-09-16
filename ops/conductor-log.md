@@ -18066,3 +18066,4 @@ code |
 | 2026-09-16 21:43 UTC | Measure adapter-withheld ARC generalization with r | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: _only) == [] + |
 | 2026-09-16 22:02 UTC | Measure adapter-withheld ARC generalization with r | FAIL | Codex CLI error: ["raw_action_count"] == 5 + assert summary["raw_environme |
 | 2026-09-16 22:45 UTC | Measure adapter-withheld ARC generalization with r | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. cache hit: 89 passed, 1 warning in 7.72s |
+| 2026-09-16 23:16 UTC | Record GateMate changed-state prerequisites and gr | OK | 88 passed, 1 warning in 8.09s |
