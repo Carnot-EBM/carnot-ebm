@@ -20024,3 +20024,4 @@ timed alternative is available.
 - 2026-09-16: Bind V645 literature and the fourteen-task execution contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v645_contract_mismatched_or_invalid; results/experiment_7343_v645_contract.json
 - 2026-09-16: Requalify isolated feedback with scoped validation and sealed requests (⚠️ Research Finding) — honest_verdict=complete_circular_positive_executor_fixture_ready_for_measurement_only; results/experiment_7344_v645_executor_fixture.json
 - 2026-09-16: Qualify the live result-resume path after temporary-directory repair (⚠️ Research Finding) — honest_verdict=complete_null_live_result_resume_protocol_qualified_no_game_solve; results/experiment_7345_v645_arc_resume_check.json
+- 2026-09-16: Wire structural additions into the opt-in verification pipeline (⚠️ Research Finding) — honest_verdict=complete_learning_adapter_disqualified; results/experiment_7346_v645_learning_adapter.json
