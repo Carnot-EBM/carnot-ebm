@@ -89,6 +89,15 @@ def test_scenario_verify_7340_preflight_rejects_quarantine_and_partial(
     assert exp7340.validate_artifact(blocked) == []
 
 
+def test_scenario_verify_7340_validation_temp_parent_is_prepared(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7340-VALIDATION-TEMP: pytest receives an existing parent."""
+
+    private_parent = tmp_path / "private" / "exp7340"
+
+    assert exp7340.prepare_scoped_basetemp(private_parent) == private_parent
+    assert private_parent.is_dir()
+
+
 def test_scenario_pbind_7340_boundary_spans_are_complete_and_nonoverlapping() -> None:
     """SCENARIO-PYBIND-7340-BOUNDARY: all conversion and result work is charged."""
 

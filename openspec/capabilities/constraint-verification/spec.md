@@ -7988,6 +7988,10 @@ terminal validators before an atomic terminal write. Exp7340 SHALL use date
 `execution_venue=host`. The execution authority defines correctness, so
 `verifier_is_oracle` SHALL remain true.
 
+Exp7340 SHALL create the private pytest base-temp parent before the scoped
+validation subprocesses start. It SHALL retain any failed validation attempt
+in the task-owned raw evidence directory before a corrected attempt runs.
+
 #### SCENARIO-VERIFY-7340-PREFLIGHT: The Same-Milestone Producer Fails Closed
 
 Given the exact Exp7339 artifact and its declared top-level protocol and binding fields,
@@ -8030,6 +8034,15 @@ Given complete rows, zero mismatches, adverse checks, E2E-003, validation, and t
 When the unchanged ten-x gate fails,
 Then native cost completion remains one while native ten-x is zero and value/promotion are zero,
 And only this exact boundary is retired without a broad native or hardware conclusion.
+
+**Spec traces:** REQ-VERIFY-7340
+
+#### SCENARIO-VERIFY-7340-VALIDATION-TEMP: Scoped Validation Has A Private Parent
+
+Given the shipped scoped validation runner and a private base-temp path,
+When Exp7340 prepares affected validation,
+Then the parent exists before pytest starts,
+And a missing parent cannot disqualify otherwise complete measured evidence.
 
 **Spec traces:** REQ-VERIFY-7340
 

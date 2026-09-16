@@ -1,0 +1,49 @@
+EE.....E                                                                 [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_req_verify_7340_authenticates_exact_same_milestone_producer _
+
+self = PosixPath('/tmp/carnot-exp7340-scoped/focused'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7340-scoped/focused'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_scenario_verify_7340_preflight_rejects_quarantine_and_partial _
+
+self = PosixPath('/tmp/carnot-exp7340-scoped/focused'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7340-scoped/focused'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_scenario_verify_7340_terminal_null_is_complete_and_tamper_evident _
+
+self = PosixPath('/tmp/carnot-exp7340-scoped/focused'), mode = 448
+parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7340-scoped/focused'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError
+=========================== short test summary info ============================
+ERROR tests/python/test_experiment_7340_v644_native_cost.py::test_req_verify_7340_authenticates_exact_same_milestone_producer
+ERROR tests/python/test_experiment_7340_v644_native_cost.py::test_scenario_verify_7340_preflight_rejects_quarantine_and_partial
+ERROR tests/python/test_experiment_7340_v644_native_cost.py::test_scenario_verify_7340_terminal_null_is_complete_and_tamper_evident
+5 passed, 3 errors in 1.71s

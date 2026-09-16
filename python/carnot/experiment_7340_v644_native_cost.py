@@ -1105,6 +1105,12 @@ def write_artifact(path: Path, artifact: Mapping[str, Any]) -> JsonDict:
     return {"path": str(path), "sha256": sha256_file(path)}
 
 
+def prepare_scoped_basetemp(path: Path) -> Path:
+    """Create the private parent required by the shipped scoped pytest runner."""
+
+    return exp7326.prepare_scoped_basetemp(path)
+
+
 class _PinnedArmWorker:  # pragma: no cover - measured subprocess boundary.
     """Own one long-lived Python or Rust arm and pin it before timed work."""
 
@@ -1650,7 +1656,7 @@ def run_experiment(root: Path) -> JsonDict:  # pragma: no cover - real end-to-en
         ("tests/python/test_experiment_7340_v644_native_cost.py",),
         ("python/carnot/experiment_7340_v644_native_cost.py",),
         static_paths=("scripts/experiments/experiment_7340_v644_native_cost.py",),
-        basetemp=Path("/tmp/carnot-exp7340-scoped"),
+        basetemp=prepare_scoped_basetemp(Path("/tmp/carnot-exp7340-scoped")),
         coverage_file=raw / ".coverage",
         log_dir=raw / "validation/scoped",
     )
