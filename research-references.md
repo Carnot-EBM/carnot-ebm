@@ -44833,3 +44833,94 @@ Exp7334: Exp5867, Exp6193, Exp6553, and Exp6614. The restored task records their
 exact artifact verdicts, changed prerequisites, and retirement on recurrence.
 Its existing structural-addition, isolated-executor, and causal controls supply
 the scientific distinction. No operator override is needed.
+
+## V645 planning scan — 2026-09-16
+
+This scan precedes the V645 experiment design. The cutoff is 2026-09-16.
+Research results below belong to their authors. They do not establish Carnot
+capabilities. Earlier entries remain historical records.
+
+### New input: acquisition throughput with exact feedback
+
+[Learning Symbolic Constraint Representations from Examples: A Neuro-Symbolic
+Approach](https://arxiv.org/abs/2609.12267), submitted 2026-09-10, introduces
+T-Oracle and FastCA. The [full text](https://arxiv.org/html/2609.12267v1)
+separates query count from acquisition time. FastCA scans a finite constraint
+bias; its argument assumes the target belongs to that bias. Its neural-oracle
+variant can mislabel queries. TO3 training also uses target constraint scopes.
+Those assumptions prevent treating a learned answer as exact authority.
+
+**Candidate experiment:** compare bounded candidate elimination against the
+existing conservative acquisition procedure. Use only exact executor answers.
+Separate a normalized binary cohort from unsupported compound constraints.
+Charge query generation, oracle calls, compilation, and future verification.
+This tests throughput, not the paper's neural oracle. A lower query count alone
+is not a win. The [author repository](https://github.com/NassimBelmecheri/TRAC)
+is an implementation reference, not a verified dependency or trending claim.
+
+### Rechecked methods and all requested topics
+
+| Topic | Primary source | Use or limit |
+|---|---|---|
+| Energy-based reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), 2025; [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605), 2025 | Learned compatibility and autoregressive equivalence do not certify extracted semantics. Preserve the generator/verifier boundary. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), 2025 | Linear feasibility assumes supplied constraints. Defer a new projection branch while extraction and feedback remain unmeasured. |
+| Online constraint acquisition | [Conservative Constraint Acquisition, 2604.13283](https://arxiv.org/abs/2604.13283), 2026-04-14 | Retain structural additions, exact feedback, and complete query accounting. Its restricted schedule language does not cover arbitrary hidden rules. |
+| Continual learning | [When Does Continual Learning Require Learning, 2607.07847](https://arxiv.org/abs/2607.07847); [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792), 2026 | Keep distinct future requests, version changes, frozen-memory controls, and updates between requests. |
+| Hallucination detection | [Beyond Document Grounding, 2607.00895](https://arxiv.org/abs/2607.00895), 2026 | Check evidence fidelity across source types. Parser success cannot substitute for correct quantities, identities, or constraints. |
+| KAN and continual classifiers | [KAC, 2503.21076](https://arxiv.org/abs/2503.21076), 2025 | Classification stability is a separate claim from exact constraint acquisition. No new KAN branch before a useful learned predictor exists. |
+| Energy-guided generation | [Token-Guard, 2601.21969](https://arxiv.org/abs/2601.21969), 2026 | Self-checking decoding needs its own matched-cost study. Do not reopen retired text-reranking or finite-answer transport branches. |
+| Ising and hardware sampling | [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985); [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170), 2026 | Preserve communication and sampling-quality costs. Neither paper supplies local Carnot hardware evidence. The current arXiv title of 2602.15985 differs from older indexed titles. |
+| Tool-result use | [AMTFV, 2607.29549](https://arxiv.org/abs/2607.29549), 2026 | Retain request → execution → delivered result → resumed decision receipts. Test delivery within a fixed budget. Mathematical results do not establish ARC transfer. |
+
+### Secondary-source access and hardware context
+
+- **OpenReview:** searched current EBM and reasoning submissions. Direct access
+  to [the indexed ICLR 2026 energy-principle PDF](https://openreview.net/pdf?id=UGB6JCl9lz)
+  returned a browser challenge. No acceptance or reproducibility claim follows.
+- **Semantic Scholar:** requested the Graph API citations endpoints for
+  `ARXIV:2507.02092` and `ARXIV:2512.15605`, with title, year, external IDs,
+  and limit 100. Both returned HTTP 429. No refreshed citation census is claimed.
+- **Hugging Face:** checked the [verification papers search](https://huggingface.co/papers?q=verification)
+  and [span-grounding paper](https://huggingface.co/papers/2607.00895).
+  Method claims above use the primary paper, not a community summary.
+- **GitHub:** checked weekly [Python](https://github.com/trending/python?since=weekly)
+  and [Rust](https://github.com/trending/rust?since=weekly) pages. Retrieved content
+  exposed navigation but no usable ranked entries. No new trending repository
+  is claimed.
+- **Extropic:** checked the [writing index](https://extropic.ai/writing) and
+  [Z1T report](https://extropic.ai/writing/z1t). The report labels chip-energy
+  estimates as projections and excludes the dense final readout. Its latency
+  comparison also excludes vocabulary logits. Use complete host boundaries in
+  Carnot measurements. No TSU procurement or local execution is established.
+- **Logical Intelligence:** [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  describes constraint enforcement beneath AI applications. The inspected page
+  provides no reproducible checkpoint or integration contract. Product context
+  only.
+
+### Local evidence that constrains the next design
+
+V644 terminal artifacts were read through `scripts/summarize_artifact.py`.
+Their current adversarial checks were clean; their failed gates remain failed.
+
+- Exp7329 failed prior-failure coverage checks and reported an absent spec path
+  at its invocation. These were validation failures, not proof of a scientific
+  result. The next plan must run the actual planner linters before delivery.
+- Exp7330's isolated fixture passed its recorded mechanism checks. Its launcher
+  then ran the whole Python suite and made that unrelated observation required.
+  The suite terminated with exit -15. Reuse the shipped scoped runner, preserve
+  the historical health record, and requalify affected behavior independently.
+- Exp7336 reproduced the missing continuation: both allowed generation calls
+  had been spent before result delivery. Its affected pytest invocation then
+  failed because the parent of its private `--basetemp` directory was absent.
+  Requalify the actual resume mechanism after fixing directory creation.
+- Exp7339 established imported PyO3 parity. Exp7340 completed the matched native
+  cost study but failed the unchanged tenfold speed gate. Preserve that null.
+  Acquisition strategy cost is a different question; another identical native
+  speed benchmark is not justified.
+- The new REQ-AUTO-025 verifier fitness target has a documented repeated-holdout
+  selection limitation. Preserve that issue. The next bounded learning study
+  must seal future evaluation data and avoid feeding evaluation scores back
+  into candidate selection.
+- GateMate still lacks a dated operator physical-change receipt. KV260 fabric
+  evidence and PolarFire CPU-dispatch evidence remain distinct historical facts.
+  The hardware wishlist does not justify repeating blocked board operations.
