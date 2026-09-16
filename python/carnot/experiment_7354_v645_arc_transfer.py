@@ -432,6 +432,8 @@ def _summary_row(episode: Mapping[str, Any]) -> JsonDict:
     raw_generated = sum(int(row.get("completion_tokens") or 0) for row in requests)
     raw_completed = sum(row.get("transport_completed") is True for row in requests)
     raw_actions = len(action_rows)
+    raw_environment_actions = sum(row.get("action") != "RESET" for row in action_rows)
+    action_receipts_valid = all("i" in row and "action" in row for row in action_rows)
     failures = [str(episode.get("error"))] if episode.get("error") else []
     terminal = episode.get("disposition") in {"complete", "censored_timeout"}
     factory = episode.get("factory_receipt") or {}
@@ -444,7 +446,8 @@ def _summary_row(episode: Mapping[str, Any]) -> JsonDict:
         and factory.get("factory") == "make_carnot_agent"
         and factory.get("policy_class") == "E3AgentPolicy"
         and request_hashes_valid
-        and raw_actions == int(episode.get("action_count") or 0)
+        and action_receipts_valid
+        and raw_environment_actions == int(episode.get("action_count") or 0)
         and len(requests) == int(episode.get("generation_calls_attempted") or 0)
         and raw_completed == int(episode.get("generation_calls_completed") or 0)
         and raw_generated == int(episode.get("generated_tokens") or 0)
@@ -467,7 +470,9 @@ def _summary_row(episode: Mapping[str, Any]) -> JsonDict:
         "authentic_terminal": authentic,
         "within_budget": within_budget,
         "request_hashes_valid": request_hashes_valid,
+        "action_receipts_valid": action_receipts_valid,
         "raw_action_count": raw_actions,
+        "raw_environment_action_count": raw_environment_actions,
         "raw_generation_calls_attempted": len(requests),
         "raw_generation_calls_completed": raw_completed,
         "raw_generated_tokens": raw_generated,

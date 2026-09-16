@@ -293,6 +293,21 @@ def test_scenario_7354_independent_reduction_and_mutations(tmp_path: Path) -> No
     assert exp.reduce_raw_panel(regression)["arc_feedback_value_score"] == 0
 
 
+def test_scenario_7354_reducer_separates_reset_and_environment_actions() -> None:
+    """SCENARIO-ARC-WMTE-7354-INDEPENDENT-REDUCTION replays action semantics."""
+
+    episode = _episode("r11l", "result_withheld", actions=5)
+    episode["action_rows"][0]["action"] = "RESET"
+    episode["action_rows"][1]["action"] = "RESET"
+    episode["action_count"] = 3
+
+    summary = exp._summary_row(episode)
+
+    assert summary["authentic_terminal"] is True
+    assert summary["raw_action_count"] == 5
+    assert summary["raw_environment_action_count"] == 3
+
+
 def test_req_7354_terminal_and_blocked_artifacts() -> None:
     """SCENARIO-ARC-WMTE-7354-TERMINAL separates accounting from causal value."""
 
