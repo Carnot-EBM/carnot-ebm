@@ -85,6 +85,10 @@ class ResultResumeGuard:
             return self._reject(
                 "absent_result", source_request_id=source_request_id, result_id=result_id
             )
+        if any(row.get("ok") is not True for row in dispatch_results):
+            return self._reject(
+                "unsuccessful_result", source_request_id=source_request_id, result_id=result_id
+            )
         if result_id in self._seen_result_ids or self._pending is not None:
             return self._reject(
                 "duplicate_result", source_request_id=source_request_id, result_id=result_id

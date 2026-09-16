@@ -375,6 +375,26 @@ def test_req_7336_guard_remaining_fail_closed_branches() -> None:
     assert guard.receipt()["rejections"][-1]["reason"] == "response_not_received"
 
 
+def test_req_7336_failed_dispatch_cannot_earn_resume_slot() -> None:
+    """REQ-ARC-WMTE-7336 reserves a request only for a successful tool result."""
+
+    guard = _guard(100.0)
+    offered = guard.offer_result(
+        source_request_id="request:0",
+        next_request_id="request:1",
+        tool_names=["diff_grids"],
+        bounded_response='<tool_response>\n{"ok": false}\n</tool_response>',
+        dispatch_results=[{"ok": False, "error": "fixture failure"}],
+    )
+    assert offered["accepted"] is False
+    assert offered["reason"] == "unsuccessful_result"
+    assert guard.has_pending_result is False
+    assert guard.normal_request_allowed(completed_calls=1) is False
+    receipt = guard.receipt()
+    assert receipt["result_rows"] == []
+    assert receipt["rejections"][-1]["plan_authorized"] is False
+
+
 def test_req_7336_malformed_loaders_and_historical_later_request(tmp_path: Path) -> None:
     """REQ-ARC-WMTE-7336 treats malformed JSON as absent and detects a later payload."""
 
@@ -523,12 +543,15 @@ def test_req_7336_validation_command_construction_and_source_hashes(
         "verdict_row_consistency_strict",
     ]
 
-    monkeypatch.setattr(
-        exp.validation_scope,
-        "run_scoped_validation",
-        lambda *args, **kwargs: {"validation_receipts": [{"name": "focused_pytest"}]},
-    )
-    assert exp._run_scoped_validation(tmp_path, tmp_path / "private") == [
+    private = tmp_path / "private"
+
+    def scoped_validation(*args: object, **kwargs: object) -> dict[str, object]:
+        del args
+        assert Path(str(kwargs["basetemp"])).is_dir()
+        return {"validation_receipts": [{"name": "focused_pytest"}]}
+
+    monkeypatch.setattr(exp.validation_scope, "run_scoped_validation", scoped_validation)
+    assert exp._run_scoped_validation(tmp_path, private) == [
         {"name": "focused_pytest"}
     ]
     exp._progress(time.monotonic(), "test", "boundary", units=1)

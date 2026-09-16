@@ -1011,12 +1011,14 @@ def _run_e2e(root: Path, private: Path) -> list[JsonDict]:
 
 
 def _run_scoped_validation(root: Path, private: Path) -> list[JsonDict]:
+    basetemp = private / "scoped"
+    basetemp.mkdir(parents=True, exist_ok=True)
     result = validation_scope.run_scoped_validation(
         root,
         [TEST_PATH.as_posix()],
         [MODULE_PATH.as_posix(), RESUME_MODULE_PATH.as_posix()],
         static_paths=[LOOP_MODULE_PATH.as_posix(), WRAPPER_PATH.as_posix()],
-        basetemp=private / "scoped",
+        basetemp=basetemp,
         coverage_file=private / ".coverage",
         log_dir=root / RAW_DIR / "validation",
     )
