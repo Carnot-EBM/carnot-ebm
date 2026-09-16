@@ -18056,3 +18056,4 @@ code |
 | 2026-09-16 15:30 UTC | Wire structural additions into the opt-in verifica | OK | 98 passed, 1 warning in 7.75s |
 | 2026-09-16 15:56 UTC | Qualify bounded Qwen3.8 plan transport and owned r | OK | 87 passed, 1 warning in 7.86s |
 | 2026-09-16 17:19 UTC | Capture fresh plans and source-fidelity controls o | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: lete_score"] = |
+| 2026-09-16 17:33 UTC | Capture fresh plans and source-fidelity controls o | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 8.09s |
