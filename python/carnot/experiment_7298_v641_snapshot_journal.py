@@ -550,21 +550,29 @@ class SQLiteSnapshotJournal(exp7284.HostGroupCommitController):
         cls,
         binding: ModuleType,
         state: Mapping[str, Any],
-        database_path: Path,
+        state_path: Path,
         **kwargs: Any,
     ) -> SQLiteSnapshotJournal:
-        """Commit initialization before constructing an event-accepting adapter."""
+        """Commit initialization before constructing an event-accepting adapter.
+
+        The parameter is named ``state_path`` (not ``database_path``) to match
+        the base class's override signature (``HostGroupCommitController.
+        from_state``) -- mypy flags a renamed positional-or-keyword parameter
+        as an incompatible override, since a caller could invoke it by keyword
+        through the base class's own contract. Every caller in this codebase
+        passes it positionally, so this rename changes no behavior.
+        """
 
         started = time.monotonic_ns()
-        if database_path.exists():
-            raise FileExistsError(f"refusing to replace task database:{database_path}")
+        if state_path.exists():
+            raise FileExistsError(f"refusing to replace task database:{state_path}")
         controller = exp7256.PersistentNativeArchiveController.from_state_with_binding(
             binding, state
         )
         state_bytes = controller.state_bytes()
         if len(state_bytes) > MAX_STATE_BYTES:
             raise ValueError("initial state exceeds the fixed state-byte bound")
-        connection = _connect(database_path)
+        connection = _connect(state_path)
         try:
             _create_schema(connection)
             connection.execute("BEGIN IMMEDIATE")
@@ -584,7 +592,7 @@ class SQLiteSnapshotJournal(exp7284.HostGroupCommitController):
         connection.close()
         return cls(
             binding,
-            database_path,
+            state_path,
             controller,
             0,
             initialization_duration_ns=max(time.monotonic_ns() - started, 1),

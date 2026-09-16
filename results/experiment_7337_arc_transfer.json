@@ -1,0 +1,68 @@
+{
+  "experiment": 7337,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-16",
+  "started_at": "2026-09-16T04:28:49.936689+00:00",
+  "finished_at": "2026-09-16T04:28:49.936689+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure adapter-withheld ARC transfer with consumed feedback",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7336-arc-resume",
+  "failed_field": "arc_resume_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7336_v644_arc_resume.json",
+  "failed_evidence_sha256": "sha256:637d5cf31d92e5f3602843a0c8f8df3d6d0e2517c8035e45fe6c450261a4c0fb",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7336-arc-resume",
+    "failed_field": "arc_resume_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7336_v644_arc_resume.json",
+    "failed_evidence_sha256": "sha256:637d5cf31d92e5f3602843a0c8f8df3d6d0e2517c8035e45fe6c450261a4c0fb"
+  },
+  "gate_check_summary": "gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7336-arc-resume.arc_resume_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7336-arc-resume",
+      "artifact_field": "arc_resume_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7336_v644_arc_resume.json",
+      "artifact_sha256": "sha256:637d5cf31d92e5f3602843a0c8f8df3d6d0e2517c8035e45fe6c450261a4c0fb"
+    },
+    {
+      "upstream": "exp7336-arc-resume",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7336_v644_arc_resume.json",
+      "artifact_sha256": "sha256:637d5cf31d92e5f3602843a0c8f8df3d6d0e2517c8035e45fe6c450261a4c0fb"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
