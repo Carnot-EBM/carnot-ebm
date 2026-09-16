@@ -32859,3 +32859,79 @@ agrees, and both terminal linters pass. This prototype SHALL use
 
 Implementation status: specified 2026-09-16. The conductor owns later status,
 changelog, and traceability reconciliation.
+
+## REQ-ARC-WMTE-7345: Qualify the repaired result-resume launcher
+
+Experiment 7345 SHALL qualify the existing opt-in result-resume mechanism before
+another model run. It SHALL not change the guard, policy, production defaults, or
+model configuration. It SHALL use run date `20260916`, milestone `2026.09.645`,
+`MODEL_SPECS=[]`, `model_invoked=false`, and zero current invocation counts. It
+SHALL declare the host CPU simulator substrate and SHALL claim no live game solve.
+
+The launcher SHALL reproduce the private `--basetemp` parent failure in a scratch
+tree. It SHALL create every private parent before pytest or coverage starts. It
+SHALL verify cleanup and a concurrent second construction in a separate directory.
+The Experiment 7336 artifact SHALL remain diagnostic evidence only because its
+affected validation is disqualified. Current checks SHALL establish readiness.
+
+The qualification SHALL reuse the Experiment 7336 CPU transport panel through the
+actual `E3AgentPolicy` and HTTP request builder. It SHALL prove that one reserved
+slot delivers one bound result within two completions and 4096 output tokens. It
+SHALL observe receipt capture before engine trust, plan installation, and a later
+policy action. Scripted response bytes SHALL remain in a labeled, hash-bound
+sidecar and SHALL not count as current model work.
+
+The controls SHALL cover a withheld result, stale episode, duplicate request,
+malformed result, timeout, and exhausted normal-request budget. No rejection
+control SHALL consume stale or duplicate data, authorize a plan, or exceed either
+budget. The qualification SHALL run E2E-009, E2E-010, and the LLM-off `r11l`
+offline smoke. It SHALL describe the borrowed AVO mechanism as persistent feedback
+plus budgeted continuation. It SHALL not describe it as a frontier supervisor.
+
+The terminal artifact SHALL preserve the first-loss receipt and hashes for the
+current repair. It SHALL include independently reduced raw rows, exact validation
+receipts, field principles, and current terminal-lint results. It SHALL set
+`arc_resume_ready_score=1` only when the live route, all controls, 100% new-module
+coverage, scoped static checks, applicable E2E checks, and both terminal linters
+pass. A missing input or failed current check SHALL force readiness and promotion
+value to zero.
+
+### SCENARIO-ARC-WMTE-7345-PRIVATE-BASETEMP
+
+- GIVEN the private validation layout that failed during Experiment 7336
+- WHEN the launcher reproduces the missing-parent error and prepares two separate runs
+- THEN each pytest and coverage basetemp parent exists before child launch
+- AND cleanup removes one run without changing the concurrent run.
+
+### SCENARIO-ARC-WMTE-7345-LIVE-RESUME
+
+- GIVEN the existing default-off result-resume guard and scripted CPU transport
+- WHEN the actual scored policy completes the tool-needed changed-input arm
+- THEN the next request contains the result exactly once within both fixed budgets
+- AND engine trust, plan installation, and a later action occur after receipt capture.
+
+### SCENARIO-ARC-WMTE-7345-CONTROLS
+
+- GIVEN withheld, stale, duplicate, malformed, timeout, and exhausted-budget controls
+- WHEN the current guard and live transport evaluate them
+- THEN stale and duplicate consumption counts remain zero
+- AND no control authorizes a plan or overruns the completion or token budget.
+
+### SCENARIO-ARC-WMTE-7345-VALIDATION
+
+- GIVEN the new explicit tests and changed module
+- WHEN the Experiment 7303 scoped runner and applicable E2E commands execute
+- THEN worktree imports, focused pytest, 100% coverage, Ruff, mypy, spec coverage,
+  E2E-009, E2E-010, and the LLM-off `r11l` smoke all pass
+- AND every subprocess receipt keeps its exact command, scope, exit, elapsed time,
+  and log hash.
+
+### SCENARIO-ARC-WMTE-7345-TERMINAL
+
+- GIVEN the first-loss receipt, repair hashes, raw controls, and current validation
+- WHEN the candidate is independently reloaded, reduced, and checked by both linters
+- THEN the final result is written atomically with every required artifact field
+- AND only a fully passing current record seals the protocol for Experiment 7354.
+
+Implementation status: specified 2026-09-16. The conductor owns later status,
+changelog, and traceability reconciliation.

@@ -306,3 +306,7 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 ## 2026-09-15 13:12 UTC -- checked, nothing new
 
+## 2026-09-16 13:12 UTC -- NEW
+
+- Leaderboard shakeup: Lord Han Solo rose to #2 with 8.84%, while Ebi is now #3 with 8.68%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
