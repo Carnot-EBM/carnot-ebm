@@ -99,6 +99,101 @@ not authorize science. Shared parser and conductor authority SHALL set
 |---|---|---|
 | REQ-REPORT-7329 and SCENARIO-REPORT-7329-* | `python/carnot/experiment_7329_v644_contract.py`; thin entrypoint; hash-bound source and control sidecars | `tests/python/test_experiment_7329_v644_contract.py`; scoped 100% coverage; selected-roadmap audits; real-file E2E; adversarial and strict row checks |
 
+## V644 read-only board continuity — 2026-09-16
+
+**Status:** Implemented. This disposition is accounting only and gates no science.
+
+### REQ-REPORT-7341: Preserve three board dispositions without new hardware work
+
+Exp7341 SHALL authenticate the terminal Exp7327 diagnostic receipt and the
+Exp7314 board evidence. A blocked, partial, disqualified, quarantined, absent,
+or identity-mismatched artifact SHALL authorize no readiness or promotion
+score. Exp7327's known block SHALL remain a diagnostic fact. It SHALL not
+become a current readiness gate. The workflow SHALL hash-check every referenced
+KV260 fabric and PolarFire CPU-dispatch source. It SHALL preserve their original
+claim classes without asserting current reachability. PolarFire CPU dispatch
+SHALL not become FPGA sampling. Any later KV260 access SHALL use SSH.
+
+The workflow SHALL inspect only the approved, existing operator receipt files
+for a dated GateMate cable, port, board power, JTAG, or DirtyJTAG change after
+Exp6559. With no accepted receipt, it SHALL emit
+`blocked_changed_physical_state` and `accepted_receipt_count=0`. This is a
+terminal external disposition, not unfinished Exp7341 work. A later accepted
+receipt SHALL record eligibility for a separate authorized experiment only.
+Exp7341 SHALL issue no SSH, USB, JTAG, flash, installation, purchase, vendor
+contact, or external message.
+
+Exp7341 SHALL emit one row for KV260, GateMate, and PolarFire. Each row SHALL
+retain metrics, cost, abstention, error, censoring, source identity, and its
+exact reopening condition. The artifact SHALL also record the bounded hardware
+path for acquired integer constraints. The V644 Extropic and KAN scan SHALL
+remain external deployment context. Vendor projections SHALL not become Carnot
+speedup. No purchase is required for milestone `2026.09.644`.
+
+`board_disposition_complete_score` SHALL equal one only when all three
+authenticated disposition rows are complete. A known external GateMate block
+counts as a complete disposition. The score SHALL not mean hardware readiness,
+new board execution, scientific value, or promotion. While the GateMate receipt
+is absent, every readiness, value, execution-promotion, and hardware-promotion
+score SHALL remain zero. No downstream V644 science gate SHALL consume Exp7341.
+
+Exp7341 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero load and generation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model-shaped fields SHALL remain in a labeled, hash-bound sidecar.
+
+The workflow SHALL use the Exp7303 scoped runner for its exact test, module,
+and entrypoint. It SHALL require focused pytest, 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test
+spec coverage. It SHALL reload the candidate and independently reduce the raw
+rows. It SHALL run adversarial verification and strict row consistency before
+the atomic terminal write. Failed affected validation SHALL produce
+`disqualified` with all readiness and promotion scores zero. A changed producer
+hash, row, disposition score, operation count, verdict, gate summary, or
+checksum SHALL fail validation.
+
+#### SCENARIO-REPORT-7341-SOURCES: Historical claims retain exact scope
+
+**Given** the Exp7327 and Exp7314 artifacts and their referenced evidence
+**When** Exp7341 authenticates the diagnostic chain
+**Then** KV260 remains historical FPGA-fabric execution and PolarFire remains CPU dispatch
+**And** neither row asserts current reachability or new execution.
+
+#### SCENARIO-REPORT-7341-GATEMATE: Missing physical receipt is terminal
+
+**Given** the approved dated operator receipt files after Exp6559
+**When** none records a changed cable, port, board power, JTAG, or DirtyJTAG state
+**Then** GateMate records `blocked_changed_physical_state` and zero accepted receipts
+**And** the task issues no hardware, installation, purchase, or messaging operation.
+
+#### SCENARIO-REPORT-7341-ACCOUNTING: Complete disposition is not readiness
+
+**Given** authenticated rows for KV260, GateMate, and PolarFire
+**When** GateMate has the known external receipt block
+**Then** `board_disposition_complete_score` equals one
+**And** every readiness, value, and promotion score remains zero.
+
+#### SCENARIO-REPORT-7341-CONTEXT: Deployment references stay external
+
+**Given** the V644 Extropic and KAN scan
+**When** Exp7341 records the bounded hardware path
+**Then** projected vendor efficiency does not become Carnot speedup
+**And** the milestone records that no purchase is required.
+
+#### SCENARIO-REPORT-7341-ARTIFACT: Stored rows control terminal output
+
+**Given** raw board rows and a measured candidate
+**When** a cold validator reloads and reduces both files
+**Then** only exact rows, scores, hashes, operation counts, and verdicts validate
+**And** adversarial and strict row checks run before atomic publication.
+
+## Implementation Status (REQ-REPORT-7341)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7341 and SCENARIO-REPORT-7341-* | `python/carnot/experiment_7341_v644_board_continuity.py`; thin entrypoint; hash-bound raw sidecars; terminal blocked artifact | Focused RED-to-green tests; 329/329 changed statements covered; scoped Ruff, format, mypy, and spec coverage; real-file E2E; adversarial verification; strict row consistency |
+
 ## V643 literature ingestion and exact execution contract — 2026-09-15
 
 **Status:** Implemented. This receipt is advisory and gates no science.
