@@ -18065,3 +18065,4 @@ code |
 | 2026-09-16 20:22 UTC | Audit acquisition soundness assumptions and cost r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7352-acquisition-cost, exp7352-acquisition-cost, exp7352-acquisition-cost) |
 | 2026-09-16 21:43 UTC | Measure adapter-withheld ARC generalization with r | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: _only) == [] + |
 | 2026-09-16 22:02 UTC | Measure adapter-withheld ARC generalization with r | FAIL | Codex CLI error: ["raw_action_count"] == 5 + assert summary["raw_environme |
+| 2026-09-16 22:45 UTC | Measure adapter-withheld ARC generalization with r | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. cache hit: 89 passed, 1 warning in 7.72s |
