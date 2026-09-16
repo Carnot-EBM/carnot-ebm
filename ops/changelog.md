@@ -20027,3 +20027,4 @@ timed alternative is available.
 - 2026-09-16: Wire structural additions into the opt-in verification pipeline (⚠️ Research Finding) — honest_verdict=complete_learning_adapter_disqualified; results/experiment_7346_v645_learning_adapter.json
 - 2026-09-16: Qualify bounded Qwen3.8 plan transport and owned runtime evidence (✅ Complete) — honest_verdict=complete_positive_plan_transport_ready_4_of_4_usable; results/experiment_7347_v645_plan_canary.json
 - 2026-09-16: Capture fresh plans and source-fidelity controls on Qwen3.8 (⚠️ Research Finding) — honest_verdict=complete_disqualified_internal_artifact_validation_failed; results/experiment_7348_v645_plan_capture.json
+- 2026-09-16: Prototype bounded constraint elimination with exact query authority (⚠️ Research Finding) — honest_verdict=complete_disqualified: current required validation or prototype safety failed; results/experiment_7351_v645_acquisition_prototype.json
