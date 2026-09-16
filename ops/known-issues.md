@@ -26736,3 +26736,60 @@ the label helper, a commit-message test, and a full run_round-to-commit end-to-e
 reproduction of the exact incident), 158/158 across the full autoresearch test set, ruff/mypy
 clean. Also fixed a stale comment (still said "1800s outer timeout" after the REQ-AUTO-023
 timeout bump to 3600s -- caught while working in the same file).
+
+## 2026-09-16: fitness target #2 shipped — verifier AUROC (REQ-AUTO-025)
+
+Closes the gap the 2026-09-12 REQ-AUTO-019/020 entry (above) named as
+out-of-scope: "a verifier-ensemble-AUROC fitness target (no reusable scoring
+harness exists yet)." A 2026-09-14 research note
+(`docs/research-notes/rsi-levels-and-autoresearch-fitness-target-2026-09-14.md`)
+independently confirmed the reason it mattered: fitness target #1
+(`double_well`/`rosenbrock`) reached machine-precision zero on the first
+production fire, and every fire since landed `accepted > 0, committed = 0` --
+saturated, nothing left to discover on those two toy problems.
+
+**What shipped.** `python/carnot/autoresearch/verifier_auroc_benchmark.py`, a
+third benchmark named `verifier_auroc`, following REQ-AUTO-021's own trust
+pattern exactly: a hypothesis proposes two weights for
+`carnot.verify.pcib_probe.PCIBProbe` (already-shipped, honestly disclosed as
+a text-statistical heuristic), and trusted harness code independently
+rescores those weights against a FIXED, never-re-randomized held-out slice
+of `data/fover_corpus_v4.json` (split by SHA-256 hash of `question_id`, so a
+hypothesis's training rows and the rows it is graded against never overlap).
+A hypothesis's own self-reported AUROC, if any, is never read.
+
+**Real headroom, measured not assumed.** `PCIBProbe`'s own documented default
+weights (0.5, 0.5) score AUROC 0.3465 on the held-out slice -- worse than
+chance, because the probe's "novel numbers are suspicious" signal does not
+track this corpus's actual error class. A single sign flip
+(entity_weight=-1.0, falsifiability_weight=1.0) reaches AUROC 0.7219. Unlike
+fitness target #1 after its first fire, there is real, non-degenerate room
+for a hypothesis to win here.
+
+**Wiring.** `_recompute_metrics` in `autoresearch_conductor_round.py` now
+dispatches the `verifier_auroc` name to the new module's own recompute
+function, alongside its existing dispatch to `toy_benchmarks.py` for the two
+toy benchmarks -- `toy_benchmarks.py` itself was not touched, keeping
+REQ-AUTO-021's scope unchanged. `AUTORESEARCH_SYSTEM_PROMPT` now describes
+all three benchmarks in one message. `seed_baselines()`'s new
+`verifier_auroc` entry is a REAL measurement
+(`measure_default_weight_energy()`), not a hand-typed placeholder like the
+two toy-benchmark seeds are.
+
+**Verification.** 36 new tests (28 in
+`tests/python/test_autoresearch_verifier_auroc_benchmark.py`, 8 added to
+`tests/python/test_autoresearch_conductor_round.py` covering the dispatch,
+prompt content, seed baseline, and one full real-sandbox end-to-end run of a
+synthetic `verifier_auroc` hypothesis). Full autoresearch test set (round +
+toy-benchmarks + new module): 98/98 passing. Ruff, ruff-format, mypy clean on
+every touched file.
+
+Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-025,
+SCENARIO-AUTO-025-A through D.
+
+**Explicitly out of scope, named rather than silently skipped:** tuning
+`PCIBProbe`'s third constructor parameter (`min_numbers_for_falsifiability`)
+-- only the two weights are exposed as tunable, keeping the hypothesis
+contract a 2-dimensional `final_state` like the two toy benchmarks; a fitness
+target #3 (e.g. ARC-generalization, also named in the 2026-09-14 research
+note) -- not attempted here.

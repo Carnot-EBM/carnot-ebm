@@ -16497,3 +16497,23 @@ string. Two real production rounds fired since the REQ-AUTO-023 retry fix shippe
 the project's first-ever accepted autoresearch discoveries (5 real git-committed hypotheses,
 both DoubleWell and Rosenbrock benchmarks driven to near machine-precision zero) — this fix
 corrects their commit-message attribution after the fact was noticed.
+
+## 2026-09-16: fitness target #2 shipped — verifier AUROC (REQ-AUTO-025)
+
+Working: autoresearch now has a second real fitness target,
+`verifier_auroc` (`python/carnot/autoresearch/verifier_auroc_benchmark.py`),
+closing the "no reusable AUROC harness exists yet" gap named at the
+2026-09-12 wiring's own scoping. A hypothesis tunes two weights for
+`PCIBProbe` against a training slice of `data/fover_corpus_v4.json`; trusted
+harness code independently rescores the claimed weights against a disjoint,
+fixed held-out slice -- the same trust-boundary shape REQ-AUTO-021
+established for the two toy benchmarks, never a self-reported number. Real
+measured headroom exists here (default weights AUROC 0.3465, worse than
+chance; a sign flip reaches 0.7219) where fitness target #1 had none left
+after its first production fire. 98/98 across the full autoresearch test
+set, ruff/mypy clean.
+
+Next: an adversarial review (Fable 5.1) of this change, per operator
+directive. If it survives review, watch the next real production
+autoresearch fire for the first `verifier_auroc` hypothesis proposals and
+whether any land a real held-out-AUROC improvement.

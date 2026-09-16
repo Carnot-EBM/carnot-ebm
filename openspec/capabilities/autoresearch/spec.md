@@ -2356,6 +2356,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-022 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 2 Python (shared conductor-round test file) |
 | REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
 | REQ-AUTO-024 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 5 Python (shared conductor-round test file) |
+| REQ-AUTO-025 | N/A | Implemented (`python/carnot/autoresearch/verifier_auroc_benchmark.py`, `scripts/autoresearch_conductor_round.py`) | 28 Python (`test_autoresearch_verifier_auroc_benchmark.py`) + 8 shared conductor-round test file |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3990,6 +3991,121 @@ iteration and iteration 0's hypothesis is accepted
 **Given** a round where no iteration needed the fallback
 **When** an accepted hypothesis is committed
 **Then** the commit message names codex exec, matching the historical text.
+
+### REQ-AUTO-025: Verifier-AUROC as a Second, Headroom-Having Fitness Target
+
+**Origin:** 2026-09-14 research note
+(`docs/research-notes/rsi-levels-and-autoresearch-fitness-target-2026-09-14.md`)
+found that fitness target #1 (`double_well`/`rosenbrock`, REQ-AUTO-021) had
+been driven to machine-precision zero on the very first production
+autoresearch fire, and every fire since landed `accepted > 0, committed = 0`
+-- expected benchmark saturation, not a defect, but a dead end for further
+measurement. The note, and `autoresearch_conductor_round.py`'s own module
+docstring, named the reason a verifier-ensemble AUROC target had not been
+built instead: "no reusable AUROC harness exists yet." A 2026-09-16 operator
+directive asked for that gap to be scoped and closed.
+
+The system SHALL provide `python/carnot/autoresearch/
+verifier_auroc_benchmark.py`, a second benchmark named `verifier_auroc`,
+built the same way REQ-AUTO-021 built the first two: a real, independently
+computed metric a hypothesis cannot influence except by actually finding a
+better answer.
+
+**The corpus and split.** The benchmark scores against
+`data/fover_corpus_v4.json` (6548 labeled reasoning-step rows, `label` in
+`{"correct", "incorrect"}`), split by a fixed SHA-256 hash of `question_id`
+into a ~30% TRAINING slice and a disjoint ~70% HELD-OUT slice. The split
+SHALL be computed once and never re-randomized -- a hypothesis across
+different rounds always trains against the same rows and is always scored
+against the same held-out rows it never sees. Splitting by `question_id`
+(not by individual row) SHALL keep every reasoning step from the same
+problem on one side of the split, preventing train/held-out leakage through
+a shared question.
+
+**The tunable parameters.** A hypothesis proposes two weights,
+`final_state = [entity_weight, falsifiability_weight]`, for
+`carnot.verify.pcib_probe.PCIBProbe` -- an already-shipped, honestly
+disclosed text-statistical hallucination probe (no GPU or LLM call needed to
+score a candidate). The hypothesis MAY read
+`benchmark_data["verifier_auroc_train_rows"]` (the training slice only, as
+plain `{"step_text", "label"}` dicts) and import `PCIBProbe` directly to
+search for good weights by any real method against that training data; it
+is never shown the held-out slice.
+
+**The trust boundary (same shape as REQ-AUTO-021, unchanged).**
+`recompute_verifier_auroc_energy(final_state)` is the one function trusted
+harness code calls to turn a hypothesis's claimed weights into a real
+energy: it rebuilds `PCIBProbe` from the claimed weights, scores every row
+of the FIXED held-out slice, computes AUROC via a local Mann-Whitney
+implementation, and returns `1.0 - auroc` (lower is better, matching
+REQ-AUTO-021's minimization convention). It SHALL never raise -- returning
+`None` (dropped entirely, same as a missing `final_state` under REQ-AUTO-021)
+for a malformed state (wrong length, non-numeric, non-finite, or a weight
+whose magnitude exceeds `MAX_ABS_WEIGHT`), an empty/unreadable corpus, or a
+held-out slice missing either class after any of those checks. A
+hypothesis's own computed AUROC on the training rows, if it reports one, is
+never read by the evaluator.
+
+**The dispatch wiring.** `autoresearch_conductor_round.py:_recompute_metrics`
+SHALL recognize the `verifier_auroc` benchmark name alongside the two
+existing `toy_benchmarks.py` names, dispatching to
+`recompute_verifier_auroc_energy` the same way it dispatches double_well/
+rosenbrock to `toy_benchmarks.recompute_final_energy` -- without modifying
+`toy_benchmarks.py` itself, keeping REQ-AUTO-021's own scope (the two toy
+benchmarks) unchanged. `AUTORESEARCH_SYSTEM_PROMPT` SHALL describe this third
+benchmark's contract in the same message as the first two, so a single
+generator call can propose a hypothesis for any of the three.
+
+**The baseline seed is a real measurement, not a placeholder.**
+`measure_default_weight_energy()` SHALL compute the seed baseline by calling
+`recompute_verifier_auroc_energy([0.5, 0.5])` -- `PCIBProbe`'s own documented
+default weights -- against the real corpus, rather than a hand-typed number
+that could silently drift from the corpus or the probe's logic.
+`seed_baselines()` SHALL use this measurement for the `verifier_auroc` entry.
+
+**Real, measured headroom (not assumed).** Confirmed once against the
+checked-in corpus, not asserted: the default weights (0.5, 0.5) score AUROC
+0.3465 on the held-out slice -- worse than chance, because `entity_uptake`
+(the probe's "novel numbers are suspicious" signal) does not track this
+corpus's actual error class. A single sign flip (entity_weight=-1.0,
+falsifiability_weight=1.0) reaches AUROC 0.7219. A hypothesis that discovers
+this by searching, rather than trusting the probe's own default weighting,
+is a genuine win against real headroom -- unlike REQ-AUTO-021's two toy
+benchmarks, which had no headroom left after the first production fire.
+
+#### SCENARIO-AUTO-025-A: A fabricated AUROC claim is never committed
+
+**Given** a hypothesis that returns `{"verifier_auroc": {"final_energy":
+0.0}}` with no `final_state`
+**When** a bounded round runs it through the real sandbox and evaluator
+**Then** the hypothesis is sandboxed successfully, but its `final_energy`
+claim is discarded before evaluation; no lineage commit is made.
+
+#### SCENARIO-AUTO-025-B: Real weights recompute to the true held-out AUROC
+
+**Given** a hypothesis that returns `{"verifier_auroc": {"final_state":
+[-1.0, 1.0]}}`
+**When** the round evaluates it
+**Then** the committed record's `final_energy` equals
+`1.0 - auroc`, where `auroc` is independently computed by
+`recompute_verifier_auroc_energy` against the fixed held-out slice --
+never a value the hypothesis chose or reported.
+
+#### SCENARIO-AUTO-025-C: Training and held-out rows never overlap
+
+**Given** the fixed corpus split
+**When** `default_benchmark_data()["verifier_auroc_train_rows"]` and the
+module's internal held-out slice are compared by `step_text`
+**Then** their intersection is empty.
+
+#### SCENARIO-AUTO-025-D: An unscoreable claim is dropped, not treated as zero or as failure
+
+**Given** any of: a `final_state` of the wrong length, a non-numeric or
+non-finite weight, or a weight whose magnitude exceeds `MAX_ABS_WEIGHT`
+**When** `recompute_verifier_auroc_energy` is called
+**Then** it returns `None` without raising, and the corresponding
+`final_energy` key is absent from the recomputed metrics passed to the
+evaluator.
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

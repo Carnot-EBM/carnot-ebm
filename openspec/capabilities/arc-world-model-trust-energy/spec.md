@@ -32781,3 +32781,81 @@ production-default change.
 - WHEN the session completes or reaches an inherited limit
 - THEN the terminal artifact separately reports current invocation counts, action and compute costs, prediction metrics, induction counts, censoring, and all validation receipts
 - AND `arc_session_complete_score` reflects complete accounting rather than scientific success.
+
+## REQ-ARC-WMTE-7336: Resume selfparse after a bound runtime tool result
+
+The shipped selfparse induction path SHALL support an opt-in result-resume mode.
+The default path and production defaults SHALL remain unchanged. The mode SHALL
+bind each successful runtime result to its source request, policy episode, and
+induction attempt. It SHALL reserve one completion slot for the immediately next
+request without increasing the existing completion or generated-token ceilings.
+
+The pending result SHALL appear exactly once in that next request. A successful
+response SHALL record receipt capture before the result can affect engine
+verification or policy planning. The path SHALL reject a stale episode, an expired
+authority, a duplicate result, a mismatched attempt, a timeout after dispatch, and
+an absent result. It SHALL retain each rejected call and reason. A runtime result
+alone SHALL NOT install an engine, authorize a plan, or select an environment action.
+
+Experiment 7336 SHALL first authenticate and reduce the exact Experiment 7319 raw
+requests, response, tool event, call budget, and exit reason. It SHALL distinguish
+payload creation from next-request delivery and receipt capture. If this first loss
+cannot be reproduced, the experiment SHALL publish a complete null with
+`arc_resume_ready_score=0` and SHALL skip the continuation panel.
+
+The continuation panel SHALL use CPU scripted completions through the actual
+`E3AgentPolicy`, local selfparse request construction, tool parsing, and dispatch.
+It SHALL include a changed-input tool-needed path that installs a verified engine
+and produces a later policy action. It SHALL also include result-withheld and
+no-tool-needed controls. Scripted model-shaped bytes SHALL stay in hash-bound fixture
+sidecars and SHALL not count as current model work.
+
+The terminal artifact SHALL use run date `20260916`, milestone `2026.09.644`,
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current invocation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. `arc_resume_ready_score` SHALL equal one only when the exact
+first loss is reproduced, the shipped result-to-action path changes, all controls
+complete, affected validation and applicable E2E checks pass, independent reduction
+agrees, and both terminal linters pass. This prototype SHALL use
+`solve_provenance=no_game_solve_cpu_transport_fixture`.
+
+### SCENARIO-ARC-WMTE-7336-FIRST-LOSS
+
+- GIVEN the authenticated Experiment 7319 request, response, and tool-event bytes
+- WHEN the reducer traces its two allowed calls and 4096-token ceiling
+- THEN it identifies request 01 as a successful dispatch with no remaining request slot
+- AND it records missing payload delivery, missing receipt capture, and the actual exit reason separately.
+
+### SCENARIO-ARC-WMTE-7336-BOUND-EXACTLY-ONCE-RESUME
+
+- GIVEN an opt-in selfparse attempt with one reserved completion slot
+- WHEN a successful tool result is pending for the same episode and attempt
+- THEN the immediately next local request contains that exact bounded result once
+- AND a successful response captures its receipt before verified engine installation and a later policy action.
+
+### SCENARIO-ARC-WMTE-7336-REJECTION-MATRIX
+
+- GIVEN stale-episode, expired-authority, duplicate-result, mismatched-attempt,
+  timeout-after-dispatch, and absent-result fixtures
+- WHEN the result-resume transport evaluates each fixture
+- THEN every fixture is rejected with its distinct reason and attempted-call evidence
+- AND none installs an engine, authorizes a plan, or selects an action.
+
+### SCENARIO-ARC-WMTE-7336-CONTROLS
+
+- GIVEN tool-needed, result-withheld, and no-tool-needed CPU scripted arms
+- WHEN the actual scored policy and local request construction run
+- THEN only the complete changed-input result-to-engine-to-action chain passes readiness
+- AND all fixture bytes remain separate from current model invocation counts.
+
+### SCENARIO-ARC-WMTE-7336-TERMINAL
+
+- GIVEN the raw first-loss receipt, CPU panel, scoped validation, applicable E2E checks,
+  independent raw-row reduction, and terminal linters
+- WHEN Experiment 7336 publishes its terminal candidate atomically
+- THEN every required field and validation receipt is present and internally consistent
+- AND a blocked, disqualified, or incomplete gate forces readiness and promotion value to zero.
+
+Implementation status: specified 2026-09-16. The conductor owns later status,
+changelog, and traceability reconciliation.

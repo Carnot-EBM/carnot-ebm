@@ -471,6 +471,52 @@ class TestRecomputeMetrics:
         )
         assert out["double_well"]["wall_clock_seconds"] == 1.2
 
+    def test_verifier_auroc_self_reported_energy_is_replaced_with_the_real_one(self) -> None:
+        """REQ-AUTO-025: the same trust boundary as double_well/rosenbrock
+        above, now exercised for the third benchmark's own dispatch branch."""
+        out = acr._recompute_metrics(
+            {"verifier_auroc": {"final_energy": -999999.0, "final_state": [0.5, 0.5]}}
+        )
+        assert out["verifier_auroc"]["final_energy"] == acr.measure_default_weight_energy()
+
+    def test_verifier_auroc_malformed_state_drops_final_energy_entirely(self) -> None:
+        out = acr._recompute_metrics({"verifier_auroc": {"final_energy": -1.0}})
+        assert "final_energy" not in out["verifier_auroc"]
+
+
+class TestDefaultBenchmarkData:
+    """REQ-AUTO-025: the training split must reach the hypothesis, and the
+    heavy corpus load must not happen at import time (every test file pays
+    it otherwise)."""
+
+    def test_includes_the_toy_benchmark_dimension(self) -> None:
+        data = acr.default_benchmark_data()
+        assert data["dim"] == 2
+
+    def test_includes_verifier_auroc_train_rows(self) -> None:
+        data = acr.default_benchmark_data()
+        rows = data["verifier_auroc_train_rows"]
+        assert rows
+        assert set(rows[0].keys()) == {"step_text", "label"}
+
+    def test_train_rows_never_include_held_out_question_ids(self) -> None:
+        from carnot.autoresearch.verifier_auroc_benchmark import _split_corpus
+
+        _, held_out = _split_corpus()
+        held_out_texts = {r["step_text"] for r in held_out}
+        data = acr.default_benchmark_data()
+        train_texts = {r["step_text"] for r in data["verifier_auroc_train_rows"]}
+        assert not (train_texts & held_out_texts)
+
+
+class TestSystemPromptMentionsVerifierAuroc:
+    def test_prompt_describes_the_third_benchmark(self) -> None:
+        assert "verifier_auroc" in acr.AUTORESEARCH_SYSTEM_PROMPT
+        assert "PCIBProbe" in acr.AUTORESEARCH_SYSTEM_PROMPT
+
+    def test_prompt_tells_the_hypothesis_its_own_auroc_is_not_trusted(self) -> None:
+        assert "never trusted" in acr.AUTORESEARCH_SYSTEM_PROMPT.lower()
+
 
 class TestVerifiedExecuteHypothesis:
     def test_a_fabricated_energy_with_no_state_never_reaches_the_evaluator(self) -> None:
@@ -491,6 +537,21 @@ class TestVerifiedExecuteHypothesis:
         code = "def run(d): raise ValueError('boom')"
         result = acr._verified_execute_hypothesis(code, {"dim": 2})
         assert result.success is False
+
+    def test_verifier_auroc_hypothesis_runs_through_the_real_sandbox(self) -> None:
+        """REQ-AUTO-025, end to end: a hypothesis that reads the training
+        rows handed to it and reports weights it never validated itself
+        still gets independently rescored against the (unseen-to-it)
+        held-out split -- the real sandbox, real recompute, nothing mocked."""
+        code = (
+            "def run(d):\n"
+            "    assert 'verifier_auroc_train_rows' in d\n"
+            "    return {'verifier_auroc': {'final_state': [-1.0, 1.0]}}\n"
+        )
+        result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data())
+        assert result.success is True
+        energy = result.metrics["verifier_auroc"]["final_energy"]
+        assert energy == acr.recompute_verifier_auroc_energy([-1.0, 1.0])
 
 
 class TestEnergyVerificationPatch:
@@ -838,6 +899,14 @@ class TestSeedBaselines:
         record = acr.seed_baselines()
         assert record.benchmarks["double_well"].final_energy == 0.05
         assert record.benchmarks["rosenbrock"].final_energy == 0.5
+
+    def test_verifier_auroc_seed_is_a_real_measurement(self) -> None:
+        """REQ-AUTO-025: unlike the two illustrative placeholders above, this
+        seed must equal an actual recomputation, not a hand-typed number."""
+        record = acr.seed_baselines()
+        assert record.benchmarks["verifier_auroc"].final_energy == (
+            acr.measure_default_weight_energy()
+        )
 
     def test_load_falls_back_to_seed_when_cache_missing(self, tmp_path: Path) -> None:
         record = acr.load_baselines(tmp_path / "does_not_exist.json")

@@ -62,8 +62,19 @@ from `scripts/demo_autoresearch.py:create_initial_baselines()` -- cheap,
 deterministic, already-implemented, no live LLM inference needed to SCORE a
 candidate (only to PROPOSE one). Deliberately NOT the ARC live agent (see
 `docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md` Part 3
-for why that was rejected) and NOT the verifier ensemble (no reusable AUROC
-harness exists yet).
+for why that was rejected). Both benchmarks were driven to machine-precision
+zero on the first production fire (2026-09-13); every fire since has landed
+`accepted > 0, committed = 0` -- saturated, not broken (see
+`docs/research-notes/rsi-levels-and-autoresearch-fitness-target-2026-09-14.md`).
+
+**Fitness target #2 (2026-09-16, REQ-AUTO-025).** `verifier_auroc` --
+correcting the note above, which said no reusable AUROC harness existed:
+`python/carnot/autoresearch/verifier_auroc_benchmark.py` now provides one,
+against a held-out split of `data/fover_corpus_v4.json` and
+`carnot.verify.pcib_probe.PCIBProbe`'s two tunable weights. See that
+module's own docstring for the trust boundary (same shape as REQ-AUTO-021's)
+and the measured, real headroom (default weights: AUROC 0.3465; a single
+sign flip: AUROC 0.7219) that motivated building it.
 
 **Where the lineage lives.** `ops/autoresearch_discoveries/<benchmark>/
 <experiment_id>.json` -- a self-contained record (code, description, metrics,
@@ -123,8 +134,30 @@ from carnot.autoresearch.toy_benchmarks import (  # noqa: E402
     BENCHMARK_ENERGY_FUNCTIONS,
     recompute_final_energy,
 )
+from carnot.autoresearch.verifier_auroc_benchmark import (  # noqa: E402
+    VERIFIER_AUROC_BENCHMARK_NAME,
+    measure_default_weight_energy,
+    recompute_verifier_auroc_energy,
+    train_rows_for_prompt,
+)
 
-DEFAULT_BENCHMARK_DATA: dict[str, Any] = {"dim": 2}
+
+def default_benchmark_data() -> dict[str, Any]:
+    """Built lazily (not a module-level constant) so importing this module --
+    every test file does -- never pays the cost of loading and splitting
+    `data/fover_corpus_v4.json` (REQ-AUTO-025) unless a round actually runs.
+    """
+    return {
+        "dim": 2,
+        # REQ-AUTO-025: the verifier_auroc benchmark's TRAINING split only --
+        # a hypothesis's sandboxed code may read this to search for good
+        # weights, but is never shown the held-out split it is actually
+        # scored against (see verifier_auroc_benchmark.py's module docstring
+        # for why).
+        "verifier_auroc_train_rows": train_rows_for_prompt(),
+    }
+
+
 DEFAULT_MODEL = os.environ.get("CARNOT_AUTORESEARCH_MODEL", "gpt-6-astra")
 DEFAULT_CODEX_TIMEOUT_S = 300
 # Measured 2026-09-12: `claude --model fable --effort max` genuinely needs
@@ -167,7 +200,23 @@ independently recomputes the true energy from your `final_state` using the \
 real formula above, so there is no way to claim a result you did not actually \
 reach. Only your `final_state` and how you found it matter. Do NOT hardcode \
 the analytic minimum (e.g. returning [1, 1, ...] without deriving it) -- the \
-research value is in the procedure, not the coordinates."""
+research value is in the procedure, not the coordinates.
+
+A third benchmark also exists:
+
+- verifier_auroc: `benchmark_data["verifier_auroc_train_rows"]` is a list of \
+{"step_text": str, "label": "correct" or "incorrect"} training examples. \
+Find two weights (entity_weight, falsifiability_weight) for \
+`carnot.verify.pcib_probe.PCIBProbe(entity_weight, falsifiability_weight)` \
+that best separate "incorrect" from "correct" rows by AUROC on THIS training \
+set -- you may import PCIBProbe directly and try any real search (grid \
+search, random search, anything real) over its `.score(step_text, "")` \
+output. Return {"verifier_auroc": {"final_state": [entity_weight, \
+falsifiability_weight], ...}}. The harness independently rescores your \
+weights against a DIFFERENT held-out set you never see, using its own AUROC \
+computation -- your own AUROC on the training rows is never trusted or seen \
+by the evaluator. Do not assume the probe's own documented default weights \
+(0.5, 0.5) are good; measure and search."""
 
 
 def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
@@ -187,10 +236,16 @@ def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(bench_metrics, dict):
             continue
         entry = {k: v for k, v in bench_metrics.items() if k != "final_energy"}
+        energy: float | None = None
         if name in BENCHMARK_ENERGY_FUNCTIONS:
             energy = recompute_final_energy(name, bench_metrics.get("final_state"))
-            if energy is not None:
-                entry["final_energy"] = energy
+        elif name == VERIFIER_AUROC_BENCHMARK_NAME:
+            # REQ-AUTO-025: same trust boundary as the toy benchmarks above,
+            # just against verifier_auroc_benchmark.py's own recompute
+            # function instead of toy_benchmarks.py's.
+            energy = recompute_verifier_auroc_energy(bench_metrics.get("final_state"))
+        if energy is not None:
+            entry["final_energy"] = energy
         verified[name] = entry
     return verified
 
@@ -254,6 +309,17 @@ def seed_baselines() -> BaselineRecord:
         final_energy=0.5,
         convergence_steps=10000,
         wall_clock_seconds=5.0,
+    )
+    # REQ-AUTO-025: unlike the two toy-benchmark seeds above (illustrative
+    # placeholders, not measurements -- the true global minimum for both is
+    # 0), this seed IS a real measurement: PCIBProbe's own documented default
+    # weights (0.5, 0.5), scored against the actual held-out corpus split.
+    # See verifier_auroc_benchmark.py's module docstring for the number.
+    record.benchmarks[VERIFIER_AUROC_BENCHMARK_NAME] = BenchmarkMetrics(
+        benchmark_name=VERIFIER_AUROC_BENCHMARK_NAME,
+        final_energy=measure_default_weight_energy(),
+        convergence_steps=0,
+        wall_clock_seconds=0.0,
     )
     return record
 
@@ -627,7 +693,7 @@ def run_round(
     # function before the evaluator sees them -- see _energy_verification_patch.
     with _energy_verification_patch():
         result = run_loop_with_generator(
-            generator, baselines, DEFAULT_BENCHMARK_DATA, config, experiment_log
+            generator, baselines, default_benchmark_data(), config, experiment_log
         )
 
     # Adversarial review 2026-09-12, findings 1/3/5: only commit benchmarks the

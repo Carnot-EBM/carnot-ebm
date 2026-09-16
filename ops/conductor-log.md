@@ -18033,3 +18033,4 @@ code |
 | 2026-09-16 02:53 UTC | Capture fresh Qwen3.8 proposals with source-fideli | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7332-plan-canary, exp7332-plan-canary) |
 | 2026-09-16 02:53 UTC | Measure continuous learning on fresh plans and cha | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7331-learning-adapter, exp7331-learning-adapter, exp7333-plan-capture, exp7333-plan-capture) |
 | 2026-09-16 02:53 UTC | Audit executor independence learning causality and | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7334-prospective-learning, exp7334-prospective-learning) |
+| 2026-09-16 04:14 UTC | Prototype a result-resume contract in the live ARC | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: + + monkey |

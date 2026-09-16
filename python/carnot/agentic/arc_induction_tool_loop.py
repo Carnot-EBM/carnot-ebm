@@ -91,6 +91,12 @@ def tool_loop_selfparse_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "selfparse"
 
 
+def selfparse_result_resume_enabled() -> bool:
+    """Enable bound result resumption without changing the shipped default."""
+
+    return os.environ.get("CARNOT_ARC_SELFPARSE_RESULT_RESUME") == "1"
+
+
 def tool_loop_grammar_enabled() -> bool:
     """Keep the measured llama.cpp transport opt-in until ARC efficacy is known."""
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_GRAMMAR") == "1"
@@ -654,6 +660,7 @@ def induce_with_tool_loop(
             "content": base + "\n\n" + instructions + schema_text + seed_note + extra,
         }
     ]
+    cap = _turn_cap()
     begin_evidence = getattr(proposer, "_begin_engine_evidence", None)
     if callable(begin_evidence):
         try:
@@ -710,6 +717,7 @@ def induce_with_tool_loop(
         "refetch_tool_calls_post_compaction": 0,
         "terminated_by": "",
         "final_answer_seen": False,
+        "result_resume": {"enabled": False},
         "wall_s": 0.0,
     }
     proposer.last_tool_loop_stats = stats
@@ -720,12 +728,28 @@ def induce_with_tool_loop(
     # the message stream is byte-identical to today.
     compact = CompactionController.from_env()
     ledger = EvidenceLedger()
+    resume_guard = None
+    if selfparse and selfparse_result_resume_enabled():
+        from carnot.agentic.arc_selfparse_result_resume import (
+            ResultResumeGuard,
+            attempt_identity,
+        )
+
+        resume_guard = ResultResumeGuard(
+            episode_id=game,
+            attempt_id=attempt_identity(game, int(cell), messages[0]["content"]),
+            completion_limit=cap,
+            authority_expires_monotonic=deadline,
+        )
+        stats["result_resume"] = resume_guard.receipt()
     if seed_engine_code and seed_report is not None and seed_report.get("ok"):
         # The seed occupies candidate ledger row 0 (repair mode, REQ-ARC-WMTE-6470):
         # its fingerprint makes a later re-submission count as a duplicate.
         ledger.record_engine_report(seed_engine_code, seed_report)
 
     def _finish(reason: str) -> tuple[bool, str]:
+        if resume_guard is not None:
+            stats["result_resume"] = resume_guard.receipt()
         stats["terminated_by"] = reason
         stats["turns_completed"] = stats["turns"]
         stats["candidates_scored"] = len(session.candidates)
@@ -791,7 +815,6 @@ def induce_with_tool_loop(
             # visible split exactly -- nothing for a mismatch-driven loop to iterate on.
             return _finish("seed_zero_mismatches")
     non_improving = 0
-    cap = _turn_cap()
     early_after = _early_stop_after()
     stall_cap = _stall_turn_cap()
     stats["stall_cap"] = stall_cap
@@ -807,6 +830,33 @@ def induce_with_tool_loop(
         remaining = deadline - time.time()
         if remaining <= 0:
             return _finish("deadline")
+        request_id = f"request:{turn}"
+        resume_request = False
+        request_messages = messages
+        if resume_guard is not None:
+            if resume_guard.has_pending_result:
+                resumed = resume_guard.prepare_next_request(
+                    request_id=request_id,
+                    episode_id=game,
+                    attempt_id=resume_guard.attempt_id,
+                    now_monotonic=time.time(),
+                )
+                if resumed is None:
+                    return _finish("result_resume_rejected")
+                resume_request = True
+                request_messages = [
+                    *messages,
+                    {
+                        "role": "user",
+                        "content": (
+                            resumed
+                            + "\n\nUse this result now. Reply with ONLY the final ```python "
+                            "block containing engine and is_level_complete. Do not call another tool."
+                        ),
+                    },
+                ]
+            elif not resume_guard.normal_request_allowed(completed_calls=stats["turns"]):
+                return _finish("resume_slot_unused")
         # COMPACTION EVENT (REQ-ARC-WMTE-6540, default OFF -- `compact.enabled` is
         # the master gate). Threshold-triggered off the previous response's MEASURED
         # prompt size, never per-turn, so between events the transcript stays
@@ -850,13 +900,19 @@ def induce_with_tool_loop(
                     stats["grammar_submit_only_turns"] += 1
             raw = _post_chat(
                 proposer,
-                messages,
+                request_messages,
                 turn=turn,
                 timeout_s=min(float(proposer.timeout), max(1.0, remaining)),
                 selfparse=selfparse,
                 **_tools_kw,
             )
         except Exception as exc:  # noqa: BLE001 - transport failure -> clean fallback
+            if resume_request and resume_guard is not None:
+                resume_guard.complete_request(
+                    request_id=request_id,
+                    response_received=False,
+                    timed_out=isinstance(exc, TimeoutError) or "timed out" in str(exc).lower(),
+                )
             stats["transport_error"] = f"{type(exc).__name__}: {exc}"[:300]
             if compacted_this_turn:
                 # The failing request was the FIRST after a rebuild. A strict
@@ -866,6 +922,12 @@ def induce_with_tool_loop(
                 stats["transport_error_on_compacted_request"] = True
             return _finish("transport_error")
         stats["turns"] += 1
+        if resume_request and resume_guard is not None:
+            resume_guard.complete_request(
+                request_id=request_id,
+                response_received=True,
+                timed_out=False,
+            )
         accounting = raw if isinstance(raw, dict) else {}
         n_tok = _completion_tokens(accounting)
         stats["decode_tokens_total"] += n_tok
@@ -920,6 +982,15 @@ def induce_with_tool_loop(
                     )
 
         if tool_calls:
+            if resume_request and resume_guard is not None:
+                resume_guard.reject(
+                    "tool_call_on_reserved_resume",
+                    request_id=request_id,
+                    attempted_tool_names=[
+                        str((call.get("function") or {}).get("name") or "") for call in tool_calls
+                    ],
+                )
+                return _finish("resume_request_returned_tool_call")
             if selfparse or grammar_json:
                 # Plain assistant text, think channel stripped: the XML stays in-context
                 # exactly as the model wrote it, and no tool_calls field goes near a
@@ -940,6 +1011,7 @@ def induce_with_tool_loop(
                     {"role": "assistant", "content": content or "", "tool_calls": tool_calls}
                 )
             tool_response_parts: list[str] = []
+            turn_results: list[dict[str, Any]] = []
             improved_this_turn = False
             turn_names: list[str] = []
             for tc in tool_calls:
@@ -965,6 +1037,7 @@ def induce_with_tool_loop(
                     receipt_transport=receipt_transport,
                     decision_point_identity=decision_point_identity,
                 )
+                turn_results.append(result)
                 stats["tool_calls_total"] += 1
                 turn_names.append(name)
                 stats["tool_calls_by_name"][name] = stats["tool_calls_by_name"].get(name, 0) + 1
@@ -1023,7 +1096,19 @@ def induce_with_tool_loop(
                         best_mismatches = m
                         improved_this_turn = True
             if selfparse or grammar_json:
-                messages.append({"role": "user", "content": "\n".join(tool_response_parts)})
+                joined_response = "\n".join(tool_response_parts)
+                if resume_guard is None:
+                    messages.append({"role": "user", "content": joined_response})
+                else:
+                    offered = resume_guard.offer_result(
+                        source_request_id=request_id,
+                        next_request_id=f"request:{turn + 1}",
+                        tool_names=turn_names,
+                        bounded_response=joined_response,
+                        dispatch_results=turn_results,
+                    )
+                    if not offered["accepted"]:
+                        return _finish("result_resume_offer_rejected")
             stats["tool_calls_per_turn"].append(turn_names)
             if (
                 session.candidates
@@ -1033,7 +1118,7 @@ def induce_with_tool_loop(
                 non_improving += 1
             elif improved_this_turn:
                 non_improving = 0
-            if best_mismatches == 0:
+            if best_mismatches == 0 and resume_guard is None:
                 return _finish("zero_mismatches")
             if non_improving >= early_after:
                 return _finish("early_stop_non_improving")
