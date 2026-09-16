@@ -71629,3 +71629,87 @@ exact upstream, check, artifact field, expected value, and observed value in
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7328 and SCENARIO-REPORT-7328-* | Planned: Exp7328 aggregation module, thin entrypoint, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, full Python tests, artifact replay, adversarial verification, row consistency, and spec coverage |
+## V645 read-only board state — 2026-09-16
+
+**Status:** Specified. This disposition is accounting only and gates no science.
+
+### REQ-REPORT-7355: Record current board state without new hardware work
+
+Exp7355 SHALL authenticate the terminal Exp7341 artifact, its three board rows,
+and the Exp6559 physical-state cutoff. It SHALL reject a missing, quarantined,
+disqualified, partial, identity-mismatched, or checksum-mismatched producer.
+The blocked Exp7341 outcome SHALL remain diagnostic evidence. It SHALL not
+authorize current readiness or become a dependency for a scientific task.
+
+Exp7355 SHALL use the existing approved-source parser to check dated operator
+receipts for a GateMate cable, port, board, power, JTAG, or DirtyJTAG change
+after Exp6559. It SHALL record the exact accepted source and date, or the
+explicit absence. If no qualifying receipt exists, the terminal verdict SHALL
+be `blocked_changed_physical_state` with `verdict_class=blocked`. The gate
+summary SHALL name the upstream, check, exact field, expected value, and
+observed value. A qualifying receipt SHALL only make one bounded GateMate
+operation eligible for a future authorized task.
+
+Exp7355 SHALL emit one authenticated row for KV260, GateMate, and PolarFire.
+KV260 SHALL remain historical FPGA-fabric execution with future SSH-only
+access. PolarFire SHALL remain hash-matched CPU dispatch and SHALL not become
+an FPGA-sampling claim. No row SHALL assert present reachability. The task
+SHALL issue no SSH, USB, JTAG, flash, reset, benchmark, installation, purchase,
+vendor contact, or external-message operation.
+
+Extropic Z1T and KAN SHALL remain deployment context only. No hardware purchase
+is required for milestone `2026.09.645`. The
+`board_disposition_complete_score` SHALL equal one only when the three board
+dispositions authenticate. The known external GateMate block counts as a
+complete disposition. Every hardware readiness, value, and promotion score
+SHALL remain zero. No downstream V645 scientific gate SHALL consume Exp7355.
+
+Exp7355 SHALL invoke no model. It SHALL declare `MODEL_SPECS=[]`,
+`model_invoked=false`, zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model-shaped evidence SHALL remain in a labeled, hash-bound sidecar.
+
+The workflow SHALL use the Exp7303 scoped runner with the exact Exp7355 test,
+module, and thin entrypoint. It SHALL require worktree imports, focused pytest,
+100% changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test spec coverage. It SHALL reload the candidate and reduce
+the raw rows independently. It SHALL run adversarial verification and strict
+verdict-row consistency before the atomic terminal write. Failed affected
+validation SHALL produce a `disqualified` result with all readiness, value,
+and promotion scores set to zero.
+
+#### SCENARIO-REPORT-7355-SOURCES: The prior board chain keeps its exact scope
+
+**Given** the Exp7341 artifact and each referenced KV260 and PolarFire receipt
+**When** Exp7355 authenticates the historical chain and the Exp6559 cutoff
+**Then** each current byte matches its recorded hash and terminal identity
+**And** KV260 remains fabric execution while PolarFire remains CPU dispatch.
+
+#### SCENARIO-REPORT-7355-GATEMATE: Missing changed-state evidence is terminal
+
+**Given** the approved dated operator receipt sources after Exp6559
+**When** no source records a qualifying GateMate physical-state change
+**Then** the result is `blocked_changed_physical_state` with an exact gate summary
+**And** the task issues zero current hardware or external operations.
+
+#### SCENARIO-REPORT-7355-ACCOUNTING: Complete disposition is not readiness
+
+**Given** authenticated rows for KV260, GateMate, and PolarFire
+**When** GateMate retains the external receipt block
+**Then** `board_disposition_complete_score` equals one
+**And** all hardware readiness, value, and promotion scores equal zero.
+
+#### SCENARIO-REPORT-7355-CONTEXT: Deployment references stay external
+
+**Given** the V645 Extropic Z1T and KAN context
+**When** Exp7355 records the bounded hardware path
+**Then** no vendor projection becomes a Carnot speed or availability claim
+**And** the milestone requires no new hardware purchase.
+
+#### SCENARIO-REPORT-7355-ARTIFACT: Stored evidence controls terminal output
+
+**Given** raw board rows, a measured candidate, and current validation receipts
+**When** the cold reducer and both terminal validators inspect the candidate
+**Then** any changed row, hash, identity, score, operation count, or checksum fails
+**And** only an accepted terminal document is written atomically.
