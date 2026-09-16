@@ -7941,3 +7941,100 @@ And any blocked or disqualified result keeps readiness at zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7339 and SCENARIO-VERIFY-7339-* | Implemented in the immutable schedule PyO3 binding and Exp7339 runner. | `tests/python/test_experiment_7339_v644_native_binding.py`, the binding's focused Rust test, the 3,310-row runtime replay, and E2E-003 verify the behavior. |
+
+### REQ-VERIFY-7340: Native Cost Evidence SHALL Cover The Complete Acquired-Constraint Boundary
+
+Exp7340 SHALL authenticate the exact top-level identity, terminal status,
+eligibility, quarantine state, readiness score, loaded-extension identity, and
+frozen protocol declared by Exp7339 before consuming any score. Missing,
+blocked, disqualified, partial, quarantined, changed, or incomplete upstream
+evidence SHALL produce a canonical row-free `blocked_*` terminal artifact that
+names the upstream, failed check, field, expected value, and observed value.
+
+The measurement SHALL replay current Python in-process, Rust in-process, and
+persistent-service arms over equivalent retained acquired-constraint records.
+One pinned host process per arm SHALL run three warmups and exactly 30 paired
+blocks at each frozen batch size 1, 32, and 256 in seeded randomized block
+order. Development-only repetition selection SHALL make clock resolution
+adequate without extending the fixed evaluation sample after outcomes are
+known. Every row SHALL retain its size, seed, block, arm, repetition count,
+complete conversion/evaluation/result boundary time, parity outcome,
+contending-work declaration, and censoring state.
+
+Cold import, constraint compilation, input marshalling, evaluation, result
+conversion, and persistent-service transport SHALL be measured as explicit
+non-overlapping spans. The artifact SHALL report p50 and p95 latency by size
+and arm and a paired bootstrap CI95 throughput ratio for native Rust versus
+Python at every size. `native_cost_complete_score` SHALL equal one only when
+all 90 paired blocks have complete three-arm costs and zero parity mismatches.
+`native_ten_x_score` SHALL equal one only when the native-over-Python
+throughput-ratio CI95 lower bound is at least 10 at all three sizes. A lower
+gain SHALL remain a complete null and SHALL not move the unchanged gate.
+
+Break-even request count SHALL include measured import, compilation, and
+binding setup costs without overlapping any per-request span. V643 stage costs
+MAY be used only when their identity and non-overlap are explicit; otherwise
+the whole-learning upper-bound analysis SHALL be unavailable. Neither an
+isolated evaluator speedup nor a native null SHALL imply a broad learning,
+native, hardware, FPGA, or board claim. A repeated performance null SHALL
+retire only this exact complete-boundary experiment.
+
+The current work SHALL run row/hash mutation checks, stage-overlap checks,
+E2E-003, independent raw-row reduction, current affected validation, and both
+terminal validators before an atomic terminal write. Exp7340 SHALL use date
+`20260916`, `MODEL_SPECS=[]`, `model_invoked=false`, zero invocation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. The execution authority defines correctness, so
+`verifier_is_oracle` SHALL remain true.
+
+#### SCENARIO-VERIFY-7340-PREFLIGHT: The Same-Milestone Producer Fails Closed
+
+Given the exact Exp7339 artifact and its declared top-level protocol and binding fields,
+When availability, hash, terminal state, class, quarantine, readiness, and extension identity are checked,
+Then only complete eligible runtime evidence can start measurement,
+And the first failed check produces a canonical row-free blocked result.
+
+**Spec traces:** REQ-VERIFY-7340
+
+#### SCENARIO-VERIFY-7340-COST: Paired Blocks Measure The Complete Boundary
+
+Given equivalent acquired-constraint requests and one pinned process per arm,
+When sizes 1, 32, and 256 run exactly 30 seeded randomized paired blocks,
+Then conversion, evaluation, results, and service transport are retained without overlap,
+And all arm outputs match at every completed block.
+
+**Spec traces:** REQ-VERIFY-7340
+
+#### SCENARIO-VERIFY-7340-GATE: Ten-X Requires Every Lower Confidence Bound
+
+Given 30 complete paired throughput ratios at each fixed size,
+When the frozen bootstrap reducer computes CI95 intervals,
+Then the ten-x score is one only if every lower bound is at least 10,
+And a smaller measured gain is published as a complete performance null.
+
+**Spec traces:** REQ-VERIFY-7340
+
+#### SCENARIO-VERIFY-7340-AMORTIZATION: Setup Is Charged Exactly Once
+
+Given measured import and compilation costs plus complete per-request costs,
+When native-versus-Python break-even is reduced,
+Then setup and steady costs do not overlap and the request count is explicit or unavailable,
+And no isolated evaluator result is presented as whole-learning acceleration.
+
+**Spec traces:** REQ-VERIFY-7340
+
+#### SCENARIO-VERIFY-7340-TERMINAL: Null Evidence Remains Complete
+
+Given complete rows, zero mismatches, adverse checks, E2E-003, validation, and terminal validators,
+When the unchanged ten-x gate fails,
+Then native cost completion remains one while native ten-x is zero and value/promotion are zero,
+And only this exact boundary is retired without a broad native or hardware conclusion.
+
+**Spec traces:** REQ-VERIFY-7340
+
+## Implementation Status (REQ-VERIFY-7340)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7340 and SCENARIO-VERIFY-7340-* | Implemented in `python/carnot/experiment_7340_v644_native_cost.py` using the shipped Exp7339 binding and Exp7326 service mechanisms. | `tests/python/test_experiment_7340_v644_native_cost.py` plus the measured E2E-003 and terminal validation receipts. |

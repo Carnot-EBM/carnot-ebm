@@ -65,3 +65,42 @@ And a source-only or build-only check cannot satisfy E2E-003.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-PYBIND-7339 and SCENARIO-PYBIND-7339-* | Implemented in `crates/carnot-python/src/schedule.rs` and `python/carnot/experiment_7339_v644_native_binding.py`. | `tests/python/test_experiment_7339_v644_native_binding.py`, the focused binding unit test, and the real imported-extension replay verify the boundary. |
+
+### REQ-PYBIND-7340: Native Timing SHALL Include Python Conversion And Result Ownership
+
+Exp7340 SHALL benchmark the existing `RustCompiledScheduleEvaluator` through
+its ordinary Python call boundary. Native elapsed time SHALL start before
+per-call Python request detachment and end only after detached ordinary Python
+result dictionaries are available. Constraint compilation and cold extension
+import SHALL be measured separately and charged to amortization exactly once.
+The timed call SHALL not substitute a Rust-only kernel timer.
+
+The Python control, compiled native evaluator, and persistent JSON service
+SHALL receive semantically equivalent requests in each randomized paired
+block. Each block SHALL retain exact output hashes and require zero parity
+mismatches. E2E-003 SHALL replay the benchmarked loaded extension rather than
+accept a source, build, or stale binary identity.
+
+#### SCENARIO-PYBIND-7340-BOUNDARY: Timing Returns Detached Python Results
+
+Given a compiled evaluator and an equivalent Python control batch,
+When a timed native repetition converts requests, evaluates them, and converts results,
+Then elapsed time covers the complete ordinary-Python boundary,
+And the resulting output hash matches the control and persistent-service hashes.
+
+**Spec traces:** REQ-PYBIND-7340
+
+#### SCENARIO-PYBIND-7340-E2E003: The Measured Binary Is The Replayed Binary
+
+Given the Exp7339-declared extension hash and current source identities,
+When Exp7340 performs its round trip and terminal reduction,
+Then the loaded module hash and result parity are rechecked,
+And a stale, missing, or differently built extension blocks score consumption.
+
+**Spec traces:** REQ-PYBIND-7340
+
+## Implementation Status (REQ-PYBIND-7340)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-PYBIND-7340 and SCENARIO-PYBIND-7340-* | Implemented in the Exp7340 complete-boundary measurement; no binding code change is required. | `tests/python/test_experiment_7340_v644_native_cost.py` and measured E2E-003 evidence cover the boundary. |
