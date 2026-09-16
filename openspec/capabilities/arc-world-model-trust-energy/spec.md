@@ -32860,6 +32860,95 @@ agrees, and both terminal linters pass. This prototype SHALL use
 Implementation status: specified 2026-09-16. The conductor owns later status,
 changelog, and traceability reconciliation.
 
+## REQ-ARC-WMTE-7354: Measure result-resume transfer with matched live episodes
+
+Experiment 7354 SHALL read the exact Experiment 7345 result before dependent
+work. It SHALL require a complete, unflagged record with
+`seal_for_exp7354=true`, `arc_resume_ready_score=1`, and all current gates
+passing. A missing or unsafe producer SHALL write a terminal `blocked_*`
+artifact with the first failed field comparison. It SHALL not load a model in
+that state.
+
+The experiment SHALL seal two eligible least-recently-measured registered games
+before outcomes. It SHALL run two fresh matched episodes per game through the
+canonical evaluation path and `E3AgentPolicy`. One arm SHALL enable the
+qualified result-resume path. The other SHALL withhold the result. Both arms
+SHALL use the same fixed seed, 192-action limit, two-completion limit, and 4096
+generated-token limit. The reserved continuation SHALL stay inside those
+limits. Adapters, banked solutions, and off-path engines SHALL remain disabled.
+The experiment SHALL not read game source or run an offline ground-truth search.
+
+The current model SHALL be `unsloth/Qwen3.8-27B-GGUF` with `Q4_K_M`
+quantization. Its resolved file bytes, hash, runtime settings, owned process,
+lease, cumulative ledger, request evidence, and task-scoped accelerator receipt
+SHALL be recorded. Model load SHALL stop after 600 seconds. The aggregate live
+window SHALL stop after 2400 seconds. Each long operation SHALL emit flushed
+boundaries and a truthful heartbeat at least every 60 seconds.
+
+The raw record SHALL retain each request, tool call, tool result, next request,
+engine trust decision, installed plan, later policy action, action count, level
+progress, failure, cancellation, and censoring disposition. An independent
+reducer SHALL recompute call, token, and action consumption from raw records. It
+SHALL reject a result-withheld mutation and a stale-result mutation. A tool call
+without later policy use is a complete null for result-resume utility.
+
+`arc_capture_complete_score` SHALL equal one only when all four episode rows are
+authentic and terminal. `arc_feedback_value_score` SHALL equal one only when the
+causal treatment path is complete on both games, both matched controls are
+valid, and neither game has a progress or action-budget regression. Four
+episodes form a mechanism pilot and SHALL not support a population claim.
+Existing public-level progress is transfer evidence only. New solve credit SHALL
+require `solve_provenance=live_agent_self_discovery` and the shipped reproduction
+gate.
+
+The terminal artifact SHALL use run date `20260916`, milestone `2026.09.645`,
+`execution_venue=host`, and an inference declaration that matches actual current
+work. It SHALL run the Experiment 7303 scoped validation, E2E-009, E2E-010, the
+real matched local-model invocation, independent reduction, adversarial
+verification, and strict verdict-row consistency checking. It SHALL preserve
+failed checks and publish the terminal deliverable atomically. It SHALL not
+change production defaults, submit a competition run, or modify historical
+determinations.
+
+### SCENARIO-ARC-WMTE-7354-UPSTREAM-BLOCK
+
+- GIVEN Experiment 7345 is missing, quarantined, blocked, partial, disqualified,
+  unsealed, not ready, or has a failed gate
+- WHEN Experiment 7354 checks the dependency
+- THEN it writes a terminal blocked artifact with zero capture, value, and promotion scores
+- AND it records the exact upstream field, expected value, and observed value before model work.
+
+### SCENARIO-ARC-WMTE-7354-FROZEN-MATCHED-PANEL
+
+- GIVEN the qualified resume producer and the existing generalization rotation
+- WHEN the panel is sealed before current outcomes
+- THEN it contains two eligible games and two fresh matched arms per game
+- AND every row has the fixed seed, action, completion, and token limits with adapters and banks disabled.
+
+### SCENARIO-ARC-WMTE-7354-CAUSAL-CHAIN
+
+- GIVEN a successful runtime tool result in a treatment episode
+- WHEN a later request receives the result and the policy continues
+- THEN the row links request, call, result, later request, engine trust, plan, and action identities
+- AND any missing link keeps the value score at zero even when a tool was invoked.
+
+### SCENARIO-ARC-WMTE-7354-INDEPENDENT-REDUCTION
+
+- GIVEN four terminal raw episode rows
+- WHEN the independent reducer recomputes budgets and causal use
+- THEN it agrees with the terminal summary and rejects withheld-result and stale-result mutations
+- AND it preserves failures, cancellations, and censored rows instead of removing them.
+
+### SCENARIO-ARC-WMTE-7354-TERMINAL
+
+- GIVEN the live panel, current validation, E2E checks, and terminal linters
+- WHEN Experiment 7354 publishes its artifact
+- THEN complete accounting can pass for a positive, null, or censored pilot
+- AND blocked, disqualified, or adversarial evidence forces value and promotion scores to zero.
+
+Implementation status: specified 2026-09-16. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## REQ-ARC-WMTE-7345: Qualify the repaired result-resume launcher
 
 Experiment 7345 SHALL qualify the existing opt-in result-resume mechanism before
