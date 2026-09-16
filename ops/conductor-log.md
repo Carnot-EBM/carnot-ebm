@@ -18059,3 +18059,4 @@ code |
 | 2026-09-16 17:33 UTC | Capture fresh plans and source-fidelity controls o | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 95 passed, 1 warning in 8.09s |
 | 2026-09-16 17:36 UTC | Measure continuous structural learning on distinct | GATE_BLOCK | gate-unsat(final): 5 of 6 gate(s) failed; first failure: exp7346-learning-adapter.learning_adapter_ready_score (actual=0 == expected=1) |
 | 2026-09-16 17:38 UTC | Independently audit learning causality source fide | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7349-prospective-learning, exp7349-prospective-learning, exp7349-prospective-learning) |
+| 2026-09-16 19:00 UTC | Prototype bounded constraint elimination with exac | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ], + } + |

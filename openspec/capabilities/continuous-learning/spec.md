@@ -17117,3 +17117,103 @@ generation SHALL use `model_load_no_generation`. No model attempt SHALL use
 - WHEN an independent reducer reloads all raw rows
 - THEN dispositions, usable plans, pair behavior, invocation counts, and costs reproduce
 - AND CPU replay adds no model load or generation count.
+
+## REQ-CL-7351: Bounded Exact-Feedback Acquisition-Time Prototype
+
+Carnot SHALL compare a finite-bias elimination learner with conservative
+acquisition and an exact-plan cache with reset. The comparison SHALL use only
+public variable names, public domain values, opaque version tokens, and exact
+Boolean feedback. It SHALL not expose target scopes, target relations, generated
+labels, or evaluator witnesses to a learner. It SHALL not use a neural oracle.
+The evaluator SHALL keep correctness authority and SHALL apply existential,
+sound partial-assignment semantics.
+
+The supported language SHALL contain normalized binary integer relations over
+domain `{0, 1, 2}`. The learner SHALL enumerate every public pair because target
+scopes are unknown. It SHALL commit a relation only after exact distinguishing
+witnesses eliminate every different semantic table in the frozen finite bias.
+If different semantic tables survive, it SHALL retain uncertainty and use a
+charged exact final check. Ternary rules, other domains, malformed queries, and
+rules outside the frozen bias SHALL cause abstention or exact fallback. They
+SHALL not become binary certainty.
+
+Development SHALL use 12 contexts with positive and negative witnesses. The
+contexts SHALL include one constraint per scope, multiple relations on one
+scope, ternary conflicts outside the bias, malformed queries, and version
+changes. Exhaustive small-domain audit enumeration SHALL report zero wrong
+admissions before evaluation opens.
+
+The evaluation manifest SHALL be sealed before its outcomes are opened. It
+SHALL contain 30 independent supported contexts: ten each with 4, 6, and 8
+variables and domain size 3. A separate challenge panel SHALL contain 12
+unsupported contexts. Every arm SHALL have a 256-query cap, a 69,632-byte state
+cap, and 12 future requests. Seeds, public query order, and arm rotation SHALL
+be frozen before execution. Independent enumeration is audit-only and its cost
+SHALL remain separate from learner acquisition cost.
+
+The value gate SHALL compare complete acquisition and future-verification time,
+not query count alone. The finite-bias arm SHALL have a paired, context-clustered
+CI95 upper full-cost ratio below `0.90` against conservative acquisition. It
+SHALL return no infeasible output, preserve future utility and coverage, and
+cause at least one later proposal-order change. `acquisition_prototype_ready_score`
+SHALL equal one when the bounded controls, exhaustive admission audit, process
+path, and current required validation pass. Readiness authorizes measurement
+only. A blocked or disqualified result SHALL set readiness, value, and promotion
+scores to zero.
+
+The terminal artifact SHALL be
+`results/experiment_7351_v645_acquisition_prototype.json`. It SHALL use date
+`20260916`, `MODEL_SPECS=[]`, `model_invoked=false`, zero current model load and
+generation counts, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL authenticate the qualified Exp7344 artifact.
+It SHALL preserve production defaults, publication surfaces, historical
+determinations, and the research roadmap.
+
+### SCENARIO-CL-7351-ADMISSION: Exact Witnesses Close Before Commit
+
+- GIVEN unknown scopes and the frozen domain-three binary relation bias
+- WHEN pair queries eliminate candidate semantic tables
+- THEN a relation commits only when every different table has an exact distinguishing witness
+- AND unresolved or out-of-bias feedback remains uncertainty with an exact final check.
+
+### SCENARIO-CL-7351-DEVELOPMENT: Supported And Unsupported Controls Stay Separate
+
+- GIVEN 12 development contexts with the required witness and lifecycle cases
+- WHEN exhaustive evaluator enumeration audits every admitted table
+- THEN wrong admissions equal zero across the complete small domains
+- AND ternary, malformed, stale-version, and unsupported-domain cases abstain or fall back safely.
+
+### SCENARIO-CL-7351-PANEL: Evaluation Identities And Budgets Stay Frozen
+
+- GIVEN independent development, evaluation, and resampling seeds
+- WHEN 30 supported contexts and 12 unsupported challenges are sealed
+- THEN variable counts, domain size, future-request count, query cap, state cap, query order, and arm rotation match the manifest
+- AND no evaluation rule, scope, witness, or generated label enters the public manifest.
+
+### SCENARIO-CL-7351-COST: Acquisition Time Governs Value
+
+- GIVEN matched public contexts and exact evaluator authority for all three arms
+- WHEN context-clustered paired cost ratios are reduced
+- THEN the finite-bias value gate uses full acquisition and future-verification time
+- AND query count is retained as a diagnostic instead of substituting for time.
+
+### SCENARIO-CL-7351-E2E: Public Queries Affect Checked Future Plans
+
+- GIVEN a public context with no target-scope disclosure
+- WHEN partial Boolean queries close a supported relation and commit it
+- THEN the relation changes at least one future proposal order
+- AND every returned future plan passes a charged exact final verification.
+
+### SCENARIO-CL-7351-TERMINAL: Raw Rows Rebuild Readiness And Value
+
+- GIVEN raw comparative rows, current scoped validation, and terminal validators
+- WHEN an independent reducer reloads the candidate
+- THEN budgets, safety, coverage, utility, costs, and gate outcomes reproduce
+- AND blocked, disqualified, or adversarial evidence prevents readiness and promotion.
+
+## Implementation Status (REQ-CL-7351)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7351 and SCENARIO-CL-7351-* | Implemented in `python/carnot/experiment_7351_v645_acquisition_prototype.py` with a thin executable wrapper. The learner uses only public domains and exact Boolean feedback. | `tests/python/test_experiment_7351_v645_acquisition_prototype.py` covers exact partial semantics, witness closure, private seals, development controls, unsupported fallback, cost reduction, terminal classification, and 100-percent changed-module coverage. The terminal result artifact supplies the bounded E2E measurement. |
