@@ -18061,3 +18061,5 @@ code |
 | 2026-09-16 17:38 UTC | Independently audit learning causality source fide | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7349-prospective-learning, exp7349-prospective-learning, exp7349-prospective-learning) |
 | 2026-09-16 19:00 UTC | Prototype bounded constraint elimination with exac | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: ], + } + |
 | 2026-09-16 20:17 UTC | Prototype bounded constraint elimination with exac | OK | cache hit: 102 passed, 1 warning in 9.53s |
+| 2026-09-16 20:20 UTC | Compare acquisition strategies at the full executi | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7351-acquisition-prototype.acquisition_prototype_ready_score (actual=0 == expected=1) |
+| 2026-09-16 20:22 UTC | Audit acquisition soundness assumptions and cost r | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7352-acquisition-cost, exp7352-acquisition-cost, exp7352-acquisition-cost) |
