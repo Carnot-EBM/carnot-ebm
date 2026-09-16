@@ -17045,3 +17045,75 @@ and promotion scores to zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7347 and SCENARIO-CL-7347-* | Implemented in `python/carnot/experiment_7347_v645_plan_canary.py` with a thin executable wrapper. The module reuses the current-model resolver, GPU lease journal, native server supervisor, and Exp7303 scoped validation runner. | `tests/python/test_experiment_7347_v645_plan_canary.py` covers exact parsing, fixed request selection, CPU controls, transport and semantic separation, raw reduction, tokenizer GPU isolation, served-alias binding, and disqualification conservation with 155/155 changed-module statements. The bounded entrypoint supplies the terminal live result. |
+
+## REQ-CL-7348: Sealed Public Plan Capture For Prospective Evaluation
+
+Carnot SHALL authenticate the V645 executor fixture and plan canary before it
+loads a model. The capture SHALL freeze all 32 public requests and their 32
+identifier-renamed twins. It SHALL schedule two candidates for each request.
+This makes exactly 128 calls. Each call SHALL generate at most 256 tokens.
+Prompts SHALL contain public request fields and the public plan schema only.
+They SHALL contain no private rules, evaluator labels, or hidden witnesses.
+
+The capture SHALL use one owned CUDA runner for the cached current Qwen3.8
+Q4_K_M GGUF. Model load SHALL stop after 600 seconds. Generation SHALL stop
+after 2,100 seconds. The capture SHALL checkpoint each terminal call. It SHALL
+not retry based on output content. At the fixed deadline, it SHALL cancel owned
+work and mark each unstarted call as censored. Failed and censored calls SHALL
+remain in the fixed denominator.
+
+The capture SHALL seal prompts and raw replies before private evaluation. It
+SHALL then use the qualified executor to reduce plan identity, parse status,
+duration, window, weight, and renamed-pair fidelity. Original and twin rows
+SHALL form one paired comparative unit. The artifact SHALL report usable plans
+and censoring separately. Each call SHALL publish cost fields for later cold
+and warm accounting. A downstream CPU replay SHALL not become a new model
+invocation claim.
+
+`plan_capture_complete_score` SHALL equal one only when all 128 scheduled
+calls have authentic terminal rows. Explicit deadline-censored rows count as
+terminal accounting. This score SHALL not assert that any proposal is usable.
+A complete run with zero usable plans SHALL have a `null` verdict. Blocked or
+disqualified evidence SHALL set readiness, value, and promotion scores to zero.
+The terminal artifact SHALL be
+`results/experiment_7348_v645_plan_capture.json`. It SHALL use date `20260916`
+and `execution_venue=host`. Authentic CUDA generation SHALL use
+`inference_substrate=live_llm_inference` and
+`inference_substrate_class=model_bounded_generation`. A load attempt without
+generation SHALL use `model_load_no_generation`. No model attempt SHALL use
+`blocked_no_run`.
+
+### SCENARIO-CL-7348-SCHEDULE: Requests Twins And Candidates Stay Frozen
+
+- GIVEN the authenticated V645 public manifest
+- WHEN the capture schedule is built before model generation
+- THEN all 32 requests and all 32 renamed twins receive two candidate slots
+- AND the 128 identities, prompts, order, seeds, and token budgets have one seal.
+
+### SCENARIO-CL-7348-BLINDING: Generation Cannot Read Private Authority
+
+- GIVEN separate public and evaluator-only manifests
+- WHEN prompts and raw calls are sealed
+- THEN prompts contain no private rules, labels, witnesses, or private paths
+- AND private evaluation starts only after the raw capture seal exists.
+
+### SCENARIO-CL-7348-TERMINAL: Every Scheduled Call Has One Disposition
+
+- GIVEN one owned runner and fixed load and generation deadlines
+- WHEN calls complete, fail, cancel, or remain unstarted at the deadline
+- THEN every scheduled call has one authentic terminal row
+- AND failures and censored rows stay in the fixed 128-call denominator.
+
+### SCENARIO-CL-7348-FIDELITY: Source Errors Stay Separate From Hidden Rules
+
+- GIVEN sealed raw replies and later private evaluator access
+- WHEN candidates and renamed pairs are reduced
+- THEN parse, identity, duration, window, weight, and hidden-rule outcomes stay separate
+- AND each original and twin pair forms one comparative unit.
+
+### SCENARIO-CL-7348-REPLAY: Raw Evidence Rebuilds Counts And Costs
+
+- GIVEN the sealed candidate manifest and terminal artifact
+- WHEN an independent reducer reloads all raw rows
+- THEN dispositions, usable plans, pair behavior, invocation counts, and costs reproduce
+- AND CPU replay adds no model load or generation count.

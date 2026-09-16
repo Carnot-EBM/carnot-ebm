@@ -875,11 +875,12 @@ def _chat_request(port: int, prompt: str, timeout_s: float) -> JsonDict:  # prag
 
 
 def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pragma: no cover
-    """Run one owned server and four bounded calls, then release only that server."""
+    """Run one owned server over the supplied fixed schedule, then release it."""
 
     capture_started = time.monotonic()
     spans: list[JsonDict] = []
     rows: list[JsonDict] = []
+    planned_calls = len(context["selected_requests"])
     gpu_uuid = str(context["available_gpu_uuids"][0])
     device = _selected_device(context, gpu_uuid)
     gpu_index = int(device["gpu_index"])
@@ -969,7 +970,7 @@ def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pra
         _phase_close(spans, "model_load", load_started, 1, str(supervisor.log_path))
 
         generation_started = time.monotonic()
-        progress("generation", "start", planned_calls=4)
+        progress("generation", "start", planned_calls=planned_calls)
         for index, public_request in enumerate(context["selected_requests"]):
             elapsed = time.monotonic() - capture_started
             if elapsed >= INFERENCE_WINDOW_TIMEOUT_S:
@@ -1001,8 +1002,8 @@ def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pra
                 continue
             prompt = render_public_prompt(public_request)
             remaining = max(0.25, INFERENCE_WINDOW_TIMEOUT_S - elapsed)
-            progress("generation", "before_call", completed=index, total=4)
-            with _heartbeat(2, "plan_generation", lambda: index, 4):
+            progress("generation", "before_call", completed=index, total=planned_calls)
+            with _heartbeat(2, "plan_generation", lambda: index, planned_calls):
                 response = _chat_request(port, prompt, min(REQUEST_TIMEOUT_S, remaining))
             row = build_call_row(
                 call_index=index,
@@ -1017,13 +1018,13 @@ def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pra
                 "generation",
                 "after_call",
                 completed=index + 1,
-                total=4,
+                total=planned_calls,
                 terminal_state=row["terminal_state"],
                 parse_status=row["parse_status"],
             )
             lease.heartbeat()
         _phase_close(spans, "generation", generation_started, len(rows), str(raw_dir))
-        progress("generation", "complete", completed=len(rows), total=4)
+        progress("generation", "complete", completed=len(rows), total=planned_calls)
     except Exception as exc:  # noqa: BLE001 - exact runtime failure is terminal evidence.
         runtime_error = f"{type(exc).__name__}:{exc}"
         load_receipt["failed"] = load_receipt["attempted"] and not load_receipt["completed"]
@@ -1051,7 +1052,7 @@ def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pra
                     cleanup,
                     after,
                     identity,
-                    len(rows) == 4 and provenance.get("provenance_ok") is True,
+                    len(rows) == planned_calls and provenance.get("provenance_ok") is True,
                 )
             except lease_api.LeaseError as exc:
                 lease_release = {"released": False, "error": f"{type(exc).__name__}:{exc}"}
@@ -1063,7 +1064,7 @@ def _live_capture(context: Mapping[str, Any], raw_dir: Path) -> JsonDict:  # pra
             process_released=cleanup.get("leak_free"),
             lease_released=lease_release.get("released"),
         )
-    while len(rows) < 4:
+    while len(rows) < planned_calls:
         index = len(rows)
         public_request = context["selected_requests"][index]
         prompt = render_public_prompt(public_request)
