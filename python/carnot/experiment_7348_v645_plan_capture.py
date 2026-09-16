@@ -711,10 +711,13 @@ def independent_reduce(artifact: Mapping[str, Any]) -> list[str]:
         "renamed_pair_rows",
         "generation_cost_rows",
         "invocation_counts",
-        "sample_size_budget",
     ):
         if artifact.get(field) != reduced[field]:
             errors.append(f"{field}_mismatch")
+    observed_budget = dict(artifact.get("sample_size_budget") or {})
+    reduced_budget = reduced["sample_size_budget"]
+    if {key: observed_budget.get(key) for key in reduced_budget} != reduced_budget:
+        errors.append("sample_size_budget_mismatch")
     return errors
 
 

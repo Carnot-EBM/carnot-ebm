@@ -243,6 +243,19 @@ def test_scenario_cl_7348_replay_detects_row_cost_and_pair_drift() -> None:
     }
     assert mod.independent_reduce(artifact) == []
 
+    artifact["sample_size_budget"] = {
+        **artifact["sample_size_budget"],
+        "max_generated_tokens_per_unit": mod.MAX_GENERATED_TOKENS,
+        "model_load_timeout_s": mod.MODEL_LOAD_TIMEOUT_S,
+        "generation_timeout_s": mod.GENERATION_TIMEOUT_S,
+        "stopping_rule": "fixed calls or deadline",
+    }
+    assert mod.independent_reduce(artifact) == []
+
+    changed = deepcopy(artifact)
+    changed["sample_size_budget"]["completed_units"] -= 1
+    assert "sample_size_budget_mismatch" in mod.independent_reduce(changed)
+
     changed = deepcopy(artifact)
     changed["generation_cost_rows"][0]["completion_tokens"] += 1
     assert "generation_cost_rows_mismatch" in mod.independent_reduce(changed)
