@@ -26793,3 +26793,82 @@ SCENARIO-AUTO-025-A through D.
 contract a 2-dimensional `final_state` like the two toy benchmarks; a fitness
 target #3 (e.g. ARC-generalization, also named in the 2026-09-14 research
 note) -- not attempted here.
+
+## 2026-09-16 (same day, later): REQ-AUTO-025 hardened after adversarial review
+
+A Fable 5.1 adversarial review of REQ-AUTO-025 (commissioned before the first
+production fire, per operator directive) found 2 CRITICAL and 3 REAL_BUG
+findings, all reproduced through the real code -- the 82 tests shipped with
+the original increment stayed green through every one of them. All fixed
+same-day except one, named below as a genuine open item.
+
+**Fixed:**
+
+1. **CRITICAL 1 -- baseline migration.** The production baseline cache
+   (`ops/.autoresearch_baselines.json`) predates `verifier_auroc` and holds
+   only `double_well`/`rosenbrock`. `load_baselines` returned it verbatim, so
+   on the FIRST real fire the evaluator would have treated `verifier_auroc`
+   as "nothing to compare against," accepted ANY reported weights
+   unconditionally, and written that number as the baseline instead of the
+   measured seed. Fixed: `load_baselines` now calls
+   `_merge_missing_seed_benchmarks` after loading a cache, adding any
+   benchmark `seed_baselines()` knows about but the cache does not -- a
+   migration, not a one-off patch, so a future fitness target #3 does not
+   repeat this bug.
+2. **CRITICAL 2 -- the trust boundary was void in-process.** A hypothesis
+   executes in the SAME interpreter as the harness's own "independent"
+   recompute (`sandbox.py`'s own docstring: "not a security boundary"). Three
+   reproduced variants: monkeypatching `_binary_auroc` (or the identical
+   attack against REQ-AUTO-021's `toy_benchmarks.BENCHMARK_ENERGY_FUNCTIONS`
+   -- this fix retroactively hardens that too), mutating the `lru_cache`d
+   held-out row dicts in place, and directly importing
+   `verifier_auroc_benchmark.py` to read the held-out split rather than
+   searching only the training rows. Fixed in two parts: (a) every
+   post-sandbox recompute now runs in a FRESH subprocess
+   (`scripts/_autoresearch_energy_recompute_worker.py`, invoked by
+   `_subprocess_recompute_energy`), immune to anything mutated in the
+   calling process; (b) `run_round` now blocks every `carnot` import for
+   sandboxed hypothesis code (`sandbox_config=SandboxConfig(blocked_modules=
+   BLOCKED_MODULES | frozenset({"carnot"}))`), with `PCIBProbe` handed to the
+   hypothesis directly via `benchmark_data["PCIBProbe"]` so the intended
+   workflow is unaffected.
+3. **REAL_BUG -- "never raises" was false.** `float(10**400)` raises
+   `OverflowError`, not `TypeError`/`ValueError`; both `_validate_weights`
+   (verifier_auroc_benchmark.py) and `toy_benchmarks.recompute_final_energy`
+   caught only the latter two, so a pathological state killed the whole
+   round before its receipt was written. Both now catch `Exception` broadly
+   for this specific untrusted-input conversion.
+4. **REAL_BUG -- a degenerate constant scorer was an accepted "improvement."**
+   Weights `(0.0, 0.0)` score every held-out row identically, which
+   `_binary_auroc`'s tie rule turns into AUROC exactly 0.5 -- better than
+   this benchmark's worse-than-chance seed (0.6535) and so accepted as a
+   real win that discriminates nothing. `recompute_verifier_auroc_energy`
+   now rejects (returns `None` for) any weight pair with zero score
+   variation across the held-out set, before computing AUROC at all.
+
+**Named, NOT fixed here -- genuine open item:** the benchmark's score is a
+linear function of two weights, so its AUROC depends only on their angle;
+one honest search finds essentially the whole landscape. The review's own
+Hanley-McNeil estimate put the held-out slice's standard error at ~0.034 (71
+positive / 4488 negative rows) against an acceptance tolerance ~125x
+smaller, meaning accepted "improvements" after the FIRST one are plausibly
+sampling noise on a fixed held-out set, not genuine generalization.
+Candidate fixes, neither attempted: widen the acceptance tolerance for this
+benchmark to roughly one Hanley-McNeil standard error, or stop echoing the
+exact held-out energy value back into the hypothesis-generator prompt across
+rounds. Whoever picks this up next should read
+`verifier_auroc_benchmark.py`'s own module docstring first -- it now states
+this limitation directly rather than the original's overclaimed "real
+headroom" framing.
+
+**Verification:** 44 new/updated tests across the three touched test files
+(`test_autoresearch_verifier_auroc_benchmark.py`,
+`test_autoresearch_conductor_round.py`,
+`test_autoresearch_toy_benchmarks.py`), all reproducing the review's own
+findings as regression tests, not just re-testing the implementation.
+108/108 passing across the full autoresearch conductor-round + toy-benchmark
++ verifier-auroc-benchmark test set. Ruff, ruff-format, mypy clean
+(4709 source files) on every touched file.
+
+Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-025's own
+"CORRECTION 2026-09-16" section and SCENARIO-AUTO-025-E through I.

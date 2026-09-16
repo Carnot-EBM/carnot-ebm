@@ -15,26 +15,54 @@ hypothesis tunes the two weights of `carnot.verify.pcib_probe.PCIBProbe`
 probe, honestly disclosed there as an approximation, no GPU/LLM needed) to
 best separate "incorrect" from "correct" steps by AUROC.
 
-**Real, measured headroom (not assumed).** The probe's own documented
-defaults (0.5, 0.5) score AUROC 0.3465 on this corpus's held-out split --
-WORSE than chance. A single sign flip (entity_weight=-1.0,
-falsifiability_weight=1.0) reaches AUROC 0.7219. That gap is the fitness
-signal: `entity_uptake` (novel numbers = suspicious) does not actually track
-this corpus's error class, so a hypothesis that discovers this by searching
-rather than assuming the paper's own weighting is a genuine win, not a
-degenerate one. Measured directly against the checked-in corpus with the
-default weights and the sign-flipped weights; not fabricated.
+**Real, measured headroom (not assumed) -- for the FIRST accepted
+hypothesis only.** The probe's own documented defaults (0.5, 0.5) score
+AUROC 0.3465 on this corpus's held-out split -- WORSE than chance. A single
+sign flip (entity_weight=-1.0, falsifiability_weight=1.0) reaches AUROC
+0.7219. That gap is real and was reproduced by an independent 2026-09-16
+adversarial review (Fable 5.1), which also measured its statistical size:
+the held-out slice has 71 positive / 4488 negative rows, giving a
+Hanley-McNeil standard error of about 0.034 at AUROC~0.73 -- roughly 125x
+the evaluator's default acceptance tolerance. Because the score is a linear
+function of the two weights (`w0*entity_uptake + w1*falsifiability_score`),
+its AUROC depends only on the (w0, w1) angle, so ONE honest grid/gradient
+search finds essentially the whole landscape. After that first genuine
+improvement, further "improvements" this benchmark can report are
+plausibly sampling noise on a FIXED held-out set, not real generalization --
+the same review found a train-optimal angle and a held-out-optimal angle
+differing by 0.00013 in energy, below the acceptance tolerance. Treat any
+`verifier_auroc` acceptance AFTER the first as suspect until this is
+addressed structurally (candidate fix: don't echo the exact held-out energy
+value back into the hypothesis-generator prompt across rounds, or widen the
+tolerance for this benchmark to roughly one Hanley-McNeil standard error).
 
-**The trust boundary (REQ-AUTO-021's pattern, unchanged).** A hypothesis
-reports `final_state = [entity_weight, falsifiability_weight]` -- the point
-its search landed on -- never a self-reported AUROC number.
-`recompute_verifier_auroc_energy` is the one function trusted harness code
-calls to turn that claim into a real, independently-measured energy: it
-rebuilds `PCIBProbe` from the claimed weights and rescores the HELD-OUT split
-only (never the training split the hypothesis was allowed to see), computing
-AUROC itself via `_binary_auroc` below. A hypothesis has no channel to
-report a number directly, exactly as REQ-AUTO-021 established for the two
-toy benchmarks.
+**The trust boundary (REQ-AUTO-021's pattern, unchanged) -- and what it
+does NOT cover.** A hypothesis reports `final_state = [entity_weight,
+falsifiability_weight]` -- the point its search landed on -- never a
+self-reported AUROC number. `recompute_verifier_auroc_energy` is the one
+function trusted harness code calls to turn that claim into a real,
+independently-measured energy, and (2026-09-16 fix, see
+`autoresearch_conductor_round.py`'s `_subprocess_recompute_energy`) this
+call now happens in a FRESH interpreter process, not the process that just
+ran the hypothesis's own code -- `sandbox.py`'s own docstring already says
+its in-process execution is "not a security boundary" against code that
+shares the harness's `sys.modules`, and the same 2026-09-16 review
+reproduced a hypothesis monkeypatching `_binary_auroc` (or mutating the
+`lru_cache`d held-out row dicts in place) to make ANY claimed weights
+recompute to a fabricated energy of 0.0, which then got git-committed as a
+real "discovery." A fresh subprocess closes that: it re-imports every
+dependency from a clean process, so nothing the sandboxed code did to the
+CALLER's module state can reach it. What it does NOT close: the sandbox
+still runs hypothesis code in-process, so a sufficiently motivated
+hypothesis that imports `carnot.autoresearch.verifier_auroc_benchmark`
+directly (blocked as of the same 2026-09-16 fix -- see
+`autoresearch_conductor_round.py`'s `sandbox_config` construction in
+`run_round`, which blocks the `carnot` import root for the sandboxed
+execution and hands `PCIBProbe` to the hypothesis via `benchmark_data`
+instead) could otherwise have called `_split_corpus()` itself and searched
+the held-out rows directly rather than the training rows it is meant to
+learn from. Both fixes now hold together: process isolation for the
+RECOMPUTE step, import blocking for the EXECUTION step.
 
 **The split is fixed, not re-randomized.** `_bucket_of(question_id)` is a
 deterministic hash, computed once, never reseeded per round -- a hypothesis
@@ -65,9 +93,16 @@ from carnot.verify.pcib_probe import PCIBProbe
 
 VERIFIER_AUROC_BENCHMARK_NAME = "verifier_auroc"
 
-# A hypothesis-controlled weight must not blow up PCIBProbe's arithmetic or
-# produce a degenerate always-same-sign scorer -- same bounding intent as
-# toy_benchmarks.py's MAX_DIM, applied to this benchmark's own parameters.
+# A numeric-stability bound on a hypothesis-controlled weight, so an extreme
+# magnitude (1e300, say) cannot interact pathologically with PCIBProbe's own
+# arithmetic. CORRECTION (2026-09-16 adversarial review): this bound does
+# NOT prevent a "degenerate always-same-sign scorer" -- AUROC is invariant
+# to uniformly rescaling both weights (the ranking induced by (w0, w1) and
+# (10*w0, 10*w1) is identical), so [-10, 10] and [-1, 1] give the SAME
+# AUROC for a fixed ratio. The actual degenerate case (both weights exactly
+# 0.0, or any pair that makes every row score identically) is caught
+# separately below, in `recompute_verifier_auroc_energy`, by rejecting a
+# held-out score set with no variation at all.
 MAX_ABS_WEIGHT = 10.0
 
 # bucket < _TRAIN_BUCKET_CEILING -> training split (hypothesis may read this);
@@ -121,10 +156,16 @@ def _split_corpus() -> tuple[tuple[dict[str, Any], ...], tuple[dict[str, Any], .
 
 def train_rows_for_prompt() -> list[dict[str, str]]:
     """The training split, as plain {"step_text", "label"} dicts -- the only
-    form of the corpus a hypothesis's sandboxed code is handed
-    (`benchmark_data["verifier_auroc_train_rows"]`). The held-out split is
-    NEVER exposed this way; it exists only inside this module, read only by
-    `recompute_verifier_auroc_energy`.
+    form of the corpus handed to a hypothesis via
+    `benchmark_data["verifier_auroc_train_rows"]`. The held-out split is
+    never exposed THIS way. CORRECTION (2026-09-16 adversarial review): an
+    earlier version of this docstring claimed the held-out split "exists
+    only inside this module" as if that were unconditionally true -- it is
+    only true because, as of the same fix, sandboxed hypothesis code cannot
+    import this module at all (`run_round` blocks the `carnot` import root
+    for the sandbox; see `autoresearch_conductor_round.py`). Before that fix,
+    a hypothesis could `import carnot.autoresearch.verifier_auroc_benchmark`
+    directly and call `_split_corpus()` itself to read the held-out rows.
     """
     train, _ = _split_corpus()
     return [{"step_text": r["step_text"], "label": r["label"]} for r in train]
@@ -153,12 +194,24 @@ def _validate_weights(final_state: Any) -> tuple[float, float] | None:
     """Exactly two finite floats, each bounded by MAX_ABS_WEIGHT -- anything
     else (wrong length, non-numeric, NaN/inf, out of range) is unscoreable
     and returns None rather than raising, matching
-    `toy_benchmarks.recompute_final_energy`'s contract."""
+    `toy_benchmarks.recompute_final_energy`'s contract.
+
+    CORRECTION (2026-09-16 adversarial review): the original version of this
+    function caught only ``(TypeError, ValueError)`` around ``float(...)``,
+    but a value like ``10**400`` (a plain Python int too large for a float)
+    raises ``OverflowError`` instead, and any object with a pathological
+    ``__float__`` could raise anything at all. Either one propagated past
+    `recompute_verifier_auroc_energy` uncaught, which killed the whole
+    autoresearch round before its receipt was written -- contradicting this
+    function's own "never raises" claim. Catching ``Exception`` broadly here
+    is deliberate: `final_state` is untrusted, LLM-generated data, and ANY
+    conversion failure means "unscoreable," never a crash.
+    """
     if not isinstance(final_state, list) or len(final_state) != 2:  # noqa: PLR2004
         return None
     try:
         w0, w1 = float(final_state[0]), float(final_state[1])
-    except (TypeError, ValueError):
+    except Exception:  # noqa: BLE001 -- untrusted input; see docstring above
         return None
     for w in (w0, w1):
         if w != w or w in (float("inf"), float("-inf")):  # NaN/inf guard
@@ -176,8 +229,15 @@ def recompute_verifier_auroc_energy(final_state: Any) -> float | None:
     [0], final_state[1])`, computes AUROC via `_binary_auroc`, and returns
     `1.0 - auroc` (lower is better, matching every other benchmark's
     convention). Never raises -- returns None on any unscoreable input
-    (malformed state, empty/missing corpus, or a held-out split with no
-    positive or no negative examples).
+    (malformed state, empty/missing corpus, a held-out split with no
+    positive or no negative examples, or -- 2026-09-16 adversarial review,
+    REAL_BUG 4 -- a weight pair that scores every held-out row IDENTICALLY,
+    such as (0.0, 0.0). A constant scorer always produces AUROC exactly 0.5
+    by the tie-counting rule in `_binary_auroc`, which happened to score
+    BETTER than this benchmark's own (worse-than-chance) seed baseline and
+    so was accepted and committed as a fabricated "improvement" that
+    discriminates nothing -- a degenerate result must never look like a
+    real one.
     """
     weights = _validate_weights(final_state)
     if weights is None:
@@ -195,6 +255,8 @@ def recompute_verifier_auroc_energy(final_state: Any) -> float | None:
             scores.append(probe.score(row["step_text"], ""))
     except Exception:  # noqa: BLE001 -- an unscoreable row must not crash the round
         return None
+    if len(set(scores)) <= 1:
+        return None  # a constant scorer discriminates nothing -- see docstring
     auroc = _binary_auroc(labels, scores)
     if auroc is None:
         return None

@@ -66,6 +66,16 @@ def recompute_final_energy(benchmark_name: str, final_state: Any) -> float | Non
     unscoreable claim is treated as "not measured", never as a score of 0
     or an error that could itself carry information back to the hypothesis.
 
+    CORRECTION (2026-09-16 adversarial review, REQ-AUTO-025's own reviewer):
+    this function's `float(x)` conversion caught only ``(TypeError,
+    ValueError)``, but a plain Python int too large for a float (``10**400``)
+    raises ``OverflowError`` instead, and any state element with a
+    pathological ``__float__`` could raise anything -- either one propagated
+    uncaught and killed the whole autoresearch round before its receipt was
+    written, contradicting the "never raises" claim this docstring already
+    made. Catching `Exception` broadly here is deliberate: `final_state` is
+    untrusted, LLM-generated data.
+
     Spec: REQ-AUTO-021
     """
     energy_fn = BENCHMARK_ENERGY_FUNCTIONS.get(benchmark_name)
@@ -77,7 +87,7 @@ def recompute_final_energy(benchmark_name: str, final_state: Any) -> float | Non
         return None
     try:
         values = [float(x) for x in final_state]
-    except (TypeError, ValueError):
+    except Exception:  # noqa: BLE001 -- untrusted input; see docstring above
         return None
     if any(v != v or v in (float("inf"), float("-inf")) for v in values):  # NaN/inf guard
         return None

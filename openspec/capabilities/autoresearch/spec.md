@@ -2356,7 +2356,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-022 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 2 Python (shared conductor-round test file) |
 | REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
 | REQ-AUTO-024 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 5 Python (shared conductor-round test file) |
-| REQ-AUTO-025 | N/A | Implemented (`python/carnot/autoresearch/verifier_auroc_benchmark.py`, `scripts/autoresearch_conductor_round.py`) | 28 Python (`test_autoresearch_verifier_auroc_benchmark.py`) + 8 shared conductor-round test file |
+| REQ-AUTO-025 | N/A | Implemented, hardened same-day per 2026-09-16 adversarial review (`python/carnot/autoresearch/verifier_auroc_benchmark.py`, `scripts/autoresearch_conductor_round.py`, `scripts/_autoresearch_energy_recompute_worker.py`) | 31 Python (`test_autoresearch_verifier_auroc_benchmark.py`) + 13 shared conductor-round test file + 1 shared toy-benchmarks test file |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -4106,6 +4106,174 @@ non-finite weight, or a weight whose magnitude exceeds `MAX_ABS_WEIGHT`
 **Then** it returns `None` without raising, and the corresponding
 `final_energy` key is absent from the recomputed metrics passed to the
 evaluator.
+
+### CORRECTION 2026-09-16 (same day, adversarial review before first production
+fire): the trust boundary above was incomplete, and the baseline seed never
+reached production. Both fixed; both preserved here per never-prune.
+
+**Origin:** an adversarial review (Fable 5.1), commissioned per operator
+directive before the first real production fire of REQ-AUTO-025, found two
+CRITICAL findings and three REAL_BUG findings against the implementation
+above -- all reproduced through the real code, not hand-traced. The 82 tests
+shipped with the original REQ-AUTO-025 stayed green through every one of
+them, because none of the tests exercised a PRE-EXISTING production baseline
+cache, an in-process monkeypatch, or a degenerate weight pair.
+
+**CRITICAL-1 (fixed): the production baseline cache predates this benchmark,
+so the seed in `seed_baselines()` never actually reaches it.** `load_baselines`
+returned a cached `BaselineRecord` verbatim when the cache file existed.
+`ops/.autoresearch_baselines.json` already existed before REQ-AUTO-025
+shipped and holds only `double_well`/`rosenbrock`. Reproduced end to end: the
+FIRST hypothesis to report ANY `verifier_auroc` weights -- reproduced with a
+genuinely bad pair (held-out energy ~0.72) -- gets accepted with verdict
+"PASS: No regression" (the evaluator has nothing in `baselines.benchmarks` to
+compare against) and `orchestrator._update_baselines` writes THAT number as
+the baseline. The measured seed (`measure_default_weight_energy()`) is never
+consulted in production. **The fix:** `load_baselines` now calls
+`_merge_missing_seed_benchmarks(record)` after loading a cache, which adds
+any benchmark `seed_baselines()` knows about but the loaded record does not
+-- a schema migration, not a one-off patch, so a future fitness target #3
+added the same way does not repeat this exact bug.
+
+**CRITICAL-2 (fixed): the trust boundary was void in-process.** `sandbox.py`'s
+own docstring already says its isolation is "not a security boundary";
+hypotheses execute in the SAME interpreter as the harness's own recompute
+call, immediately afterward. Three reproduced variants, all through the real
+`run_round` -> real sandbox -> real evaluator -> real git commit:
+
+- **Variant B1 (monkeypatch):** a hypothesis does `import carnot.autoresearch.
+  verifier_auroc_benchmark as vab; vab._binary_auroc = lambda l, s: 1.0`, then
+  reports ANY weights. The patched function is still installed when the
+  harness's "independent" recompute runs next in the same process --
+  `final_energy` comes back `0.0` and IS git-committed as a real discovery.
+  The identical class of bug was reproduced against REQ-AUTO-021's own
+  `toy_benchmarks.BENCHMARK_ENERGY_FUNCTIONS` too (the 2026-09-12 reviewer's
+  exact `-999999.0` reproduction still works with one added import line) --
+  this correction covers both.
+- **Variant B2 (cache mutation):** `_split_corpus()`'s `lru_cache` returns the
+  SAME dict objects on every call; a hypothesis mutating a held-out row's
+  `step_text`/`label` in place corrupts the harness's own subsequent scoring
+  of that row.
+- **Variant A (answer-key read):** nothing stopped a hypothesis from
+  importing `carnot.autoresearch.verifier_auroc_benchmark` directly and
+  calling `_split_corpus()` / `recompute_verifier_auroc_energy()` itself to
+  read the held-out rows and report the held-out-optimal weights directly --
+  the ORIGINAL `train_rows_for_prompt()` docstring's claim that the held-out
+  split "is never exposed this way; it exists only inside this module" was
+  false as long as the module itself was importable from inside the sandbox.
+
+**The fix, two parts, closing all three variants together:**
+
+1. The system SHALL recompute every benchmark's post-sandbox energy in a
+   FRESH interpreter process, never the process that just executed the
+   hypothesis. `_subprocess_recompute_energy` (in
+   `autoresearch_conductor_round.py`) spawns
+   `scripts/_autoresearch_energy_recompute_worker.py` per recompute, passing
+   `{"benchmark_name": str, "final_state": Any}` as JSON on stdin and reading
+   `{"energy": float | None}` as JSON from stdout -- never a live Python
+   object across the boundary, so nothing a hypothesis constructed (a
+   patched function, a mutated dict, a class instance) can reach the
+   recompute. This closes Variant B1 and B2 completely, and retroactively
+   hardens REQ-AUTO-021's own toy benchmarks against the identical class of
+   bug, without modifying `toy_benchmarks.py`, `orchestrator.py`,
+   `evaluator.py`, or `sandbox.py`.
+2. The system SHALL block every `carnot` import for sandboxed hypothesis
+   code in a real autoresearch round, and SHALL hand `PCIBProbe` to the
+   hypothesis directly as a value in `benchmark_data["PCIBProbe"]` instead of
+   requiring `import carnot.verify.pcib_probe`. `run_round`'s
+   `AutoresearchConfig` now carries `sandbox_config=SandboxConfig
+   (blocked_modules=BLOCKED_MODULES | frozenset({"carnot"}))`. This closes
+   Variant A: a hypothesis can no longer import
+   `verifier_auroc_benchmark.py` (or any other `carnot.*` module) to read
+   the held-out split or reach the same globals the subprocess fix (above)
+   protects, while the intended workflow (constructing `PCIBProbe` and
+   calling `.score()` against the training rows) is unaffected. This does
+   NOT require modifying `sandbox.py`'s own guarded-import mechanism --
+   `SandboxConfig.blocked_modules` was already a caller-supplied parameter;
+   `run_round` simply supplies a stricter one for this specific round.
+
+**REAL_BUG (fixed): "never raises" was false.** `_validate_weights` (this
+module) and `toy_benchmarks.recompute_final_energy` both caught only
+`(TypeError, ValueError)` around their `float(...)` conversions. A value
+like `10**400` (a plain Python int too large for a float) raises
+`OverflowError` instead, which propagated past both functions uncaught and
+killed the whole round before its receipt was written -- contradicting both
+functions' own docstring claims. Both now catch `Exception` broadly, with a
+comment explaining why that breadth is deliberate for untrusted,
+LLM-generated input.
+
+**REAL_BUG (fixed): a constant scorer was an accepted, committable
+"improvement."** Weights `(0.0, 0.0)` (or any pair producing an identical
+score for every held-out row) make `_binary_auroc` return exactly `0.5` by
+its own tie-counting rule -- which happened to beat this benchmark's
+worse-than-chance seed baseline (0.6535) and so was accepted as a genuine
+"improvement" that in fact discriminates nothing.
+`recompute_verifier_auroc_energy` now rejects (returns `None` for) any
+weight pair whose held-out scores have zero variation, before computing
+AUROC at all. The `MAX_ABS_WEIGHT` bound's docstring, which had incorrectly
+claimed to guard against exactly this case, is corrected: AUROC is
+invariant to uniformly rescaling both weights, so that bound is a numeric-
+stability guard only, not a degeneracy guard.
+
+**REAL_BUG (named, NOT structurally fixed here -- see verifier_auroc_
+benchmark.py's own module docstring for the honest, corrected framing):**
+the score is a linear function of two weights, so its AUROC depends only on
+their angle; one honest search finds essentially the whole landscape. The
+review's own Hanley-McNeil calculation put the held-out slice's standard
+error at ~0.034 (71 positive / 4488 negative rows) against an acceptance
+tolerance roughly 125x smaller, meaning ACCEPTED "improvements" after the
+first are plausibly sampling noise on a fixed held-out set, not genuine
+generalization. Candidate fixes (not attempted in this pass): widen the
+tolerance for this benchmark to roughly one Hanley-McNeil standard error, or
+stop echoing the exact held-out energy value back into the hypothesis-
+generator prompt across rounds. Tracked as an open item in
+`ops/known-issues.md`.
+
+#### SCENARIO-AUTO-025-E: An in-process monkeypatch cannot fabricate an energy
+
+**Given** a hypothesis that does `import carnot.autoresearch.
+verifier_auroc_benchmark as vab; vab._binary_auroc = lambda l, s: 1.0` and
+reports any weights
+**When** the round evaluates it through the real sandbox and the real
+subprocess-isolated recompute
+**Then** the resulting `final_energy` is the same as an honest, unpatched
+recompute of those weights would produce -- never the fabricated value the
+monkeypatch would have produced in-process.
+
+#### SCENARIO-AUTO-025-F: A hypothesis cannot import its way to the held-out split
+
+**Given** a hypothesis that does `import carnot.autoresearch.
+verifier_auroc_benchmark as vab; vab._split_corpus()`
+**When** it runs inside a real autoresearch round's sandbox
+**Then** the import raises `ImportError` (the sandbox's blocked-modules set
+includes `carnot` for this round), and the hypothesis's execution fails
+rather than succeeding with the held-out rows in hand.
+
+#### SCENARIO-AUTO-025-G: PCIBProbe remains usable without any carnot import
+
+**Given** a hypothesis that reads `benchmark_data["PCIBProbe"]`, constructs
+it, and calls `.score(...)` against the training rows, without writing any
+`import carnot` statement
+**When** it runs inside a real autoresearch round's sandbox with `carnot`
+imports blocked
+**Then** it succeeds and produces a real, independently recomputed
+`final_energy` for `verifier_auroc`.
+
+#### SCENARIO-AUTO-025-H: A degenerate constant scorer is never accepted
+
+**Given** a `final_state` such as `[0.0, 0.0]` that scores every held-out row
+identically
+**When** `recompute_verifier_auroc_energy` is called
+**Then** it returns `None` (unscoreable), never `0.5` treated as a real
+energy.
+
+#### SCENARIO-AUTO-025-I: A missing benchmark in a pre-existing baseline cache is seeded, not silently absent
+
+**Given** a `BaselineRecord` loaded from a cache file that predates
+`verifier_auroc` (contains only `double_well`/`rosenbrock`)
+**When** `load_baselines` loads it
+**Then** the returned record also contains a `verifier_auroc` entry equal to
+`measure_default_weight_energy()`, not an absent key.
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

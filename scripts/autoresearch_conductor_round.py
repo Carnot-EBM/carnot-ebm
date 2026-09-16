@@ -121,6 +121,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "python"))
 
 from carnot.autoresearch import orchestrator as _orchestrator_module  # noqa: E402
+from carnot.autoresearch import verifier_auroc_benchmark as _verifier_auroc_module  # noqa: E402
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics  # noqa: E402
 from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker  # noqa: E402
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog  # noqa: E402
@@ -129,17 +130,30 @@ from carnot.autoresearch.hypothesis_generator import (  # noqa: E402
     _extract_hypotheses,
 )
 from carnot.autoresearch.orchestrator import AutoresearchConfig, run_loop_with_generator  # noqa: E402
-from carnot.autoresearch.sandbox import SandboxConfig, SandboxResult, execute_hypothesis  # noqa: E402
+from carnot.autoresearch.sandbox import (  # noqa: E402
+    BLOCKED_MODULES,
+    SandboxConfig,
+    SandboxResult,
+    execute_hypothesis,
+)
 from carnot.autoresearch.toy_benchmarks import (  # noqa: E402
     BENCHMARK_ENERGY_FUNCTIONS,
-    recompute_final_energy,
 )
 from carnot.autoresearch.verifier_auroc_benchmark import (  # noqa: E402
     VERIFIER_AUROC_BENCHMARK_NAME,
     measure_default_weight_energy,
-    recompute_verifier_auroc_energy,
     train_rows_for_prompt,
 )
+from carnot.verify.pcib_probe import PCIBProbe  # noqa: E402
+
+# REQ-AUTO-025 CRITICAL-2 fix (2026-09-16 adversarial review): every benchmark's
+# post-sandbox energy is now recomputed in THIS fresh-interpreter worker
+# script, never in-process. `recompute_final_energy` and
+# `recompute_verifier_auroc_energy` are no longer imported directly above --
+# see `_subprocess_recompute_energy` below for why, and
+# `scripts/_autoresearch_energy_recompute_worker.py` for the worker itself.
+_RECOMPUTE_WORKER = Path(__file__).resolve().parent / "_autoresearch_energy_recompute_worker.py"
+_RECOMPUTE_TIMEOUT_S = 30
 
 
 def default_benchmark_data() -> dict[str, Any]:
@@ -155,6 +169,15 @@ def default_benchmark_data() -> dict[str, Any]:
         # scored against (see verifier_auroc_benchmark.py's module docstring
         # for why).
         "verifier_auroc_train_rows": train_rows_for_prompt(),
+        # REQ-AUTO-025 CRITICAL-2 (Variant A) fix (2026-09-16 adversarial
+        # review): PCIBProbe is handed to the hypothesis directly, as a class
+        # object in this trusted dict, rather than via `import
+        # carnot.verify.pcib_probe` -- `run_round` now blocks the `carnot`
+        # import root for the sandboxed execution entirely (see its
+        # `sandbox_config` construction), so a hypothesis cannot import THIS
+        # module (or any other carnot.* module) to read the held-out split
+        # or corrupt the trusted recompute path from inside its own run().
+        "PCIBProbe": PCIBProbe,
     }
 
 
@@ -206,46 +229,91 @@ A third benchmark also exists:
 
 - verifier_auroc: `benchmark_data["verifier_auroc_train_rows"]` is a list of \
 {"step_text": str, "label": "correct" or "incorrect"} training examples. \
-Find two weights (entity_weight, falsifiability_weight) for \
-`carnot.verify.pcib_probe.PCIBProbe(entity_weight, falsifiability_weight)` \
-that best separate "incorrect" from "correct" rows by AUROC on THIS training \
-set -- you may import PCIBProbe directly and try any real search (grid \
-search, random search, anything real) over its `.score(step_text, "")` \
-output. Return {"verifier_auroc": {"final_state": [entity_weight, \
-falsifiability_weight], ...}}. The harness independently rescores your \
-weights against a DIFFERENT held-out set you never see, using its own AUROC \
-computation -- your own AUROC on the training rows is never trusted or seen \
-by the evaluator. Do not assume the probe's own documented default weights \
-(0.5, 0.5) are good; measure and search."""
+`benchmark_data["PCIBProbe"]` is a class -- construct it as \
+`Probe = benchmark_data["PCIBProbe"]; probe = Probe(entity_weight=..., \
+falsifiability_weight=...)`. Do NOT write `import carnot` or anything under \
+it -- all `carnot` imports are BLOCKED in this sandbox and will raise \
+ImportError; PCIBProbe is provided to you directly for exactly this reason. \
+Find two weights (entity_weight, falsifiability_weight) that best separate \
+"incorrect" from "correct" rows by AUROC on THIS training set -- try any \
+real search (grid search, random search, anything real) over the probe's \
+`.score(step_text, "")` output. Return {"verifier_auroc": {"final_state": \
+[entity_weight, falsifiability_weight], ...}}. The harness independently \
+rescores your weights against a DIFFERENT held-out set you cannot read (you \
+have no working route to it: the training rows above are the only corpus \
+data you are given, and `carnot` imports that could reach the held-out set \
+directly are blocked) -- your own AUROC on the training rows is never \
+trusted or seen by the evaluator. Do not assume the probe's own documented \
+default weights (0.5, 0.5) are good; measure and search. A weight pair that \
+scores every training row identically (e.g. (0.0, 0.0)) will be rejected as \
+degenerate, not accepted."""
+
+
+def _subprocess_recompute_energy(benchmark_name: str, final_state: Any) -> float | None:
+    """Recompute one benchmark's energy in a FRESH interpreter process.
+
+    REQ-AUTO-025 CRITICAL-2 fix (2026-09-16 adversarial review). The
+    hypothesis whose `final_state` this recomputes just finished running
+    IN-PROCESS, in the same interpreter as this function -- `sandbox.py`'s
+    own docstring says its isolation is "not a security boundary", and the
+    review proved it: a hypothesis that does
+    `import carnot.autoresearch.toy_benchmarks as tb; tb.BENCHMARK_ENERGY_
+    FUNCTIONS["double_well"] = lambda s: -999999.0` (or the equivalent
+    against `verifier_auroc_benchmark.py`'s `_binary_auroc`, or mutating the
+    `lru_cache`d held-out row dicts in place) makes the SAME process's
+    subsequent "independent" recompute return whatever the hypothesis chose
+    -- fabricating a real git-committed "discovery." Spawning a brand-new
+    `python -c`-equivalent process for the recompute closes this: the worker
+    re-imports every dependency fresh, so nothing the hypothesis mutated in
+    THIS process's `sys.modules` or `lru_cache`s can reach it. `final_state`
+    is passed as JSON on stdin (never a live Python object, so nothing the
+    hypothesis constructed -- a class instance, a closure -- crosses the
+    process boundary either). Never raises -- a spawn failure, a timeout, or
+    malformed worker output all become None (the same "unscoreable" contract
+    every recompute function in this project already has).
+    """
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(_RECOMPUTE_WORKER)],
+            input=json.dumps({"benchmark_name": benchmark_name, "final_state": final_state}),
+            capture_output=True,
+            text=True,
+            timeout=_RECOMPUTE_TIMEOUT_S,
+            check=False,
+        )
+        if proc.returncode != 0:
+            return None
+        result = json.loads(proc.stdout.strip())
+        energy = result.get("energy")
+        return float(energy) if isinstance(energy, (int, float)) and energy == energy else None
+    except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError, AttributeError):
+        return None
 
 
 def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
-    """The one seam between the sandbox and the evaluator (REQ-AUTO-021).
+    """The one seam between the sandbox and the evaluator (REQ-AUTO-021,
+    hardened by REQ-AUTO-025's CRITICAL-2 fix -- see
+    `_subprocess_recompute_energy` above).
 
-    For each benchmark this module has a real potential function for, drop
+    For each benchmark this project has a real recompute function for, drop
     whatever `final_energy` the hypothesis self-reported and replace it with
-    `recompute_final_energy(name, final_state)` -- None (dropped entirely) if
-    `final_state` is missing or malformed, which the evaluator already
-    treats as "not measured" (`evaluator.py`: `if bench_energy is None:
-    continue`). A benchmark name this module does not know how to score
-    (including anything an LLM made up) never gets a `final_energy` at all,
-    so it can never register as an improvement or a regression.
+    a FRESH-PROCESS recomputation -- None (dropped entirely) if `final_state`
+    is missing, malformed, or the recompute worker itself fails for any
+    reason, which the evaluator already treats as "not measured"
+    (`evaluator.py`: `if bench_energy is None: continue`). A benchmark name
+    this project does not know how to score (including anything an LLM made
+    up) never gets a `final_energy` at all, so it can never register as an
+    improvement or a regression.
     """
     verified: dict[str, Any] = {}
     for name, bench_metrics in raw_metrics.items():
         if not isinstance(bench_metrics, dict):
             continue
         entry = {k: v for k, v in bench_metrics.items() if k != "final_energy"}
-        energy: float | None = None
-        if name in BENCHMARK_ENERGY_FUNCTIONS:
-            energy = recompute_final_energy(name, bench_metrics.get("final_state"))
-        elif name == VERIFIER_AUROC_BENCHMARK_NAME:
-            # REQ-AUTO-025: same trust boundary as the toy benchmarks above,
-            # just against verifier_auroc_benchmark.py's own recompute
-            # function instead of toy_benchmarks.py's.
-            energy = recompute_verifier_auroc_energy(bench_metrics.get("final_state"))
-        if energy is not None:
-            entry["final_energy"] = energy
+        if name in BENCHMARK_ENERGY_FUNCTIONS or name == VERIFIER_AUROC_BENCHMARK_NAME:
+            energy = _subprocess_recompute_energy(name, bench_metrics.get("final_state"))
+            if energy is not None:
+                entry["final_energy"] = energy
         verified[name] = entry
     return verified
 
@@ -259,7 +327,24 @@ def _verified_execute_hypothesis(
     """Drop-in replacement for sandbox.execute_hypothesis: same sandbox, same
     isolation, but the returned metrics have been through `_recompute_metrics`
     before the evaluator ever sees them."""
-    result = execute_hypothesis(hypothesis_code, benchmark_data, config, docker_config)
+    # A permissive caller can omit run_round's ``carnot`` import block (the
+    # adversarial regression test deliberately does), allowing hypothesis code
+    # to mutate these already-imported module objects.  The energy recompute is
+    # safe in its fresh subprocess regardless, but restore the parent process's
+    # trusted helpers as well so the mutation cannot poison later baselines or
+    # tests in this interpreter.  Clearing the original split function's cache
+    # also discards any held-out row dictionaries mutated in place.
+    original_binary_auroc = _verifier_auroc_module._binary_auroc
+    original_split_corpus = _verifier_auroc_module._split_corpus
+    original_toy_energy_functions = dict(BENCHMARK_ENERGY_FUNCTIONS)
+    try:
+        result = execute_hypothesis(hypothesis_code, benchmark_data, config, docker_config)
+    finally:
+        _verifier_auroc_module._binary_auroc = original_binary_auroc
+        _verifier_auroc_module._split_corpus = original_split_corpus
+        original_split_corpus.cache_clear()
+        BENCHMARK_ENERGY_FUNCTIONS.clear()
+        BENCHMARK_ENERGY_FUNCTIONS.update(original_toy_energy_functions)
     if not result.success:
         return result
     return SandboxResult(
@@ -324,12 +409,43 @@ def seed_baselines() -> BaselineRecord:
     return record
 
 
+def _merge_missing_seed_benchmarks(record: BaselineRecord) -> None:
+    """Add any benchmark `seed_baselines()` knows about but `record` (loaded
+    from a persisted cache) does not, in place. Never overwrites an existing
+    entry -- a benchmark the cache already tracks keeps its real, evolved
+    baseline; only a genuinely NEW benchmark name gets seeded.
+
+    REQ-AUTO-025 CRITICAL-1 fix (2026-09-16 adversarial review). Before this,
+    `load_baselines` returned a cached `BaselineRecord` verbatim -- correct
+    when the cache already knows every benchmark, but on the FIRST run after
+    `verifier_auroc` shipped, the real production cache
+    (`ops/.autoresearch_baselines.json`) predates it and holds only
+    double_well/rosenbrock. `evaluator.py` iterates `baselines.benchmarks`
+    and treats a name absent from that dict as "nothing to compare against",
+    so the round's evaluator gate returns "PASS: No regression" (not
+    "Improved") for ANY reported verifier_auroc energy, accepts it, and
+    `orchestrator._update_baselines` writes THAT number as the baseline --
+    reproduced with a bad weight pair (held-out energy ~0.72) landing as the
+    baseline, then the probe's own DEFAULT weights (the seed number this
+    module is supposed to start from) landing as a git-committed "accept ...
+    (final_energy None -> 0.6534640104441265)" improvement against it. This
+    function is the migration: called every time a cache is loaded, so any
+    FUTURE new benchmark added the same way `verifier_auroc` was gets seeded
+    correctly too, not just this one.
+    """
+    seed = seed_baselines()
+    for name, metrics in seed.benchmarks.items():
+        record.benchmarks.setdefault(name, metrics)
+
+
 def load_baselines(baseline_cache: Path) -> BaselineRecord:
     if baseline_cache.exists():
         try:
-            return BaselineRecord.load(baseline_cache)
+            record = BaselineRecord.load(baseline_cache)
         except (OSError, json.JSONDecodeError, KeyError):
-            pass  # fail toward a fresh, known-good baseline, not a crash
+            return seed_baselines()  # fail toward a fresh, known-good baseline, not a crash
+        _merge_missing_seed_benchmarks(record)
+        return record
     return seed_baselines()
 
 
@@ -687,6 +803,20 @@ def run_round(
         # bumped to 3600s alongside this for exactly that reason).
         max_consecutive_empty_generations=3,
         constitution_checker=checker,
+        # REQ-AUTO-025 CRITICAL-2 (Variant A) fix (2026-09-16 adversarial
+        # review): block every `carnot` import for sandboxed hypothesis
+        # code, not just the stdlib roots SandboxConfig's own default
+        # blocks. Without this, a hypothesis could `import
+        # carnot.autoresearch.verifier_auroc_benchmark` directly and call
+        # its internal `_split_corpus()` to read the held-out rows it is
+        # meant to never see, or reach `toy_benchmarks.BENCHMARK_ENERGY_
+        # FUNCTIONS` to set up the monkeypatch `_subprocess_recompute_
+        # energy` otherwise defends against (that fix closes the RECOMPUTE
+        # step; this closes the EXECUTION step). PCIBProbe is handed to the
+        # hypothesis directly via `benchmark_data["PCIBProbe"]`
+        # (`default_benchmark_data()`) so blocking `carnot` does not break
+        # the intended verifier_auroc workflow.
+        sandbox_config=SandboxConfig(blocked_modules=BLOCKED_MODULES | frozenset({"carnot"})),
     )
     # REQ-AUTO-021: for the duration of the loop, every sandboxed hypothesis's
     # metrics are recomputed from its final_state through a real potential

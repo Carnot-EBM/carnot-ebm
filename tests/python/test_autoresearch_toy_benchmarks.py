@@ -70,6 +70,14 @@ class TestRecomputeFinalEnergy:
         assert recompute_final_energy("double_well", {"x": 1}) is None
         assert recompute_final_energy("double_well", [1.0, "not a number"]) is None
 
+    def test_overflow_error_returns_none_not_raise(self) -> None:
+        """2026-09-16 adversarial review (REQ-AUTO-025's own reviewer, same
+        bug class flagged against verifier_auroc_benchmark.py): `float(x)`
+        for a plain Python int too large for a float (10**400) raises
+        OverflowError, not TypeError/ValueError -- this used to propagate
+        uncaught and kill the whole autoresearch round."""
+        assert recompute_final_energy("double_well", [10**400, 0.0]) is None
+
     def test_nan_and_inf_state_values_return_none(self) -> None:
         assert recompute_final_energy("double_well", [float("nan"), 1.0]) is None
         assert recompute_final_energy("double_well", [float("inf"), 1.0]) is None

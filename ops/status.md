@@ -16517,3 +16517,23 @@ Next: an adversarial review (Fable 5.1) of this change, per operator
 directive. If it survives review, watch the next real production
 autoresearch fire for the first `verifier_auroc` hypothesis proposals and
 whether any land a real held-out-AUROC improvement.
+
+## 2026-09-16 (later): REQ-AUTO-025 hardened after adversarial review
+
+Working: an adversarial review (Fable 5.1, per operator directive) found the
+first-shipped verifier_auroc fitness target had a void trust boundary
+in-process and a baseline-migration gap that would have fired on the very
+next production round. Both CRITICAL findings fixed same-day: post-sandbox
+recompute now runs in a fresh subprocess (immune to a hypothesis
+monkeypatching the harness's own module state -- this also retroactively
+hardens REQ-AUTO-021's toy benchmarks against the identical attack), and
+`carnot` imports are now blocked for sandboxed hypothesis code (PCIBProbe is
+handed to the hypothesis directly instead). Also fixed: two "never raises"
+claims that were false (OverflowError), and a degenerate constant-scorer
+that could pass as a fake "improvement." 108/108 tests, ruff/mypy clean. One
+statistical-validity concern (repeat "improvements" on a fixed held-out set
+are plausibly noise after the first) is named but not structurally fixed --
+see `ops/known-issues.md` for the candidate fixes.
+
+Next: watch the first real production `verifier_auroc` fire under the
+hardened code for a genuine accepted improvement.

@@ -12,6 +12,8 @@ import subprocess
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 import scripts.autoresearch_conductor_round as acr
 from carnot.autoresearch.constitution import ConstitutionChecker
 from carnot.autoresearch.experiment_log import ExperimentEntry
@@ -542,7 +544,12 @@ class TestVerifiedExecuteHypothesis:
         """REQ-AUTO-025, end to end: a hypothesis that reads the training
         rows handed to it and reports weights it never validated itself
         still gets independently rescored against the (unseen-to-it)
-        held-out split -- the real sandbox, real recompute, nothing mocked."""
+        held-out split -- the real sandbox, real recompute (now a fresh
+        subprocess per REQ-AUTO-025's own CRITICAL-2 fix), nothing mocked."""
+        from carnot.autoresearch.verifier_auroc_benchmark import (
+            recompute_verifier_auroc_energy,
+        )
+
         code = (
             "def run(d):\n"
             "    assert 'verifier_auroc_train_rows' in d\n"
@@ -551,7 +558,73 @@ class TestVerifiedExecuteHypothesis:
         result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data())
         assert result.success is True
         energy = result.metrics["verifier_auroc"]["final_energy"]
-        assert energy == acr.recompute_verifier_auroc_energy([-1.0, 1.0])
+        # Compared against a direct, in-process recompute (fine in test code --
+        # no untrusted code has run here) to confirm the SUBPROCESS path used
+        # in production gives the identical, correct number.
+        assert energy == recompute_verifier_auroc_energy([-1.0, 1.0])
+
+    def test_hypothesis_cannot_import_carnot_at_all(self) -> None:
+        """REQ-AUTO-025 CRITICAL-2 (Variant A) fix: the sandbox must reject
+        ANY `carnot` import from sandboxed hypothesis code, not just direct
+        access to the held-out split -- this is what makes PCIBProbe's
+        injection via benchmark_data (not `import carnot.verify.pcib_probe`)
+        actually load-bearing rather than cosmetic."""
+        code = "def run(d):\n    import carnot\n    return {}\n"
+        config = acr.SandboxConfig(blocked_modules=acr.BLOCKED_MODULES | frozenset({"carnot"}))
+        result = acr._verified_execute_hypothesis(code, {"dim": 2}, config)
+        assert result.success is False
+
+    def test_hypothesis_cannot_reach_the_held_out_split_via_direct_import(self) -> None:
+        """The exact CRITICAL-2 Variant A reproduction from the 2026-09-16
+        adversarial review, run through the real sandbox with the carnot
+        import root blocked: a hypothesis that tries to import the benchmark
+        module itself to read the held-out split must fail, not succeed."""
+        code = (
+            "def run(d):\n"
+            "    import carnot.autoresearch.verifier_auroc_benchmark as vab\n"
+            "    _, held_out = vab._split_corpus()\n"
+            "    return {'verifier_auroc': {'final_state': [0.5, 0.5]}}\n"
+        )
+        config = acr.SandboxConfig(blocked_modules=acr.BLOCKED_MODULES | frozenset({"carnot"}))
+        result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data(), config)
+        assert result.success is False
+
+    def test_hypothesis_can_still_use_the_injected_pcibprobe(self) -> None:
+        """The carnot-import block must not break the intended workflow:
+        PCIBProbe handed via benchmark_data must still work end to end."""
+        code = (
+            "def run(d):\n"
+            "    Probe = d['PCIBProbe']\n"
+            "    probe = Probe(entity_weight=-1.0, falsifiability_weight=1.0)\n"
+            "    probe.score(d['verifier_auroc_train_rows'][0]['step_text'], '')\n"
+            "    return {'verifier_auroc': {'final_state': [-1.0, 1.0]}}\n"
+        )
+        config = acr.SandboxConfig(blocked_modules=acr.BLOCKED_MODULES | frozenset({"carnot"}))
+        result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data(), config)
+        assert result.success is True
+        assert "final_energy" in result.metrics["verifier_auroc"]
+
+    def test_monkeypatched_binary_auroc_no_longer_fabricates_a_zero_energy(self) -> None:
+        """The exact CRITICAL-2 (Variant B1) reproduction from the 2026-09-16
+        adversarial review: a hypothesis that patches _binary_auroc to always
+        return 1.0 must NOT get a fabricated final_energy of 0.0, because the
+        recompute now runs in a fresh subprocess that never sees this
+        process's monkeypatch."""
+        code = (
+            "def run(d):\n"
+            "    import carnot.autoresearch.verifier_auroc_benchmark as vab\n"
+            "    vab._binary_auroc = lambda labels, scores: 1.0\n"
+            "    return {'verifier_auroc': {'final_state': [0.5, 0.5]}}\n"
+        )
+        # Deliberately NOT blocking carnot here -- this reproduces the
+        # in-process monkeypatch attack even when the import itself succeeds,
+        # to prove the SUBPROCESS recompute (not the import block) is what
+        # actually closes it.
+        result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data())
+        assert result.success is True
+        energy = result.metrics["verifier_auroc"].get("final_energy")
+        assert energy != 0.0
+        assert energy == pytest.approx(acr.measure_default_weight_energy())
 
 
 class TestEnergyVerificationPatch:
@@ -917,3 +990,55 @@ class TestSeedBaselines:
         cache.write_text("not json")
         record = acr.load_baselines(cache)
         assert record.benchmarks["double_well"].final_energy == 0.05
+
+    def test_a_cache_predating_verifier_auroc_gets_it_seeded(self, tmp_path: Path) -> None:
+        """REQ-AUTO-025 CRITICAL-1 fix (2026-09-16 adversarial review): the
+        REAL production cache (ops/.autoresearch_baselines.json) predates
+        this benchmark and holds only double_well/rosenbrock. Before the
+        fix, load_baselines returned that cache verbatim, so verifier_auroc
+        was silently ABSENT -- the evaluator then treated ANY reported
+        weights as 'nothing to compare against' and accepted them
+        unconditionally, landing whatever the first hypothesis proposed as
+        the baseline instead of the measured seed."""
+        cache = tmp_path / "old_baselines.json"
+        old = acr.BaselineRecord(version="0.1.0")
+        old.benchmarks["double_well"] = acr.BenchmarkMetrics(
+            benchmark_name="double_well",
+            final_energy=0.05,
+            convergence_steps=5000,
+            wall_clock_seconds=2.0,
+        )
+        old.benchmarks["rosenbrock"] = acr.BenchmarkMetrics(
+            benchmark_name="rosenbrock",
+            final_energy=0.5,
+            convergence_steps=10000,
+            wall_clock_seconds=5.0,
+        )
+        old.save(cache)
+        assert "verifier_auroc" not in old.benchmarks  # sanity: reproduces the real gap
+
+        record = acr.load_baselines(cache)
+
+        assert "verifier_auroc" in record.benchmarks
+        assert record.benchmarks["verifier_auroc"].final_energy == (
+            acr.measure_default_weight_energy()
+        )
+        # The pre-existing entries must be UNCHANGED, not reset to the seed --
+        # a real, evolved baseline must never be silently overwritten.
+        assert record.benchmarks["double_well"].final_energy == 0.05
+        assert record.benchmarks["rosenbrock"].final_energy == 0.5
+
+    def test_a_cache_with_a_real_verifier_auroc_baseline_is_not_overwritten(
+        self, tmp_path: Path
+    ) -> None:
+        """The migration must be additive-only: a benchmark the cache
+        already tracks (even verifier_auroc itself, once a real round has
+        run) keeps its real, evolved value -- never reset to the seed."""
+        cache = tmp_path / "evolved_baselines.json"
+        record = acr.seed_baselines()
+        record.benchmarks["verifier_auroc"].final_energy = 0.1234  # a real "improved" value
+        record.save(cache)
+
+        loaded = acr.load_baselines(cache)
+
+        assert loaded.benchmarks["verifier_auroc"].final_energy == 0.1234
