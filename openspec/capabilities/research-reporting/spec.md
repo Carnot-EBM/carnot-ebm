@@ -194,6 +194,123 @@ checksum SHALL fail validation.
 |---|---|---|
 | REQ-REPORT-7341 and SCENARIO-REPORT-7341-* | `python/carnot/experiment_7341_v644_board_continuity.py`; thin entrypoint; hash-bound raw sidecars; terminal blocked artifact | Focused RED-to-green tests; 329/329 changed statements covered; scoped Ruff, format, mypy, and spec coverage; real-file E2E; adversarial verification; strict row consistency |
 
+## V644 independent capstone disposition contract — 2026-09-16
+
+**Status:** Implemented. The capstone closes accounting without merging board availability with scientific evidence.
+
+### REQ-REPORT-7342: Reconcile fourteen exact V644 dispositions without erasing science
+
+Exp7342 SHALL compare the fourteen ordered design and YAML rows from
+`exp7329-contract` through `exp7342-capstone`. It SHALL compare task IDs,
+titles, phases, substrate classes, exact deliverable paths, and structured
+gates. It SHALL read each exact deliverable or the task's canonical conductor
+block record. It SHALL not use a similarly named artifact. Historical evidence
+SHALL not satisfy a current readiness gate.
+
+The reducer SHALL authenticate producer identity, availability, terminal class,
+and quarantine state before it reads a score. Missing, blocked, partial,
+disqualified, and quarantined producers SHALL authorize no readiness, value, or
+promotion. The reducer SHALL preserve every canonical failed-gate record. It
+SHALL name the exact upstream, check, field, expected value, and observed value.
+
+The reducer SHALL independently report source fidelity, acquired-constraint
+learning, live ARC causality, native host cost, and board evidence. It SHALL
+preserve cohort limits, shared-oracle classes, failed gates, quarantines,
+missing measurements, and expected conditional skips. A successful result
+whose executor defines correctness SHALL remain `circular_positive`. A
+capture-ready or disposition-complete score SHALL not become scientific value.
+
+The GateMate changed-physical-state absence SHALL remain `blocked` in the board
+row. An authenticated expected block SHALL complete that disposition. It SHALL
+not authorize hardware or erase a completed scientific result. A missing or
+disqualified required science measurement SHALL set the capstone
+`verdict_class` to `blocked`. Its `gate_check_summary` SHALL identify the first
+exact failed upstream check. A complete measured null SHALL remain `null`.
+
+Exp7342 SHALL compare every declared prior verdict as exact UTF-8 bytes. It
+SHALL record a precise retirement, preservation, or reopening decision. It
+SHALL preserve the V643 source comparison and the V642 suffix and storage
+retirements. Each current claim branch SHALL have one action and one falsifiable
+reopening condition.
+
+The artifact SHALL set `capstone_complete_score=1` only when all fourteen exact
+dispositions exist, including the capstone self row. This score is accounting
+only. Readiness, value, and promotion SHALL remain zero for blocked or
+disqualified evidence. The artifact SHALL retain unchanged G1 through G4,
+`paper_ready`, and `unmet_gates` from `scripts/publication_gate.py --json`.
+It SHALL not upload, submit, message externally, change production defaults,
+or modify a roadmap.
+
+Exp7342 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero load and generation counters,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical model evidence SHALL remain labeled and hash-bound.
+
+The workflow SHALL use the Exp7303 scoped runner with the exact test, module,
+and entrypoint. It SHALL require focused pytest, 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test
+spec coverage. It SHALL run the entrypoint on real files. It SHALL reload and
+independently reduce the candidate. It SHALL run adversarial verification and
+strict verdict-row consistency before the atomic terminal write. Failed
+affected validation SHALL produce `disqualified` with zero readiness, value,
+and promotion.
+
+#### SCENARIO-REPORT-7342-CONTRACT: Fourteen design and YAML rows match exactly
+
+**Given** the active V644 Markdown and YAML contracts
+**When** Exp7342 parses both sources independently
+**Then** fourteen ordered identities, phases, substrates, paths, and gates agree
+**And** the capstone self row is disposition fourteen.
+
+#### SCENARIO-REPORT-7342-EVIDENCE: Terminal class outranks a producer score
+
+**Given** exact deliverables and canonical conductor block records
+**When** Exp7342 authenticates each producer before reduction
+**Then** missing, blocked, partial, disqualified, or quarantined evidence cannot authorize a claim
+**And** each failed gate keeps its exact upstream, field, expected value, and observed value.
+
+#### SCENARIO-REPORT-7342-CLAIMS: Five authority classes remain separate
+
+**Given** source, learning, ARC, native-cost, and board evidence
+**When** Exp7342 constructs the claim matrix
+**Then** each class retains its own metrics, costs, failures, abstention, and censoring
+**And** circular executor evidence does not become a broad autonomous-learning claim.
+
+#### SCENARIO-REPORT-7342-BOARD: Expected board absence completes only its row
+
+**Given** Exp7341 has three authenticated board dispositions and a GateMate external block
+**When** Exp7342 records the board row
+**Then** the board disposition is complete and remains blocked
+**And** it does not cause or clear the independent scientific capstone verdict.
+
+#### SCENARIO-REPORT-7342-RETIREMENTS: Exact prior bytes control branch decisions
+
+**Given** all V644 prior-failure declarations and preserved V643 and V642 decisions
+**When** Exp7342 compares current and prior verdict bytes
+**Then** each row records an exact-repeat result and a precise disposition decision
+**And** every branch has one action and one falsifiable reopening condition.
+
+#### SCENARIO-REPORT-7342-PUBLICATION: Stable gates remain historical status
+
+**Given** the read-only publication gate output
+**When** Exp7342 stores G1 through G4, paper readiness, and unmet gates
+**Then** those values remain unchanged
+**And** no upload, submission, external message, or production change occurs.
+
+#### SCENARIO-REPORT-7342-ARTIFACT: Cold replay controls terminal publication
+
+**Given** raw dispositions, validation receipts, and a measured candidate
+**When** an independent reducer reloads the candidate
+**Then** any changed row, hash, class, gate, score, decision, or checksum fails
+**And** only the validated terminal document is written atomically.
+
+## Implementation Status (REQ-REPORT-7342)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7342 and SCENARIO-REPORT-7342-* | `python/carnot/experiment_7342_v644_capstone.py`; thin entrypoint; hash-bound current artifacts and conductor block records | Focused RED-to-green tests; 318/318 changed statements covered; scoped Ruff, format, mypy, and spec coverage; real-file E2E; cold replay; adversarial verification; strict row consistency |
+
 ## V643 literature ingestion and exact execution contract — 2026-09-15
 
 **Status:** Implemented. This receipt is advisory and gates no science.
