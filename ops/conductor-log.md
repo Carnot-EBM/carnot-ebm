@@ -18007,3 +18007,22 @@ code |
 | 2026-09-15 23:13 UTC | Plan milestone 2026.09.644 | OK | 14 tasks proposed |
 | 2026-09-15 23:36 UTC | Milestone 2026.09.644 activated | OK | 14 tasks queued |
 | 2026-09-16 00:00 UTC | Bind V644 sources and the exact fourteen-task cont | OK | 90 passed, 1 warning in 10.39s |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on arc_c |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on arc_l |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on ver |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on arc_orp |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on tracked_ |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on  |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on mutation_ |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on audit_fi |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6633_gpu_lease_phase_journal.json age-week 3: OPEN 21 days: CLAIM_REF |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on run_stop_au |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on in_pr |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 3: OPEN 21 day |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declares_terminal_artifact_readiness age-week 2: OPEN 14 |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_stem age-week 2: OPEN 14 days: SILENT_NON_FIRING o |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_small_shared_denominator_rate_pair age-week 2: OPEN 1 |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6888_independent_relation_qualification.json age-week 2: OPEN 14 days |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7324_v643_addition_learning.json age-week 0: OPEN 1 days: CLAIM_OVERS |
+| 2026-09-16 00:16 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7325_v643_addition_audit.json age-week 0: OPEN 1 days: CLAIM_OVERSTAT |
+| 2026-09-16 01:24 UTC | Build an isolated executor and a fresh versioned r | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: ted, mutate in |

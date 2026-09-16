@@ -16704,3 +16704,106 @@ publication surfaces, historical determinations, or the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7325 and SCENARIO-CL-7325-* | Implemented in `python/carnot/experiment_7325_v643_addition_audit.py` with a thin script entrypoint and terminal result `results/experiment_7325_v643_addition_audit.json`. The audit reloads raw producer evidence, rebuilds every comparison and update, checks three causal interventions, runs eight hostile controls, and exercises the current transactional lifecycle. | `tests/python/test_experiment_7325_v643_addition_audit.py` covers 13 behavior and fail-closed cases. Scoped statement coverage is 490/490 (100%). |
+
+## REQ-CL-7330: Isolated Executor And Fresh Versioned Request Panel
+
+Carnot SHALL provide the public structural learner and its canonical state
+serializer in `python/carnot/experiment_7330_v644_public_learner.py`. This
+module SHALL contain no private rule generator, evaluator predicate, or import
+of the V643 module that contains those rules. A separate executable evaluator
+SHALL implement schedule validity in
+`scripts/experiments/experiment_7330_v644_private_executor.py`. The evaluator
+SHALL compute interval occupancy and private pair gaps directly from the domain
+definition. It SHALL not import the public learned-atom predicate or the old
+private-rule helper.
+
+The evaluator SHALL run in a process separate from the learner. The learner
+SHALL receive only a public manifest path and an IPC endpoint. The endpoint
+SHALL return a Boolean for each submitted plan and no private rule, optimum,
+or failure explanation. Opaque version tokens SHALL be generated independently
+from private rule assignments, request identifiers, and learner-visible seeds.
+The run SHALL retain learner and evaluator process identifiers, import
+closures, file-open receipts, response keys, and deliberate private-path leak
+checks. These receipts describe an audited process boundary. They SHALL not
+claim hostile-process containment.
+
+The fixture SHALL seal four development streams and 16 held-out streams. Each
+stream SHALL contain 12 requests: four warmup requests and eight later
+requests. The held-out streams SHALL form four disjoint four-stream cohorts:
+stable rules, announced changes, return to a prior version, and unannounced
+changes. Requests SHALL contain four through six activities with distinct
+identities, varying allowed start windows, durations, and weights. Exact replay
+of one prior plan SHALL not cover a later request. The fixture SHALL also seal
+a separate compound-conflict challenge outside the acquisition language.
+
+The fixture SHALL reserve 24 disjoint live proposal pairs for Exp7333, six per
+cohort. Each pair SHALL contain an original request and a renamed-identifier
+twin with the same public structure. Original-first and twin-first orders SHALL
+be balanced within each cohort. Public requests and opaque versions SHALL have
+a seal separate from evaluator-only rules, witnesses, and labels. No runtime
+learner or memory policy SHALL read held-out or live-panel evaluator outcomes.
+All downstream arms SHALL use the same frozen distribution and query budget.
+
+Independent executor controls SHALL exhaustively enumerate a tiny domain. They
+SHALL also mutate constraints, reject malformed plans, compare one public
+request under different private rules, and compare the same rules under
+different opaque tokens. One control SHALL demonstrate that the V643
+version-suffix lookup would return the wrong equivalence class. The compound
+challenge SHALL reject the full plan while accepting its pair projections and
+SHALL add no unsupported learned atom.
+
+`executor_fixture_ready_score` SHALL equal one only when process separation,
+independent predicate controls, sealed manifests, known-invalid rejection, a
+nonempty acceptance witness for every sealed private request, and private-path
+leak checks all pass. The evaluator remains the executable oracle, so
+`verifier_is_oracle` SHALL be true and a favorable fixture result SHALL use
+`circular_positive`. This result is synthetic-domain development evidence. It
+SHALL make no satellite, live-model, or prospective learning efficacy claim.
+
+The task SHALL use date `20260916`, `MODEL_SPECS=[]`, and
+`model_invoked=false`. Current model load and generation counts SHALL be zero.
+It SHALL declare `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL not change model weights, production defaults,
+publication surfaces, historical determinations, or the research roadmap.
+
+### SCENARIO-CL-7330-BOUNDARY: Public Learner Uses Boolean IPC Only
+
+- GIVEN sealed public and evaluator-only manifests in separate files
+- WHEN the learner executes development requests against the evaluator process
+- THEN learner imports and file opens contain no private evaluator or V643 rule source
+- AND each response contains only a query identity and Boolean acceptance value.
+
+### SCENARIO-CL-7330-PANEL: Fresh Cohorts And Live Twins Stay Sealed
+
+- GIVEN independent public, token, private-rule, and resampling seeds
+- WHEN four development, 16 held-out, and 24 live proposal pairs are built
+- THEN every stream has the fixed warmup and later counts across all four cohorts
+- AND renamed twins, presentation order, public seals, and evaluator-label seals remain bound.
+
+### SCENARIO-CL-7330-EXECUTOR: Independent Occupancy Controls Fail Closed
+
+- GIVEN tiny domains, malformed plans, mutated rules, opaque-token aliases, and suffix traps
+- WHEN the private evaluator computes interval occupancy and pair gaps
+- THEN exhaustive expected labels agree and every malformed plan is rejected
+- AND rules, not version spelling, determine the Boolean result.
+
+### SCENARIO-CL-7330-COMPOUND: Unsupported Conflicts Do Not Become Atoms
+
+- GIVEN a compound conflict outside pair-gap acquisition
+- WHEN the full plan rejects while all pair projections accept
+- THEN the challenge remains an explicit unsupported conflict
+- AND the learner stores no pair atom from the compound Boolean alone.
+
+### SCENARIO-CL-7330-TERMINAL: Readiness Is Process Evidence Only
+
+- GIVEN real sidecars, independently reduced rows, scoped checks, and terminal validators
+- WHEN readiness and the terminal verdict are derived
+- THEN readiness is one only when every isolation, seal, invalid, and witness gate passes
+- AND a blocked or disqualified result sets readiness and downstream value scores to zero.
+
+## Implementation Status (REQ-CL-7330)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7330 and SCENARIO-CL-7330-* | Implemented in `python/carnot/experiment_7330_v644_public_learner.py` and `python/carnot/experiment_7330_v644_executor_isolation.py`. The private evaluator lives in its separate executable script and the old V643 producer remains unchanged. | `tests/python/test_experiment_7330_v644_executor_isolation.py` covers serialization, process isolation, independent semantics, sealed panels, compound uncertainty, cold reduction, fail-closed classification, and atomic publication. |
