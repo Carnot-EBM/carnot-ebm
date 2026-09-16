@@ -16906,3 +16906,84 @@ roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7344 and SCENARIO-CL-7344-* | Implemented in `python/carnot/experiment_7344_v645_executor_fixture.py` with a thin script wrapper. The module reuses the V644 public learner and private Boolean executor, seals the V645 panels, and excludes repository-wide pytest from its command plan. | `tests/python/test_experiment_7344_v645_executor_fixture.py` covers stream and twin seals, hostile and lifecycle controls, process E2E, exact command scope, historical-health separation, raw reduction, terminal classification, blocked output, and 582/582 changed-module statements. |
+
+## REQ-CL-7346: Opt-In Learning Adapter Through The Shipped Pipeline Seam
+
+Carnot SHALL provide a disabled-by-default learning adapter for the existing
+`VerifyRepairPipeline` production Safety-Net extension seam. The adapter SHALL
+validate public identifiers, windows, weights, and scalar types before it
+proposes a schedule. It SHALL not receive private rules. Every returned plan
+SHALL pass a charged exact executor check through the pipeline.
+
+The adapter SHALL freeze memory bytes at request entry. It SHALL commit new
+hash-bound atoms only after the request closes and paid localization ends.
+Announced version changes SHALL select no atoms from the old version. A failed
+exact check after an atom changes a proposal SHALL invalidate that atom before
+the next request. Durable state SHALL stay at or below 69,632 bytes. The exact
+executor SHALL receive at most 24 queries per request, including localization
+and final checks.
+
+The V645 measurement SHALL freeze four arms before outcomes: persistent
+structural acquisition, reset per request, exact-plan cache with reset, and
+memory frozen after warmup. The arms SHALL share public checks, proposal order,
+query budgets, and exact final authority. The result SHALL keep the qualified
+source-fidelity cohort separate from scripted model-shaped evidence. Scripted
+evidence SHALL not become a current model-inference claim.
+
+Promotion SHALL require zero returned infeasible plans and zero stale-atom
+returns. Against reset and exact cache, the persistent arm SHALL have
+stream-clustered paired CI95 lower bounds of at least -0.02 for utility and
+coverage. Its CI95 upper total-query ratio SHALL be below 0.90. At least one
+later distinct request SHALL have an atom-caused plan change that reverses when
+the atom is erased. Frozen-memory comparisons SHALL use post-warmup rows only.
+A deployment-cost claim additionally SHALL require a complete-wall-cost ratio
+CI95 upper bound at most 1.0.
+
+The terminal artifact SHALL be
+`results/experiment_7346_v645_learning_adapter.json`. It SHALL use date
+`20260916`, `MODEL_SPECS=[]`, `model_invoked=false`, zero invocation counts,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL preserve production defaults, historical
+determinations, publication surfaces, and the research roadmap.
+
+### SCENARIO-CL-7346-PIPELINE: Later Requests Use Acquired Constraints
+
+- GIVEN an opted-in adapter and a rejected plan with charged Boolean feedback
+- WHEN a distinct later request enters `VerifyRepairPipeline`
+- THEN a certified active atom can reject or redirect the unconstrained proposal
+- AND the returned plan passes a new charged exact final check.
+
+### SCENARIO-CL-7346-TRANSACTION: Requests Observe Frozen Durable State
+
+- GIVEN a request-entry memory snapshot and localization feedback
+- WHEN feedback is withheld, duplicated, corrupted, restarted, or rolled back
+- THEN active request bytes do not change and invalid state fails closed
+- AND commits occur only after the request closes with byte-bound receipts.
+
+### SCENARIO-CL-7346-VERSION: Announced And Hidden Drift Fail Closed
+
+- GIVEN atoms certified for one opaque version
+- WHEN the version changes or exact feedback contradicts an atom-shaped proposal
+- THEN stale atoms cannot authorize a returned plan
+- AND hidden drift triggers atom revalidation before the next request.
+
+### SCENARIO-CL-7346-PROMOTION: Paired Stream Gates Own The Verdict
+
+- GIVEN all four frozen arms over sealed source-fidelity streams
+- WHEN raw rows are independently reduced with stream-clustered resampling
+- THEN utility, coverage, total-query, safety, erasure, and frozen-memory gates use the frozen contract
+- AND a blocked, disqualified, or adversarial result has zero readiness, value, and promotion scores.
+
+### SCENARIO-CL-7346-LIFECYCLE: The Actual Adapter Commits, Restarts, And Rolls Back
+
+- GIVEN one certified atom committed through transactional memory
+- WHEN the adapter restarts and then applies the commit receipt's inverse patch
+- THEN restart exposes the same atom and rollback restores exact parent bytes
+- AND this lifecycle is reported as the applicable E2E-007 check.
+
+## Implementation Status (REQ-CL-7346)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7346 and SCENARIO-CL-7346-* | Implemented in `python/carnot/experiment_7346_v645_learning_adapter.py` through the existing disabled-by-default pipeline seam and a thin executable wrapper. | `tests/python/test_experiment_7346_v645_learning_adapter.py` covers pipeline reuse, validation boundaries, transactions, drift, four arms, controls, reduction, and terminal classification. Scoped Exp7303 validation passed with 646/646 changed-module statements. Independent reduction and both strict terminal validators passed. The mandated full suite timed out with existing failures, so the terminal artifact is disqualified and all scores are zero. |
