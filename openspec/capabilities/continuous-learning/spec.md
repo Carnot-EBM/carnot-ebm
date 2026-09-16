@@ -16987,3 +16987,61 @@ determinations, publication surfaces, and the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7346 and SCENARIO-CL-7346-* | Implemented in `python/carnot/experiment_7346_v645_learning_adapter.py` through the existing disabled-by-default pipeline seam and a thin executable wrapper. | `tests/python/test_experiment_7346_v645_learning_adapter.py` covers pipeline reuse, validation boundaries, transactions, drift, four arms, controls, reduction, and terminal classification. Scoped Exp7303 validation passed with 646/646 changed-module statements. Independent reduction and both strict terminal validators passed. The mandated full suite timed out with existing failures, so the terminal artifact is disqualified and all scores are zero. |
+
+## REQ-CL-7347: Current Local Model Public Plan Canary
+
+Carnot SHALL run four development requests from the qualified V645 executor
+fixture through the cached current Qwen3.8 Q4_K_M GGUF. The run SHALL use the
+GGUF tokenizer and an owned local CUDA runner. It SHALL bind the served model,
+model bytes, process identity, GPU lease, and device receipts to each call.
+Each call SHALL generate at most 128 tokens. Model load SHALL stop after 600
+seconds. The complete inference window SHALL stop after 900 seconds.
+
+The public prompt SHALL contain only the development request and the exact
+public plan schema. That schema has `request_id` and `assignments` fields. The
+decoder SHALL not repair malformed output. It SHALL not retry a request after
+a parser failure. Every raw prompt, reply, error, parser result, and terminal
+call disposition SHALL remain in the artifact.
+
+`plan_transport_ready_score` SHALL equal one when current model ownership,
+actual served identity, and four terminal response captures are sound.
+Semantic plan failures SHALL remain visible in `usable_plan_count`. They SHALL
+not reduce transport readiness. CPU valid and invalid format controls SHALL
+test the same parser without becoming current model calls.
+
+The terminal artifact SHALL be
+`results/experiment_7347_v645_plan_canary.json`. It SHALL use date `20260916`,
+declare the intended `unsloth/Qwen3.8-27B-GGUF` Q4_K_M model, and use
+`execution_venue=host`. Authentic CUDA generation SHALL use
+`inference_substrate=live_llm_inference` and
+`inference_substrate_class=model_bounded_generation`. A load attempt without
+generation SHALL use `model_load_no_generation`. No model attempt SHALL use
+`blocked_no_run`. Blocked or disqualified evidence SHALL set readiness, value,
+and promotion scores to zero.
+
+### SCENARIO-CL-7347-PARSER: Exact Public Fields Fail Closed
+
+- GIVEN a valid public request and raw model text
+- WHEN the plan decoder reads the response
+- THEN it accepts only one exact object with `request_id` and `assignments`
+- AND malformed, mismatched, partial, or out-of-domain plans remain failed rows.
+
+### SCENARIO-CL-7347-TRANSPORT: Four Owned Calls Qualify Transport
+
+- GIVEN one authenticated owned runner serving the cached current GGUF
+- WHEN four bounded development calls reach terminal capture
+- THEN each call retains prompt, reply, disposition, runtime identity, and GPU evidence
+- AND semantic plan errors do not hide sound transport.
+
+### SCENARIO-CL-7347-TERMINAL: Raw Evidence Rebuilds The Verdict
+
+- GIVEN the raw call manifest and terminal candidate
+- WHEN an independent reducer and strict artifact checks run
+- THEN invocation counts, usable plan count, and transport readiness reproduce
+- AND adversarial, blocked, or disqualified evidence prevents promotion.
+
+## Implementation Status (REQ-CL-7347)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7347 and SCENARIO-CL-7347-* | Implemented in `python/carnot/experiment_7347_v645_plan_canary.py` with a thin executable wrapper. The module reuses the current-model resolver, GPU lease journal, native server supervisor, and Exp7303 scoped validation runner. | `tests/python/test_experiment_7347_v645_plan_canary.py` covers exact parsing, fixed request selection, CPU controls, transport and semantic separation, raw reduction, tokenizer GPU isolation, served-alias binding, and disqualification conservation with 155/155 changed-module statements. The bounded entrypoint supplies the terminal live result. |

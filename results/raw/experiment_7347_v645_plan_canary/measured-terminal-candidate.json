@@ -1,0 +1,2820 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "acceptance_gate_results": {
+    "adversarial_clear": {
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "principle": "A critical finding prevents readiness or promotion."
+    },
+    "affected_validation": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Changed code and its exact tests must pass current scoped checks."
+    },
+    "cpu_parser_controls": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Valid and invalid public formats must exercise the production parser."
+    },
+    "plan_transport": {
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "Ownership, identity, CUDA evidence, and four captures qualify transport."
+    },
+    "preconditions": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Every exact producer and runtime check precedes dependent work."
+    },
+    "terminal_validation": {
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "Independent reduction and both strict readers must pass."
+    }
+  },
+  "completed_at_utc": "2026-09-16T15:51:55.381411Z",
+  "cpu_parser_controls": [
+    {
+      "control": "cpu_valid_format",
+      "expected": "valid",
+      "inference_substrate": "cpu_parser_control",
+      "observed": "valid",
+      "passed": true,
+      "raw_reply": "{\"assignments\":{\"a\":0,\"b\":0,\"c\":0,\"d\":0,\"e\":0},\"request_id\":\"development-0-00-request-00\"}"
+    },
+    {
+      "control": "cpu_invalid_format",
+      "expected": "invalid",
+      "inference_substrate": "cpu_parser_control",
+      "observed": "invalid",
+      "passed": true,
+      "raw_reply": "```json\n{}\n```"
+    }
+  ],
+  "duration_s": 27.683571,
+  "execution_venue": "host",
+  "experiment_id": "exp7347-plan-canary",
+  "field_principles": {
+    "MODEL_SPECS": "List actual intended model identities; LLM tasks include unsloth/Qwen3.8-27B-GGUF.",
+    "acceptance_gate_results": "Each gate records expected, observed, passed and its principle.",
+    "duration_s": "Measure monotonic time; never wait merely to pass a duration floor.",
+    "execution_venue": "Use host; this milestone makes no new board-execution claim.",
+    "field_principles": "Explain fields separately; do not wrap numeric gates or ordinary dictionaries.",
+    "flagged_adversarial": "Set false only after current verification; a critical finding sets true and prevents promotion.",
+    "gate_check_summary": "Every blocked_* names upstream, failed check, exact artifact field, expected and observed value.",
+    "honest_verdict": "Completed work starts complete_ or complete:; external absence starts blocked_ with its failed check.",
+    "inference_substrate": "Declare actual computation; historical model receipts are not current inference.",
+    "inference_substrate_class": "Use the closed duration class matching the actual run.",
+    "invocation_counts": "Separate attempted, completed, failed, cancelled and in-flight operations.",
+    "model_invoked": "True for any attempted current model load or generation, including failures.",
+    "phase_spans": "Measure disjoint load, generation, evaluation, test and write spans.",
+    "plan_transport_ready_score": "Qualify transport and identity independently from source correctness.",
+    "preconditions_checked": "Record each actual input/resource check before dependent work.",
+    "random_seed": "Freeze development, evaluation and resampling seeds before outcomes.",
+    "raw_call_manifest": "Keep four bounded calls, including errors and unparsed outputs.",
+    "repository_health": "Preserve dated unrelated failures separately from affected required validation.",
+    "reproducibility_checksum": "Bind code, settings, inputs, evaluator identity and raw evidence.",
+    "rows": "Keep every comparative unit, arm, metric, cost, failure and censoring disposition.",
+    "run_date": "Use 20260916; record real UTC timestamps as well.",
+    "runtime_identity_receipt": "Bind the owned process and exact GGUF bytes to each request.",
+    "sample_size_budget": "Record planned, attempted, completed and censored units and stopping rules.",
+    "schema": "Version the record and retain ordinary top-level experiment_id and milestone.",
+    "source_artifact_hashes": "Authenticate exact producers and current same-milestone paths.",
+    "status": "Write a terminal result only after actual work and affected checks.",
+    "usable_plan_count": "Keep semantic nulls visible when transport is healthy.",
+    "validation_receipts": "Retain exact command, scope, exit code, elapsed time and log hash, including failures.",
+    "verdict_class": "Closed enum: positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial.",
+    "verifier_is_oracle": "True when the executor defines correctness; separate code does not remove circularity."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "artifact_field": "plan_transport_ready_score",
+    "check_count": 9,
+    "expected_value": 1,
+    "failed_check": null,
+    "failed_check_count": 0,
+    "observed_value": 1,
+    "passed": true,
+    "upstream": "exp7347-plan-canary"
+  },
+  "gpu_receipts": {
+    "cleanup": {
+      "action": "terminated",
+      "bounded": true,
+      "leak_free": true,
+      "signals_sent": [
+        {
+          "signal": "SIGTERM",
+          "target": "process_group"
+        }
+      ],
+      "unrelated_process_kill_count_delta": 0,
+      "wait_status": "exited_zombie"
+    },
+    "lease_release": {
+      "checksum": "sha256:de48d9624e92ed59bff1a9f881625c1892f45ce04914517d9127fd7f57170e1b",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+      "phase": "terminal_complete",
+      "pid": 1617668,
+      "pid_start_ticks": 186558731,
+      "released": true,
+      "signals_sent": []
+    },
+    "provenance": {
+      "cuda_log_evidence": true,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "logged_layer_receipt": null,
+      "owned_compute_apps": [
+        {
+          "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 50857 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "owned_by_task": true,
+          "pid": 1617739,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 16340
+        }
+      ],
+      "provenance_ok": true,
+      "server_pid": 1617739,
+      "server_pid_start_ticks": 186558887,
+      "task_owned_vram_mb": 16340
+    },
+    "snapshots": [
+      {
+        "command_receipts": {
+          "compute_apps": {
+            "duration_s": 0.028743868926540017,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3768859, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18030\n"
+          },
+          "gpu": {
+            "duration_s": 0.03268943401053548,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 18040, 6085\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n"
+          }
+        },
+        "compute_apps": [
+          {
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 58269 --host 127.0.0.1 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0",
+            "gpu_index": 0,
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "owned_by_task": false,
+            "pid": 3768859,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18030
+          }
+        ],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 6085,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 18040,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "phase": "before_model_load"
+      },
+      {
+        "command_receipts": {
+          "compute_apps": {
+            "duration_s": 0.02550307591445744,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3768859, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18030\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 1617739, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 16340\n"
+          },
+          "gpu": {
+            "duration_s": 0.03199509112164378,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 18040, 6085\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 16350, 7775\n"
+          }
+        },
+        "compute_apps": [
+          {
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 58269 --host 127.0.0.1 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0",
+            "gpu_index": 0,
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "owned_by_task": false,
+            "pid": 3768859,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18030
+          },
+          {
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 50857 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+            "gpu_index": 1,
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "owned_by_task": true,
+            "pid": 1617739,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 16340
+          }
+        ],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 6085,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 18040,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 7775,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 16350,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "phase": "model_resident"
+      },
+      {
+        "command_receipts": {
+          "compute_apps": {
+            "duration_s": 0.025673095136880875,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 3768859, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 18030\n"
+          },
+          "gpu": {
+            "duration_s": 0.03157496196217835,
+            "returncode": 0,
+            "stderr": "",
+            "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 18040, 6085\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 96, 24576, 4, 24120\n"
+          }
+        },
+        "compute_apps": [
+          {
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf -ngl 999 -c 49152 --port 58269 --host 127.0.0.1 --parallel 1 --cache-type-k q8_0 --cache-type-v q8_0",
+            "gpu_index": 0,
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "owned_by_task": false,
+            "pid": 3768859,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 18030
+          }
+        ],
+        "devices": [
+          {
+            "index": 0,
+            "memory_free_mb": 6085,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 18040,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 0,
+            "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+          },
+          {
+            "index": 1,
+            "memory_free_mb": 24120,
+            "memory_total_mb": 24576,
+            "memory_used_mb": 4,
+            "name": "NVIDIA GeForce RTX 3090",
+            "utilization_pct": 96,
+            "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+          }
+        ],
+        "gpu_count": 2,
+        "ok": true,
+        "phase": "after_cleanup"
+      }
+    ]
+  },
+  "honest_verdict": "complete_positive_plan_transport_ready_4_of_4_usable",
+  "inference_substrate": "live_llm_inference",
+  "inference_substrate_class": "model_bounded_generation",
+  "invocation_counts": {
+    "generation_calls_attempted": 4,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 4,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "load_receipt": {
+    "attempted": true,
+    "cancelled": false,
+    "completed": true,
+    "error": null,
+    "failed": false,
+    "in_flight": false
+  },
+  "milestone": "2026.09.645",
+  "model_invoked": true,
+  "model_specs": [
+    {
+      "bytes": 17106775008,
+      "chat_template_sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+      "embedded_chat_template": true,
+      "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+      "embedded_tokenizer_loadable": true,
+      "hash_source": "content_addressed_cache_target",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "quantization": "Q4_K_M",
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "runtime_settings": {
+        "cuda_gpu_layers": "all",
+        "inference_window_timeout_s": 900.0,
+        "max_generated_tokens": 128,
+        "model_load_timeout_s": 600.0,
+        "parallel_requests": 1,
+        "seed": 7347101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+    }
+  ],
+  "observed_plan_transport_ready_score": 1,
+  "phase_spans": [
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7347_v645_plan_canary/llama_server_7359043716047430749.log",
+      "completed_units": 1,
+      "duration_s": 10.368544,
+      "end_elapsed_s": 1865599.165989,
+      "phase": "model_load",
+      "start_elapsed_s": 1865588.797445
+    },
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7347_v645_plan_canary",
+      "completed_units": 4,
+      "duration_s": 8.402976,
+      "end_elapsed_s": 1865607.568972,
+      "phase": "generation",
+      "start_elapsed_s": 1865599.165996
+    },
+    {
+      "checkpoint": null,
+      "completed_units": 1,
+      "duration_s": 0.531483,
+      "end_elapsed_s": 1865608.100525,
+      "phase": "cleanup",
+      "start_elapsed_s": 1865607.569042
+    },
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7347_v645_plan_canary/raw_call_manifest.json",
+      "completed_units": 4,
+      "duration_s": 0.001783,
+      "end_elapsed_s": 1865608.102348,
+      "phase": "evaluation",
+      "start_elapsed_s": 1865608.100566
+    },
+    {
+      "checkpoint": null,
+      "completed_units": 8,
+      "duration_s": 7.513582,
+      "end_elapsed_s": 1865615.615935,
+      "phase": "tests",
+      "start_elapsed_s": 1865608.102353
+    }
+  ],
+  "plan_transport_ready_score": 1,
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "check": "run_date",
+      "expected_value": "20260916",
+      "observed_value": "20260916",
+      "passed": true,
+      "principle": "This run is tied to the V645 execution date.",
+      "upstream": "execution_contract"
+    },
+    {
+      "artifact_field": "preconditions_checked",
+      "check": "required_source_paths",
+      "expected_value": {
+        "e2e_plan": true,
+        "entrypoint": true,
+        "exclusion_manifest": true,
+        "module": true,
+        "producer": true,
+        "public_manifest": true,
+        "research_program": true,
+        "research_references": true,
+        "spec": true,
+        "spec_has_req": true,
+        "tests": true,
+        "validation_runner": true
+      },
+      "observed_value": {
+        "e2e_plan": true,
+        "entrypoint": true,
+        "exclusion_manifest": true,
+        "module": true,
+        "producer": true,
+        "public_manifest": true,
+        "research_program": true,
+        "research_references": true,
+        "spec": true,
+        "spec_has_req": true,
+        "tests": true,
+        "validation_runner": true
+      },
+      "passed": true,
+      "principle": "All exact inputs and the driving requirement must exist before inference.",
+      "upstream": "repository"
+    },
+    {
+      "artifact_field": "executor_fixture_ready_score",
+      "check": "same_milestone_executor_fixture",
+      "expected_value": {
+        "executor_fixture_ready_score": 1,
+        "flagged_adversarial": false,
+        "milestone": "2026.09.645",
+        "quarantined": false,
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "observed_value": {
+        "executor_fixture_ready_score": 1,
+        "flagged_adversarial": false,
+        "milestone": "2026.09.645",
+        "quarantined": false,
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "passed": true,
+      "principle": "A blocked, partial, disqualified, or quarantined producer cannot authorize model work.",
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "source_artifact_hashes",
+      "check": "public_manifest_bytes",
+      "expected_value": "sha256:9dea7a4113c9899f603e541940f6366db34af06e8078786680072e52e1011a78",
+      "observed_value": "sha256:9dea7a4113c9899f603e541940f6366db34af06e8078786680072e52e1011a78",
+      "passed": true,
+      "principle": "The canary must use the exact public bytes authenticated by its producer.",
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "sample_size_budget",
+      "check": "four_development_requests",
+      "expected_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "observed_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "passed": true,
+      "principle": "The fixed budget permits four public requests and no replacement samples.",
+      "upstream": "public_manifest"
+    },
+    {
+      "artifact_field": "MODEL_SPECS",
+      "check": "cached_current_model",
+      "expected_value": {
+        "content_addressed": true,
+        "embedded_chat_template": true,
+        "embedded_tokenizer_loadable": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M"
+      },
+      "observed_value": {
+        "content_addressed": true,
+        "embedded_chat_template": true,
+        "embedded_tokenizer_loadable": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M"
+      },
+      "passed": true,
+      "principle": "The owned runner must load the current Q4 GGUF and its embedded tokenizer.",
+      "upstream": "cached_current_model"
+    },
+    {
+      "artifact_field": "runtime_identity_receipt",
+      "check": "native_cuda_runner",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "principle": "Static runner receipts must confirm CUDA linkage and bounded generation.",
+      "upstream": "native_llama_server"
+    },
+    {
+      "artifact_field": "runtime_identity_receipt",
+      "check": "cuda_inventory_and_owned_capacity",
+      "expected_value": {
+        "conflicts": [],
+        "minimum_available_gpu_count": 1,
+        "query_ok": true
+      },
+      "observed_value": {
+        "available_gpu_uuids": [
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "conflicting_lease_ids": [],
+        "conflicts": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "memory_mb": 18030,
+            "pid": 3768859
+          }
+        ],
+        "query_ok": true
+      },
+      "passed": true,
+      "principle": "Actual CUDA inventory, free memory, and lease ownership must permit one runner.",
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    },
+    {
+      "artifact_field": "inference_substrate",
+      "check": "force_live_mode",
+      "expected_value": "1",
+      "observed_value": "1",
+      "passed": true,
+      "principle": "The canary forbids simulated fallback.",
+      "upstream": "process_environment"
+    }
+  ],
+  "promotion_ready_score": 0,
+  "random_seed": {
+    "development": 7347101,
+    "evaluation": 7347201,
+    "resampling": 7347301
+  },
+  "raw_call_manifest": {
+    "calls": [
+      {
+        "attempted": true,
+        "call_index": 0,
+        "censored": false,
+        "completion_tokens": 70,
+        "decoded_plan": {
+          "assignments": {
+            "a": 0,
+            "b": 0,
+            "c": 0,
+            "d": 0,
+            "e": 0
+          },
+          "request_id": "development-0-00-request-00"
+        },
+        "error": null,
+        "finish_reason": "stop",
+        "latency_s": 2.069446092005819,
+        "max_generated_tokens": 128,
+        "parse_errors": [],
+        "parse_status": "valid",
+        "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-00\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,10,11],\"b\":[0,1,3,4],\"c\":[0,2,6,7],\"d\":[0,3,9,10],\"e\":[0,4,12,13]},\"durations\":{\"a\":2,\"b\":2,\"c\":2,\"d\":2,\"e\":2},\"horizon\":22,\"public_revision\":0,\"request_id\":\"development-0-00-request-00\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":1,\"d\":1,\"e\":1}}",
+        "prompt_sha256": "sha256:8f9751f3169340b9393bc2aa4ce9a1be2baaf4ec270295d72c38d5bd600bae4c",
+        "prompt_tokens": 284,
+        "public_request": {
+          "activities": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "allowed_starts": {
+            "a": [
+              0,
+              1,
+              10,
+              11
+            ],
+            "b": [
+              0,
+              1,
+              3,
+              4
+            ],
+            "c": [
+              0,
+              2,
+              6,
+              7
+            ],
+            "d": [
+              0,
+              3,
+              9,
+              10
+            ],
+            "e": [
+              0,
+              4,
+              12,
+              13
+            ]
+          },
+          "durations": {
+            "a": 2,
+            "b": 2,
+            "c": 2,
+            "d": 2,
+            "e": 2
+          },
+          "horizon": 22,
+          "public_revision": 0,
+          "request_id": "development-0-00-request-00",
+          "version_token": "opaque-72c2e5a882de75a126abe41c",
+          "warmup": true,
+          "weights": {
+            "a": 2,
+            "b": 2,
+            "c": 1,
+            "d": 1,
+            "e": 1
+          }
+        },
+        "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-00\"\n}",
+        "raw_reply_sha256": "sha256:2433b4a33e5853974fff7518245f6400d95186c5f2c3c9dd8b138ebfea628d21",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-00\"\n}",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 1789573900,
+          "id": "chatcmpl-kZGq6FFZqYGkUL7AfyjB2PDcqfbm7nzZ",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "object": "chat.completion",
+          "system_fingerprint": "b9606-9b4dae81f",
+          "timings": {
+            "cache_n": 0,
+            "predicted_ms": 1679.985,
+            "predicted_n": 70,
+            "predicted_per_second": 41.66703869379786,
+            "predicted_per_token_ms": 23.999785714285714,
+            "prompt_ms": 369.949,
+            "prompt_n": 284,
+            "prompt_per_second": 767.673382006709,
+            "prompt_per_token_ms": 1.302637323943662
+          },
+          "usage": {
+            "completion_tokens": 70,
+            "prompt_tokens": 284,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 354
+          }
+        },
+        "request_id": "development-0-00-request-00",
+        "runtime_identity_receipt": {
+          "comm": "llama-server",
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "50857",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+          "cuda_provenance_ok": true,
+          "exists": true,
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+          "model_bytes": 17106775008,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "owned_by_current_uid": true,
+          "owned_by_task": true,
+          "parent_identity": {
+            "pid": 1617668,
+            "start_time_ticks": 186558731
+          },
+          "pid": 1617739,
+          "ppid": 1617668,
+          "process_group_id": 1617739,
+          "quantization": "Q4_K_M",
+          "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "served_model_response": {
+            "data": [
+              {
+                "aliases": [],
+                "created": 1789573898,
+                "id": "Qwen3.8-27B-Q4_K_M.gguf",
+                "meta": {
+                  "n_ctx": 4096,
+                  "n_ctx_train": 262144,
+                  "n_embd": 5120,
+                  "n_params": 27320697856,
+                  "n_vocab": 248320,
+                  "size": 17095778304,
+                  "vocab_type": 2
+                },
+                "object": "model",
+                "owned_by": "llamacpp",
+                "tags": []
+              }
+            ],
+            "models": [
+              {
+                "capabilities": [
+                  "completion"
+                ],
+                "description": "",
+                "details": {
+                  "families": [
+                    ""
+                  ],
+                  "family": "",
+                  "format": "gguf",
+                  "parameter_size": "",
+                  "parent_model": "",
+                  "quantization_level": ""
+                },
+                "digest": "",
+                "model": "Qwen3.8-27B-Q4_K_M.gguf",
+                "modified_at": "",
+                "name": "Qwen3.8-27B-Q4_K_M.gguf",
+                "parameters": "",
+                "size": "",
+                "tags": [
+                  ""
+                ],
+                "type": "model"
+              }
+            ],
+            "object": "list"
+          },
+          "session_id": 1617739,
+          "start_time_ticks": 186558887,
+          "state": "R",
+          "task_owned_vram_mb": 16340,
+          "uid": 1000
+        },
+        "terminal_state": "response"
+      },
+      {
+        "attempted": true,
+        "call_index": 1,
+        "censored": false,
+        "completion_tokens": 70,
+        "decoded_plan": {
+          "assignments": {
+            "a": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 0
+          },
+          "request_id": "development-0-00-request-01"
+        },
+        "error": null,
+        "finish_reason": "stop",
+        "latency_s": 2.10034940415062,
+        "max_generated_tokens": 128,
+        "parse_errors": [],
+        "parse_status": "valid",
+        "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-01\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[1,2,11,14],\"b\":[1,2,4,5],\"c\":[1,3,7,8],\"d\":[1,4,10,11],\"e\":[0,1,13,14]},\"durations\":{\"a\":1,\"b\":1,\"c\":2,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":1,\"request_id\":\"development-0-00-request-01\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":2,\"d\":3,\"e\":1}}",
+        "prompt_sha256": "sha256:b48f0887a7d0cbee9de3d6cdb24f3614650f301dc9bf533a03b3768a78b6358b",
+        "prompt_tokens": 285,
+        "public_request": {
+          "activities": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "allowed_starts": {
+            "a": [
+              1,
+              2,
+              11,
+              14
+            ],
+            "b": [
+              1,
+              2,
+              4,
+              5
+            ],
+            "c": [
+              1,
+              3,
+              7,
+              8
+            ],
+            "d": [
+              1,
+              4,
+              10,
+              11
+            ],
+            "e": [
+              0,
+              1,
+              13,
+              14
+            ]
+          },
+          "durations": {
+            "a": 1,
+            "b": 1,
+            "c": 2,
+            "d": 1,
+            "e": 1
+          },
+          "horizon": 22,
+          "public_revision": 1,
+          "request_id": "development-0-00-request-01",
+          "version_token": "opaque-72c2e5a882de75a126abe41c",
+          "warmup": true,
+          "weights": {
+            "a": 2,
+            "b": 2,
+            "c": 2,
+            "d": 3,
+            "e": 1
+          }
+        },
+        "raw_reply": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-01\"\n}",
+        "raw_reply_sha256": "sha256:74cb31b5c15c8a8f2a980da624acadba674803e8fb0c7feb7a8f46cc5e259dc9",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-01\"\n}",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 1789573903,
+          "id": "chatcmpl-oENXoF3W8fZxYImmrjc7lq0Hy4p3ZyZT",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "object": "chat.completion",
+          "system_fingerprint": "b9606-9b4dae81f",
+          "timings": {
+            "cache_n": 0,
+            "predicted_ms": 1674.918,
+            "predicted_n": 70,
+            "predicted_per_second": 41.79309076623453,
+            "predicted_per_token_ms": 23.9274,
+            "prompt_ms": 320.414,
+            "prompt_n": 285,
+            "prompt_per_second": 889.4742426985089,
+            "prompt_per_token_ms": 1.124259649122807
+          },
+          "usage": {
+            "completion_tokens": 70,
+            "prompt_tokens": 285,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 355
+          }
+        },
+        "request_id": "development-0-00-request-01",
+        "runtime_identity_receipt": {
+          "comm": "llama-server",
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "50857",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+          "cuda_provenance_ok": true,
+          "exists": true,
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+          "model_bytes": 17106775008,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "owned_by_current_uid": true,
+          "owned_by_task": true,
+          "parent_identity": {
+            "pid": 1617668,
+            "start_time_ticks": 186558731
+          },
+          "pid": 1617739,
+          "ppid": 1617668,
+          "process_group_id": 1617739,
+          "quantization": "Q4_K_M",
+          "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "served_model_response": {
+            "data": [
+              {
+                "aliases": [],
+                "created": 1789573898,
+                "id": "Qwen3.8-27B-Q4_K_M.gguf",
+                "meta": {
+                  "n_ctx": 4096,
+                  "n_ctx_train": 262144,
+                  "n_embd": 5120,
+                  "n_params": 27320697856,
+                  "n_vocab": 248320,
+                  "size": 17095778304,
+                  "vocab_type": 2
+                },
+                "object": "model",
+                "owned_by": "llamacpp",
+                "tags": []
+              }
+            ],
+            "models": [
+              {
+                "capabilities": [
+                  "completion"
+                ],
+                "description": "",
+                "details": {
+                  "families": [
+                    ""
+                  ],
+                  "family": "",
+                  "format": "gguf",
+                  "parameter_size": "",
+                  "parent_model": "",
+                  "quantization_level": ""
+                },
+                "digest": "",
+                "model": "Qwen3.8-27B-Q4_K_M.gguf",
+                "modified_at": "",
+                "name": "Qwen3.8-27B-Q4_K_M.gguf",
+                "parameters": "",
+                "size": "",
+                "tags": [
+                  ""
+                ],
+                "type": "model"
+              }
+            ],
+            "object": "list"
+          },
+          "session_id": 1617739,
+          "start_time_ticks": 186558887,
+          "state": "R",
+          "task_owned_vram_mb": 16340,
+          "uid": 1000
+        },
+        "terminal_state": "response"
+      },
+      {
+        "attempted": true,
+        "call_index": 2,
+        "censored": false,
+        "completion_tokens": 70,
+        "decoded_plan": {
+          "assignments": {
+            "a": 0,
+            "b": 2,
+            "c": 2,
+            "d": 0,
+            "e": 1
+          },
+          "request_id": "development-0-00-request-02"
+        },
+        "error": null,
+        "finish_reason": "stop",
+        "latency_s": 2.0992891050409526,
+        "max_generated_tokens": 128,
+        "parse_errors": [],
+        "parse_status": "valid",
+        "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-02\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,2,5],\"b\":[2,3,4,21],\"c\":[2,4,6,7],\"d\":[0,2,9,10],\"e\":[1,2,12,13]},\"durations\":{\"a\":2,\"b\":1,\"c\":2,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":2,\"request_id\":\"development-0-00-request-02\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":1,\"b\":2,\"c\":3,\"d\":1,\"e\":1}}",
+        "prompt_sha256": "sha256:afb1a1b70ffea5f681931725a9dcb77ee5292723dd372e330d38ae855f10f558",
+        "prompt_tokens": 283,
+        "public_request": {
+          "activities": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "allowed_starts": {
+            "a": [
+              0,
+              1,
+              2,
+              5
+            ],
+            "b": [
+              2,
+              3,
+              4,
+              21
+            ],
+            "c": [
+              2,
+              4,
+              6,
+              7
+            ],
+            "d": [
+              0,
+              2,
+              9,
+              10
+            ],
+            "e": [
+              1,
+              2,
+              12,
+              13
+            ]
+          },
+          "durations": {
+            "a": 2,
+            "b": 1,
+            "c": 2,
+            "d": 1,
+            "e": 1
+          },
+          "horizon": 22,
+          "public_revision": 2,
+          "request_id": "development-0-00-request-02",
+          "version_token": "opaque-72c2e5a882de75a126abe41c",
+          "warmup": true,
+          "weights": {
+            "a": 1,
+            "b": 2,
+            "c": 3,
+            "d": 1,
+            "e": 1
+          }
+        },
+        "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 2,\n    \"c\": 2,\n    \"d\": 0,\n    \"e\": 1\n  },\n  \"request_id\": \"development-0-00-request-02\"\n}",
+        "raw_reply_sha256": "sha256:b0e7a93edc3536197279c325b1e535f1f2ea74c5ace30f9972350030db63a5cf",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 2,\n    \"c\": 2,\n    \"d\": 0,\n    \"e\": 1\n  },\n  \"request_id\": \"development-0-00-request-02\"\n}",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 1789573905,
+          "id": "chatcmpl-hdzuv2cSqzGOb3emSZRjcxuP4T2CyqE5",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "object": "chat.completion",
+          "system_fingerprint": "b9606-9b4dae81f",
+          "timings": {
+            "cache_n": 0,
+            "predicted_ms": 1675.129,
+            "predicted_n": 70,
+            "predicted_per_second": 41.78782648978079,
+            "predicted_per_token_ms": 23.930414285714285,
+            "prompt_ms": 319.01,
+            "prompt_n": 283,
+            "prompt_per_second": 887.1195260336666,
+            "prompt_per_token_ms": 1.127243816254417
+          },
+          "usage": {
+            "completion_tokens": 70,
+            "prompt_tokens": 283,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 353
+          }
+        },
+        "request_id": "development-0-00-request-02",
+        "runtime_identity_receipt": {
+          "comm": "llama-server",
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "50857",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+          "cuda_provenance_ok": true,
+          "exists": true,
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+          "model_bytes": 17106775008,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "owned_by_current_uid": true,
+          "owned_by_task": true,
+          "parent_identity": {
+            "pid": 1617668,
+            "start_time_ticks": 186558731
+          },
+          "pid": 1617739,
+          "ppid": 1617668,
+          "process_group_id": 1617739,
+          "quantization": "Q4_K_M",
+          "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "served_model_response": {
+            "data": [
+              {
+                "aliases": [],
+                "created": 1789573898,
+                "id": "Qwen3.8-27B-Q4_K_M.gguf",
+                "meta": {
+                  "n_ctx": 4096,
+                  "n_ctx_train": 262144,
+                  "n_embd": 5120,
+                  "n_params": 27320697856,
+                  "n_vocab": 248320,
+                  "size": 17095778304,
+                  "vocab_type": 2
+                },
+                "object": "model",
+                "owned_by": "llamacpp",
+                "tags": []
+              }
+            ],
+            "models": [
+              {
+                "capabilities": [
+                  "completion"
+                ],
+                "description": "",
+                "details": {
+                  "families": [
+                    ""
+                  ],
+                  "family": "",
+                  "format": "gguf",
+                  "parameter_size": "",
+                  "parent_model": "",
+                  "quantization_level": ""
+                },
+                "digest": "",
+                "model": "Qwen3.8-27B-Q4_K_M.gguf",
+                "modified_at": "",
+                "name": "Qwen3.8-27B-Q4_K_M.gguf",
+                "parameters": "",
+                "size": "",
+                "tags": [
+                  ""
+                ],
+                "type": "model"
+              }
+            ],
+            "object": "list"
+          },
+          "session_id": 1617739,
+          "start_time_ticks": 186558887,
+          "state": "R",
+          "task_owned_vram_mb": 16340,
+          "uid": 1000
+        },
+        "terminal_state": "response"
+      },
+      {
+        "attempted": true,
+        "call_index": 3,
+        "censored": false,
+        "completion_tokens": 70,
+        "decoded_plan": {
+          "assignments": {
+            "a": 0,
+            "b": 0,
+            "c": 0,
+            "d": 0,
+            "e": 0
+          },
+          "request_id": "development-0-00-request-03"
+        },
+        "error": null,
+        "finish_reason": "stop",
+        "latency_s": 2.1109936139546335,
+        "max_generated_tokens": 128,
+        "parse_errors": [],
+        "parse_status": "valid",
+        "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-03\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,2,3],\"b\":[0,4,5,9],\"c\":[0,1,7,8],\"d\":[0,1,10,11],\"e\":[0,2,13,14]},\"durations\":{\"a\":1,\"b\":1,\"c\":1,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":3,\"request_id\":\"development-0-00-request-03\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":3,\"d\":2,\"e\":2}}",
+        "prompt_sha256": "sha256:606601df7da1d7ecff7397bf0948cc85d0c0e831e8afa57b02e7dffe01b51438",
+        "prompt_tokens": 283,
+        "public_request": {
+          "activities": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "allowed_starts": {
+            "a": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "b": [
+              0,
+              4,
+              5,
+              9
+            ],
+            "c": [
+              0,
+              1,
+              7,
+              8
+            ],
+            "d": [
+              0,
+              1,
+              10,
+              11
+            ],
+            "e": [
+              0,
+              2,
+              13,
+              14
+            ]
+          },
+          "durations": {
+            "a": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 1
+          },
+          "horizon": 22,
+          "public_revision": 3,
+          "request_id": "development-0-00-request-03",
+          "version_token": "opaque-72c2e5a882de75a126abe41c",
+          "warmup": true,
+          "weights": {
+            "a": 2,
+            "b": 2,
+            "c": 3,
+            "d": 2,
+            "e": 2
+          }
+        },
+        "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-03\"\n}",
+        "raw_reply_sha256": "sha256:6fa54586e579bd581779e3a6bb77f9a354dc7975dbd2ae34586c3b06d7fb7595",
+        "raw_response": {
+          "choices": [
+            {
+              "finish_reason": "stop",
+              "index": 0,
+              "message": {
+                "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-03\"\n}",
+                "role": "assistant"
+              }
+            }
+          ],
+          "created": 1789573907,
+          "id": "chatcmpl-WPx5iah5XQwMkDLAx08HG48HDCYpzVVc",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "object": "chat.completion",
+          "system_fingerprint": "b9606-9b4dae81f",
+          "timings": {
+            "cache_n": 0,
+            "predicted_ms": 1686.562,
+            "predicted_n": 70,
+            "predicted_per_second": 41.50455186349509,
+            "predicted_per_token_ms": 24.093742857142857,
+            "prompt_ms": 319.895,
+            "prompt_n": 283,
+            "prompt_per_second": 884.6652807952611,
+            "prompt_per_token_ms": 1.1303710247349823
+          },
+          "usage": {
+            "completion_tokens": 70,
+            "prompt_tokens": 283,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "total_tokens": 353
+          }
+        },
+        "request_id": "development-0-00-request-03",
+        "runtime_identity_receipt": {
+          "comm": "llama-server",
+          "command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--model",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "50857",
+            "--ctx-size",
+            "4096",
+            "--n-gpu-layers",
+            "all",
+            "--split-mode",
+            "none",
+            "--parallel",
+            "1",
+            "--batch-size",
+            "512",
+            "--ubatch-size",
+            "512",
+            "--cache-type-k",
+            "q8_0",
+            "--cache-type-v",
+            "q8_0",
+            "--fit",
+            "off",
+            "--offline",
+            "--jinja",
+            "--reasoning",
+            "off",
+            "--no-webui",
+            "--log-verbosity",
+            "3"
+          ],
+          "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+          "cuda_provenance_ok": true,
+          "exists": true,
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+          "model_bytes": 17106775008,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+          "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "owned_by_current_uid": true,
+          "owned_by_task": true,
+          "parent_identity": {
+            "pid": 1617668,
+            "start_time_ticks": 186558731
+          },
+          "pid": 1617739,
+          "ppid": 1617668,
+          "process_group_id": 1617739,
+          "quantization": "Q4_K_M",
+          "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "served_model_response": {
+            "data": [
+              {
+                "aliases": [],
+                "created": 1789573898,
+                "id": "Qwen3.8-27B-Q4_K_M.gguf",
+                "meta": {
+                  "n_ctx": 4096,
+                  "n_ctx_train": 262144,
+                  "n_embd": 5120,
+                  "n_params": 27320697856,
+                  "n_vocab": 248320,
+                  "size": 17095778304,
+                  "vocab_type": 2
+                },
+                "object": "model",
+                "owned_by": "llamacpp",
+                "tags": []
+              }
+            ],
+            "models": [
+              {
+                "capabilities": [
+                  "completion"
+                ],
+                "description": "",
+                "details": {
+                  "families": [
+                    ""
+                  ],
+                  "family": "",
+                  "format": "gguf",
+                  "parameter_size": "",
+                  "parent_model": "",
+                  "quantization_level": ""
+                },
+                "digest": "",
+                "model": "Qwen3.8-27B-Q4_K_M.gguf",
+                "modified_at": "",
+                "name": "Qwen3.8-27B-Q4_K_M.gguf",
+                "parameters": "",
+                "size": "",
+                "tags": [
+                  ""
+                ],
+                "type": "model"
+              }
+            ],
+            "object": "list"
+          },
+          "session_id": 1617739,
+          "start_time_ticks": 186558887,
+          "state": "R",
+          "task_owned_vram_mb": 16340,
+          "uid": 1000
+        },
+        "terminal_state": "response"
+      }
+    ],
+    "producer": "exp7347-plan-canary",
+    "schema": "carnot.exp7347.raw_calls.v1"
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failure_count": 0,
+    "historical_failures": [],
+    "incident_open": false,
+    "status": "healthy",
+    "unresolved_collection_error_observation_count": 0
+  },
+  "reproducibility_checksum": "sha256:35058323ca2914274811bfe5cdb170240e20c5be02f3a08f3eb57252e25139f0",
+  "rows": [
+    {
+      "attempted": true,
+      "call_index": 0,
+      "censored": false,
+      "completion_tokens": 70,
+      "decoded_plan": {
+        "assignments": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 0,
+          "e": 0
+        },
+        "request_id": "development-0-00-request-00"
+      },
+      "error": null,
+      "finish_reason": "stop",
+      "latency_s": 2.069446092005819,
+      "max_generated_tokens": 128,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-00\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,10,11],\"b\":[0,1,3,4],\"c\":[0,2,6,7],\"d\":[0,3,9,10],\"e\":[0,4,12,13]},\"durations\":{\"a\":2,\"b\":2,\"c\":2,\"d\":2,\"e\":2},\"horizon\":22,\"public_revision\":0,\"request_id\":\"development-0-00-request-00\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":1,\"d\":1,\"e\":1}}",
+      "prompt_sha256": "sha256:8f9751f3169340b9393bc2aa4ce9a1be2baaf4ec270295d72c38d5bd600bae4c",
+      "prompt_tokens": 284,
+      "public_request": {
+        "activities": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "allowed_starts": {
+          "a": [
+            0,
+            1,
+            10,
+            11
+          ],
+          "b": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "c": [
+            0,
+            2,
+            6,
+            7
+          ],
+          "d": [
+            0,
+            3,
+            9,
+            10
+          ],
+          "e": [
+            0,
+            4,
+            12,
+            13
+          ]
+        },
+        "durations": {
+          "a": 2,
+          "b": 2,
+          "c": 2,
+          "d": 2,
+          "e": 2
+        },
+        "horizon": 22,
+        "public_revision": 0,
+        "request_id": "development-0-00-request-00",
+        "version_token": "opaque-72c2e5a882de75a126abe41c",
+        "warmup": true,
+        "weights": {
+          "a": 2,
+          "b": 2,
+          "c": 1,
+          "d": 1,
+          "e": 1
+        }
+      },
+      "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-00\"\n}",
+      "raw_reply_sha256": "sha256:2433b4a33e5853974fff7518245f6400d95186c5f2c3c9dd8b138ebfea628d21",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-00\"\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789573900,
+        "id": "chatcmpl-kZGq6FFZqYGkUL7AfyjB2PDcqfbm7nzZ",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1679.985,
+          "predicted_n": 70,
+          "predicted_per_second": 41.66703869379786,
+          "predicted_per_token_ms": 23.999785714285714,
+          "prompt_ms": 369.949,
+          "prompt_n": 284,
+          "prompt_per_second": 767.673382006709,
+          "prompt_per_token_ms": 1.302637323943662
+        },
+        "usage": {
+          "completion_tokens": 70,
+          "prompt_tokens": 284,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 354
+        }
+      },
+      "request_id": "development-0-00-request-00",
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50857",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 1617668,
+          "start_time_ticks": 186558731
+        },
+        "pid": 1617739,
+        "ppid": 1617668,
+        "process_group_id": 1617739,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789573898,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "session_id": 1617739,
+        "start_time_ticks": 186558887,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "terminal_state": "response"
+    },
+    {
+      "attempted": true,
+      "call_index": 1,
+      "censored": false,
+      "completion_tokens": 70,
+      "decoded_plan": {
+        "assignments": {
+          "a": 1,
+          "b": 1,
+          "c": 1,
+          "d": 1,
+          "e": 0
+        },
+        "request_id": "development-0-00-request-01"
+      },
+      "error": null,
+      "finish_reason": "stop",
+      "latency_s": 2.10034940415062,
+      "max_generated_tokens": 128,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-01\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[1,2,11,14],\"b\":[1,2,4,5],\"c\":[1,3,7,8],\"d\":[1,4,10,11],\"e\":[0,1,13,14]},\"durations\":{\"a\":1,\"b\":1,\"c\":2,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":1,\"request_id\":\"development-0-00-request-01\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":2,\"d\":3,\"e\":1}}",
+      "prompt_sha256": "sha256:b48f0887a7d0cbee9de3d6cdb24f3614650f301dc9bf533a03b3768a78b6358b",
+      "prompt_tokens": 285,
+      "public_request": {
+        "activities": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "allowed_starts": {
+          "a": [
+            1,
+            2,
+            11,
+            14
+          ],
+          "b": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "c": [
+            1,
+            3,
+            7,
+            8
+          ],
+          "d": [
+            1,
+            4,
+            10,
+            11
+          ],
+          "e": [
+            0,
+            1,
+            13,
+            14
+          ]
+        },
+        "durations": {
+          "a": 1,
+          "b": 1,
+          "c": 2,
+          "d": 1,
+          "e": 1
+        },
+        "horizon": 22,
+        "public_revision": 1,
+        "request_id": "development-0-00-request-01",
+        "version_token": "opaque-72c2e5a882de75a126abe41c",
+        "warmup": true,
+        "weights": {
+          "a": 2,
+          "b": 2,
+          "c": 2,
+          "d": 3,
+          "e": 1
+        }
+      },
+      "raw_reply": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-01\"\n}",
+      "raw_reply_sha256": "sha256:74cb31b5c15c8a8f2a980da624acadba674803e8fb0c7feb7a8f46cc5e259dc9",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-01\"\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789573903,
+        "id": "chatcmpl-oENXoF3W8fZxYImmrjc7lq0Hy4p3ZyZT",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1674.918,
+          "predicted_n": 70,
+          "predicted_per_second": 41.79309076623453,
+          "predicted_per_token_ms": 23.9274,
+          "prompt_ms": 320.414,
+          "prompt_n": 285,
+          "prompt_per_second": 889.4742426985089,
+          "prompt_per_token_ms": 1.124259649122807
+        },
+        "usage": {
+          "completion_tokens": 70,
+          "prompt_tokens": 285,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 355
+        }
+      },
+      "request_id": "development-0-00-request-01",
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50857",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 1617668,
+          "start_time_ticks": 186558731
+        },
+        "pid": 1617739,
+        "ppid": 1617668,
+        "process_group_id": 1617739,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789573898,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "session_id": 1617739,
+        "start_time_ticks": 186558887,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "terminal_state": "response"
+    },
+    {
+      "attempted": true,
+      "call_index": 2,
+      "censored": false,
+      "completion_tokens": 70,
+      "decoded_plan": {
+        "assignments": {
+          "a": 0,
+          "b": 2,
+          "c": 2,
+          "d": 0,
+          "e": 1
+        },
+        "request_id": "development-0-00-request-02"
+      },
+      "error": null,
+      "finish_reason": "stop",
+      "latency_s": 2.0992891050409526,
+      "max_generated_tokens": 128,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-02\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,2,5],\"b\":[2,3,4,21],\"c\":[2,4,6,7],\"d\":[0,2,9,10],\"e\":[1,2,12,13]},\"durations\":{\"a\":2,\"b\":1,\"c\":2,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":2,\"request_id\":\"development-0-00-request-02\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":1,\"b\":2,\"c\":3,\"d\":1,\"e\":1}}",
+      "prompt_sha256": "sha256:afb1a1b70ffea5f681931725a9dcb77ee5292723dd372e330d38ae855f10f558",
+      "prompt_tokens": 283,
+      "public_request": {
+        "activities": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "allowed_starts": {
+          "a": [
+            0,
+            1,
+            2,
+            5
+          ],
+          "b": [
+            2,
+            3,
+            4,
+            21
+          ],
+          "c": [
+            2,
+            4,
+            6,
+            7
+          ],
+          "d": [
+            0,
+            2,
+            9,
+            10
+          ],
+          "e": [
+            1,
+            2,
+            12,
+            13
+          ]
+        },
+        "durations": {
+          "a": 2,
+          "b": 1,
+          "c": 2,
+          "d": 1,
+          "e": 1
+        },
+        "horizon": 22,
+        "public_revision": 2,
+        "request_id": "development-0-00-request-02",
+        "version_token": "opaque-72c2e5a882de75a126abe41c",
+        "warmup": true,
+        "weights": {
+          "a": 1,
+          "b": 2,
+          "c": 3,
+          "d": 1,
+          "e": 1
+        }
+      },
+      "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 2,\n    \"c\": 2,\n    \"d\": 0,\n    \"e\": 1\n  },\n  \"request_id\": \"development-0-00-request-02\"\n}",
+      "raw_reply_sha256": "sha256:b0e7a93edc3536197279c325b1e535f1f2ea74c5ace30f9972350030db63a5cf",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 2,\n    \"c\": 2,\n    \"d\": 0,\n    \"e\": 1\n  },\n  \"request_id\": \"development-0-00-request-02\"\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789573905,
+        "id": "chatcmpl-hdzuv2cSqzGOb3emSZRjcxuP4T2CyqE5",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1675.129,
+          "predicted_n": 70,
+          "predicted_per_second": 41.78782648978079,
+          "predicted_per_token_ms": 23.930414285714285,
+          "prompt_ms": 319.01,
+          "prompt_n": 283,
+          "prompt_per_second": 887.1195260336666,
+          "prompt_per_token_ms": 1.127243816254417
+        },
+        "usage": {
+          "completion_tokens": 70,
+          "prompt_tokens": 283,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 353
+        }
+      },
+      "request_id": "development-0-00-request-02",
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50857",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 1617668,
+          "start_time_ticks": 186558731
+        },
+        "pid": 1617739,
+        "ppid": 1617668,
+        "process_group_id": 1617739,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789573898,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "session_id": 1617739,
+        "start_time_ticks": 186558887,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "terminal_state": "response"
+    },
+    {
+      "attempted": true,
+      "call_index": 3,
+      "censored": false,
+      "completion_tokens": 70,
+      "decoded_plan": {
+        "assignments": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 0,
+          "e": 0
+        },
+        "request_id": "development-0-00-request-03"
+      },
+      "error": null,
+      "finish_reason": "stop",
+      "latency_s": 2.1109936139546335,
+      "max_generated_tokens": 128,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"development-0-00-request-03\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,2,3],\"b\":[0,4,5,9],\"c\":[0,1,7,8],\"d\":[0,1,10,11],\"e\":[0,2,13,14]},\"durations\":{\"a\":1,\"b\":1,\"c\":1,\"d\":1,\"e\":1},\"horizon\":22,\"public_revision\":3,\"request_id\":\"development-0-00-request-03\",\"version_token\":\"opaque-72c2e5a882de75a126abe41c\",\"warmup\":true,\"weights\":{\"a\":2,\"b\":2,\"c\":3,\"d\":2,\"e\":2}}",
+      "prompt_sha256": "sha256:606601df7da1d7ecff7397bf0948cc85d0c0e831e8afa57b02e7dffe01b51438",
+      "prompt_tokens": 283,
+      "public_request": {
+        "activities": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "allowed_starts": {
+          "a": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "b": [
+            0,
+            4,
+            5,
+            9
+          ],
+          "c": [
+            0,
+            1,
+            7,
+            8
+          ],
+          "d": [
+            0,
+            1,
+            10,
+            11
+          ],
+          "e": [
+            0,
+            2,
+            13,
+            14
+          ]
+        },
+        "durations": {
+          "a": 1,
+          "b": 1,
+          "c": 1,
+          "d": 1,
+          "e": 1
+        },
+        "horizon": 22,
+        "public_revision": 3,
+        "request_id": "development-0-00-request-03",
+        "version_token": "opaque-72c2e5a882de75a126abe41c",
+        "warmup": true,
+        "weights": {
+          "a": 2,
+          "b": 2,
+          "c": 3,
+          "d": 2,
+          "e": 2
+        }
+      },
+      "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-03\"\n}",
+      "raw_reply_sha256": "sha256:6fa54586e579bd581779e3a6bb77f9a354dc7975dbd2ae34586c3b06d7fb7595",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"development-0-00-request-03\"\n}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789573907,
+        "id": "chatcmpl-WPx5iah5XQwMkDLAx08HG48HDCYpzVVc",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 1686.562,
+          "predicted_n": 70,
+          "predicted_per_second": 41.50455186349509,
+          "predicted_per_token_ms": 24.093742857142857,
+          "prompt_ms": 319.895,
+          "prompt_n": 283,
+          "prompt_per_second": 884.6652807952611,
+          "prompt_per_token_ms": 1.1303710247349823
+        },
+        "usage": {
+          "completion_tokens": 70,
+          "prompt_tokens": 283,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 353
+        }
+      },
+      "request_id": "development-0-00-request-03",
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50857",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 1617668,
+          "start_time_ticks": 186558731
+        },
+        "pid": 1617739,
+        "ppid": 1617668,
+        "process_group_id": 1617739,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789573898,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "session_id": 1617739,
+        "start_time_ticks": 186558887,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "terminal_state": "response"
+    }
+  ],
+  "run_date": "20260916",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "50857",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:875b738280018ef75a6348df9a1cfc0befa9fcb0421d2c854975350d46e99873",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:e70e2b070b44c55ec9b64b7483193799a3249054096e47420412f0b93c883957",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 1617668,
+      "start_time_ticks": 186558731
+    },
+    "pid": 1617739,
+    "ppid": 1617668,
+    "process_group_id": 1617739,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789573898,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 1617739,
+    "start_time_ticks": 186558887,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "sample_size_budget": {
+    "attempted_units": 4,
+    "censored_units": 0,
+    "completed_units": 4,
+    "inference_window_timeout_s": 900.0,
+    "max_generated_tokens_per_unit": 128,
+    "model_load_timeout_s": 600.0,
+    "planned_units": 4,
+    "stopping_rule": "four terminal calls or the fixed inference deadline; no replacement"
+  },
+  "schema": "carnot.exp7347.v645_plan_canary.v1",
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7344_v645_executor_fixture/public/public_manifest.json": "sha256:9dea7a4113c9899f603e541940f6366db34af06e8078786680072e52e1011a78",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7347_v645_plan_canary/raw_call_manifest.json": "sha256:a223889b2ada7c6082f38719dcaebc179a627cb79ff4054b14deccb10f105624",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:d442db4a877751fa040f3f53776ce201a1335e8302a2ae12ce8bcae2a838a347",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7347_v645_plan_canary.py": "sha256:8d87fd551b13ccc528f2d3d0b5ebe6ec892eaf110e945f689f527edbffe5ff3f",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:097178116bac2fcb5deddad80da41467a9ccc4d49749a4c4244afb508664f4c6",
+    "results/experiment_7344_v645_executor_fixture.json": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/experiments/experiment_7347_v645_plan_canary.py": "sha256:d59b104d97c7830af627daea899ed591bff8326220fc6edec8464c680f52323b",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7347_v645_plan_canary.py": "sha256:e8c570e09101657d8d5823799b8bf938ccb8e95e97586b103d8c9e52d0c59d10"
+  },
+  "started_at_utc": "2026-09-16T15:51:27.697851Z",
+  "status": "complete",
+  "usable_plan_count": 4,
+  "validation_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7347_v645_plan_canary",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7347_v645_plan_canary"
+      ],
+      "duration_s": 0.5079890550114214,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/00_worktree_imports.log",
+      "log_sha256": "sha256:cde5d9c7422580615b3171fde14456216a79e3c875d6da10b134579a6d2844c5",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7347_v645_plan_canary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7347_v645_plan_canary.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7347_v645_plan_canary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7347_v645_plan_canary.py"
+      },
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7347-v645-scoped/focused tests/python/test_experiment_7347_v645_plan_canary.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7347-v645-scoped/focused",
+        "tests/python/test_experiment_7347_v645_plan_canary.py",
+        "-q"
+      ],
+      "duration_s": 2.5114816159475595,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/01_focused_pytest.log",
+      "log_sha256": "sha256:810348f571f43ec0ebb8a956e13a38e43f125a14786b1fa48bd96e1717eaee6a",
+      "name": "focused_pytest",
+      "output_tail": "......                                                                   [100%]\n6 passed in 0.86s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/carnot-exp7347-v645-coverage/.coverage '--include=*/experiment_7347_v645_plan_canary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7347-v645-scoped/coverage tests/python/test_experiment_7347_v645_plan_canary.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7347-v645-coverage/.coverage",
+        "--include=*/experiment_7347_v645_plan_canary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7347-v645-scoped/coverage",
+        "tests/python/test_experiment_7347_v645_plan_canary.py",
+        "-q"
+      ],
+      "duration_s": 4.268150484887883,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/02_changed_module_coverage.log",
+      "log_sha256": "sha256:13dfddd98a0bcc8048bc0b49e67b05f6b6c0909c61d5954e2e215e8ad42931b7",
+      "name": "changed_module_coverage",
+      "output_tail": "......                                                                   [100%]\n6 passed in 1.62s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/carnot-exp7347-v645-coverage/.coverage '--include=*/experiment_7347_v645_plan_canary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/carnot-exp7347-v645-coverage/.coverage",
+        "--include=*/experiment_7347_v645_plan_canary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "duration_s": 0.08107042801566422,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:ed4fe5d5b7b7fb6feaddf790a50b2c7efd4d39acbf7bef92bc5572eec2d7142b",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------\npython/carnot/experiment_7347_v645_plan_canary.py     155      0   100%\n---------------------------------------------------------------------------------\nTOTAL                                                 155      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7347_v645_plan_canary.py scripts/experiments/experiment_7347_v645_plan_canary.py tests/python/test_experiment_7347_v645_plan_canary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7347_v645_plan_canary.py",
+        "scripts/experiments/experiment_7347_v645_plan_canary.py",
+        "tests/python/test_experiment_7347_v645_plan_canary.py"
+      ],
+      "duration_s": 0.011269300943240523,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7347_v645_plan_canary.py scripts/experiments/experiment_7347_v645_plan_canary.py tests/python/test_experiment_7347_v645_plan_canary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7347_v645_plan_canary.py",
+        "scripts/experiments/experiment_7347_v645_plan_canary.py",
+        "tests/python/test_experiment_7347_v645_plan_canary.py"
+      ],
+      "duration_s": 0.011572630144655704,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7347_v645_plan_canary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7347_v645_plan_canary.py"
+      ],
+      "duration_s": 0.09511274402029812,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/06_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7347_v645_plan_canary.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7347_v645_plan_canary.py"
+      ],
+      "duration_s": 0.025200478034093976,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7347_v645_plan_canary/validation/scoped/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "timed_out": false
+    }
+  ],
+  "value_ready_score": 0,
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}
