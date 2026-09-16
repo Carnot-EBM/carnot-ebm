@@ -327,21 +327,23 @@ def _verified_execute_hypothesis(
     """Drop-in replacement for sandbox.execute_hypothesis: same sandbox, same
     isolation, but the returned metrics have been through `_recompute_metrics`
     before the evaluator ever sees them."""
-    # A permissive caller can omit run_round's ``carnot`` import block (the
-    # adversarial regression test deliberately does), allowing hypothesis code
-    # to mutate these already-imported module objects.  The energy recompute is
-    # safe in its fresh subprocess regardless, but restore the parent process's
-    # trusted helpers as well so the mutation cannot poison later baselines or
-    # tests in this interpreter.  Clearing the original split function's cache
-    # also discards any held-out row dictionaries mutated in place.
+    # The production round blocks ``carnot`` imports, but direct callers can
+    # deliberately use a permissive config to test the fresh-process trust
+    # boundary. Such a hypothesis still runs in this interpreter and can
+    # mutate imported module state. Restore every trusted object reachable by
+    # the scoring path, and clear both corpus caches so mutations to cached row
+    # dictionaries cannot poison later baseline measurements or tests.
     original_binary_auroc = _verifier_auroc_module._binary_auroc
     original_split_corpus = _verifier_auroc_module._split_corpus
+    original_load_corpus_rows = _verifier_auroc_module._load_corpus_rows
     original_toy_energy_functions = dict(BENCHMARK_ENERGY_FUNCTIONS)
     try:
         result = execute_hypothesis(hypothesis_code, benchmark_data, config, docker_config)
     finally:
         _verifier_auroc_module._binary_auroc = original_binary_auroc
         _verifier_auroc_module._split_corpus = original_split_corpus
+        _verifier_auroc_module._load_corpus_rows = original_load_corpus_rows
+        original_load_corpus_rows.cache_clear()
         original_split_corpus.cache_clear()
         BENCHMARK_ENERGY_FUNCTIONS.clear()
         BENCHMARK_ENERGY_FUNCTIONS.update(original_toy_energy_functions)

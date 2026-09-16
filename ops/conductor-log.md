@@ -18037,3 +18037,7 @@ code |
 | 2026-09-16 04:26 UTC | Prototype a result-resume contract in the live ARC | OK | 203 passed, 1 warning in 15.43s |
 | 2026-09-16 04:29 UTC | Measure adapter-withheld ARC transfer with consume | GATE_BLOCK | gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7336-arc-resume.arc_resume_ready_score (actual=0 == expected=1) |
 | 2026-09-16 04:31 UTC | Audit live feedback delivery and later action caus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7337-arc-transfer, exp7337-arc-transfer) |
+| 2026-09-16 05:20 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 4 reverted file(s); restored 4 |
+| 2026-09-16 05:36 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 2 reverted file(s); restored 2 |
+| 2026-09-16 05:38 UTC | Prototype in-process acquired-constraint evaluatio | FAIL | Post-tests failed: E comparison failed |
+| 2026-09-16 05:40 UTC | Prototype in-process acquired-constraint evaluatio | OK | Deliverable already exists in repo |

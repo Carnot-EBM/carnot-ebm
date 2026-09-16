@@ -1,0 +1,137 @@
+    Checking carnot-core v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-core)
+    Checking carnot-ising v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-ising)
+    Checking carnot-kan v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-kan)
+    Checking carnot-webgpu-gateway v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-webgpu-gateway)
+    Checking carnot-boltzmann v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-boltzmann)
+    Checking carnot-gibbs v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-gibbs)
+    Checking carnot-samplers v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers)
+    Checking carnot-constraints v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-constraints)
+    Checking carnot-python v0.1.0 (/home/ianblenke/github.com/ianblenke/carnot/crates/carnot-python)
+error: unused import: `ndarray::Array2`
+ --> crates/carnot-python/src/s2kan.rs:3:5
+  |
+3 | use ndarray::Array2;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `-D unused-imports` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: unused import: `std::sync::Arc`
+ --> crates/carnot-python/src/s2kan.rs:6:5
+  |
+6 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+error: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`
+  --> crates/carnot-python/src/s2kan.rs:40:16
+   |
+40 |         result.into_pyarray_bound(py)
+   |                ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `-D deprecated` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(deprecated)]`
+
+error: this function has too many arguments (8/7)
+   --> crates/carnot-python/src/adaptive_state.rs:162:5
+    |
+162 | /     fn propose<'py>(
+163 | |         &mut self,
+164 | |         py: Python<'py>,
+165 | |         event_id: String,
+...   |
+170 | |         expected_prior_state_hash: String,
+171 | |     ) -> PyResult<Bound<'py, PyDict>> {
+    | |_____________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+    = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: this function has too many arguments (15/7)
+   --> crates/carnot-python/src/adaptive_state.rs:379:1
+    |
+379 | / fn certified_strategy_schema_record<'py>(
+380 | |     py: Python<'py>,
+381 | |     schema_version_u16: u16,
+382 | |     strategy_identity_u64: u64,
+...   |
+394 | |     flags_u16: u16,
+395 | | ) -> PyResult<Bound<'py, PyDict>> {
+    | |_________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+error: this function has too many arguments (8/7)
+   --> crates/carnot-python/src/mode_jump.rs:171:5
+    |
+171 | /     fn new(
+172 | |         schema: String,
+173 | |         shape: Vec<usize>,
+174 | |         cardinalities: Vec<usize>,
+...   |
+179 | |         state_space_size: usize,
+180 | |     ) -> PyResult<Self> {
+    | |_______________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+error: this function has too many arguments (8/7)
+   --> crates/carnot-python/src/one_axis_tempering.rs:241:5
+    |
+241 | /     fn run_sweeps<'py>(
+242 | |         &self,
+243 | |         py: Python<'py>,
+244 | |         states: Vec<Vec<i8>>,
+...   |
+249 | |         n_samples: usize,
+250 | |     ) -> PyResult<Bound<'py, PyDict>> {
+    | |_____________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+error: this function has too many arguments (8/7)
+   --> crates/carnot-python/src/one_axis_tempering.rs:341:5
+    |
+341 | /     fn run_sweeps_compact<'py>(
+342 | |         &self,
+343 | |         py: Python<'py>,
+344 | |         states: Vec<Vec<i8>>,
+...   |
+349 | |         n_samples: usize,
+350 | |     ) -> PyResult<Bound<'py, PyDict>> {
+    | |_____________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+error: the loop variable `value` is used to index `votes`
+  --> crates/carnot-python/src/packed_belief.rs:88:22
+   |
+88 |         for value in 0..DOMAIN_SIZE {
+   |                      ^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#needless_range_loop
+   = note: `-D clippy::needless-range-loop` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`
+help: consider using an iterator and enumerate()
+   |
+88 -         for value in 0..DOMAIN_SIZE {
+88 +         for (value, <item>) in votes.iter_mut().enumerate().take(DOMAIN_SIZE) {
+   |
+
+error: this function has too many arguments (8/7)
+   --> crates/carnot-python/src/safety_net.rs:545:1
+    |
+545 | / fn fallback_decision(
+546 | |     request_hash: &str,
+547 | |     original_order: &[String],
+548 | |     reason: &str,
+...   |
+553 | |     uncertainty_bucket: &str,
+554 | | ) -> SafetyNetDecision {
+    | |______________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#too_many_arguments
+
+error: could not compile `carnot-python` (lib) due to 10 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `carnot-python` (lib test) due to 10 previous errors

@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-11
+**Last Updated:** 2026-09-16
 
 **Operational Note:** 2026-09-11 REQ-VERIFY-7223 maps the authenticated,
 calibration-only Qwen span canary in
@@ -2834,3 +2834,23 @@ through the real interpreter-bound `RustPackedBeliefController`. The cold
 validator now rejects non-mapping cost rows as malformed evidence instead of
 raising an uncaught attribute error. The conductor-equivalent selection passes
 104 tests, and the Exp7243 module has 754/754 scoped statement coverage.
+
+## Exp7339 in-process schedule binding and test-state repair — 2026-09-16
+
+REQ-VERIFY-7339, REQ-PYBIND-7339, and their SCENARIO-* requirements map to
+`crates/carnot-python/src/schedule.rs`,
+`python/carnot/experiment_7339_v644_native_binding.py`, its executable wrapper,
+and `tests/python/test_experiment_7339_v644_native_binding.py`. The actual
+interpreter-specific extension replayed 3,308 parity cases plus two mutation
+cases without a mismatch; E2E-003 crossed the imported PyO3 boundary. The fixed
+cost panel contains all 270 rows (three arms, three batch sizes, thirty paired
+blocks), while making no speed or learning-value claim. The focused Python
+suite passes 9 tests with 372/372 statements covered, and affected Rust tests,
+formatting, and clippy pass.
+
+REQ-AUTO-025 / SCENARIO-AUTO-025-E also maps to the caller-state restoration
+in `scripts/autoresearch_conductor_round.py`. Permissive direct sandbox calls
+now restore both verifier corpus-cache functions, clear both original caches,
+and restore the toy-energy registry after untrusted code returns. The two
+baseline-cache migration regressions remain present. The complete affected
+autoresearch suite passes 115 tests.

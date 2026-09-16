@@ -7854,3 +7854,90 @@ And blocked or disqualified output sets both scores to zero before atomic public
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7326 and SCENARIO-VERIFY-7326-* | `python/carnot/experiment_7326_v643_constraint_kernel.py` reuses the scoped validation runner, and `crates/carnot-constraints/src/schedule.rs` exposes the integer kernel through a task-owned example; no binding or storage change. | `tests/python/test_experiment_7326_v643_constraint_kernel.py` covers every new Python statement, while `crates/carnot-constraints/tests/experiment_7326_constraint_kernel.rs` and the serialized round trip cover Rust boundaries and parity. |
+
+### REQ-VERIFY-7339: Native Schedule Evaluation SHALL Preserve Exact Semantics
+
+Exp7339 SHALL authenticate the exact Exp7325 learning audit and Exp7326 kernel
+artifact before measurement. Both inputs SHALL be terminal and available at
+their recorded hashes. Exp7325 SHALL remain promoted and eligible. Exp7326
+SHALL retain 3,304 exact parity rows and zero mismatches. A missing,
+quarantined, blocked, disqualified, partial, or changed input SHALL produce a
+row-free terminal blocked result. The result SHALL name the failed field and
+its expected and observed values.
+
+The native path SHALL reuse `carnot-constraints` schedule evaluation. It SHALL
+not add a second energy implementation. The path SHALL preserve validity,
+feasibility, errors, checked overflow, total energy, and ordered term energies.
+It SHALL preserve the executor-version check. It SHALL never convert invalid
+input into a zero-energy certificate.
+
+The parity panel SHALL replay the 2,304 captured and 1,000 seeded Exp7326
+fixtures through the imported extension. It SHALL also include fixed mutation
+and overflow cases. Constraint compilation SHALL copy its inputs. Later caller
+mutation SHALL not change compiled behavior. Returned Python objects SHALL not
+share mutable state with later results. The panel SHALL require zero
+differences.
+
+The fixed cost protocol SHALL use batch sizes 1, 32, and 256. It SHALL run 30
+randomized paired blocks for each size. Each timed native call SHALL include
+Python-object conversion, request and result allocation, batch marshalling,
+evaluation, and result conversion. JSON and subprocess work SHALL stay outside
+the native timed boundary. Import and immutable-constraint compilation SHALL
+be charged separately. Current Python in-process, Rust in-process, and the
+historical-service mechanism SHALL receive equivalent current requests. The
+study SHALL make no speed or learning-value claim.
+
+The terminal artifact SHALL record the interpreter, ABI, loaded extension,
+binary hash, Rust source identity, build command, and isolated build target.
+`native_binding_ready_score` SHALL equal one only after the actual imported
+extension completes exact parity, mutation and overflow checks, E2E-003, the
+fixed cost protocol, affected validation, and terminal validators. A build by
+itself SHALL never set readiness. Exp7339 SHALL not alter production defaults,
+publication surfaces, deployment, historical artifacts, or board state.
+
+Exp7339 SHALL use date `20260916`. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, and zero load and generation counts. It SHALL declare
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` for its
+execution venue. All durations SHALL use measured monotonic time.
+
+#### SCENARIO-VERIFY-7339-PREFLIGHT: Historical Inputs Fail Closed
+
+Given the retained Exp7325 and Exp7326 artifacts and their named raw evidence,
+When identity, status, class, quarantine, scores, row counts, and hashes are checked,
+Then only exact eligible inputs can start native measurement,
+And the first failed check produces a row-free blocked result.
+
+**Spec traces:** REQ-VERIFY-7339
+
+#### SCENARIO-VERIFY-7339-PARITY: The Imported Extension Replays Every Fixture
+
+Given all 3,304 authenticated fixtures and the fixed adverse cases,
+When the compiled native evaluator processes in-process Python objects,
+Then every decision, error, total, and ordered term energy matches Python,
+And the mismatch count is zero.
+
+**Spec traces:** REQ-VERIFY-7339
+
+#### SCENARIO-VERIFY-7339-PROTOCOL: Full Boundaries Use Fixed Paired Blocks
+
+Given the protocol sealed before timing,
+When sizes 1, 32, and 256 each run in 30 randomized paired blocks,
+Then each arm records complete costs, failures, abstentions, and censoring,
+And setup costs remain separate from timed per-call boundary costs.
+
+**Spec traces:** REQ-VERIFY-7339
+
+#### SCENARIO-VERIFY-7339-TERMINAL: Readiness Requires Runtime Evidence
+
+Given a built and imported interpreter-specific extension,
+When parity, adverse cases, E2E-003, cost rows, scoped checks, Rust checks, and terminal validators finish,
+Then readiness equals one only if every required check passes,
+And any blocked or disqualified result keeps readiness at zero.
+
+**Spec traces:** REQ-VERIFY-7339
+
+## Implementation Status (REQ-VERIFY-7339)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7339 and SCENARIO-VERIFY-7339-* | Implemented in the immutable schedule PyO3 binding and Exp7339 runner. | `tests/python/test_experiment_7339_v644_native_binding.py`, the binding's focused Rust test, the 3,310-row runtime replay, and E2E-003 verify the behavior. |

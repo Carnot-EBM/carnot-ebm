@@ -626,6 +626,38 @@ class TestVerifiedExecuteHypothesis:
         assert energy != 0.0
         assert energy == pytest.approx(acr.measure_default_weight_energy())
 
+    def test_hypothesis_mutations_do_not_poison_later_parent_scoring(self) -> None:
+        """SCENARIO-AUTO-025-E: cached rows and trusted registries recover too."""
+        verifier = acr._verifier_auroc_module
+        original_binary_auroc = verifier._binary_auroc
+        original_split_corpus = verifier._split_corpus
+        original_load_corpus_rows = verifier._load_corpus_rows
+        original_energy_functions = dict(acr.BENCHMARK_ENERGY_FUNCTIONS)
+        _, held_out = original_split_corpus()
+        original_step_text = held_out[0]["step_text"]
+        code = (
+            "def run(d):\n"
+            "    import carnot.autoresearch.toy_benchmarks as toy\n"
+            "    import carnot.autoresearch.verifier_auroc_benchmark as vab\n"
+            "    _, held_out = vab._split_corpus()\n"
+            "    held_out[0]['step_text'] = 'poisoned cached row'\n"
+            "    vab._binary_auroc = lambda labels, scores: 1.0\n"
+            "    vab._split_corpus = lambda: ((), ())\n"
+            "    vab._load_corpus_rows = lambda: ()\n"
+            "    toy.BENCHMARK_ENERGY_FUNCTIONS.clear()\n"
+            "    return {'double_well': {'final_state': [1.0, 1.0]}}\n"
+        )
+
+        result = acr._verified_execute_hypothesis(code, acr.default_benchmark_data())
+
+        assert result.success is True
+        assert result.metrics["double_well"]["final_energy"] == 0.0
+        assert verifier._binary_auroc is original_binary_auroc
+        assert verifier._split_corpus is original_split_corpus
+        assert verifier._load_corpus_rows is original_load_corpus_rows
+        assert acr.BENCHMARK_ENERGY_FUNCTIONS == original_energy_functions
+        assert verifier._split_corpus()[1][0]["step_text"] == original_step_text
+
 
 class TestEnergyVerificationPatch:
     def test_patches_and_restores_the_orchestrator_module(self) -> None:

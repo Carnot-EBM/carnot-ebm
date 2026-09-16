@@ -20,6 +20,7 @@ mod packed_belief;
 mod pipeline;
 mod s2kan;
 mod safety_net;
+mod schedule;
 mod spectral_k_block;
 mod verification_learning;
 
@@ -483,6 +484,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Compact Safety-Net router ABI
     safety_net::register_safety_net_module(m)?;
+
+    // Immutable acquired schedule constraints
+    schedule::register_schedule_module(m)?;
 
     Ok(())
 }

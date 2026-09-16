@@ -21,6 +21,37 @@ class TestBucketOf:
 
 
 class TestSplitCorpus:
+    def test_missing_corpus_returns_empty_rows(self, monkeypatch, tmp_path) -> None:
+        """REQ-AUTO-025: an unreadable corpus is unscoreable, not fatal."""
+        monkeypatch.setattr(vab, "repo_path", lambda *_parts: tmp_path / "missing.json")
+        vab._load_corpus_rows.cache_clear()
+        try:
+            assert vab._load_corpus_rows() == ()
+        finally:
+            vab._load_corpus_rows.cache_clear()
+
+    def test_non_list_corpus_returns_empty_rows(self, monkeypatch, tmp_path) -> None:
+        """REQ-AUTO-025: the corpus root must be a JSON list."""
+        corpus_path = tmp_path / "not-a-list.json"
+        corpus_path.write_text('{"row": "not a list"}', encoding="utf-8")
+        monkeypatch.setattr(vab, "repo_path", lambda *_parts: corpus_path)
+        vab._load_corpus_rows.cache_clear()
+        try:
+            assert vab._load_corpus_rows() == ()
+        finally:
+            vab._load_corpus_rows.cache_clear()
+
+    def test_corrupt_json_corpus_returns_empty_rows(self, monkeypatch, tmp_path) -> None:
+        """REQ-AUTO-025: corrupt JSON is unscoreable, not fatal."""
+        corpus_path = tmp_path / "corrupt.json"
+        corpus_path.write_text("{not-json", encoding="utf-8")
+        monkeypatch.setattr(vab, "repo_path", lambda *_parts: corpus_path)
+        vab._load_corpus_rows.cache_clear()
+        try:
+            assert vab._load_corpus_rows() == ()
+        finally:
+            vab._load_corpus_rows.cache_clear()
+
     def test_train_and_held_out_are_disjoint(self) -> None:
         train, held_out = vab._split_corpus()
         train_qids = {r.get("question_id") for r in train}
@@ -169,6 +200,45 @@ class TestRecomputeVerifierAurocEnergy:
         non-constant scorer -- it must be narrowly scoped to the tied case."""
         assert vab.recompute_verifier_auroc_energy([0.5, 0.5]) is not None
         assert vab.recompute_verifier_auroc_energy([-1.0, 1.0]) is not None
+
+    def test_empty_held_out_split_returns_none(self, monkeypatch) -> None:
+        """REQ-AUTO-025: an empty held-out split cannot produce an AUROC."""
+        monkeypatch.setattr(vab, "_split_corpus", lambda: ((), ()))
+        assert vab.recompute_verifier_auroc_energy([0.5, 0.5]) is None
+
+    def test_probe_scoring_exception_returns_none(self, monkeypatch) -> None:
+        """REQ-AUTO-025: one unscoreable row must not crash the round."""
+
+        class RaisingProbe:
+            def __init__(self, **_weights) -> None:
+                pass
+
+            def score(self, _step_text: str, _context: str) -> float:
+                raise RuntimeError("unscoreable row")
+
+        held_out = ({"label": "incorrect", "step_text": "bad row"},)
+        monkeypatch.setattr(vab, "_split_corpus", lambda: ((), held_out))
+        monkeypatch.setattr(vab, "PCIBProbe", RaisingProbe)
+        assert vab.recompute_verifier_auroc_energy([0.5, 0.5]) is None
+
+    def test_undefined_auroc_returns_none(self, monkeypatch) -> None:
+        """REQ-AUTO-025: an undefined held-out AUROC is unscoreable."""
+
+        class VaryingProbe:
+            def __init__(self, **_weights) -> None:
+                pass
+
+            def score(self, step_text: str, _context: str) -> float:
+                return float(step_text)
+
+        held_out = (
+            {"label": "incorrect", "step_text": "1"},
+            {"label": "correct", "step_text": "2"},
+        )
+        monkeypatch.setattr(vab, "_split_corpus", lambda: ((), held_out))
+        monkeypatch.setattr(vab, "PCIBProbe", VaryingProbe)
+        monkeypatch.setattr(vab, "_binary_auroc", lambda _labels, _scores: None)
+        assert vab.recompute_verifier_auroc_energy([0.5, 0.5]) is None
 
 
 class TestMeasureDefaultWeightEnergy:

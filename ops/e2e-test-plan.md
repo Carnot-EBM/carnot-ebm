@@ -33,6 +33,11 @@ Same as E2E-001 but using the Python/JAX implementation. Cross-validate that Rus
 3. Compare with pure-Python JAX computation
 4. Verify zero-copy array transfer for contiguous arrays
 
+**Operational Note (2026-09-16, Exp7339):** E2E-003 also crossed the actual
+task-owned CPython 3.12 PyO3 extension for immutable schedule constraints. The
+round trip preserved ordered term energies and exact errors with zero parity
+mismatches; source-only and build-only checks did not satisfy the gate.
+
 ### E2E-004: Serialization Cross-Language
 
 **Objective:** Verify that a model saved from Rust can be loaded in Python and vice versa.

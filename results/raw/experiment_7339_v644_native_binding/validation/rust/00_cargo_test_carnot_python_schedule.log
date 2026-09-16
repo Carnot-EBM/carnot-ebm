@@ -1,0 +1,31 @@
+warning: unused import: `ndarray::Array2`
+ --> crates/carnot-python/src/s2kan.rs:3:5
+  |
+3 | use ndarray::Array2;
+  |     ^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `std::sync::Arc`
+ --> crates/carnot-python/src/s2kan.rs:6:5
+  |
+6 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`
+  --> crates/carnot-python/src/s2kan.rs:40:16
+   |
+40 |         result.into_pyarray_bound(py)
+   |                ^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: `carnot-python` (lib test) generated 3 warnings (run `cargo fix --lib -p carnot-python --tests` to apply 2 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (results/raw/experiment_7339_v644_native_binding/target/debug/deps/carnot_python-773817540a46dc74)
+
+running 1 test
+test schedule::tests::invalid_boundary_result_never_looks_feasible ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-11
+**Last Updated:** 2026-09-16
 
 ## 2026-09-11 — Exp7223 canary evidence regression repaired
 
@@ -16537,3 +16537,31 @@ see `ops/known-issues.md` for the candidate fixes.
 
 Next: watch the first real production `verifier_auroc` fire under the
 hardened code for a genuine accepted improvement.
+
+## 2026-09-16: Exp7339 native schedule binding complete; comparison regression repaired
+
+Working: Exp7339 exposes immutable acquired schedule constraints through the
+actual interpreter-specific `carnot._rust.RustCompiledScheduleEvaluator` and
+reuses the existing Rust batch evaluator. The imported extension completed
+3,310 parity/mutation rows with zero mismatches and the sealed 270-row cost
+protocol without a Python fallback. E2E-003, terminal validators, affected
+Rust checks, and the 9-test Python scope pass; the experiment module retains
+372/372 statement coverage. The result is honestly circular-positive under
+shared evaluator authority and makes no speed or learning-value claim.
+
+The pre-test `comparison failed` regression was caller contamination, not a
+native-binding mismatch: a permissive autoresearch hypothesis replaced the
+parent process's AUROC helper, so the clean subprocess result was compared to
+the poisoned in-process expectation. The wrapper now restores the trusted
+helpers and toy registry and clears both corpus caches in `finally`. The two
+previously erased baseline-migration tests are present again, an additional
+cached-row/registry poisoning regression is covered, and all 115 affected
+autoresearch tests pass. No skip, test weakening, source reversion, or
+`scripts/research_conductor.py` edit was used.
+
+Repository-wide validation remains separately blocked during collection by
+the pre-existing missing model-registry key
+`unsloth/Qwen3.6-35B-A3B-GGUF` in Exp5500/5512 dependents. Workspace-wide
+`cargo fmt --all -- --check` also retains unrelated formatting drift in
+`carnot-core`, `carnot-kan`, and `carnot-samplers`; affected-crate formatting
+and clippy pass.
