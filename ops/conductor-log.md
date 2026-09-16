@@ -18054,3 +18054,4 @@ code |
 | 2026-09-16 14:11 UTC | Qualify the live result-resume path after temporar | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: [list[str] | N |
 | 2026-09-16 14:25 UTC | Qualify the live result-resume path after temporar | OK | 87 passed, 1 warning in 12.76s |
 | 2026-09-16 15:30 UTC | Wire structural additions into the opt-in verifica | OK | 98 passed, 1 warning in 7.75s |
+| 2026-09-16 15:56 UTC | Qualify bounded Qwen3.8 plan transport and owned r | OK | 87 passed, 1 warning in 7.86s |
