@@ -18041,3 +18041,4 @@ code |
 | 2026-09-16 05:36 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 2 reverted file(s); restored 2 |
 | 2026-09-16 05:38 UTC | Prototype in-process acquired-constraint evaluatio | FAIL | Post-tests failed: E comparison failed |
 | 2026-09-16 05:40 UTC | Prototype in-process acquired-constraint evaluatio | OK | Deliverable already exists in repo |
+| 2026-09-16 05:42 UTC | Measure complete in-process constraint cost and pa | SKIP | Pre-tests failing, self-heal failed: 1 failed, 187 passed, 1 warning in 37.06s |
