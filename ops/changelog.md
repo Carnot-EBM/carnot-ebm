@@ -20088,3 +20088,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-17: Attack proof authority and seal prospective formula streams (⚠️ Research Finding) — honest_verdict=complete_null_proof_boundary_ready_learning_value_not_measured; results/experiment_7371_v647_proof_boundary.json
 - 2026-09-17: Qualify bounded Qwen3.8 assignment proposals (⚠️ Research Finding) — honest_verdict=complete_disqualified_internal_artifact_validation_failed; results/experiment_7372_v647_qwen_canary.json
 - 2026-09-17: Collect new adapter-withheld ARC supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7376_v647_arc_outcomes.json
+- 2026-09-17: Compile original-clause Boltzmann laws with entailment controls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_exact_source_law_fixture_ready; results/experiment_7377_v647_ising_law.json
