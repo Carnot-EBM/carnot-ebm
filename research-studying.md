@@ -5845,3 +5845,23 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Scope boundary: this map adds no research branch or runtime dependency. It
   is advisory and does not authorize a science consumer.
 <!-- EXP7357-V646-SOURCE-INGESTION-20260917-END -->
+
+<!-- EXP7369-V647-SOURCE-INGESTION-20260917-START -->
+## 2026-09-17 Exp7369 V647 source-to-method ingestion — INGESTED
+
+| Method family | Primary source | Adopted control or defer reason |
+|---|---|---|
+| Parameterized 2-SAT | [Parameterized logical problems, arXiv:2602.12665](https://arxiv.org/abs/2602.12665) | Use contradiction cycles, free variables, backbones, late bridges, renaming, and duplication as controlled formula families. Keep version splits and a persistent exact-solver baseline. |
+| Semantic realizability | [ChopChop, arXiv:2509.00360](https://arxiv.org/html/2509.00360v1) | Reject a partial assignment only with a finite contradiction path. This is an adaptation. It is not token-level constrained decoding. |
+| Verifier authority | [No Free Checker, arXiv:2609.09250](https://arxiv.org/abs/2609.09250) and [T-Oracle/FastCA, arXiv:2609.12267](https://arxiv.org/html/2609.12267v1) | Record learner, checker, and evaluator information separately. Admit a derived implication only against exact current source clauses. A learned oracle is never truth. |
+| KAN deferral | [KAN-CL, arXiv:2605.12306](https://arxiv.org/abs/2605.12306) | Defer a KAN head until there is a non-oracle prediction target and a useful exact baseline. Vision retention does not certify logical consequences. |
+| EBT deferral | [EBT, arXiv:2507.02092](https://arxiv.org/abs/2507.02092) and [ARM–EBM, arXiv:2512.15605v4](https://arxiv.org/abs/2512.15605v4) | Keep both as architecture context. Compatibility energy and function-space equivalence do not certify source semantics. No foundation-model training branch is added. |
+| Ising and hardware cost | [FPGA/Ising co-design, arXiv:2602.15985](https://arxiv.org/abs/2602.15985) | Preserve the source Boltzmann law and include construction, updates, transfers, and amortization in future placement accounting. External hardware results are not local Carnot measurements. |
+
+- Access boundary: the planning scan's two Semantic Scholar citation requests
+  returned HTTP 429. The experiment records its later bounded recheck as a
+  separate observation. A 429 does not imply a citation count or an absent
+  citation.
+- Scope boundary: this advisory map does not change the twelve-task V647
+  roster. It adds no runtime dependency and makes no local science claim.
+<!-- EXP7369-V647-SOURCE-INGESTION-20260917-END -->

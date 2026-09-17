@@ -72478,3 +72478,97 @@ The terminal JSON SHALL be written atomically.
 **When** independent replay and both strict readers inspect the candidate
 **Then** changed paths, hashes, rows, classes, gates, retirements, or checksums fail
 **And** only the resulting terminal document is written atomically.
+
+## V647 advisory source and exact-contract receipt — 2026-09-17
+
+**Status:** Planned. This receipt checks planning authorities and creates no science result.
+
+### REQ-REPORT-7369: Bind the exact V647 contract and its dated source delta
+
+Exp7369 SHALL select only a roadmap whose milestone is `2026.09.647`. It SHALL
+prefer `research-roadmap-next.yaml` when that staged file has the exact
+milestone. Otherwise, it SHALL use the active `research-roadmap.yaml` only when
+that file has the exact milestone. It SHALL parse the YAML and the single active
+Exact Task Contract table in the V647 design independently. It SHALL compare all
+twelve rows in order, from `exp7369-contract` through `exp7380-capstone`, across
+ID, title, deliverable, phase, substrate class, and every structured gate.
+
+The workflow SHALL run the existing roadmap schema, prior-failure, exclusion,
+and gate audits on the selected YAML. It SHALL also retain the existing prompt,
+ARC-generalization, and overdue-priority checks in the named V647 plan. It SHALL
+prove that IDs 7369 through 7380 are fresh. Private mutations SHALL delete and
+reorder a task; change milestone, title, path, phase, and substrate; misspell a
+gate field; and remove `retire_if_same_verdict`. Each mutation SHALL fail its
+applicable contract, schema, gate, or prior-failure check.
+
+Exp7369 SHALL ingest the dated V647 research delta into
+`research-studying.md`. Its source-to-method rows SHALL cover parameterized
+2-SAT, semantic realizability, verifier authority, KAN and EBT deferrals, and
+Ising or hardware cost. It SHALL make one bounded sequential access attempt per
+declared primary link. It SHALL record HTTP 429 and all other access failures as
+source outcomes. It SHALL not infer missing citations, add a runtime dependency,
+change the frozen task roster, or create a local science claim.
+
+The validation plan SHALL derive required names from the actual Exp7358 scoped
+plan plus declared roadmap and terminal checks. It SHALL not add
+`full_python_suite`. The workflow SHALL validate this plan before it starts any
+child process. It SHALL execute the affected test, changed module, and thin
+entrypoint through Exp7303. The checks SHALL include worktree imports, focused
+pytest with no workers or inherited coverage, separate 100 percent changed-
+module coverage, scoped Ruff check and format, changed-module mypy, and exact-
+test spec coverage. Repository-wide observations SHALL remain separate health
+records. No numbered E2E applies; the declared entrypoint and a cold artifact
+replay are the capability-level E2E checks.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+model invocation counts, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model inputs SHALL remain labeled and hash-bound. It SHALL record real monotonic
+duration, UTC boundaries, phase spans, source hashes, contract rows, mutation
+rows, source-method rows, sample budgets, exact gate results, validation
+receipts, and repository health. It SHALL run an independent cold reducer,
+`scripts/adversarial_verify.py`, and strict verdict-row consistency before the
+atomic terminal write.
+
+`contract_complete_score` SHALL equal one only when the twelve-row contract is
+exact and every applicable required plan check passes. This score is advisory.
+`science_value_score` and `promotion_score` SHALL remain zero. Missing or
+ineligible required input SHALL use `blocked`; a contract or affected-check
+defect SHALL use `disqualified`; only unfinished retryable Exp7369-owned work
+MAY use `partial`. Every blocked result SHALL name the upstream, failed check,
+exact field, expected value, and observed value.
+
+#### SCENARIO-REPORT-7369-CONTRACT: Both authorities preserve twelve exact rows
+
+**Given** the exact V647 YAML and Markdown authorities
+**When** Exp7369 parses and compares them independently
+**Then** twelve ordered IDs, titles, paths, phases, substrates, and gate lists match
+**And** no task in the frozen roster is added, removed, or silently substituted.
+
+#### SCENARIO-REPORT-7369-MUTATIONS: Contract defects fail their owning checks
+
+**Given** private copies of an exact V647 roadmap
+**When** each required task, field, gate, substrate, and retirement mutation is applied
+**Then** the named contract, schema, gate, or prior-failure check rejects it
+**And** a rejected mutation cannot create a science result.
+
+#### SCENARIO-REPORT-7369-SOURCES: Access outcomes remain distinct from method choices
+
+**Given** the dated V647 primary links and six bounded method families
+**When** Exp7369 performs its sequential source refresh
+**Then** every row keeps its URL, date, access outcome, control, or defer reason
+**And** HTTP 429 or another access failure creates no inferred citation or roster change.
+
+#### SCENARIO-REPORT-7369-VALIDATION: The Exp7358 plan stays exact and scoped
+
+**Given** the Exp7358 named plan and the Exp7303 command builder
+**When** Exp7369 validates and executes its affected command set
+**Then** every derived required check runs exactly once with explicit file scope
+**And** no unexecuted `full_python_suite` name appears in the required set.
+
+#### SCENARIO-REPORT-7369-ARTIFACT: Cold replay controls terminal publication
+
+**Given** raw authorities, source receipts, mutation rows, and validation receipts
+**When** the reducer and both strict terminal tools reload the candidate
+**Then** a changed identity, hash, row, gate, score, class, or checksum fails
+**And** only a valid terminal document is written atomically.
