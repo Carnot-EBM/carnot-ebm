@@ -45153,3 +45153,32 @@ solver. This is a planning inference, not a result from the cited papers.
 - Extropic's writing index initially returned navigation only. Search indexing
   exposed the dated Z1T and summer-update pages. Keep these vendor announcements
   separate from owned hardware and dated local graduation receipts.
+
+## Outer-loop note - 2026-09-17 (TypeSafe AI)
+
+Operator-supplied URL, read directly (not a milestone planner sweep):
+
+- **TypeSafe AI ("Jev")** - https://typesafe.ai. Marketing page only; no paper,
+  no benchmark methodology, no equations found (checked /research,
+  /technology, /jev - all 404). Claims a new model class, "System One
+  Models," trained with "Reinforcement Learning for Calibrated Decisions
+  (RLCD)" instead of RLHF. Output is typed structured data with a confidence
+  score, not text - the pitch is that software thresholds the confidence
+  score to decide when to act autonomously versus escalate to a human.
+  States RLHF causes "mode dropping, overconfidence, and lack of
+  reliability." Claims 193.6x faster, 244.6x cheaper, $42 per billion input
+  tokens, and "zero hallucinations." None of these claims carry a published
+  benchmark or methodology; treat as vendor marketing copy, not a verified
+  result.
+  - Carnot hook 1: the calibrated-confidence-gates-autonomy pattern already
+  exists here in a different form. The verifier ensemble's AUROC score and
+  the `adversarial_verify` fabrication gate already decide accept-clean
+  versus FLAGGED-for-review. TypeSafe's pitch names the same shape (a probe
+  scores confidence, the harness thresholds on it), with no equations to
+  learn from, since none are published.
+  - Carnot hook 2: the RLHF-reliability critique matches this project's own
+  founding thesis - energy-based verification instead of an RLHF-trained
+  judge, aimed at the same overconfidence failure mode. Worth citing as
+  external corroboration of the north-star framing, not as a technical
+  source. There is no method to adopt here.
+  - Not yet built. Flagged for a future bounded task, not implemented here.
