@@ -17107,6 +17107,124 @@ strict row consistency. It SHALL publish the terminal JSON atomically.
 |---|---|---|
 | REQ-CL-7360 and SCENARIO-CL-7360-* | Implemented in `python/carnot/experiment_7360_v646_learning_fixture.py` with a thin entrypoint, sealed public/private evidence, acceptance sidecar, and terminal artifact. The scoped plan keeps every pytest-associated command visibly bound to the explicit test file even when its private temporary path contains `pytest`. | `tests/python/test_experiment_7360_v646_learning_fixture.py`; 10 focused tests and 576/576 changed-module statements. The 91-test conductor subset, independent reducer, adversarial verifier, strict row consistency, Ruff check/format, mypy, and scoped spec coverage pass. |
 
+## REQ-CL-7362: Prospective Structural Learning On Distinct Requests
+
+Carnot SHALL authenticate the exact Exp7360 fixture bytes and Exp7361 proposal
+bytes before evaluation. Each producer SHALL have its declared readiness score
+equal to one. Each producer SHALL have an eligible terminal class and no
+adversarial flag. A missing, changed, blocked, partial, disqualified,
+quarantined, or malformed producer SHALL create a row-free blocked artifact.
+The blocked summary SHALL name the exact upstream, check, field, expected
+value, and observed value.
+
+The run SHALL execute the four arms in the frozen Exp7360 acceptance manifest.
+It SHALL evaluate all 32 synthetic streams and the eight live-proposal streams.
+Original requests and renamed twins SHALL remain one stream cluster. Every
+captured proposal SHALL retain its terminal disposition. Invalid source plans
+SHALL count as failures or abstentions. They SHALL not supply positive labels
+for atom admission.
+
+Each request SHALL predict from immutable entry-state bytes. Exact feedback
+MAY propose atoms only after the request closes. Admission SHALL use exact
+counterexample checks in the pair-gap and capacity vocabulary. A higher-order
+conflict SHALL not authorize a pairwise atom. Every returned plan SHALL have a
+paid exact final check. All query types SHALL count toward the 24-query limit.
+All durable state SHALL remain within 69,632 bytes.
+
+The result SHALL retain each proposed, admitted, rejected, invalidated, and
+restarted atom event. It SHALL retain utility, coverage, paid-query categories,
+request latency, and complete-service cost. Historical model time SHALL appear
+only as a hash-bound amortized cost column. It SHALL not count as current model
+work. The run SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, `inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`.
+
+The run SHALL erase at least one used atom and repeat the same later distinct
+request from the same snapshot. Only a changed decision proves atom necessity.
+Restart, announced drift, unannounced drift, and rollback controls SHALL replay
+frozen inputs. The reducer SHALL use paired whole-stream bootstrap intervals.
+It SHALL report synthetic and live results separately. Renamed twins and
+repeated requests SHALL not become independent clusters.
+
+The reducer SHALL apply every Exp7360 threshold without adjustment. It SHALL
+require zero unsafe accepted plans and zero stale-version decisions. Utility
+and coverage lower bounds SHALL be at least -0.02. Query-ratio upper bounds
+against reset and exact cache SHALL be below 0.90. The complete-service cost
+ratio upper bound SHALL be at most 1.0. At least one later distinct-request
+erasure witness SHALL exist. A completed threshold miss SHALL produce a null
+result while `learning_capture_complete_score` remains one. The exact executor
+defines truth. A favorable result SHALL use `verdict_class=circular_positive`.
+
+The workflow SHALL use the Exp7303 scoped runner through the Exp7358 command
+boundary. It SHALL run explicit affected tests, separate changed-module
+coverage at 100 percent, scoped Ruff check and format, changed-module mypy, and
+scoped specification coverage. It SHALL run the declared entrypoint, cold
+independent reduction, adversarial verification, and strict row consistency.
+It SHALL publish the terminal JSON atomically.
+
+### SCENARIO-CL-7362-PRECONDITIONS: Exact Producers Or A Row-Free Block
+
+- GIVEN the declared Exp7360 and Exp7361 paths and their sealed dependent bytes
+- WHEN readiness, terminal class, flag, exclusion state, and byte hashes are checked
+- THEN dependent evaluation starts only from exact eligible evidence
+- AND any external failure creates a row-free blocked record with the exact failed field.
+
+### SCENARIO-CL-7362-EPISODE: Feedback Cannot Change The Active Request
+
+- GIVEN an immutable entry-state snapshot and one proposed plan
+- WHEN the exact executor returns feedback
+- THEN no atom changes the active request decision
+- AND any exact-supported atom becomes visible only to a later request.
+
+### SCENARIO-CL-7362-LANGUAGE: Unsupported Evidence Cannot Gain Authority
+
+- GIVEN an invalid source plan or a higher-order conflict outside the frozen vocabulary
+- WHEN the evaluator records its disposition
+- THEN no positive pair-gap or capacity label is inferred from that evidence
+- AND the failure remains visible in the fixed denominator.
+
+### SCENARIO-CL-7362-PANEL: Four Arms Share Both Frozen Cohorts
+
+- GIVEN 32 synthetic streams and eight live-proposal streams with renamed twins
+- WHEN all four frozen arms run without retuning
+- THEN every stream, request, arm, proposal, cost, query, and failure has a row
+- AND synthetic, live, original, and twin evidence remain separately identifiable.
+
+### SCENARIO-CL-7362-CAUSALITY: Atom Erasure Must Reverse A Later Decision
+
+- GIVEN an admitted atom that influenced a later distinct request
+- WHEN only that atom is erased from the same saved snapshot
+- THEN the same request decision changes and the exact counterfactual is retained
+- AND a write without such a change earns no structural-learning value.
+
+### SCENARIO-CL-7362-REDUCTION: Streams Own Frozen Intervals
+
+- GIVEN complete per-stream rows for both cohorts
+- WHEN paired 95 percent intervals are reduced with the frozen seed
+- THEN renamed twins and repeated requests stay inside their owning stream cluster
+- AND every Exp7360 threshold is applied without movement.
+
+### SCENARIO-CL-7362-TERMINAL: Completion And Value Stay Separate
+
+- GIVEN all frozen rows, lifecycle controls, and affected checks are complete
+- WHEN one or more scientific value gates fail
+- THEN capture completion remains one and learning value remains zero
+- AND the terminal class is null rather than blocked or partial.
+
+### SCENARIO-CL-7362-E2E: Raw Evidence Rebuilds The Terminal Artifact
+
+- GIVEN the measured candidate and its raw rows
+- WHEN independent reduction, adversarial verification, and strict row checking run
+- THEN the stored gates, scores, class, and checksum reproduce
+- AND failed affected validation prevents readiness, value, and promotion.
+
+## Implementation Status (REQ-CL-7362)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7362 and SCENARIO-CL-7362-* | Planned: `python/carnot/experiment_7362_v646_prospective_learning.py` with a thin script entrypoint and atomic terminal artifact. | Planned: `tests/python/test_experiment_7362_v646_prospective_learning.py`. |
+
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 
 Carnot SHALL run four development requests from the qualified V645 executor
