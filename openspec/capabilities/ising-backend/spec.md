@@ -1997,3 +1997,90 @@ write. A missing GateMate receipt SHALL keep the terminal result blocked and
 `board_continuity_complete_score=0`.
 
 **Implementation status:** Implemented and verified (Exp7327)
+
+### REQ-ISING-7377
+
+**The V647 finite-temperature law fixture MUST preserve the Boltzmann law of
+the original 2-CNF clauses and MUST detect when an implied clause is added as
+another energy term.**
+
+**Rationale:**
+A logically implied clause preserves the satisfying assignments. It can still
+change the probability of non-minimum states at finite inverse temperature.
+Proof assistance can establish entailment or define an explicit hard condition.
+It cannot silently add a finite penalty or remove positive source-law mass.
+
+**Acceptance criteria:**
+- The fixture SHALL compile each original two-literal clause into an Ising
+  polynomial with an explicit offset. It SHALL state the bit-to-spin map,
+  literal signs, and the energy sign convention.
+- Unit assumptions SHALL define a clamped support. They SHALL not become
+  finite penalty terms. Conflicting assumptions SHALL produce an explicit
+  empty conditioned support with zero normalizer and no invented samples.
+- The frozen panel SHALL contain one six-variable development counterexample
+  and 24 formulas across three fixed seeds. It SHALL include implication paths,
+  duplicate clauses, duplicate assumptions, conflicting assumptions, and an
+  empty conditioned-support case. Every formula SHALL use at most 12 variables.
+- The evaluation SHALL enumerate every state at inverse temperatures 0.5, 1,
+  and 2. It SHALL evaluate source-only energy, source-only energy with proof
+  assistance, and energy with one intentionally appended implied clause.
+- For every condition, compiled energies and normalized probabilities SHALL be
+  compared with an independent clause-violation enumeration. Source-faithful
+  rows SHALL require maximum absolute energy error at most `1e-12` and total
+  variation at most `1e-10`.
+- The appended-clause arm SHALL keep the source satisfying minima but SHALL
+  report its finite-temperature distance from the source law. Equality of
+  minima alone SHALL not pass the law gate.
+- Independent negative controls SHALL tamper with the offset, one coefficient
+  sign, beta, clause multiplicity, conditioning, and the appended implied
+  clause. Each mutation SHALL name the expected detector and observed result.
+- A proof certificate SHALL be source checked and SHALL be used only for
+  entailment or an explicit hard-conditioned support. Proof assistance SHALL
+  not assign zero probability to a state that has positive mass under the same
+  original conditioned law.
+- `law_fixture_ready_score=1` SHALL require source-energy parity, source-law
+  probability parity, unchanged proof-assisted energy, detection of the
+  intentional law change, all negative controls, affected validation, and
+  terminal artifact checks. `promotion_score` SHALL remain zero.
+- The artifact SHALL freeze the exact fixture hash, three formula seeds, beta
+  grid, four chains, 1,000 warm-up steps, and 4,000 recorded samples per chain
+  for Exp7378. This task SHALL not run those empirical chains.
+- The task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current model
+  invocation counts, `cpu_exact_solver_or_simulator`, and host execution. It
+  SHALL use measured monotonic durations and SHALL not load a model.
+- The task SHALL reuse the Exp7358 command plan and Exp7303 streaming runner for
+  affected checks. It SHALL run the declared entrypoint, cold artifact replay,
+  independent reduction, adversarial verification, and strict row-consistency
+  validation before one atomic terminal write.
+
+### SCENARIO-ISING-7377-SOURCE-LAW
+
+**Exact source parity:** Given the frozen original clauses and a beta in the
+fixed grid, when all states are enumerated, then the compiled Ising energy and
+normalized law match independent clause enumeration within the declared
+tolerances.
+
+### SCENARIO-ISING-7377-CONDITIONING
+
+**Hard support stays separate:** Given unit assumptions, when the law is
+conditioned, then only the explicit clamp changes support. Conflicting
+assumptions yield an empty support, while proof assistance never removes
+positive mass from the original conditioned law.
+
+### SCENARIO-ISING-7377-NEGATIVE-CONTROL
+
+**Implied does not mean distribution-neutral:** Given a source-entailed clause,
+when it is appended as another finite energy term, then the satisfying minima
+remain equal and a nonzero finite-temperature law change is detected. Offset,
+sign, beta, multiplicity, and conditioning mutations are also detected by their
+declared independent checks.
+
+### SCENARIO-ISING-7377-TERMINAL
+
+**Validated frozen handoff:** Given complete exact rows and controls, when the
+scoped and terminal checks pass, then the artifact records a ready fixture and
+the fixed Exp7378 sampling protocol. Any failed required check produces a
+blocked or disqualified terminal result with an exact gate summary and zero
+readiness and promotion scores.
+
+**Implementation status:** Implemented and verified (Exp7377)
