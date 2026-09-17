@@ -20048,3 +20048,4 @@ Widened the cap to 4000 chars on both `call_codex` and the sibling `call_fable` 
 class, not yet observed there but not proven absent either), added a stdout fallback when
 stderr is empty, and added regression tests reproducing the exact banner-then-error shape.
 4 new/updated tests, 64/64 passing, ruff/mypy clean.
+- 2026-09-17: Bind the V646 research delta and twelve-task contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v646_contract_mismatched_or_invalid; results/experiment_7357_v646_contract.json
