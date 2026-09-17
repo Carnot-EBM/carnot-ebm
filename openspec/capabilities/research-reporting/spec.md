@@ -71713,3 +71713,111 @@ and promotion scores set to zero.
 **When** the cold reducer and both terminal validators inspect the candidate
 **Then** any changed row, hash, identity, score, operation count, or checksum fails
 **And** only an accepted terminal document is written atomically.
+
+## V645 independent capstone disposition contract — 2026-09-16
+
+**Status:** Implemented. The capstone closes accounting without promoting blocked science.
+
+### REQ-REPORT-7356: Reconcile fourteen exact V645 dispositions and five claim boundaries
+
+Exp7356 SHALL independently parse and compare the fourteen ordered V645 rows in
+the selected Markdown and YAML contracts. It SHALL compare task IDs, titles,
+phases, substrate classes, exact deliverable paths, and structured gates. It
+SHALL read only each declared deliverable or the exact canonical conductor gate
+record. It SHALL represent the capstone as the fourteenth self disposition.
+
+The reducer SHALL authenticate producer identity, terminal class, quarantine
+state, and adversarial state before it reads a score. Missing, blocked, partial,
+disqualified, quarantined, or adversarially flagged producers SHALL authorize no
+readiness, value, or promotion. Each blocked gate record SHALL retain its exact
+upstream, check, artifact field, expected value, and observed value.
+
+The reducer SHALL report source fidelity, continuous structural learning,
+acquisition cost, live ARC causality, and hardware disposition as five separate
+claims. It SHALL recompute the available learning, acquisition, and ARC summaries
+from raw per-unit rows and frozen gates. It SHALL retain the shared-executor
+circularity, small live-origin cohort, four-episode ARC limit, costs, failures,
+abstentions, and censoring. Unusable producers MAY retain diagnostic measurements,
+but those measurements SHALL not become promoted metrics.
+
+An authenticated GateMate changed-state block SHALL complete only the hardware
+disposition. It SHALL not become a science prerequisite. Missing or unusable
+required science SHALL set `verdict_class=blocked` and name the first exact
+failure. If all science is complete but a value gate fails, the result SHALL be
+`null`. Only unfinished work owned by Exp7356 MAY be `partial`.
+
+Exp7356 SHALL compare every `prior_failures` verdict with the exact recorded
+predecessor bytes and apply `retire_if_same_verdict`. It SHALL preserve the native
+tenfold null, retired joint-claim comparison, delayed-feedback mixture and suffix
+retirements, and unsupported-hardware boundaries. Each claim branch SHALL name one
+evidence-bound action and one falsifiable continuation or retirement condition.
+
+The artifact SHALL set `capstone_complete_score=1` only when all fourteen exact
+dispositions exist. This score SHALL mean accounting only. Readiness, value, and
+promotion SHALL remain zero when required science is blocked or disqualified. The
+artifact SHALL retain the current G1 through G4, `paper_ready`, and `unmet_gates`
+from `scripts/publication_gate.py --json`. It SHALL record three focused science
+questions, two independent infrastructure prerequisites, no new model family, and
+no hardware integration in `scope_reduction_compliance`.
+
+Exp7356 SHALL invoke no model. It SHALL declare `MODEL_SPECS=[]`,
+`model_invoked=false`, zero invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+
+The workflow SHALL use the Exp7303 scoped runner with the exact Exp7356 test,
+module, and thin entrypoint. It SHALL require worktree imports, focused pytest,
+100 percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test spec coverage. It SHALL run the declared entrypoint, reload
+the candidate, independently replay raw rows, run adversarial verification, and
+run strict verdict-row consistency before the atomic terminal write. Failed
+affected validation SHALL produce a `disqualified` result with zero readiness,
+value, and promotion.
+
+#### SCENARIO-REPORT-7356-CONTRACT: Both authorities preserve fourteen rows
+
+**Given** the exact V645 Markdown and selected YAML contracts
+**When** Exp7356 parses both byte streams independently
+**Then** fourteen ordered identities, titles, phases, substrates, paths, and gates agree
+**And** the capstone self row is disposition fourteen.
+
+#### SCENARIO-REPORT-7356-EVIDENCE: Eligibility precedes numeric reduction
+
+**Given** exact deliverables and canonical conductor gate records
+**When** Exp7356 authenticates each evidence slot
+**Then** unusable or flagged producers authorize no promoted metric
+**And** every blocked record retains the exact failed check and values.
+
+#### SCENARIO-REPORT-7356-CLAIMS: Five authority classes remain separate
+
+**Given** current source, learning, acquisition, ARC, and hardware evidence
+**When** Exp7356 independently reduces raw rows and frozen gates
+**Then** each claim retains its metrics, limits, costs, failures, abstentions, and censoring
+**And** shared-executor success remains circular and unavailable science remains blocked.
+
+#### SCENARIO-REPORT-7356-HARDWARE: Expected GateMate absence completes only hardware accounting
+
+**Given** Exp7355 has three authenticated board rows and a GateMate external block
+**When** Exp7356 builds the hardware claim
+**Then** the disposition is complete and remains blocked
+**And** it neither causes nor clears the independent science verdict.
+
+#### SCENARIO-REPORT-7356-RETIREMENTS: Exact predecessor bytes control decisions
+
+**Given** all V645 prior-failure declarations and preserved earlier boundaries
+**When** Exp7356 compares recorded predecessor and current verdict bytes
+**Then** exact repeats apply their declared retirement condition
+**And** unrelated positive evidence does not reopen a retired construction.
+
+#### SCENARIO-REPORT-7356-ARTIFACT: Cold replay controls terminal publication
+
+**Given** raw dispositions, current validation receipts, and a measured candidate
+**When** an independent reducer reloads the candidate
+**Then** changed rows, hashes, classes, gates, scores, decisions, or checksum fail
+**And** only the validated terminal document is written atomically.
+
+## Implementation Status (REQ-REPORT-7356)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7356 and SCENARIO-REPORT-7356-* | Implemented: Exp7356 aggregation module, thin entrypoint, independent raw reduction sidecar, and terminal artifact | Verified by focused RED-to-green tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
