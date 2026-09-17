@@ -16593,3 +16593,19 @@ the pre-existing missing model-registry key
 `cargo fmt --all -- --check` also retains unrelated formatting drift in
 `carnot-core`, `carnot-kan`, and `carnot-samplers`; affected-crate formatting
 and clippy pass.
+
+## 2026-09-17 — V647 research plan staged, not activated
+
+`research-roadmap-next.yaml` and the rewritten V647 design specify twelve
+experiments, exp7369 through exp7380, across four phases. The proposed core is
+proof-carrying implication memory with persistent exact-solver controls and
+causal erasure tests. Independent branches collect new adapter-withheld ARC
+outcomes and check whether derived clauses alter finite-temperature Ising laws.
+The hardware task preserves dated board prerequisites and bounds placement
+value from eligible host measurements; it performs no physical operations.
+
+V646's missing required validation receipt is separate from its zero causal
+witnesses and failed cost gates. The plan preserves all those findings and
+does not repeat its unchanged schedule-acquisition chain. New LLM work uses
+`unsloth/Qwen3.8-27B-GGUF` with bounded-generation substrate declarations.
+The current roadmap and conductor are unchanged. No V647 experiment has run.

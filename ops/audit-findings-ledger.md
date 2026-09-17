@@ -165,3 +165,4 @@ of truth, not this line.)
 | 2026-09-15 | experiment_claim_audit | experiment_7324_v643_addition_learning.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-15 | experiment_claim_audit | experiment_7325_v643_addition_audit.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-17 | qa_layer_authenticity_audit | adversarial_verify.py::_is_rate_metric_field | SILENT_NON_FIRING | OPEN | |
+| 2026-09-17 | experiment_claim_audit | experiment_7361_v646_fresh_plan_capture.json | CLAIM_OVERSTATED | OPEN | |

@@ -2879,3 +2879,22 @@ now restore both verifier corpus-cache functions, clear both original caches,
 and restore the toy-energy registry after untrusted code returns. The two
 baseline-cache migration regressions remain present. The complete affected
 autoresearch suite passes 115 tests.
+
+## 2026-09-17 — V647 research plan staged (not executed)
+
+Milestone `2026.09.647` contains exactly twelve tasks, exp7369 through exp7380.
+The authority pair is `openspec/change-proposals/research-roadmap-vNEXT.md`
+and `research-roadmap-next.yaml`. The active roadmap is unchanged.
+
+| PRD requirement | Planned work | Existing capability; implementation status |
+|---|---|---|
+| FR-11 autonomous learning | Exp7370–7375: version-bound implication proofs, independent safety, live proposals, prospective learning and cold audit | continuous-learning; proposed, not implemented |
+| FR-12 verifiable reasoning | Explicit source clauses, separate proposal transcription/extendibility, proof authority and erasure controls | constraint-verification; proposed, not implemented |
+| FR-07 inference; FR-12 | Exp7376 live ARC outcome acquisition; Exp7377–7378 finite-law and sampler checks | arc-world-model-trust-energy, ising-backend, samplers; proposed, not implemented |
+| NFR-01 performance | Exp7379 complete-cost placement bound and dated board prerequisites | research-reporting; planned analysis, no hardware execution or speed claim |
+| FR-09 / FR-10 | Exp7369 exact authority/gate contract; Exp7380 twelve dispositions and unchanged publication gates | research-reporting; staged planning only |
+
+Future tasks must add their driving REQ-* and failing tests before changing
+implementation. The V646 validation failure and scientific nulls remain intact.
+The prior V645 design bytes are preserved in
+`openspec/change-proposals/research-roadmap-v645-preserved-20260917.md`.

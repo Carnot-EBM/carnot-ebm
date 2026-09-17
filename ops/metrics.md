@@ -3437,3 +3437,4 @@ Writing an estimate would put an invented number in the metrics record.
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
 | 1 | 2026-09-15T23:33:08Z | 2026-09-15T23:34:07Z | Proposed damped-Newton optimizer (tridiagonal Hessian solve + multi-start) for autoresearch double_well/rosenbrock benchmark; verified in /tmp on numpy and pure-python paths, exact E=0.0 at dim up to 500, <=0.2s. | see session JSONL |
+| 2 | 2026-09-17T15:47:09Z | 2026-09-17T15:47:25Z | Autoresearch iteration-1 hypothesis (codex fallback): run() for double_well (GD+Newton polish), rosenbrock (LM tridiagonal multi-start), verifier_auroc (affine-decomposed grid + bootstrap-gated defaults floor). | see session JSONL |

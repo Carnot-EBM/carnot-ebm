@@ -45101,3 +45101,55 @@ remain intact. Paper results below are external evidence, not Carnot results.
   reasoning beneath the language interface. It is architectural context;
   this pass did not obtain weights, a reproducible benchmark, or a sufficient
   implementation specification to reproduce Kona.
+
+## 2026-09-17 — V647 planning literature delta
+
+This scan precedes the V647 experiment design. Sources below were opened on
+2026-09-17. A rechecked source is not a new discovery. Paper and vendor results
+are external evidence, not Carnot measurements. The useful new candidate is a
+small, proof-carrying implication memory: derive reusable consequences from
+explicit constraints, then measure future-query cost against an incremental
+solver. This is a planning inference, not a result from the cited papers.
+
+| Topic and primary source | Finding and possible use | Evidence limit / decision |
+|---|---|---|
+| [Parameterized logical problems, 2602.12665](https://arxiv.org/abs/2602.12665), submitted 2026-02-13; new to this ledger | Structured 2-SAT families isolate contradiction cycles, free variables, backbones, late bridges, renaming and duplication. Use these axes to test whether stored implication proofs transfer to different assumption queries. | Controlled formal problems, not natural-language truth. Keep family and rule-version splits; compare with a persistent exact solver. |
+| [ChopChop, 2509.00360](https://arxiv.org/html/2509.00360v1), submitted 2025-08-30; rechecked | Semantic feasibility concerns possible completions of a partial structure. This suggests rejecting a partial assignment only with a checkable contradiction path. | A finite implication check is an adaptation, not a reproduction of regular coinduction. Do not claim token-level constrained decoding when only completed proposals are filtered. |
+| [No Free Checker, 2609.09250](https://arxiv.org/abs/2609.09250), submitted 2026-09-08; found through [Hugging Face](https://huggingface.co/papers/2609.09250) | The survey separates verifier access from credibility. Record the information given to the learner, checker and evaluator, and compare a cheap exact baseline. | Robot-policy survey; transfer the evaluation questions, not its empirical conclusions. No verifier moat follows from oracle-defined labels. |
+| [T-Oracle/FastCA, 2609.12267](https://arxiv.org/html/2609.12267v1), submitted 2026-09-10; rechecked | Learned oracle responses can support symbolic constraint acquisition. The useful distinction is the candidate mechanism versus the authority that admits a constraint. | Do not use a neural oracle as truth. A compact proof checker can admit a derived implication only against the exact current source clauses. |
+| [Conservative Constraint Acquisition, 2604.13283](https://arxiv.org/abs/2604.13283), submitted 2026-04-14; rechecked | Binary-feedback learning is restricted to pairwise separation and global capacity. Query savings and complete execution cost are separate measurements. | V646 preserved failed cost and causality gates. This paper does not justify another unchanged Boolean schedule-acquisition run. |
+| [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306), submitted 2026-05-12; rechecked | Per-knot importance can localize retention in a learned KAN head. | Vision continual-learning evidence does not certify logical consequences. Defer a KAN head until a non-oracle prediction target and a useful exact baseline exist. |
+| [Energy-guided Recursive Model, 2607.10128](https://arxiv.org/abs/2607.10128), submitted 2026-07-11; rechecked | Hopfield energy selects recursive candidate trajectories; sampling and ranking need matched inference budgets. | No new text scorer or retired tempering extension. A small Ising encoding should first preserve the source law exactly, including conditioning. |
+| [Structured latent trajectories, 2603.28248](https://arxiv.org/abs/2603.28248), submitted 2026-03-30; rechecked | The authors report decoder distribution mismatch despite lower latent energy. | Retain exact validity and source-fidelity checks. Energy descent is not a correctness certificate. |
+| [EBT, 2507.02092](https://arxiv.org/abs/2507.02092), submitted 2025-07-02, and [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised 2026-05-25 | Compatibility optimization and the ARM–EBM function-space relation remain background for the long-term model program. | Neither proves that Carnot's extracted constraints match a request. Foundation-model training stays deferred. |
+| [FPGA/Ising co-design, 2602.15985](https://arxiv.org/abs/2602.15985), submitted 2026-02-17; rechecked | Host decomposition and communication belong inside an acceleration measurement. | Preserve measured native-cost nulls. Include construction, updates, transfers and amortization when mapping a new certificate representation to hardware. |
+| [Extropic Z1T](https://extropic.ai/writing/z1t), dated 2026-09-04, and [summer update](https://extropic.ai/writing/from-one-to-one-billion) | Vendor describes sparse transformer-like probabilistic models and hardware/software co-design. The update places a larger cluster in 2027. | Vendor claims are not locally measured performance or proof of device availability. No procurement or hardware access is assumed. |
+| [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models) and [Automatic Formal Verification for Code Generation](https://logicalintelligence.com/blog/automatic-formal-verification-for-code-generation), dated 2026-06-03 | The technical article distinguishes formal specification, code and proof, and calls the learned energy verifier imperfect. | This reinforces separate source-semantics and formal-validity claims. No public implementation sufficient for a local Kona reproduction was established in this pass. |
+
+### Source coverage and access receipts
+
+- arXiv searches covered all eight requested topics: EBMs, neural constraint
+  satisfaction, Ising ML, hallucination mitigation, KANs, constrained
+  generation, hardware sampling and continual learning. [HardNet++](https://arxiv.org/abs/2604.19669)
+  was screened but its repair lineage is already retired locally. It is not
+  proposed again. [M2Note](https://arxiv.org/abs/2607.00685) was screened for
+  memory updates; same-batch rollback is insufficient evidence of future value.
+- OpenReview search returned the [EBT paper PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg).
+  The [forum](https://openreview.net/forum?id=ZBj3Qp1bYg) returned a browser
+  challenge. The arXiv text is the method authority for this pass; no review
+  verdict or reviewer consensus is inferred.
+- Semantic Scholar citation queries for both seed papers were attempted through
+  the browser and directly through the Graph API. The browser returned internal
+  errors; direct citation endpoints returned HTTP 429 for both seeds. This pass
+  therefore adds **no verified citing-paper discovery from Semantic Scholar**.
+  The prior V646 successful partial scan remains historical evidence only.
+- Hugging Face verification search led to No Free Checker; its arXiv page was
+  checked before selecting evaluation controls. Generated paper summaries are
+  not used as scientific authority.
+- [GitHub Python trending](https://github.com/trending/python?since=monthly)
+  and [Rust trending](https://github.com/trending/rust?since=monthly) were opened.
+  No relevant new EBM/constraint/KAN repository was established from this pass.
+  Author code is not called trending merely because a paper links to it.
+- Extropic's writing index initially returned navigation only. Search indexing
+  exposed the dated Z1T and summer-update pages. Keep these vendor announcements
+  separate from owned hardware and dated local graduation receipts.

@@ -1,0 +1,219 @@
+# Carnot Research Roadmap V645: Exact acquisition cost, continued learning, and resumed ARC feedback
+
+**Created:** 2026-09-16 UTC
+**Milestone:** 2026.09.645
+**Status:** Active; fourteen tasks, exp7343 through exp7356
+**Supersedes:** V644 active roster and its terminal evidence
+
+## V645 Transition Evidence
+
+V644 completed all fourteen task dispositions. Its contract receipt failed
+prior-failure coverage and a prompt-path check. Those failures do not erase the
+task outcomes. Historical artifacts remain diagnostic evidence and cannot
+satisfy a V645 readiness gate.
+
+V645 requalifies the affected fixtures through scoped validation. It measures
+prospective learning, exact acquisition cost, and ARC feedback use as separate
+questions. The contract receipt is advisory. No science task gates on it.
+
+## V645 Research Inputs
+
+The dated V645 section in `research-references.md` is the source ledger. These
+methods define controls and do not count as Carnot results.
+
+- T-Oracle and FastCA, arXiv `2609.12267`, motivate acquisition time and query
+  accounting. V645 uses only exact executor answers, not a neural oracle.
+- Conservative Constraint Acquisition, arXiv `2604.13283`, motivates bounded
+  structural additions with complete query accounting.
+- Memoir, arXiv `2607.20792`, motivates read-only prediction and delayed
+  updates between distinct future requests.
+- AMTFV, arXiv `2607.29549`, motivates explicit request, execution, delivery,
+  resumed reasoning, and later-action receipts.
+
+## Exact Task Contract
+
+There are **14 tasks**, **exp7343 through exp7356**, in this exact order. The
+table is the literal contract with the selected V645 YAML. An `in` gate uses a
+JSON list from the closed terminal-class set.
+
+| Order | Task ID | Exact title | Deliverable | Phase | Substrate class | Structured gate |
+|---|---|---|---|---|---|---|
+| 1 | exp7343-contract | Bind V645 literature and the fourteen-task execution contract | results/experiment_7343_v645_contract.json | 1 | aggregation | None |
+| 2 | exp7344-executor-fixture | Requalify isolated feedback with scoped validation and sealed requests | results/experiment_7344_v645_executor_fixture.json | 1 | cpu_exact_solver_or_simulator | None |
+| 3 | exp7345-arc-resume-check | Qualify the live result-resume path after temporary-directory repair | results/experiment_7345_v645_arc_resume_check.json | 1 | cpu_exact_solver_or_simulator | None |
+| 4 | exp7346-learning-adapter | Wire structural additions into the opt-in verification pipeline | results/experiment_7346_v645_learning_adapter.json | 2 | cpu_exact_solver_or_simulator | exp7344-executor-fixture.executor_fixture_ready_score == 1; exp7344-executor-fixture.verdict_class in ["positive", "circular_positive", "null"]; exp7344-executor-fixture.flagged_adversarial == false |
+| 5 | exp7347-plan-canary | Qualify bounded Qwen3.8 plan transport and owned runtime evidence | results/experiment_7347_v645_plan_canary.json | 2 | model_bounded_generation | exp7344-executor-fixture.executor_fixture_ready_score == 1; exp7344-executor-fixture.verdict_class in ["positive", "circular_positive", "null"]; exp7344-executor-fixture.flagged_adversarial == false |
+| 6 | exp7348-plan-capture | Capture fresh plans and source-fidelity controls on Qwen3.8 | results/experiment_7348_v645_plan_capture.json | 2 | model_bounded_generation | exp7344-executor-fixture.executor_fixture_ready_score == 1; exp7344-executor-fixture.verdict_class in ["positive", "circular_positive", "null"]; exp7344-executor-fixture.flagged_adversarial == false; exp7347-plan-canary.plan_transport_ready_score == 1; exp7347-plan-canary.verdict_class in ["positive", "circular_positive", "null"]; exp7347-plan-canary.flagged_adversarial == false |
+| 7 | exp7349-prospective-learning | Measure continuous structural learning on distinct future requests | results/experiment_7349_v645_prospective_learning.json | 2 | cpu_exact_solver_or_simulator | exp7346-learning-adapter.learning_adapter_ready_score == 1; exp7346-learning-adapter.verdict_class in ["positive", "circular_positive", "null"]; exp7346-learning-adapter.flagged_adversarial == false; exp7348-plan-capture.plan_capture_complete_score == 1; exp7348-plan-capture.verdict_class in ["positive", "circular_positive", "null"]; exp7348-plan-capture.flagged_adversarial == false |
+| 8 | exp7350-learning-audit | Independently audit learning causality source fidelity and complete cost | results/experiment_7350_v645_learning_audit.json | 2 | aggregation | exp7349-prospective-learning.learning_capture_complete_score == 1; exp7349-prospective-learning.verdict_class in ["positive", "circular_positive", "null"]; exp7349-prospective-learning.flagged_adversarial == false |
+| 9 | exp7351-acquisition-prototype | Prototype bounded constraint elimination with exact query authority | results/experiment_7351_v645_acquisition_prototype.json | 3 | cpu_exact_solver_or_simulator | exp7344-executor-fixture.executor_fixture_ready_score == 1; exp7344-executor-fixture.verdict_class in ["positive", "circular_positive", "null"]; exp7344-executor-fixture.flagged_adversarial == false |
+| 10 | exp7352-acquisition-cost | Compare acquisition strategies at the full execution boundary | results/experiment_7352_v645_acquisition_cost.json | 3 | cpu_exact_solver_or_simulator | exp7351-acquisition-prototype.acquisition_prototype_ready_score == 1; exp7351-acquisition-prototype.verdict_class in ["positive", "circular_positive", "null"]; exp7351-acquisition-prototype.flagged_adversarial == false |
+| 11 | exp7353-acquisition-audit | Audit acquisition soundness assumptions and cost recomputation | results/experiment_7353_v645_acquisition_audit.json | 3 | aggregation | exp7352-acquisition-cost.acquisition_capture_complete_score == 1; exp7352-acquisition-cost.verdict_class in ["positive", "circular_positive", "null"]; exp7352-acquisition-cost.flagged_adversarial == false |
+| 12 | exp7354-arc-transfer | Measure adapter-withheld ARC generalization with resumed tool feedback | results/experiment_7354_v645_arc_transfer.json | 4 | model_bounded_generation | exp7345-arc-resume-check.arc_resume_ready_score == 1; exp7345-arc-resume-check.verdict_class in ["positive", "circular_positive", "null"]; exp7345-arc-resume-check.flagged_adversarial == false |
+| 13 | exp7355-board-state | Record GateMate changed-state prerequisites and graduated board evidence | results/experiment_7355_v645_board_state.json | 4 | aggregation | None |
+| 14 | exp7356-capstone | Reconcile fourteen outcomes and decide bounded next research steps | results/experiment_7356_v645_capstone.json | 4 | aggregation | None |
+
+## V645 Phase Boundaries
+
+Phase 1 requalifies the isolated executor and live result-resume fixture. Phase
+2 measures prospective structural learning. Phase 3 compares exact acquisition
+strategies and audits their assumptions. Phase 4 tests ARC transfer, preserves
+board state, and reconciles the fourteen dispositions.
+
+Every score gate has a closed terminal-class gate and an adversarial flag.
+Missing, blocked, partial, quarantined, or disqualified evidence cannot
+authorize a consumer.
+
+## Historical V644 Design
+
+# Carnot Research Roadmap V644: Live acquisition, consumed feedback, and native boundaries
+
+**Created:** 2026-09-15 UTC
+**Milestone:** 2026.09.644
+**Status:** Active; fourteen tasks, exp7329 through exp7342
+**Supersedes:** V643 active roster and its terminal evidence
+
+## V644 Transition Evidence
+
+V643 completed all thirteen tasks. The completion archive ends at V642, so the
+V643 transition uses exact terminal artifacts and the conductor record. Those
+artifacts are diagnostic evidence. They cannot satisfy a V644 readiness gate.
+
+The V644 contract tests live proposal value with an isolated executor, delayed
+memory commits, consumed ARC feedback, and an in-process native boundary. The
+contract receipt is advisory. No science task gates on it.
+
+## V644 Research Inputs
+
+The dated V644 section in `research-references.md` is the source ledger. These
+methods define controls and do not count as Carnot results.
+
+- Conservative Constraint Acquisition, arXiv `2604.13283`, motivates bounded
+  constraint acquisition through an isolated executor.
+- Memoir, arXiv `2607.20792`, motivates read-only prediction and delayed
+  memory commits between requests.
+- Solver-Hard, arXiv `2607.17047`, motivates identifier relabeling and
+  request-order controls instead of solver-runtime difficulty labels.
+- AMTFV, arXiv `2607.29549`, motivates an explicit tool request, exact result
+  delivery, resumed reasoning, and later-action trace.
+
+## Exact Task Contract
+
+There are **14 tasks**, **exp7329 through exp7342**, in this exact order. The
+table is the literal contract with the selected V644 YAML. An `in` gate uses a
+JSON list from the closed terminal-class set.
+
+| Order | Task ID | Exact title | Deliverable | Phase | Substrate class | Structured gate |
+|---|---|---|---|---|---|---|
+| 1 | exp7329-contract | Bind V644 sources and the exact fourteen-task contract | results/experiment_7329_v644_contract.json | 1 | aggregation | None |
+| 2 | exp7330-executor-isolation | Build an isolated executor and a fresh versioned request panel | results/experiment_7330_v644_executor_isolation.json | 1 | cpu_exact_solver_or_simulator | None |
+| 3 | exp7331-learning-adapter | Connect acquired constraints to the opt-in verification path | results/experiment_7331_v644_learning_adapter.json | 1 | cpu_exact_solver_or_simulator | exp7330-executor-isolation.executor_fixture_ready_score == 1; exp7330-executor-isolation.verdict_class in ["positive", "circular_positive", "null"] |
+| 4 | exp7332-plan-canary | Qualify bounded Qwen3.8 plan proposals and identity evidence | results/experiment_7332_v644_plan_canary.json | 2 | model_bounded_generation | exp7330-executor-isolation.executor_fixture_ready_score == 1; exp7330-executor-isolation.verdict_class in ["positive", "circular_positive", "null"] |
+| 5 | exp7333-plan-capture | Capture fresh Qwen3.8 proposals with source-fidelity controls | results/experiment_7333_v644_plan_capture.json | 2 | model_bounded_generation | exp7330-executor-isolation.executor_fixture_ready_score == 1; exp7330-executor-isolation.verdict_class in ["positive", "circular_positive", "null"]; exp7332-plan-canary.plan_canary_ready_score == 1; exp7332-plan-canary.verdict_class in ["positive", "circular_positive", "null"] |
+| 6 | exp7334-prospective-learning | Measure continuous learning on fresh plans and changing constraints | results/experiment_7334_v644_prospective_learning.json | 2 | cpu_exact_solver_or_simulator | exp7331-learning-adapter.learning_adapter_ready_score == 1; exp7331-learning-adapter.verdict_class in ["positive", "circular_positive", "null"]; exp7333-plan-capture.plan_capture_complete_score == 1; exp7333-plan-capture.verdict_class in ["positive", "circular_positive", "null"] |
+| 7 | exp7335-learning-audit | Audit executor independence learning causality and full cost | results/experiment_7335_v644_learning_audit.json | 2 | aggregation | exp7334-prospective-learning.learning_capture_complete_score == 1; exp7334-prospective-learning.verdict_class in ["positive", "circular_positive", "null"] |
+| 8 | exp7336-arc-resume | Prototype a result-resume contract in the live ARC policy | results/experiment_7336_v644_arc_resume.json | 3 | cpu_exact_solver_or_simulator | None |
+| 9 | exp7337-arc-transfer | Measure adapter-withheld ARC transfer with consumed feedback | results/experiment_7337_v644_arc_transfer.json | 3 | model_bounded_generation | exp7336-arc-resume.arc_resume_ready_score == 1; exp7336-arc-resume.verdict_class in ["positive", "circular_positive", "null"] |
+| 10 | exp7338-arc-causal-audit | Audit live feedback delivery and later action causality | results/experiment_7338_v644_arc_causal_audit.json | 3 | aggregation | exp7337-arc-transfer.arc_capture_complete_score == 1; exp7337-arc-transfer.verdict_class in ["positive", "circular_positive", "null"] |
+| 11 | exp7339-native-binding | Prototype in-process acquired-constraint evaluation | results/experiment_7339_v644_native_binding.json | 4 | cpu_exact_solver_or_simulator | None |
+| 12 | exp7340-native-cost | Measure complete in-process constraint cost and parity | results/experiment_7340_v644_native_cost.json | 4 | cpu_exact_solver_or_simulator | exp7339-native-binding.native_binding_ready_score == 1; exp7339-native-binding.verdict_class in ["positive", "circular_positive", "null"] |
+| 13 | exp7341-board-continuity | Record GateMate prerequisites and preserve graduated board evidence | results/experiment_7341_v644_board_continuity.json | 4 | aggregation | None |
+| 14 | exp7342-capstone | Reconcile fourteen outcomes and decide bounded next steps | results/experiment_7342_v644_capstone.json | 4 | aggregation | None |
+
+## V644 Phase Boundaries
+
+Phase 1 isolates executor authority and connects the opt-in learning path.
+Phase 2 captures bounded proposals and tests prospective learning. Phase 3
+tests ARC result delivery and later action use. Phase 4 measures the native
+boundary, preserves board evidence, and reconciles all fourteen dispositions.
+
+Every score gate has a closed terminal-class gate. Missing, blocked, partial,
+quarantined, or disqualified evidence cannot authorize a consumer.
+
+## Historical V643 Design
+
+# Carnot Research Roadmap V643: Measurable source verification, live authority handoff, and structural self-learning
+
+**Created:** 2026-09-15 UTC
+**Milestone:** 2026.09.643
+**Status:** Active; thirteen tasks, exp7316 through exp7328
+**Supersedes:** V642 active roster and its terminal evidence
+
+## Transition Evidence
+
+The completion archive ends at V641. V642 evidence therefore comes from its
+active roster, terminal artifacts, and conductor log. Exp7302 rejected the V642
+contract because the selected YAML still named the V641 document. Exp7315 then
+closed all fourteen V642 dispositions. It retained the absent Exp7309 audit,
+the ARC tool-use null, the factor-learning null, and the blocked science class.
+
+The V643 contract repairs the document mismatch. It does not reinterpret V642
+history. Historical artifacts remain diagnostic evidence. They cannot satisfy
+a current readiness gate.
+
+## Research Inputs
+
+The dated V643 section in `research-references.md` is the source ledger. Its
+methods motivate tests and do not count as Carnot results.
+
+- Conservative Constraint Acquisition, arXiv `2604.13283`, motivates versioned
+  structural constraint learning. Every oracle query enters the cost.
+- Cascaded Batch Prompting, arXiv `2608.27038`, motivates the frozen batch
+  branch. V643 first repairs its launcher and measures existing arms.
+- BATCHSAFEBENCH, arXiv `2503.15551`, motivates claim-order, neighboring-claim,
+  and unsupported-instruction controls for batch isolation.
+- Energy-Based Transformers, arXiv `2507.02092`, remains architecture context.
+  Its learned compatibility score cannot certify a source translation.
+
+## Architecture
+
+```text
+selected V643 YAML + independent Markdown table -> exact contract receipt
+
+scoped batch harness -> bounded canary -> held-out measurement -> cold audit
+
+owned ARC lease -> live selfparse session -> consumed tool-result evidence
+
+versioned plans -> acquired constraint structure -> prospective test -> audit
+                                      |
+                                      +-> Rust parity and complete cost
+
+existing board receipts -> unchanged three-board dispositions
+
+all thirteen dispositions -> independent V643 capstone
+```
+
+No task in this document changes a production default. The contract task
+invokes no model and gates no scientific branch.
+
+## Exact Task Contract
+
+There are **13 tasks**, **exp7316 through exp7328**, in this exact order.
+The table is the literal contract with the selected V643 YAML.
+
+| Order | Task ID | Exact title | Deliverable | Phase | Structured gate |
+|---|---|---|---|---|---|
+| 1 | exp7316-contract | Bind V643 literature and the exact thirteen-task contract | results/experiment_7316_v643_contract.json | 1 | None |
+| 2 | exp7317-batch-harness | Qualify the batch fixture through the shipped scoped runner | results/experiment_7317_v643_batch_harness.json | 1 | None |
+| 3 | exp7318-arc-authority | Carry the owned runtime lease into ARC evaluation provenance | results/experiment_7318_v643_arc_authority.json | 1 | None |
+| 4 | exp7319-arc-session | Measure live selfparse generalization after authority repair | results/experiment_7319_v643_arc_session.json | 2 | exp7318-arc-authority.arc_authority_ready_score == 1; exp7318-arc-authority.verdict_class != "disqualified"; exp7318-arc-authority.verdict_class != "blocked"; exp7318-arc-authority.verdict_class != "partial" |
+| 5 | exp7320-batch-canary | Qualify bounded Qwen3.8 joint-claim calls | results/experiment_7320_v643_batch_canary.json | 2 | exp7317-batch-harness.batch_harness_ready_score == 1; exp7317-batch-harness.verdict_class != "disqualified"; exp7317-batch-harness.verdict_class != "blocked"; exp7317-batch-harness.verdict_class != "partial" |
+| 6 | exp7321-batch-measurement | Measure joint-claim fidelity and complete inference cost | results/experiment_7321_v643_batch_measurement.json | 2 | exp7317-batch-harness.batch_harness_ready_score == 1; exp7317-batch-harness.verdict_class != "disqualified"; exp7317-batch-harness.verdict_class != "blocked"; exp7317-batch-harness.verdict_class != "partial"; exp7320-batch-canary.batch_canary_ready_score == 1; exp7320-batch-canary.verdict_class != "disqualified"; exp7320-batch-canary.verdict_class != "blocked"; exp7320-batch-canary.verdict_class != "partial" |
+| 7 | exp7322-batch-audit | Audit source semantics and cross-claim interference | results/experiment_7322_v643_batch_audit.json | 2 | exp7321-batch-measurement.batch_capture_complete_score == 1; exp7321-batch-measurement.verdict_class != "disqualified"; exp7321-batch-measurement.verdict_class != "blocked"; exp7321-batch-measurement.verdict_class != "partial" |
+| 8 | exp7323-addition-prototype | Prototype structural constraint addition across versioned plans | results/experiment_7323_v643_addition_prototype.json | 3 | None |
+| 9 | exp7324-addition-learning | Measure prospective learning from acquired plan constraints | results/experiment_7324_v643_addition_learning.json | 3 | exp7323-addition-prototype.addition_fixture_ready_score == 1; exp7323-addition-prototype.verdict_class != "disqualified"; exp7323-addition-prototype.verdict_class != "blocked"; exp7323-addition-prototype.verdict_class != "partial" |
+| 10 | exp7325-addition-audit | Independently audit structural learning and version safety | results/experiment_7325_v643_addition_audit.json | 3 | exp7324-addition-learning.addition_capture_complete_score == 1; exp7324-addition-learning.verdict_class != "disqualified"; exp7324-addition-learning.verdict_class != "blocked"; exp7324-addition-learning.verdict_class != "partial" |
+| 11 | exp7326-constraint-kernel | Measure Rust parity and cost for useful acquired constraints | results/experiment_7326_v643_constraint_kernel.json | 4 | exp7325-addition-audit.addition_promotion_score == 1; exp7325-addition-audit.verdict_class != "disqualified"; exp7325-addition-audit.verdict_class != "blocked"; exp7325-addition-audit.verdict_class != "partial" |
+| 12 | exp7327-board-continuity | Preserve board evidence and GateMate changed-state conditions | results/experiment_7327_v643_board_continuity.json | 4 | None |
+| 13 | exp7328-capstone | Reconcile thirteen outcomes and decide the next research branches | results/experiment_7328_v643_capstone.json | 4 | None |
+
+## Phase Boundaries
+
+Phase 1 binds the contract and repairs two execution handoffs. Phase 2 measures
+live ARC use and the frozen batch branch. Phase 3 tests structural constraint
+addition with prospective outcomes. Phase 4 checks parity, preserves board
+evidence, and reconciles all thirteen dispositions.
+
+All score gates remain paired with explicit terminal-class gates. A missing,
+blocked, partial, quarantined, or disqualified producer cannot authorize a
+consumer even when a numeric score equals one.
