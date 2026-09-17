@@ -1,0 +1,1834 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "affected_validation": {
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    "board_accounting": {
+      "expected": [
+        "KV260",
+        "GateMate",
+        "PolarFire"
+      ],
+      "observed": [
+        "KV260",
+        "GateMate",
+        "PolarFire"
+      ],
+      "passed": true
+    },
+    "changed_physical_state": {
+      "expected": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "observed": null,
+      "passed": false
+    },
+    "hardware_safety": {
+      "expected": "zero model, board, download, install, purchase, and vendor operations",
+      "observed": 0,
+      "passed": true
+    },
+    "hardware_value": {
+      "expected": "current authenticated measured hardware gain",
+      "observed": null,
+      "passed": false
+    },
+    "native_cost_null_preserved": {
+      "expected": {
+        "gate_passed": false,
+        "native_ten_x_score": 0
+      },
+      "observed": {
+        "gate_passed": false,
+        "native_ten_x_score": 0
+      },
+      "passed": true
+    },
+    "placement_measurement": {
+      "expected": "eligible complete-query measured rows",
+      "observed": [
+        "placement_input_unavailable",
+        "placement_input_unavailable"
+      ],
+      "passed": false
+    },
+    "promotion": {
+      "expected": 0,
+      "observed": 0,
+      "passed": true
+    },
+    "source_authentication": {
+      "expected": "exact Exp7367 rows/receipts and complete Exp7340 null",
+      "observed": true,
+      "passed": true
+    },
+    "terminal_validators": {
+      "expected": [
+        "independent_reducer",
+        "adversarial_verify",
+        "verdict_row_consistency_strict"
+      ],
+      "observed": {
+        "failed": [],
+        "passed": [
+          "independent_reducer",
+          "adversarial_verify",
+          "verdict_row_consistency_strict"
+        ]
+      },
+      "passed": true
+    }
+  },
+  "amdahl_protocol": {
+    "formula": "1 / ((1 - replaceable_fraction) + replaceable_fraction / kernel_rate)",
+    "hundred_x_unaccelerated_fraction_max": 0.01,
+    "hypothetical_kernel_rate": 100.0,
+    "infinite_kernel_limit": "1 / unaccelerated_fraction",
+    "necessary_not_sufficient": true,
+    "requires_measured_complete_service_fraction": true
+  },
+  "board_disposition_complete_score": 1,
+  "board_rows": [
+    {
+      "architecture_limit": "k_max<=5",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none; any future access uses ssh kria only",
+      "fpga_sampling_claimed": true,
+      "future_access": "ssh_only",
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "kv260_fpga_fabric",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:0c85f975bae5228eb68f0acfc273fe711458d04ea6ff44d45d8b75c22fe4d1b0",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_preserved",
+      "unit_id": "board:KV260"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "censored": false,
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_prerequisite": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260916",
+      "last_authenticated_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "last_authenticated_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "last_authenticated_venue": "none_read_only",
+      "metric": false,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:343fdd35086078109085ef656d6a51033f08ccc511e3931a748fc94735b87e4c",
+      "row_type": "board_disposition",
+      "terminal_state": "blocked_changed_physical_state",
+      "unit_id": "board:GateMate"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": true,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "polarfire_linux_cpu",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:c44b1574497e5599acd91c7ec34d29f9f95efbe11b62d4dfcd8b3c79ab2f22b5",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_cpu_dispatch_preserved",
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "changed_state_receipt": null,
+  "completed_at_utc": "2026-09-17T22:34:37.523818+00:00",
+  "device_reconciliation": [
+    {
+      "access_assumed": false,
+      "architecture_limit": "k_max<=5",
+      "class": "owned_graduated_historical",
+      "device": "KV260",
+      "future_access": "ssh_only",
+      "measured_carnot_gain": null
+    },
+    {
+      "access_assumed": false,
+      "class": "owned_cpu_dispatch_historical",
+      "device": "PolarFire",
+      "fpga_sampling_observed": false,
+      "measured_carnot_gain": null
+    },
+    {
+      "access_assumed": false,
+      "class": "owned_externally_blocked",
+      "device": "GateMate",
+      "measured_carnot_gain": null
+    },
+    {
+      "access_assumed": false,
+      "class": "vendor_announcement",
+      "device": "Extropic Z1T",
+      "measured_carnot_gain": null,
+      "owned_by_carnot": false,
+      "source_path": "research-references.md",
+      "v647_evidence_date": "20260917",
+      "vendor_source_date": "20260904"
+    },
+    {
+      "access_assumed": false,
+      "class": "unavailable_not_assumed",
+      "device": "TSU",
+      "measured_carnot_gain": null
+    },
+    {
+      "access_assumed": false,
+      "class": "unavailable_not_assumed",
+      "device": "NPU",
+      "measured_carnot_gain": null
+    }
+  ],
+  "duplicate_required_commands": [],
+  "duration_s": 11.658612594008446,
+  "execution_venue": "host",
+  "experiment_id": 7379,
+  "failed_required_commands": [],
+  "field_principles": {
+    "MODEL_SPECS": "List intended current models; host-only aggregation intends none.",
+    "acceptance_gate_results": "Separate expected, observed, and passed values for each gate class.",
+    "amdahl_protocol": "Retain the ordinary amdahl_protocol value with its evidence scope.",
+    "board_disposition_complete_score": "Equal one for three authenticated dispositions, including an external block.",
+    "board_rows": "Keep board, authenticated venue, date, hash, terminal state, and exact prerequisite.",
+    "changed_state_receipt": "Store a qualifying operator change or null with an exact failed gate.",
+    "completed_at_utc": "Retain the ordinary completed_at_utc value with its evidence scope.",
+    "device_reconciliation": "Retain the ordinary device_reconciliation value with its evidence scope.",
+    "duplicate_required_commands": "Retain the ordinary duplicate_required_commands value with its evidence scope.",
+    "duration_s": "Use measured monotonic elapsed time without sleep or invented duration.",
+    "execution_venue": "Record host CPU work and no current board execution.",
+    "experiment_id": "Retain the ordinary experiment_id value with its evidence scope.",
+    "failed_required_commands": "Retain the ordinary failed_required_commands value with its evidence scope.",
+    "field_principles": "Explain fields directly without wrapping dictionaries or numeric values.",
+    "flagged_adversarial": "Flag a current critical independent finding and exclude it from readiness.",
+    "gate_check_summary": "Name every blocked upstream, field, expectation, and observation.",
+    "hardware_operations": "Retain the ordinary hardware_operations value with its evidence scope.",
+    "hardware_ready_score": "Remain zero because no current board qualification or physical action occurs.",
+    "hardware_value_score": "Remain zero because projections and vendor claims are not measured gains.",
+    "honest_verdict": "Name external absence precisely and never disguise it as success.",
+    "host_computation": "Retain the ordinary host_computation value with its evidence scope.",
+    "inference_substrate": "Name actual host aggregation and retain historical provenance in a sidecar.",
+    "inference_substrate_class": "Use the closed aggregation class that matches actual work.",
+    "invocation_counts": "Separate zero current calls from labeled hash-bound historical receipts.",
+    "milestone": "Retain the ordinary milestone value with its evidence scope.",
+    "missing_required_commands": "Retain the ordinary missing_required_commands value with its evidence scope.",
+    "model_invoked": "Set true for any attempted current load or generation; this task attempted none.",
+    "native_cost_boundary": "Retain the ordinary native_cost_boundary value with its evidence scope.",
+    "phase": "Retain the ordinary phase value with its evidence scope.",
+    "phase_spans": "Retain measured read, build, load, generate, evaluate, validate, and write boundaries.",
+    "placement_envelope_rows": "Use measured fractions and bounds only, or name an unavailable input exactly.",
+    "placement_recommendation": "Retain the ordinary placement_recommendation value with its evidence scope.",
+    "preconditions_checked": "Record exact paths, identities, hashes, classes, and resources before reduction.",
+    "prior_failure_recurrence": "Retain the ordinary prior_failure_recurrence value with its evidence scope.",
+    "promotion_score": "Remain zero because this milestone authorizes no rollout or publication.",
+    "random_seed": "Use null because deterministic evidence accounting does not sample.",
+    "repository_health": "Keep dated unrelated failures distinct from affected checks.",
+    "reproducibility_checksum": "Bind exact code, sources, formula, protocol, raw rows, gates, and validation logs.",
+    "required_checks_passed": "Retain the ordinary required_checks_passed value with its evidence scope.",
+    "rows": "Retain every board and placement unit, failure, metric, cost, and censoring disposition.",
+    "run_date": "Use 20260917 together with actual UTC start and completion timestamps.",
+    "sample_size_budget": "Declare planned, attempted, completed, censored units and the fixed stopping rule.",
+    "schema": "Version the schema while keeping experiment_id and milestone ordinary top-level fields.",
+    "source_artifact_hashes": "Bind exact producer paths and bytes while preserving original classes.",
+    "source_artifact_states": "Retain the ordinary source_artifact_states value with its evidence scope.",
+    "started_at_utc": "Retain the ordinary started_at_utc value with its evidence scope.",
+    "status": "Use a terminal state only after real work and required validation.",
+    "task_id": "Retain the ordinary task_id value with its evidence scope.",
+    "validation_receipts": "Retain argv, environment, scope, exit, elapsed time, and exact log hash.",
+    "verdict_class": "Use the closed class; unchanged external absence is blocked, not partial.",
+    "verifier_is_oracle": "Disclose that the artifact reducer defines record truth, not hardware efficacy."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "check_count": 29,
+    "checks": [
+      {
+        "category": "required_source",
+        "check": "source_bytes:AGENTS.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "AGENTS.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:CODEX.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "CODEX.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:CLAUDE.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "CLAUDE.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:research-program.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "research-program.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/exclusion_manifest.yaml",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/e2e-test-plan.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/e2e-test-plan.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/hardware-bringup-prep.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/hardware-bringup-prep.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:research-hardware-wishlist.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "research-hardware-wishlist.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:research-references.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "research-references.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7367_v646_board_disposition.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7367_v646_board_disposition.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7340_v644_native_cost.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7340_v644_native_cost.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7378_v647_ising_audit.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7378_v647_ising_audit.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7358_v646_validation_contract.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7358_v646_validation_contract.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7367_v646_board_disposition.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7367_v646_board_disposition.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7379_v647_hardware_envelope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7379_v647_hardware_envelope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:tests/python/test_experiment_7379_v647_hardware_envelope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "tests/python/test_experiment_7379_v647_hardware_envelope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:scripts/experiments/experiment_7379_v647_hardware_envelope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "scripts/experiments/experiment_7379_v647_hardware_envelope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "driving_capability",
+        "expected_value": "REQ-REPORT-7379",
+        "field": "REQ-*",
+        "observed_value": "REQ-REPORT-7379",
+        "passed": true,
+        "upstream": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "category": "required_source",
+        "check": "authenticated_board_history",
+        "expected_value": {
+          "all_receipts_authenticated": true,
+          "boards": [
+            "KV260",
+            "GateMate",
+            "PolarFire"
+          ],
+          "experiment_id": 7367,
+          "verdict_class": "blocked_diagnostic"
+        },
+        "field": "identity/class/row_hash/latest_receipt_hash",
+        "observed_value": {
+          "all_receipts_authenticated": true,
+          "boards": [
+            "GateMate",
+            "KV260",
+            "PolarFire"
+          ],
+          "experiment_id": 7367,
+          "verdict_class": "blocked"
+        },
+        "passed": true,
+        "upstream": "results/experiment_7367_v646_board_disposition.json"
+      },
+      {
+        "category": "required_source",
+        "check": "complete_cost_null",
+        "expected_value": [
+          7340,
+          "null",
+          0,
+          false
+        ],
+        "field": "identity/class/native_ten_x_score/acceptance_gate_results.native_ten_x.passed",
+        "observed_value": [
+          7340,
+          "null",
+          0,
+          false
+        ],
+        "passed": true,
+        "upstream": "results/experiment_7340_v644_native_cost.json"
+      },
+      {
+        "category": "required_source",
+        "check": "exp7358_command_boundary",
+        "expected_value": 1,
+        "field": "validation_contract_ready_score",
+        "observed_value": 1,
+        "passed": true,
+        "upstream": "results/experiment_7358_v646_validation_contract.json"
+      },
+      {
+        "category": "external_prerequisite",
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7374",
+        "expected_value": "readable JSON object",
+        "field": "path",
+        "observed_value": "missing",
+        "passed": false,
+        "upstream": "results/experiment_7374_v647_prospective_memory.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7378",
+        "expected_value": "positive|circular_positive|null",
+        "field": "verdict_class",
+        "observed_value": "disqualified",
+        "passed": false,
+        "upstream": "results/experiment_7378_v647_ising_audit.json"
+      },
+      {
+        "category": "required_validation",
+        "check": "affected_required_validation",
+        "expected_value": true,
+        "field": "required_checks_passed",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "Exp7303 scoped runner through Exp7358 command plan"
+      },
+      {
+        "category": "required_validation",
+        "check": "terminal_validation",
+        "expected_value": true,
+        "field": "all terminal commands pass",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "cold replay and strict terminal readers"
+      }
+    ],
+    "failed_count": 3,
+    "failures": [
+      {
+        "category": "external_prerequisite",
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7374",
+        "expected_value": "readable JSON object",
+        "field": "path",
+        "observed_value": "missing",
+        "passed": false,
+        "upstream": "results/experiment_7374_v647_prospective_memory.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7378",
+        "expected_value": "positive|circular_positive|null",
+        "field": "verdict_class",
+        "observed_value": "disqualified",
+        "passed": false,
+        "upstream": "results/experiment_7378_v647_ising_audit.json"
+      }
+    ],
+    "first_failure": {
+      "check": "gatemate_changed_physical_state_receipt",
+      "expected_value": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "field": "receipt_date/operator_authored/provenance/changed_field",
+      "observed_value": {
+        "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+        "accepted_receipt_count": 0,
+        "selected_source_path": null
+      },
+      "upstream": "physical_state_receipt"
+    },
+    "passed": false
+  },
+  "hardware_operations": {
+    "device_access": 0,
+    "downloads": 0,
+    "driver_installations": 0,
+    "flash": 0,
+    "fpga": 0,
+    "jtag": 0,
+    "native_benchmarks": 0,
+    "purchases": 0,
+    "reset": 0,
+    "rust_ports": 0,
+    "ssh": 0,
+    "usb": 0,
+    "vendor_contacts": 0
+  },
+  "hardware_ready_score": 0,
+  "hardware_value_score": 0,
+  "honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and unavailable placement inputs create no speed claim",
+  "host_computation": {
+    "hostname": "icbfl1",
+    "machine": "x86_64",
+    "operation": "CPython JSON parsing, SHA-256 hashing, and Amdahl arithmetic",
+    "processor": "host_cpu"
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "current": {
+      "generations": {
+        "attempted": 0,
+        "cancelled": 0,
+        "completed": 0,
+        "failed": 0,
+        "in_flight": 0
+      },
+      "loads": {
+        "attempted": 0,
+        "cancelled": 0,
+        "completed": 0,
+        "failed": 0,
+        "in_flight": 0
+      }
+    },
+    "historical": {
+      "sidecar_count": 1,
+      "sidecars": [
+        {
+          "label": "historical_hash_bound_no_current_model_work",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/historical_model_receipts.json",
+          "sha256": "sha256:e21637617b33888f385ac5dbfff64853491e232f975c4b97c3384657f14fe332"
+        }
+      ]
+    }
+  },
+  "milestone": "2026.09.647",
+  "missing_required_commands": [],
+  "model_invoked": false,
+  "native_cost_boundary": {
+    "complete_boundary_gate_expected": "CI95 lower bound >= 10 at sizes 1, 32, and 256",
+    "complete_boundary_gate_observed": {
+      "1": 1.9070958551116404,
+      "256": 1.660640300423487,
+      "32": 1.684761623050079
+    },
+    "complete_boundary_gate_passed": false,
+    "erased_by_inner_loop_or_vendor_claim": false,
+    "measurement_scope": "complete Python-to-result request boundary",
+    "native_ten_x_score": 0,
+    "new_native_benchmark_run": false,
+    "rust_port_authorized": false,
+    "source_path": "results/experiment_7340_v644_native_cost.json",
+    "source_verdict_class": "null"
+  },
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430762+00:00",
+      "completed_units": 24,
+      "duration_s": 0.24088973784819245,
+      "ended_monotonic_offset_s": 0.24089725292287767,
+      "phase": "read",
+      "started_monotonic_offset_s": 7.51507468521595e-06
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430777+00:00",
+      "completed_units": 3,
+      "duration_s": 0.0006749280728399754,
+      "ended_monotonic_offset_s": 0.24157226108945906,
+      "phase": "build",
+      "started_monotonic_offset_s": 0.2408973330166191
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430779+00:00",
+      "completed_units": 0,
+      "duration_s": 4.0978193283081055e-08,
+      "ended_monotonic_offset_s": 0.24157246202230453,
+      "phase": "load",
+      "started_monotonic_offset_s": 0.24157242104411125
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430780+00:00",
+      "completed_units": 0,
+      "duration_s": 5.005858838558197e-08,
+      "ended_monotonic_offset_s": 0.24157255212776363,
+      "phase": "generate",
+      "started_monotonic_offset_s": 0.24157250206917524
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430782+00:00",
+      "completed_units": 5,
+      "duration_s": 2.0158011466264725e-05,
+      "ended_monotonic_offset_s": 0.24159284005872905,
+      "phase": "evaluate",
+      "started_monotonic_offset_s": 0.2415726820472628
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430784+00:00",
+      "completed_units": 8,
+      "duration_s": 6.985082291066647e-05,
+      "ended_monotonic_offset_s": 0.24166273092851043,
+      "phase": "validate",
+      "started_monotonic_offset_s": 0.24159288010559976
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T22:34:36.430785+00:00",
+      "completed_units": 3,
+      "duration_s": 0.0007634039502590895,
+      "ended_monotonic_offset_s": 0.2424262349959463,
+      "phase": "write",
+      "started_monotonic_offset_s": 0.2416628310456872
+    }
+  ],
+  "placement_envelope_rows": [
+    {
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "error": "path: expected 'readable JSON object', observed 'missing'",
+      "expected_value": "readable JSON object",
+      "failed_field": "path",
+      "full_path_version_upload_count": null,
+      "hundred_x_necessary_condition": {
+        "condition_scope": "necessary_even_with_infinitely_fast_kernel_not_evaluable",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "hypothetical_kernel_rate": 100.0,
+      "infinite_kernel_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "missing",
+      "outcome": "placement_input_unavailable",
+      "performance_evidence_eligible": false,
+      "recommendation": "retain_cpu",
+      "row_sha256": "sha256:5cdfe96352b6beaf62c6941a9a349024100e53f03bb1bb3a0e0249b6f652e503",
+      "row_type": "placement_envelope",
+      "service_time_decomposition_ns": null,
+      "source_class": "missing",
+      "source_experiment": "Exp7374",
+      "source_path": "results/experiment_7374_v647_prospective_memory.json",
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7374",
+      "update_cadence_queries": null
+    },
+    {
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "error": "verdict_class: expected 'positive|circular_positive|null', observed 'disqualified'",
+      "expected_value": "positive|circular_positive|null",
+      "failed_field": "verdict_class",
+      "full_path_version_upload_count": null,
+      "hundred_x_necessary_condition": {
+        "condition_scope": "necessary_even_with_infinitely_fast_kernel_not_evaluable",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "hypothetical_kernel_rate": 100.0,
+      "infinite_kernel_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "disqualified",
+      "outcome": "placement_input_unavailable",
+      "performance_evidence_eligible": false,
+      "recommendation": "retain_cpu",
+      "row_sha256": "sha256:5d9b63de976f39e6aed5e95d2ac8912a47e27cb09334565af9f4915a91628fdf",
+      "row_type": "placement_envelope",
+      "service_time_decomposition_ns": null,
+      "source_class": "disqualified",
+      "source_experiment": "Exp7378",
+      "source_path": "results/experiment_7378_v647_ising_audit.json",
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7378",
+      "update_cadence_queries": null
+    }
+  ],
+  "placement_recommendation": "retain_cpu",
+  "preconditions_checked": [
+    {
+      "category": "required_source",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/hardware-bringup-prep.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/hardware-bringup-prep.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:research-hardware-wishlist.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-hardware-wishlist.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-references.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7367_v646_board_disposition.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7367_v646_board_disposition.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7340_v644_native_cost.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7340_v644_native_cost.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7378_v647_ising_audit.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7378_v647_ising_audit.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7358_v646_validation_contract.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7367_v646_board_disposition.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7367_v646_board_disposition.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7379_v647_hardware_envelope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7379_v647_hardware_envelope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:tests/python/test_experiment_7379_v647_hardware_envelope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7379_v647_hardware_envelope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:scripts/experiments/experiment_7379_v647_hardware_envelope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7379_v647_hardware_envelope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "driving_capability",
+      "expected_value": "REQ-REPORT-7379",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7379",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "required_source",
+      "check": "authenticated_board_history",
+      "expected_value": {
+        "all_receipts_authenticated": true,
+        "boards": [
+          "KV260",
+          "GateMate",
+          "PolarFire"
+        ],
+        "experiment_id": 7367,
+        "verdict_class": "blocked_diagnostic"
+      },
+      "field": "identity/class/row_hash/latest_receipt_hash",
+      "observed_value": {
+        "all_receipts_authenticated": true,
+        "boards": [
+          "GateMate",
+          "KV260",
+          "PolarFire"
+        ],
+        "experiment_id": 7367,
+        "verdict_class": "blocked"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7367_v646_board_disposition.json"
+    },
+    {
+      "category": "required_source",
+      "check": "complete_cost_null",
+      "expected_value": [
+        7340,
+        "null",
+        0,
+        false
+      ],
+      "field": "identity/class/native_ten_x_score/acceptance_gate_results.native_ten_x.passed",
+      "observed_value": [
+        7340,
+        "null",
+        0,
+        false
+      ],
+      "passed": true,
+      "upstream": "results/experiment_7340_v644_native_cost.json"
+    },
+    {
+      "category": "required_source",
+      "check": "exp7358_command_boundary",
+      "expected_value": 1,
+      "field": "validation_contract_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    }
+  ],
+  "prior_failure_recurrence": {
+    "action": "preserve block and do not repeat physical diagnostics",
+    "prior_honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three diagnostic board dispositions are complete, while readiness, value, and promotion remain zero",
+    "retire_if_same_verdict": true,
+    "same_external_block": true,
+    "source_experiment": "exp7367-board-disposition"
+  },
+  "promotion_score": 0,
+  "random_seed": null,
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failure_count": 4,
+    "historical_failures": [
+      {
+        "classification": "unrelated_repository_wide_failure_observation",
+        "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python/test_experiment_7300_v641_board_continuity.py tests/python/test_experiment_7314_v642_board_continuity.py -q --no-cov -n 0 -o addopts= --basetemp /tmp/exp7314-affected",
+        "date": "20260915",
+        "duration_s": 4.772386,
+        "exit_code": 1,
+        "log_sha256": "sha256:8455dbdb6229e9a9974019f86adbd6ccc556874b1c091f05881db1ae662064a8",
+        "resolved": false,
+        "source_experiment_id": 7314
+      },
+      {
+        "classification": "unrelated_repository_wide_failure_observation",
+        "command": ".venv/bin/pytest tests/python -q",
+        "date": "20260915",
+        "duration_s": null,
+        "exit_code": null,
+        "log_sha256": "sha256:a226a838ea6d527bc923abe765cc5e9c2b9b70f1df323aaf353d7f62226f6230",
+        "resolved": false,
+        "source_experiment_id": 7314
+      },
+      {
+        "cause": "private pytest basetemp parent was absent",
+        "classification": "affected_authoring_failure_corrected",
+        "date": "20260916",
+        "resolved": true,
+        "source_path": "results/raw/experiment_7341_v644_board_continuity/validation/failed_basetemp_parent_artifact.json",
+        "source_sha256": "sha256:0e03333f0346cc497d09ed49cc31394ff5b71779bcec65f651a83f6f0588d0ff",
+        "validation_receipts": [
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/focused tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/focused",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 2.5174543091561645,
+            "elapsed_s": 2.5174543091561645,
+            "exit_code": 1,
+            "log_hash": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/01_focused_pytest.log",
+            "log_sha256": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "name": "focused_pytest",
+            "output_tail": "\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 0.87s\n",
+            "passed": false,
+            "scope": "explicit_tests",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/coverage tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "run",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "-m",
+              "pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/coverage",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 4.1640213679056615,
+            "elapsed_s": 4.1640213679056615,
+            "exit_code": 1,
+            "log_hash": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/02_changed_module_coverage.log",
+            "log_sha256": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "name": "changed_module_coverage",
+            "output_tail": "sixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 1.59s\n",
+            "passed": false,
+            "scope": "explicit_tests_and_changed_modules",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' --show-missing --fail-under=100",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "report",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "--show-missing",
+              "--fail-under=100"
+            ],
+            "duration_s": 0.07214806508272886,
+            "elapsed_s": 0.07214806508272886,
+            "exit_code": 2,
+            "log_hash": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/03_changed_module_coverage_report.log",
+            "log_sha256": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "name": "changed_module_coverage_report",
+            "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7341_v644_board_continuity.py     328    247    25%   121-131, 150-151, 165, 171-199, 205-225, 231-234, 242-484, 506-529, 540-568, 574-635, 641, 667, 686, 713, 749, 755-757, 770-779, 789-830, 845, 925-1107, 1150-1289, 1295-1304, 1310-1314\n--------------------------------------------------------------------------------------\nTOTAL                                                      328    247    25%\nCoverage failure: total of 25 is less than fail-under=100\n",
+            "passed": false,
+            "scope": "changed_modules",
+            "timed_out": false
+          }
+        ]
+      },
+      {
+        "cause": "private pytest basetemp parent was absent",
+        "classification": "affected_authoring_failure_corrected",
+        "date": "20260916",
+        "resolved": true,
+        "source_path": "results/raw/experiment_7341_v644_board_continuity/validation/failed_basetemp_parent_artifact.json",
+        "source_sha256": "sha256:0e03333f0346cc497d09ed49cc31394ff5b71779bcec65f651a83f6f0588d0ff",
+        "validation_receipts": [
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/focused tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/focused",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 2.5174543091561645,
+            "elapsed_s": 2.5174543091561645,
+            "exit_code": 1,
+            "log_hash": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/01_focused_pytest.log",
+            "log_sha256": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "name": "focused_pytest",
+            "output_tail": "\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 0.87s\n",
+            "passed": false,
+            "scope": "explicit_tests",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/coverage tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "run",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "-m",
+              "pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/coverage",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 4.1640213679056615,
+            "elapsed_s": 4.1640213679056615,
+            "exit_code": 1,
+            "log_hash": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/02_changed_module_coverage.log",
+            "log_sha256": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "name": "changed_module_coverage",
+            "output_tail": "sixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 1.59s\n",
+            "passed": false,
+            "scope": "explicit_tests_and_changed_modules",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' --show-missing --fail-under=100",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "report",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "--show-missing",
+              "--fail-under=100"
+            ],
+            "duration_s": 0.07214806508272886,
+            "elapsed_s": 0.07214806508272886,
+            "exit_code": 2,
+            "log_hash": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/03_changed_module_coverage_report.log",
+            "log_sha256": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "name": "changed_module_coverage_report",
+            "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7341_v644_board_continuity.py     328    247    25%   121-131, 150-151, 165, 171-199, 205-225, 231-234, 242-484, 506-529, 540-568, 574-635, 641, 667, 686, 713, 749, 755-757, 770-779, 789-830, 845, 925-1107, 1150-1289, 1295-1304, 1310-1314\n--------------------------------------------------------------------------------------\nTOTAL                                                      328    247    25%\nCoverage failure: total of 25 is less than fail-under=100\n",
+            "passed": false,
+            "scope": "changed_modules",
+            "timed_out": false
+          }
+        ]
+      }
+    ],
+    "incident_open": true,
+    "status": "degraded_open",
+    "unresolved_collection_error_observation_count": 0
+  },
+  "reproducibility_checksum": "sha256:b53c4ae0228009d82337a99623bf303b903c16126dfd843558ef9782a22c0232",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "architecture_limit": "k_max<=5",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none; any future access uses ssh kria only",
+      "fpga_sampling_claimed": true,
+      "future_access": "ssh_only",
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "kv260_fpga_fabric",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:0c85f975bae5228eb68f0acfc273fe711458d04ea6ff44d45d8b75c22fe4d1b0",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_preserved",
+      "unit_id": "board:KV260"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "censored": false,
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_prerequisite": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260916",
+      "last_authenticated_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "last_authenticated_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "last_authenticated_venue": "none_read_only",
+      "metric": false,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:343fdd35086078109085ef656d6a51033f08ccc511e3931a748fc94735b87e4c",
+      "row_type": "board_disposition",
+      "terminal_state": "blocked_changed_physical_state",
+      "unit_id": "board:GateMate"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": true,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "polarfire_linux_cpu",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:c44b1574497e5599acd91c7ec34d29f9f95efbe11b62d4dfcd8b3c79ab2f22b5",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_cpu_dispatch_preserved",
+      "unit_id": "board:PolarFire"
+    },
+    {
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "error": "path: expected 'readable JSON object', observed 'missing'",
+      "expected_value": "readable JSON object",
+      "failed_field": "path",
+      "full_path_version_upload_count": null,
+      "hundred_x_necessary_condition": {
+        "condition_scope": "necessary_even_with_infinitely_fast_kernel_not_evaluable",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "hypothetical_kernel_rate": 100.0,
+      "infinite_kernel_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "missing",
+      "outcome": "placement_input_unavailable",
+      "performance_evidence_eligible": false,
+      "recommendation": "retain_cpu",
+      "row_sha256": "sha256:5cdfe96352b6beaf62c6941a9a349024100e53f03bb1bb3a0e0249b6f652e503",
+      "row_type": "placement_envelope",
+      "service_time_decomposition_ns": null,
+      "source_class": "missing",
+      "source_experiment": "Exp7374",
+      "source_path": "results/experiment_7374_v647_prospective_memory.json",
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7374",
+      "update_cadence_queries": null
+    },
+    {
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "error": "verdict_class: expected 'positive|circular_positive|null', observed 'disqualified'",
+      "expected_value": "positive|circular_positive|null",
+      "failed_field": "verdict_class",
+      "full_path_version_upload_count": null,
+      "hundred_x_necessary_condition": {
+        "condition_scope": "necessary_even_with_infinitely_fast_kernel_not_evaluable",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "hypothetical_kernel_rate": 100.0,
+      "infinite_kernel_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "disqualified",
+      "outcome": "placement_input_unavailable",
+      "performance_evidence_eligible": false,
+      "recommendation": "retain_cpu",
+      "row_sha256": "sha256:5d9b63de976f39e6aed5e95d2ac8912a47e27cb09334565af9f4915a91628fdf",
+      "row_type": "placement_envelope",
+      "service_time_decomposition_ns": null,
+      "source_class": "disqualified",
+      "source_experiment": "Exp7378",
+      "source_path": "results/experiment_7378_v647_ising_audit.json",
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7378",
+      "update_cadence_queries": null
+    }
+  ],
+  "run_date": "20260917",
+  "sample_size_budget": {
+    "board_rows_attempted": 3,
+    "board_rows_censored": 0,
+    "board_rows_completed": 3,
+    "board_rows_planned": 3,
+    "new_hardware_runs_attempted": 0,
+    "new_hardware_runs_censored": 0,
+    "new_hardware_runs_completed": 0,
+    "new_hardware_runs_planned": 0,
+    "placement_rows_censored": 2,
+    "placement_rows_completed": 0,
+    "placement_sources_attempted": 2,
+    "placement_sources_eligible": 0,
+    "placement_sources_planned": 2,
+    "placement_sources_unavailable": 2,
+    "remaining_work": 0,
+    "stopping_rule": "inspect Exp7374 and Exp7378 once; reduce eligible measured rows only; account for exactly KV260, GateMate, and PolarFire; stop before hardware work"
+  },
+  "schema": "carnot.experiment_7379.v647_hardware_envelope.v1",
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/gatemate_changed_state_search.json": "sha256:008f9229c7a311e5f79f5f473ed77fcfc8773969ae642ebede8b5dce5828c510",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/hardware_envelope_evidence.json": "sha256:c0a47aed3f28e36f4630bf8679e12a20d0056ced58691ad844e2d5cbfa762027",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/historical_model_receipts.json": "sha256:e21637617b33888f385ac5dbfff64853491e232f975c4b97c3384657f14fe332",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:6cdc8771dda9006b965d575c9cad44b8536681d813de2b168c55f201ded0419e",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e",
+    "ops/hardware-bringup-prep.md": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7367_v646_board_disposition.py": "sha256:19a32626e135abe2e6a4c64db0fc7b545467ef18647519cf61c21b7218283c0c",
+    "python/carnot/experiment_7379_v647_hardware_envelope.py": "sha256:22474ee665b4c37fcf5bd17bb729da5cf496fc05f276745eeee40604cd5ef2ee",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:32450cbf83a2a53a2f3dd56b932ece1b3794b8cd542aed4ac92b4357c9bb634d",
+    "results/experiment_7340_v644_native_cost.json": "sha256:cd4b71d899dac882a9b05ac24bf2ecb46770044e2b8edcd1e4050cbc0d015954",
+    "results/experiment_7358_v646_validation_contract.json": "sha256:0d2c2fe876ba303b21c9b5fe5b094d92851ea407d7d9f06ae9d8ca4d37475781",
+    "results/experiment_7367_v646_board_disposition.json": "sha256:7802f106982d6bda7f764406619628c254be0327b4a945d9e6de773d10fcb406",
+    "results/experiment_7374_v647_prospective_memory.json": null,
+    "results/experiment_7378_v647_ising_audit.json": "sha256:a9f6ae5b2f2d189cdb8d81542cb5ca6ef5ebc94f69208d5a933527834ac8afd8",
+    "scripts/experiments/experiment_7379_v647_hardware_envelope.py": "sha256:396ccc65de7b5b5d3fa9e4e34f7b903579106ee9c7ab2296818f63978614dd80",
+    "tests/python/test_experiment_7379_v647_hardware_envelope.py": "sha256:e2f4cece884de299e6d0f44e0c8141a81b59aa6aa57166631a2af809f20f82d7"
+  },
+  "source_artifact_states": {
+    "board_source": {
+      "authorizes_readiness": false,
+      "board_disposition_complete_score": 1,
+      "diagnostic_only": true,
+      "experiment_id": 7367,
+      "status": "blocked",
+      "verdict_class": "blocked"
+    },
+    "cost_source": {
+      "complete_boundary_gate_passed": false,
+      "experiment_id": 7340,
+      "native_cost_complete_score": 1,
+      "native_ten_x_score": 0,
+      "status": "complete",
+      "verdict_class": "null"
+    },
+    "receipt_authentication": {
+      "GateMate": true,
+      "KV260": true,
+      "PolarFire": true
+    },
+    "validation_boundary": {
+      "experiment_id": "exp7358-validation-contract",
+      "validation_contract_ready_score": 1
+    }
+  },
+  "started_at_utc": "2026-09-17T22:34:36.188330+00:00",
+  "status": "blocked",
+  "task_id": "exp7379-hardware-envelope",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7379_v647_hardware_envelope",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7379_v647_hardware_envelope"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5544678489677608,
+      "ended_at_utc": "2026-09-17T22:34:26.420971+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:7c9c9796c667ffcada93aa5fab82dc79ca8cdc0cb0b7b8d35ec6d245839dea7a",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7379_v647_hardware_envelope\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7379_v647_hardware_envelope.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7379_v647_hardware_envelope": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7379_v647_hardware_envelope.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T22:34:25.866097+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7379-a7r22j4w/basetemp/focused tests/python/test_experiment_7379_v647_hardware_envelope.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7379-a7r22j4w/basetemp/focused",
+        "tests/python/test_experiment_7379_v647_hardware_envelope.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 3.8402197130490094,
+      "ended_at_utc": "2026-09-17T22:34:30.261872+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:000838e86ffd475e620408b5a5ba9cdf6ff82f71936b60ee65f8b75d84e6be81",
+      "name": "focused_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 2.12s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T22:34:26.421010+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7379-a7r22j4w/coverage/.coverage '--include=*/experiment_7379_v647_hardware_envelope.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7379-a7r22j4w/basetemp/coverage tests/python/test_experiment_7379_v647_hardware_envelope.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7379-a7r22j4w/coverage/.coverage",
+        "--include=*/experiment_7379_v647_hardware_envelope.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7379-a7r22j4w/basetemp/coverage",
+        "tests/python/test_experiment_7379_v647_hardware_envelope.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 5.667348947841674,
+      "ended_at_utc": "2026-09-17T22:34:35.929811+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:3da8aea6831218549e46f00cbe1b982fda932fe0fe29a2cb942f74065e2a89ad",
+      "name": "changed_module_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 2.94s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T22:34:30.261929+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7379_v647_hardware_envelope.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7379_v647_hardware_envelope.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7379-a7r22j4w/coverage/.coverage"
+      },
+      "duration_s": 0.07590287015773356,
+      "ended_at_utc": "2026-09-17T22:34:36.006204+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:d3a1806cb8a7f786ecd09deace1f6995ea7b2b049ca1f5fe24ccfd682380138c",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7379_v647_hardware_envelope.py     342      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       342      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T22:34:35.929880+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7379_v647_hardware_envelope.py scripts/experiments/experiment_7379_v647_hardware_envelope.py tests/python/test_experiment_7379_v647_hardware_envelope.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7379_v647_hardware_envelope.py",
+        "scripts/experiments/experiment_7379_v647_hardware_envelope.py",
+        "tests/python/test_experiment_7379_v647_hardware_envelope.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012673998018726707,
+      "ended_at_utc": "2026-09-17T22:34:36.019233+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T22:34:36.006234+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7379_v647_hardware_envelope.py scripts/experiments/experiment_7379_v647_hardware_envelope.py tests/python/test_experiment_7379_v647_hardware_envelope.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7379_v647_hardware_envelope.py",
+        "scripts/experiments/experiment_7379_v647_hardware_envelope.py",
+        "tests/python/test_experiment_7379_v647_hardware_envelope.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011075495043769479,
+      "ended_at_utc": "2026-09-17T22:34:36.030796+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T22:34:36.019275+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7379_v647_hardware_envelope.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7379_v647_hardware_envelope.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.13642812310718,
+      "ended_at_utc": "2026-09-17T22:34:36.167594+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T22:34:36.030843+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7379_v647_hardware_envelope.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7379_v647_hardware_envelope.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.020079317968338728,
+      "ended_at_utc": "2026-09-17T22:34:36.188052+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T22:34:36.167622+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'from pathlib import Path; from carnot.experiment_7379_v647_hardware_envelope import ExperimentPaths,cold_validate_candidate; p=ExperimentPaths(Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7379_v647_hardware_envelope.json'\"'\"'),Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/hardware_envelope_evidence.json'\"'\"'),Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/gatemate_changed_state_search.json'\"'\"'),Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/historical_model_receipts.json'\"'\"'),Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json'\"'\"'),Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/validation'\"'\"')); e=cold_validate_candidate(p); print({'\"'\"'errors'\"'\"':e}, flush=True); raise SystemExit(bool(e))'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "from pathlib import Path; from carnot.experiment_7379_v647_hardware_envelope import ExperimentPaths,cold_validate_candidate; p=ExperimentPaths(Path('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7379_v647_hardware_envelope.json'),Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/hardware_envelope_evidence.json'),Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/gatemate_changed_state_search.json'),Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/historical_model_receipts.json'),Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json'),Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/validation')); e=cold_validate_candidate(p); print({'errors':e}, flush=True); raise SystemExit(bool(e))"
+      ],
+      "command_category": "independent_replay",
+      "command_environment": {},
+      "duration_s": 0.50142663391307,
+      "ended_at_utc": "2026-09-17T22:34:36.937299+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+      "log_sha256": "sha256:c1055b23bc92c9bfd026807244ea4bbf1999d4821ebb507d320cf2a26ff08cae",
+      "name": "independent_reducer",
+      "output_tail": "{'errors': []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "independent_replay",
+      "started_at_utc": "2026-09-17T22:34:36.435546+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5449930001050234,
+      "ended_at_utc": "2026-09-17T22:34:37.482566+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "safety",
+      "started_at_utc": "2026-09-17T22:34:36.937331+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7379_v647_hardware_envelope/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.04095382895320654,
+      "ended_at_utc": "2026-09-17T22:34:37.523752+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7379_v647_hardware_envelope/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "safety",
+      "started_at_utc": "2026-09-17T22:34:37.482597+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

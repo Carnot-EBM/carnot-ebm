@@ -72572,3 +72572,104 @@ exact field, expected value, and observed value.
 **When** the reducer and both strict terminal tools reload the candidate
 **Then** a changed identity, hash, row, gate, score, class, or checksum fails
 **And** only a valid terminal document is written atomically.
+
+## V647 hardware placement envelope — 2026-09-17
+
+**Status:** Specified. This host-only analysis preserves board and complete-cost boundaries.
+
+### REQ-REPORT-7379: Bound placement only from eligible measured service rows
+
+Exp7379 SHALL authenticate the exact Exp7367 board-disposition bytes and Exp7340
+native-cost bytes before it reduces any hardware claim. It SHALL independently
+check all three Exp7367 row hashes and the current bytes of each KV260 and
+PolarFire latest-receipt path. KV260 SHALL remain historical FPGA-fabric
+execution with future access restricted to SSH and the existing `k_max<=5`
+architecture. PolarFire SHALL remain hash-matched CPU dispatch, not FPGA
+sampling. The Exp7340 complete-service tenfold null SHALL remain a null and
+SHALL NOT be erased by an inner-loop timing or vendor announcement.
+
+Exp7379 SHALL inspect the declared Exp7374 and Exp7378 producer paths. A producer
+is eligible for placement analysis only when it exists, has the exact identity,
+is terminal, is neither blocked, partial, nor disqualified, is not adversarially
+flagged or quarantined, passed its required validation, and supplies measured
+complete-query rows with solve, certificate discovery, certificate check,
+certificate update, serialization, and host-overhead components. Missing or
+ineligible evidence SHALL produce a `placement_input_unavailable` row naming the
+exact path, class, failed field, expected value, and observed value. Such rows
+MAY complete accounting but SHALL NOT become performance evidence.
+
+For each eligible measured row, Exp7379 SHALL compute the replaceable fraction
+from complete service time and the Amdahl bound
+`1 / ((1 - fraction) + fraction / kernel_rate)`. It SHALL report the infinite-
+kernel bound separately from a declared hypothetical finite kernel rate. It
+SHALL state the necessary condition for a 100x total speed target:
+`unaccelerated_fraction <= 0.01`, even for an infinitely fast kernel. It SHALL
+count full path or version uploads and retain the measured update cadence. When
+measured headroom is unavailable or insufficient, the recommendation SHALL be
+CPU retention. No native benchmark, Rust port, or hardware execution is in
+scope.
+
+Exp7379 SHALL reuse the approved GateMate changed-state receipt parser over the
+approved local operator sources only. Without an operator-authored dated cable,
+port, board, power, JTAG, or DirtyJTAG change after Exp6559, it SHALL set
+`changed_state_receipt=null` and use `blocked_changed_physical_state` with an
+exact `gate_check_summary`. That external block SHALL not prevent three-row
+board accounting. `board_disposition_complete_score` SHALL equal one only when
+KV260, GateMate, and PolarFire are all authenticated. `hardware_ready_score`,
+`hardware_value_score`, and `promotion_score` SHALL remain zero.
+
+The wishlist reconciliation SHALL retain Extropic Z1T as a dated V647 vendor
+announcement, not measured Carnot hardware. It SHALL assume neither TSU nor NPU
+access. No USB, SSH, JTAG, flash, reset, installation, download, purchase,
+vendor-contact, model, or device operation is authorized. Exp7379 SHALL declare
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model receipts SHALL remain labeled and hash-bound in a sidecar.
+
+The workflow SHALL derive the exact affected command plan through Exp7358 and
+execute it through Exp7303. It SHALL require worktree imports, focused pytest
+without workers or inherited coverage, separate 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test spec
+coverage. It SHALL not add an unexecuted full-suite requirement. The declared
+entrypoint and cold artifact replay are its capability-level end-to-end checks.
+It SHALL independently reduce the retained raw evidence, run adversarial
+verification and strict verdict-row consistency, and write the terminal JSON
+atomically. A required affected-check or terminal-validator failure SHALL use
+`verdict_class=disqualified` and keep all readiness, value, and promotion scores
+at zero.
+
+#### SCENARIO-REPORT-7379-SOURCES: Board history and the complete-cost null stay authenticated
+
+**Given** exact Exp7367 and Exp7340 bytes plus their referenced receipts
+**When** Exp7379 authenticates identities, hashes, rows, classes, and validation
+**Then** KV260 fabric and PolarFire CPU evidence remain separate historical facts
+**And** no projection or inner-loop timing erases the complete-service tenfold null.
+
+#### SCENARIO-REPORT-7379-PLACEMENT: Unavailable producers create no speed claim
+
+**Given** a missing Exp7374 producer or a disqualified Exp7378 producer
+**When** Exp7379 checks placement eligibility before reading performance rows
+**Then** each unavailable input names its exact path, class, field, expectation, and observation
+**And** replaceable fractions, upload counts, cadence, and full-service speedups are not fabricated.
+
+#### SCENARIO-REPORT-7379-AMDAHL: Complete service time controls acceleration bounds
+
+**Given** eligible measured stage rows and a separately declared kernel rate
+**When** Exp7379 reduces replaceable and unaccelerated service fractions
+**Then** it reports finite-rate and infinite-rate Amdahl bounds separately
+**And** a 100x target requires an unaccelerated fraction no greater than 0.01.
+
+#### SCENARIO-REPORT-7379-BOARDS: External GateMate absence still completes three-row accounting
+
+**Given** authenticated KV260 and PolarFire graduation plus no changed GateMate receipt
+**When** Exp7379 reconciles the board and wishlist ledgers
+**Then** the verdict is `blocked_changed_physical_state` with an exact failed gate
+**And** board disposition is complete while readiness, value, and promotion remain zero.
+
+#### SCENARIO-REPORT-7379-ARTIFACT: Scoped validation and cold replay control publication
+
+**Given** retained raw board, placement, source, and validation evidence
+**When** the independent reducer and both strict terminal tools inspect the candidate
+**Then** changed identities, hashes, rows, classes, gates, scores, or checksums fail
+**And** only the resulting valid terminal document is written atomically.

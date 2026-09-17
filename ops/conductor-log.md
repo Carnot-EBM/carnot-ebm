@@ -18141,3 +18141,4 @@ code |
 | 2026-09-17 21:22 UTC | Collect new adapter-withheld ARC supervisor outcom | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 7.39s |
 | 2026-09-17 21:42 UTC | Compile original-clause Boltzmann laws with entail | OK | 89 passed, 1 warning in 7.65s |
 | 2026-09-17 22:15 UTC | Validate Boltzmann marginals under cached entailme | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.68s |
+| 2026-09-17 23:38 UTC | Bound proof-memory placement and preserve board pr | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 56"] == experi |
