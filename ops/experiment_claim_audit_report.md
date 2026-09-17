@@ -11,32 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
+| CLAIM_SUPPORTED | 1 |
 | NO_CLAIM | 5 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
-## experiment_7331_learning_adapter.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No falsifiable outcome claim is made; this is a blocked gate-check receipt.
-
-## WAS THAT CHECKED
-No. The experiment did not run because both prerequisite gates failed.
-
-## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7330-executor-isolation.executor_fixture_ready_score (actual=0 == expected=1)` `blocked_at_layer` `conductor_pre_gate`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7332_plan_canary.json
+## experiment_7347_v645_plan_canary.json
 
 **NO_CLAIM**
 
@@ -47,18 +26,22 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because the artifact reports a blocked pre-gate check, not an experimental result or comparative claim.
+For the receipt-level transport assertion, fewer than four completed responses, any censored or failed call, an invalid parse, invalid assignment, or failed runtime provenance would refute readiness; no comparative model-value claim is made.
 
 ## WAS THAT CHECKED
-No; the experiment was blocked at `conductor_pre_gate`, so the method and any substantive success criterion were never evaluated.
+Yes. All four call rows expose completion, censoring, parsing, assignments, allowed starts, and runtime identity, while parser controls demonstrate that invalid formatting could be rejected.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate_check_summary": "gate-unsat(final): 2 of 2 gate(s) failed; first failure: exp7330-executor-isolation.executor_fixture_ready_score (actual=0 == expected=1)"`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`complete_positive_plan_transport_ready_4_of_4_usable`; `generation_calls_attempted`: `4`; `generation_calls_completed`: `4`; `generation_calls_failed`: `0`; `censored`: `false`; `parse_status`: `valid`; `terminal_state`: `response`; `cuda_provenance_ok`: `true`; `cpu_invalid_format`; `observed`: `invalid`; `promotion_ready_score`: `0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7336_v644_arc_resume.json
+## experiment_7348_v645_plan_capture.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7349_prospective_learning.json
 
 **NO_CLAIM**
 
@@ -69,40 +52,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a disqualified mechanism receipt rather than an efficacy, readiness, generalization, or verifier-value claim.
+For the intended learning claim, distinct future requests would need to show no structural improvement—or no advantage over a serious non-learning baseline—but this blocked artifact contains no experimental outcomes.
 
 ## WAS THAT CHECKED
-Not applicable; no positive comparative claim was advanced for refutation.
+No. Execution stopped at `conductor_pre_gate`; only prerequisite gates were evaluated.
 
 ## EVIDENCE
-`honest_verdict` `complete_disqualified_affected_validation_failed` `verdict_class` `disqualified` `status` `disqualified` `promotion_value` `0` `model_invoked` `false` `solve_provenance` `no_game_solve_cpu_transport_fixture`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"gate-unsat(final): 5 of 6 gate(s) failed"`, `"blocked_at_layer": "conductor_pre_gate"`, `"duration_s": 0.0`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7337_arc_transfer.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no substantive performance or transfer claim to falsify; this is only a blocked-run receipt.
-
-## WAS THAT CHECKED
-No; the experiment stopped at the pre-gate, so no transfer result or comparator was evaluated.
-
-## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"blocked_at_layer": "conductor_pre_gate"`, `"passed": false`, `"actual": 0`, `"expected": 1`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7339_v644_native_binding.json
+## experiment_7351_v645_acquisition_prototype.json
 
 **CLAIM_SUPPORTED**
 
@@ -110,65 +71,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The imported native binding exactly matches the reference schedule evaluator and completes the fixed boundary protocol, without asserting speed or learning value.
+The completed experiment is disqualified because required validation or prototype-safety/value gates failed.
 
 ## WHAT WOULD REFUTE IT
-A valid parity case with different Python and Rust outputs, any nonzero parity mismatch, use of a fallback instead of the imported extension, or missing/censored protocol blocks would refute the claim.
+All required checks passing—particularly affected validation and cost-value—with no disqualifying safety failure would falsify the headline.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports an actual imported-extension replay, exact comparison across captured and adverse cases, mutation checks, and all 270 planned timing rows across 90 paired blocks. Although the verifier is the oracle, the claim is narrowly about execution-grounded parity—not independent correctness or added value.
+Yes. The acceptance gates explicitly tested affected validation, cost-value, adversarial clearance, resource bounds, infeasible outputs, and terminal validation; the first two failed. The repository-wide required test observation also failed and timed out. The exact-oracle circularity does not rescue a positive value claim because the artifact makes none and assigns zero value/readiness.
 
 ## EVIDENCE
-`"verifier_is_oracle": true`; `"verdict_class": "circular_positive"`; `"mismatches": 0`; `"all_matched": true`; `"rows": 3308`; `"actual imported extension round trip with zero differences"`; `"python_fallback_used": false`; `"compiled_execution": true`; `"cost_rows_completed": 270`; `"cost_rows_censored": 0`; `"paired_blocks": 90`; `"speed_claimed": false`; `"learning_value_claimed": false`; `"claim_boundary": "prototype parity and readiness only; Exp7340 owns speed inference"`
+`honest_verdict`: `complete_disqualified: current required validation or prototype safety failed`; `verdict_class`: `disqualified`; `required_checks_passed`: `false`; `affected_validation`: `observed`: `false`, `passed`: `false`; `cost_value`: `observed`: `false`, `passed`: `false`; `acquisition_value_score`: `0`; `acquisition_prototype_ready_score`: `0`; `finite_bias_utility`: `327.5`; `conservative_utility`: `327.5`; `timed_out`: `true`; `verifier_is_oracle`: `true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7340_v644_native_cost.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The native evaluator completed with exact parity but failed the predeclared ten-times-throughput lower-bound gate at every tested batch size.
-
-## WHAT WOULD REFUTE IT
-CI95 lower bounds of at least 10 for native-over-Python throughput at batch sizes 1, 32, and 256 would refute the performance-null claim.
-
-## WAS THAT CHECKED
-Yes. The fixed native-versus-Python comparison was evaluated over 30 paired blocks at each size, with the protocol sealed before timing and no outcome-based extension. All observed CI95 lower bounds were below 10. The oracle defines correctness parity, but the artifact makes no positive claim about the verifier’s added value.
-
-## EVIDENCE
-`"expected": "CI95 lower bound >= 10 at sizes 1, 32, and 256"`; `"passed": false`; `"1": 1.9070958551116404`; `"32": 1.684761623050079`; `"256": 1.660640300423487`; `"randomized_paired_blocks_each": 30`; `"sealed_before_timing": true`; `"stopping_rule": "exactly 30 paired blocks for each fixed size; no outcome extension"`; `"parity_mismatches": 0`; `"native_ten_x_score": 0`; `"verdict_class": "null"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7341_v644_board_continuity.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-GateMate remains blocked because no qualifying post-Exp6559 physical-state receipt exists, while three board dispositions are complete and no hardware readiness, promotion, or operations are claimed.
-
-## WHAT WOULD REFUTE IT
-A qualifying operator-authored receipt dated after 20260823 documenting a GateMate cable, port, power, board, JTAG, or DirtyJTAG change would refute the blocking claim; nonzero readiness, promotion, or issued operations would contradict the remaining headline assertions.
-
-## WAS THAT CHECKED
-Yes. The artifact applies an explicit receipt contract, reports the receipt search result and accepted count, includes a GateMate row that could have recorded qualifying evidence, and separately records readiness, promotion, and operation counts. The oracle warning does not create circularity here because the artifact makes a receipt-status claim, not a positive claim about the verifier’s added value.
-
-## EVIDENCE
-`"gatemate_changed_physical_state_receipt"`; `"accepted_receipt_count": 0`; `"exists": false`; `"newer_than_exp6559": false`; `"operator_changed_conditions": {}`; `"terminal_criterion_met": false`; `"board_disposition_complete_score": 1`; `"hardware_readiness_score": 0`; `"hardware_promotion_score": 0`; `"hardware_operations_issued_count": 0`; `"status": "blocked"`; `"verdict_class": "blocked"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7342_v644_capstone.json
+## experiment_7352_acquisition_cost.json
 
 **NO_CLAIM**
 
@@ -179,13 +96,61 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative efficacy claim to falsify. Treating the administrative headline as an assertion, it would be contradicted by fewer than fourteen dispositions, available current science, or a qualifying current board-state receipt.
+There is no comparative claim to falsify. Any future claim of acquisition-strategy superiority would be refuted if a serious baseline tied or outperformed the tested method at the full execution boundary.
 
 ## WAS THAT CHECKED
-No comparative claim was checked. The administrative assertions were checked through the fourteen-disposition count, the required-science availability gate, and the board-receipt gate.
+No. Execution was blocked at the pre-gate, so no acquisition strategies or comparator results were evaluated.
 
 ## EVIDENCE
-`inference_substrate` `aggregation_from_upstream_artifacts` `model_invoked` `false` `capstone_value_score` `0` `promotes_scientific_efficacy` `false` `fourteen_dispositions` `14` `required_science_available` `false` `gatemate_changed_physical_state_receipt_missing` `verdict_class` `blocked`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"blocked_at_layer": "conductor_pre_gate"`; `"gate_check_summary": "gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7351-acquisition-prototype.acquisition_prototype_ready_score (actual=0 == expected=1)"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7354_v645_arc_transfer.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7355_v645_board_state.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+This is a read-only state/receipt artifact, not a comparative value claim; its accounting record would be contradicted by an eligible post-Exp6559 operator-authored physical-change receipt, any current hardware operation, or any nonzero readiness, value, or promotion score.
+
+## WAS THAT CHECKED
+Yes. The artifact searched the named approved receipt sources, recorded zero accepted receipts, enumerated operation counts, and reported the relevant scores as zero. The oracle circularity does not affect a verifier-value claim because no such claim is made.
+
+## EVIDENCE
+`inference_substrate`: `aggregation_from_upstream_artifacts`; `current_evidence`: `read_only_artifact_aggregation`; `accepted_receipt_count`: `0`; `exists`: `false`; `hardware_operations_issued_count`: `0`; `hardware_readiness_score`: `0`; `hardware_value_score`: `0`; `hardware_promotion_score`: `0`; `scientific_value_score`: `0`; `model_invoked`: `false`; `status`: `blocked`; `Accounting completeness does not assert board availability.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7356_v645_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+The capstone completed fourteen-task disposition accounting while withholding scientific promotion because the required evidence remained unavailable.
+
+## WHAT WOULD REFUTE IT
+A disposition count other than fourteen, an unclassified task, available qualifying science, or a positive readiness/value/promotion score would refute the administrative headline; there is no comparative efficacy claim to falsify.
+
+## WAS THAT CHECKED
+Yes. The exact roster count, required-science availability, and promotion/readiness/value scores were explicitly checked, and the five claim rows record abstention or blocking rather than efficacy promotion. The oracle circularity therefore does not create a circular value claim here.
+
+## EVIDENCE
+`"fourteen_dispositions"`, `"observed": 14`, `"passed": true`, `"required_science_available"`, `"observed": false`, `"passed": false`, `"capstone_complete_score": 1`, `"capstone_promotion_score": 0`, `"capstone_readiness_score": 0`, `"capstone_value_score": 0`, `"promotes_scientific_efficacy": false`, `"metric_kind": "disposition_accounting_only"`, `"verdict_class": "blocked"`, `"inference_substrate": "aggregation_from_upstream_artifacts"`
 
 ## RECOMMENDATION
 KEEP

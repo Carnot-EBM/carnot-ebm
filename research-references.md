@@ -45003,3 +45003,101 @@ Operator-supplied paper, read directly (not a milestone planner sweep):
   but nothing formalizes "operator feedback on a run -> harness update" as a
   named mechanism the way this paper does. Worth naming if the operator ever
   wants that loop made explicit; not proposed as a task here.
+## V646 planning research — 2026-09-16
+
+This section records a new source check before the V646 experiment design.
+Existing entries, including the concurrent September self-improvement notes,
+remain intact. Paper results below are external evidence, not Carnot results.
+
+### Methods to carry into the next bounded experiments
+
+- **Dream-RSI**, [2609.14858v1](https://arxiv.org/html/2609.14858v1), submitted
+  2026-09-14. The method evaluates exploration policies against recorded
+  discovery trees before returning online. Carnot can test whether its
+  supervisor ledger supports this use. A redirect followed by progress is
+  only an association. Unobserved branches have unknown outcomes. Require
+  support coverage, game-disjoint evaluation, and abstention on unsupported
+  counterfactuals. Restrict candidates to the existing curated arm set.
+  [Author code](https://github.com/zhengkid/Dream-RSI) is a reference, not a
+  new runtime dependency. This extends the earlier discovery note with an
+  explicit support test; it does not authorize autonomous arm invention.
+- **ModularRSI**, [2609.14857v1](https://arxiv.org/html/2609.14857v1), submitted
+  2026-09-14. The authors separate harness modules and use successful/failed
+  trajectory contrasts across tasks. Their evolution tasks are disjoint from
+  downstream benchmarks. Apply those controls to one Carnot supervisor
+  selection module. Keep evaluation games out of selection and compare with
+  the unchanged live policy. A lone failed run cannot identify a general
+  module defect. This is an adaptation of the evaluation method, not a
+  reproduction of their coding-agent results.
+- **Conservative Constraint Acquisition**,
+  [2604.13283v1](https://arxiv.org/html/2604.13283v1), submitted 2026-04-14.
+  Its scope is pairwise separation and global capacity under Boolean
+  feasibility feedback. Use this assumption explicitly in prospective
+  structural learning. Charge auxiliary acquisition queries and complete
+  service time. Preserve higher-order counterexamples that cannot justify
+  pairwise atoms. Lower query count does not imply lower latency.
+- **Memoir**, [2607.20792](https://arxiv.org/abs/2607.20792), rechecked.
+  Use separate prediction and memory-write phases as a hypothesis for the
+  existing constraint adapter. Test delayed updates on distinct future
+  requests, restart, erasure, and rule-version changes. Do not infer a
+  Carnot learning benefit from the paper or from memory writes alone.
+- **RT4CHART**, [2603.27752](https://arxiv.org/abs/2603.27752), found through
+  [Hugging Face Papers](https://huggingface.co/papers/2603.27752).
+  Claim decomposition and evidence-linked diagnostics motivate separate
+  source-fidelity and executor-validity rows. An executable plan can still
+  misrepresent the user's request. Retain quantity, entity, and ordering
+  checks instead of accepting parser success as semantic evidence.
+
+### Requested topic sweep and deferred directions
+
+| Topic | Primary source checked | Implication and boundary |
+|---|---|---|
+| Energy-based reasoning | [EBT, 2507.02092](https://arxiv.org/abs/2507.02092); [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4) | Compatibility optimization and function-space equivalence do not prove the truth of extracted constraints. No foundation-model training branch in this milestone. |
+| Neural constraint satisfaction | [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461); [PAL, 2503.19466](https://arxiv.org/abs/2503.19466) | Supplied linear/algebraic constraints are prerequisites. They do not resolve Carnot's source-translation gap. |
+| Ising in ML | [Scaling Up Thermodynamic AI Models, 2607.00170](https://arxiv.org/abs/2607.00170) | Preserve sample-quality and autocorrelation costs. Classification results are not verification evidence. |
+| Hallucination mitigation | [SIRIN, 2608.00033](https://arxiv.org/abs/2608.00033) | Memory-grounded faithfulness needs independent evaluation. Defer another detector integration until present measurements are valid. |
+| KAN continual learning | [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306) | Per-knot anchoring is a candidate for a future learned verifier. Its vision classifier result does not justify exact constraint certification. |
+| Constrained generation | [AdapTrack, 2510.17376](https://arxiv.org/abs/2510.17376); [DISC, 2504.09135](https://arxiv.org/abs/2504.09135) | Distribution distortion and decoding cost remain controls. Do not reopen retired finite-ID transport or external-text ranking. |
+| Hardware sampling | [FPGA–ASIC co-design, 2602.15985v2](https://arxiv.org/abs/2602.15985v2), revised 2026-09-04 | Digital orchestration can dominate solver time. Measure complete boundaries before claiming acceleration; no new board performance follows from this paper. |
+| Online constraint acquisition | [T-Oracle/FastCA, 2609.12267](https://arxiv.org/abs/2609.12267) | Neural oracle emulation is not an exact authority. Keep the existing exact-feedback experiment and its paid-query accounting; do not add a neural oracle. |
+
+### Secondary-source checks and access limits
+
+- **OpenReview:** searched ICLR 2026 energy/reasoning submissions. The
+  [Structural Energy Framework entry](https://openreview.net/forum?id=etXDKUpxJq)
+  returned a browser challenge. Search indexing exposed a conference-paper
+  PDF, but this pass did not verify its decision or full method. No experiment
+  relies on an inferred acceptance status.
+- **Semantic Scholar:** both Graph API citation endpoints returned HTTP 200
+  via a direct read, after the browser tool returned internal errors.
+  The [EBT citation page](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  returned 20 entries and a next-page pointer. This is a partial citation
+  scan. It included Memoir, Solver-Hard, and
+  [Cross-Block Conditioning, 2609.14934](https://arxiv.org/abs/2609.14934).
+  The [ARM–EBM citation endpoint](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20)
+  returned eight entries, including
+  [Constitutional On-Policy Safe Distillation](https://arxiv.org/abs/2606.03089)
+  and [False First Steps](https://arxiv.org/abs/2602.02991).
+  Their arXiv records were opened. Defer new distillation and latent-model
+  branches. The cited distributional text-scorer paper does not reopen PHASE D.
+- **Hugging Face:** checked verification/hallucination papers, then followed
+  RT4CHART and SIRIN to arXiv. Discovery summaries are not the authority for
+  scientific claims.
+- **GitHub trending:** inspected the
+  [Python](https://github.com/trending/python?since=monthly) and
+  [Rust](https://github.com/trending/rust?since=monthly) monthly pages.
+  No new EBM/constraint/KAN implementation was selected from those lists.
+  Author-linked research code is not claimed to be trending.
+- **Extropic:** [writing](https://extropic.ai/writing) exposed only site
+  navigation in this fetch. Its [hardware page](https://extropic.ai/hardware)
+  lists Z1 Stick and Card early access in 2027. Its
+  [software page](https://extropic.ai/software) now describes TORX alongside
+  THRML. These are vendor statements, not authenticated Carnot hardware
+  access. This check supersedes older planning assumptions of immediate Z1
+  availability; do not schedule TSU execution on that basis.
+- **Logical Intelligence:** checked
+  [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models)
+  and its linked reasoning article. The public description places constraint
+  reasoning beneath the language interface. It is architectural context;
+  this pass did not obtain weights, a reproducible benchmark, or a sufficient
+  implementation specification to reproduce Kona.

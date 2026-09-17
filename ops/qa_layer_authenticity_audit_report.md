@@ -3,66 +3,36 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-16
 
-Scanned 9 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 2 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 5 |
-| `CANNOT_DETERMINE` | 0 |
+| `SILENT_NON_FIRING` | 3 |
+| `CANNOT_DETERMINE` | 1 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 2 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_is_finite_number` — auroc = decimal.Decimal("1.37")
-- `adversarial_verify.py::_name_tokens` — nFolds
-- `adversarial_verify.py::_is_count_field` — results/experiment_1957_truncproof_ll1_grammar.json` contains the real top-level field `{"runs": 100}`. `_is_count_field("runs")` returns False even though runs is unambiguously a combinatorial count.
-- `adversarial_verify.py::_is_timestamp_field` — results/experiment_4146_sudoku_accumulate_pass1_epochfix.json: {"seed_epoch": 6399, "post_epoch": 6399}` — these real anti-no-op measurements prove that training did not advance, but both are classified as timestamps and the current tautology check emits nothing.
-- `adversarial_verify.py::_is_identifier_field` — "auroc_by_seed": {"11": 0.812, "17": 0.817}
+- `adversarial_verify.py::_delta_stem` — results/experiment_274_results.json` contains the real field `"delta_accuracy_vs_158": 16.67`, which this function returns `None` for.
+- `adversarial_verify.py::_is_rate_metric_field` — precision_given_agreement: 0.8`, with `agreement_gold_entries: 8` and `agreement_entries: 10`, is a real top-level small-sample ARC k/N metric in `results/arc3_gap4_arc2_chain_ensemble.json`, but this function returns false for its field name.
+- `adversarial_verify.py::_add_variant_denominators_from_value` — {"ablation_arms": ["baseline", "no_retrieval", "no_reranker"]}` should contribute denominator 3, but the list branch does nothing because `"ablation_arms"` does not contain `"variant"`.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_is_finite_number` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_name_tokens` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_count_field` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_timestamp_field` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_identifier_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_delta_stem` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_rate_metric_field` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_add_variant_denominators_from_value` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_flag_summary
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The name `_flag_summary` claims to summarize a list of flags into a count, maximum severity rank, and serialized flag records.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-This function performs no artifact-field extraction, free-text matching, threshold enforcement, path computation, writes, recognizer fallback, or measurement. Nothing in the supplied code supports a concrete misclassification or silent non-firing finding.
-
-
-## adversarial_verify.py::_is_finite_number
+## adversarial_verify.py::_delta_stem
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -70,186 +40,52 @@ This function performs no artifact-field extraction, free-text matching, thresho
 SILENT_NON_FIRING
 
 ## CLAIM
-The function claims `True if v is a real, finite numeric value.` and says it `Accepts any real number, not only Python's built-in int and float.`
+`If k names a delta/diff/change, return the metric STEM it should derive from`.
 
 ## FINDINGS
-1. `if isinstance(v, numbers.Real):` is narrower than the claimed concept. Finite numeric scalar types that do not register with `numbers.Real`, notably Decimal scalars and scalar tensor objects, reach the terminal `return False`; the docstring itself establishes that false results can cause metrics to be `silently skipped`.
-2. `math.isfinite(float(v))` tests the converted binary float, not the original value. A finite integer outside the float range raises `OverflowError` and returns false, directly contradicting `True if v is a real, finite numeric value.`
-3. No dictionary-field read occurs. The function has no field-unwrapping logic, so a principle-wrapped numeric field, a list, or None reaches `return False`; whether wrappers reach this function cannot be determined without its callers.
-4. There are no free-text searches, substring checks, regexes, or negation-sensitive rules.
-5. There are no numeric thresholds or boundary comparisons. The defect is numeric classification, not an off-by-one operator.
-6. The implementation is narrower than its name and opening docstring. Its later oversized-integer carve-out documents the contradiction but does not resolve it.
-7. There are no hardcoded semantic token lists. The tuple `OverflowError, ValueError, TypeError` represents conversion failures; no defensible omitted built-in conversion exception is evident.
-8. Test mutation cannot be determined from the supplied code alone. Semantically, none of the branches is decorative: deleting the bool branch accepts booleans, deleting the exception branch permits verifier crashes, and deleting the terminal false changes unsupported-input behavior.
-9. There are no paths, filesystem writes, tracked-state mutations, or measurements of external work.
-10. The terminal `return False` conflates unsupported values, non-numbers, non-finite numbers, and finite values that cannot survive float conversion. A caller using this predicate as a guard cannot distinguish an unverified metric from a genuinely rejected one.
+1. The implementation is narrower than its claim. Prefix-form delta names are not recognized; they fall through to `return None`, making a missed delta indistinguishable from a genuine non-delta field.
+
+2. There are no dictionary-field reads. `kl = k.lower()` assumes the declared string input; dict, list, or None inputs raise immediately. Principle-wrapped artifact values are irrelevant because this helper accepts a field name, not a field value.
+
+3. No word-internal substring collision was found. `if kl in ("delta", "diff", "change"):` is exact equality, while `if kl.endswith(suf):` and `if marker in kl:` use underscore-delimited tokens. They nevertheless falsely fail on prefix-form names because no prefix branch exists.
+
+4. The hardcoded vocabulary `("delta", "diff", "change")` stands in for arithmetic-change field names but omits ordinary members such as difference, improvement, and gain. The positional grammar also omits delta-first names.
+
+5. No negation or context-blind free-text scan exists. There are also no numeric thresholds or off-by-one comparisons.
+
+6. Mutation testing exposed two unprotected branches. Deleting `if kl in ("delta", "diff", "change"):` left all 9 focused regression tests green; deleting `if marker in kl:` also left all 9 green. The suffix branch is covered by a positive suffix-form assertion, but the infix fixture expects rejection and therefore passes even when infix recognition never fires.
+
+7. The terminal `return None` is a silent unrecognized default. Downstream callers conservatively withhold the structural-delta exemption, producing false-positive quarantine rather than skipping the entire linter, but no output distinguishes unsupported naming from a genuine non-delta.
+
+8. No absolute paths, writes, tracked-state mutation, timing measurements, counters, or other side effects exist in this function.
 
 ## COUNTEREXAMPLE
-An in-memory artifact containing `{"auroc": decimal.Decimal("1.37")}` is plausible for a script using exact decimal serialization. The value is finite but impossible for AUROC; this function returns false before the range check can run.
+```json
+{
+  "experiment": "honest",
+  "honest_verdict": "success: measured accuracy improvement",
+  "accuracy_baseline": 0.123456,
+  "accuracy_treatment": 0.246912,
+  "delta_accuracy_vs_158": 0.123456
+}
+```
+The helper returns `None` for `delta_accuracy_vs_158`; the downstream tautology check consequently emits a CRITICAL finding for the honest baseline/delta equality instead of recognizing verified arithmetic structure.
 
 ## MISSED INPUT
-`auroc = decimal.Decimal("1.37")`
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The `numbers.Real` gate and lossy `float(v)` conversion recreate the exact silent-skip failure described in the docstring for additional numeric types. A critical verifier needs to distinguish finite, non-finite, and unsupported values instead of collapsing all three into `return False`.
-
-
-## adversarial_verify.py::_numeric_pairs
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-`Return all distinct pairs of finite-numeric top-level keys.`
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-`items = [(k, float(v)) for k, v in d.items() if _is_finite_number(v)]` explicitly filters values before conversion; lists, dictionaries, booleans, and None are not assumed to be numbers here. The function contains no text matching, thresholds, recognizer defaults, paths, writes, side effects, or measurements, and its pair-generation loop matches its stated contract.
-
-
-## adversarial_verify.py::_name_tokens
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The function claims to extract whole-word tokens from a field name for count and timestamp classification.
-
-## FINDINGS
-1. `return set(re.findall(r"[a-z0-9]+", name.lower()))` lowercases before detecting boundaries, destroying camelCase boundaries. A real field such as nFolds becomes one token instead of the expected n and folds tokens, silently preventing a downstream folds marker from firing.
-
-2. The regex `r"[a-z0-9]+"` stands in for lexical words in field names but only recognizes runs separated by non-alphanumeric characters. It omits camelCase and PascalCase word boundaries; Unicode letters are also fragmented or discarded. The implementation is therefore narrower than the claim `Whole words in a field name`.
-
-3. There are no dictionary-field reads, free-text substring checks, negation-sensitive checks, numeric thresholds, absolute paths, writes, default no-check branches, or measurements in this function. `name.lower()` assumes a string, but that matches the declared `name: str` interface; principle-wrapped field values do not apply to dictionary key names.
-
-4. Whether deleting `r"[a-z0-9]+"` or changing its semantics would fail an existing test cannot be determined from the supplied function. No test suite was provided, and there is no neighbouring rule in this snippet that double-covers tokenization.
-
-## COUNTEREXAMPLE
-Field name: `nFolds`
-
-Actual result: `{"nfolds"}`
-
-Expected classification-relevant tokens: `{"n", "folds"}`
-
-This is a false negative for any downstream rule looking for the `folds` marker.
-
-## MISSED INPUT
-`nFolds`
+`results/experiment_274_results.json` contains the real field `"delta_accuracy_vs_158": 16.67`, which this function returns `None` for.
 
 ## RECOMMENDATION
 WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The documented examples cover underscore-separated names, but `name.lower()` erases camelCase boundaries before tokenization. Because the function feeds classifiers, that failure is silent: a normal agent-produced JSON field can bypass the intended marker without any error or visible “unrecognized” result.
+This is a corpus-demonstrated silent recognizer miss that can turn into a false-positive quarantine. The unsupported-name default is indistinguishable from a genuine non-delta, and the focused regression suite does not protect two of the three recognition branches.
 
 
-## adversarial_verify.py::_is_count_field
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims to recognize a `Field whose name implies a combinatorial count` for which `small-integer coincidence is plausible, not suspicious.`
-
-## FINDINGS
-1. Silent non-firing: the count vocabulary misses ordinary, corpus-real count nouns including runs, episodes, games, and tokens. Consequently, real count fields are silently treated as measurements.
-
-2. Field extraction: there is no `d.get` or equivalent artifact-value read here. `name.lower()` assumes a string and would raise on a dict, list, or None, but the declared `name: str` input represents a field name, not a principle-wrapped field value.
-
-3. Substring matching: `return any(m in nl for m in count_markers)` has no token boundaries. Concrete false matches include `count` in discounted_reward, `n_` in mean_loss, `_n` in run_name, `num_` in enum_value, `rows` in arrows_score, `total` in totally_correct_rate, `size` in effect_size, `_index` in search_indexed_accuracy, `step` in stepwise_auc, `iteration` in transliteration_accuracy, and `epoch` in epochal_loss.
-
-4. Negation/context: no free-text verdict is scanned, so proposition-level negation is inapplicable. Nevertheless, a negated identifier such as not_count_metric still matches because `count` is treated without context.
-
-5. Boundary comparisons: this function contains no numeric threshold, so there is no numeric off-by-one defect to assess.
-
-6. Claim mismatch: the implementation is both broader and narrower than its docstring. It accepts non-count metrics through accidental substrings while rejecting genuine count nouns absent from `_COUNT_WORDS` and `count_markers`.
-
-7. Pattern-list gap: `_COUNT_WORDS` stands for ordinary count nouns but omits runs, episodes, games, and tokens. `count_markers` stands for lexical evidence of a count but likewise omits those nouns while including semantically overbroad markers such as `size`, `step`, and `epoch`.
-
-8. Untested/decorative pattern: `_num` is completely subsumed by `_n`; every name containing `_num` necessarily contains `_n`, so deleting `_num` cannot change behavior and should leave behavioral tests green. Direct helper tests cover the `_COUNT_WORDS` branch, `count`, and `n_`, but no dedicated assertions protect `_n`, `num_`, `rows`, `total`, `size`, `_index`, `step`, `iteration`, or `epoch`.
-
-9. Paths and side effects: this helper computes no path, performs no write, and does not mutate tracked state.
-
-10. Default behavior: an unrecognized name makes `return any(m in nl for m in count_markers)` return False. That does not disable the downstream fabrication check—it withholds the count exemption—but it silently conflates an unknown count noun with a known non-count field.
-
-11. Measurement timing: this function performs no work measurement, duration capture, or counter update.
-
-## COUNTEREXAMPLE
-`{"mean_latency_ms": 125.0, "mean_energy_j": 125.0}`
-
-Both names are classified as counts solely because mean_ contains `n_`. The downstream tautology check therefore emits no flag for two unrelated metrics matching exactly at 125.0—a false negative.
-
-## MISSED INPUT
-`results/experiment_1957_truncproof_ll1_grammar.json` contains the real top-level field `{"runs": 100}`. `_is_count_field("runs")` returns False even though runs is unambiguously a combinatorial count.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The raw `m in nl` classifier simultaneously creates dangerous exemptions for unrelated metrics and misses genuine count fields. Matching normalized whole tokens with an explicitly tested count vocabulary is required; adding more unbounded substrings would merely move both failure boundaries.
-
-
-## adversarial_verify.py::_is_timestamp_field
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`True if the field is a wall-clock TIMESTAMP (not a measured metric).`
-
-## FINDINGS
-1. `if kl.endswith(("_ts", "_epoch", "_unixtime")):` classifies every training-epoch counter as a timestamp. Real anti-no-op fields ending in `_epoch` are therefore excluded from tautology detection; the real missed fragment is identified below.
-2. There are no dictionary-field reads here. `kl = k.lower()` requires a string, but `k: str` explicitly establishes that contract and JSON object keys are strings; principle-wrapped field values are irrelevant.
-3. `t in kl for t in ("time", "clock", "epoch", "stamp")` performs boundaryless substring matching. The corpus field z3_timeout_ms matches `"time"` inside “timeout” even though it is a solver limit, not a timestamp.
-4. The code is context-blind even where boundaries exist. `_epoch` cannot distinguish a Unix epoch from a training epoch, while `"time"` cannot distinguish an instant from execution time, verification time, wall time, or a timeout.
-5. The hardcoded taxonomies are narrower and broader than their concepts. `("_ts", "_epoch", "_unixtime")` omits the corpus’s Unix-labelled timestamp suffix while wrongly absorbing training epochs; `("_ns", "_us", "_ms")` omits seconds; and `("time", "clock", "epoch", "stamp")` omits Unix/UTC/created/updated vocabulary while accepting duration and timeout vocabulary.
-6. `if _names_a_measured_interval(kl):` does not rescue all measured intervals. Actual corpus fields representing execution time, verification time, and wall time still reach `return True` through the generic `"time"` rule.
-7. There are no numeric thresholds or comparison operators, so no threshold-boundary or off-by-one defect applies.
-8. The implementation is both broader and narrower than its claim: it returns true for measured durations, timeout limits, and training counters, but false for the actual wall-clock timestamp field updated_at_unix.
-9. Mutation coverage is defective. The explicit `"mtime"` member is deletable under the named regression tests because every tested mtime key also ends in `_ns` and contains `"time"`; `_unixtime` has no test occurrence; `_us` and `_ms` have no positive timestamp case; and `"time"`, `"epoch"`, and `"stamp"` lack independent positive coverage. The measured-interval return, `"timestamp"`, `_ts`, `_epoch`, `_ns` plus `"clock"`, and the final `return False` do have direct behavioral coverage.
-10. The function computes no path, performs no write, and mutates no tracked artifact or operator document. It contains no measurement and therefore cannot evaluate one before its work.
-11. The default `return False` does not disable downstream checking: an unrecognized name remains eligible for tautology comparison. It does not report that recognition failed, but its failure direction is conservative.
-
-## COUNTEREXAMPLE
-`{"honest_verdict":"complete: timing paths independently measured","execution_time_ms":705.7332992553711,"solver_latency_ms":705.7332992553711}` — execution_time_ms is misclassified as a timestamp, so the identical measured values produce no TAUTOLOGY flag.
-
-## MISSED INPUT
-`results/experiment_4146_sudoku_accumulate_pass1_epochfix.json: {"seed_epoch": 6399, "post_epoch": 6399}` — these real anti-no-op measurements prove that training did not advance, but both are classified as timestamps and the current tautology check emits nothing.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The classifier confuses lexical hints with semantics, suppressing real measurements while failing to recognize an actual Unix timestamp spelling. Word boundaries or one more token will not repair the training-epoch and elapsed-time collisions; timestamp instants need an explicit tokenized taxonomy with corpus-derived positive and negative tests.
-
-
-## adversarial_verify.py::_is_chance_floor_score
+## adversarial_verify.py::_is_verified_arithmetic_delta
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## adversarial_verify.py::_is_identifier_field
+## adversarial_verify.py::_is_rate_metric_field
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -257,34 +93,114 @@ The classifier confuses lexical hints with semantics, suppressing real measureme
 SILENT_NON_FIRING
 
 ## CLAIM
-`True if the field is an identifier / seed / timestamp / metadata field,` and `not a measured metric.`
+`True for small-sample k/N ARC rate fields, not arbitrary floats.` claims to recognize small-sample ARC proportions while excluding unrelated numeric fields.
 
 ## FINDINGS
-1. Silent non-firing: `return kl.endswith("_seed") or kl.endswith("_id") or kl.endswith("_seed_used")` classifies measured-result collections such as auroc_by_seed or latency_by_model_id as identifiers. Those fields describe metrics grouped by an identifier; they are not themselves identifier fields.
-2. Field extraction: there are no dictionary-field reads or wrapped artifact values here. `kl = k.lower()` assumes a string and raises on None, lists, or dictionaries, but that matches the declared parameter type; principle-wrapped values are irrelevant because this function receives a key.
-3. String boundaries: `kl in _IDENTIFIER_FIELDS` is exact membership, not substring matching. The suffix tests have lexical boundaries but are context-blind: they cannot distinguish a seed value from a measured metric grouped by seed.
-4. Negation/context: no free-text field is scanned, so negation blindness is not present.
-5. Numeric boundaries: there are no numeric thresholds or off-by-one comparisons.
-6. Docstring mismatch: the implementation is broader than its claim because any name ending with the recognized suffixes is treated as metadata, even when the field contains measured results.
-7. Pattern taxonomy: the suffix vocabulary represents identifier/seed naming conventions but omits plausible conventions such as UUID, identifier, trial number, and run number. The contents of `_IDENTIFIER_FIELDS` and the implementation of `_is_timestamp_field(kl)` were not supplied, so whether they compensate cannot be determined.
-8. Untested/deletable patterns: no tests were supplied. None of the three visible suffix rules subsumes another, so no visible rule can be proven decorative; overlap with the unavailable global set and timestamp helper cannot be assessed.
-9. Absolute paths and tracked-state mutation: this function computes no paths and performs no writes.
-10. Default behavior: an unrecognized key returns false and is treated as a measured field, not silently approved as an identifier. Caller behavior is unavailable.
-11. Measurement timing: this function records no duration, counter, or other measurement.
+1. A real small-sample ARC precision field is not recognized; the literal input appears under MISSED INPUT. The recognizer is therefore narrower than its stated concept.
+
+2. There are no dictionary reads in this function. `kl = k.lower()` assumes a string and would raise on a dict, list, or None, but JSON object keys are strings and principle wrappers affect values, so this is not an artifact-shape bug in the normal call path.
+
+3. `any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])` performs unbounded substring matching. In the current marker list, transfer matches inside transferred, and first_win matches inside first_window. The consequential false-negative fragment is under COUNTEREXAMPLE.
+
+4. The suffix checks in `kl.endswith(("_rate", "_fraction"))` and the underscore-delimited checks `"_rate_" in kl` and `"_fraction_" in kl` do have lexical boundaries. They are nevertheless semantically overbroad: a learning-rate hyperparameter is not a small-sample k/N outcome.
+
+5. The marker scan is context- and negation-blind. A field named no_winner_generated_count is classified exactly like a positive winner-generated rate because only substring presence matters. The function does not scan free-text values, so honest-verdict negation is not directly implicated.
+
+6. There are no numeric thresholds or comparisons here, hence no local off-by-one defect.
+
+7. The implementation is simultaneously broader and narrower than its docstring. It never examines ARC context, sample size, numerator, denominator, or even the value; meanwhile, `("_rate", "_fraction")`, `"_rate_"`, and `"_fraction_"` omit ordinary k/N names such as accuracy, precision, recall, proportion, ratio, and pct. `_RATE_METRIC_MARKERS[2:]` is also brittle positional coupling: reordering the external tuple silently changes this predicate.
+
+8. Repository search found no direct test of `_is_rate_metric_field`. The `"_rate_" in kl` rule is double-covered in the incident fixtures by domain markers such as transfer, first_win, and winner_generated, while `"_fraction_" in kl` has no isolated regression test; either could plausibly be deleted while the current focused suite stayed green.
+
+9. The function is pure: it contains no path computation, writes, tracked-state mutation, or measurement. An unrecognized key returns false rather than disabling the downstream check, so the default direction is stricter—not silent approval—and classes D, E, F, and G do not apply.
 
 ## COUNTEREXAMPLE
-`{"auroc_by_seed": {"11": 0.812, "17": 0.817}, "accuracy_by_seed": {"11": 0.812, "17": 0.817}}` — both measured fields are classified as identifiers solely because their names end in `_seed`.
+`{"variant_attempts_count": 25, "checkpoint_transferred_gib": 0.04, "transfer_latency_s": 0.04}`
+
+Both unrelated measurements are classified as rates because their names contain transfer; both equal 1/25, so the downstream shared-denominator carve-out suppresses the tautology warning.
 
 ## MISSED INPUT
-`"auroc_by_seed": {"11": 0.812, "17": 0.817}`
+`precision_given_agreement: 0.8`, with `agreement_gold_entries: 8` and `agreement_entries: 10`, is a real top-level small-sample ARC k/N metric in `results/arc3_gap4_arc2_chain_ensemble.json`, but this function returns false for its field name.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The suffix heuristic silently confuses metrics grouped by an identifier with identifier values, allowing real measurements to be excluded from the comparison this predicate supports. The missing global definitions, callers, and tests prevent a complete taxonomy or mutation audit, but the false classification is provable from this function alone.
+The predicate is neither a validator nor a safe lexical recognizer: `any(marker in kl for marker in _RATE_METRIC_MARKERS[2:])` admits non-rate measurements while the enumerated spellings omit real ARC proportions. Because its result suppresses downstream tautology detection, replace name sampling with explicit metric metadata and verified numerator/denominator provenance.
 
 
-## adversarial_verify.py::_is_reference_field
+## adversarial_verify.py::_add_variant_denominators_from_value
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Collect explicit small variant denominators from counts or list lengths.`
+
+## FINDINGS
+1. Silent non-firing: the only list-name recognizer is `if "variant" in kl and 1 < len(value) <= _SMALL_SHARED_DENOMINATOR_MAX:`. A genuine variant collection whose field name uses another project-plausible term silently contributes no denominator. The function is `-> None` and reports no unrecognized case, so omission is indistinguishable from a genuine absence.
+
+2. Substring overmatch: `"variant" in kl` has no token boundary and therefore matches unrelated longer identifiers containing those letters. The numeric path has the same structural weakness in `any(marker in kl for marker in _DENOMINATOR_KEY_MARKERS)`, although the omitted marker definitions prevent auditing its concrete collisions.
+
+3. Context blindness: the list rule examines only whether the key contains `"variant"`. It cannot distinguish an actual variant collection from a key describing non-variant data, invariant checks, rejected variants, or variants that were not attempted.
+
+4. Recursive contamination: `_add_variant_denominators_from_value(key, item, out)` reuses the matched parent key for every nested list. Once an ancestor matches `"variant"`, lengths of nested score arrays, token arrays, or diagnostic arrays can also be collected as supposed variant denominators.
+
+5. Field extraction is comparatively sound for the requested wrapper convention. There are no dict-field reads through d.get; `elif isinstance(value, dict):` recursively reaches a wrapped value while preserving the parent path, lists are handled, and None is ignored. The remaining type assumption is `kl = key.lower()`, which raises if an external caller violates the declared string-key contract.
+
+6. No threshold off-by-one defect is demonstrable. `if 1 < n <= _SMALL_SHARED_DENOMINATOR_MAX and float(value).is_integer():` excludes one and includes the configured maximum; the docstring does not define different endpoint semantics.
+
+7. The implementation is both narrower and broader than its claim: narrower because variant-list recognition requires the literal substring `"variant"`, and broader because unrelated or nested list lengths can reach `out.add(n)`. The concept represented by `_DENOMINATOR_KEY_MARKERS` is numeric denominator/count field names, but its members are not supplied, so omissions and mutation coverage for that list cannot honestly be determined.
+
+8. No tests are supplied, so no rule can be claimed deletable with the suite still green. The numeric, list, list-recursion, and dict-recursion branches are not logically double-covered by one another.
+
+9. This function contains no filesystem path, write, tracked-state mutation, duration measurement, or work-timing operation. The supplied code therefore has no hardcoded-write-target, test-side-effect, or pre-work measurement defect.
+
+## COUNTEREXAMPLE
+`{"invariant_checks": ["schema_valid", "hash_matches"]}` is classified as having variant denominator 2 because `"variant"` occurs inside `"invariant_checks"`, even though the list contains validation invariants rather than experimental variants.
+
+## MISSED INPUT
+`{"ablation_arms": ["baseline", "no_retrieval", "no_reranker"]}` should contribute denominator 3, but the list branch does nothing because `"ablation_arms"` does not contain `"variant"`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The same `"variant" in kl` predicate underdefines the intended concept while overmatching unrelated identifiers, and recursive reuse of `key` spreads that mistake into nested lists. A structured field classifier with explicit recognized/unrecognized status and level-aware traversal is required; adding one boundary or synonym would repair only one failure mode.
+
+
+## adversarial_verify.py::_variant_denominators
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+CANNOT_DETERMINE
+
+## CLAIM
+`Return small variant denominators explicitly evidenced in the artifact.`
+
+## FINDINGS
+1. Silent non-firing cannot be evaluated because all recognition logic is delegated to `_add_variant_denominators_from_value(key, value, denominators)`, whose implementation is absent.
+2. No field-specific reads or type assumptions occur here; `for key, value in d.items():` forwards wrapped dictionaries, lists, and None values unchanged.
+3. No substring matching, negation-sensitive scanning, numeric thresholds, hardcoded pattern lists, absolute paths, writes, default recognizer branches, or measurements appear in the supplied function.
+4. Whether the implementation matches its claim depends entirely on the omitted helper.
+5. Test coverage and deletable rules cannot be assessed because neither the helper nor tests were supplied.
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+ADD_TEST_CASE
+
+## RATIONALE
+The visible function is only an iteration wrapper and contains no substantive detection behavior. Auditing fabrication detection requires the implementation and tests for `_add_variant_denominators_from_value`; declaring this clean without them would be unsupported.
+
+
+## adversarial_verify.py::_is_small_shared_denominator_rate_pair
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
