@@ -16988,6 +16988,125 @@ determinations, publication surfaces, and the research roadmap.
 |---|---|---|
 | REQ-CL-7346 and SCENARIO-CL-7346-* | Implemented in `python/carnot/experiment_7346_v645_learning_adapter.py` through the existing disabled-by-default pipeline seam and a thin executable wrapper. | `tests/python/test_experiment_7346_v645_learning_adapter.py` covers pipeline reuse, validation boundaries, transactions, drift, four arms, controls, reduction, and terminal classification. Scoped Exp7303 validation passed with 646/646 changed-module statements. Independent reduction and both strict terminal validators passed. The mandated full suite timed out with existing failures, so the terminal artifact is disqualified and all scores are zero. |
 
+## REQ-CL-7360: V646 Learning Fixture SHALL Separate Safety From Value
+
+Exp7360 SHALL authenticate the terminal Exp7358 validation contract before it
+does dependent work. It SHALL require `validation_contract_ready_score=1`, an
+eligible terminal class, and `flagged_adversarial=false`. Missing, malformed,
+quarantined, blocked, partial, disqualified, or flagged input SHALL produce a
+terminal blocked artifact. The blocked artifact SHALL name the exact upstream,
+check, field, expected value, and observed value. It SHALL contain no dependent
+rows.
+
+The fixture SHALL reuse the isolated Boolean executor and the disabled-by-
+default structural adapter. The learner SHALL see public requests and charged
+Boolean feedback only. Private rules, witnesses, and evaluator labels SHALL
+remain in a separate hash-bound manifest. Process separation SHALL be described
+as an information-boundary test. It SHALL not be described as an operating-
+system security sandbox. The finite acquisition vocabulary SHALL be frozen to
+pairwise gap and capacity constraints.
+
+The fixture SHALL seal 32 fresh streams of 12 requests. It SHALL assign eight
+streams to each of stable rules, announced drift, recurrence, and unannounced
+drift. Requests zero through three SHALL be warmup. It SHALL also seal 32 public
+requests in eight four-request streams, with requests zero and one marked as
+warmup. Each public request SHALL have an identifier-renamed twin. A separate
+four-request development canary SHALL be sealed. Development, evaluation, and
+resampling seeds SHALL be disjoint. Public request identities and normalized
+request hashes SHALL not overlap the V645 panel.
+
+Safety controls SHALL test private-data exclusion, separate learner and
+evaluator processes, announced and unannounced drift, a higher-order conflict
+outside the finite vocabulary, contradictory exact feedback, rollback,
+restart, post-request-only commits, and rejection of cached or unverified
+release authority. Every returned plan SHALL have a paid exact final check.
+The per-request limit SHALL remain 24 paid queries. Durable adapter state SHALL
+remain at or below 69,632 bytes.
+
+Before process evaluation, Exp7360 SHALL publish a machine-readable acceptance
+manifest for Exp7362. It SHALL freeze four arms: persistent structural memory,
+reset every request, exact-request cache without structural generalization, and
+structural memory frozen after warmup. Paired arms SHALL use the same proposal
+list and exact executor. Information queries, proposal checks, writes,
+persistence, and verification SHALL be charged.
+
+The acceptance manifest SHALL retain value gates without evaluating them. The
+gates SHALL require zero unsafe accepted plans and stale-version decisions;
+utility and coverage non-inferiority margins of 0.02; a stream-clustered query-
+ratio upper 95 percent bound below 0.90 against reset and exact cache; a
+complete-service cost-ratio upper bound at most 1.0; and one causal erasure
+witness on a later distinct request. These criteria SHALL not control fixture
+readiness.
+
+`learning_fixture_ready_score` SHALL equal one only when the prerequisite,
+fresh panel, isolation controls, adapter lifecycle controls, scoped validation,
+independent reduction, adversarial check, and strict row check pass. It SHALL
+not require a scientific value win. The V645 adapter null SHALL remain labeled
+historical evidence against the unchanged method. Value and promotion scores
+SHALL remain zero because this task performs no efficacy measurement.
+
+Exp7360 SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, and zero current
+invocation counts. It SHALL declare the host CPU exact solver or simulator as
+its actual inference substrate and class. Historical model receipts SHALL be
+labeled, hash-bound sidecars and SHALL not count as current inference. The
+evaluator defines truth, so `verifier_is_oracle` SHALL be true.
+
+The workflow SHALL use the Exp7303 scoped runner with explicit tests, changed
+modules, and static files. It SHALL require worktree imports, serial pytest with
+cleared addopts and no inherited coverage, a private base-temp directory,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and scoped specification coverage. It SHALL run the
+declared entrypoint, cold independent reduction, adversarial verification, and
+strict row consistency. It SHALL publish the terminal JSON atomically.
+
+### SCENARIO-CL-7360-PRECONDITION: Eligible Null Infrastructure Authorizes Fixture Work
+
+- GIVEN a complete Exp7358 null with validation readiness one and no adversarial flag
+- WHEN Exp7360 checks exact producer fields before dependent work
+- THEN fixture construction can proceed without requiring scientific efficacy
+- AND every missing or ineligible producer state emits an exact blocked summary.
+
+### SCENARIO-CL-7360-PANEL: Fresh Requests And Private Labels Stay Separate
+
+- GIVEN disjoint V646 seeds and the sealed V645 request hashes
+- WHEN the fixture builds development, public twin, and canary panels
+- THEN all requested stream, cohort, warmup, twin, and distinct-identity counts match
+- AND normalized overlap or evaluator-only data in public bytes fails closed.
+
+### SCENARIO-CL-7360-SAFETY: Adapter And Executor Controls Fail Closed
+
+- GIVEN private-path probes, both drift forms, a higher-order conflict, contradictory feedback, restart, rollback, and cache probes
+- WHEN the current isolated executor and opt-in adapter run those controls
+- THEN no unsafe or stale plan is returned and commits occur only after request close
+- AND final release authority always comes from a charged exact check.
+
+### SCENARIO-CL-7360-ACCEPTANCE: Value Gates Are Frozen But Not Evaluated
+
+- GIVEN four preregistered Exp7362 arms and fixed budgets
+- WHEN Exp7360 writes the acceptance manifest before evaluator work
+- THEN query, service, cost, safety, and erasure criteria retain their exact thresholds
+- AND none of those unmeasured value outcomes can reduce fixture readiness.
+
+### SCENARIO-CL-7360-TERMINAL: Safe Complete Fixture Can Be A Scientific Null
+
+- GIVEN a complete sealed panel, passing safety controls, and passing affected checks
+- WHEN terminal state is reduced from raw evidence
+- THEN fixture readiness is one while value and promotion remain zero
+- AND the verdict is null because efficacy was not measured.
+
+### SCENARIO-CL-7360-E2E: Scoped Checks Publish One Atomic Fixture
+
+- GIVEN task-owned raw evidence and an unpublished candidate
+- WHEN the declared unbuffered entrypoint runs
+- THEN scoped validation, independent reduction, adversarial verification, and strict row checking inspect the candidate
+- AND only a cold-valid terminal JSON is published at the declared result path.
+
+## Implementation Status (REQ-CL-7360)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7360 and SCENARIO-CL-7360-* | Planned: reusable fixture module, thin entrypoint, sealed public/private evidence, acceptance sidecar, and terminal artifact | Planned: focused tests, 100% changed-module coverage, scoped validation, entrypoint E2E, independent reduction, adversarial verification, strict row consistency, and full Python suite |
+
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 
 Carnot SHALL run four development requests from the qualified V645 executor
