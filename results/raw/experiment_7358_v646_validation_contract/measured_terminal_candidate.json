@@ -1,0 +1,2369 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "required_validation",
+      "check": "required_validation",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "required_validation",
+      "check": "worktree_imports",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "safety",
+      "check": "heartbeat_silence_guard",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "completion",
+      "check": "classification_controls",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "safety",
+      "check": "safe_fixture_readiness",
+      "expected": 1,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "category": "completion",
+      "check": "complete_capture",
+      "expected": 1,
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "category": "efficacy",
+      "check": "scientific_value",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    },
+    {
+      "category": "promotion",
+      "check": "scientific_promotion",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    }
+  ],
+  "affected_manifest": {
+    "changed_modules": [
+      "python/carnot/experiment_7358_v646_validation_contract.py"
+    ],
+    "experiment_id": "exp7358-validation-contract",
+    "static_paths": [
+      "scripts/experiments/experiment_7358_v646_validation_contract.py"
+    ],
+    "test_paths": [
+      "tests/python/test_experiment_7358_v646_validation_contract.py"
+    ]
+  },
+  "capture_complete_score": 1,
+  "classification_rows": [
+    {
+      "actual_scores": {
+        "capture_complete_score": 1,
+        "fixture_ready_score": 1,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "null",
+      "censored": false,
+      "control_id": "completed_null",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "null",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "failed_affected_test",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": false,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "unsafe_fixture",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": false
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "missing_completed_result",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": false,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "blocked",
+      "censored": false,
+      "control_id": "blocked_prerequisite",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "blocked",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": false,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "adversarial_flag",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": true,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "partial",
+      "censored": false,
+      "control_id": "unfinished_retryable_owned_work",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "partial",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": false,
+        "retryable_own_work_unfinished": true,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 1,
+        "fixture_ready_score": 1,
+        "promotion_score": 1,
+        "scientific_value_score": 1
+      },
+      "actual_terminal_class": "circular_positive",
+      "censored": false,
+      "control_id": "oracle_defined_benefit",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "circular_positive",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": true,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    }
+  ],
+  "command_plan_rows": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7358_v646_validation_contract",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7358_v646_validation_contract"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5069405699614435,
+      "ended_at_utc": "2026-09-17T04:08:27.252449+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:f9380d4082c02f5f7d1bf9467002b8597ab87d83cccf35e4ec148276a60272ef",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7358_v646_validation_contract\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7358_v646_validation_contract": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:26.745239+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/focused tests/python/test_experiment_7358_v646_validation_contract.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/focused",
+        "tests/python/test_experiment_7358_v646_validation_contract.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 2.635306549957022,
+      "ended_at_utc": "2026-09-17T04:08:29.888174+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:345d2df444113ba28fe0ea03345c4c10f8a0c48f5f2ca6eea4ed7d84a07f4d63",
+      "name": "focused_pytest",
+      "output_tail": "................                                                         [100%]\n16 passed in 0.94s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T04:08:27.252485+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage '--include=*/experiment_7358_v646_validation_contract.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/coverage tests/python/test_experiment_7358_v646_validation_contract.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage",
+        "--include=*/experiment_7358_v646_validation_contract.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/coverage",
+        "tests/python/test_experiment_7358_v646_validation_contract.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.222198590170592,
+      "ended_at_utc": "2026-09-17T04:08:34.110930+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:569615e6eda130849ea7fbfbb9770f3708df54e8a799c42c9b1b71afb3c29ca7",
+      "name": "changed_module_coverage",
+      "output_tail": "................                                                         [100%]\n16 passed in 1.63s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T04:08:29.888231+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7358_v646_validation_contract.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7358_v646_validation_contract.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage"
+      },
+      "duration_s": 0.0692514090333134,
+      "ended_at_utc": "2026-09-17T04:08:34.180802+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:92e728027ac262fdd88a2e8ab34b55667983b2fc05ed37020f743f8289bf47d0",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                        Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------\npython/carnot/experiment_7358_v646_validation_contract.py     352      0   100%\n-----------------------------------------------------------------------------------------\nTOTAL                                                         352      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:34.110985+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7358_v646_validation_contract.py scripts/experiments/experiment_7358_v646_validation_contract.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7358_v646_validation_contract.py",
+        "scripts/experiments/experiment_7358_v646_validation_contract.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011871651047840714,
+      "ended_at_utc": "2026-09-17T04:08:34.193149+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T04:08:34.180867+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7358_v646_validation_contract.py scripts/experiments/experiment_7358_v646_validation_contract.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7358_v646_validation_contract.py",
+        "scripts/experiments/experiment_7358_v646_validation_contract.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011491086101159453,
+      "ended_at_utc": "2026-09-17T04:08:34.205046+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T04:08:34.193193+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.0921609359793365,
+      "ended_at_utc": "2026-09-17T04:08:34.297527+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:34.205089+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02314531896263361,
+      "ended_at_utc": "2026-09-17T04:08:34.320922+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T04:08:34.297557+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7358_v646_validation_contract import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v);print(e,flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7358_v646_validation_contract import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v);print(e,flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.4223847771063447,
+      "ended_at_utc": "2026-09-17T04:08:34.748219+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "output_tail": "[]\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:34.325611+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5954314770642668,
+      "ended_at_utc": "2026-09-17T04:08:35.343905+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:34.748248+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.026467426912859082,
+      "ended_at_utc": "2026-09-17T04:08:35.370728+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:35.343937+00:00",
+      "timed_out": false
+    }
+  ],
+  "completed_at_utc": "2026-09-17T04:08:35.370773+00:00",
+  "duration_s": 8.849590238882229,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "experiment_id": "exp7358-validation-contract",
+  "field_principles": {
+    "MODEL_SPECS": "List intended current models; this CPU contract intends none.",
+    "acceptance_gate_results": "Separate required validation, safety, value, and promotion.",
+    "affected_manifest": "Retain this supporting evidence in its ordinary JSON type.",
+    "capture_complete_score": "Retain this supporting evidence in its ordinary JSON type.",
+    "classification_rows": "Retain expected and actual classes for every mutation control.",
+    "command_plan_rows": "Retain each actual planned or executed command and evidence hash.",
+    "completed_at_utc": "Retain this supporting evidence in its ordinary JSON type.",
+    "duration_s": "Use measured monotonic elapsed time without synthetic delay.",
+    "execution_host": "Retain this supporting evidence in its ordinary JSON type.",
+    "execution_venue": "Record host CPU execution; V646 performs no board run.",
+    "experiment_id": "Retain this supporting evidence in its ordinary JSON type.",
+    "field_principles": "Explain each field without changing its scalar or dictionary type.",
+    "fixture_ready_score": "Retain this supporting evidence in its ordinary JSON type.",
+    "flagged_adversarial": "Current critical findings prevent readiness and promotion.",
+    "gate_check_summary": "Name each first failed check with expected and observed values.",
+    "global_repository_health_policy_changed": "Retain this supporting evidence in its ordinary JSON type.",
+    "heartbeat_control_passed": "Retain this supporting evidence in its ordinary JSON type.",
+    "historical_command_traces": "Retain this supporting evidence in its ordinary JSON type.",
+    "historical_inference_sidecars": "Retain this supporting evidence in its ordinary JSON type.",
+    "honest_verdict": "Distinguish infrastructure readiness from null scientific value.",
+    "host_computation": "Retain this supporting evidence in its ordinary JSON type.",
+    "independent_reduction": "Retain this supporting evidence in its ordinary JSON type.",
+    "inference_substrate": "Name the actual host CPU command planning and exact reduction.",
+    "inference_substrate_class": "Use the actual closed class without duration padding.",
+    "invocation_counts": "Separate all current attempted, completed, failed, cancelled, and live calls.",
+    "milestone": "Retain this supporting evidence in its ordinary JSON type.",
+    "model_invoked": "Set true for any attempted current model load or generation.",
+    "phase": "Retain this supporting evidence in its ordinary JSON type.",
+    "phase_spans": "Retain disjoint measured phase intervals.",
+    "preconditions_checked": "Check exact paths and required fields before dependent work.",
+    "production_defaults_changed": "Retain this supporting evidence in its ordinary JSON type.",
+    "promotion_score": "Retain this supporting evidence in its ordinary JSON type.",
+    "random_seed": "Use null because this deterministic contract performs no sampling.",
+    "repository_health": "Keep dated unrelated failures outside affected required checks.",
+    "reproducibility_checksum": "Bind code, inputs, settings, and raw evidence.",
+    "rows": "Retain every comparative classification control.",
+    "run_date": "Use 20260917 with actual aware UTC timestamps.",
+    "sample_size_budget": "Freeze planned, attempted, completed, and censored controls.",
+    "schema": "Version this record and retain ordinary experiment identity fields.",
+    "scientific_value_score": "Retain this supporting evidence in its ordinary JSON type.",
+    "source_artifact_hashes": "Hash exact producer paths and retain original dispositions.",
+    "started_at_utc": "Retain this supporting evidence in its ordinary JSON type.",
+    "status": "Use a terminal status only after actual affected validation.",
+    "validation_contract_ready_score": "One requires scoped planning, truthful receipts, heartbeat, controls, and affected checks.",
+    "validation_receipts": "Retain exact commands, exits, elapsed time, categories, and hashes.",
+    "verdict_class": "Use the closed terminal verdict enum.",
+    "verifier_is_oracle": "Disclose that the evaluator defines command-contract correctness.",
+    "worktree_root": "Retain this supporting evidence in its ordinary JSON type."
+  },
+  "fixture_ready_score": 1,
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_count": 2,
+    "first_failure": {
+      "category": "efficacy",
+      "check": "scientific_value",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    }
+  },
+  "global_repository_health_policy_changed": false,
+  "heartbeat_control_passed": true,
+  "historical_command_traces": [
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7346_v645_learning_adapter",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7346_v645_learning_adapter"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 1.5246585581917316,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/00_worktree_imports.log",
+      "log_sha256": "sha256:1afb314d400155f06223c764d72a957f5761ad2e6b201f77c5b6bf636d4650a1",
+      "name": "worktree_imports",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7346_v645_learning_adapter\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7346_v645_learning_adapter.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7346_v645_learning_adapter": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7346_v645_learning_adapter.py"
+      },
+      "scope": "changed_modules",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7346-validation-ti39yhl6/basetemp/focused tests/python/test_experiment_7346_v645_learning_adapter.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7346-validation-ti39yhl6/basetemp/focused",
+        "tests/python/test_experiment_7346_v645_learning_adapter.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 4.272952204104513,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/01_focused_pytest.log",
+      "log_sha256": "sha256:a338a1775e55aaa9642c10f0137ac0f9ccc02ea1fdacbd01ec0237b7460cf071",
+      "name": "focused_pytest",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": ".................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n17 passed, 1 warning in 2.15s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7346-validation-ti39yhl6/.coverage-exp7346 '--include=*/experiment_7346_v645_learning_adapter.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7346-validation-ti39yhl6/basetemp/coverage tests/python/test_experiment_7346_v645_learning_adapter.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7346-validation-ti39yhl6/.coverage-exp7346",
+        "--include=*/experiment_7346_v645_learning_adapter.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7346-validation-ti39yhl6/basetemp/coverage",
+        "tests/python/test_experiment_7346_v645_learning_adapter.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 8.490421395981684,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/02_changed_module_coverage.log",
+      "log_sha256": "sha256:8c0243cba03ad3738905bd106a7ee0b1c755defed1d06c84ffee037860483b0e",
+      "name": "changed_module_coverage",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": ".................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n17 passed, 1 warning in 5.40s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7346-validation-ti39yhl6/.coverage-exp7346 '--include=*/experiment_7346_v645_learning_adapter.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7346-validation-ti39yhl6/.coverage-exp7346",
+        "--include=*/experiment_7346_v645_learning_adapter.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.08423184207640588,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:437d123f2528c84cb0055ec2487956253082dc940ea8976b50c95134e7d9b0fd",
+      "name": "changed_module_coverage_report",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7346_v645_learning_adapter.py     646      0   100%\n--------------------------------------------------------------------------------------\nTOTAL                                                      646      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7346_v645_learning_adapter.py scripts/experiments/experiment_7346_v645_learning_adapter.py tests/python/test_experiment_7346_v645_learning_adapter.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7346_v645_learning_adapter.py",
+        "scripts/experiments/experiment_7346_v645_learning_adapter.py",
+        "tests/python/test_experiment_7346_v645_learning_adapter.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.016751237912103534,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7346_v645_learning_adapter.py scripts/experiments/experiment_7346_v645_learning_adapter.py tests/python/test_experiment_7346_v645_learning_adapter.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7346_v645_learning_adapter.py",
+        "scripts/experiments/experiment_7346_v645_learning_adapter.py",
+        "tests/python/test_experiment_7346_v645_learning_adapter.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.015493193874135613,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7346_v645_learning_adapter.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7346_v645_learning_adapter.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.18522116402164102,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/06_changed_module_mypy.log",
+      "log_sha256": "sha256:98660d945fcce212395c9307f36148c59dfa9713f8cc299d9e2f8b2781c07177",
+      "name": "changed_module_mypy",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main->run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7346_v645_learning_adapter.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7346_v645_learning_adapter.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.021073047071695328,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/scoped/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter.main",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "command_category": "diagnostic_repository_health",
+      "duration_s": 1980.6815059871878,
+      "exit_code": -15,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/full/00_full_python_suite.log",
+      "log_sha256": "sha256:07c4d0cdcefb9c1408a935e2f92d2110b41fb92919500cc7e4da0dd037c22f60",
+      "name": "full_python_suite",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": ".................................................................... [ 54%]\n...................................................................F..F. [ 54%]\n........................................................................ [ 54%]\n..ss.................................................................... [ 54%]\n................................s.s...s................................. [ 54%]\n........................................................................ [ 54%]\n..............s......................................................... [ 54%]\n........................................................................ [ 54%]\n..............................................................F......... [ 54%]\n........................................................................ [ 55%]\n....F................................................................... [ 55%]\n.............................................................F....F..... [ 55%]\n........................................................................ [ 55%]\n..........F.............F..............FF.FF............F............... [ 55%]\n..........................................FFFF.............F.....F...... [ 55%]\n..................F..F..............................F................... [ 55%]\n.....................F.................................................. [ 55%]\n.......................F................................................ [ 55%]\n.........................................F..................F........... [ 56%]\n........................................................................ [ 56%]\n......FF..........F..................................................... [ 56%]\n...........F..F......................................................... [ 56%]\n........................................................FF.............F [ 56%]\nFFFF...............................................FFFFFFFF.FF.......... [ 56%]\n..............F.F....................................................... [ 56%]\n.........................F.............................................. [ 56%]\n...............................................................FFF...... [ 56%]\n............................................................/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140683340171696, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140232558355824, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140076867924720, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139834267266528, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "scope": "mandated_python_suite",
+      "source": "exp7346",
+      "timed_out": true
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter._terminal_commands",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib;from carnot.experiment_7346_v645_learning_adapter import independent_reduce;a=json.loads(pathlib.Path(r'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json'\"'\"').read_text());e=independent_reduce(a);print(e,flush=True);raise SystemExit(bool(e))'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib;from carnot.experiment_7346_v645_learning_adapter import independent_reduce;a=json.loads(pathlib.Path(r'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json').read_text());e=independent_reduce(a);print(e,flush=True);raise SystemExit(bool(e))"
+      ],
+      "command_category": "completion",
+      "duration_s": 1.565526759950444,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/terminal/00_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "[]\n",
+      "passed": true,
+      "scope": "measured_candidate",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter._terminal_commands",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json"
+      ],
+      "command_category": "safety",
+      "duration_s": 1.3914500910323113,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/terminal/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "measured_candidate",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7346_v645_learning_adapter._terminal_commands",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7346_v645_learning_adapter/measured-terminal-candidate.json"
+      ],
+      "command_category": "completion",
+      "duration_s": 0.14983411505818367,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7346_v645_learning_adapter/validation/terminal/02_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "original_flagged_adversarial": false,
+      "original_status": "complete_learning_adapter_disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "measured_candidate",
+      "source": "exp7346",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports /home/ianblenke/github.com/ianblenke/carnot carnot.experiment_7354_v645_arc_transfer",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        "/home/ianblenke/github.com/ianblenke/carnot",
+        "carnot.experiment_7354_v645_arc_transfer"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.4563754848204553,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/00_worktree_imports.log",
+      "log_sha256": "sha256:3b60d9adde936aa046897821c038e13e8c5d273c8506c514c8e1b0a96989301d",
+      "name": "worktree_imports",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7354_v645_arc_transfer\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7354_v645_arc_transfer.py\"}}\n",
+      "passed": true,
+      "resolved_imports": {
+        "carnot.experiment_7354_v645_arc_transfer": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7354_v645_arc_transfer.py"
+      },
+      "scope": "changed_modules",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7354-validation-ra0_isrg/scoped/focused tests/python/test_experiment_7354_v645_arc_transfer.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7354-validation-ra0_isrg/scoped/focused",
+        "tests/python/test_experiment_7354_v645_arc_transfer.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 2.5501168749760836,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/01_focused_pytest.log",
+      "log_sha256": "sha256:3ebe5ac66218e34d1419f463e7afea5a3f3361eac40b592b94b44225769e2dab",
+      "name": "focused_pytest",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "........                                                                 [100%]\n8 passed in 0.83s\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/tmp/exp7354-validation-ra0_isrg/coverage/.coverage '--include=*/experiment_7354_v645_arc_transfer.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7354-validation-ra0_isrg/scoped/coverage tests/python/test_experiment_7354_v645_arc_transfer.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7354-validation-ra0_isrg/coverage/.coverage",
+        "--include=*/experiment_7354_v645_arc_transfer.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7354-validation-ra0_isrg/scoped/coverage",
+        "tests/python/test_experiment_7354_v645_arc_transfer.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 4.358823596034199,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/02_changed_module_coverage.log",
+      "log_sha256": "sha256:63d536fb8bbe6ed3941b2a01f97c528d3a23d7792458dd58e67835d63c18a51f",
+      "name": "changed_module_coverage",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "........                                                                 [100%]\n8 passed in 1.62s\n",
+      "passed": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/tmp/exp7354-validation-ra0_isrg/coverage/.coverage '--include=*/experiment_7354_v645_arc_transfer.py' --show-missing --fail-under=100",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+        "report",
+        "--data-file=/tmp/exp7354-validation-ra0_isrg/coverage/.coverage",
+        "--include=*/experiment_7354_v645_arc_transfer.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.08362841908819973,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/03_changed_module_coverage_report.log",
+      "log_sha256": "sha256:c8e186a4c68479f5ec765ac569d98564620e48ff2862da3679f1b4b6089eb8ab",
+      "name": "changed_module_coverage_report",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7354_v645_arc_transfer.py           322      0   100%\nscripts/experiments/experiment_7354_v645_arc_transfer.py       3      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        325      0   100%\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check python/carnot/experiment_7354_v645_arc_transfer.py scripts/experiments/experiment_7354_v645_arc_transfer.py tests/python/test_experiment_7354_v645_arc_transfer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7354_v645_arc_transfer.py",
+        "scripts/experiments/experiment_7354_v645_arc_transfer.py",
+        "tests/python/test_experiment_7354_v645_arc_transfer.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.010400746949017048,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/04_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "scope": "changed_files",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff format --check python/carnot/experiment_7354_v645_arc_transfer.py scripts/experiments/experiment_7354_v645_arc_transfer.py tests/python/test_experiment_7354_v645_arc_transfer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7354_v645_arc_transfer.py",
+        "scripts/experiments/experiment_7354_v645_arc_transfer.py",
+        "tests/python/test_experiment_7354_v645_arc_transfer.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.009028600994497538,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/05_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "scope": "changed_files",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy python/carnot/experiment_7354_v645_arc_transfer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy",
+        "python/carnot/experiment_7354_v645_arc_transfer.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.09360773395746946,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/06_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "scope": "changed_modules",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.run_scoped_validation",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7354_v645_arc_transfer.py",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7354_v645_arc_transfer.py"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 0.017300711013376713,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/scoped/07_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "scope": "explicit_tests",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.e2e_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7354-validation-ra0_isrg/e2e009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7354-validation-ra0_isrg/e2e009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 11.377407026011497,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/e2e/00_e2e_009.log",
+      "log_sha256": "sha256:8f0c6e3feaa7f98578262187b1fcde9c593bf26d0423b3659e3f88ba81b97279",
+      "name": "e2e_009",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.30s\n",
+      "passed": true,
+      "scope": "E2E-009",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.e2e_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7354-validation-ra0_isrg/e2e010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7354-validation-ra0_isrg/e2e010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 10.209746432956308,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/e2e/01_e2e_010.log",
+      "log_sha256": "sha256:45ffd6a6496fda1755e91e8ef2adad5ed3c05cd7d5ab0cc50b02e614afa9e38a",
+      "name": "e2e_010",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.10s\n",
+      "passed": true,
+      "scope": "E2E-010",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.e2e_command_specs",
+      "command": "/usr/bin/env CARNOT_ARC_DISABLE_INDUCTION=1 /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7354-validation-ra0_isrg/offline-smoke.json",
+      "command_argv": [
+        "/usr/bin/env",
+        "CARNOT_ARC_DISABLE_INDUCTION=1",
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7354-validation-ra0_isrg/offline-smoke.json"
+      ],
+      "command_category": "required_validation",
+      "duration_s": 3.1787601851392537,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/e2e/02_e2e_offline_smoke.log",
+      "log_sha256": "sha256:bfa9d8e066af5bdd2fb21a9e463feb752d8814ac1867dda385e4ea3db0e17206",
+      "name": "e2e_offline_smoke",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-16 18:08:00 | INFO | Created new scorecard: cb2ba84e-b59e-41c0-a883-fd8755430d2b\n2026-09-16 18:08:00 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-16 18:08:00 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7354-validation-ra0_isrg/offline-smoke.json\n",
+      "passed": true,
+      "scope": "E2E-009 offline twin",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.e2e_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "command_category": "diagnostic_repository_health",
+      "duration_s": 2038.393184616929,
+      "exit_code": -15,
+      "historical_only": true,
+      "historical_required": true,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/e2e/03_full_python_suite.log",
+      "log_sha256": "sha256:4699feda95328fade43309c25ad04547111b71ffcbad179093817c342b9d87b4",
+      "name": "full_python_suite",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": ".................................... [ 53%]\n........................F.....................F......................... [ 53%]\n.........F............F.................F.F...FF.FF..................... [ 54%]\n........................................................................ [ 54%]\n....ss.................................................................. [ 54%]\n................................s.s...s................................. [ 54%]\n........................................................................ [ 54%]\n.............s.......................................................... [ 54%]\n........................................................................ [ 54%]\n..............................................................F....F.... [ 54%]\n........................................................................ [ 54%]\n........................................................................ [ 55%]\n.........................................................F.............F [ 55%]\n........................................................................ [ 55%]\n........................................FF.FF............F.............. [ 55%]\n.......................................F....FFFF....F...........F.....F. [ 55%]\n.......................F..F..............................F.............. [ 55%]\n........................................................................ [ 55%]\n...........................F............................................ [ 55%]\n.............................................F..................F....... [ 55%]\n........................................................................ [ 55%]\n..........FF..........F.................................F............... [ 56%]\n........................................................................ [ 56%]\n..................FF.........................................FF......... [ 56%]\n....FFFFF...............................................FFFFFFFF.FF..... [ 56%]\n....................F.F................................................. [ 56%]\n...............................F........................................ [ 56%]\n....................................................................FFF. [ 56%]\n............/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139957614605664, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140372819358352, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140013232193168, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139689110368336, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "scope": "mandatory full Python suite",
+      "source": "exp7354",
+      "timed_out": true
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.terminal_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7354_v645_arc_transfer.py --reduce-raw /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/independent_reduction_input.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7354_v645_arc_transfer.py",
+        "--reduce-raw",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/independent_reduction_input.json"
+      ],
+      "command_category": "completion",
+      "duration_s": 0.5125565568450838,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/terminal/00_independent_reducer.log",
+      "log_sha256": "sha256:33d660d1ec142e6cb36332cd775503dadd81c7a5ad1f8cd4e7824d71cd585683",
+      "name": "independent_reducer",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "phase=startup event=entrypoint elapsed_s=0.000\n{\"arc_capture_complete_score\": 1, \"arc_feedback_value_score\": 0, \"attempted_units\": 4, \"causal_chain_rows\": [{\"absent_links\": [\"successful_bound_result\"], \"arm\": \"result_resume\", \"chain_complete\": false, \"episode_id\": \"r11l:result_resume\", \"game\": \"r11l\", \"links\": {}}, {\"absent_links\": [\"successful_bound_result\"], \"arm\": \"result_resume\", \"chain_complete\": false, \"episode_id\": \"re86:result_resume\", \"game\": \"re86\", \"links\": {}}], \"causal_treatment_games\": [], \"censored_units\": 0, \"completed_units\": 4, \"matched_controls_valid\": true, \"no_progress_or_action_regression\": true, \"per_game_results\": [{\"abstentions\": 1, \"action_receipts_valid\": true, \"arm\": \"result_resume\", \"authentic_terminal\": true, \"censored\": false, \"costs\": {\"actions\": 192, \"generation_calls\": 2, \"output_tokens\": 4096, \"wall_s\": 417.127154}, \"disposition\": \"complete\", \"failures\": [], \"game\": \"r11l\", \"levels\": 0, \"metrics\": {\"levels\": 0}, \"raw_action_count\": 192, \"raw_environment_action_count\": 176, \"raw_generated_tokens\": 4096, \"raw_generation_calls_attempted\": 2, \"raw_generation_calls_completed\": 2, \"request_hashes_valid\": true, \"seed\": 1735420260916, \"unit_id\": \"r11l:result_resume\", \"within_budget\": true}, {\"abstentions\": 1, \"action_receipts_valid\": true, \"arm\": \"result_withheld\", \"authentic_terminal\": true, \"censored\": false, \"costs\": {\"actions\": 192, \"generation_calls\": 2, \"output_tokens\": 4096, \"wall_s\": 407.099435}, \"disposition\": \"complete\", \"failures\": [], \"game\": \"r11l\", \"levels\": 0, \"metrics\": {\"levels\": 0}, \"raw_action_count\": 192, \"raw_environment_action_count\": 176, \"raw_generated_tokens\": 4096, \"raw_generation_calls_attempted\": 2, \"raw_generation_calls_completed\": 2, \"request_hashes_valid\": true, \"seed\": 1735420260916, \"unit_id\": \"r11l:result_withheld\", \"within_budget\": true}, {\"abstentions\": 1, \"action_receipts_valid\": true, \"arm\": \"result_withheld\", \"authentic_terminal\": true, \"censored\": false, \"costs\": {\"actions\": 192, \"generation_calls\": 2, \"output_tokens\": 4096, \"wall_s\": 427.42483}, \"disposition\": \"complete\", \"failures\": [], \"game\": \"re86\", \"levels\": 0, \"metrics\": {\"levels\": 0}, \"raw_action_count\": 192, \"raw_environment_action_count\": 190, \"raw_generated_tokens\": 4096, \"raw_generation_calls_attempted\": 2, \"raw_generation_calls_completed\": 2, \"request_hashes_valid\": true, \"seed\": 1735420260916, \"unit_id\": \"re86:result_withheld\", \"within_budget\": true}, {\"abstentions\": 1, \"action_receipts_valid\": true, \"arm\": \"result_resume\", \"authentic_terminal\": true, \"censored\": false, \"costs\": {\"actions\": 192, \"generation_calls\": 2, \"output_tokens\": 4096, \"wall_s\": 428.292078}, \"disposition\": \"complete\", \"failures\": [], \"game\": \"re86\", \"levels\": 0, \"metrics\": {\"levels\": 0}, \"raw_action_count\": 192, \"raw_environment_action_count\": 190, \"raw_generated_tokens\": 4096, \"raw_generation_calls_attempted\": 2, \"raw_generation_calls_completed\": 2, \"request_hashes_valid\": true, \"seed\": 1735420260916, \"unit_id\": \"re86:result_resume\", \"within_budget\": true}], \"planned_units\": 4}\n",
+      "passed": true,
+      "scope": "raw episode and request records",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.terminal_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "duration_s": 0.6091584861278534,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/terminal/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "measured terminal candidate",
+      "source": "exp7354",
+      "timed_out": false
+    },
+    {
+      "caller": "carnot.experiment_7354_v645_arc_transfer.terminal_command_specs",
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7354_v645_arc_transfer/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "duration_s": 0.03248118283227086,
+      "exit_code": 0,
+      "historical_only": true,
+      "historical_required": false,
+      "log_path": "results/raw/experiment_7354_v645_arc_transfer/validation/terminal/02_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "original_flagged_adversarial": true,
+      "original_status": "disqualified",
+      "original_verdict_class": "disqualified",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "measured terminal candidate",
+      "source": "exp7354",
+      "timed_out": false
+    }
+  ],
+  "historical_inference_sidecars": [
+    {
+      "artifact_path": "results/experiment_7346_v645_learning_adapter.json",
+      "artifact_sha256": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01",
+      "authorizes_current_inference": false,
+      "historical_MODEL_SPECS": [],
+      "historical_invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      },
+      "historical_model_invoked": false,
+      "label": "historical_diagnostic_only_no_current_generation",
+      "source": "exp7346"
+    },
+    {
+      "artifact_path": "results/experiment_7354_v645_arc_transfer.json",
+      "artifact_sha256": "sha256:5e279e6dee55a95ab0a7d22d06e27362c1139fec210fa22e3e97515a1aa97815",
+      "authorizes_current_inference": false,
+      "historical_MODEL_SPECS": [
+        {
+          "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+          "quantization": "Q4_K_M"
+        }
+      ],
+      "historical_invocation_counts": {
+        "generation_calls_attempted": 8,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 8,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "historical_model_invoked": true,
+      "label": "historical_diagnostic_only_no_current_generation",
+      "source": "exp7354"
+    }
+  ],
+  "honest_verdict": "complete_null_scientific_value_not_tested_validation_contract_ready",
+  "host_computation": {
+    "machine": "x86_64",
+    "processor": "",
+    "python": "3.12.13"
+  },
+  "independent_reduction": {
+    "capture_complete_score": 1,
+    "classification_controls_passed": true,
+    "fixture_ready_score": 1,
+    "heartbeat_control_passed": true,
+    "preconditions_passed": true,
+    "promotion_score": 0,
+    "required_validation_passed": true,
+    "scientific_value_score": 0,
+    "validation_contract_ready_score": 1,
+    "verdict_class": "null",
+    "worktree_imports_passed": true
+  },
+  "inference_substrate": "artifact_qa_lint_tests",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.646",
+  "model_invoked": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "duration_s": 0.018149277893826365,
+      "end_s": 0.01816823286935687,
+      "phase": "load",
+      "start_s": 1.895497553050518e-05
+    },
+    {
+      "duration_s": 0.20450708991847932,
+      "end_s": 0.2230454278178513,
+      "phase": "evaluation",
+      "start_s": 0.01853833789937198
+    },
+    {
+      "duration_s": 7.576792190084234,
+      "end_s": 7.799862714949995,
+      "phase": "validation",
+      "start_s": 0.2230705248657614
+    },
+    {
+      "duration_s": 1.0451688840985298,
+      "end_s": 8.849572825944051,
+      "phase": "terminal_validation",
+      "start_s": 7.804403941845521
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7346_v645_learning_adapter.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7346_v645_learning_adapter.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7354_v645_arc_transfer.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7354_v645_arc_transfer.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_7346_v645_learning_adapter.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7346_v645_learning_adapter.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_7354_v645_arc_transfer.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7354_v645_arc_transfer.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:tests/python/test_experiment_7303_v642_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7303_v642_validation_scope.py"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "check": "driving_requirement",
+      "expected": "REQ-REPORT-7358",
+      "observed": "REQ-REPORT-7358",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "status",
+      "check": "historical_exp7346_status",
+      "expected": "complete_learning_adapter_disqualified",
+      "observed": "complete_learning_adapter_disqualified",
+      "passed": true,
+      "upstream": "results/experiment_7346_v645_learning_adapter.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "historical_exp7346_verdict_class",
+      "expected": "disqualified",
+      "observed": "disqualified",
+      "passed": true,
+      "upstream": "results/experiment_7346_v645_learning_adapter.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "historical_exp7346_flagged_adversarial",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "upstream": "results/experiment_7346_v645_learning_adapter.json"
+    },
+    {
+      "artifact_field": "validation_receipts.full_python_suite.command_argv[1:]",
+      "check": "historical_exp7346_broad_command",
+      "expected": [
+        "tests/python",
+        "-q"
+      ],
+      "observed": [
+        "tests/python",
+        "-q"
+      ],
+      "passed": true,
+      "upstream": "results/experiment_7346_v645_learning_adapter.json"
+    },
+    {
+      "artifact_field": "status",
+      "check": "historical_exp7354_status",
+      "expected": "disqualified",
+      "observed": "disqualified",
+      "passed": true,
+      "upstream": "results/experiment_7354_v645_arc_transfer.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "historical_exp7354_verdict_class",
+      "expected": "disqualified",
+      "observed": "disqualified",
+      "passed": true,
+      "upstream": "results/experiment_7354_v645_arc_transfer.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "historical_exp7354_flagged_adversarial",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "upstream": "results/experiment_7354_v645_arc_transfer.json"
+    },
+    {
+      "artifact_field": "validation_receipts.full_python_suite.command_argv[1:]",
+      "check": "historical_exp7354_broad_command",
+      "expected": [
+        "tests/python",
+        "-q"
+      ],
+      "observed": [
+        "tests/python",
+        "-q"
+      ],
+      "passed": true,
+      "upstream": "results/experiment_7354_v645_arc_transfer.json"
+    },
+    {
+      "artifact_field": "exp7358-validation-contract",
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": null,
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "2026-09-17",
+    "historical_failures": [
+      {
+        "classification": "unrelated_repository_health_full_suite_timeout",
+        "command": "pytest tests/python -q",
+        "date": "2026-09-16",
+        "original_verdict_class": "disqualified",
+        "resolved": false,
+        "source": "exp7346"
+      },
+      {
+        "classification": "unrelated_repository_health_full_suite_timeout",
+        "command": "pytest tests/python -q",
+        "date": "2026-09-16",
+        "original_verdict_class": "disqualified",
+        "resolved": false,
+        "source": "exp7354"
+      }
+    ],
+    "status": "degraded_historical_timeouts_retained"
+  },
+  "reproducibility_checksum": "sha256:0b9019c89ee24d8d9b02edd48c4e5955e770ebd423afa19d8fed024993ec7451",
+  "rows": [
+    {
+      "actual_scores": {
+        "capture_complete_score": 1,
+        "fixture_ready_score": 1,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "null",
+      "censored": false,
+      "control_id": "completed_null",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "null",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "failed_affected_test",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": false,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "unsafe_fixture",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": false
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "missing_completed_result",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": false,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "blocked",
+      "censored": false,
+      "control_id": "blocked_prerequisite",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "blocked",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": false,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "disqualified",
+      "censored": false,
+      "control_id": "adversarial_flag",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "disqualified",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": true,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 0,
+        "fixture_ready_score": 0,
+        "promotion_score": 0,
+        "scientific_value_score": 0
+      },
+      "actual_terminal_class": "partial",
+      "censored": false,
+      "control_id": "unfinished_retryable_owned_work",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "partial",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": false,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": false,
+        "retryable_own_work_unfinished": true,
+        "safety_passed": true
+      },
+      "passed": true
+    },
+    {
+      "actual_scores": {
+        "capture_complete_score": 1,
+        "fixture_ready_score": 1,
+        "promotion_score": 1,
+        "scientific_value_score": 1
+      },
+      "actual_terminal_class": "circular_positive",
+      "censored": false,
+      "control_id": "oracle_defined_benefit",
+      "costs": {
+        "current_model_calls": 0
+      },
+      "disposition": "complete",
+      "expected_terminal_class": "circular_positive",
+      "failures": [],
+      "inputs": {
+        "efficacy_passed": true,
+        "flagged_adversarial": false,
+        "prerequisites_passed": true,
+        "required_validation_passed": true,
+        "result_complete": true,
+        "result_present": true,
+        "retryable_own_work_unfinished": false,
+        "safety_passed": true
+      },
+      "passed": true
+    }
+  ],
+  "run_date": "20260917",
+  "sample_size_budget": {
+    "attempted_classification_controls": 8,
+    "censored_classification_controls": 0,
+    "completed_classification_controls": 8,
+    "planned_classification_controls": 8,
+    "stopping_rule": "Run every frozen control once and never extend from outcomes."
+  },
+  "schema": "carnot.exp7358.v646.validation_contract.v1",
+  "scientific_value_score": 0,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:f2441a88491e3294af732dbf42b55323ee5630e4024d17b3efa3aa1e1f677c0b",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7346_v645_learning_adapter.py": "sha256:b05573fa17a1f9f0707f01c4b6318132448595729da1b602a012d34b0239f2ad",
+    "python/carnot/experiment_7354_v645_arc_transfer.py": "sha256:2533ebd2eefe7abf42e7a9ba2587d21b29c33e22316f5b2f121182a0f61299dc",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7346_v645_learning_adapter.json": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01",
+    "results/experiment_7354_v645_arc_transfer.json": "sha256:5e279e6dee55a95ab0a7d22d06e27362c1139fec210fa22e3e97515a1aa97815",
+    "tests/python/test_experiment_7303_v642_validation_scope.py": "sha256:60c04230411630ba6919b638139d9d230a2b7254aab2e953dc717d0209364262"
+  },
+  "started_at_utc": "2026-09-17T04:08:26.521184+00:00",
+  "status": "complete_validation_contract_null_science",
+  "validation_contract_ready_score": 1,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7358_v646_validation_contract",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7358_v646_validation_contract"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5069405699614435,
+      "ended_at_utc": "2026-09-17T04:08:27.252449+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:f9380d4082c02f5f7d1bf9467002b8597ab87d83cccf35e4ec148276a60272ef",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7358_v646_validation_contract\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7358_v646_validation_contract": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:26.745239+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/focused tests/python/test_experiment_7358_v646_validation_contract.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/focused",
+        "tests/python/test_experiment_7358_v646_validation_contract.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 2.635306549957022,
+      "ended_at_utc": "2026-09-17T04:08:29.888174+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:345d2df444113ba28fe0ea03345c4c10f8a0c48f5f2ca6eea4ed7d84a07f4d63",
+      "name": "focused_pytest",
+      "output_tail": "................                                                         [100%]\n16 passed in 0.94s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T04:08:27.252485+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage '--include=*/experiment_7358_v646_validation_contract.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/coverage tests/python/test_experiment_7358_v646_validation_contract.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage",
+        "--include=*/experiment_7358_v646_validation_contract.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7358-validation-cn8lvf9a/basetemp/coverage",
+        "tests/python/test_experiment_7358_v646_validation_contract.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.222198590170592,
+      "ended_at_utc": "2026-09-17T04:08:34.110930+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:569615e6eda130849ea7fbfbb9770f3708df54e8a799c42c9b1b71afb3c29ca7",
+      "name": "changed_module_coverage",
+      "output_tail": "................                                                         [100%]\n16 passed in 1.63s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T04:08:29.888231+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7358_v646_validation_contract.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7358_v646_validation_contract.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7358-validation-cn8lvf9a/coverage/.coverage"
+      },
+      "duration_s": 0.0692514090333134,
+      "ended_at_utc": "2026-09-17T04:08:34.180802+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:92e728027ac262fdd88a2e8ab34b55667983b2fc05ed37020f743f8289bf47d0",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                        Stmts   Miss  Cover   Missing\n-----------------------------------------------------------------------------------------\npython/carnot/experiment_7358_v646_validation_contract.py     352      0   100%\n-----------------------------------------------------------------------------------------\nTOTAL                                                         352      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:34.110985+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7358_v646_validation_contract.py scripts/experiments/experiment_7358_v646_validation_contract.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7358_v646_validation_contract.py",
+        "scripts/experiments/experiment_7358_v646_validation_contract.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011871651047840714,
+      "ended_at_utc": "2026-09-17T04:08:34.193149+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T04:08:34.180867+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7358_v646_validation_contract.py scripts/experiments/experiment_7358_v646_validation_contract.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7358_v646_validation_contract.py",
+        "scripts/experiments/experiment_7358_v646_validation_contract.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.011491086101159453,
+      "ended_at_utc": "2026-09-17T04:08:34.205046+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T04:08:34.193193+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.0921609359793365,
+      "ended_at_utc": "2026-09-17T04:08:34.297527+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T04:08:34.205089+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7358_v646_validation_contract.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7358_v646_validation_contract.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02314531896263361,
+      "ended_at_utc": "2026-09-17T04:08:34.320922+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T04:08:34.297557+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7358_v646_validation_contract import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v);print(e,flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7358_v646_validation_contract import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v);print(e,flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.4223847771063447,
+      "ended_at_utc": "2026-09-17T04:08:34.748219+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "output_tail": "[]\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:34.325611+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5954314770642668,
+      "ended_at_utc": "2026-09-17T04:08:35.343905+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:34.748248+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7358_v646_validation_contract/measured_terminal_candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.026467426912859082,
+      "ended_at_utc": "2026-09-17T04:08:35.370728+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-17T04:08:35.343937+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'print('\"'\"'pass'\"'\"', flush=True)'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "print('pass', flush=True)"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 0.014492060989141464,
+      "ended_at_utc": "2026-09-17T04:08:26.556527+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/controls/00_control_pass/00_control_pass.log",
+      "log_sha256": "sha256:9f56e761d79bfdb34304a012586cb04d16b435ef6130091a97702e559260a2f2",
+      "name": "control_pass",
+      "output_tail": "pass\n",
+      "passed": true,
+      "required": false,
+      "scope": "control",
+      "started_at_utc": "2026-09-17T04:08:26.539752+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'raise SystemExit(7)'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "raise SystemExit(7)"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.017660819925367832,
+      "ended_at_utc": "2026-09-17T04:08:26.574518+00:00",
+      "exit_code": 7,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/controls/01_control_fail/00_control_fail.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "control_fail",
+      "output_tail": "",
+      "passed": false,
+      "required": false,
+      "scope": "control",
+      "started_at_utc": "2026-09-17T04:08:26.556556+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import time;time.sleep(0.15)'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import time;time.sleep(0.15)"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.16909981798380613,
+      "ended_at_utc": "2026-09-17T04:08:26.744081+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7358_v646_validation_contract/validation/controls/02_control_silence/00_control_silence.log",
+      "log_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "control_silence",
+      "output_tail": "",
+      "passed": true,
+      "required": false,
+      "scope": "control",
+      "started_at_utc": "2026-09-17T04:08:26.574551+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true,
+  "worktree_root": "/home/ianblenke/github.com/ianblenke/carnot"
+}

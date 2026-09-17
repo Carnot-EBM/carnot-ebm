@@ -1,6 +1,20 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-16
+**Last Updated:** 2026-09-17
+
+**Operational Note:** 2026-09-17 REQ-REPORT-7358 maps the V646
+experiment-only command planner, closed terminal classifier, independent
+reducer, and artifact validator in
+`python/carnot/experiment_7358_v646_validation_contract.py` to
+`tests/python/test_experiment_7358_v646_validation_contract.py`. The repaired
+planner uses stable worktree-relative tool vectors and keeps the private
+coverage-report data file in explicit command environment, so a temporary path
+containing `pytest` cannot make non-pytest commands appear in the pytest set.
+All 16 focused tests pass with 352/352 scoped statements covered. The real
+entrypoint completed all affected and terminal commands with readiness one,
+scientific value zero, promotion zero, and a null verdict. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified.
 
 **Operational Note:** 2026-09-11 REQ-VERIFY-7223 maps the authenticated,
 calibration-only Qwen span canary in

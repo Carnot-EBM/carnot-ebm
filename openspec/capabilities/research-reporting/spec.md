@@ -1,5 +1,97 @@
 # Research Reporting Capability Specification
 
+## V646 experiment-only validation contract — 2026-09-17
+
+**Status:** Implemented. This contract changes validation planning and result
+classification. It does not change a scientific threshold or global health
+policy. The real Exp7358 entrypoint completed with all affected checks passing,
+352/352 changed-module statements covered, infrastructure readiness one, and a
+null scientific verdict.
+
+### REQ-REPORT-7358: Separate affected validation from scientific acceptance
+
+Exp7358 SHALL authenticate the Exp7346 and Exp7354 artifacts as historical
+diagnostic evidence. It SHALL retain their original terminal classes, flags,
+commands, callers, exits, and log hashes. Historical model receipts SHALL be
+hash-bound and labeled as historical. They SHALL not count as current model
+work. Exp7358 SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, and the host CPU exact solver or simulator class.
+
+Exp7358 SHALL define an explicit affected-test, changed-module, and static-file
+manifest for each V646 experiment entrypoint. It SHALL pass that manifest to
+the Exp7303 scoped runner. The experiment-only planner SHALL reject a
+repository directory target such as `tests/python`, a test outside the
+manifest, a duplicate or missing required command, a missing private
+`--basetemp` parent, or an import outside the worktree. The global repository
+health policy and conductor SHALL remain unchanged.
+
+Every executed command SHALL retain exact argv, scope, required status,
+command category, UTC start and end, real exit, measured duration, timeout
+state, and exact log hash. The shipped heartbeat-capable runner SHALL execute
+bounded commands. A silent-child control SHALL prove that pending-operation
+heartbeats occur. Passing and failing child controls SHALL preserve their real
+exits. Historical full-suite commands SHALL be reproduced only as rejected
+plan inputs and SHALL not execute.
+
+The terminal classifier SHALL keep completion, required validation, safety,
+efficacy, and promotion independent. A complete safe result that misses an
+efficacy gate SHALL be `null` and MAY keep fixture readiness and complete
+capture. A failed required check, unsafe fixture, missing completed result, or
+adversarial flag SHALL be `disqualified` with zero readiness and promotion. An
+external missing or ineligible prerequisite SHALL be `blocked`. Only unfinished
+retryable work owned by the current task MAY be `partial`.
+
+The workflow SHALL execute the affected Exp7358 test through the scoped runner
+with `-n 0`, cleared addopts, `--no-cov`, and a private `--basetemp`. It SHALL
+require worktree imports, separate 100 percent changed-module coverage, scoped
+Ruff check and format, changed-module mypy, and scoped specification coverage.
+It SHALL run an independent reducer, adversarial verifier, and strict verdict
+row consistency lint against the measured candidate.
+
+The terminal artifact SHALL contain the required fields and field principles.
+`validation_contract_ready_score` SHALL equal one only when command planning,
+truthful receipts, heartbeat controls, classification controls, and affected
+checks pass. This score is infrastructure readiness. It SHALL not convert a
+null scientific result into positive evidence or authorize scientific
+promotion.
+
+#### SCENARIO-REPORT-7358-PLAN: Broad validation fails before execution
+
+**Given** the historical Exp7346 and Exp7354 full-suite argument vectors
+**When** the V646 experiment-only planner evaluates either vector
+**Then** it rejects the `tests/python` directory target without running it
+**And** the historical command, caller, exit, timeout, and hash remain evidence.
+
+#### SCENARIO-REPORT-7358-SCOPE: Explicit affected files control validation
+
+**Given** a V646 affected-file manifest and private validation directory
+**When** Exp7358 builds the Exp7303 command set
+**Then** both pytest commands name only explicit test files
+**And** missing basetemp parents or non-worktree imports fail closed.
+
+#### SCENARIO-REPORT-7358-RECEIPTS: Bounded children keep truthful evidence
+
+**Given** passing, failing, and silent temporary child commands
+**When** the shipped runner executes them
+**Then** the receipts keep real exits, times, categories, and log hashes
+**And** the silent child emits at least one pending-operation heartbeat.
+
+#### SCENARIO-REPORT-7358-CLASSIFICATION: Readiness does not require efficacy
+
+**Given** independently varied completion, validation, safety, value, and flag
+inputs
+**When** the closed classifier reduces each control
+**Then** a safe complete efficacy miss is `null` with fixture readiness
+**And** failed checks, unsafe evidence, missing results, and flags cannot be
+ready or promotable.
+
+#### SCENARIO-REPORT-7358-TERMINAL: Stored evidence recomputes readiness
+
+**Given** the raw command-plan and classification rows
+**When** an independent reducer reloads the candidate
+**Then** it recomputes the ready score and terminal class from raw evidence
+**And** changed evidence, missing fields, or inconsistent scores fail validation.
+
 ## V646 advisory contract and source map — 2026-09-17
 
 **Status:** Implemented. This receipt is advisory and gates no science.

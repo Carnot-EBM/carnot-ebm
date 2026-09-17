@@ -1,6 +1,23 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-16
+**Last Updated:** 2026-09-17
+
+## 2026-09-17 — Exp7358 command-plan regression repaired
+
+The V646 planner no longer lets an absolute temporary repository or coverage
+path contaminate command-kind detection. Tool paths are stable and
+worktree-relative, while the coverage report receives its private data file
+through explicit command environment that is retained in the receipt. The
+original failing scenario now passes; the complete focused file is 16/16 with
+352/352 statements covered. Ruff check/format, mypy, and changed-file spec
+coverage pass. The real Exp7358 entrypoint also completed its heartbeat,
+affected-validation, independent-reducer, adversarial-verifier, and strict-row
+checks. Its refreshed terminal artifact has validation readiness 1, scientific
+value 0, promotion 0, no adversarial flag, and the required null verdict. No
+numbered E2E in `ops/e2e-test-plan.md` applies to this validation-contract
+repair; the shipped experiment entrypoint is the capability-level E2E. No test
+was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
 
 ## 2026-09-11 — Exp7223 canary evidence regression repaired
 

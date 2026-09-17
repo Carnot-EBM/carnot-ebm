@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-09-17 — Exp7358 scoped command-plan repair (REQ-REPORT-7358)
+
+- Removed absolute temporary-root leakage from the V646 tool argument vectors;
+  command tools now resolve relative to their declared worktree.
+- Moved the coverage report's private data-file selection into explicit
+  command-local environment and retained that environment in command receipts.
+- Fixed the failing plan scenario without changing or skipping tests and
+  without modifying `scripts/research_conductor.py`.
+- Verified 16/16 focused tests, 352/352 changed-module statements, Ruff,
+  formatting, mypy, and scoped spec coverage. The real Exp7358 entrypoint
+  completed with readiness 1 and an honest null-science terminal verdict.
+
 ## 2026-09-12 — Fable 5.1 fallback when codex returns zero hypotheses
 
 - Operator directive, prompted by both real production autoresearch fires
