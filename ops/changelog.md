@@ -20089,3 +20089,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-17: Qualify bounded Qwen3.8 assignment proposals (⚠️ Research Finding) — honest_verdict=complete_disqualified_internal_artifact_validation_failed; results/experiment_7372_v647_qwen_canary.json
 - 2026-09-17: Collect new adapter-withheld ARC supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7376_v647_arc_outcomes.json
 - 2026-09-17: Compile original-clause Boltzmann laws with entailment controls (⚠️ Research Finding) — honest_verdict=complete_circular_positive_exact_source_law_fixture_ready; results/experiment_7377_v647_ising_law.json
+- 2026-09-17: Validate Boltzmann marginals under cached entailment (⚠️ Research Finding) — honest_verdict=complete_disqualified_ising_sampler_audit_evidence; results/experiment_7378_v647_ising_audit.json
