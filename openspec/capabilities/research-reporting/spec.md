@@ -1,5 +1,105 @@
 # Research Reporting Capability Specification
 
+## V646 archived acquisition adjudication — 2026-09-17
+
+**Status:** Implemented. The cold adjudication copied all archived bytes,
+recomputed all 126 comparative rows, retained the failed cost gate and original
+disqualification, and passed its affected and terminal validation. It did not
+rerun acquisition or clear the original disqualification.
+
+### REQ-REPORT-7364: Adjudicate acquisition evidence without a new benchmark
+
+Exp7364 SHALL authenticate the terminal Exp7358 validation contract before it
+reads dependent Exp7351 evidence. Missing, quarantined, blocked, partial,
+disqualified, flagged, or unready prerequisites SHALL produce a terminal
+blocked artifact. The block SHALL name the exact path, field, expected value,
+and observed value. No dependent evidence work SHALL start after such a block.
+
+Exp7364 SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, `inference_substrate_class=aggregation`, and measured host
+CPU work. It SHALL hash-copy the Exp7351 artifact and all archived raw files.
+Historical model-shaped receipts SHALL remain labeled as historical and SHALL
+not count as current inference.
+
+The adjudicator SHALL independently enumerate 90 evaluation rows, 36 challenge
+rows, and 12 separate development records. It SHALL preserve all three arms
+for each archived context. It SHALL recompute complete-cost and paid-query
+ratios with the frozen context-cluster bootstrap and resampling seed. It SHALL
+also recompute utility, coverage, safety, and resource limits. The cost gate
+SHALL continue to require the complete-cost interval upper bound to be less
+than 0.90.
+
+The adjudicator SHALL trace Exp7351 `required_checks_passed=false` to the
+required broad-suite receipt. It SHALL preserve that receipt's timeout and
+exit value. Empty scoped missing, failed, and duplicate command lists SHALL
+not replace the failed broad receipt. The new record SHALL preserve Exp7351's
+disqualified verdict and failed cost finding. A reproducible correction SHALL
+be labeled diagnostic only. It SHALL not clear a historical flag or authorize
+promotion.
+
+The authority review SHALL distinguish exact pairwise or global-capacity
+feedback from unsupported higher-order constraints and neural-oracle
+approximation. Its conclusions SHALL not extend beyond the archived finite
+vocabulary. An unchanged elimination and cost benchmark SHALL be retired.
+A future benchmark requires a named mechanism change and new frozen evidence.
+
+Cold reconciliation SHALL reject a changed cost, an omitted paid auxiliary
+query, a changed context identity, an incomplete arm set, or a hash-copy
+mismatch. `acquisition_adjudication_complete_score` SHALL equal one only after
+the source inventory, row accounting, receipt diagnosis, mutation controls,
+and current affected validation are complete. It is an accounting score. It
+SHALL not become scientific value, readiness, or promotion.
+
+The workflow SHALL use the Exp7358 command-plan boundary and shipped Exp7303
+runner with explicit affected files. It SHALL require worktree imports,
+focused pytest with `-n 0`, cleared addopts, `--no-cov`, private temporary
+paths, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and scoped specification coverage. It SHALL then
+reload the candidate, run an independent reducer, run the adversarial verifier,
+and run strict verdict-row consistency. The terminal JSON SHALL be atomic.
+
+#### SCENARIO-REPORT-7364-GATES: Ineligible validation contracts stop early
+
+**Given** the declared Exp7358 path and its three exact gate fields
+**When** a field is absent, ineligible, flagged, or byte-unavailable
+**Then** Exp7364 emits a terminal blocked record with the exact failed field
+**And** it does not copy or reduce Exp7351 evidence.
+
+#### SCENARIO-REPORT-7364-RECONCILE: Archived rows reduce from exact copies
+
+**Given** the Exp7351 artifact, raw row file, development records, and receipts
+**When** the adjudicator performs a cold reconciliation
+**Then** it finds 90 evaluation rows, 36 challenge rows, and 12 development records
+**And** every source and copied byte hash agrees.
+
+#### SCENARIO-REPORT-7364-MUTATIONS: Evidence drift fails closed
+
+**Given** one authenticated archived evidence bundle
+**When** a complete cost changes, one auxiliary query is omitted, or a context ID changes
+**Then** the independent reconciliation reports the matching integrity failure
+**And** the accounting completion score becomes zero.
+
+#### SCENARIO-REPORT-7364-DISCREPANCY: The original failed receipt remains authoritative
+
+**Given** passing scoped receipts and empty scoped error lists
+**When** the original broad-suite receipt has a timeout or nonzero exit
+**Then** the diagnosis explains `required_checks_passed=false` from that receipt
+**And** the original disqualified class remains unchanged.
+
+#### SCENARIO-REPORT-7364-AUTHORITY: Method assumptions bound each claim
+
+**Given** CCA, T-Oracle/FastCA, and the archived finite relation vocabulary
+**When** authority support is classified
+**Then** exact pairwise feedback is separate from higher-order and neural feedback
+**And** no support row claims authority outside the actual vocabulary.
+
+#### SCENARIO-REPORT-7364-TERMINAL: Accounting completion cannot promote null science
+
+**Given** complete cold accounting and current affected validation
+**When** the frozen complete-cost interval still misses 0.90
+**Then** adjudication completion is one while value, readiness, and promotion are zero
+**And** the unchanged benchmark is retired pending a named mechanism change.
+
 ## V646 fresh plan capture — 2026-09-17
 
 **Status:** In progress. This capability records fresh local-model proposals
