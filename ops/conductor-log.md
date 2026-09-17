@@ -18115,3 +18115,4 @@ code |
 | 2026-09-17 04:40 UTC | Diagnose frozen capture accounting and validate a  | OK | 96 passed, 1 warning in 9.82s |
 | 2026-09-17 05:02 UTC | Qualify adapter safety and seal distinct future re | FAIL | Codex CLI error: xp, "collect_preconditions", lambda _root: ([failed], {}, {} |
 | 2026-09-17 05:05 UTC | Qualify adapter safety and seal distinct future re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 90 passed, 1 warning in 13.68s |
+| 2026-09-17 05:33 UTC | Qualify adapter safety and seal distinct future re | OK | 91 passed, 1 warning in 14.69s |
