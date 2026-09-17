@@ -13,6 +13,77 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V646 supervisor support audit — 2026-09-17
+
+**Status:** Specified. This audit can finish with a null result when the
+recorded ledger does not support an ordering.
+
+### REQ-ARC-WMTE-7365: Replay existing supervisor arms only on recorded support
+
+Exp7365 SHALL read the existing supervisor refinement ledger with the shipped
+ledger reader. It SHALL retain applied, shadow, error, duplicate, missing-outcome,
+and co-credit dispositions separately. It SHALL use only applied redirects with
+an observed Boolean level-up outcome as ranking support. The audit SHALL group
+support by trajectory and game. It SHALL not count redirects as independent
+trajectories.
+
+The audit SHALL freeze development and evaluation game IDs before it compares
+orderings. Development and evaluation games SHALL be disjoint by game and family.
+The evaluation panel SHALL contain four registry-reachable games. The audit SHALL
+compare no more than three permutations of the existing curated arms. It SHALL
+not add an arm, game rule, adapter, branch, or propensity estimate.
+
+A candidate replay SHALL follow a recorded redirect sequence only while the
+candidate selects the same next arm as the recorded sequence. The first changed
+arm and every later redirect in that trajectory SHALL have an unknown outcome.
+The audit SHALL censor these rows and count them in
+`unsupported_counterfactual_count`. Supported outcomes are descriptive
+associations. They SHALL not be reported as causal off-policy values.
+
+An ordering SHALL be trial-ready only if each compared arm has at least ten
+outcome-bearing supported decisions across at least three development games.
+Each leave-one-game-out development fold SHALL preserve that floor. The four
+evaluation games SHALL be disjoint and registry-reachable. Duplicate, shadow,
+co-credit, missing-outcome, and changed-action controls SHALL pass. The ordering
+and its configuration hash SHALL be frozen before any later live outcome.
+
+The live E3 seam SHALL accept an ordering only through an explicit experiment
+configuration. Production defaults and `ARM_ORDER` SHALL remain unchanged. A
+missing or invalid opt-in SHALL return the curated order. An insufficient ledger
+SHALL produce `complete_null_insufficient_supported_outcomes`, readiness zero,
+support counts, and no manufactured frozen ordering. An empty completed audit is
+a null result, not partial work.
+
+#### SCENARIO-ARC-WMTE-7365-PREFIX: A changed action censors its suffix
+
+**Given** a recorded arm sequence and a candidate ordering
+**When** the candidate first selects a different arm
+**Then** the changed decision and every later decision have unknown outcomes
+**And** no later level-up is credited to that candidate.
+
+#### SCENARIO-ARC-WMTE-7365-SUPPORT: Eligibility uses independent support
+
+**Given** deduplicated applied receipts and separate shadow or error receipts
+**When** support is reduced by trajectory and game
+**Then** only outcome-bearing supported applied decisions count toward the floor
+**And** redirects, shared credits, and duplicate copies do not inflate games or
+trajectories.
+
+#### SCENARIO-ARC-WMTE-7365-NULL: Insufficient support stays terminal and null
+
+**Given** fewer than ten supported decisions per compared arm, fewer than three
+development games, or fewer than four disjoint reachable evaluation games
+**When** the audit completes
+**Then** readiness is zero and no ordering is frozen
+**And** the result is a complete null with exact shortfall rows.
+
+#### SCENARIO-ARC-WMTE-7365-ROUTING: Only an explicit valid opt-in changes order
+
+**Given** the live E3 seam and a frozen manifest
+**When** no experiment opt-in is present, or its hash is invalid
+**Then** the curated production arm order is unchanged
+**And** a valid opt-in can select only a permutation of existing curated arms.
+
 **CORRECTION 2026-09-05, append-only. The first implementation was the wrong repair and is
 reverted.** It reset `explorer._hybrid_diversity` on every level-up. The adversarial reviewer
 showed that mutates real search state to fix a REPORTING defect, and that it removed the

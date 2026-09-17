@@ -1,0 +1,2811 @@
+{
+  "candidate_rows": [
+    {
+      "arm_order": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_0",
+      "censored": true,
+      "censored_decision_count": 23,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 2,
+          "observed_levelup_count": 2,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 2,
+          "trajectory_count": 2
+        },
+        "drop_goal_bias": {
+          "development_game_count": 3,
+          "observed_levelup_count": 6,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 6,
+          "trajectory_count": 6
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        }
+      },
+      "supported_decision_count": 8,
+      "supported_game_count": 3,
+      "supported_trajectory_count": 6,
+      "unit_id": "ordering_0",
+      "unsupported_counterfactual_count": 23,
+      "value": 8
+    },
+    {
+      "arm_order": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_1",
+      "censored": true,
+      "censored_decision_count": 19,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 2,
+          "observed_levelup_count": 2,
+          "observed_levelup_rate": 0.5,
+          "supported_decision_count": 4,
+          "trajectory_count": 3
+        },
+        "drop_goal_bias": {
+          "development_game_count": 3,
+          "observed_levelup_count": 6,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 6,
+          "trajectory_count": 6
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 2,
+          "observed_levelup_count": 1,
+          "observed_levelup_rate": 0.5,
+          "supported_decision_count": 2,
+          "trajectory_count": 2
+        }
+      },
+      "supported_decision_count": 12,
+      "supported_game_count": 3,
+      "supported_trajectory_count": 7,
+      "unit_id": "ordering_1",
+      "unsupported_counterfactual_count": 19,
+      "value": 12
+    },
+    {
+      "arm_order": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_2",
+      "censored": true,
+      "censored_decision_count": 31,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        },
+        "drop_goal_bias": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        }
+      },
+      "supported_decision_count": 0,
+      "supported_game_count": 0,
+      "supported_trajectory_count": 0,
+      "unit_id": "ordering_2",
+      "unsupported_counterfactual_count": 31,
+      "value": 0
+    }
+  ],
+  "control_rows": [
+    {
+      "control": "duplicate_partial_final",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "shadow_separation",
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "control": "co_credit_preserved",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "missing_outcome_censored",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "changed_action_suffix_censored",
+      "observed": 73,
+      "passed": true
+    }
+  ],
+  "controls_passed": true,
+  "development_game_count": 4,
+  "evaluation_game_count": 4,
+  "frozen_ordering": null,
+  "frozen_supervisor_trial_manifest": {
+    "arm_order": null,
+    "config_hash": null,
+    "curated_arm_definitions_changed": false,
+    "development_family_ids": [
+      "click_template_handle_average",
+      "graph_explore",
+      "palette_region_fill",
+      "reflection_mirror_object_alignment"
+    ],
+    "development_game_ids": [
+      "ar25",
+      "cd82",
+      "r11l",
+      "tu93"
+    ],
+    "evaluation_family_ids": [
+      "config_toggle_navigation",
+      "goal_directed_navigation_local_obstacle_clear",
+      "local_constraint_color_cycle",
+      "marker_pair_shape_alignment"
+    ],
+    "evaluation_game_ids": [
+      "bp35",
+      "cn04",
+      "dc22",
+      "ft09"
+    ],
+    "live_action_budget": "unchanged_from_E3_experiment_runner",
+    "minimum_development_games": 3,
+    "minimum_supported_decisions_per_arm": 10,
+    "production_defaults_changed": false,
+    "required_evaluation_games": 4,
+    "schema": "carnot.exp7365.supervisor_order_opt_in.v1"
+  },
+  "game_split": {
+    "development_family_ids": [
+      "click_template_handle_average",
+      "graph_explore",
+      "palette_region_fill",
+      "reflection_mirror_object_alignment"
+    ],
+    "development_game_ids": [
+      "ar25",
+      "cd82",
+      "r11l",
+      "tu93"
+    ],
+    "disjoint_families": true,
+    "disjoint_games": true,
+    "evaluation_family_ids": [
+      "config_toggle_navigation",
+      "goal_directed_navigation_local_obstacle_clear",
+      "local_constraint_color_cycle",
+      "marker_pair_shape_alignment"
+    ],
+    "evaluation_game_ids": [
+      "bp35",
+      "cn04",
+      "dc22",
+      "ft09"
+    ],
+    "evaluation_reachable": true,
+    "registry_precheck": [
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "reflection_mirror_object_alignment",
+        "game": "ar25",
+        "levels_reproduced": 8
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "palette_region_fill",
+        "game": "cd82",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "click_template_handle_average",
+        "game": "r11l",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "graph_explore",
+        "game": "tu93",
+        "levels_reproduced": 9
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "goal_directed_navigation_local_obstacle_clear",
+        "game": "bp35",
+        "levels_reproduced": 9
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "marker_pair_shape_alignment",
+        "game": "cn04",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "config_toggle_navigation",
+        "game": "dc22",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "local_constraint_color_cycle",
+        "game": "ft09",
+        "levels_reproduced": 6
+      }
+    ]
+  },
+  "independent_trajectory_count": 14,
+  "leave_one_game_out_rows": [
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 6,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 1,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 2,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 1,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "r11l",
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 4,
+        "drop_goal_bias": 6,
+        "force_exploration_diversity": 2
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "r11l",
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 4,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 2
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 2,
+        "force_exploration_diversity": 1
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l"
+        ],
+        "force_exploration_diversity": [
+          "r11l"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 1
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    }
+  ],
+  "panel_passed": true,
+  "receipt_counts": {
+    "applied": 14,
+    "duplicate": 0,
+    "error": 0,
+    "shadow": 1
+  },
+  "supervisor_trial_ready_score": 0,
+  "support_rows": [
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": true,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 651,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 531,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 768,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": true,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": true,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 233,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 113,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": true,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 651,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 768,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": true,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": true,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 233,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 113,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 645,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": 525,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "censoring_reason": "shadow_not_applied",
+      "co_credited_count": null,
+      "control_id": "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252",
+      "game": "r11l",
+      "held_out_assignment": "control",
+      "kind": "shadow_control",
+      "supported": false,
+      "trajectory_id": "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252"
+    }
+  ],
+  "unsupported_counterfactual_count": 73
+}

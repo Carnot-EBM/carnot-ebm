@@ -1,0 +1,3614 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "completion",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "required_validation",
+      "check": "required_validation",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "safety",
+      "check": "adversarial_clear",
+      "expected": false,
+      "observed": false,
+      "passed": true
+    },
+    {
+      "category": "support",
+      "check": "support_floor",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    },
+    {
+      "category": "efficacy",
+      "check": "scientific_value",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    },
+    {
+      "category": "promotion",
+      "check": "promotion",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    }
+  ],
+  "completed_at_utc": "2026-09-17T09:52:18.449266+00:00",
+  "control_rows": [
+    {
+      "control": "duplicate_partial_final",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "shadow_separation",
+      "observed": 1,
+      "passed": true
+    },
+    {
+      "control": "co_credit_preserved",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "missing_outcome_censored",
+      "observed": 0,
+      "passed": true
+    },
+    {
+      "control": "changed_action_suffix_censored",
+      "observed": 73,
+      "passed": true
+    }
+  ],
+  "curated_arm_definitions_changed": false,
+  "duration_s": 9.826324844034389,
+  "execution_venue": "host",
+  "experiment_id": "exp7365-supervisor-support",
+  "field_principles": {
+    "MODEL_SPECS": "List current model identities; this CPU audit has none.",
+    "acceptance_gate_results": "Separate validation, safety, support, and scientific value.",
+    "duration_s": "Use real monotonic elapsed time without padding.",
+    "execution_venue": "Name the measured host venue; no board runs occur.",
+    "field_principles": "Explain scalar fields without wrapping their values.",
+    "flagged_adversarial": "A critical current verifier finding prevents readiness.",
+    "frozen_supervisor_trial_manifest": "Freeze an eligible order and disjoint IDs.",
+    "gate_check_summary": "Name the first exact failed field and retain all failures.",
+    "generalization_activity": "Use ledger refinement and leave-one-game-out checks only.",
+    "honest_verdict": "Separate a completed null support audit from unavailable work.",
+    "inference_substrate": "Name the actual host CPU ledger reduction.",
+    "inference_substrate_class": "Use the measured closed CPU solver class.",
+    "invocation_counts": "Separate every current call state from historical receipts.",
+    "model_invoked": "Set true for any attempted current model load or generation.",
+    "phase_spans": "Keep load, generation, evaluation, validation, and write disjoint.",
+    "preconditions_checked": "Record exact paths and fields before ledger work.",
+    "random_seed": "Freeze split and resampling seeds even when selection is deterministic.",
+    "repository_health": "Keep dated unrelated failures outside affected validation.",
+    "reproducibility_checksum": "Bind code, settings, inputs, evaluator, and raw evidence.",
+    "rows": "Keep every compared ordering with costs, failures, and censoring.",
+    "run_date": "Use the requested date and real UTC boundary timestamps.",
+    "sample_size_budget": "State planned, completed, censored units and stopping rules.",
+    "schema": "Version this record and keep ordinary experiment identity fields.",
+    "source_artifact_hashes": "Hash exact producer and evidence bytes.",
+    "status": "Use a terminal state only after the affected checks finish.",
+    "supervisor_trial_ready_score": "Require all support, panel, and routing floors.",
+    "support_rows": "Keep every decision, outcome, censor, co-credit, and assignment.",
+    "unsupported_counterfactual_count": "Count every deliberately unknown changed-path row.",
+    "validation_receipts": "Keep exact command, scope, exit, elapsed time, and log hash.",
+    "verdict_class": "Use the closed terminal class vocabulary.",
+    "verifier_is_oracle": "The live level-up receipt defines the observed outcome only."
+  },
+  "flagged_adversarial": false,
+  "frozen_supervisor_trial_manifest": {
+    "arm_order": null,
+    "config_hash": null,
+    "curated_arm_definitions_changed": false,
+    "development_family_ids": [
+      "click_template_handle_average",
+      "graph_explore",
+      "palette_region_fill",
+      "reflection_mirror_object_alignment"
+    ],
+    "development_game_ids": [
+      "ar25",
+      "cd82",
+      "r11l",
+      "tu93"
+    ],
+    "evaluation_family_ids": [
+      "config_toggle_navigation",
+      "goal_directed_navigation_local_obstacle_clear",
+      "local_constraint_color_cycle",
+      "marker_pair_shape_alignment"
+    ],
+    "evaluation_game_ids": [
+      "bp35",
+      "cn04",
+      "dc22",
+      "ft09"
+    ],
+    "live_action_budget": "unchanged_from_E3_experiment_runner",
+    "minimum_development_games": 3,
+    "minimum_supported_decisions_per_arm": 10,
+    "production_defaults_changed": false,
+    "required_evaluation_games": 4,
+    "schema": "carnot.exp7365.supervisor_order_opt_in.v1"
+  },
+  "game_split": {
+    "development_family_ids": [
+      "click_template_handle_average",
+      "graph_explore",
+      "palette_region_fill",
+      "reflection_mirror_object_alignment"
+    ],
+    "development_game_ids": [
+      "ar25",
+      "cd82",
+      "r11l",
+      "tu93"
+    ],
+    "disjoint_families": true,
+    "disjoint_games": true,
+    "evaluation_family_ids": [
+      "config_toggle_navigation",
+      "goal_directed_navigation_local_obstacle_clear",
+      "local_constraint_color_cycle",
+      "marker_pair_shape_alignment"
+    ],
+    "evaluation_game_ids": [
+      "bp35",
+      "cn04",
+      "dc22",
+      "ft09"
+    ],
+    "evaluation_reachable": true,
+    "registry_precheck": [
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "reflection_mirror_object_alignment",
+        "game": "ar25",
+        "levels_reproduced": 8
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "palette_region_fill",
+        "game": "cd82",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "click_template_handle_average",
+        "game": "r11l",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "development",
+        "existing_public_solve_only": true,
+        "family": "graph_explore",
+        "game": "tu93",
+        "levels_reproduced": 9
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "goal_directed_navigation_local_obstacle_clear",
+        "game": "bp35",
+        "levels_reproduced": 9
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "marker_pair_shape_alignment",
+        "game": "cn04",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "config_toggle_navigation",
+        "game": "dc22",
+        "levels_reproduced": 6
+      },
+      {
+        "assignment": "evaluation",
+        "existing_public_solve_only": true,
+        "family": "local_constraint_color_cycle",
+        "game": "ft09",
+        "levels_reproduced": 6
+      }
+    ]
+  },
+  "gate_check_summary": {
+    "all_passed": false,
+    "failed_checks": [
+      {
+        "category": "support",
+        "check": "support_floor",
+        "expected": 1,
+        "observed": 0,
+        "passed": false
+      },
+      {
+        "category": "efficacy",
+        "check": "scientific_value",
+        "expected": 1,
+        "observed": 0,
+        "passed": false
+      },
+      {
+        "category": "promotion",
+        "check": "promotion",
+        "expected": 1,
+        "observed": 0,
+        "passed": false
+      }
+    ],
+    "failed_count": 3,
+    "first_failure": {
+      "category": "support",
+      "check": "support_floor",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    }
+  },
+  "generalization_activity": {
+    "causal_off_policy_claim": false,
+    "kind": "existing_supervisor_ledger_refinement_with_leave_one_game_out_checks",
+    "live_trial_executed": false,
+    "new_public_solve": false
+  },
+  "historical_inference_sidecars": [
+    {
+      "flagged_adversarial": null,
+      "historical_only": true,
+      "inference_substrate": "canonical_live_e3_trace_fsm_supervisor_no_llm",
+      "model_invoked": "not_recorded",
+      "path": "results/experiment_6656_arc_trace_automaton_live_loo.json",
+      "sha256": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e",
+      "status": "blocked_archived_transport_lacks_redirect_outcomes",
+      "verdict_class": "blocked"
+    },
+    {
+      "flagged_adversarial": null,
+      "historical_only": true,
+      "inference_substrate": "deterministic_cpu_audit_of_live_arc_receipts_no_new_llm",
+      "model_invoked": "not_recorded",
+      "path": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "sha256": "sha256:730a532b8143ab77ff5277e2a16cf8117237b539914676f36636c6bd9934c9cb",
+      "status": "complete_insufficient_banked_progress_evidence",
+      "verdict_class": "null"
+    },
+    {
+      "flagged_adversarial": null,
+      "historical_only": true,
+      "inference_substrate": "canonical_live_e3_supervisor_ab_no_new_llm",
+      "model_invoked": "not_recorded",
+      "path": "results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "sha256": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57",
+      "status": "complete_arc_supervisor_ab_partial",
+      "verdict_class": "partial"
+    }
+  ],
+  "honest_verdict": "complete_null_insufficient_supported_outcomes",
+  "host_computation": {
+    "machine": "x86_64",
+    "node": "icbfl1",
+    "operation": "JSON ledger ingestion, deterministic prefix mask, grouped counts",
+    "processor": "not_reported"
+  },
+  "inference_substrate": "host_cpu_json_ledger_reduction_and_exact_support_mask",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "invocation_counts": {
+    "current": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "historical": {
+      "counted_as_current": false,
+      "sidecar_count": 3
+    }
+  },
+  "leave_one_game_out_rows": [
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 6,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 1,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "tu93"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 2,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_0",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "cd82"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l"
+        ],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 1,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "r11l",
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 4,
+        "drop_goal_bias": 6,
+        "force_exploration_diversity": 2
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l",
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "r11l",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "r11l",
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 4,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 2
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "tu93"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "tu93"
+        ],
+        "force_exploration_diversity": [
+          "tu93"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 2,
+        "force_exploration_diversity": 1
+      }
+    },
+    {
+      "candidate_id": "ordering_1",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [
+          "r11l"
+        ],
+        "drop_goal_bias": [
+          "cd82",
+          "r11l"
+        ],
+        "force_exploration_diversity": [
+          "r11l"
+        ]
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 2,
+        "drop_goal_bias": 5,
+        "force_exploration_diversity": 1
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "ar25",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "cd82",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "r11l",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    },
+    {
+      "candidate_id": "ordering_2",
+      "expected_minimum_per_arm": 10,
+      "held_out_game": "tu93",
+      "passed": false,
+      "support_games_by_arm": {
+        "allow_reinduction": [],
+        "drop_goal_bias": [],
+        "force_exploration_diversity": []
+      },
+      "supported_decisions_by_arm": {
+        "allow_reinduction": 0,
+        "drop_goal_bias": 0,
+        "force_exploration_diversity": 0
+      }
+    }
+  ],
+  "milestone": "2026.09.646",
+  "model_invoked": false,
+  "phase": 3,
+  "phase_spans": [
+    {
+      "completed_units": 29,
+      "duration_s": 0.38779935892671347,
+      "end_s": 0.38781544007360935,
+      "phase": "load",
+      "start_s": 1.6081146895885468e-05
+    },
+    {
+      "completed_units": 0,
+      "duration_s": 0.0,
+      "end_s": 0.3878656141459942,
+      "phase": "generation",
+      "start_s": 0.3878656141459942
+    },
+    {
+      "completed_units": 14,
+      "duration_s": 0.19651850592345,
+      "end_s": 0.584387606009841,
+      "phase": "evaluation",
+      "start_s": 0.38786910008639097
+    },
+    {
+      "completed_units": 12,
+      "duration_s": 9.23850437393412,
+      "end_s": 9.82534444401972,
+      "phase": "validation",
+      "start_s": 0.5868400700856
+    },
+    {
+      "completed_units": 1,
+      "duration_s": 7.986091077327728e-08,
+      "end_s": 9.826323681976646,
+      "phase": "write",
+      "start_s": 9.826323602115735
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/agentic/arc_supervisor_refinement.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_supervisor_refinement.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/agentic/arc_trajectory_supervisor.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_trajectory_supervisor.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:tests/python/test_arc_supervisor_refinement.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_arc_supervisor_refinement.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/arc_solve_registry.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/arc_supervisor_refinement_ledger.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/arc_supervisor_refinement_ledger.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_7358_v646_validation_contract.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_6656_arc_trace_automaton_live_loo.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_6656_arc_trace_automaton_live_loo.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_6682_arc_held_family_supervisor_ab.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_6682_arc_held_family_supervisor_ab.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7365_v646_supervisor_support.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7365_v646_supervisor_support.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:scripts/experiments/experiment_7365_v646_supervisor_support.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7365_v646_supervisor_support.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:tests/python/test_experiment_7365_v646_supervisor_support.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7365_v646_supervisor_support.py"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "check": "driving_requirement",
+      "expected": "REQ-ARC-WMTE-7365",
+      "observed": "REQ-ARC-WMTE-7365",
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "validation_contract_ready_score",
+      "check": "validation_contract_ready",
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "validation_contract_verdict",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed": "null",
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "validation_contract_adversarial",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "artifact_field": "status",
+      "check": "validation_contract_terminal_status",
+      "expected": "terminal_not_blocked_partial_or_disqualified",
+      "observed": "complete_validation_contract_null_science",
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "artifact_field": "exp7358-validation-contract",
+      "check": "validation_contract_not_quarantined",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "exp7365-supervisor-support",
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "observed": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "random_seed": {
+    "development_split": 7365001,
+    "evaluation_split": 7365002,
+    "resampling": 7365003,
+    "selection_is_deterministic": true
+  },
+  "receipt_counts": {
+    "applied": 14,
+    "duplicate": 0,
+    "error": 0,
+    "shadow": 1
+  },
+  "repository_health": {
+    "as_of": "20260917",
+    "unrelated_failures": [
+      {
+        "duration_s": 1907.050442007836,
+        "exit_code": -15,
+        "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/full_suite/00_full_python_suite.log",
+        "log_sha256": "sha256:fc5e125f4c1e6c6d1ff162d2c9b1075e5b5ac38a9280cd51c0af37c323481cb4",
+        "name": "full_python_suite",
+        "timed_out": true
+      }
+    ]
+  },
+  "reproducibility_checksum": "sha256:acfc7c1f8014d535517554a5e6615d1733b68f47089672b5f178638227afd398",
+  "rows": [
+    {
+      "arm_order": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_0",
+      "censored": true,
+      "censored_decision_count": 23,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 2,
+          "observed_levelup_count": 2,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 2,
+          "trajectory_count": 2
+        },
+        "drop_goal_bias": {
+          "development_game_count": 3,
+          "observed_levelup_count": 6,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 6,
+          "trajectory_count": 6
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        }
+      },
+      "supported_decision_count": 8,
+      "supported_game_count": 3,
+      "supported_trajectory_count": 6,
+      "unit_id": "ordering_0",
+      "unsupported_counterfactual_count": 23,
+      "value": 8
+    },
+    {
+      "arm_order": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_1",
+      "censored": true,
+      "censored_decision_count": 19,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 2,
+          "observed_levelup_count": 2,
+          "observed_levelup_rate": 0.5,
+          "supported_decision_count": 4,
+          "trajectory_count": 3
+        },
+        "drop_goal_bias": {
+          "development_game_count": 3,
+          "observed_levelup_count": 6,
+          "observed_levelup_rate": 1.0,
+          "supported_decision_count": 6,
+          "trajectory_count": 6
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 2,
+          "observed_levelup_count": 1,
+          "observed_levelup_rate": 0.5,
+          "supported_decision_count": 2,
+          "trajectory_count": 2
+        }
+      },
+      "supported_decision_count": 12,
+      "supported_game_count": 3,
+      "supported_trajectory_count": 7,
+      "unit_id": "ordering_1",
+      "unsupported_counterfactual_count": 19,
+      "value": 12
+    },
+    {
+      "arm_order": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "arm_support_floor_passed": false,
+      "candidate_id": "ordering_2",
+      "censored": true,
+      "censored_decision_count": 31,
+      "costs": {
+        "current_model_calls": 0,
+        "live_arc_runs": 0
+      },
+      "disposition": "complete",
+      "eligible_before_controls": false,
+      "failures": [],
+      "leave_one_game_out_passed": false,
+      "metric": "supported_decision_count",
+      "per_arm": {
+        "allow_reinduction": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        },
+        "drop_goal_bias": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        },
+        "force_exploration_diversity": {
+          "development_game_count": 0,
+          "observed_levelup_count": 0,
+          "observed_levelup_rate": null,
+          "supported_decision_count": 0,
+          "trajectory_count": 0
+        }
+      },
+      "supported_decision_count": 0,
+      "supported_game_count": 0,
+      "supported_trajectory_count": 0,
+      "unit_id": "ordering_2",
+      "unsupported_counterfactual_count": 31,
+      "value": 0
+    }
+  ],
+  "run_date": "20260917",
+  "sample_size_budget": {
+    "candidate_orderings_attempted": 3,
+    "candidate_orderings_completed": 3,
+    "candidate_orderings_planned": 3,
+    "decision_rows_censored": 74,
+    "decision_rows_completed": 94,
+    "stopping_rule": "audit all deduplicated ledger entries; no live run",
+    "trajectory_units_completed": 14
+  },
+  "schema": "carnot.exp7365.v646.supervisor_support.v1",
+  "scientific_value_score": 0,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:bc2ed688881b8b59ba8b5124815362baf48675a5f62abdee2a658d130804e1f8",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:43ab1db6b0e130892a689bb10efd791602da87a771d9a4e58170c5a006536b03",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/arc_supervisor_refinement_ledger.json": "sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/agentic/arc_supervisor_refinement.py": "sha256:3c4e9a50eee49e253fd755eb47d8d0235594189aafdc19a557bade7fd3aac428",
+    "python/carnot/agentic/arc_trajectory_supervisor.py": "sha256:69ae2b2c566552bdba2639494bf7b3e1dd5d2d8f701667ad7f5715e67cbb0304",
+    "python/carnot/experiment_7365_v646_supervisor_support.py": "sha256:a63da8693caefb493f35530e36c300f27201023c1ae9aed6a406d46a93e21629",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_6656_arc_trace_automaton_live_loo.json": "sha256:913052fa24153337e8716ee24609bec3466f0e945d8351ccd8cdda77da3d1a2e",
+    "results/experiment_6682_arc_held_family_supervisor_ab.json": "sha256:5c8b07486a0ff9a543ce093374a67f2935f553cc1ef7d048b6561ff9a1996d57",
+    "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": "sha256:730a532b8143ab77ff5277e2a16cf8117237b539914676f36636c6bd9934c9cb",
+    "results/experiment_7358_v646_validation_contract.json": "sha256:0d2c2fe876ba303b21c9b5fe5b094d92851ea407d7d9f06ae9d8ca4d37475781",
+    "scripts/experiments/experiment_7365_v646_supervisor_support.py": "sha256:6d422138158735881d97af84afcfecd6afced2d31ccdfb7f257ddd4aa4e4c700",
+    "tests/python/test_arc_supervisor_refinement.py": "sha256:341c740e3bfa337cd67dae4756179730788fee0799d7bb1dad4105b7e42ed1c5",
+    "tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py": "sha256:da814076000c4dc9372a6071a34a2eacb363678c2e09b1e2120ac347d98f8852",
+    "tests/python/test_experiment_7365_v646_supervisor_support.py": "sha256:c6aa5ffa9ae527683a893ad67c1b05dceb09d1bd78d8678e07b974096883228d"
+  },
+  "started_at_utc": "2026-09-17T09:52:08.622943+00:00",
+  "status": "complete_null_insufficient_supported_outcomes",
+  "supervisor_trial_ready_score": 0,
+  "support_rows": [
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": true,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 651,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 531,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 768,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": true,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": true,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 233,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 113,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "allow_reinduction",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": true,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 651,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 768,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": true,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": true,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 233,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 113,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": true,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": 765,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": 645,
+      "candidate_arm": "force_exploration_diversity",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": 525,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": true,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "allow_reinduction",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": null,
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": false,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": true,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": false
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+      "supported": false,
+      "trajectory_id": "sha256:0a18a1c03edabbf3bab98eb03c8e245b9bf735f6f26764611c7f40397f0d925e",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1011,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "cd82",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:2c3ca1295d9942aa17fc39438db6fece0836418e532b5482788e8e3fc811cf15",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1008,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1128,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 1,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "supported": false,
+      "trajectory_id": "sha256:8284bc51032c46e1bdbe544319eadc31a0a00d8f52e8abe32efd2fd5be18b5eb",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 260,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 380,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:a2893a05b211b005cf5471d3d59679edc42184a6b1facd1ffbc4cef4c3c50fd9",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 165,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 1,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 348,
+      "actions_to_levelup": null,
+      "candidate_arm": "drop_goal_bias",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:abe8bdcc800c1b25256e077dd9bc831cefc256eca978bae9945650fe208ac01f",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 480,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 4,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 5,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1370,
+      "actions_to_levelup": null,
+      "candidate_arm": "tool_loop_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 6,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "tool_loop_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+      "supported": false,
+      "trajectory_id": "sha256:b46eaad577d982cbf189b99f35fc3b5fb9b3f331d7f149b26c5265d763d865fc",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "tu93",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/.claude/jobs/ad0c053d/tmp/supwindow/rows.json",
+      "supported": false,
+      "trajectory_id": "sha256:c3a2dfe0d840c38d16fd4dea7f94610e9f04c1d570dad958dd1ecfcc94023bb8",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "candidate_changed_actual_action",
+      "co_credited_count": null,
+      "decision_index": 0,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "drop_goal_bias",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 1,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "force_exploration_diversity",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 2,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 0,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup": null,
+      "candidate_arm": "allow_reinduction",
+      "candidate_ordering": [
+        "allow_reinduction",
+        "drop_goal_bias",
+        "force_exploration_diversity",
+        "tool_loop_reinduction"
+      ],
+      "causal_interpretation": "descriptive_observed_association_only",
+      "censoring_reason": "after_candidate_changed_action",
+      "co_credited_count": null,
+      "decision_index": 3,
+      "family_assignment": "development",
+      "game": "r11l",
+      "level": 2,
+      "observed_arm": "allow_reinduction",
+      "observed_outcome": null,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+      "supported": false,
+      "trajectory_id": "sha256:f377c874235e4d2f964b4ff550265777fa4b54e63eb50c58f4a519c688d60033",
+      "unsupported_counterfactual": true
+    },
+    {
+      "censoring_reason": "shadow_not_applied",
+      "co_credited_count": null,
+      "control_id": "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252",
+      "game": "r11l",
+      "held_out_assignment": "control",
+      "kind": "shadow_control",
+      "supported": false,
+      "trajectory_id": "sha256:82750966c7e15adebc2ba8fccd26f332e2036df0ab708bb4d01d9c37128aa252"
+    }
+  ],
+  "unsupported_counterfactual_count": 73,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7365_v646_supervisor_support",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7365_v646_supervisor_support"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.44999032095074654,
+      "ended_at_utc": "2026-09-17T09:52:09.662798+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:1d699581df5a52d395db8aa12ce4c48d56c66554b2d4969ed514921de4ebd5ee",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7365_v646_supervisor_support\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7365_v646_supervisor_support.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7365_v646_supervisor_support": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7365_v646_supervisor_support.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T09:52:09.212344+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7365-validation-f0gin3nc/basetemp/focused tests/python/test_experiment_7365_v646_supervisor_support.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7365-validation-f0gin3nc/basetemp/focused",
+        "tests/python/test_experiment_7365_v646_supervisor_support.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 2.879062360152602,
+      "ended_at_utc": "2026-09-17T09:52:12.542302+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:b720ca74af19b4c41f8bf7e92f462f14cf0327b7cac137672a7cd250cb54c87d",
+      "name": "focused_pytest",
+      "output_tail": "....................                                                     [100%]\n20 passed in 1.16s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T09:52:09.662836+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7365-validation-f0gin3nc/coverage/.coverage '--include=*/experiment_7365_v646_supervisor_support.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7365-validation-f0gin3nc/basetemp/coverage tests/python/test_experiment_7365_v646_supervisor_support.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7365-validation-f0gin3nc/coverage/.coverage",
+        "--include=*/experiment_7365_v646_supervisor_support.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7365-validation-f0gin3nc/basetemp/coverage",
+        "tests/python/test_experiment_7365_v646_supervisor_support.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.572592642856762,
+      "ended_at_utc": "2026-09-17T09:52:17.115308+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:af369cd799f76e8b425d4bbbcb6cb528b210ed0fdf62ebe8b5e1dc93322a291b",
+      "name": "changed_module_coverage",
+      "output_tail": "....................                                                     [100%]\n20 passed in 1.88s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T09:52:12.542361+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7365_v646_supervisor_support.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7365_v646_supervisor_support.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7365-validation-f0gin3nc/coverage/.coverage"
+      },
+      "duration_s": 0.07673656800761819,
+      "ended_at_utc": "2026-09-17T09:52:17.192315+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:b2666a6893a0724c8f5b234caebb07198f2cf4ebe7458d52f924ff621bc0df6a",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7365_v646_supervisor_support.py     437      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        437      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T09:52:17.115341+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7365_v646_supervisor_support.py scripts/experiments/experiment_7365_v646_supervisor_support.py tests/python/test_experiment_7365_v646_supervisor_support.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7365_v646_supervisor_support.py",
+        "scripts/experiments/experiment_7365_v646_supervisor_support.py",
+        "tests/python/test_experiment_7365_v646_supervisor_support.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012171650072559714,
+      "ended_at_utc": "2026-09-17T09:52:17.204816+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T09:52:17.192343+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7365_v646_supervisor_support.py scripts/experiments/experiment_7365_v646_supervisor_support.py tests/python/test_experiment_7365_v646_supervisor_support.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7365_v646_supervisor_support.py",
+        "scripts/experiments/experiment_7365_v646_supervisor_support.py",
+        "tests/python/test_experiment_7365_v646_supervisor_support.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010930811055004597,
+      "ended_at_utc": "2026-09-17T09:52:17.216089+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T09:52:17.204862+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7365_v646_supervisor_support.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7365_v646_supervisor_support.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.177313701948151,
+      "ended_at_utc": "2026-09-17T09:52:17.393772+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T09:52:17.216112+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7365_v646_supervisor_support.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7365_v646_supervisor_support.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.019894437864422798,
+      "ended_at_utc": "2026-09-17T09:52:17.414054+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T09:52:17.393828+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest tests/python -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "tests/python",
+        "-q"
+      ],
+      "current_required_validation": false,
+      "duration_s": 1907.050442007836,
+      "exit_code": -15,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/full_suite/00_full_python_suite.log",
+      "log_sha256": "sha256:fc5e125f4c1e6c6d1ff162d2c9b1075e5b5ac38a9280cd51c0af37c323481cb4",
+      "name": "full_python_suite",
+      "output_tail": ".....................ss.... [ 53%]\n........................................................................ [ 54%]\n.....................s.s...s............................................ [ 54%]\n.......................................................F................ [ 54%]\n..s..................................................................... [ 54%]\n........................................................................ [ 54%]\n........................................................................ [ 54%]\n....................................................F................... [ 54%]\n........................................................................ [ 54%]\n......................................F....FF........................... [ 54%]\n...........................F.......F.................................... [ 55%]\n...............FF.FF............F....................................... [ 55%]\n..................FFFF.............F.....F.....F...................F..F. [ 55%]\n.............................F.......................................... [ 55%]\n........................................................................ [ 55%]\n..................F..................................................... [ 55%]\n.....................................F...................F.............. [ 55%]\n........................................................................ [ 55%]\n......FF...........F.................................................FF. [ 55%]\n...........................................FF................FFFFF...... [ 55%]\n........................................................................ [ 56%]\n........................................................................ [ 56%]\n.....FFFFFFFF.FF........................F.F............................. [ 56%]\n....................................................F................... [ 56%]\n........................................................................ [ 56%]\n.................F.FFF...F.F......F......F.............................. [ 56%]\n........................................................................ [ 56%]\n............................FF....................FFF...........FFF.F... [ 56%]\n...................../home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140678221198688, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 139717325026656, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140611997221808, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/_pytest/main.py:353: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: 140221011847808, Hook: pytest_sessionfinish\nOSError: cannot send (already closed?)\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config.hook.pytest_sessionfinish(\n",
+      "passed": false,
+      "reused_as_repository_health_diagnostic": true,
+      "scope": "repository_python_tests",
+      "timed_out": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys;from pathlib import Path;from carnot.experiment_7365_v646_supervisor_support import validate_artifact;value=json.loads(Path(sys.argv[1]).read_text());errors=validate_artifact(value,require_validation=False);print(errors,flush=True);raise SystemExit(bool(errors))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,sys;from pathlib import Path;from carnot.experiment_7365_v646_supervisor_support import validate_artifact;value=json.loads(Path(sys.argv[1]).read_text());errors=validate_artifact(value,require_validation=False);print(errors,flush=True);raise SystemExit(bool(errors))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json"
+      ],
+      "duration_s": 0.43487686896696687,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/terminal/00_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "output_tail": "[]\n",
+      "passed": true,
+      "scope": "raw_evidence",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json"
+      ],
+      "duration_s": 0.562841648934409,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/terminal/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7365_v646_supervisor_support/terminal_candidate.json"
+      ],
+      "duration_s": 0.028179410845041275,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7365_v646_supervisor_support/validation/terminal/02_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "terminal_candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}
