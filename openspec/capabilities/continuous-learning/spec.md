@@ -17225,6 +17225,94 @@ It SHALL publish the terminal JSON atomically.
 |---|---|---|
 | REQ-CL-7362 and SCENARIO-CL-7362-* | Planned: `python/carnot/experiment_7362_v646_prospective_learning.py` with a thin script entrypoint and atomic terminal artifact. | Planned: `tests/python/test_experiment_7362_v646_prospective_learning.py`. |
 
+## REQ-CL-7370: Versioned Source-Checked 2-CNF Proof Memory
+
+Carnot SHALL expose one public 2-CNF formula and the same assumption queries to
+all development arms. An immutable formula version SHALL contain canonical
+clause identifiers and a source hash. Formula truth SHALL remain with the exact
+solver. Proof memory SHALL not acquire hidden rules from Boolean feedback.
+
+After an exact unsatisfiable query, proof discovery MAY retain at most eight
+implication paths. Each path SHALL contain only original implication-graph
+edges. Each edge SHALL name its exact source clause. A checker that does not
+call the learner SHALL verify every edge, endpoint, formula version, and source
+hash. A path SHALL contain at most `2n` edges. Memory SHALL retain at most 128
+paths and 65,536 serialized bytes.
+
+Prediction SHALL read the prior committed snapshot. A checked path MAY reject
+only when current assumptions contain its antecedent and the negation of its
+consequent. A cache miss SHALL call the exact solver. A path SHALL never certify
+a satisfying assignment. Every satisfiable output SHALL pass source-clause
+verification. New paths SHALL commit only after the query finishes. Restart
+SHALL restore exact committed bytes. A version change SHALL invalidate old
+paths atomically.
+
+Development SHALL use 16 formulas with variable counts in `{8, 12, 24, 32}`.
+The panel SHALL include long chains, independent conflicts, satisfiable near
+misses, duplicate clauses, and version edits. Direct enumeration SHALL check
+all formulas with at most 12 variables. A separate exact 2-SAT implementation
+SHALL check larger formulas. The fixture SHALL retain one later, different
+assumption query whose early rejection uses a prior proof. Removing that one
+path from the same snapshot SHALL remove the early decision. If no such witness
+exists, `proof_fixture_ready_score` SHALL be zero and the witness SHALL be null.
+
+Development cost rows SHALL compare reset exact solving, persistent incremental
+exact solving, and a persistent source-graph reachability cache. The rows SHALL
+charge discovery, proof checking, updates, storage, and exact solve work. They
+SHALL not select held-out requests or claim a ten-fold gain. Hostile checks
+SHALL reject stale versions, forged edges, omitted literals, negative clause
+identifiers, cycles, conflicting metadata, and label leakage.
+
+The terminal artifact SHALL use milestone `2026.09.647`, phase 1, and run date
+`20260917`. It SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+model invocation counts, `inference_substrate_class=cpu_exact_solver_or_simulator`,
+and `execution_venue=host`. It SHALL preserve the disqualified V646 capstone as
+hash-bound historical evidence only. Learning value and promotion scores SHALL
+remain zero.
+
+The workflow SHALL derive its explicit affected command plan from Exp7358 and
+run it through Exp7303. It SHALL require worktree imports, focused serial pytest
+with cleared addopts and no inherited coverage, separate 100 percent changed-
+module coverage, scoped Ruff check and format, changed-module mypy, and scoped
+specification coverage. It SHALL run the declared entrypoint and cold artifact
+replay as the capability-level end-to-end check. It SHALL also run independent
+reduction, adversarial verification, and strict row consistency before one
+atomic terminal write. No numbered E2E test applies.
+
+### SCENARIO-CL-7370-PROOF: Original Edges Are The Only Rejection Authority
+
+- GIVEN a committed path for `a` implies `b` in one exact formula version
+- WHEN later assumptions contain `a` and `not b`
+- THEN the checker verifies every original edge and source clause before early rejection
+- AND a forged, stale, cyclic, incomplete, or label-derived path fails closed.
+
+### SCENARIO-CL-7370-LIFECYCLE: Queries Observe Only Prior Committed Memory
+
+- GIVEN an exact query can discover a new implication path
+- WHEN that query starts from one immutable snapshot
+- THEN the active query does not observe its new path
+- AND restart restores committed bytes while a version edit invalidates them.
+
+### SCENARIO-CL-7370-WITNESS: One Path Changes A Later Different Decision
+
+- GIVEN a source-checked path learned after an exact query
+- WHEN a later different assumption set conflicts with that path
+- THEN the full snapshot rejects before exact solving
+- AND erasing only that path from the same snapshot removes the early decision.
+
+### SCENARIO-CL-7370-VALIDATION: Raw Evidence Rebuilds One Terminal Artifact
+
+- GIVEN 16 development formulas, raw arm rows, hostile controls, and command receipts
+- WHEN the entrypoint, cold replay, independent reducer, and strict readers run
+- THEN stored gates, scores, costs, class, and checksum reproduce
+- AND failed required validation sets readiness, value, and promotion to zero.
+
+## Implementation Status (REQ-CL-7370)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7370 and SCENARIO-CL-7370-* | Planned: `python/carnot/learning/implication_memory.py` and `python/carnot/experiment_7370_v647_proof_memory.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7370_v647_proof_memory.py`. |
+
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 
 Carnot SHALL run four development requests from the qualified V645 executor
