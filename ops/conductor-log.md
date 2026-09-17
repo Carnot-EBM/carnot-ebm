@@ -18139,3 +18139,4 @@ code |
 | 2026-09-17 19:55 UTC | Independently reduce proof-memory causality and co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7374-prospective-memory, exp7374-prospective-memory, exp7374-prospective-memory) |
 | 2026-09-17 20:14 UTC | Collect new adapter-withheld ARC supervisor outcom | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ld_schedule(exp.TAR |
 | 2026-09-17 21:22 UTC | Collect new adapter-withheld ARC supervisor outcom | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 97 passed, 1 warning in 7.39s |
+| 2026-09-17 21:42 UTC | Compile original-clause Boltzmann laws with entail | OK | 89 passed, 1 warning in 7.65s |
