@@ -5822,3 +5822,26 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Boundary: this map is advisory. HTTP 429 and browser challenges remain
   access outcomes. They do not create a model result or a local science result.
 <!-- EXP7343-V645-SOURCE-INGESTION-20260916-END -->
+
+<!-- EXP7357-V646-SOURCE-INGESTION-20260917-START -->
+## 2026-09-17 Exp7357 V646 source ingestion — INGESTED
+
+- Dream-RSI (`arXiv:2609.14858`) maps to Exp7365 and Exp7366. Replay only
+  ledger-supported supervisor choices. A redirect followed by progress is
+  observed support. It is not a causal result for an unobserved alternative.
+- ModularRSI (`arXiv:2609.14857`) maps to Exp7365 and Exp7366. Freeze one
+  supervisor module. Keep selection and live evaluation games disjoint. One
+  failed trajectory does not identify a general module defect.
+- Conservative Constraint Acquisition (`arXiv:2604.13283`) maps to Exp7362.
+  Use its Boolean pairwise-separation assumptions explicitly. Charge every
+  acquisition query. Preserve unsupported higher-order counterexamples.
+- Memoir (`arXiv:2607.20792`) maps to Exp7362. Keep prediction memory
+  read-only. Commit a verified update only between distinct future requests.
+- RT4CHART (`arXiv:2603.27752`) maps to Exp7361. Keep source-fidelity rows
+  separate from executor-validity rows. Parser success is not semantic proof.
+- Access boundary: the bounded primary-page refresh can return HTTP 429,
+  browser challenges, or other failures. These are access outcomes. They do
+  not invalidate authenticated contract bytes or create local science.
+- Scope boundary: this map adds no research branch or runtime dependency. It
+  is advisory and does not authorize a science consumer.
+<!-- EXP7357-V646-SOURCE-INGESTION-20260917-END -->

@@ -1,5 +1,103 @@
 # Research Reporting Capability Specification
 
+## V646 advisory contract and source map — 2026-09-17
+
+**Status:** Implemented. This receipt is advisory and gates no science.
+
+### REQ-REPORT-7357: Authenticate the V646 twelve-task contract
+
+Exp7357 SHALL select `research-roadmap-next.yaml` only when it names milestone
+`2026.09.646`. Otherwise, it SHALL require the active roadmap to name that
+milestone. It SHALL hash-copy the selected YAML and its named Markdown before
+parsing either copy. It SHALL not edit or activate either authority.
+
+Exp7357 SHALL use the shipped independent Markdown and YAML parsers. It SHALL
+require one active Exact Task Contract with twelve ordered tasks from
+`exp7357-contract` through `exp7368-capstone`. It SHALL compare IDs, titles,
+phases, deliverables, substrate classes, and every structured gate. It SHALL
+retain stale or unexpected Markdown rows as mismatch evidence. Missing,
+reordered, stale, changed, misspelled, and malformed contract mutations SHALL
+fail closed.
+
+Each structured gate SHALL name an earlier producer. The producer SHALL
+declare the exact consumed field. The real conductor reader and the experiment
+precondition reader SHALL evaluate valid evidence, zero scores, missing
+producers, missing fields or terminal classes, disqualified score-one evidence,
+and adversarially flagged score-one evidence. Only valid evidence MAY pass.
+
+Exp7357 SHALL make bounded primary-source checks for Dream-RSI `2609.14858`,
+ModularRSI `2609.14857`, Conservative Constraint Acquisition `2604.13283`,
+Memoir `2607.20792`, and RT4CHART `2603.27752`. The method map SHALL target
+Exp7365/7366, Exp7362, and Exp7361. It SHALL distinguish observed-support replay
+from an unsupported causal counterfactual. Network failure SHALL remain an
+access outcome and SHALL not invalidate an otherwise authenticated contract.
+
+Exp7357 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate_class=aggregation`, and actual host computation.
+Historical model receipts SHALL remain labeled and hash-bound. They SHALL not
+count as current inference.
+
+The workflow SHALL run the shipped schema, prior-failure, gate-field,
+exclusion-manifest, prompt-path, ARC-generalization, and overdue-priority
+checks. It SHALL use the Exp7303 scoped runner for explicit tests and the
+changed module. It SHALL run an independent reducer, adversarial verifier, and
+strict verdict-row consistency lint against the measured candidate.
+
+The terminal artifact SHALL contain every required field and field principle.
+It SHALL preserve twelve contract row slots plus any unexpected Markdown rows.
+`contract_complete_score` SHALL equal one only when the exact pair, planner
+controls, gate controls, affected validation, and terminal validation pass.
+The score SHALL have no scientific-value or promotion meaning.
+
+#### SCENARIO-REPORT-7357-AUTHORITY: Select and freeze matching sources
+
+**Given** staged and active roadmap candidates
+**When** Exp7357 resolves milestone `2026.09.646`
+**Then** a matching staged file wins and a matching active file is the fallback
+**And** exact YAML and Markdown bytes are copied and hash-checked before parsing.
+
+#### SCENARIO-REPORT-7357-CONTRACT: Independent sources fail closed
+
+**Given** separate V646 YAML and Markdown bytes
+**When** Exp7357 parses and compares both sources
+**Then** twelve ordered row slots preserve all task and gate fields
+**And** a stale document, extra active contract, or named mutation rejects parity.
+
+#### SCENARIO-REPORT-7357-GATES: Ineligible evidence cannot authorize work
+
+**Given** every V646 gate edge and isolated producer artifacts
+**When** the real conductor reader evaluates all adverse cases
+**Then** only valid terminal evidence passes
+**And** missing, disqualified, blocked, partial, or flagged evidence fails closed.
+
+#### SCENARIO-REPORT-7357-SOURCES: Advisory methods preserve limits
+
+**Given** five primary URLs and the dated V646 source ledger
+**When** bounded requests produce successes or access failures
+**Then** every source keeps its outcome, assumption, limit, and task mapping
+**And** replay support is not reported as a causal counterfactual.
+
+#### SCENARIO-REPORT-7357-VALIDATION: Exact affected checks control completion
+
+**Given** the selected YAML, changed module, entrypoint, and tests
+**When** Exp7357 runs the structural, scoped, and terminal commands
+**Then** each receipt keeps argv, scope, exit, elapsed time, and log hash
+**And** any affected failure keeps the contract score at zero.
+
+#### SCENARIO-REPORT-7357-ARTIFACT: Stored evidence recomputes terminal state
+
+**Given** a hash-bound candidate with raw rows, controls, and receipts
+**When** an independent reducer reloads the candidate
+**Then** unchanged evidence recomputes its score and terminal verdict
+**And** changed evidence, hashes, model state, or required fields fail validation.
+
+## Implementation Status (REQ-REPORT-7357)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7357 and SCENARIO-REPORT-7357-* | Exp7357 module, thin entrypoint, frozen authority copies, real-reader controls, and source sidecars | Focused tests, 100% changed-module coverage, seven roadmap checks, scoped static checks, independent reduction, adversarial verification, and strict row consistency |
+
 ## V645 source ingestion and exact execution contract — 2026-09-16
 
 **Status:** Implemented. This receipt is advisory and gates no science.
