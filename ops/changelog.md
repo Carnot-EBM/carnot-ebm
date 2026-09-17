@@ -20062,3 +20062,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 4 new/updated tests, 64/64 passing, ruff/mypy clean.
 - 2026-09-17: Bind the V646 research delta and twelve-task contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v646_contract_mismatched_or_invalid; results/experiment_7357_v646_contract.json
 - 2026-09-17: Separate required validation from scientific acceptance (⚠️ Research Finding) — honest_verdict=complete_null_scientific_value_not_tested_validation_contract_ready; results/experiment_7358_v646_validation_contract.json
+- 2026-09-17: Diagnose frozen capture accounting and validate a cold reducer (⚠️ Research Finding) — honest_verdict=complete_null_accounting_reducer_ready_no_current_science; results/experiment_7359_v646_capture_reducer.json
