@@ -183,9 +183,7 @@ def test_scenario_arc_wmte_7376_redirect_outcomes_and_empty_ledger() -> None:
             }
         ]
     )
-    empty = _episode(
-        episode_id="cn04:seed-12", game="cn04", seed=12, redirects=[]
-    )
+    empty = _episode(episode_id="cn04:seed-12", game="cn04", seed=12, redirects=[])
     rows = exp.extract_new_outcomes([resolved, empty])
 
     assert len(rows) == 1
@@ -200,9 +198,7 @@ def test_scenario_arc_wmte_7376_redirect_outcomes_and_empty_ledger() -> None:
 def test_censored_episode_does_not_invent_redirect_outcome() -> None:
     """REQ-ARC-WMTE-7376 censors an unresolved redirect when its episode is censored."""
 
-    rows = exp.extract_new_outcomes(
-        [_episode(disposition="censored_timeout", censored=True)]
-    )
+    rows = exp.extract_new_outcomes([_episode(disposition="censored_timeout", censored=True)])
 
     assert rows[0]["resolved_by_levelup"] is None
     assert rows[0]["outcome_observed"] is False
@@ -313,9 +309,9 @@ def test_episode_completion_accepts_empty_outcome_ledger() -> None:
     assert reduced["redirect_event_count"] == 0
 
     episodes[0]["adapter_disabled"] = False
-    assert exp.reduce_episode_accounting(schedule, episodes)[
-        "arc_outcome_capture_complete_score"
-    ] == 0
+    assert (
+        exp.reduce_episode_accounting(schedule, episodes)["arc_outcome_capture_complete_score"] == 0
+    )
 
 
 def test_validation_plan_is_exp7358_scoped_and_has_private_parents(tmp_path: Path) -> None:
@@ -447,3 +443,175 @@ def test_atomic_json_and_independent_reduce(tmp_path: Path) -> None:
     assert json.loads(path.read_text())["schedule"] == schedule
     assert reduced["episode_accounting"]["arc_outcome_capture_complete_score"] == 1
     assert reduced["support"]["supervisor_support_ready_score"] == 0
+
+
+def test_strict_reducer_and_fail_closed_boundaries(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """REQ-ARC-WMTE-7376 independently rejects malformed evidence and reports progress."""
+
+    schedule = exp.build_schedule(exp.TARGET_GAMES)
+    episodes = []
+    for planned in schedule:
+        episode = _episode(
+            planned["episode_id"], game=planned["game"], seed=planned["seed"], redirects=[]
+        )
+        episode.update(
+            {
+                "completion_limit": exp.MODEL_CALL_LIMIT,
+                "generated_token_limit": exp.GENERATED_TOKEN_LIMIT,
+                "max_new_tokens_per_call": exp.MAX_NEW_TOKENS,
+                "starting_policy": {"sha256": "sha256:start"},
+                "ending_policy": {"sha256": "sha256:end"},
+                "source_engine_provenance": {"sha256": "sha256:engine"},
+            }
+        )
+        episode["trajectory_supervisor"]["mode"] = "applied"
+        episodes.append(episode)
+
+    reduced = exp.reduce_raw_panel({"schedule": schedule, "episodes": episodes}, historical_rows=[])
+    assert reduced["arc_outcome_capture_complete_score"] == 1
+
+    malformed = exp.reduce_raw_panel(
+        {"schedule": schedule, "episodes": episodes[:-1]}, historical_rows=[]
+    )
+    assert malformed["arc_outcome_capture_complete_score"] == 0
+    inauthentic = deepcopy(episodes)
+    inauthentic[0]["saved_engine_disabled"] = False
+    assert (
+        exp.reduce_raw_panel({"schedule": schedule, "episodes": inauthentic}, historical_rows=[])[
+            "arc_outcome_capture_complete_score"
+        ]
+        == 0
+    )
+    assert (
+        exp.reduce_episode_accounting(schedule, episodes[:-1])["arc_outcome_capture_complete_score"]
+        == 0
+    )
+
+    assert exp.redirect_rows_for_episode({"trajectory_supervisor": None}) == []
+    shadow = deepcopy(episodes[0])
+    shadow["trajectory_supervisor"]["mode"] = "shadow"
+    assert exp.redirect_rows_for_episode(shadow) == []
+    invalid_arm = deepcopy(episodes[0])
+    invalid_arm["trajectory_supervisor"]["redirects"] = [
+        {"arm": "invented", "action_index": 1, "resolved_by_levelup": True}
+    ]
+    assert exp.redirect_rows_for_episode(invalid_arm) == []
+    assert exp.historical_support_rows({}) == []
+    assert (
+        exp.historical_support_rows(
+            {
+                "entries": {
+                    "shadow": {"mode": "shadow"},
+                    "bad": {"mode": "applied", "redirects": [None, {"arm": "invented"}]},
+                }
+            }
+        )
+        == []
+    )
+    assert exp.join_event_rows([{"runtime_event_id": None}], [])["rows"] == []
+
+    source = tmp_path / "source.txt"
+    source.write_text("evidence", encoding="utf-8")
+    assert exp.sha256_file(source).startswith("sha256:")
+    assert exp.load_json(tmp_path / "missing.json") is None
+    malformed_json = tmp_path / "malformed.json"
+    malformed_json.write_text("{", encoding="utf-8")
+    assert exp.load_json(malformed_json) is None
+    exp.progress(0.0, "test", "boundary", unit=1)
+    assert "phase=test event=boundary" in capsys.readouterr().out
+
+
+def test_artifact_validator_error_paths_and_argument_parser() -> None:
+    """REQ-ARC-WMTE-7376 keeps terminal validation and CLI classification fail closed."""
+
+    assert exp.validate_artifact(None) == ["artifact_not_object"]
+    blocked = exp.build_blocked_artifact(
+        preconditions=[exp.gate("model", "cache", "path", "readable", "missing")],
+        source_hashes={},
+        started_at_utc="2026-09-17T10:00:00+00:00",
+        completed_at_utc="2026-09-17T10:00:01+00:00",
+        duration_s=1.0,
+    )
+    broken_blocked = deepcopy(blocked)
+    broken_blocked.update(
+        {
+            "model_invoked": True,
+            "inference_substrate_class": "wrong",
+            "gate_check_summary": {"first_failure": None},
+            "supervisor_support_ready_score": 1,
+            "scientific_value_score": 1,
+        }
+    )
+    assert {
+        "blocked_invocations",
+        "blocked_substrate",
+        "blocked_gate_check_summary",
+        "unsafe_readiness",
+    }.issubset(exp.validate_artifact(broken_blocked))
+
+    schedule = exp.build_schedule(exp.TARGET_GAMES)
+    episodes = [
+        _episode(row["episode_id"], game=row["game"], seed=row["seed"], redirects=[])
+        for row in schedule
+    ]
+    complete = exp.build_artifact(
+        preconditions=[exp.gate("inputs", "repo", "available", True, True)],
+        source_hashes={},
+        selection={"passed": True, "games": list(exp.TARGET_GAMES)},
+        schedule=schedule,
+        episodes=episodes,
+        historical_rows=[],
+        runtime_receipt={"task_linked_cuda_execution": True},
+        model_specs=[{"hf_id": exp.MODEL_ID, "quantization": "Q4_K_M"}],
+        invocation_counts={
+            **exp.ZERO_INVOCATION_COUNTS,
+            "model_loads_attempted": 1,
+            "model_loads_completed": 1,
+            "generation_calls_attempted": 6,
+            "generation_calls_completed": 6,
+        },
+        validation_receipts=_passing_receipts(),
+        repository_health={"status": "healthy"},
+        phase_spans=[],
+        started_at_utc="2026-09-17T10:00:00+00:00",
+        completed_at_utc="2026-09-17T10:01:00+00:00",
+        duration_s=60.0,
+    )
+    broken = deepcopy(complete)
+    broken.update(
+        {
+            "schema": "wrong",
+            "run_date": "wrong",
+            "verdict_class": "wrong",
+            "honest_verdict": "wrong",
+            "MODEL_SPECS": [],
+            "model_invoked": False,
+            "inference_substrate_class": "wrong",
+            "duration_s": 0,
+            "validation_receipts": [],
+            "promotion_score": 1,
+            "production_defaults_changed": True,
+            "field_principles": {},
+            "reproducibility_checksum": "wrong",
+        }
+    )
+    errors = exp.validate_artifact(broken)
+    assert {
+        "identity",
+        "run_date",
+        "verdict_class",
+        "honest_verdict",
+        "MODEL_SPECS",
+        "model_invoked",
+        "inference_substrate_class",
+        "duration_s",
+        "validation_receipts",
+        "promotion_score",
+        "production_defaults_changed",
+        "field_principles",
+        "reproducibility_checksum",
+    }.issubset(errors)
+    args = exp.parse_args(["--date", exp.RUN_DATE, "--role", "live-session"])
+    assert args.role == "live-session"
