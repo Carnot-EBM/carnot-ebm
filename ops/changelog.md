@@ -20087,3 +20087,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-17: Prototype versioned implication proofs for later constraint queries (⚠️ Research Finding) — honest_verdict=complete_null_proof_fixture_ready_learning_value_not_measured; results/experiment_7370_v647_proof_memory.json
 - 2026-09-17: Attack proof authority and seal prospective formula streams (⚠️ Research Finding) — honest_verdict=complete_null_proof_boundary_ready_learning_value_not_measured; results/experiment_7371_v647_proof_boundary.json
 - 2026-09-17: Qualify bounded Qwen3.8 assignment proposals (⚠️ Research Finding) — honest_verdict=complete_disqualified_internal_artifact_validation_failed; results/experiment_7372_v647_qwen_canary.json
+- 2026-09-17: Collect new adapter-withheld ARC supervisor outcomes (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7376_v647_arc_outcomes.json
