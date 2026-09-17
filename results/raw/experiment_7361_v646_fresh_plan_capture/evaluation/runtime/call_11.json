@@ -1,0 +1,237 @@
+{
+  "attempted": true,
+  "call_index": 11,
+  "censored": false,
+  "completion_tokens": 83,
+  "decoded_plan": {
+    "assignments": {
+      "unit-1": 0,
+      "unit-2": 2,
+      "unit-3": 2,
+      "unit-4": 0,
+      "unit-5": 1
+    },
+    "request_id": "v646-public-00-02-twin"
+  },
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 2.5188927249982953,
+  "max_generated_tokens": 256,
+  "parse_errors": [],
+  "parse_status": "valid",
+  "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"unit-1\":\"one integer from this activity's allowed_starts\",\"unit-2\":\"one integer from this activity's allowed_starts\",\"unit-3\":\"one integer from this activity's allowed_starts\",\"unit-4\":\"one integer from this activity's allowed_starts\",\"unit-5\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"v646-public-00-02-twin\"}\nPUBLIC_REQUEST={\"activities\":[\"unit-1\",\"unit-2\",\"unit-3\",\"unit-4\",\"unit-5\"],\"allowed_starts\":{\"unit-1\":[0,1,2,10],\"unit-2\":[2,3,4,13],\"unit-3\":[2,4,6,7],\"unit-4\":[0,2,9,10],\"unit-5\":[1,2,12,13]},\"durations\":{\"unit-1\":2,\"unit-2\":2,\"unit-3\":1,\"unit-4\":2,\"unit-5\":2},\"horizon\":22,\"public_revision\":2,\"request_id\":\"v646-public-00-02-twin\",\"version_token\":\"opaque-b85dfb8304f8c680922cd88a\",\"weights\":{\"unit-1\":3,\"unit-2\":1,\"unit-3\":3,\"unit-4\":3,\"unit-5\":1}}",
+  "prompt_sha256": "sha256:a6bd32738fb437662bb1910a81b4f3271f18a97b89bf78804dbdeb6d56dbad33",
+  "prompt_tokens": 335,
+  "public_request": {
+    "activities": [
+      "unit-1",
+      "unit-2",
+      "unit-3",
+      "unit-4",
+      "unit-5"
+    ],
+    "allowed_starts": {
+      "unit-1": [
+        0,
+        1,
+        2,
+        10
+      ],
+      "unit-2": [
+        2,
+        3,
+        4,
+        13
+      ],
+      "unit-3": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "unit-4": [
+        0,
+        2,
+        9,
+        10
+      ],
+      "unit-5": [
+        1,
+        2,
+        12,
+        13
+      ]
+    },
+    "durations": {
+      "unit-1": 2,
+      "unit-2": 2,
+      "unit-3": 1,
+      "unit-4": 2,
+      "unit-5": 2
+    },
+    "horizon": 22,
+    "public_revision": 2,
+    "request_id": "v646-public-00-02-twin",
+    "version_token": "opaque-b85dfb8304f8c680922cd88a",
+    "weights": {
+      "unit-1": 3,
+      "unit-2": 1,
+      "unit-3": 3,
+      "unit-4": 3,
+      "unit-5": 1
+    }
+  },
+  "raw_reply": "{\n  \"assignments\": {\n    \"unit-1\": 0,\n    \"unit-2\": 2,\n    \"unit-3\": 2,\n    \"unit-4\": 0,\n    \"unit-5\": 1\n  },\n  \"request_id\": \"v646-public-00-02-twin\"\n}",
+  "raw_reply_sha256": "sha256:f2147b7f08ace0f1fbad5df95e4d3414e856849b36055f647eaed6f1e8ef68c4",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"assignments\": {\n    \"unit-1\": 0,\n    \"unit-2\": 2,\n    \"unit-3\": 2,\n    \"unit-4\": 0,\n    \"unit-5\": 1\n  },\n  \"request_id\": \"v646-public-00-02-twin\"\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789624327,
+    "id": "chatcmpl-vkp5IFscLgwungrXiLnsukYgjkXflJo4",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 2001.367,
+      "predicted_n": 83,
+      "predicted_per_second": 41.471654124405966,
+      "predicted_per_token_ms": 24.112855421686746,
+      "prompt_ms": 352.99,
+      "prompt_n": 335,
+      "prompt_per_second": 949.0353834386243,
+      "prompt_per_token_ms": 1.0537014925373134
+    },
+    "usage": {
+      "completion_tokens": 83,
+      "prompt_tokens": 335,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 418
+    }
+  },
+  "request_id": "v646-public-00-02-twin",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "34095",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:03f55da06ca044d1146343a5dc959bfef8de33868682c2e8cce966435e63fa9e",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:81f820811017f562117af79c44a9d37554195dbeda8e7b03a7acdbcec2bf7f7d",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 2226305,
+      "start_time_ticks": 191596536
+    },
+    "pid": 2226484,
+    "ppid": 2226305,
+    "process_group_id": 2226484,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789624298,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 2226484,
+    "start_time_ticks": 191598931,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}

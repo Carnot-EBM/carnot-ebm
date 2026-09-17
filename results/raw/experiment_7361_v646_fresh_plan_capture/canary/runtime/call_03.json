@@ -1,0 +1,237 @@
+{
+  "attempted": true,
+  "call_index": 3,
+  "censored": false,
+  "completion_tokens": 70,
+  "decoded_plan": {
+    "assignments": {
+      "a": 0,
+      "b": 0,
+      "c": 0,
+      "d": 0,
+      "e": 0
+    },
+    "request_id": "v646-development-canary-03"
+  },
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 2.110558287007734,
+  "max_generated_tokens": 256,
+  "parse_errors": [],
+  "parse_status": "valid",
+  "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\",\"e\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"v646-development-canary-03\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\",\"e\"],\"allowed_starts\":{\"a\":[0,1,2,3],\"b\":[0,3,4,5],\"c\":[0,4,7,8],\"d\":[0,1,10,11],\"e\":[0,2,13,14]},\"durations\":{\"a\":1,\"b\":2,\"c\":2,\"d\":2,\"e\":2},\"horizon\":22,\"public_revision\":3,\"request_id\":\"v646-development-canary-03\",\"version_token\":\"opaque-2d3a58928ec256a9d02b667b\",\"weights\":{\"a\":1,\"b\":1,\"c\":2,\"d\":2,\"e\":2}}",
+  "prompt_sha256": "sha256:62471a9d590d5659a8da1d128450d4a635cfe9ba72525fed356d580e69462c1b",
+  "prompt_tokens": 280,
+  "public_request": {
+    "activities": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ],
+    "allowed_starts": {
+      "a": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "b": [
+        0,
+        3,
+        4,
+        5
+      ],
+      "c": [
+        0,
+        4,
+        7,
+        8
+      ],
+      "d": [
+        0,
+        1,
+        10,
+        11
+      ],
+      "e": [
+        0,
+        2,
+        13,
+        14
+      ]
+    },
+    "durations": {
+      "a": 1,
+      "b": 2,
+      "c": 2,
+      "d": 2,
+      "e": 2
+    },
+    "horizon": 22,
+    "public_revision": 3,
+    "request_id": "v646-development-canary-03",
+    "version_token": "opaque-2d3a58928ec256a9d02b667b",
+    "weights": {
+      "a": 1,
+      "b": 1,
+      "c": 2,
+      "d": 2,
+      "e": 2
+    }
+  },
+  "raw_reply": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"v646-development-canary-03\"\n}",
+  "raw_reply_sha256": "sha256:c1b86977f688daeef9af3f23083c96384846d5d4e6b2305860714ab51481b65e",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"assignments\": {\n    \"a\": 0,\n    \"b\": 0,\n    \"c\": 0,\n    \"d\": 0,\n    \"e\": 0\n  },\n  \"request_id\": \"v646-development-canary-03\"\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789624288,
+    "id": "chatcmpl-5jlPpeoG1je283li8gqZYQMOJwz1CIOZ",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1686.763,
+      "predicted_n": 70,
+      "predicted_per_second": 41.49960605016828,
+      "predicted_per_token_ms": 24.096614285714285,
+      "prompt_ms": 322.334,
+      "prompt_n": 280,
+      "prompt_per_second": 868.6641806325116,
+      "prompt_per_token_ms": 1.1511928571428571
+    },
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 280,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 350
+    }
+  },
+  "request_id": "v646-development-canary-03",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "41587",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:8503a3df1ad5739834cc885a88bf1fb0202aeaa540cc969e10f6b821a5f0ffe2",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:43c12aa9a70f4c6d1cce008efaa55e05385a6d9743b23f85166b6d4b420cbd45",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 2226305,
+      "start_time_ticks": 191596536
+    },
+    "pid": 2226380,
+    "ppid": 2226305,
+    "process_group_id": 2226380,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789624279,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 2226380,
+    "start_time_ticks": 191596682,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}

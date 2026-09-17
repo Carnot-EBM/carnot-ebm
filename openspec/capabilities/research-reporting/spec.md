@@ -1,5 +1,91 @@
 # Research Reporting Capability Specification
 
+## V646 fresh plan capture — 2026-09-17
+
+**Status:** In progress. This capability records fresh local-model proposals
+for a sealed panel. It keeps public-source fidelity separate from private
+executor validity and does not authorize promotion.
+
+### REQ-REPORT-7361: Capture fresh plans with independent source fidelity
+
+Exp7361 SHALL authenticate the exact Exp7359 capture reducer and Exp7360
+learning fixture fields before it performs model work. Missing, quarantined,
+blocked, partial, disqualified, flagged, or byte-mismatched inputs SHALL produce
+a terminal blocked artifact with the exact expected and observed gate values.
+
+The run SHALL resolve only `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model()`. It SHALL preserve the actual quantization, model hash,
+owned GPU lease, process identity, device allocation, and phase telemetry. A
+cache miss or unavailable lease SHALL block without a download, substitute, or
+foreign-process termination.
+
+The run SHALL first make exactly four development-canary calls with at most 256
+output tokens each. Evaluation SHALL start only when all four calls establish
+transport and schema readiness. The frozen evaluation SHALL contain 128 calls:
+32 sealed requests, original and renamed forms, and two candidates per form.
+It SHALL preserve the sealed paired order, use fixed settings, permit no
+outcome-dependent retry, checkpoint each disposition, and censor every
+unstarted call when the 1,800-second generation budget closes.
+
+Each call SHALL retain its public input, exact raw candidate, parser result,
+request and candidate identity, token counts, stop reason, elapsed time,
+identifier mapping, owned runtime receipt, raw path, and byte hash. Source
+fidelity SHALL independently report entity, quantity, and ordering evidence
+from public fields. Parsing, exact schema validity, renamed equality, public
+semantic correctness, and private-executor validity SHALL remain separate.
+Private labels SHALL not enter prompts.
+
+Exp7361 SHALL call the reusable Exp7359 reducer with the fresh explicit
+schedule and exact candidate bytes. A complete capture requires one
+authenticated terminal disposition for every planned evaluation call and
+agreement with an independent reduction. Failed replies MAY yield a complete
+null result. Missing or censored replies SHALL keep capture completion at zero.
+Proposal bytes SHALL remain frozen for Exp7362 even when no proposal is usable.
+
+The workflow SHALL use the Exp7303 scoped validation runner with explicit tests,
+changed modules, and static files. It SHALL require worktree imports, focused
+pytest without repository addopts or coverage, separate 100 percent changed-
+module coverage, scoped Ruff check and format, changed-module mypy, and scoped
+specification coverage. It SHALL then cold-reduce the candidate and run the
+adversarial verifier and strict verdict-row consistency lint. The terminal JSON
+SHALL be atomic and SHALL keep accounting completion separate from scientific
+value and promotion.
+
+#### SCENARIO-REPORT-7361-GATES: Ineligible producers stop before model work
+
+**Given** the declared Exp7359 and Exp7360 paths and exact YAML gate fields
+**When** a producer is missing, ineligible, flagged, or byte-mismatched
+**Then** the run publishes the failed upstream, field, expected, and observed value
+**And** no current model load or generation is attempted.
+
+#### SCENARIO-REPORT-7361-SCHEDULE: The sealed panel defines every call
+
+**Given** four development requests and 32 original-and-renamed request pairs
+**When** the schedule is frozen before generation
+**Then** it contains four canary calls and 128 evaluation calls at 256 tokens each
+**And** request order, candidate identity, prompts, and seeds do not depend on outputs.
+
+#### SCENARIO-REPORT-7361-FIDELITY: Public meaning and executor validity stay separate
+
+**Given** a raw candidate and its exact public request
+**When** the candidate is parsed and evaluated
+**Then** entity, quantity, ordering, schema, rename, and executor results are distinct
+**And** no private rule or label is used by the prompt or public fidelity scorer.
+
+#### SCENARIO-REPORT-7361-REDUCTION: Completion is schedule-derived
+
+**Given** the explicit evaluation schedule, exact candidate files, and terminal rows
+**When** primary and independent reducers reload the evidence
+**Then** both derive the same budget, call identities, twin rows, and completion score
+**And** proposal usefulness cannot turn incomplete accounting into completion.
+
+#### SCENARIO-REPORT-7361-TERMINAL: Current validation controls publication
+
+**Given** a measured candidate with live runtime receipts and frozen proposal bytes
+**When** affected checks and three cold terminal checks run
+**Then** every command retains its scope, exit, elapsed time, and log hash
+**And** failed validation or a critical finding prevents readiness and promotion.
+
 ## V646 cold capture reduction — 2026-09-17
 
 **Status:** In progress. This capability corrects accounting diagnostics. It

@@ -1,0 +1,227 @@
+{
+  "attempted": true,
+  "call_index": 87,
+  "censored": false,
+  "completion_tokens": 64,
+  "decoded_plan": {
+    "assignments": {
+      "a": 1,
+      "b": 1,
+      "c": 1,
+      "d": 1
+    },
+    "request_id": "v646-public-05-01-original"
+  },
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 2.008414686890319,
+  "max_generated_tokens": 256,
+  "parse_errors": [],
+  "parse_status": "valid",
+  "prompt": "Return exactly one JSON object and no other text. Use exactly the public plan fields shown below.\nPUBLIC_PLAN_SCHEMA={\"assignments\":{\"a\":\"one integer from this activity's allowed_starts\",\"b\":\"one integer from this activity's allowed_starts\",\"c\":\"one integer from this activity's allowed_starts\",\"d\":\"one integer from this activity's allowed_starts\"},\"request_id\":\"v646-public-05-01-original\"}\nPUBLIC_REQUEST={\"activities\":[\"a\",\"b\",\"c\",\"d\"],\"allowed_starts\":{\"a\":[1,2,7,18],\"b\":[1,2,4,5],\"c\":[1,3,7,8],\"d\":[1,4,10,11]},\"durations\":{\"a\":2,\"b\":1,\"c\":2,\"d\":2},\"horizon\":22,\"public_revision\":1,\"request_id\":\"v646-public-05-01-original\",\"version_token\":\"opaque-dc2b17de114d210ab2807944\",\"weights\":{\"a\":3,\"b\":2,\"c\":3,\"d\":2}}",
+  "prompt_sha256": "sha256:b1845ff66b32ca51d272714c05cdd67716df915b835a3a85c2dbd935e39d6ef4",
+  "prompt_tokens": 250,
+  "public_request": {
+    "activities": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "allowed_starts": {
+      "a": [
+        1,
+        2,
+        7,
+        18
+      ],
+      "b": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "c": [
+        1,
+        3,
+        7,
+        8
+      ],
+      "d": [
+        1,
+        4,
+        10,
+        11
+      ]
+    },
+    "durations": {
+      "a": 2,
+      "b": 1,
+      "c": 2,
+      "d": 2
+    },
+    "horizon": 22,
+    "public_revision": 1,
+    "request_id": "v646-public-05-01-original",
+    "version_token": "opaque-dc2b17de114d210ab2807944",
+    "weights": {
+      "a": 3,
+      "b": 2,
+      "c": 3,
+      "d": 2
+    }
+  },
+  "raw_reply": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1\n  },\n  \"request_id\": \"v646-public-05-01-original\"\n}",
+  "raw_reply_sha256": "sha256:c025e48359fd50aee799614f879b84834fca1a2c3b50d4f3bc5c8c098703b961",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"assignments\": {\n    \"a\": 1,\n    \"b\": 1,\n    \"c\": 1,\n    \"d\": 1\n  },\n  \"request_id\": \"v646-public-05-01-original\"\n}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789624505,
+    "id": "chatcmpl-z15NvAdBAYE1vDuVfnIu1qIyMlWdSnAW",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 1558.95,
+      "predicted_n": 64,
+      "predicted_per_second": 41.05327303633856,
+      "predicted_per_token_ms": 24.35859375,
+      "prompt_ms": 289.535,
+      "prompt_n": 250,
+      "prompt_per_second": 863.4534684925828,
+      "prompt_per_token_ms": 1.1581400000000002
+    },
+    "usage": {
+      "completion_tokens": 64,
+      "prompt_tokens": 250,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 314
+    }
+  },
+  "request_id": "v646-public-05-01-original",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "34095",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:03f55da06ca044d1146343a5dc959bfef8de33868682c2e8cce966435e63fa9e",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:81f820811017f562117af79c44a9d37554195dbeda8e7b03a7acdbcec2bf7f7d",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 2226305,
+      "start_time_ticks": 191596536
+    },
+    "pid": 2226484,
+    "ppid": 2226305,
+    "process_group_id": 2226484,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789624298,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 2226484,
+    "start_time_ticks": 191598931,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}
