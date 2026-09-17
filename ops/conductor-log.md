@@ -18125,3 +18125,4 @@ code |
 | 2026-09-17 09:58 UTC | Measure a frozen supervisor ordering on disjoint l | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp7365-supervisor-support.supervisor_trial_ready_score (actual=0 == expected=1) |
 | 2026-09-17 11:20 UTC | Preserve authenticated board status and changed-st | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: act) + raw |
 | 2026-09-17 12:43 UTC | Preserve authenticated board status and changed-st | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: l status remai |
+| 2026-09-17 14:05 UTC | Preserve authenticated board status and changed-st | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: failure. code |

@@ -310,3 +310,13 @@ Ebi moved into second place at 8.68%, pushing NVARC3 to third and Third Intellig
 
 - Leaderboard shakeup: Lord Han Solo rose to #2 with 8.84%, while Ebi is now #3 with 8.68%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-17 13:15 UTC -- NEW
+
+- Leaderboard shakeup as of September 17: Tufa Labs leads with 18.81%, followed by Daniel Franzen at 11.59% and NVARC3 at 11.04%. Lord Han Solo is now #4 at 9.81%; Ebi is #6 at 8.68%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- Final-scoring clarification: private scores are calculated during each submission’s original run; selected final submissions will not be rerun. Each run evaluates both leaderboard subsets, while only the public half is shown during competition. The runtime limit is 9 hours. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- ARC Prize reported GPT-6 Astra scoring 62.7% on the Semi-Private set with its Standard harness and 99.9% with a Provider Adapter harness. Future ARC-AGI leaderboard reporting will label both harness types separately. [ARC Prize announcement](https://arcprize.org/blog/astra)
+
+- The competition host analyzed 500 failed submissions: roughly one-third had no traceable visible notebook error, while almost 20% required a GPU but had not enabled one. [Kaggle host announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
