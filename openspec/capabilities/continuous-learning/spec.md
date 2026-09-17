@@ -17313,6 +17313,98 @@ atomic terminal write. No numbered E2E test applies.
 |---|---|---|
 | REQ-CL-7370 and SCENARIO-CL-7370-* | Planned: `python/carnot/learning/implication_memory.py` and `python/carnot/experiment_7370_v647_proof_memory.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7370_v647_proof_memory.py`. |
 
+## REQ-CL-7371: Independent Proof-Boundary Protocol
+
+Carnot SHALL seal a host-only boundary protocol before any live proposal
+capture. The protocol SHALL use 16 development formulas, 32 synthetic
+evaluation streams, and eight disjoint live-proposal streams. Synthetic streams
+SHALL cover eight parameterized 2-CNF families with four seeds and variable
+counts in `{8, 12, 24, 32}`. Each evaluation stream SHALL freeze 24 ordered
+requests: eight warm-up requests, eight later distinct requests, four
+recurrence requests, and four rule-version requests. Expected satisfiable
+version-change requests SHALL remain satisfiable. The live cohort SHALL freeze
+four requests per stream and two future proposals per request. A proposal SHALL
+contain two to four distinct literals and SHALL be judged by extendibility, not
+by full-assignment clause satisfaction.
+
+An independent path checker SHALL reconstruct every legal implication edge
+from canonical source clauses. It SHALL not call the proof-memory producer or
+its reduction. A separate truth-table oracle SHALL decide all test formulas
+with at most 12 variables. Tests SHALL cover each rejection branch, canonical
+serialization, crash/restart, and formula-version isolation. The protocol SHALL
+include disjoint-assumption and renamed-variable negative controls. Names alone
+SHALL never transfer proof authority.
+
+Every synthetic request SHALL run through five equal-input arms in preserved
+order: reset exact solver, persistent incremental exact solver, persistent
+reachability cache, proof memory, and proof memory with matched state size but
+non-applicable certificates. The incremental arm SHALL retain its same-version
+solver state. All arms SHALL use identical clauses, assumption bytes, timeout,
+source-hash charges, exact final validation, and memory accounting. No arm SHALL
+read an inaccessible result from another arm.
+
+The acceptance manifest SHALL be sealed before outcomes. It SHALL require zero
+invalid SAT outputs, zero false proof rejections, zero stale-version effects,
+unchanged exact decision coverage, valid utility, at least eight individual
+erasure witnesses across at least four streams, a paired stream-bootstrap 95
+percent upper bound below `0.90` for paid exact-query ratio, and a complete-
+service cost ratio at most `1.0` against both the incremental and reachability
+arms. Bootstrap reduction SHALL use 10,000 draws and seed `7371307`. Synthetic
+rows SHALL cluster by the eight formula families. Later live rows SHALL cluster
+by the eight independent live streams. `learning_value_score` SHALL remain zero
+until all gates pass in both cohorts. A completed safety fixture MAY set
+`proof_boundary_ready_score=1` without making an efficacy claim.
+
+The task SHALL reject a missing, blocked, partial, quarantined, disqualified, or
+adversarial Exp7370 producer. It SHALL bind the producer and sealed protocol by
+byte hash. Authority controls SHALL attempt forged hashes, reordered delayed
+feedback, state poisoning, missing queries, benchmark-timer exclusion, control
+reset, disjoint assumptions, and renamed variables. Raw fixtures SHALL live
+under `results/raw/experiment_7371_v647_proof_boundary/`. The immutable public
+manifest SHALL live at `data/v647_implication_stream_manifest.json`.
+
+The terminal artifact SHALL use milestone `2026.09.647`, phase 1, and run date
+`20260917`. It SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+model invocation counts, `inference_substrate_class=cpu_exact_solver_or_simulator`,
+and host execution. It SHALL use the scoped Exp7358 command plan through Exp7303.
+It SHALL run the declared entrypoint, cold replay, independent reduction,
+adversarial verification, and strict row-consistency checks. No numbered E2E
+test applies. It SHALL write the terminal result atomically.
+
+### SCENARIO-CL-7371-INDEPENDENT: Source Bytes Alone Grant Proof Authority
+
+- GIVEN a candidate path, canonical clauses, version, and source hash
+- WHEN the independent checker reconstructs each implication edge
+- THEN only a continuous, acyclic, hash-bound source path is accepted
+- AND stale, forged, omitted, cyclic, poisoned, renamed, or name-only evidence is rejected.
+
+### SCENARIO-CL-7371-PROTOCOL: Cohorts And Acceptance Stay Frozen
+
+- GIVEN the sealed synthetic, development, and live-proposal manifests
+- WHEN terminal evidence is reduced or replayed
+- THEN formula families, seeds, request order, prompts, arms, and gates match the sealed bytes
+- AND no outcome can relax a threshold or move an instance between cohorts.
+
+### SCENARIO-CL-7371-ARMS: Equal Inputs Preserve Comparator Authority
+
+- GIVEN one ordered synthetic request stream
+- WHEN all five arms process each request
+- THEN source clauses, assumption bytes, final exact validation, timeouts, and costs remain comparable
+- AND same-version incremental state persists while stale proof state cannot survive a version change.
+
+### SCENARIO-CL-7371-READINESS: Safety Is Separate From Learning Value
+
+- GIVEN complete independent checks, sealed controls, raw rows, and required validation
+- WHEN the live-proposal outcomes are not yet captured
+- THEN `proof_boundary_ready_score` can be one
+- AND `learning_value_score` and `promotion_score` remain zero.
+
+## Implementation Status (REQ-CL-7371)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7371 and SCENARIO-CL-7371-* | Planned: `python/carnot/experiment_7371_v647_proof_boundary.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7371_v647_proof_boundary.py`. |
+
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 
 Carnot SHALL run four development requests from the qualified V645 executor
