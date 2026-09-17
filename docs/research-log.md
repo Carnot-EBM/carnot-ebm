@@ -6822,3 +6822,10 @@ The critical path for milestone .250:
 - theme: isolated executor and request-panel construction dominated an all-compute reconstructed execution window
 - key result: honest operational negative — the longest task consumed 70.42 of 72.7 minutes, but no data available this milestone identifies its costly phase or an eligible multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.645
+
+- exp_range: no data available this milestone
+- theme: exact-query constraint work dominated an all-compute execution while phase and dispatch telemetry remained unjoined
+- key result: honest operational negative — elapsed-time ranking is known, but causal phase cost, sustained compute-window GPU efficiency, and any eligible parallel-model runner miss are not established
+- acceptance: no data available this milestone

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.645",
+  "generated_at": "2026-09-17T00:56:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 146.8,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 9,
+  "slowest_experiments": [
+    {
+      "experiment": "Prototype bounded constraint elimination with exact query authority",
+      "duration_minutes": 69.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Wire structural additions into the opt-in verification pipeline",
+      "duration_minutes": 35.3,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Measure adapter-withheld ARC generalization with resumed tool feedback",
+      "duration_minutes": 34.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture fresh plans and source-fidelity controls on Qwen3.8",
+      "duration_minutes": 5.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify the live result-resume path after temporary-directory repair",
+      "duration_minutes": 0.88,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Nine compute-bound experiments completed in 146.8 minutes. The 69.0-minute bounded constraint-elimination prototype was the longest; the supplied evidence does not identify its costly phase, and the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Runtime was concentrated in the 69.0-minute bounded constraint-elimination prototype and the 35.3-minute and 34.68-minute compute-bound tasks.",
+    "The timing data has no phase breakdown, so it cannot explain why the longest compute-bound experiments took as long as they did.",
+    "The GPU report is a point-in-time snapshot rather than task-window telemetry, so it cannot establish sustained compute efficiency.",
+    "No model-count or runner-dispatch evidence is supplied, so no missed DualGPURunner dispatch can be established."
+  ],
+  "improvements_suggested": [
+    "Add phase timers and resumable checkpoints to long compute paths so the next retrospective can isolate expensive stages and interrupted work need not replay completed stages.",
+    "Join GPU utilization, memory, process identity, and cleanup events to each experiment's start and stop window.",
+    "Record model count, runner choice, and device assignment at launch; use DualGPURunner only when two or more models are actually loaded in parallel.",
+    "Emit one machine-readable execution receipt that combines phase timing, checkpoint status, accelerator telemetry, and dispatch metadata."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument phase boundaries and checkpoint completion in the longest compute paths.",
+    "Capture task-scoped GPU and process-lifecycle telemetry, including post-task memory release.",
+    "Log model cardinality and runner/device selection, with dual-device dispatch limited to eligible parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports elapsed-time ranking but not causal attribution. A zero savings estimate is retained because no measured counterfactual quantifies the benefit of any proposed change."
+}
