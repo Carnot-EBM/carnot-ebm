@@ -2,6 +2,17 @@
 
 **Last Updated:** 2026-09-17
 
+**Operational Note:** 2026-09-17 REQ-CL-7360 maps the V646 learning-safety
+fixture in `python/carnot/experiment_7360_v646_learning_fixture.py` to
+`tests/python/test_experiment_7360_v646_learning_fixture.py`. Its scoped
+coverage report explicitly omits the affected test selector, so a private
+temporary path containing `pytest` cannot cause that non-pytest report to lose
+its visible file scope. The exact conductor subset passes 91 tests, and all
+576 changed-module statements are covered. The cold reducer, adversarial
+verifier, strict row check, Ruff, format, mypy, and scoped spec checks pass.
+No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
+
 **Operational Note:** 2026-09-17 REQ-REPORT-7358 maps the V646
 experiment-only command planner, closed terminal classifier, independent
 reducer, and artifact validator in

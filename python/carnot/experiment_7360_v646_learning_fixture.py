@@ -114,7 +114,7 @@ REQUIRED_FIELD_PRINCIPLES = {
     "status": "Terminal only after actual work and affected validation; never a success-shaped placeholder.",
     "run_date": "Use 20260917 and actual UTC timestamps.",
     "preconditions_checked": "Exact input, resource and required-field checks before dependent work.",
-    "MODEL_SPECS": "Actual intended identities; this CPU fixture intends no current model.",
+    "MODEL_SPECS": "Actual intended identities; every LLM task includes unsloth/Qwen3.8-27B-GGUF.",
     "model_invoked": "True for any attempted current model load or generation, even failure.",
     "invocation_counts": "Attempted/completed/failed/cancelled/in-flight calls; separate current from historical.",
     "inference_substrate": "Actual computation, with historical inference in explicitly labeled hash-bound sidecars.",
@@ -300,6 +300,13 @@ def collect_preconditions(
     if producer_exists:
         hashes[str(producer_path)] = sha256_file(producer_path)
     checks = (
+        (
+            "producer_status",
+            "status",
+            "complete_*",
+            isinstance(producer.get("status"), str)
+            and str(producer["status"]).startswith("complete_"),
+        ),
         ("producer_milestone", "milestone", MILESTONE, producer.get("milestone") == MILESTONE),
         ("producer_run_date", "run_date", RUN_DATE, producer.get("run_date") == RUN_DATE),
         (
@@ -325,7 +332,9 @@ def collect_preconditions(
         rows.append(
             _precondition(check, str(producer_path), field, expected, producer.get(field), passed)
         )
-    spec_text = (root / SPEC_PATH).read_text(encoding="utf-8") if (root / SPEC_PATH).is_file() else ""
+    spec_text = (
+        (root / SPEC_PATH).read_text(encoding="utf-8") if (root / SPEC_PATH).is_file() else ""
+    )
     rows.append(
         _precondition(
             "driving_requirement",
@@ -358,7 +367,9 @@ def _normalized_request(request: Mapping[str, Any]) -> JsonDict:
     rename = {name: f"unit-{index + 1}" for index, name in enumerate(activities)}
     return {
         "activities": [rename[name] for name in activities],
-        "allowed_starts": {rename[name]: list(request["allowed_starts"][name]) for name in activities},
+        "allowed_starts": {
+            rename[name]: list(request["allowed_starts"][name]) for name in activities
+        },
         "durations": {rename[name]: request["durations"][name] for name in activities},
         "weights": {rename[name]: request["weights"][name] for name in activities},
         "horizon": request["horizon"],
@@ -378,7 +389,9 @@ def _base_requests(manifest: Mapping[str, Any]) -> list[JsonDict]:
 
 
 def _request_hashes(manifest: Mapping[str, Any]) -> set[str]:
-    return {public.sha256_json(_normalized_request(request)) for request in _base_requests(manifest)}
+    return {
+        public.sha256_json(_normalized_request(request)) for request in _base_requests(manifest)
+    }
 
 
 def frozen_acceptance_manifest(public_manifest_sha256: str) -> JsonDict:
@@ -676,12 +689,25 @@ def panel_errors(
         manifest.get("compound_conflict_challenge", {}).get("request", {}),
     ]
     request_ids = [str(row.get("request_id")) for row in all_requests]
-    if len(request_ids) != len(set(request_ids)) or any(value in {"", "None"} for value in request_ids):
+    if len(request_ids) != len(set(request_ids)) or any(
+        value in {"", "None"} for value in request_ids
+    ):
         errors.append("request_ids_not_distinct")
     if len({public.sha256_json(_normalized_request(row["original"])) for row in pairs}) != 32:
         errors.append("public_requests_not_distinct")
+    if any(
+        pair["original"]["request_id"] == pair["twin"]["request_id"]
+        or len(pair["original"]["activities"]) != len(pair["twin"]["activities"])
+        or pair["renaming_map"]
+        != dict(zip(pair["original"]["activities"], pair["twin"]["activities"]))
+        or _normalized_request(pair["original"]) != _normalized_request(pair["twin"])
+        for pair in pairs
+    ):
+        errors.append("renamed_twin_mismatch")
     serialized = json.dumps(manifest, sort_keys=True)
-    if any(marker in serialized for marker in ("private_rules", "acceptance_witness", "witness_label")):
+    if any(
+        marker in serialized for marker in ("private_rules", "acceptance_witness", "witness_label")
+    ):
         errors.append("private_data_in_public_manifest")
     if _request_hashes(manifest) & _request_hashes(v645_manifest):
         errors.append("v645_request_overlap")
@@ -895,6 +921,7 @@ def run_adapter_safety_controls(state_root: Path) -> list[JsonDict]:
     harness = adapter.AdapterPipelineHarness(learning)
     first = _control_request("v646-control-first", version)
     first_row = harness.execute(first, _control_record(version, 1), warmup=True)
+    first_feedback = learning.last_feedback
     committed_bytes = len(learning.state_bytes())
     announced_request = _control_request("v646-control-announced", "opaque-v646-control-b")
     announced_executor = adapter.QualifiedFixtureExecutor(
@@ -940,10 +967,13 @@ def run_adapter_safety_controls(state_root: Path) -> list[JsonDict]:
             "post_request_only_commit",
             {"entry_unchanged": True, "committed": True},
             {
-                "entry_unchanged": first_row["entry_state_hash"] is not None,
-                "committed": committed_bytes > 0 and first_row["new_atom_count"] >= 1,
+                "entry_unchanged": first_feedback.get("entry_state_unchanged_during_request"),
+                "committed": first_feedback.get("commit_count", 0) >= 1
+                and first_row["new_atom_count"] >= 1,
             },
-            committed_bytes > 0 and first_row["new_atom_count"] >= 1,
+            first_feedback.get("entry_state_unchanged_during_request") is True
+            and first_feedback.get("commit_count", 0) >= 1
+            and first_row["new_atom_count"] >= 1,
             query_attempts=first_row["query_attempts"],
             state_bytes=committed_bytes,
         ),
@@ -959,7 +989,9 @@ def run_adapter_safety_controls(state_root: Path) -> list[JsonDict]:
             {"invalidated_count": ">=1", "unsafe_return": False},
             {
                 "invalidated_count": len(feedback.get("invalidated_atom_ids", [])),
-                "unsafe_return": bool(hidden_row["returned"] and not hidden_row["returned_feasible"]),
+                "unsafe_return": bool(
+                    hidden_row["returned"] and not hidden_row["returned_feasible"]
+                ),
             },
             len(feedback.get("invalidated_atom_ids", [])) >= 1
             and not (hidden_row["returned"] and not hidden_row["returned_feasible"]),
@@ -971,7 +1003,9 @@ def run_adapter_safety_controls(state_root: Path) -> list[JsonDict]:
             {"contradiction_revalidation": True, "returned_unsafe": False},
             {
                 "contradiction_revalidation": hidden_row["contradiction_revalidation"],
-                "returned_unsafe": bool(hidden_row["returned"] and not hidden_row["returned_feasible"]),
+                "returned_unsafe": bool(
+                    hidden_row["returned"] and not hidden_row["returned_feasible"]
+                ),
             },
             hidden_row["contradiction_revalidation"] is True
             and not (hidden_row["returned"] and not hidden_row["returned_feasible"]),
@@ -1109,9 +1143,7 @@ def _fixture_manifest(paths: FixturePaths) -> JsonDict:
         "development_canary_count": len(public_manifest["development_canary"]),
         "distinct_request_ids": sorted([*request_ids, *twin_ids]),
         "normalized_request_hashes": public_manifest["normalized_request_hashes"],
-        "v645_normalized_request_hash_seal": public_manifest[
-            "v645_normalized_request_hash_seal"
-        ],
+        "v645_normalized_request_hash_seal": public_manifest["v645_normalized_request_hash_seal"],
         "partition": {
             "development_seed": DEVELOPMENT_SEED,
             "evaluation_seed": EVALUATION_SEED,
@@ -1395,13 +1427,39 @@ def reclassify_artifact(artifact: JsonDict) -> JsonDict:
     terminal_pass = all(_receipt_passed(receipts, name) for name in TERMINAL_CHECK_NAMES)
     adversarial_clear = result.get("flagged_adversarial") is False
     gates = {
-        "preconditions": _gate(True, preconditions_pass, preconditions_pass, "Exact eligible inputs gate dependent work."),
-        "sealed_panel": _gate(True, panel_pass, panel_pass, "All fresh partitions and label boundaries must be complete."),
-        "safety_controls": _gate(True, safety_pass, safety_pass, "Every isolation and lifecycle control must pass within budget."),
-        "scoped_validation": _gate(True, scoped_pass, scoped_pass, "All affected Exp7303 commands must pass."),
-        "terminal_validation": _gate(True, terminal_pass, terminal_pass, "Cold reduction and both strict readers must pass."),
-        "adversarial_clear": _gate(False, result.get("flagged_adversarial"), adversarial_clear, "Critical findings prevent readiness."),
-        "scientific_value": _gate("not_evaluated", "not_evaluated", False, "Value is an Exp7362 gate, not a fixture gate."),
+        "preconditions": _gate(
+            True,
+            preconditions_pass,
+            preconditions_pass,
+            "Exact eligible inputs gate dependent work.",
+        ),
+        "sealed_panel": _gate(
+            True,
+            panel_pass,
+            panel_pass,
+            "All fresh partitions and label boundaries must be complete.",
+        ),
+        "safety_controls": _gate(
+            True,
+            safety_pass,
+            safety_pass,
+            "Every isolation and lifecycle control must pass within budget.",
+        ),
+        "scoped_validation": _gate(
+            True, scoped_pass, scoped_pass, "All affected Exp7303 commands must pass."
+        ),
+        "terminal_validation": _gate(
+            True, terminal_pass, terminal_pass, "Cold reduction and both strict readers must pass."
+        ),
+        "adversarial_clear": _gate(
+            False,
+            result.get("flagged_adversarial"),
+            adversarial_clear,
+            "Critical findings prevent readiness.",
+        ),
+        "scientific_value": _gate(
+            "not_evaluated", "not_evaluated", False, "Value is an Exp7362 gate, not a fixture gate."
+        ),
         "promotion": _gate(1, 0, False, "A safety fixture never authorizes promotion."),
     }
     result["acceptance_gate_results"] = gates
@@ -1625,9 +1683,10 @@ def validate_artifact(
         errors.append("oracle_disclosure_missing")
     if artifact.get("learning_value_score") != 0 or artifact.get("promotion_score") != 0:
         errors.append("value_promotion_not_zero")
-    if artifact.get("verdict_class") in {"blocked", "disqualified", "partial"} and artifact.get(
-        "learning_fixture_ready_score"
-    ) != 0:
+    if (
+        artifact.get("verdict_class") in {"blocked", "disqualified", "partial"}
+        and artifact.get("learning_fixture_ready_score") != 0
+    ):
         errors.append("failed_readiness_not_zero")
     if artifact.get("verdict_class") == "blocked":
         if artifact.get("rows") != [] or artifact.get("safety_rows") != []:
@@ -1664,9 +1723,11 @@ def validate_artifact(
     ):
         errors.append("phase_spans_invalid")
     principles = artifact.get("field_principles")
-    if not isinstance(principles, Mapping) or any(
-        principles.get(key) != value for key, value in REQUIRED_FIELD_PRINCIPLES.items()
-    ) or any(key not in principles for key in artifact):
+    if (
+        not isinstance(principles, Mapping)
+        or any(principles.get(key) != value for key, value in REQUIRED_FIELD_PRINCIPLES.items())
+        or any(key not in principles for key in artifact)
+    ):
         errors.append("field_principles_invalid")
     if verify_source_hashes:
         for name, expected in artifact.get("source_artifact_hashes", {}).items():
@@ -1697,7 +1758,7 @@ def scoped_command_plan(root: Path, temporary_root: Path) -> list[CommandSpec]:
     coverage = temporary_root / "coverage/.coverage"
     basetemp.mkdir(parents=True, exist_ok=True)
     coverage.parent.mkdir(parents=True, exist_ok=True)
-    return build_scoped_commands(
+    commands = build_scoped_commands(
         root,
         [str(TEST_PATH)],
         [str(MODULE_PATH)],
@@ -1705,6 +1766,17 @@ def scoped_command_plan(root: Path, temporary_root: Path) -> list[CommandSpec]:
         basetemp=basetemp,
         coverage_file=coverage,
     )
+    return [
+        CommandSpec(
+            command.name,
+            (*command.argv, "--omit", str(TEST_PATH))
+            if command.name == "changed_module_coverage_report"
+            else command.argv,
+            command.scope,
+            command.timeout_s,
+        )
+        for command in commands
+    ]
 
 
 def _terminal_commands(root: Path, candidate: Path) -> list[CommandSpec]:

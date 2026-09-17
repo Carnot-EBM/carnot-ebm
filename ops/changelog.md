@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-09-17 — Exp7360 scoped command-plan repair (REQ-CL-7360)
+
+- Kept the explicit affected test selector on the changed-module coverage
+  report by omitting that test from the module-only report.
+- Prevented pytest-owned temporary path names from making the report appear to
+  be an unscoped pytest command.
+- Verified the exact 91-test conductor subset, 10 focused tests, 576/576
+  changed-module statements, Ruff check/format, mypy, scoped spec coverage,
+  and all three terminal readers without skipping, weakening, deleting, or
+  reverting tests and without modifying the conductor.
+
 ## 2026-09-17 — Exp7358 scoped command-plan repair (REQ-REPORT-7358)
 
 - Removed absolute temporary-root leakage from the V646 tool argument vectors;

@@ -53,6 +53,7 @@ def test_preconditions_accept_eligible_null_and_reject_bad_producers(tmp_path: P
     assert loaded["verdict_class"] == "null"
 
     for field, bad_value in (
+        ("status", "blocked_upstream"),
         ("validation_contract_ready_score", 0),
         ("verdict_class", "disqualified"),
         ("flagged_adversarial", True),
@@ -93,11 +94,14 @@ def test_fresh_panel_counts_hashes_twins_and_private_separation(
     """SCENARIO-CL-7360-PANEL: the new panel is complete and non-overlapping."""
 
     paths, public_manifest, private_manifest = sealed_evidence
-    assert exp.panel_errors(
-        public_manifest,
-        private_manifest,
-        exp.load_json(exp.REPO_ROOT / exp.V645_PUBLIC_MANIFEST_PATH),
-    ) == []
+    assert (
+        exp.panel_errors(
+            public_manifest,
+            private_manifest,
+            exp.load_json(exp.REPO_ROOT / exp.V645_PUBLIC_MANIFEST_PATH),
+        )
+        == []
+    )
     assert len(public_manifest["development_streams"]) == 32
     assert {stream["cohort"] for stream in public_manifest["development_streams"]} == set(
         exp.COHORTS
@@ -106,6 +110,10 @@ def test_fresh_panel_counts_hashes_twins_and_private_separation(
     assert len(public_manifest["public_request_streams"]) == 8
     assert len(public_manifest["live_proposal_panel"]) == 32
     assert len(public_manifest["development_canary"]) == 4
+    assert all(
+        exp._normalized_request(pair["original"]) == exp._normalized_request(pair["twin"])
+        for pair in public_manifest["live_proposal_panel"]
+    )
     assert "private_rules" not in paths.public_manifest.read_text(encoding="utf-8")
     assert "acceptance_witness" not in paths.public_manifest.read_text(encoding="utf-8")
     assert private_manifest["public_manifest_sha256"] == exp.sha256_file(paths.public_manifest)
@@ -154,10 +162,11 @@ def test_panel_mutations_fail_closed(
     bad["development_canary"].pop()
     mutations.append((bad, private_manifest, "development_canary_count"))
     bad = deepcopy(public_manifest)
-    bad["live_proposal_panel"][1]["original"] = deepcopy(
-        bad["live_proposal_panel"][0]["original"]
-    )
+    bad["live_proposal_panel"][1]["original"] = deepcopy(bad["live_proposal_panel"][0]["original"])
     mutations.append((bad, private_manifest, "public_requests_not_distinct"))
+    bad = deepcopy(public_manifest)
+    bad["live_proposal_panel"][0]["twin"]["horizon"] += 1
+    mutations.append((bad, private_manifest, "renamed_twin_mismatch"))
     bad = deepcopy(public_manifest)
     bad["evaluation_seed"] = bad["development_seed"]
     mutations.append((bad, private_manifest, "seeds_not_disjoint"))
@@ -208,6 +217,7 @@ def test_adapter_controls_cover_drift_lifecycle_and_release_authority(tmp_path: 
     by_control = {row["control"]: row for row in rows}
 
     assert all(row["passed"] for row in rows)
+    assert by_control["post_request_only_commit"]["observed"]["entry_unchanged"] is True
     assert by_control["contradictory_feedback"]["observed"]["invalidated_count"] >= 1
     assert by_control["announced_drift"]["observed"]["active_atoms"] == 0
     assert by_control["rollback_restart_post_request_commit"]["passed"] is True

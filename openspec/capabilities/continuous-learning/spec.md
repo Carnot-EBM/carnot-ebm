@@ -17105,7 +17105,7 @@ strict row consistency. It SHALL publish the terminal JSON atomically.
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-CL-7360 and SCENARIO-CL-7360-* | Planned: reusable fixture module, thin entrypoint, sealed public/private evidence, acceptance sidecar, and terminal artifact | Planned: focused tests, 100% changed-module coverage, scoped validation, entrypoint E2E, independent reduction, adversarial verification, strict row consistency, and full Python suite |
+| REQ-CL-7360 and SCENARIO-CL-7360-* | Implemented in `python/carnot/experiment_7360_v646_learning_fixture.py` with a thin entrypoint, sealed public/private evidence, acceptance sidecar, and terminal artifact. The scoped plan keeps every pytest-associated command visibly bound to the explicit test file even when its private temporary path contains `pytest`. | `tests/python/test_experiment_7360_v646_learning_fixture.py`; 10 focused tests and 576/576 changed-module statements. The 91-test conductor subset, independent reducer, adversarial verifier, strict row consistency, Ruff check/format, mypy, and scoped spec coverage pass. |
 
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 

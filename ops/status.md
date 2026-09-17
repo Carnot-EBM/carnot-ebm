@@ -2,6 +2,17 @@
 
 **Last Updated:** 2026-09-17
 
+## 2026-09-17 — Exp7360 scoped-plan regression repaired
+
+Exp7360 now keeps the affected test selector explicit on its changed-module
+coverage report, including when pytest supplies a private temporary path whose
+name itself contains `pytest`. The exact conductor subset is green at 91/91;
+the focused suite is 10/10 with 576/576 changed-module statements covered.
+Ruff check/format, mypy, scoped spec coverage, the cold independent reducer,
+adversarial verification, and strict row consistency pass. No test was
+skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
+
 ## 2026-09-17 — Exp7358 command-plan regression repaired
 
 The V646 planner no longer lets an absolute temporary repository or coverage
