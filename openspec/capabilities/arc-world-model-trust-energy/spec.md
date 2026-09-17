@@ -13,6 +13,94 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V647 adapter-withheld supervisor outcome capture — 2026-09-17
+
+**Status:** Specified. A complete empty redirect ledger is a valid null result.
+
+### REQ-ARC-WMTE-7376: Capture new live outcomes without changing the supervisor policy
+
+Experiment 7376 SHALL perform a registry precheck before target selection. It
+SHALL freeze three eligible public games and two seeds per game before current
+outcomes are visible. Every episode SHALL use the shipped `make_carnot_agent`
+factory, `E3AgentPolicy`, and curated supervisor arm order. The per-game adapter,
+banked solution, hand solver, saved engine, and replay route SHALL remain
+withheld. The experiment SHALL not inspect game source, build a per-game model,
+run ground-truth search, or credit a level already recorded as reproduced.
+
+The six episodes SHALL use `unsloth/Qwen3.8-27B-GGUF` through an authenticated
+native CUDA llama.cpp runtime. Each episode SHALL stop at 128 environment
+actions, two model calls, or 256 new tokens per call. The aggregate episode-work
+window SHALL stop at 1800 seconds. The declared substrate class SHALL be
+`model_bounded_generation`. The experiment SHALL record actual duration and
+SHALL not add sleeps to meet the ten-second class floor.
+
+Each episode SHALL retain its game, seed, action and model-call budgets,
+disposition, failures, level progress, zero-firing state, and censoring. Each
+redirect row SHALL retain its unique runtime event ID, trigger action, selected
+arm, later action range, level progress, `resolved_by_levelup`,
+`actions_to_levelup`, competing redirects, and censoring. Starting and ending
+policy state, source and engine provenance, model invocations, and tool-result to
+later-action receipts SHALL be hash-bound. The recorder SHALL not force a
+redirect or infer an unobserved arm outcome.
+
+The experiment SHALL join authenticated new applied redirect rows with existing
+development receipts by unique runtime event ID. It SHALL recompute per-arm
+support and leave-one-game-out coverage. Support readiness requires ten
+outcome-bearing decisions for each curated applied arm across at least three
+development games, with the same floor in every leave-one-game-out fold.
+Associations after redirects SHALL remain descriptive. The experiment SHALL not
+change arm priority, fit an offline selector, invent an arm, or authorize a
+production promotion.
+
+`arc_outcome_capture_complete_score` SHALL equal one when all six planned episode
+dispositions and required authenticity checks are accounted. An empty outcome
+ledger can therefore receive completion credit while scientific support remains
+null. `supervisor_support_ready_score` SHALL equal one only when the unchanged
+support threshold passes. `promotion_score` SHALL remain zero. Any incidental
+level claim SHALL use `solve_provenance=live_agent_self_discovery`; a new solve
+also requires the shipped reproduction and duplicate checks before credit.
+
+The experiment SHALL build its affected command plan through Experiment 7358 and
+execute the plan through Experiment 7303. It SHALL run scoped worktree imports,
+focused pytest, separate 100 percent changed-module coverage, Ruff check and
+format, changed-module mypy, spec coverage, E2E-009, E2E-010, and the E2E-009
+LLM-off real-environment smoke. It SHALL independently reload and reduce raw
+evidence, run `scripts/adversarial_verify.py`, and run strict verdict-row
+consistency checking. It SHALL publish the terminal JSON atomically and preserve
+all failed checks. It SHALL not change production defaults, the active roadmap,
+the research conductor, the solve registry, or submitted policy.
+
+#### SCENARIO-ARC-WMTE-7376-FROZEN-LIVE-PANEL
+
+- GIVEN public registry metadata and the current adapter inventory
+- WHEN the experiment freezes its panel before current outcomes
+- THEN it selects three eligible games and two seeds per game
+- AND all six rows withhold adapters, banks, solvers, saved engines, and replay routes.
+
+#### SCENARIO-ARC-WMTE-7376-REDIRECT-OUTCOMES
+
+- GIVEN a live episode through the unchanged curated supervisor
+- WHEN a redirect fires or no arm fires before a terminal episode disposition
+- THEN the raw row retains the observed redirect outcome or the explicit empty ledger
+- AND no unobserved arm outcome or causal effect is invented.
+
+#### SCENARIO-ARC-WMTE-7376-SUPPORT-REDUCTION
+
+- GIVEN authenticated historical development rows and new runtime event IDs
+- WHEN support is recomputed by arm, game, and leave-one-game-out fold
+- THEN duplicate event IDs contribute once and only observed applied outcomes count
+- AND fewer than ten decisions per arm or three games keeps support readiness at zero.
+
+#### SCENARIO-ARC-WMTE-7376-TERMINAL-ACCOUNTING
+
+- GIVEN six completed or censored episode dispositions and current validation receipts
+- WHEN the independent reducer and terminal linters evaluate the candidate
+- THEN completion can equal one for a positive or empty outcome ledger
+- AND blocked, disqualified, adversarial, or incomplete evidence keeps readiness and promotion zero.
+
+Implementation status: specified 2026-09-17. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V646 supervisor support audit — 2026-09-17
 
 **Status:** Specified. This audit can finish with a null result when the

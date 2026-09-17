@@ -18137,3 +18137,4 @@ code |
 | 2026-09-17 19:53 UTC | Capture frozen Qwen3.8 proposals for distinct logi | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7372-qwen-canary.qwen_assignment_transport_ready_score (actual=0 == expected=1) |
 | 2026-09-17 19:55 UTC | Measure continuous learning from certified implica | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7373-proposal-capture, exp7373-proposal-capture, exp7373-proposal-capture) |
 | 2026-09-17 19:55 UTC | Independently reduce proof-memory causality and co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7374-prospective-memory, exp7374-prospective-memory, exp7374-prospective-memory) |
+| 2026-09-17 20:14 UTC | Collect new adapter-withheld ARC supervisor outcom | FAIL | Codex CLI error: Stalled after 600s silence. Last output: ld_schedule(exp.TAR |
