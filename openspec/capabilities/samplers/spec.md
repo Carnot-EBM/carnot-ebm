@@ -5602,3 +5602,102 @@ unlabeled IID claim, or invalid terminal state fails closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7229 and SCENARIO-SAMPLER-7229-* | Implemented (`python/carnot/experiment_7229_v636_rare_event_audit.py`, `scripts/experiments/experiment_7229_v636_rare_event_audit.py`, `results/experiment_7229_v636_rare_event_audit.json`) | Implemented (`tests/python/test_experiment_7229_v636_rare_event_audit.py`; authenticated replay reduction, zero-hit nondegeneracy, failure classification, cost and construction checks, gate preservation, artifact attacks, CLI paths, and scoped coverage) |
+
+### REQ-SAMPLER-7378: Frozen Finite-Law Sampler Audit
+
+Carnot SHALL run the shipped CPU `ParallelIsingSampler` against the exact
+Exp7377 finite-temperature law fixture. The audit SHALL measure sampling
+quality. Exact source-energy agreement alone SHALL not qualify the sampler.
+
+- REQ-SAMPLER-7378-PREFLIGHT: Exp7378 SHALL authenticate the exact Exp7377
+  artifact and require `law_fixture_ready_score == 1`, `verdict_class` in
+  `positive | circular_positive | null`, and `flagged_adversarial == false`.
+  A missing, malformed, blocked, partial, disqualified, quarantined, or
+  hash-invalid input SHALL produce a terminal blocked artifact before sampling.
+- REQ-SAMPLER-7378-PROTOCOL: The audit SHALL use all 24 frozen formulas,
+  betas `0.5, 1, 2`, source-only and proof-assisted conditions, four fixed
+  chains, 1,000 warm-up steps, and 4,000 recorded samples per chain. It SHALL
+  keep one sampler update between samples. It SHALL not tune temperature,
+  restart policy, budgets, or gates after observing results.
+- REQ-SAMPLER-7378-CONDITIONING: Consistent assumptions SHALL be compiled into
+  an algebraically reduced Ising law before sampling. Samples SHALL be restored
+  to the original variable order without rejection or support filtering.
+  An empty conditioned support SHALL retain four structural chain rows with no
+  invented samples and SHALL fail the scientific value gate.
+- REQ-SAMPLER-7378-EVIDENCE: Every chain SHALL retain its order, fixed seed,
+  source hash, state counts, ordered-trace hash, complete elapsed time, build
+  time, conditioning time, update time, bounded-observable errors, and
+  autocorrelation-based effective sample counts. A lossless compressed raw
+  trace archive SHALL bind all nonempty chains by path, byte hash, and record
+  count.
+- REQ-SAMPLER-7378-OBSERVABLES: Each nonempty cell SHALL compare mean source
+  energy per original clause and every original bit marginal with exact
+  enumerated targets. It SHALL report maximum absolute error, 95-percent
+  interval coverage, and a descriptive sparse state-histogram total variation.
+  Histogram distance SHALL not replace the observable or ESS gates.
+- REQ-SAMPLER-7378-QUALIFICATION: A source-faithful cell SHALL qualify only
+  when every bounded-observable error is at most `0.05` and the minimum
+  aggregate effective sample count is at least `1000`. All source-faithful
+  cells SHALL qualify for `ising_law_value_score=1`. Empty-support cells,
+  constant observables, low ESS, and failed intervals SHALL remain visible.
+- REQ-SAMPLER-7378-HOSTILE: The audit SHALL independently recompute source
+  clause energies. A frozen subset containing one formula from each source
+  seed SHALL append the implied clause and sample that changed law at all three
+  betas. The result SHALL report original-versus-appended exact law shift and
+  sampled agreement with the appended target. It SHALL not call energy parity
+  a speedup.
+- REQ-SAMPLER-7378-VALIDATION: The task SHALL build its affected command set
+  with Exp7358 and execute it through Exp7303. It SHALL also run the applicable
+  E2E-002 Python/JAX training-and-sampling test and the existing small
+  Python/Rust Ising energy check. If the compiled extension is unavailable,
+  the cross-language check SHALL be blocked, not passed, and SHALL not trigger
+  a rebuild.
+- REQ-SAMPLER-7378-ARTIFACT: The executable SHALL atomically write
+  `results/experiment_7378_v647_ising_audit.json`. It SHALL retain all required
+  field principles, preconditions, rows, budgets, scores, command receipts,
+  host timings, source hashes, phase spans, and a reproducibility checksum.
+  It SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current model
+  invocation counts, `cpu_exact_solver_or_simulator`, and host CPU execution.
+  Progress lines SHALL be flushed at phase boundaries and during long work.
+- REQ-SAMPLER-7378-SCORES: `ising_sample_capture_complete_score` SHALL equal
+  one only for complete chain and cell evidence with valid required checks.
+  Sampling failures do not erase completed evidence. `ising_law_value_score`
+  SHALL equal one only when energy controls, wrong-law controls, every fixed
+  observable gate, and every fixed ESS gate pass. `promotion_score` SHALL stay
+  zero. The result SHALL recommend whether the shipped sampler preserves the
+  source law and SHALL make no hardware or speed claim.
+
+#### SCENARIO-SAMPLER-7378-SOURCE: Fixed Chains Face Exact Observables
+
+**Given** one authenticated frozen formula, beta, and faithful condition
+**When** the four fixed CPU chains finish without filtering
+**Then** source energy and every bit marginal are compared with exact targets
+**And** error and effective sample size remain separate qualification gates.
+
+#### SCENARIO-SAMPLER-7378-EMPTY: Empty Support Produces No Fake Draws
+
+**Given** contradictory frozen assumptions with zero exact normalizer
+**When** the audit reaches that cell
+**Then** four structural chain rows record zero samples and the exact failure
+**And** no unconditioned or rejected samples substitute for the absent law.
+
+#### SCENARIO-SAMPLER-7378-HOSTILE: Appended Clauses Change The Law
+
+**Given** one frozen entailed clause per formula seed
+**When** it is appended as another finite energy term
+**Then** the exact original-versus-appended shift is nonzero
+**And** sampled observables are judged against the appended target while the
+source-law mismatch remains visible as a negative control.
+
+#### SCENARIO-SAMPLER-7378-TERMINAL: Raw Evidence Recomputes The Verdict
+
+**Given** a complete or externally blocked Exp7378 artifact
+**When** a cold reducer reloads raw evidence and strict readers inspect it
+**Then** chain coverage, metrics, gates, scores, hashes, and terminal class agree
+**And** dropped rows, raised budgets, hidden failures, or promotion fail closed.
+
+## Implementation Status (REQ-SAMPLER-7378)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7378 and SCENARIO-SAMPLER-7378-* | Planned | Planned |
