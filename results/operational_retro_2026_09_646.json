@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.646",
+  "generated_at": "2026-09-17T14:43:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 74.4,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 10,
+  "slowest_experiments": [
+    {
+      "experiment": "Measure continuous structural learning on later distinct requests",
+      "duration_minutes": 65.33,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Capture Qwen3.8 proposals with separate source-fidelity evidence",
+      "duration_minutes": 5.74,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Reconcile twelve dispositions and decide whether claims advance",
+      "duration_minutes": 1.27,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Bind the V646 research delta and twelve-task contract",
+      "duration_minutes": 0.67,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qualify adapter safety and seal distinct future requests",
+      "duration_minutes": 0.58,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "All 10 completed experiments were compute-bound in the locked 74.4-minute window. The 65.33-minute structural-learning task dominated elapsed time, but the available records do not explain its internal cost; the locked compute-task GPU-idle classification is false.",
+  "bottlenecks_identified": [
+    "Measure continuous structural learning on later distinct requests occupied 65.33 of the 74.4 minutes, but the disk-mtime reconstruction has no phase trace that can identify why.",
+    "The point-in-time GPU report is not correlated with an experiment execution window, so it cannot establish sustained accelerator efficiency for the compute-bound tasks.",
+    "The supplied data has no model-count or runner-selection receipt, so it cannot establish whether any task with two or more models failed to engage DualGPURunner."
+  ],
+  "improvements_suggested": [
+    "Emit task-linked monotonic spans for model load, warmup, inference, validation, and artifact writes so the next duration leader has a causal phase breakdown.",
+    "Sample device utilization during each active compute window and join every sample to the task, process, and device instead of relying on a closing snapshot.",
+    "Record model count, runner choice, and assigned devices at launch; select DualGPURunner only when two or more models are loaded in parallel.",
+    "Add restartable checkpoints around the long structural-learning path and place an independent ready model job on the free device when its launch receipt proves that overlap is valid."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add one joined execution receipt with phase spans and task-window GPU telemetry.",
+    "Add launch-time model-count, runner-selection, and device-assignment evidence.",
+    "Checkpoint the duration-leading path and use eligibility-aware placement for independent compute work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The duration ordering identifies where to investigate, not why the work was slow. The closing GPU sample and missing concurrency receipts do not support a sustained-utilization judgment or a DualGPURunner-miss claim."
+}
