@@ -18121,3 +18121,4 @@ code |
 | 2026-09-17 08:38 UTC | Measure continuous structural learning on later di | OK | cache hit: 99 passed, 1 warning in 7.58s |
 | 2026-09-17 08:41 UTC | Independently adjudicate structural-learning evide | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7362-prospective-learning.learning_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-17 09:01 UTC | Adjudicate archived acquisition assumptions and co | OK | 94 passed, 1 warning in 8.05s |
+| 2026-09-17 09:55 UTC | Audit cross-game supervisor support and prototype  | OK | 101 passed, 1 warning in 7.59s |
