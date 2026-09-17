@@ -1,5 +1,86 @@
 # Research Reporting Capability Specification
 
+## V646 cold capture reduction — 2026-09-17
+
+**Status:** In progress. This capability corrects accounting diagnostics. It
+does not revise V645 science or remove the original quarantine.
+
+### REQ-REPORT-7359: Reduce capture evidence without current inference
+
+Exp7359 SHALL authenticate the terminal Exp7358 validation contract before it
+reads dependent Exp7348 evidence. It SHALL stop with a `blocked` artifact when
+that producer is missing, partial, disqualified, quarantined, or not ready.
+Exp7359 SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, `inference_substrate_class=aggregation`, and measured host
+CPU work. Historical Qwen receipts SHALL remain labeled and hash-bound.
+
+The reusable reducer SHALL accept a schedule as an explicit input. It SHALL
+derive its planned count from that schedule. It SHALL not contain a V645 task
+ID or a fixed sample count. The reducer SHALL derive attempted, completed,
+failed, cancelled, and censored counts from terminal call states. Completion
+SHALL require one identity-matched terminal row for each authenticated schedule
+row. Proposal usefulness and a final readiness score SHALL not affect capture
+completion.
+
+The reducer SHALL reject a changed or partial schedule, a missing or duplicate
+call, a non-terminal call, a mismatched request ID, changed candidate bytes, or
+a candidate row that differs from its inline call. It SHALL retain each raw
+call disposition, each original-and-renamed identifier pair, semantic failure
+counts, candidate byte hashes, and runtime receipt hashes. A separate
+implementation SHALL produce the same budget and completion result.
+
+Exp7359 SHALL diagnose each Exp7348 mismatch with exact expected and observed
+values. It SHALL name the writer and reducer. Its correction receipt SHALL
+preserve Exp7348's original status, verdict, scores, internal errors, and
+adversarial flag. `capture_reducer_ready_score` SHALL describe only the tested
+accounting implementation. It SHALL not become V646 scientific value or
+authorize promotion.
+
+The workflow SHALL use the Exp7358 command-plan boundary with explicit tests,
+changed modules, and static files. It SHALL require worktree imports, focused
+pytest with `-n 0`, cleared addopts, `--no-cov`, a private `--basetemp`, separate
+100 percent changed-module coverage, scoped Ruff check and format, changed-file
+mypy, and scoped specification coverage. It SHALL run a cold reducer,
+`adversarial_verify.py`, and strict verdict-row consistency against the
+candidate. It SHALL publish the terminal JSON atomically.
+
+#### SCENARIO-REPORT-7359-BUDGET: Policy metadata does not change call counts
+
+**Given** an authenticated schedule and one terminal call for every schedule row
+**When** the reducer derives the capture budget
+**Then** it compares the six call-state fields by name
+**And** extra timeout, token, or stopping-rule fields do not create a mismatch.
+
+#### SCENARIO-REPORT-7359-FAILURES: Every terminal state stays in the denominator
+
+**Given** response, request-error, and cancelled rows in one explicit schedule
+**When** the reducer accounts for the rows
+**Then** attempted, completed, failed, cancelled, and censored counts are exact
+**And** score validity does not depend on parse or semantic usefulness.
+
+#### SCENARIO-REPORT-7359-INTEGRITY: Evidence mutations fail closed
+
+**Given** authenticated schedule, inline-call, and candidate-file evidence
+**When** a call is missing or duplicated, a request ID changes, candidate bytes
+change, or the schedule loses a row
+**Then** the reducer reports the exact integrity error
+**And** capture completion is zero.
+
+#### SCENARIO-REPORT-7359-CIRCULARITY: Final readiness is not a reducer input
+
+**Given** identical schedule and call evidence with different final scores
+**When** both records are reduced
+**Then** both produce the same budget and capture completion
+**And** a failed terminal gate cannot rewrite immutable historical call states.
+
+#### SCENARIO-REPORT-7359-REPLAY: Archived calls produce a correction receipt
+
+**Given** the Exp7348 schedule, 128 inline calls, exact candidate files, and
+runtime receipts
+**When** Exp7359 performs a cold replay
+**Then** the primary and independent reducers agree on all 128 dispositions
+**And** the correction keeps Exp7348 disqualified and flagged.
+
 ## V646 experiment-only validation contract — 2026-09-17
 
 **Status:** Implemented. This contract changes validation planning and result
