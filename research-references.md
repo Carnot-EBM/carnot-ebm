@@ -44924,3 +44924,82 @@ Their current adversarial checks were clean; their failed gates remain failed.
 - GateMate still lacks a dated operator physical-change receipt. KV260 fabric
   evidence and PolarFire CPU-dispatch evidence remain distinct historical facts.
   The hardware wishlist does not justify repeating blocked board operations.
+
+## Outer-loop note - 2026-09-17
+
+Operator-supplied paper, read directly (not a milestone planner sweep):
+
+- **Dream-RSI: Recursive Self-Improvement through Evolving Worlds** -
+  arXiv:2609.14858, https://arxiv.org/abs/2609.14858. Builds a cheap "replay
+  simulator" from accumulated discovery-tree history, refines the exploration
+  policy off-policy against that simulator, then redeploys the improved policy
+  online - cutting the cost of repeated live evaluation while holding discovery
+  quality, shown on algorithm/math/GPU-kernel search tasks.
+  - Carnot hook 1 (`scripts/autoresearch_conductor_round.py`, REQ-AUTO-025):
+    every round currently cold-starts hypothesis generation and pays a real
+    codex/fable call plus sandbox plus subprocess recompute per iteration, with
+    no reuse of prior (weights, energy) history to steer the next candidate.
+    A replay-simulator built from the accumulated baseline/rejection history
+    could pre-screen candidate directions before spending a real generation
+    cycle - plausibly also a structural angle on the documented repeated-holdout
+    selection limitation above (steer search by simulated headroom rather than
+    by re-sampling near the same already-measured point).
+  - Carnot hook 2 (ARC AVO-adoption program, `REQ-ARC-WMTE-6600`/`6640`): the
+    trajectory supervisor's redirect-arm selection is a fixed heuristic table.
+    Once the redirect ledger carries outcomes, a replay-simulator over that
+    ledger is a candidate architecture for arm *selection* (not generation -
+    arm proposal stays human/outer-loop per the existing note on why AVO's
+    open-ended strategy generation does not transfer to a 27B local model).
+  - Not yet built. Flagged for a future bounded task, not implemented here.
+
+- **ModularRSI: Modular and Generalizable Recursive Harness Self-Improvement**
+  - arXiv:2609.14857, https://arxiv.org/abs/2609.14857. Decomposes an agent
+  harness into five independently-evolving modules (Agent Loop, Tool Use,
+  Observation Management, Context Management, Task Completion Detection),
+  contrasts successful vs. failed trajectories to localize which module is
+  deficient, and evolves against benchmark-disjoint tasks specifically to
+  separate genuine improvement from benchmark-specific overfitting - shown to
+  transfer across unseen in-domain and cross-domain tasks (TB2.0, SWE-Bench
+  Verified) and across foundation models. Stated limitation: single-trajectory
+  updates can conflate a systemic harness deficiency with one instance's
+  reasoning failure.
+  - Carnot hook 1 (REQ-AUTO-025's own logged limitation, directly): the
+  benchmark-disjoint-evolution pattern is a named structural answer to the
+  repeated-holdout selection concern already on record above (a hypothesis
+  scored repeatedly against the SAME fixed held-out split risks fitting to
+  it). ModularRSI's fix is to evolve against tasks the harness has not seen
+  yet, not just hold out data once - worth comparing against the candidate
+  fixes already named in `ops/known-issues.md` for this same gap.
+  - Carnot hook 2 (ARC live agent, `E3AgentPolicy`): its module boundaries
+  (Observation Management, Task Completion Detection) map close to onto the
+  live agent's own frame/state handling and win-condition induction. The
+  success-vs-failure trajectory contrast is a concrete mechanism for the
+  Generalization-Testing Floor's task-class 2 (reusable-primitive hardening)
+  - localize WHICH primitive is weak from trajectory contrast instead of
+  guessing from a single held-out measurement.
+  - Not yet built. Flagged for a future bounded task, not implemented here.
+
+- **ScienceBuddy: Recursive-in-Recursive Self-Improvement for Interactive
+  Scientific Agents** - PhAI Labs, https://phai-labs.com/en/papers/sciencebuddy/.
+  Product page, not an arXiv paper - shallower than the two entries above, no
+  stated limitations section, logged for the framing not the method detail.
+  Core idea: nest two recursions. The inner recursion improves the HARNESS with
+  the model held fixed (this is what REQ-AUTO-025's conductor round and the
+  ModularRSI/Dream-RSI entries above all are); the outer recursion then trains
+  the MODEL ITSELF under the improved harness. Also frames the target as an
+  interactive workspace where a human researcher's feedback drives continuous
+  learning, not a fully unattended loop.
+  - Carnot hook 1 (scope boundary, not a build item): everything shipped or
+  proposed above (REQ-AUTO-025, Dream-RSI hook, ModularRSI hook) is inner-loop
+  only - harness/prompt/search-policy evolution around the frozen mandated
+  model (`unsloth/Qwen3.8-27B-GGUF`). This paper names the outer loop (actually
+  RL-training that model's weights) as the next tier up. That is a materially
+  bigger, costlier commitment than anything proposed above and needs an
+  explicit operator decision before any task targets it - flagging the
+  boundary, not proposing to cross it.
+  - Carnot hook 2: the "interactive, researcher-feedback-driven" framing has no
+  structured equivalent here today. The outer-loop Claude session is the de
+  facto feedback channel (via `ops/known-issues.md` entries and direct fixes),
+  but nothing formalizes "operator feedback on a run -> harness update" as a
+  named mechanism the way this paper does. Worth naming if the operator ever
+  wants that loop made explicit; not proposed as a task here.
