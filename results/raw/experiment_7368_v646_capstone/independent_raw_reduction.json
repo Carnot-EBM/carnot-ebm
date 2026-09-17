@@ -1,0 +1,261 @@
+{
+  "claim_rows": [
+    {
+      "arm": "fresh_source_fidelity",
+      "censored": false,
+      "claim": "fresh_source_fidelity",
+      "cohort": "live_model_capture",
+      "completion_score": 1,
+      "costs": {
+        "generation_calls": 132
+      },
+      "evidence_period": "current",
+      "failures": [
+        "independent_value_not_established"
+      ],
+      "metric": null,
+      "metrics": {
+        "all_fidelity_dimension_count": 128,
+        "executor_valid_count": 6,
+        "parser_valid_count": 128,
+        "public_semantic_correct_count": 128,
+        "row_count": 128
+      },
+      "producer": "exp7361-fresh-plan-capture",
+      "promotes_scientific_value": false,
+      "truth_authority": "oracle_defined",
+      "unit_id": "claim:fresh_source_fidelity",
+      "value_score": 0,
+      "verdict_class": "circular_positive"
+    },
+    {
+      "arm": "structural_learning",
+      "censored": false,
+      "claim": "structural_learning",
+      "cohort": "synthetic_and_live",
+      "completion_score": 0,
+      "costs": {
+        "historical_model_amortization_included": true
+      },
+      "evidence_period": "current",
+      "failures": [
+        "complete_service_cost_ratio",
+        "later_distinct_request_erasure_witness",
+        "query_ratio_vs_exact_cache",
+        "query_ratio_vs_reset"
+      ],
+      "metric": null,
+      "metrics": {
+        "live_stream_count": 32,
+        "maximum_complete_cost_upper_95": 74.76227660968986,
+        "maximum_query_ratio_upper_95": 0.9205046795986983,
+        "raw_row_count": 1792,
+        "structural_witness_count": 0,
+        "synthetic_stream_count": 128
+      },
+      "producer": "exp7362-prospective-learning",
+      "promotes_scientific_value": false,
+      "truth_authority": "independent_raw_reduction",
+      "unit_id": "claim:structural_learning",
+      "value_score": 0,
+      "verdict_class": "disqualified"
+    },
+    {
+      "arm": "learning_audit",
+      "censored": true,
+      "claim": "learning_audit",
+      "cohort": "not_run",
+      "completion_score": 0,
+      "costs": {
+        "current_model_calls": 0
+      },
+      "evidence_period": "current",
+      "failures": [
+        "independent_learning_audit_unavailable"
+      ],
+      "metric": null,
+      "metrics": {
+        "expected": 1,
+        "failed_field": "learning_capture_complete_score",
+        "observed": 0
+      },
+      "producer": "exp7363-learning-audit",
+      "promotes_scientific_value": false,
+      "truth_authority": "conductor_pre_gate",
+      "unit_id": "claim:learning_audit",
+      "value_score": 0,
+      "verdict_class": "blocked"
+    },
+    {
+      "arm": "acquisition_adjudication",
+      "censored": false,
+      "claim": "acquisition_adjudication",
+      "cohort": "synthetic_archive",
+      "completion_score": 1,
+      "costs": {
+        "new_generation_calls": 0
+      },
+      "evidence_period": "current_reduction_of_historical_rows",
+      "failures": [
+        "complete_cost_gate_failed"
+      ],
+      "metric": null,
+      "metrics": {
+        "complete_cost_upper_95": 0.9652615826317683,
+        "paid_query_ratio_upper_95": 0.3949077682514939,
+        "paired_context_count": 42,
+        "returned_infeasible_count": 0
+      },
+      "producer": "exp7364-acquisition-adjudication",
+      "promotes_scientific_value": false,
+      "truth_authority": "independent_raw_reduction",
+      "unit_id": "claim:acquisition_adjudication",
+      "value_score": 0,
+      "verdict_class": "null"
+    },
+    {
+      "arm": "supervisor_support_and_live",
+      "censored": false,
+      "claim": "supervisor_support_and_live",
+      "cohort": "archived_support_with_optional_live_not_run",
+      "completion_score": 1,
+      "costs": {
+        "current_live_generation_calls": 0
+      },
+      "evidence_period": "current",
+      "failures": [
+        "insufficient_supported_outcomes",
+        "expected_live_pre_gate_skip"
+      ],
+      "metric": null,
+      "metrics": {
+        "live_skip_accounted": true,
+        "live_trial_executed": false,
+        "support_row_count": 94,
+        "supported_decision_count": 0,
+        "unsupported_counterfactual_count": 73
+      },
+      "producer": "exp7365-supervisor-support+exp7366-supervisor-live",
+      "promotes_scientific_value": false,
+      "truth_authority": "observed_outcomes_only",
+      "unit_id": "claim:supervisor_support_and_live",
+      "value_score": 0,
+      "verdict_class": "null"
+    },
+    {
+      "arm": "board_dispositions",
+      "censored": false,
+      "claim": "board_dispositions",
+      "cohort": "hardware_accounting",
+      "completion_score": 1,
+      "costs": {
+        "current_hardware_operations": 0
+      },
+      "evidence_period": "historical_and_current_receipt_search",
+      "failures": [
+        "gatemate_changed_physical_state_receipt_missing"
+      ],
+      "metric": null,
+      "metrics": {
+        "board_row_count": 3,
+        "changed_state_receipt": null,
+        "hardware_operation_count": 0,
+        "native_tenfold_speed_gate": null
+      },
+      "producer": "exp7367-board-disposition",
+      "promotes_scientific_value": false,
+      "truth_authority": "authenticated_receipts",
+      "unit_id": "claim:board_dispositions",
+      "value_score": 0,
+      "verdict_class": "blocked"
+    }
+  ],
+  "historical_live_arc_pairs": [
+    {
+      "arm": "result_resume_minus_result_withheld",
+      "censored": false,
+      "claim": "historical_live_arc_pair",
+      "cohort": "live",
+      "costs": {
+        "resume": {
+          "generated_tokens": 4096,
+          "prompt_tokens": 13498,
+          "wall_s": 417.127154
+        },
+        "withheld": {
+          "generated_tokens": 4096,
+          "prompt_tokens": 13498,
+          "wall_s": 407.099435
+        }
+      },
+      "evidence_period": "historical",
+      "failures": [
+        "no_successful_bound_result",
+        "no_later_policy_action"
+      ],
+      "game": "r11l",
+      "metric": null,
+      "metrics": {
+        "action_delta_resume_minus_withheld": 0,
+        "level_delta_resume_minus_withheld": 0,
+        "resume_levels": 0,
+        "usable_answer_delta_resume_minus_withheld": 0,
+        "withheld_levels": 0
+      },
+      "promotes_scientific_value": false,
+      "truth_authority": "raw_environment_episode",
+      "unit_id": "historical_arc_pair:r11l",
+      "verdict_class": "null"
+    },
+    {
+      "arm": "result_resume_minus_result_withheld",
+      "censored": false,
+      "claim": "historical_live_arc_pair",
+      "cohort": "live",
+      "costs": {
+        "resume": {
+          "generated_tokens": 4096,
+          "prompt_tokens": 22098,
+          "wall_s": 428.292078
+        },
+        "withheld": {
+          "generated_tokens": 4096,
+          "prompt_tokens": 22098,
+          "wall_s": 427.42483
+        }
+      },
+      "evidence_period": "historical",
+      "failures": [
+        "no_successful_bound_result",
+        "no_later_policy_action"
+      ],
+      "game": "re86",
+      "metric": null,
+      "metrics": {
+        "action_delta_resume_minus_withheld": 0,
+        "level_delta_resume_minus_withheld": 0,
+        "resume_levels": 0,
+        "usable_answer_delta_resume_minus_withheld": 0,
+        "withheld_levels": 0
+      },
+      "promotes_scientific_value": false,
+      "truth_authority": "raw_environment_episode",
+      "unit_id": "historical_arc_pair:re86",
+      "verdict_class": "null"
+    }
+  ],
+  "producer_hashes": {
+    "exp7357-contract": "sha256:daa9e92651c713150d1b671df95617979c50816ff6e18ba0d251870bc5109aaa",
+    "exp7358-validation-contract": "sha256:0d2c2fe876ba303b21c9b5fe5b094d92851ea407d7d9f06ae9d8ca4d37475781",
+    "exp7359-capture-reducer": "sha256:9d70a46b85802bce4784c641f94bb58a0b44af9aede39ed3451db794f13d451e",
+    "exp7360-learning-fixture": "sha256:ab03a4d90f576f9e4f173c96befcdb2cb79326af663c31fd04165efc1cd54ecf",
+    "exp7361-fresh-plan-capture": "sha256:ed7a3805d32bc71d045a586096b137515b5d31f19b9c6a836415dcee2c03d95a",
+    "exp7362-prospective-learning": "sha256:81747289aa0312b6fccc750b58cb029a4ee73a56fa4e3e2a3f143e59effa28a1",
+    "exp7363-learning-audit": "sha256:630d3427cca64e68ed8b753f99d9eea09fd8ec28dfc000ced03d36c9af61d55f",
+    "exp7364-acquisition-adjudication": "sha256:85718ef4aef4eb91c4586649b13dd8d91b6ea764e9eb82db2a843ebf7249bebf",
+    "exp7365-supervisor-support": "sha256:92d1ead54bc5b083f639c7e5496e7d5c3b23d3c573f36cf68db7dfb9a34151cc",
+    "exp7366-supervisor-live": "sha256:6029ec5000b86c23e98f1238422a616007008a529d67d4d0afd136dad3b05273",
+    "exp7367-board-disposition": "sha256:7802f106982d6bda7f764406619628c254be0327b4a945d9e6de773d10fcb406"
+  },
+  "schema": "carnot.experiment_7368.independent_raw_reduction.v1"
+}

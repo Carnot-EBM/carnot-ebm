@@ -72375,3 +72375,106 @@ atomic terminal write. Failed affected validation SHALL produce a
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7367 and SCENARIO-REPORT-7367-* | Implemented: Exp7367 aggregation module, thin entrypoint, sidecars, and terminal artifact | Verified by focused RED-to-green tests and 100% changed-module coverage; the entrypoint records its scoped checks, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V646 independent capstone reconciliation — 2026-09-17
+
+**Status:** Implemented. The V646 capstone reconciles all twelve dispositions and preserves null, blocked, and disqualified outcomes.
+
+### REQ-REPORT-7368: Reconcile all twelve V646 dispositions without converting nulls into missing work
+
+Exp7368 SHALL parse the active `2026.09.646` YAML contract and require the
+twelve ordered tasks from `exp7357-contract` through `exp7368-capstone`. It
+SHALL inspect each declared producer artifact. When, and only when, a declared
+deliverable does not exist, it MAY use the canonical `blocked_gate_check_v1`
+record written by the conductor. Each evidence row SHALL keep the expected and
+actual path, identity, terminal class, adversarial flag, quarantine state, and
+byte hash. The capstone SHALL create its self row only after the first eleven
+rows reconcile.
+
+Exp7368 SHALL treat a valid completed null as science, not as missing work. It
+SHALL classify required unavailable source, learning, or learning-audit
+evidence as blocked. It SHALL name the producer, exact field, expected value,
+and observed value. A required-check failure SHALL disqualify the capstone.
+The complete-null Exp7365 support result and expected Exp7366 pre-gate record
+SHALL form one accounted exploratory negative. The expected GateMate block
+SHALL remain independent of required science.
+
+The reducer SHALL independently summarize source-fidelity rows, structural
+learning, the missing independent learning audit, archived acquisition,
+supervisor support and live eligibility, and board dispositions. It SHALL
+recompute the small historical live ARC paired level and action differences
+from raw episode rows. It SHALL distinguish current from historical evidence,
+live from synthetic cohorts, oracle-defined from independent truth, and
+completion from value.
+
+The artifact SHALL apply four V646 publication gates. G1 SHALL require
+authenticated reproducible raw rows. G2 SHALL require independent raw
+reduction and adversarial checks. G3 SHALL require complete-cost and baseline
+honesty. G4 SHALL require access, venue, circularity, and solve provenance.
+Accounting completeness SHALL not satisfy a publication gate. The task SHALL
+perform no publication, release, push, automatic policy promotion, hardware
+operation, or model invocation.
+
+Each declared prior failure SHALL be compared with its recorded predecessor.
+An exact repeated verdict with `retire_if_same_verdict=true` SHALL receive an
+explicit retirement decision and an exclusion-manifest receipt. The native
+tenfold null and the retired external-text scoring, unchanged acquisition, and
+result-resume branches SHALL remain retired. Each next research decision SHALL
+name a measured bottleneck and a falsifiable reopening condition.
+
+Exp7368 SHALL use `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+invocation counts, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`.
+Historical inference SHALL remain in a labeled, hash-bound sidecar. Estimated
+savings SHALL remain zero unless a measured counterfactual exists.
+
+The workflow SHALL use the Exp7303 runner through the Exp7358 command-plan
+boundary. It SHALL use the exact test, module, and thin entrypoint. It SHALL
+run worktree imports, focused pytest without inherited coverage or workers,
+100 percent changed-module coverage, scoped Ruff check and format, changed-
+module mypy, scoped spec coverage, and the full Python suite. It SHALL execute
+the declared entrypoint, reload the candidate, independently reduce raw
+evidence, run adversarial verification, and run strict verdict-row consistency.
+The terminal JSON SHALL be written atomically.
+
+#### SCENARIO-REPORT-7368-DISPOSITIONS: Twelve slots include canonical skips and self
+
+**Given** the exact V646 task order and the first eleven outcomes
+**When** Exp7368 authenticates each evidence slot
+**Then** declared artifacts and canonical pre-gate records stay distinct
+**And** the completed self accounting is the twelfth disposition.
+
+#### SCENARIO-REPORT-7368-NULLS: Optional ineligibility does not become missing science
+
+**Given** Exp7365 is a complete insufficient-support null and Exp7366 is skipped
+**When** the supervisor branch is reduced
+**Then** both records form one complete exploratory negative
+**And** neither record is a required learning-audit substitute.
+
+#### SCENARIO-REPORT-7368-CLAIMS: Independent reductions preserve provenance boundaries
+
+**Given** current V646 rows and historical V645 live ARC episode rows
+**When** the capstone computes claim summaries and paired differences
+**Then** current, historical, live, synthetic, oracle, and independent evidence stay labeled
+**And** completion scores never become scientific value or promotion.
+
+#### SCENARIO-REPORT-7368-RETIREMENTS: Exact repeats use the manifest mechanism
+
+**Given** declared prior failures and recorded predecessor verdict bytes
+**When** a current verdict is an exact repeat with retirement enabled
+**Then** the artifact records the exact comparison and retirement decision
+**And** the exclusion manifest contains the matching durable retirement receipt.
+
+#### SCENARIO-REPORT-7368-PUBLICATION: Four gates fail closed
+
+**Given** authenticated evidence with required-science or validation failures
+**When** G1 through G4 are reduced
+**Then** each gate records expected, observed, and passed separately
+**And** publication, readiness, value, and promotion remain zero.
+
+#### SCENARIO-REPORT-7368-ARTIFACT: Cold replay controls the atomic result
+
+**Given** the measured candidate, raw sidecars, and exact validation receipts
+**When** independent replay and both strict readers inspect the candidate
+**Then** changed paths, hashes, rows, classes, gates, retirements, or checksums fail
+**And** only the resulting terminal document is written atomically.

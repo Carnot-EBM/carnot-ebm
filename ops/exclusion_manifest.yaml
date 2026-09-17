@@ -1166,3 +1166,20 @@ retired_extras:
   blocked_patterns:
   - one-family flagship source shard re-proposed without a diagnosed cause for the failing quality precondition
   - flagship source shard retried after blocked_precondition_failed_without_quality_claim with no stated change
+- id: v646_learning_audit_pregate_repeat_retired_exp7363
+  experiment_scope: repeat the V646 structural-learning audit against the same
+    disqualified Exp7362 capture with no eligible replacement evidence
+  reason: 'retire_if_same_verdict: Exp7363 repeated the exact
+    blocked_gate_check_failed verdict from Exp7349. A new audit is not useful
+    until an eligible prospective learning capture passes required validation.'
+  experiment_ids:
+  - exp7349-prospective-learning
+  - exp7363-learning-audit
+  retired_milestone: 2026.09.646
+  retired_by_artifact: results/experiment_7363_learning_audit.json
+  recorded_by_artifact: results/experiment_7368_v646_capstone.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - repeat exp7363 learning audit without eligible learning capture
+  - rerun v646 learning audit on disqualified exp7362
