@@ -2794,5 +2794,18 @@
     }
   ],
   "verdict_class": "disqualified",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-17T19:50:55Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "EXECUTION_VENUE_INVALID",
+      "severity": "critical",
+      "detail": "execution_venue={'board_execution': False, 'cuda_device_index': 1, 'cuda_device_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'host': 'icbfl1'} is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate."
+    }
+  ]
 }

@@ -18133,3 +18133,4 @@ code |
 | 2026-09-17 18:58 UTC | Prototype versioned implication proofs for later c | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: L-7370-VALIDAT |
 | 2026-09-17 19:06 UTC | Prototype versioned implication proofs for later c | OK | cache hit: 95 passed, 1 warning in 8.70s |
 | 2026-09-17 19:29 UTC | Attack proof authority and seal prospective formul | OK | 136 passed, 1 warning in 16.08s |
+| 2026-09-17 19:50 UTC | Qualify bounded Qwen3.8 assignment proposals | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 7.49s |
