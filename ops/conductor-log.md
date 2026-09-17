@@ -18124,3 +18124,4 @@ code |
 | 2026-09-17 09:55 UTC | Audit cross-game supervisor support and prototype  | OK | 101 passed, 1 warning in 7.59s |
 | 2026-09-17 09:58 UTC | Measure a frozen supervisor ordering on disjoint l | GATE_BLOCK | gate-unsat(final): 1 of 3 gate(s) failed; first failure: exp7365-supervisor-support.supervisor_trial_ready_score (actual=0 == expected=1) |
 | 2026-09-17 11:20 UTC | Preserve authenticated board status and changed-st | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: act) + raw |
+| 2026-09-17 12:43 UTC | Preserve authenticated board status and changed-st | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: l status remai |
