@@ -297,6 +297,8 @@ def test_artifact_build_replay_and_scope_reduction(
     contract, evidence = repository_state
     artifact = _build(contract, evidence)
     assert capstone.validate_artifact(artifact, root=ROOT, replay=True) == []
+    assert capstone.RUN_DATE == "20260917"
+    assert artifact["run_date"] == "20260917"
     assert artifact["capstone_complete_score"] == 1
     assert artifact["capstone_readiness_score"] == 0
     assert artifact["capstone_value_score"] == 0
@@ -348,7 +350,7 @@ def test_helpers_fail_closed_and_terminal_commands_are_exact(
     bad.write_text("[]", encoding="utf-8")
     with pytest.raises(ValueError, match="JSON object"):
         capstone.read_json(bad)
-    assert capstone.date_argument("20260916") == "20260916"
+    assert capstone.date_argument("20260917") == "20260917"
     with pytest.raises(ValueError, match="YYYYMMDD"):
         capstone.date_argument("2026-09-16")
     assert capstone.validate_artifact([], root=ROOT) == ["artifact_mapping"]
@@ -531,7 +533,7 @@ def test_main_orchestrates_scoped_validation_and_atomic_write(
         lambda *args: [{"name": "terminal", "passed": True, "exit_code": 0}],
     )
     monkeypatch.setattr(capstone, "validate_artifact", lambda *args, **kwargs: [])
-    assert capstone.main(["--date", "20260916"]) == 0
+    assert capstone.main(["--date", "20260917"]) == 0
     saved = json.loads(output.read_text(encoding="utf-8"))
     assert saved["capstone_complete_score"] == 1
     assert saved["verdict_class"] == "blocked"

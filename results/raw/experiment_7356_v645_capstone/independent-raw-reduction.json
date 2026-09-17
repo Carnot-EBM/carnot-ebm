@@ -1,0 +1,741 @@
+{
+  "claim_matrix": [
+    {
+      "abstention": true,
+      "arm": "independent_raw_reduction",
+      "censored": false,
+      "claim": "source_fidelity",
+      "costs": {
+        "upstream_generation_calls": 128,
+        "upstream_model_loads": 1
+      },
+      "diagnostic_metrics": {
+        "fully_faithful_unit_count": 126,
+        "hidden_rule_accepted_count": 4,
+        "raw_unit_count": 128,
+        "small_live_origin_cohort": true,
+        "source_failure_count": 2
+      },
+      "failures": [
+        "producer_disqualified",
+        "producer_flagged_adversarial"
+      ],
+      "metric": null,
+      "metric_kind": "unavailable_for_promotion",
+      "producer": "exp7348-plan-capture",
+      "producer_sha256": "sha256:07250c839788e91df711dd7f1b9deacfcad72704fa017d536306c3058e1b6131",
+      "promotes_scientific_efficacy": false,
+      "unit_id": "claim:source_fidelity",
+      "verdict_class": "blocked"
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_reduction",
+      "censored": false,
+      "claim": "continuous_learning",
+      "costs": {
+        "adapter_query_attempts": 15181,
+        "prospective_rows": 0
+      },
+      "diagnostic_metrics": {
+        "adapter_raw_row_count": 1664,
+        "future_use_witness_count": 118,
+        "prospective_unit_count": 0,
+        "returned_feasible_count": 145,
+        "shared_executor_authority": true
+      },
+      "failures": [
+        "prospective_learning_gate_blocked",
+        "independent_learning_audit_absent"
+      ],
+      "metric": null,
+      "metric_kind": "unavailable_for_promotion",
+      "producer": "exp7350-learning-audit",
+      "producer_sha256": "sha256:204b248e97d9a668218369109120359dfd6328a674b21daab079763f6ba3b4a7",
+      "promotes_scientific_efficacy": false,
+      "unit_id": "claim:continuous_learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_reduction",
+      "censored": false,
+      "claim": "acquisition_cost",
+      "costs": {
+        "audit_available": false,
+        "query_attempts": 14877
+      },
+      "diagnostic_metrics": {
+        "challenge_row_count": 36,
+        "evaluation_full_cost_s_by_arm": {
+          "conservative_acquisition": 0.379843177041,
+          "exact_plan_cache_reset": 0.20974733145,
+          "finite_bias_elimination": 0.333405573154
+        },
+        "evaluation_row_count": 90,
+        "prototype_raw_row_count": 126,
+        "returned_infeasible_count": 0,
+        "shared_executor_authority": true
+      },
+      "failures": [
+        "acquisition_cost_gate_blocked",
+        "independent_acquisition_audit_absent"
+      ],
+      "metric": null,
+      "metric_kind": "unavailable_for_promotion",
+      "producer": "exp7353-acquisition-audit",
+      "producer_sha256": "sha256:272715b394325cd9c838f4a17ed2f5307503622a73c6b012ff489fa83d36165f",
+      "promotes_scientific_efficacy": false,
+      "unit_id": "claim:acquisition_cost",
+      "verdict_class": "blocked"
+    },
+    {
+      "abstention": true,
+      "arm": "independent_raw_reduction",
+      "censored": false,
+      "claim": "live_arc_causality",
+      "costs": {
+        "actions": 768,
+        "generation_calls": 8,
+        "output_tokens": 16384
+      },
+      "diagnostic_metrics": {
+        "complete_causal_chain_count": 0,
+        "completed_episode_count": 4,
+        "game_count": 2,
+        "paired_level_delta": 0,
+        "planned_episode_count": 4,
+        "treatment_level_total": 0,
+        "withheld_level_total": 0
+      },
+      "failures": [
+        "producer_disqualified",
+        "producer_flagged_adversarial",
+        "successful_bound_result_absent"
+      ],
+      "metric": null,
+      "metric_kind": "unavailable_for_promotion",
+      "producer": "exp7354-arc-transfer",
+      "producer_sha256": "sha256:5e279e6dee55a95ab0a7d22d06e27362c1139fec210fa22e3e97515a1aa97815",
+      "promotes_scientific_efficacy": false,
+      "unit_id": "claim:live_arc_causality",
+      "verdict_class": "blocked"
+    },
+    {
+      "abstention": true,
+      "arm": "read_only_board_dispositions",
+      "censored": false,
+      "claim": "hardware_disposition",
+      "costs": {
+        "hardware_operations": 0
+      },
+      "diagnostic_metrics": {
+        "board_row_count": 3,
+        "disposition_complete_score": 1,
+        "hardware_operations_issued_count": 0,
+        "hardware_promotion_score": 0,
+        "hardware_readiness_score": 0,
+        "hardware_value_score": 0
+      },
+      "disposition_complete": true,
+      "expected_external_block": true,
+      "failures": [
+        "gatemate_changed_physical_state_receipt_missing"
+      ],
+      "metric": 1,
+      "metric_kind": "disposition_accounting_only",
+      "producer": "exp7355-board-state",
+      "producer_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "promotes_scientific_efficacy": false,
+      "science_prerequisite": false,
+      "unit_id": "claim:hardware_disposition",
+      "verdict_class": "blocked"
+    }
+  ],
+  "gate_replay": [
+    {
+      "artifact_field": "executor_fixture_ready_score",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7346-learning-adapter",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7346-learning-adapter",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "circular_positive",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7346-learning-adapter",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "executor_fixture_ready_score",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7347-plan-canary",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7347-plan-canary",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "circular_positive",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7347-plan-canary",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "executor_fixture_ready_score",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "circular_positive",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "plan_transport_ready_score",
+      "artifact_path": "results/experiment_7347_v645_plan_canary.json",
+      "artifact_sha256": "sha256:257ccf57ab5d763ae5b58b8b7f867f49111779a28d595e138dba97d5421faede",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7347-plan-canary"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7347_v645_plan_canary.json",
+      "artifact_sha256": "sha256:257ccf57ab5d763ae5b58b8b7f867f49111779a28d595e138dba97d5421faede",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "positive",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7347-plan-canary"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7347_v645_plan_canary.json",
+      "artifact_sha256": "sha256:257ccf57ab5d763ae5b58b8b7f867f49111779a28d595e138dba97d5421faede",
+      "consumer": "exp7348-plan-capture",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7347-plan-canary"
+    },
+    {
+      "artifact_field": "learning_adapter_ready_score",
+      "artifact_path": "results/experiment_7346_v645_learning_adapter.json",
+      "artifact_sha256": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7346-learning-adapter"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7346_v645_learning_adapter.json",
+      "artifact_sha256": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "disqualified",
+      "operator": "in",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7346-learning-adapter"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7346_v645_learning_adapter.json",
+      "artifact_sha256": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7346-learning-adapter"
+    },
+    {
+      "artifact_field": "plan_capture_complete_score",
+      "artifact_path": "results/experiment_7348_v645_plan_capture.json",
+      "artifact_sha256": "sha256:07250c839788e91df711dd7f1b9deacfcad72704fa017d536306c3058e1b6131",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "quarantined",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": true,
+      "upstream": "exp7348-plan-capture"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7348_v645_plan_capture.json",
+      "artifact_sha256": "sha256:07250c839788e91df711dd7f1b9deacfcad72704fa017d536306c3058e1b6131",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "disqualified",
+      "operator": "in",
+      "outcome": "quarantined",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": true,
+      "upstream": "exp7348-plan-capture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7348_v645_plan_capture.json",
+      "artifact_sha256": "sha256:07250c839788e91df711dd7f1b9deacfcad72704fa017d536306c3058e1b6131",
+      "consumer": "exp7349-prospective-learning",
+      "expected_value": false,
+      "observed_value": true,
+      "operator": "==",
+      "outcome": "quarantined",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": true,
+      "upstream": "exp7348-plan-capture"
+    },
+    {
+      "artifact_field": "learning_capture_complete_score",
+      "artifact_path": "ops/conductor-log.md:L18559",
+      "artifact_sha256": "sha256:de899e09309627c5d4c55d4af5619536cf661c571d8f4e64fc294f8822e2fcae",
+      "consumer": "exp7350-learning-audit",
+      "expected_value": 1,
+      "observed_value": null,
+      "operator": "==",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7349-prospective-learning"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "ops/conductor-log.md:L18559",
+      "artifact_sha256": "sha256:de899e09309627c5d4c55d4af5619536cf661c571d8f4e64fc294f8822e2fcae",
+      "consumer": "exp7350-learning-audit",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": null,
+      "operator": "in",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7349-prospective-learning"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "ops/conductor-log.md:L18559",
+      "artifact_sha256": "sha256:de899e09309627c5d4c55d4af5619536cf661c571d8f4e64fc294f8822e2fcae",
+      "consumer": "exp7350-learning-audit",
+      "expected_value": false,
+      "observed_value": null,
+      "operator": "==",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7349-prospective-learning"
+    },
+    {
+      "artifact_field": "executor_fixture_ready_score",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7351-acquisition-prototype",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7351-acquisition-prototype",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "circular_positive",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7344_v645_executor_fixture.json",
+      "artifact_sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820",
+      "consumer": "exp7351-acquisition-prototype",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "circular_positive",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7344-executor-fixture"
+    },
+    {
+      "artifact_field": "acquisition_prototype_ready_score",
+      "artifact_path": "results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7",
+      "consumer": "exp7352-acquisition-cost",
+      "expected_value": 1,
+      "observed_value": 0,
+      "operator": "==",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7351-acquisition-prototype"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7",
+      "consumer": "exp7352-acquisition-cost",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "disqualified",
+      "operator": "in",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7351-acquisition-prototype"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7351_v645_acquisition_prototype.json",
+      "artifact_sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7",
+      "consumer": "exp7352-acquisition-cost",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "disqualified",
+      "passed": false,
+      "producer_disposition_class": "disqualified",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7351-acquisition-prototype"
+    },
+    {
+      "artifact_field": "acquisition_capture_complete_score",
+      "artifact_path": "ops/conductor-log.md:L18563",
+      "artifact_sha256": "sha256:1be153f6d2963b05b290b74509788a95238dbbc16a4d3e616f45b9abfc33a5ba",
+      "consumer": "exp7353-acquisition-audit",
+      "expected_value": 1,
+      "observed_value": null,
+      "operator": "==",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7352-acquisition-cost"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "ops/conductor-log.md:L18563",
+      "artifact_sha256": "sha256:1be153f6d2963b05b290b74509788a95238dbbc16a4d3e616f45b9abfc33a5ba",
+      "consumer": "exp7353-acquisition-audit",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": null,
+      "operator": "in",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7352-acquisition-cost"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "ops/conductor-log.md:L18563",
+      "artifact_sha256": "sha256:1be153f6d2963b05b290b74509788a95238dbbc16a4d3e616f45b9abfc33a5ba",
+      "consumer": "exp7353-acquisition-audit",
+      "expected_value": false,
+      "observed_value": null,
+      "operator": "==",
+      "outcome": "blocked",
+      "passed": false,
+      "producer_disposition_class": "blocked",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7352-acquisition-cost"
+    },
+    {
+      "artifact_field": "arc_resume_ready_score",
+      "artifact_path": "results/experiment_7345_v645_arc_resume_check.json",
+      "artifact_sha256": "sha256:52a0eaec6f465ea3bfb3dd3ec62031908384f6509e6a7161d302205dcf3fa380",
+      "consumer": "exp7354-arc-transfer",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "null",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7345-arc-resume-check"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "artifact_path": "results/experiment_7345_v645_arc_resume_check.json",
+      "artifact_sha256": "sha256:52a0eaec6f465ea3bfb3dd3ec62031908384f6509e6a7161d302205dcf3fa380",
+      "consumer": "exp7354-arc-transfer",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "null",
+      "operator": "in",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "null",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7345-arc-resume-check"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "artifact_path": "results/experiment_7345_v645_arc_resume_check.json",
+      "artifact_sha256": "sha256:52a0eaec6f465ea3bfb3dd3ec62031908384f6509e6a7161d302205dcf3fa380",
+      "consumer": "exp7354-arc-transfer",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "outcome": "passed",
+      "passed": true,
+      "producer_disposition_class": "null",
+      "producer_flagged_adversarial": false,
+      "upstream": "exp7345-arc-resume-check"
+    }
+  ],
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": {
+      "available": true,
+      "sha256": "sha256:db663edfa8026fa641bfbcce3435c164a6e5991be5ebbe482d55ea06b953071b"
+    },
+    "openspec/change-proposals/research-roadmap-vNEXT.md": {
+      "available": true,
+      "sha256": "sha256:5342f55cb4fb25389310a09853dc5a1f490c5e569aa713ac7ae471397ebfbcb2"
+    },
+    "ops/conductor-log.md": {
+      "available": true,
+      "sha256": "sha256:7299d3faafb0da28873238f47b31ec7a37a0bf78b02605ff07f4336346480b3e"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "available": true,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "python/carnot/experiment_7356_v645_capstone.py": {
+      "available": true,
+      "sha256": "sha256:66e39eda651ab84e43aa16c05bd5db6d67a0aab7725bd8423932f29b02700f0d"
+    },
+    "research-roadmap.yaml": {
+      "available": true,
+      "sha256": "sha256:ec75812f41f431b02b38bbcfd623049bb4c8de258010691f8c9a53301621e960"
+    },
+    "results/experiment_7328_v643_capstone.json": {
+      "available": true,
+      "sha256": "sha256:724a0131b51c1f4e117e6f6146d9f68eb730f1db2c262994c6bb98e53787a14e"
+    },
+    "results/experiment_7342_v644_capstone.json": {
+      "available": true,
+      "sha256": "sha256:cffdb1907e080931d13218f6c3813f569f46f59182861f6297d89874a84c455a"
+    },
+    "results/experiment_7343_v645_contract.json": {
+      "available": true,
+      "sha256": "sha256:1b8eec04b82d59b7045c793ef6bdacdd794f10a2a3c571c5a8243cb86f82823c"
+    },
+    "results/experiment_7344_v645_executor_fixture.json": {
+      "available": true,
+      "sha256": "sha256:a279554473b373d1e45cad5e2773d5d89acefe07e3f32c81c6fab368d5303820"
+    },
+    "results/experiment_7345_v645_arc_resume_check.json": {
+      "available": true,
+      "sha256": "sha256:52a0eaec6f465ea3bfb3dd3ec62031908384f6509e6a7161d302205dcf3fa380"
+    },
+    "results/experiment_7346_v645_learning_adapter.json": {
+      "available": true,
+      "sha256": "sha256:67158fd006dab5cc80eedaf4a9a97a4eae139526903e083c1f1407ae23f7ee01"
+    },
+    "results/experiment_7347_v645_plan_canary.json": {
+      "available": true,
+      "sha256": "sha256:257ccf57ab5d763ae5b58b8b7f867f49111779a28d595e138dba97d5421faede"
+    },
+    "results/experiment_7348_v645_plan_capture.json": {
+      "available": true,
+      "sha256": "sha256:07250c839788e91df711dd7f1b9deacfcad72704fa017d536306c3058e1b6131"
+    },
+    "results/experiment_7351_v645_acquisition_prototype.json": {
+      "available": true,
+      "sha256": "sha256:16c088af90cd5423fd46631314877b1cbfced1dda3e6f6b8a2e8dca890acb5d7"
+    },
+    "results/experiment_7354_v645_arc_transfer.json": {
+      "available": true,
+      "sha256": "sha256:5e279e6dee55a95ab0a7d22d06e27362c1139fec210fa22e3e97515a1aa97815"
+    },
+    "results/experiment_7355_v645_board_state.json": {
+      "available": true,
+      "sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a"
+    },
+    "scripts/experiments/experiment_7356_v645_capstone.py": {
+      "available": true,
+      "sha256": "sha256:43f6fbcca558d656ad7e2dae3f6ae4c40a9de4e0cc07689bb5c3bc70db72a2be"
+    },
+    "tests/python/test_experiment_7356_v645_capstone.py": {
+      "available": true,
+      "sha256": "sha256:150b87a6ddc6c904d1f698ad7ed534c0785ea4e5042f221a47238ada97efdf63"
+    }
+  }
+}

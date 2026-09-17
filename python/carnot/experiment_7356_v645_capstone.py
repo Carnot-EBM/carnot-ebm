@@ -33,7 +33,7 @@ JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MILESTONE = "2026.09.645"
-RUN_DATE = "20260916"
+RUN_DATE = "20260917"
 RANDOM_SEED = {
     "development": 7_356_202_609_16,
     "evaluation": 7_356_202_609_17,
@@ -139,7 +139,7 @@ CANONICAL_BLOCK_SPECS: dict[str, JsonDict] = {
 FIELD_PRINCIPLES: dict[str, str] = {
     "schema": "Version the record and retain ordinary top-level experiment_id and milestone.",
     "status": "Write a terminal result only after actual work and affected checks.",
-    "run_date": "Use 20260916; record real UTC timestamps as well.",
+    "run_date": "Use 20260917; record real UTC timestamps as well.",
     "preconditions_checked": "Record each actual input/resource check before dependent work.",
     "MODEL_SPECS": "List actual intended model identities; LLM tasks include unsloth/Qwen3.8-27B-GGUF.",
     "model_invoked": "True for any attempted current model load or generation, including failures.",

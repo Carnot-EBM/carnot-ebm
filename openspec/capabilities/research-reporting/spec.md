@@ -71764,6 +71764,8 @@ Exp7356 SHALL invoke no model. It SHALL declare `MODEL_SPECS=[]`,
 `model_invoked=false`, zero invocation counts,
 `inference_substrate=aggregation_from_upstream_artifacts`,
 `inference_substrate_class=aggregation`, and `execution_venue=host`.
+The terminal artifact SHALL use `run_date=20260917`. It SHALL also retain the
+real UTC start and completion timestamps for the actual run.
 
 The workflow SHALL use the Exp7303 scoped runner with the exact Exp7356 test,
 module, and thin entrypoint. It SHALL require worktree imports, focused pytest,
