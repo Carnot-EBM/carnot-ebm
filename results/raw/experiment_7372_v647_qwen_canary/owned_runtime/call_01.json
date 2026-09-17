@@ -1,0 +1,338 @@
+{
+  "attempted": true,
+  "call_index": 1,
+  "censored": false,
+  "completion_tokens": 12,
+  "decoded_plan": null,
+  "error": null,
+  "finish_reason": "stop",
+  "latency_s": 0.6639936731662601,
+  "max_generated_tokens": 128,
+  "parse_errors": [
+    "top_level_fields"
+  ],
+  "parse_status": "invalid",
+  "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+  "prompt_sha256": "sha256:68e1f1f48197523ef7b74c5588562530bccccc669af2051ce5d4e26e67d1b401",
+  "prompt_tokens": 242,
+  "public_request": {
+    "call_index": 1,
+    "cohort": "development_canary",
+    "family": "contradiction_cycle_balanced",
+    "formula": {
+      "clauses": [
+        {
+          "clause_id": 0,
+          "literals": [
+            1,
+            -12
+          ]
+        },
+        {
+          "clause_id": 1,
+          "literals": [
+            -1,
+            3
+          ]
+        },
+        {
+          "clause_id": 2,
+          "literals": [
+            -1,
+            12
+          ]
+        },
+        {
+          "clause_id": 3,
+          "literals": [
+            2,
+            -11
+          ]
+        },
+        {
+          "clause_id": 4,
+          "literals": [
+            -2,
+            12
+          ]
+        },
+        {
+          "clause_id": 5,
+          "literals": [
+            -3,
+            4
+          ]
+        },
+        {
+          "clause_id": 6,
+          "literals": [
+            -4,
+            5
+          ]
+        },
+        {
+          "clause_id": 7,
+          "literals": [
+            -5,
+            6
+          ]
+        },
+        {
+          "clause_id": 8,
+          "literals": [
+            -6,
+            7
+          ]
+        },
+        {
+          "clause_id": 9,
+          "literals": [
+            -7,
+            8
+          ]
+        },
+        {
+          "clause_id": 10,
+          "literals": [
+            -8,
+            9
+          ]
+        },
+        {
+          "clause_id": 11,
+          "literals": [
+            -9,
+            10
+          ]
+        },
+        {
+          "clause_id": 12,
+          "literals": [
+            -10,
+            11
+          ]
+        }
+      ],
+      "n_vars": 12,
+      "raw_clause_order": [
+        [
+          -1,
+          3
+        ],
+        [
+          -3,
+          4
+        ],
+        [
+          -4,
+          5
+        ],
+        [
+          -5,
+          6
+        ],
+        [
+          -6,
+          7
+        ],
+        [
+          -7,
+          8
+        ],
+        [
+          -8,
+          9
+        ],
+        [
+          -9,
+          10
+        ],
+        [
+          -10,
+          11
+        ],
+        [
+          -11,
+          2
+        ],
+        [
+          -2,
+          12
+        ],
+        [
+          -12,
+          1
+        ],
+        [
+          12,
+          -1
+        ]
+      ],
+      "rule_provenance": {
+        "family": "contradiction_cycle_balanced",
+        "paper": "arXiv:2602.12665",
+        "seed": 1,
+        "version": 1
+      },
+      "source_hash": "sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977",
+      "version": "dev-contradiction_cycle_balanced-1-v1"
+    },
+    "formula_id": "dev-contradiction_cycle_balanced-1",
+    "n_vars": 12,
+    "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+    "request_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1"
+  },
+  "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+  "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"assignments\":[1,-2,3,-4]}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789674368,
+    "id": "chatcmpl-tO4U2dYUab8yVsQDhga5ZWQOqX4i0UKu",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 273.675,
+      "predicted_n": 12,
+      "predicted_per_second": 43.84762948753083,
+      "predicted_per_token_ms": 22.806250000000002,
+      "prompt_ms": 285.244,
+      "prompt_n": 242,
+      "prompt_per_second": 848.3964605741049,
+      "prompt_per_token_ms": 1.178694214876033
+    },
+    "usage": {
+      "completion_tokens": 12,
+      "prompt_tokens": 242,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 254
+    }
+  },
+  "request_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "50927",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 2724905,
+      "start_time_ticks": 196603919
+    },
+    "pid": 2724968,
+    "ppid": 2724905,
+    "process_group_id": 2724968,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789674367,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "session_id": 2724968,
+    "start_time_ticks": 196604111,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "terminal_state": "response"
+}

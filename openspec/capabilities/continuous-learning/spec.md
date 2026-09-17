@@ -17405,6 +17405,104 @@ test applies. It SHALL write the terminal result atomically.
 |---|---|---|
 | REQ-CL-7371 and SCENARIO-CL-7371-* | Planned: `python/carnot/experiment_7371_v647_proof_boundary.py` with a thin executable entrypoint. | Planned: `tests/python/test_experiment_7371_v647_proof_boundary.py`. |
 
+## REQ-CL-7372: Bounded Qwen Assignment Transport Canary
+
+Carnot SHALL run four sealed development formulas from Exp7371 through one
+owned `unsloth/Qwen3.8-27B-GGUF` instance. Each prompt SHALL include the exact
+2-CNF formula and request one JSON object with an `assignments` list. The list
+SHALL contain two to four distinct, nonzero signed integer literals. Each
+literal's absolute variable number SHALL be within the formula's variable
+count. This is an unrestricted partial assignment. It SHALL not use a finite
+answer label, an answer ID, grammar-constrained decoding, repair, or retry.
+
+The run SHALL use one fixed decoding configuration and at most 128 generated
+tokens per call. It SHALL use the native GGUF tokenizer and chat template. It
+SHALL record the exact GGUF hash, quantization, server executable hash, process
+ID and start tick, owned lease, CUDA device, and native offload evidence. It
+SHALL observe GPU availability without stopping or moving another process.
+Any attempted current model load or generation SHALL count as a current
+invocation, including a failed attempt.
+
+The parser SHALL retain exact request bytes, response bytes, asserted literals,
+finish reason, truncation state, token counts, timing, error, and terminal
+disposition for every call. It SHALL not replace an invalid response. Schema,
+variable range, distinct-variable consistency, and response fidelity SHALL be
+separate checks. Formula extendibility SHALL be a separate mathematical result
+and SHALL not control transport readiness.
+
+`qwen_assignment_transport_ready_score` SHALL equal one only when the owned
+model load completes, all four calls have terminal owned-runtime dispositions,
+and at least three proposals pass schema, variable, and response-fidelity
+checks. A parser failure is a completed transport disposition. A failed,
+cancelled, or in-flight call prevents readiness. A null transport result SHALL
+stop later generation work. `promotion_score` SHALL remain zero.
+
+Exp7372 SHALL reject a missing, blocked, partial, quarantined, disqualified, or
+adversarial Exp7371 producer. It SHALL require
+`proof_boundary_ready_score=1`, an eligible terminal class, and
+`flagged_adversarial=false` before model work. A failed prerequisite SHALL
+write one terminal `blocked_*` artifact with the exact failed field, expected
+value, and observed value.
+
+The terminal artifact SHALL use milestone `2026.09.647`, phase 2, and run date
+`20260917`. It SHALL declare
+`inference_substrate_class=model_bounded_generation` for an attempted live run.
+The actual generation window SHALL last at least 10 seconds without artificial
+delay. It SHALL preserve measured phase spans, invocation counters, the four
+raw call rows, runner and GPU receipts, source hashes, acceptance gates, and all
+required principle annotations. Scientific value and promotion SHALL remain
+zero because this task qualifies transport only.
+
+The workflow SHALL derive the affected command plan from Exp7358 and execute it
+through Exp7303. It SHALL run worktree imports, focused serial pytest with
+cleared addopts, separate 100 percent changed-module coverage, scoped Ruff check
+and format, changed-module mypy, and exact-test specification coverage. The
+declared entrypoint and a cold artifact replay are the capability-level end-to-
+end checks. It SHALL also run independent raw-evidence reduction, adversarial
+verification, and strict row consistency before one atomic terminal write. No
+numbered E2E test applies.
+
+### SCENARIO-CL-7372-PARSER: Exact JSON Preserves Unrestricted Assignments
+
+- GIVEN a raw model response and its sealed formula
+- WHEN the assignment parser checks the response
+- THEN it accepts only one exact JSON object with two to four legal literals
+- AND duplicate variables, zero, out-of-range values, booleans, extra fields, markdown, and repaired text remain invalid.
+
+### SCENARIO-CL-7372-TRANSPORT: Mathematical Validity Does Not Define Transport
+
+- GIVEN four complete owned-runtime responses and at least three usable proposals
+- WHEN one usable partial assignment is not extendible to a satisfying assignment
+- THEN `qwen_assignment_transport_ready_score` remains one
+- AND formula validity remains visible as a separate row result.
+
+### SCENARIO-CL-7372-RUNTIME: One Native Instance Owns Every Call
+
+- GIVEN the cached Qwen3.8 Q4_K_M GGUF and an available CUDA device
+- WHEN the bounded canary runs
+- THEN all four rows bind to one owned PID, start tick, lease, GGUF hash, server hash, and device
+- AND no simulated fallback, second model instance, repair call, or retry is counted.
+
+### SCENARIO-CL-7372-GATE: Ineligible Proof Evidence Stops Model Work
+
+- GIVEN the exact Exp7371 artifact
+- WHEN readiness, class, adversarial, quarantine, identity, or terminal checks fail
+- THEN the run writes a terminal blocked artifact with zero current invocations
+- AND the gate summary records the failed path, field, expected value, and observed value.
+
+### SCENARIO-CL-7372-ARTIFACT: Cold Replay Controls The Terminal Score
+
+- GIVEN four raw call files, the runner receipt, source hashes, and validation receipts
+- WHEN the independent reducer and strict readers reload the candidate
+- THEN they reproduce counts, usability, formula results, score, class, and checksum
+- AND any changed response, literal, identity, gate, or hash fails validation.
+
+## Implementation Status (REQ-CL-7372)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7372 and SCENARIO-CL-7372-* | Implemented: `python/carnot/experiment_7372_v647_qwen_canary.py` with a thin executable entrypoint. | Verified by focused tests and 100 percent changed-module coverage; the entrypoint records scoped checks, cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
+
 ## REQ-CL-7347: Current Local Model Public Plan Canary
 
 Carnot SHALL run four development requests from the qualified V645 executor

@@ -1,0 +1,2798 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": {
+    "adversarial_clear": {
+      "expected": false,
+      "observed": true,
+      "passed": false,
+      "principle": "A current critical independent finding prevents readiness."
+    },
+    "affected_validation": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "Every command in the exact Exp7358 affected plan must pass."
+    },
+    "assignment_transport": {
+      "expected": 1,
+      "observed": 1,
+      "passed": true,
+      "principle": "Formula validity is measured separately and does not define transport."
+    },
+    "bounded_generation_floor": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "The actual bounded model workload must meet its class floor without padding."
+    },
+    "four_owned_runtime_dispositions": {
+      "expected": 4,
+      "observed": 4,
+      "passed": true,
+      "principle": "All four calls must finish on the one owned runtime."
+    },
+    "preconditions": {
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "principle": "All exact producer and resource checks must pass before generation."
+    },
+    "promotion": {
+      "expected": 1,
+      "observed": 0,
+      "passed": false,
+      "principle": "This transport canary never authorizes rollout or publication."
+    },
+    "terminal_validation": {
+      "expected": true,
+      "observed": false,
+      "passed": false,
+      "principle": "Cold replay, independent reduction, and both strict readers must pass."
+    },
+    "usable_assignment_proposals": {
+      "expected": 3,
+      "observed": 4,
+      "passed": false,
+      "principle": "At least three responses must pass schema, variable, and fidelity checks."
+    }
+  },
+  "active_research_roadmap_changed": false,
+  "capability_e2e_checks": [
+    "declared_entrypoint",
+    "cold_artifact_replay"
+  ],
+  "complete_owned_runtime_disposition_count": 4,
+  "completed_at_utc": "2026-09-17T19:46:20.146192Z",
+  "duration_s": 40.696793,
+  "execution_venue": {
+    "board_execution": false,
+    "cuda_device_index": 1,
+    "cuda_device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "host": "icbfl1"
+  },
+  "experiment_id": "exp7372-v647-qwen-canary",
+  "field_principles": {
+    "MODEL_SPECS": "Name only unsloth/Qwen3.8-27B-GGUF and its exact cached settings.",
+    "acceptance_gate_results": "Keep expected, observed, and passed values separate for every gate.",
+    "duration_s": "Measure monotonic duration and never add sleeps to satisfy a class floor.",
+    "execution_venue": "Record the measured host CUDA device; make no board-execution claim.",
+    "field_principles": "Explain required fields without wrapping ordinary dictionaries or numeric scores.",
+    "flagged_adversarial": "Set true only for a current critical independent finding.",
+    "gate_check_summary": "Name the first failed check, upstream, field, expected value, and observed value.",
+    "honest_verdict": "Use complete_ for finished work and blocked_ for an unavailable prerequisite.",
+    "inference_substrate": "Record actual owned native CUDA work and label historical evidence separately.",
+    "inference_substrate_class": "Use the closed class that matches actual bounded generation without padding.",
+    "invocation_counts": "Separate attempted, complete, failed, cancelled, and in-flight model operations.",
+    "model_invoked": "Set true after any current model load or generation attempt, including failure.",
+    "phase_spans": "Retain measured read, build, load, generation, evaluation, validation, and write spans.",
+    "preconditions_checked": "Record exact paths, producer identity, hashes, class, and resources before model work.",
+    "promotion_score": "Keep zero because this canary authorizes no rollout or publication.",
+    "qwen_assignment_transport_ready_score": "Set one only for the fixed owned four-call and three-usable contract.",
+    "random_seed": "Freeze experiment and resampling seeds before outcomes.",
+    "raw_call_rows": "Retain request and response paths, hashes, parsing, finish, token, and timing data.",
+    "repository_health": "Keep unrelated dated failures separate from current affected checks.",
+    "reproducibility_checksum": "Bind code, settings, formulas, protocol, and exact raw rows.",
+    "rows": "Retain every call outcome, metric, cost, failure, and censoring disposition.",
+    "run_date": "Use 20260917 and retain actual UTC start and completion times.",
+    "runner_receipt": "Bind PID, start tick, lease, GGUF, server hash, CUDA device, and offload evidence.",
+    "sample_size_budget": "Predeclare four calls, token limits, stopping rules, and remaining work.",
+    "schema": "Use a versioned schema with ordinary experiment_id and milestone fields.",
+    "source_artifact_hashes": "Hash exact producer, formula, model, server, code, and raw evidence bytes.",
+    "status": "Write a terminal status only after actual work and required validation.",
+    "validation_receipts": "Retain command argv, environment, scope, exit, duration, and log hash for each check.",
+    "verdict_class": "Use only positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "Set true only when the evaluator defines truth; independent code alone is insufficient."
+  },
+  "flagged_adversarial": true,
+  "formula_valid_proposal_count": 0,
+  "gate_check_summary": {
+    "artifact_field": "acceptance_gate_results",
+    "check_count": 44,
+    "expected_value": 3,
+    "failed_check": "usable_assignment_proposals",
+    "failed_check_count": 3,
+    "observed_value": 4,
+    "passed": false,
+    "upstream": "exp7372-v647-qwen-canary"
+  },
+  "honest_verdict": "complete_disqualified_internal_artifact_validation_failed",
+  "inference_substrate": "owned_native_cuda_llama_cpp",
+  "inference_substrate_class": "model_bounded_generation",
+  "internal_validation_errors": [
+    "qwen_assignment_transport_ready_score_mismatch"
+  ],
+  "invocation_counts": {
+    "generation_calls_attempted": 4,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 4,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "historical_generation_calls": 0,
+    "historical_model_loads": 0,
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "load_receipt": {
+    "attempted": true,
+    "cancelled": false,
+    "completed": true,
+    "error": null,
+    "failed": false,
+    "in_flight": false
+  },
+  "milestone": "2026.09.647",
+  "model_invoked": true,
+  "model_settings": {
+    "bytes": 17106775008,
+    "chat_template_sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "decoding": {
+      "max_new_tokens": 128,
+      "repair_attempts": 0,
+      "retry_budget": 0,
+      "seed": 7372101,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+    "embedded_tokenizer_loadable": true,
+    "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "quantization": "Q4_K_M",
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "numbered_e2e_applicable": false,
+  "observed_qwen_assignment_transport_ready_score": 1,
+  "phase": 2,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-17T19:45:39.485808Z",
+      "completed_units": 32,
+      "duration_s": 0.036261,
+      "end_elapsed_s": 0.036393,
+      "phase": "read",
+      "start_elapsed_s": 0.000131
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T19:45:40.718777Z",
+      "completed_units": 4,
+      "duration_s": 1.232944,
+      "end_elapsed_s": 1.269366,
+      "phase": "build",
+      "start_elapsed_s": 0.036421
+    },
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/owned_runtime/llama_server_2853297611839229850.log",
+      "completed_units": 1,
+      "duration_s": 26.395263,
+      "end_elapsed_s": 1966067.436765,
+      "phase": "model_load",
+      "start_elapsed_s": 1966041.041502
+    },
+    {
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/owned_runtime",
+      "completed_units": 4,
+      "duration_s": 2.78175,
+      "end_elapsed_s": 1966070.218521,
+      "phase": "generation",
+      "start_elapsed_s": 1966067.436771
+    },
+    {
+      "checkpoint": null,
+      "completed_units": 1,
+      "duration_s": 0.429819,
+      "end_elapsed_s": 1966070.648394,
+      "phase": "cleanup",
+      "start_elapsed_s": 1966070.218575
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T19:46:10.418811Z",
+      "completed_units": 4,
+      "duration_s": 0.002615,
+      "end_elapsed_s": 30.969404,
+      "phase": "evaluate",
+      "start_elapsed_s": 30.966788
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T19:46:20.146160Z",
+      "completed_units": 12,
+      "duration_s": 9.727331,
+      "end_elapsed_s": 40.696749,
+      "phase": "validate",
+      "start_elapsed_s": 30.969418
+    },
+    {
+      "checkpoint_at_utc": "2026-09-17T19:46:20.146197Z",
+      "completed_units": 1,
+      "duration_s": 4e-06,
+      "end_elapsed_s": 40.696794,
+      "phase": "write",
+      "start_elapsed_s": 40.69679
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "check": "run_date",
+      "expected_value": "20260917",
+      "observed_value": "20260917",
+      "passed": true,
+      "upstream": "execution_contract"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:openspec/capabilities/continuous-learning/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7372_v647_qwen_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7372_v647_qwen_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:scripts/experiments/experiment_7372_v647_qwen_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7372_v647_qwen_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:tests/python/test_experiment_7372_v647_qwen_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7372_v647_qwen_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/resolvers/gguf_cache.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/resolvers/gguf_cache.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:python/carnot/experiment_7361_v646_fresh_plan_capture.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7361_v646_fresh_plan_capture.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/experiment_7371_v647_proof_boundary.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/development_formulas.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "check": "driving_requirement",
+      "expected_value": "REQ-CL-7372",
+      "observed_value": "REQ-CL-7372",
+      "passed": true,
+      "upstream": "openspec/capabilities/continuous-learning/spec.md"
+    },
+    {
+      "artifact_field": "path",
+      "check": "producer_path",
+      "expected_value": "readable_nonempty_json_object",
+      "observed_value": "readable_nonempty_json_object",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "sha256",
+      "check": "producer_sha256",
+      "expected_value": "sha256:<64 hex>",
+      "observed_value": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "check": "producer_experiment_id",
+      "expected_value": "exp7371-v647-proof-boundary",
+      "observed_value": "exp7371-v647-proof-boundary",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "milestone",
+      "check": "producer_milestone",
+      "expected_value": "2026.09.647",
+      "observed_value": "2026.09.647",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "proof_boundary_ready_score",
+      "check": "producer_proof_boundary_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "check": "producer_verdict_class",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "null",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "check": "producer_flagged_adversarial",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "status",
+      "check": "producer_status",
+      "expected_value": "complete_*",
+      "observed_value": "complete_proof_boundary_ready_live_capture_not_started",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "quarantined",
+      "check": "producer_quarantined",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "development_formulas_sha256",
+      "check": "producer_development_formulas_sha256",
+      "expected_value": "sha256:e2f5dd66fc7c7385cfd785b121535c8ac104ab62e46d0ae770431d46724bca0b",
+      "observed_value": "sha256:e2f5dd66fc7c7385cfd785b121535c8ac104ab62e46d0ae770431d46724bca0b",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "development_formulas",
+      "check": "four_sealed_development_formulas",
+      "expected_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "observed_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7371_v647_proof_boundary/development_formulas.json"
+    },
+    {
+      "artifact_field": "CARNOT_FORCE_LIVE",
+      "check": "force_live_mode",
+      "expected_value": "1",
+      "observed_value": "1",
+      "passed": true,
+      "upstream": "process_environment"
+    },
+    {
+      "artifact_field": "MODEL_SPECS",
+      "check": "cached_qwen_gguf",
+      "expected_value": {
+        "chat_template": true,
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M",
+        "tokenizer": true
+      },
+      "observed_value": {
+        "chat_template": true,
+        "model": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M",
+        "tokenizer": true
+      },
+      "passed": true,
+      "upstream": "local_huggingface_cache"
+    },
+    {
+      "artifact_field": "runner_receipt",
+      "check": "native_cuda_runner",
+      "expected_value": {
+        "errors": [],
+        "server_sha256": "sha256:<64 hex>"
+      },
+      "observed_value": {
+        "errors": [],
+        "server_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773"
+      },
+      "passed": true,
+      "upstream": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    {
+      "artifact_field": "runner_receipt",
+      "check": "cuda_capacity_without_displacement",
+      "expected_value": {
+        "conflicts": [],
+        "minimum_available_gpu_count": 1,
+        "query_ok": true
+      },
+      "observed_value": {
+        "available_gpu_uuids": [
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "conflicting_lease_ids": [],
+        "conflicts": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "memory_mb": 18030,
+            "pid": 3768859
+          }
+        ],
+        "query_ok": true
+      },
+      "passed": true,
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "qwen_assignment_transport_ready_score": 0,
+  "random_seed": {
+    "experiment": 7372101,
+    "resampling": 7372301
+  },
+  "raw_call_rows": [
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 0,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6236404839437455,
+        "prompt_tokens": 220
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-0",
+      "formula_source_hash": "sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-0-v1",
+      "latency_s": 0.6236404839437455,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 8,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+      "prompt_sha256": "sha256:31f4fc10645b3a3d530dbd63fd629e16bf3a6e22428c352573c4b7a8ca13bbd0",
+      "prompt_tokens": 220,
+      "raw_path": "results/raw/experiment_7372_v647_qwen_canary/call_00.json",
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDFdLFs4LC0xXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjo4LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjpmNzc5YTNiMmQwMWNmNThiYTJhNmEzMTU1OGQ2NDBjNzk5NmIyYzEyMjAwM2RiZDBjODJkMDhlYTNkNTY0ZTQ2XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674367,
+        "id": "chatcmpl-Pqtp1LRzOZh4tbkQeaUPTDYExPBdYIOz",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 280.678,
+          "predicted_n": 12,
+          "predicted_per_second": 42.75361802492536,
+          "predicted_per_token_ms": 23.389833333333332,
+          "prompt_ms": 331.03,
+          "prompt_n": 220,
+          "prompt_per_second": 664.5923330211764,
+          "prompt_per_token_ms": 1.504681818181818
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 220,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 232
+        }
+      },
+      "raw_sha256": "sha256:2db34062aaacf090ef30cff496cfc35a9799d523082a9f4aec85327d6d9bcfbb",
+      "request_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 1,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6639936731662601,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-1",
+      "formula_source_hash": "sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-1-v1",
+      "latency_s": 0.6639936731662601,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+      "prompt_sha256": "sha256:68e1f1f48197523ef7b74c5588562530bccccc669af2051ce5d4e26e67d1b401",
+      "prompt_tokens": 242,
+      "raw_path": "results/raw/experiment_7372_v647_qwen_canary/call_01.json",
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDJdLFstMiwxMl0sWy0xMiwxXSxbMTIsLTFdXSxcImZvcm11bGFfaWRcIjpcImRldi1jb250cmFkaWN0aW9uX2N5Y2xlX2JhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjEyLFwic291cmNlX2hhc2hcIjpcInNoYTI1NjphZDMwOTMwZDFhNmZhZWMxYjVkNWMzOWZmZWE2OTFlOTQ4ODNjZjU0NTg4NTFjMGI4MTE1NmU5MWQ2Y2QwOTc3XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0xLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674368,
+        "id": "chatcmpl-tO4U2dYUab8yVsQDhga5ZWQOqX4i0UKu",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 273.675,
+          "predicted_n": 12,
+          "predicted_per_second": 43.84762948753083,
+          "predicted_per_token_ms": 22.806250000000002,
+          "prompt_ms": 285.244,
+          "prompt_n": 242,
+          "prompt_per_second": 848.3964605741049,
+          "prompt_per_token_ms": 1.178694214876033
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "raw_sha256": "sha256:ec8cce93fdd10544ed6ec7801c6c5dd9acd09bcd7b748bc3cb383be0eb08e4dd",
+      "request_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 2,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.7314176009967923,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-0",
+      "formula_source_hash": "sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-0-v1",
+      "latency_s": 0.7314176009967923,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+      "prompt_sha256": "sha256:ba4c2fbe010e59c2209d27240524a3a440e16d16aed218d75bffd1a08fa6b0a0",
+      "prompt_tokens": 242,
+      "raw_path": "results/raw/experiment_7372_v647_qwen_canary/call_02.json",
+      "raw_reply": "{\"assignments\":[1,-2,3,4]}",
+      "raw_reply_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDldLFstOSwxMF0sWy0xMCwxMV0sWy0xMSwxMl0sWy0xMiw2XSxbLTYsMV1dLFwiZm9ybXVsYV9pZFwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjoxMixcInNvdXJjZV9oYXNoXCI6XCJzaGEyNTY6YTJkMDJhYTcyZjZmYmE1N2MwMmY4YmJhZTNlMWQ2NmU2MzNjMjY1ZGRmOGI3ZjNlMTlhMDFhMzIzMTRkMDhlMlwiLFwidmVyc2lvblwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674369,
+        "id": "chatcmpl-ARvOfyc15nJ2IXPjTGhRbVOv5o2AmPXp",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 273.475,
+          "predicted_n": 12,
+          "predicted_per_second": 43.87969649876588,
+          "predicted_per_token_ms": 22.789583333333336,
+          "prompt_ms": 285.159,
+          "prompt_n": 242,
+          "prompt_per_second": 848.6493500117479,
+          "prompt_per_token_ms": 1.1783429752066115
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "raw_sha256": "sha256:5e4f0f957291f3b0730263e6c033fe040679214a7aedef67b1caf6bbbe4476b6",
+      "request_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 3,
+      "censored": false,
+      "completion_tokens": 10,
+      "cost": {
+        "completion_tokens": 10,
+        "latency_s": 0.749388654017821,
+        "prompt_tokens": 317
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-1",
+      "formula_source_hash": "sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-1-v1",
+      "latency_s": 0.749388654017821,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 24,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+      "prompt_sha256": "sha256:41de7e1c4c077ad2daac6d3d872ba088f790e98fcb1f7a40326b2476c17a82fd",
+      "prompt_tokens": 317,
+      "raw_path": "results/raw/experiment_7372_v647_qwen_canary/call_03.json",
+      "raw_reply": "{\"assignments\":[1,-2,3]}",
+      "raw_reply_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDEyXSxbLTEyLDEzXSxbLTEzLDE0XSxbLTE0LDE1XSxbLTE1LDE2XSxbLTE2LDE3XSxbLTE3LDE4XSxbLTE4LDE5XSxbLTE5LDIwXSxbLTIwLDIxXSxbLTIxLDIyXSxbLTIyLDIzXSxbLTIzLDJdLFstMiwyNF0sWy0yNCwxMl0sWy0xMiwxXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjI0LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjozMzRjOTZhOTg5NzNiOGExM2Y0YzI4NzA4NDE2MzZhZDQ3MDY1ZGJlNzdiYzMwZjY3NmE4YTAzZjc4MzY4NGFjXCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTEtdjFcIn0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzM3MjEwMSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+      "raw_request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674369,
+        "id": "chatcmpl-8nW9Sq4e5o6Zt5AVOjOTWG2y4x2HckPO",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 231.429,
+          "predicted_n": 10,
+          "predicted_per_second": 43.20979652506816,
+          "predicted_per_token_ms": 23.1429,
+          "prompt_ms": 345.822,
+          "prompt_n": 317,
+          "prompt_per_second": 916.6565458530689,
+          "prompt_per_token_ms": 1.0909211356466877
+        },
+        "usage": {
+          "completion_tokens": 10,
+          "prompt_tokens": 317,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 327
+        }
+      },
+      "raw_sha256": "sha256:b9682672e0593b4510cdb771c7c716d1e5f4ab0c84d7d9cdbf4025762f538ef8",
+      "request_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    }
+  ],
+  "repository_health": {
+    "affected_reduction": {
+      "duplicate_required_commands": [],
+      "expected_import_count": 1,
+      "failed_required_commands": [],
+      "installed_imports": [],
+      "missing_required_commands": [],
+      "observed_import_count": 1,
+      "passed": true,
+      "plan_errors": [],
+      "required_checks_passed": true
+    },
+    "affects_required_checks": false,
+    "historical_failures": [],
+    "status": "healthy"
+  },
+  "reproducibility_checksum": "sha256:b2e877752dbbee65ed6701955f1992a042e19d41a3a114c9809c212763dd1a1a",
+  "research_conductor_changed": false,
+  "rows": [
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 0,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6236404839437455,
+        "prompt_tokens": 220
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-0",
+      "formula_source_hash": "sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-0-v1",
+      "latency_s": 0.6236404839437455,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 8,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+      "prompt_sha256": "sha256:31f4fc10645b3a3d530dbd63fd629e16bf3a6e22428c352573c4b7a8ca13bbd0",
+      "prompt_tokens": 220,
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDFdLFs4LC0xXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjo4LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjpmNzc5YTNiMmQwMWNmNThiYTJhNmEzMTU1OGQ2NDBjNzk5NmIyYzEyMjAwM2RiZDBjODJkMDhlYTNkNTY0ZTQ2XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674367,
+        "id": "chatcmpl-Pqtp1LRzOZh4tbkQeaUPTDYExPBdYIOz",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 280.678,
+          "predicted_n": 12,
+          "predicted_per_second": 42.75361802492536,
+          "predicted_per_token_ms": 23.389833333333332,
+          "prompt_ms": 331.03,
+          "prompt_n": 220,
+          "prompt_per_second": 664.5923330211764,
+          "prompt_per_token_ms": 1.504681818181818
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 220,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 232
+        }
+      },
+      "request_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 1,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6639936731662601,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-1",
+      "formula_source_hash": "sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-1-v1",
+      "latency_s": 0.6639936731662601,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+      "prompt_sha256": "sha256:68e1f1f48197523ef7b74c5588562530bccccc669af2051ce5d4e26e67d1b401",
+      "prompt_tokens": 242,
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDJdLFstMiwxMl0sWy0xMiwxXSxbMTIsLTFdXSxcImZvcm11bGFfaWRcIjpcImRldi1jb250cmFkaWN0aW9uX2N5Y2xlX2JhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjEyLFwic291cmNlX2hhc2hcIjpcInNoYTI1NjphZDMwOTMwZDFhNmZhZWMxYjVkNWMzOWZmZWE2OTFlOTQ4ODNjZjU0NTg4NTFjMGI4MTE1NmU5MWQ2Y2QwOTc3XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0xLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674368,
+        "id": "chatcmpl-tO4U2dYUab8yVsQDhga5ZWQOqX4i0UKu",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 273.675,
+          "predicted_n": 12,
+          "predicted_per_second": 43.84762948753083,
+          "predicted_per_token_ms": 22.806250000000002,
+          "prompt_ms": 285.244,
+          "prompt_n": 242,
+          "prompt_per_second": 848.3964605741049,
+          "prompt_per_token_ms": 1.178694214876033
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "request_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 2,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.7314176009967923,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-0",
+      "formula_source_hash": "sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-0-v1",
+      "latency_s": 0.7314176009967923,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+      "prompt_sha256": "sha256:ba4c2fbe010e59c2209d27240524a3a440e16d16aed218d75bffd1a08fa6b0a0",
+      "prompt_tokens": 242,
+      "raw_reply": "{\"assignments\":[1,-2,3,4]}",
+      "raw_reply_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDldLFstOSwxMF0sWy0xMCwxMV0sWy0xMSwxMl0sWy0xMiw2XSxbLTYsMV1dLFwiZm9ybXVsYV9pZFwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjoxMixcInNvdXJjZV9oYXNoXCI6XCJzaGEyNTY6YTJkMDJhYTcyZjZmYmE1N2MwMmY4YmJhZTNlMWQ2NmU2MzNjMjY1ZGRmOGI3ZjNlMTlhMDFhMzIzMTRkMDhlMlwiLFwidmVyc2lvblwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674369,
+        "id": "chatcmpl-ARvOfyc15nJ2IXPjTGhRbVOv5o2AmPXp",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 273.475,
+          "predicted_n": 12,
+          "predicted_per_second": 43.87969649876588,
+          "predicted_per_token_ms": 22.789583333333336,
+          "prompt_ms": 285.159,
+          "prompt_n": 242,
+          "prompt_per_second": 848.6493500117479,
+          "prompt_per_token_ms": 1.1783429752066115
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "request_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 3,
+      "censored": false,
+      "completion_tokens": 10,
+      "cost": {
+        "completion_tokens": 10,
+        "latency_s": 0.749388654017821,
+        "prompt_tokens": 317
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-1",
+      "formula_source_hash": "sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-1-v1",
+      "latency_s": 0.749388654017821,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 24,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+      "prompt_sha256": "sha256:41de7e1c4c077ad2daac6d3d872ba088f790e98fcb1f7a40326b2476c17a82fd",
+      "prompt_tokens": 317,
+      "raw_reply": "{\"assignments\":[1,-2,3]}",
+      "raw_reply_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDEyXSxbLTEyLDEzXSxbLTEzLDE0XSxbLTE0LDE1XSxbLTE1LDE2XSxbLTE2LDE3XSxbLTE3LDE4XSxbLTE4LDE5XSxbLTE5LDIwXSxbLTIwLDIxXSxbLTIxLDIyXSxbLTIyLDIzXSxbLTIzLDJdLFstMiwyNF0sWy0yNCwxMl0sWy0xMiwxXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjI0LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjozMzRjOTZhOTg5NzNiOGExM2Y0YzI4NzA4NDE2MzZhZDQ3MDY1ZGJlNzdiYzMwZjY3NmE4YTAzZjc4MzY4NGFjXCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTEtdjFcIn0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzM3MjEwMSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+      "raw_request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789674369,
+        "id": "chatcmpl-8nW9Sq4e5o6Zt5AVOjOTWG2y4x2HckPO",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 231.429,
+          "predicted_n": 10,
+          "predicted_per_second": 43.20979652506816,
+          "predicted_per_token_ms": 23.1429,
+          "prompt_ms": 345.822,
+          "prompt_n": 317,
+          "prompt_per_second": 916.6565458530689,
+          "prompt_per_token_ms": 1.0909211356466877
+        },
+        "usage": {
+          "completion_tokens": 10,
+          "prompt_tokens": 317,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 327
+        }
+      },
+      "request_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "50927",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 2724905,
+          "start_time_ticks": 196603919
+        },
+        "pid": 2724968,
+        "ppid": 2724905,
+        "process_group_id": 2724968,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789674367,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 2724968,
+        "start_time_ticks": 196604111,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    }
+  ],
+  "run_date": "20260917",
+  "runner_receipt": {
+    "cleanup": {
+      "action": "terminated",
+      "bounded": true,
+      "leak_free": true,
+      "signals_sent": [
+        {
+          "signal": "SIGTERM",
+          "target": "process_group"
+        }
+      ],
+      "unrelated_process_kill_count_delta": 0,
+      "wait_status": "exited_zombie"
+    },
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "50927",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_provenance": {
+      "cuda_log_evidence": true,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "logged_layer_receipt": null,
+      "owned_compute_apps": [
+        {
+          "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 50927 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "owned_by_task": true,
+          "pid": 2724968,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 16340
+        }
+      ],
+      "provenance_ok": true,
+      "server_pid": 2724968,
+      "server_pid_start_ticks": 196604111,
+      "task_owned_vram_mb": 16340
+    },
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+    "lease_release": {
+      "checksum": "sha256:591d1eea57e420761664ebc9f595edc5e54716f6ff56c8bd4780c7bc955dc87f",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+      "phase": "terminal_complete",
+      "pid": 2724905,
+      "pid_start_ticks": 196603919,
+      "released": true,
+      "signals_sent": []
+    },
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 2724905,
+      "start_time_ticks": 196603919
+    },
+    "pid": 2724968,
+    "ppid": 2724905,
+    "process_group_id": 2724968,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789674367,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "session_id": 2724968,
+    "single_model_instance": true,
+    "start_time_ticks": 196604111,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "runtime_identity_consistent": true,
+  "sample_size_budget": {
+    "attempted_units": 4,
+    "censored_units": 0,
+    "completed_units": 4,
+    "inference_window_timeout_s": 900.0,
+    "max_new_tokens_per_unit": 128,
+    "model_load_timeout_s": 600.0,
+    "planned_units": 4,
+    "remaining_units": 0,
+    "stopping_rule": "four terminal calls or the fixed deadline; no repair, retry, or replacement"
+  },
+  "schema": "carnot.exp7372.v647.qwen_canary.v1",
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/continuous-learning/spec.md": "sha256:1b6af21e3cbe6e762f6a6545637be15479a6896532603642fcefa42867e0e4b0",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7372_v647_qwen_canary.py": "sha256:4a6e11f2c01b3d252169d64c3869fb8a592871632df2b6b4225ddb5f78ee2743",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "python/carnot/resolvers/gguf_cache.py": "sha256:0d62ab0c5c5a3836b1d4a4e39cdac9408554553a2517ab2ff1bfcc7538e3146d",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7371_v647_proof_boundary.json": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+    "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json": "sha256:e2f5dd66fc7c7385cfd785b121535c8ac104ab62e46d0ae770431d46724bca0b",
+    "results/raw/experiment_7372_v647_qwen_canary/call_00.json": "sha256:2db34062aaacf090ef30cff496cfc35a9799d523082a9f4aec85327d6d9bcfbb",
+    "results/raw/experiment_7372_v647_qwen_canary/call_01.json": "sha256:ec8cce93fdd10544ed6ec7801c6c5dd9acd09bcd7b748bc3cb383be0eb08e4dd",
+    "results/raw/experiment_7372_v647_qwen_canary/call_02.json": "sha256:5e4f0f957291f3b0730263e6c033fe040679214a7aedef67b1caf6bbbe4476b6",
+    "results/raw/experiment_7372_v647_qwen_canary/call_03.json": "sha256:b9682672e0593b4510cdb771c7c716d1e5f4ab0c84d7d9cdbf4025762f538ef8",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/experiments/experiment_7372_v647_qwen_canary.py": "sha256:2c5d42f8309035daea832925765c9ebc27ddacebd3d8163cf846ba733333e013",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7372_v647_qwen_canary.py": "sha256:9c71d458101826ee9863578919088bf05afbe2952316b9f47404eb3d1f908575"
+  },
+  "started_at_utc": "2026-09-17T19:45:39.449403Z",
+  "status": "complete_internal_validation_failed",
+  "usable_proposal_count": 4,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7372_v647_qwen_canary",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7372_v647_qwen_canary"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.4634094370994717,
+      "ended_at_utc": "2026-09-17T19:46:10.883216+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:fb5f7b2f766dc1962c76b40861aaa85571df3db73e16c8ddd5e2442fe949c43f",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7372_v647_qwen_canary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7372_v647_qwen_canary.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7372_v647_qwen_canary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7372_v647_qwen_canary.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T19:46:10.419384+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7372-v647-validation/basetemp/focused tests/python/test_experiment_7372_v647_qwen_canary.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7372-v647-validation/basetemp/focused",
+        "tests/python/test_experiment_7372_v647_qwen_canary.py",
+        "-q"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 2.7852767049334943,
+      "ended_at_utc": "2026-09-17T19:46:13.668927+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:e02f6535f1e9ed73ca090163d98a6a8d25ce7a253ee807e280811c8071965a91",
+      "name": "focused_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 1.06s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T19:46:10.883277+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7372-v647-validation/coverage/.coverage '--include=*/experiment_7372_v647_qwen_canary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7372-v647-validation/basetemp/coverage tests/python/test_experiment_7372_v647_qwen_canary.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7372-v647-validation/coverage/.coverage",
+        "--include=*/experiment_7372_v647_qwen_canary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7372-v647-validation/basetemp/coverage",
+        "tests/python/test_experiment_7372_v647_qwen_canary.py",
+        "-q"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 4.70460140099749,
+      "ended_at_utc": "2026-09-17T19:46:18.373812+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:5daffe4797973b0a2c0bbcbccc75977edc8c1e10ceb2b6b9ae28de0a5cf0ccae",
+      "name": "changed_module_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 1.97s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T19:46:13.668956+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7372_v647_qwen_canary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7372_v647_qwen_canary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7372-v647-validation/coverage/.coverage"
+      },
+      "duration_s": 0.10687612509354949,
+      "ended_at_utc": "2026-09-17T19:46:18.481120+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:cfc860a6082f0f0459a0ce27194a903de7263d1b73878fdbf771f07bf9181d4a",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------\npython/carnot/experiment_7372_v647_qwen_canary.py     240      0   100%\n---------------------------------------------------------------------------------\nTOTAL                                                 240      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T19:46:18.373845+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7372_v647_qwen_canary.py scripts/experiments/experiment_7372_v647_qwen_canary.py tests/python/test_experiment_7372_v647_qwen_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7372_v647_qwen_canary.py",
+        "scripts/experiments/experiment_7372_v647_qwen_canary.py",
+        "tests/python/test_experiment_7372_v647_qwen_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.012565152952447534,
+      "ended_at_utc": "2026-09-17T19:46:18.494159+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T19:46:18.481176+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7372_v647_qwen_canary.py scripts/experiments/experiment_7372_v647_qwen_canary.py tests/python/test_experiment_7372_v647_qwen_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7372_v647_qwen_canary.py",
+        "scripts/experiments/experiment_7372_v647_qwen_canary.py",
+        "tests/python/test_experiment_7372_v647_qwen_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.010140309110283852,
+      "ended_at_utc": "2026-09-17T19:46:18.504825+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T19:46:18.494200+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7372_v647_qwen_canary.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7372_v647_qwen_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.09695442486554384,
+      "ended_at_utc": "2026-09-17T19:46:18.602133+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T19:46:18.504873+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7372_v647_qwen_canary.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7372_v647_qwen_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.02336593298241496,
+      "ended_at_utc": "2026-09-17T19:46:18.625736+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T19:46:18.602161+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7372_v647_qwen_canary.py --date 20260917 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7372_v647_qwen_canary.py",
+        "--date",
+        "20260917",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json"
+      ],
+      "duration_s": 0.4534129169769585,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/00_declared_entrypoint_replay.log",
+      "log_sha256": "sha256:fb9750565688799f8220fb8288c050a166dbc3818c1831dfd8444e4e85e47269",
+      "name": "declared_entrypoint_replay",
+      "output_tail": "[exp7372] phase=entrypoint event=start date=20260917\n{\"errors\":[]}\n",
+      "passed": true,
+      "scope": "candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib;from carnot.experiment_7372_v647_qwen_canary import independent_reduce_artifact;v=json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json'\"'\"').read_text());e=independent_reduce_artifact(v);print(e,flush=True);raise SystemExit(bool(e))'",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib;from carnot.experiment_7372_v647_qwen_canary import independent_reduce_artifact;v=json.loads(pathlib.Path('/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json').read_text());e=independent_reduce_artifact(v);print(e,flush=True);raise SystemExit(bool(e))"
+      ],
+      "duration_s": 0.47500869701616466,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/01_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "output_tail": "[]\n",
+      "passed": true,
+      "scope": "candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json"
+      ],
+      "duration_s": 0.5546580899972469,
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/02_adversarial_verify.log",
+      "log_sha256": "sha256:9eaccdfa4602f63c6fe4e75d425c012b760eb9d22d47a6703b061bf39055fb0b",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] expexp7372-v647-qwen-canary () -- 2 flag(s)\n  - CRITICAL EXECUTION_VENUE_INVALID        execution_venue={'board_execution': False, 'cuda_device_index': 1, 'cuda_device_uuid': 'GPU-7971baff-9583-eaa6-2292-393f930a28f9', 'host': 'icbfl1'} is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate.\n  - CRITICAL VERDICT_CLASS_MISMATCH         verdict_class=positive but verifier_is_oracle=True: a circular (verifier==oracle) result must declare circular_positive so the circularity travels WITH the claim into capstones and headline aggregation. See CLAUDE.md 'Circularity / Oracle-Distinctness Discipline'.\n\n",
+      "passed": false,
+      "scope": "candidate",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json"
+      ],
+      "duration_s": 0.025545825948938727,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/03_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "candidate",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}
