@@ -306,6 +306,38 @@ class TestCallCodex:
             ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
         assert ok is False
 
+    def test_real_error_text_after_the_banner_is_not_truncated_away(self) -> None:
+        """2026-09-17 correction: a real codex startup banner is close to 200
+        chars on its own, so the old `stderr[:200]` slice never reached the
+        actual error -- every logged failure reason was just the banner. This
+        reproduces that exact shape (banner, then the real error) and asserts
+        the error text survives."""
+        banner = (
+            "OpenAI Codex v0.153.4\n--------\nworkdir: /tmp/autoresearch-codex-abc123\n"
+            "model: gpt-6-astra\nprovider: openai\napproval: never\n"
+            "sandbox: danger-full-access\nreasoning effort: xhigh\n"
+            "reasoning summaries: none\n--------\n"
+        )
+        assert len(banner) > 190  # confirms the banner alone used to exhaust the old cap
+        real_error = "stream error: rate limit exceeded, retry after 42s"
+
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr=banner + real_error)
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
+        assert ok is False
+        assert real_error in out
+
+    def test_falls_back_to_stdout_when_stderr_is_empty(self) -> None:
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 1, stdout="fatal: bad config", stderr="")
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_codex("hello", "gpt-6-astra", 60)
+        assert ok is False
+        assert "fatal: bad config" in out
+
 
 class TestCodexGenerateHypotheses:
     def test_extracts_hypotheses_from_a_real_shaped_response(self) -> None:
@@ -373,6 +405,20 @@ class TestCallFable:
         with patch.object(acr.subprocess, "run", side_effect=fake_run):
             ok, out = acr.call_fable("hello", 60)
         assert ok is False
+
+    def test_long_error_text_is_not_truncated_away(self) -> None:
+        """Same fix as call_codex's identical correction -- not currently
+        reproducing a real observed failure (fable has not failed this
+        session), but the sibling function must not regress the same way."""
+        long_error = "x" * 300 + "REAL ERROR TAIL"
+
+        def fake_run(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr=long_error)
+
+        with patch.object(acr.subprocess, "run", side_effect=fake_run):
+            ok, out = acr.call_fable("hello", 60)
+        assert ok is False
+        assert "REAL ERROR TAIL" in out
 
 
 class TestGenerateHypothesesWithFallback:

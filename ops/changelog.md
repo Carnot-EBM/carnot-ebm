@@ -20032,3 +20032,19 @@ timed alternative is available.
 - 2026-09-16: Record GateMate changed-state prerequisites and graduated board evidence (⚠️ Blocked) — honest_verdict=blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three authenticated dispositions are complete, but hardware readiness, value, and promotion remain zero; zero hardware or external operations were issued; results/experiment_7355_v645_board_state.json
 - 2026-09-17: Reconcile fourteen outcomes and decide bounded next research steps (⚠️ Blocked) — honest_verdict=blocked_exp7348_plan_capture: all fourteen dispositions are represented; required V645 science is unavailable while the expected GateMate block remains independent; results/experiment_7356_v645_capstone.json
 - 2026-09-17: Added the milestone 2026.09.645 operational retrospective. Nine compute-bound experiments completed in 146.8 minutes. The bounded constraint-elimination prototype was the longest at 69.0 minutes, followed by tasks at 35.3 and 34.68 minutes. The supplied data does not identify their costly phases. The locked compute-task GPU-idle classification is false, and no model-count or runner receipt establishes a missed DualGPURunner dispatch. The next tooling priority is a joined execution receipt with phase checkpoints, task-window GPU telemetry, and model-count, runner, and device metadata. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_09_645.json.
+
+## 2026-09-17 — [outer-loop] Fixed `call_codex`/`call_fable` truncating away the real error
+
+Every logged `codex_call_failed` reason today read `codex exit 1: <startup banner>` and
+nothing else. `scripts/autoresearch_conductor_round.py:call_codex` sliced `stderr` to
+`[:200]` before returning it, and codex's own startup banner (workdir/model/provider/
+approval/sandbox/reasoning lines) is itself close to 200 characters -- so the real error
+text, which always comes after the banner, was silently discarded on every single
+failure this project has ever logged from this path. Live repro of the exact production
+call (same model, flags, isolated scratch dir, real hypothesis prompt) succeeded cleanly,
+confirming codex was never actually "dead" today -- the diagnostic was just blind.
+
+Widened the cap to 4000 chars on both `call_codex` and the sibling `call_fable` (same bug
+class, not yet observed there but not proven absent either), added a stdout fallback when
+stderr is empty, and added regression tests reproducing the exact banner-then-error shape.
+4 new/updated tests, 64/64 passing, ruff/mypy clean.

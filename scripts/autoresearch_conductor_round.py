@@ -504,7 +504,16 @@ def call_codex(prompt: str, model: str, timeout: int) -> tuple[bool, str]:
                 cwd=scratch_dir,
             )
         if proc.returncode != 0:
-            return False, f"codex exit {proc.returncode}: {proc.stderr[:200]}"
+            # CORRECTION (2026-09-17): this used to slice stderr to [:200]. codex's
+            # own startup banner (workdir/model/provider/approval/sandbox/reasoning
+            # lines) is itself close to 200 chars, so every failure reason this
+            # project has ever logged was just that banner -- the real error text,
+            # which always comes AFTER the banner, was silently truncated away.
+            # Every "codex_call_failed" reason recorded before this fix told nobody
+            # what actually went wrong. 4000 chars comfortably clears the banner and
+            # still bounds the receipt.
+            detail = proc.stderr.strip() or proc.stdout.strip()
+            return False, f"codex exit {proc.returncode}: {detail[:4000]}"
         return True, proc.stdout
     except (subprocess.TimeoutExpired, OSError) as exc:
         return False, str(exc)
@@ -558,7 +567,12 @@ def call_fable(prompt: str, timeout: int) -> tuple[bool, str]:
             cwd=PROJECT_ROOT,
         )
         if proc.returncode != 0:
-            return False, f"claude exit {proc.returncode}: {proc.stderr[:200]}"
+            # Same fix as call_codex above (2026-09-17) -- do not re-truncate to
+            # [:200] here even though `claude --print` has no startup banner to
+            # exhaust it today; the sibling function silently losing its real
+            # error text is exactly the failure this correction exists to prevent.
+            detail = proc.stderr.strip() or proc.stdout.strip()
+            return False, f"claude exit {proc.returncode}: {detail[:4000]}"
         return True, proc.stdout
     except (subprocess.TimeoutExpired, OSError) as exc:
         return False, str(exc)
