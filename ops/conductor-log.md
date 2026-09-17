@@ -18134,3 +18134,6 @@ code |
 | 2026-09-17 19:06 UTC | Prototype versioned implication proofs for later c | OK | cache hit: 95 passed, 1 warning in 8.70s |
 | 2026-09-17 19:29 UTC | Attack proof authority and seal prospective formul | OK | 136 passed, 1 warning in 16.08s |
 | 2026-09-17 19:50 UTC | Qualify bounded Qwen3.8 assignment proposals | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 90 passed, 1 warning in 7.49s |
+| 2026-09-17 19:53 UTC | Capture frozen Qwen3.8 proposals for distinct logi | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7372-qwen-canary.qwen_assignment_transport_ready_score (actual=0 == expected=1) |
+| 2026-09-17 19:55 UTC | Measure continuous learning from certified implica | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7373-proposal-capture, exp7373-proposal-capture, exp7373-proposal-capture) |
+| 2026-09-17 19:55 UTC | Independently reduce proof-memory causality and co | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7374-prospective-memory, exp7374-prospective-memory, exp7374-prospective-memory) |
