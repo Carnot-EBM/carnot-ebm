@@ -18119,3 +18119,4 @@ code |
 | 2026-09-17 06:01 UTC | Capture Qwen3.8 proposals with separate source-fid | OK | 89 passed, 1 warning in 7.91s |
 | 2026-09-17 07:24 UTC | Measure continuous structural learning on later di | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: 2-TERMINAL: ev |
 | 2026-09-17 08:38 UTC | Measure continuous structural learning on later di | OK | cache hit: 99 passed, 1 warning in 7.58s |
+| 2026-09-17 08:41 UTC | Independently adjudicate structural-learning evide | GATE_BLOCK | gate-unsat(final): 2 of 3 gate(s) failed; first failure: exp7362-prospective-learning.learning_capture_complete_score (actual=0 == expected=1) |
