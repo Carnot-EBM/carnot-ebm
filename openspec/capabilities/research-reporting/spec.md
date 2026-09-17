@@ -72280,3 +72280,98 @@ value, and promotion.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7356 and SCENARIO-REPORT-7356-* | Implemented: Exp7356 aggregation module, thin entrypoint, independent raw reduction sidecar, and terminal artifact | Verified by focused RED-to-green tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V646 board disposition — 2026-09-17
+
+**Status:** Implemented. This task closes board accounting without new hardware work.
+
+### REQ-REPORT-7367: Reconcile board history without promoting it
+
+Exp7367 SHALL authenticate the exact Exp7355 board-state bytes and Exp7340
+native-cost bytes. A missing, quarantined, identity-mismatched, partial, or
+disqualified source SHALL fail closed. The blocked Exp7355 source MAY support
+diagnostic accounting only. It SHALL authorize no readiness, value, or
+promotion.
+
+Exp7367 SHALL emit one row for KV260 fabric execution, PolarFire CPU dispatch,
+and GateMate. Each row SHALL retain its exact historical venue, denominator,
+date, prerequisite, availability class, and next action. KV260 and PolarFire
+SHALL remain graduated history. PolarFire CPU dispatch SHALL not become FPGA
+sampling. The board record SHALL keep `native_tenfold_speed_gate=null`. It
+SHALL not combine inner-kernel timing with complete-boundary service timing.
+
+Exp7367 SHALL use the approved receipt parser only on the approved local
+operator sources. It SHALL accept only a dated, operator-authored GateMate
+cable, port, board, power, JTAG, or DirtyJTAG change after Exp6559. If no such
+receipt exists, `changed_state_receipt` SHALL be null. The result SHALL use
+`blocked_changed_physical_state` and SHALL name the exact failed check in
+`gate_check_summary`. It SHALL issue no USB, SSH, JTAG, FPGA, ROCm, device,
+purchase, or vendor operation.
+
+The wishlist reconciliation SHALL separate owned historical boards, the
+blocked GateMate board, and vendor-announced Extropic Z1 access. The Extropic
+row SHALL cite the current 2026 source status and 2027 early-access target. It
+SHALL state that Carnot owns no Z1 hardware and has no authenticated Z1 route.
+No row SHALL claim new runtime, speed, power, readiness, or availability.
+
+`board_disposition_complete_score` SHALL equal one when all three authenticated
+board rows are accounted for. This is an accounting score only.
+`hardware_ready_score`, `hardware_value_score`, and `promotion_score` SHALL all
+equal zero. A missing external physical-change receipt SHALL use
+`verdict_class=blocked`, not `partial`.
+
+Exp7367 SHALL invoke no model. It SHALL use `MODEL_SPECS=[]`,
+`model_invoked=false`, zero current invocation counts,
+`inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model receipts SHALL stay in a labeled, hash-bound sidecar.
+
+The workflow SHALL use the Exp7303 scoped runner and Exp7358 command-plan
+boundary. It SHALL name the exact Exp7367 test, module, and thin entrypoint. It
+SHALL require worktree imports, focused pytest, 100 percent changed-module
+coverage, scoped Ruff check and format, changed-module mypy, and exact-test
+spec coverage. It SHALL reload the candidate, independently reduce raw rows,
+run adversarial verification, and run strict verdict-row consistency before an
+atomic terminal write. Failed affected validation SHALL produce a
+`disqualified` result with all three scores at zero.
+
+#### SCENARIO-REPORT-7367-SOURCES: Diagnostic sources keep their boundaries
+
+**Given** exact Exp7355 and Exp7340 bytes
+**When** Exp7367 authenticates their identities and terminal states
+**Then** blocked board evidence remains diagnostic and the native null remains complete
+**And** neither source authorizes current hardware readiness or promotion.
+
+#### SCENARIO-REPORT-7367-ROWS: Three boards remain separate
+
+**Given** authenticated historical board rows
+**When** Exp7367 builds the disposition ledger
+**Then** KV260 fabric, PolarFire CPU dispatch, and GateMate have separate rows
+**And** each row retains its venue, denominator, date, prerequisite, availability, and next action.
+
+#### SCENARIO-REPORT-7367-GATEMATE: External absence is terminal
+
+**Given** approved operator sources after Exp6559
+**When** no dated physical-change receipt exists
+**Then** the result is `blocked_changed_physical_state` with an exact gate summary
+**And** no hardware probe or integration operation occurs.
+
+#### SCENARIO-REPORT-7367-WISHLIST: Vendor plans do not become owned hardware
+
+**Given** the dated wishlist and Extropic reference entry
+**When** Exp7367 reconciles device availability
+**Then** Z1 remains vendor-announced early access for 2027 and not Carnot-owned
+**And** graduated and blocked local boards retain their distinct classes.
+
+#### SCENARIO-REPORT-7367-ARTIFACT: A cold replay controls terminal output
+
+**Given** raw board rows, exact source hashes, and current validation receipts
+**When** the independent reducer and terminal validators inspect the candidate
+**Then** changed rows, hashes, gates, classes, scores, or checksums fail
+**And** only the validated terminal document is written atomically.
+
+## Implementation Status (REQ-REPORT-7367)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7367 and SCENARIO-REPORT-7367-* | Implemented: Exp7367 aggregation module, thin entrypoint, sidecars, and terminal artifact | Verified by focused RED-to-green tests and 100% changed-module coverage; the entrypoint records its scoped checks, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |

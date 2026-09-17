@@ -1,0 +1,1642 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "affected_validation": {
+      "expected": "all eight exact scoped checks pass",
+      "observed": true,
+      "passed": true
+    },
+    "board_accounting": {
+      "expected": {
+        "boards": [
+          "KV260",
+          "PolarFire",
+          "GateMate"
+        ],
+        "count": 3
+      },
+      "observed": {
+        "blocked_boards": [
+          "GateMate"
+        ],
+        "boards": [
+          "KV260",
+          "GateMate",
+          "PolarFire"
+        ],
+        "complete": true,
+        "graduated_historical_boards": [
+          "KV260",
+          "PolarFire"
+        ],
+        "row_count": 3
+      },
+      "passed": true
+    },
+    "changed_physical_state": {
+      "expected": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "observed": null,
+      "passed": false
+    },
+    "hardware_safety": {
+      "expected": "zero current hardware and external operations",
+      "observed": 0,
+      "passed": true
+    },
+    "hardware_value": {
+      "expected": "new authenticated board performance measurement",
+      "observed": null,
+      "passed": false
+    },
+    "promotion": {
+      "expected": "qualified current hardware value",
+      "observed": null,
+      "passed": false
+    },
+    "source_authentication": {
+      "expected": "exact authenticated Exp7355, Exp7340, and Exp7358 boundary bytes",
+      "observed": true,
+      "passed": true
+    }
+  },
+  "board_disposition_complete_score": 1,
+  "board_rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 32,
+        "unit": "fabric_samples"
+      },
+      "disposition": "graduated_preserved",
+      "error": null,
+      "evidence_date": "20260915",
+      "exact_next_condition": "none; any future access uses ssh kria only",
+      "execution_venue": "kv260_fpga_fabric",
+      "external_messages_issued": [],
+      "fabric_execution_completed": true,
+      "failed_value": null,
+      "fpga_sampling_claimed": true,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "none; any future access uses ssh kria only",
+      "observed_state": {
+        "median_latency_ms": 0.025465,
+        "programmable_logic_latency_transcript": true,
+        "sample_count": 32,
+        "synthesis_and_overlay_confirmed": true
+      },
+      "observed_venue": "kv260_fpga_fabric",
+      "prerequisite": "authenticated V640 row and fabric evidence hash chain",
+      "prerequisite_check": "authenticated V640 row and fabric evidence hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "processor_class": "fpga_fabric",
+      "procurement_operations_issued": [],
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+          "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+        },
+        {
+          "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+          "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+        }
+      ],
+      "row_sha256": "sha256:39f7b04846de63f2da1b51ed59ead9550c5dbb7935507dda50f75615cdce9ef1",
+      "seed": null,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": true,
+      "accepted_receipt_count": 0,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "board_availability": "attached_not_rechecked",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 0,
+        "unit": "new_hardware_runs"
+      },
+      "disposition": "blocked_changed_physical_state",
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "evidence_date": "20260916",
+      "exact_next_condition": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "execution_venue": "none_read_only",
+      "external_messages_issued": [],
+      "fabric_execution_completed": false,
+      "failed_value": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": false,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260916",
+      "latest_receipt_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "latest_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "metric": false,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_state": "operator_changed_physical_state_receipt_missing",
+      "observed_venue": "none_read_only",
+      "operator_author_evidence": null,
+      "operator_changed_conditions": {},
+      "operator_date_evidence": null,
+      "operator_evidence_hash": null,
+      "operator_source_path": null,
+      "physical_receipt_contract": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "prerequisite": "operator-authored USB/JTAG/cabling/board/power change after Exp6559",
+      "prerequisite_check": "operator-authored USB/JTAG/cabling/board/power change after Exp6559",
+      "present_availability_asserted": false,
+      "preserved_capability": "attached GateMate board; fabric execution not graduated",
+      "processor_class": "unavailable",
+      "procurement_operations_issued": [],
+      "row_sha256": "sha256:45b6d73f7059245feca661d191deede298ef9169a7fb2017d7ed3efaaddcc643",
+      "seed": null,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    },
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 1,
+        "unit": "cpu_dispatches"
+      },
+      "disposition": "graduated_cpu_dispatch_preserved",
+      "error": null,
+      "evidence_date": "20260915",
+      "exact_next_condition": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "execution_venue": "polarfire_linux_cpu",
+      "external_messages_issued": [],
+      "fabric_execution_completed": false,
+      "failed_value": null,
+      "fpga_sampling_claimed": false,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "observed_state": {
+        "binary_sha256": "sha256:756f9e6bb80a1af495a1d37e40356f166f0fc3c50a6bffe9a9af8721b45ac27c",
+        "dispatch_completed": true,
+        "input_hash_matches": true,
+        "input_sha256": "sha256:1afb4db70c81817af732c457a9c2e5653250e4d7e6ccc57232536107a2bf3596",
+        "output_hash_matches": true,
+        "output_sha256": "sha256:220fade2b4c13e1b1a4ba300a5fe81acd7dfe9ec93c4fcb090c7573ed2f3af66",
+        "transport_exit_code": 0,
+        "workload_exit_code": 0
+      },
+      "observed_venue": "polarfire_linux_cpu",
+      "prerequisite": "authenticated V640 row and CPU dispatch hash chain",
+      "prerequisite_check": "authenticated V640 row and CPU dispatch hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "processor_class": "cpu",
+      "procurement_operations_issued": [],
+      "programmable_logic_sampling_observed": false,
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+          "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+        },
+        {
+          "path": "results/experiment_7231_v636_board_continuity.json",
+          "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+        }
+      ],
+      "row_sha256": "sha256:a659c881c068d6aab589d9afaa296140ef9f16ec8657b339da91247eea29d622",
+      "seed": null,
+      "smoke_repeated": false,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": true,
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "changed_state_receipt": null,
+  "completed_at_utc": "2026-09-17T10:13:19.056420+00:00",
+  "device_reconciliation": [
+    {
+      "availability": "historical execution preserved; current reachability not asserted",
+      "class": "owned_graduated_historical",
+      "device": "KV260",
+      "owned_by_carnot": true,
+      "runtime_claimed": false,
+      "source_date": "20260915",
+      "speed_claimed": false
+    },
+    {
+      "availability": "historical CPU dispatch preserved; FPGA sampling not observed",
+      "class": "owned_graduated_historical",
+      "device": "PolarFire",
+      "owned_by_carnot": true,
+      "runtime_claimed": false,
+      "source_date": "20260915",
+      "speed_claimed": false
+    },
+    {
+      "availability": "blocked pending dated operator physical-change receipt",
+      "class": "owned_blocked",
+      "device": "GateMate",
+      "owned_by_carnot": true,
+      "runtime_claimed": false,
+      "source_date": "20260917",
+      "speed_claimed": false
+    },
+    {
+      "authenticated_carnot_route": false,
+      "availability": "vendor early access targeted for 2027",
+      "class": "vendor_announced",
+      "device": "Extropic Z1",
+      "owned_by_carnot": false,
+      "runtime_claimed": false,
+      "source_date": "20260917",
+      "source_path": "research-references.md",
+      "source_statement": "2026-09-17 source status; Z1 Stick and Card early access in 2027",
+      "speed_claimed": false
+    }
+  ],
+  "duplicate_required_commands": [],
+  "duration_s": 0.03719821898266673,
+  "execution_venue": "host",
+  "experiment_id": 7367,
+  "failed_required_commands": [],
+  "field_principles": {
+    "MODEL_SPECS": "List actual intended current models; this aggregation intends none.",
+    "acceptance_gate_results": "Separate validation, safety, value, and promotion outcomes.",
+    "board_disposition_complete_score": "Count three authenticated rows only; do not authorize science.",
+    "board_rows": "Keep three provenance, venue, prerequisite, availability, and action rows.",
+    "changed_state_receipt": "Store dated operator evidence or null after the exact failed check.",
+    "completed_at_utc": "Retain this evidence in its ordinary JSON type.",
+    "device_reconciliation": "Retain this evidence in its ordinary JSON type.",
+    "duplicate_required_commands": "Retain this evidence in its ordinary JSON type.",
+    "duration_s": "Use measured monotonic elapsed time without sleep or synthetic time.",
+    "execution_venue": "Record host CPU work and make no V646 board-execution claim.",
+    "experiment_id": "Retain this evidence in its ordinary JSON type.",
+    "failed_required_commands": "Retain this evidence in its ordinary JSON type.",
+    "field_principles": "Explain fields without wrapping scalar gates or dictionaries.",
+    "flagged_adversarial": "Set true for current critical findings and prevent promotion.",
+    "gate_check_summary": "Name the exact upstream, field, expected value, and observed value.",
+    "hardware_operations": "Retain this evidence in its ordinary JSON type.",
+    "hardware_ready_score": "Remain zero because this task performs no hardware qualification.",
+    "hardware_value_score": "Remain zero because this task measures no new board performance.",
+    "honest_verdict": "Distinguish complete accounting from blocked hardware science.",
+    "host_computation": "Retain this evidence in its ordinary JSON type.",
+    "inference_substrate": "Name actual host aggregation and keep historical inference in sidecars.",
+    "inference_substrate_class": "Use the actual closed duration class without padding.",
+    "invocation_counts": "Separate current call outcomes from labeled historical receipts.",
+    "milestone": "Retain this evidence in its ordinary JSON type.",
+    "missing_required_commands": "Retain this evidence in its ordinary JSON type.",
+    "model_invoked": "Set true for any attempted current model load or generation.",
+    "native_cost_context": "Retain this evidence in its ordinary JSON type.",
+    "native_tenfold_speed_gate": "Retain this evidence in its ordinary JSON type.",
+    "phase": "Retain this evidence in its ordinary JSON type.",
+    "phase_spans": "Retain disjoint measured load, generation, evaluation, validation, and write spans.",
+    "preconditions_checked": "Check exact inputs, resources, and required fields before reduction.",
+    "promotion_score": "Remain zero because history and vendor announcements authorize no claim.",
+    "random_seed": "Use null because deterministic evidence reconciliation does not sample.",
+    "raw_row_reduction": "Retain this evidence in its ordinary JSON type.",
+    "repository_health": "Keep dated unrelated failures separate from affected validation.",
+    "reproducibility_checksum": "Bind code, settings, evaluator, inputs, and raw evidence.",
+    "required_checks_passed": "Retain this evidence in its ordinary JSON type.",
+    "rows": "Retain every board unit, cost boundary, failure, and abstention disposition.",
+    "run_date": "Use 20260917 and retain actual UTC timestamps.",
+    "sample_size_budget": "Freeze planned, attempted, completed, censored units and stopping rules.",
+    "schema": "Version this record and retain ordinary top-level experiment identity.",
+    "source_artifact_hashes": "Hash exact producer paths and preserve their original classes.",
+    "source_artifact_states": "Retain this evidence in its ordinary JSON type.",
+    "started_at_utc": "Retain this evidence in its ordinary JSON type.",
+    "status": "Use a terminal status only after actual work and affected validation.",
+    "task_id": "Retain this evidence in its ordinary JSON type.",
+    "validation_receipts": "Retain exact command, scope, exit, elapsed time, and log hash.",
+    "verdict_class": "Use the closed terminal class; external unchanged absence is blocked.",
+    "verifier_is_oracle": "Disclose that the evaluator defines artifact-format truth."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "required_source_bytes",
+        "expected_value": "all nonempty",
+        "field": "REQUIRED_SOURCE_PATHS",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "openspec/capabilities/research-reporting/spec.md": 4243357,
+          "ops/e2e-test-plan.md": 8502,
+          "ops/exclusion_manifest.yaml": 56173,
+          "python/carnot/experiment_7355_v645_board_state.py": 52194,
+          "python/carnot/experiment_7358_v646_validation_contract.py": 54324,
+          "python/carnot/experiment_7367_v646_board_disposition.py": 48819,
+          "python/carnot/reporting/experiment_7303_validation_scope.py": 13393,
+          "research-hardware-wishlist.md": 29009,
+          "research-program.md": 28560,
+          "research-references.md": 3495233,
+          "results/experiment_7340_v644_native_cost.json": 245894,
+          "results/experiment_7355_v645_board_state.json": 107449,
+          "results/experiment_7358_v646_validation_contract.json": 124510,
+          "results/raw/experiment_7355_v645_board_state/historical_model_receipts.json": 1096,
+          "scripts/experiments/experiment_7367_v646_board_disposition.py": 121,
+          "tests/python/test_experiment_7367_v646_board_disposition.py": 14231
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "driving_capability_spec",
+        "expected_value": true,
+        "field": "REQ-REPORT-7367 and scenarios",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "check": "authenticated_historical_sources",
+        "expected_value": [],
+        "field": "identity/status/validation/value-boundary",
+        "observed_value": [],
+        "passed": true,
+        "upstream": "Exp7355 and Exp7340"
+      },
+      {
+        "check": "exp7358_command_boundary",
+        "expected_value": 1,
+        "field": "validation_contract_ready_score",
+        "observed_value": 1,
+        "passed": true,
+        "upstream": "results/experiment_7358_v646_validation_contract.json"
+      },
+      {
+        "check": "historical_model_sidecar",
+        "expected_value": {
+          "current_MODEL_SPECS": [],
+          "current_model_invoked": false
+        },
+        "field": "current_MODEL_SPECS/current_model_invoked",
+        "observed_value": {
+          "current_MODEL_SPECS": [],
+          "current_model_invoked": false
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7355_v645_board_state/historical_model_receipts.json"
+      },
+      {
+        "check": "task_owned_destinations",
+        "expected_value": true,
+        "field": "parent paths",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "affected_required_validation",
+        "expected_value": true,
+        "field": "required_checks_passed",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "Exp7303 scoped runner through Exp7358 command plan"
+      },
+      {
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      }
+    ],
+    "failures": [
+      {
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      }
+    ],
+    "first_failure": {
+      "check": "gatemate_changed_physical_state_receipt",
+      "expected_value": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "field": "receipt_date/operator_authored/provenance/changed_field",
+      "observed_value": {
+        "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+        "accepted_receipt_count": 0,
+        "selected_source_path": null
+      },
+      "upstream": "physical_state_receipt"
+    },
+    "passed": false
+  },
+  "hardware_operations": {
+    "fpga": 0,
+    "jtag": 0,
+    "purchases": 0,
+    "rocm": 0,
+    "ssh": 0,
+    "thermodynamic_devices": 0,
+    "usb": 0,
+    "vendor_contacts": 0
+  },
+  "hardware_ready_score": 0,
+  "hardware_value_score": 0,
+  "honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three diagnostic board dispositions are complete, while readiness, value, and promotion remain zero",
+  "host_computation": {
+    "hostname": "icbfl1",
+    "machine": "x86_64",
+    "operation": "CPython JSON parsing, SHA-256 hashing, and deterministic reduction",
+    "processor": "host_cpu"
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "current": {
+      "generation_calls_attempted": 0,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 0,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "model_loads_attempted": 0,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 0,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "historical": {
+      "sidecar_count": 1,
+      "sidecars": [
+        {
+          "label": "historical_diagnostic_only_no_current_generation",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7367_v646_board_disposition/historical_model_receipts.json",
+          "sha256": "sha256:29c59fbfffeda4817c493bf114d0eb2fb53face0a9d996cbe71cf56543743241"
+        }
+      ]
+    }
+  },
+  "milestone": "2026.09.646",
+  "missing_required_commands": [],
+  "model_invoked": false,
+  "native_cost_context": {
+    "board_speed_gate_created": false,
+    "complete_boundary_ci95_lower_by_batch_size": {
+      "1": 1.9070958551116404,
+      "256": 1.660640300423487,
+      "32": 1.684761623050079
+    },
+    "complete_boundary_gate_expected": "CI95 lower bound >= 10 at sizes 1, 32, and 256",
+    "complete_boundary_gate_passed": false,
+    "inner_kernel_combined_with_service": false,
+    "measurement_scope": "complete Python-to-result request boundary",
+    "native_ten_x_score": 0,
+    "sample_size_budget": {
+      "batch_sizes": [
+        1,
+        32,
+        256
+      ],
+      "paired_blocks_attempted": 90,
+      "paired_blocks_censored": 0,
+      "paired_blocks_completed": 90,
+      "paired_blocks_per_size": 30,
+      "paired_blocks_planned": 90,
+      "rows_attempted": 270,
+      "rows_censored": 0,
+      "rows_completed": 270,
+      "rows_planned": 270,
+      "stopping_rule": "exactly 30 paired blocks for each fixed size; no outcome extension"
+    },
+    "source_path": "results/experiment_7340_v644_native_cost.json"
+  },
+  "native_tenfold_speed_gate": null,
+  "phase": 4,
+  "phase_spans": [
+    {
+      "completed_units": 3,
+      "duration_s": 0.013300601858645678,
+      "end_s": 0.013307424960657954,
+      "phase": "load",
+      "start_s": 6.8231020122766495e-06
+    },
+    {
+      "completed_units": 0,
+      "duration_s": 0.0,
+      "end_s": 0.013307424960657954,
+      "phase": "generation",
+      "start_s": 0.013307424960657954
+    },
+    {
+      "completed_units": 3,
+      "duration_s": 0.02359247417189181,
+      "end_s": 0.03689989913254976,
+      "phase": "evaluation",
+      "start_s": 0.013307424960657954
+    },
+    {
+      "completed_units": 8,
+      "duration_s": 2.9248185455799103e-06,
+      "end_s": 0.03690282395109534,
+      "phase": "validation",
+      "start_s": 0.03689989913254976
+    },
+    {
+      "completed_units": 3,
+      "duration_s": 0.00029539503157138824,
+      "end_s": 0.03719821898266673,
+      "phase": "write",
+      "start_s": 0.03690282395109534
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_source_bytes",
+      "expected_value": "all nonempty",
+      "field": "REQUIRED_SOURCE_PATHS",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "openspec/capabilities/research-reporting/spec.md": 4243357,
+        "ops/e2e-test-plan.md": 8502,
+        "ops/exclusion_manifest.yaml": 56173,
+        "python/carnot/experiment_7355_v645_board_state.py": 52194,
+        "python/carnot/experiment_7358_v646_validation_contract.py": 54324,
+        "python/carnot/experiment_7367_v646_board_disposition.py": 48819,
+        "python/carnot/reporting/experiment_7303_validation_scope.py": 13393,
+        "research-hardware-wishlist.md": 29009,
+        "research-program.md": 28560,
+        "research-references.md": 3495233,
+        "results/experiment_7340_v644_native_cost.json": 245894,
+        "results/experiment_7355_v645_board_state.json": 107449,
+        "results/experiment_7358_v646_validation_contract.json": 124510,
+        "results/raw/experiment_7355_v645_board_state/historical_model_receipts.json": 1096,
+        "scripts/experiments/experiment_7367_v646_board_disposition.py": 121,
+        "tests/python/test_experiment_7367_v646_board_disposition.py": 14231
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "driving_capability_spec",
+      "expected_value": true,
+      "field": "REQ-REPORT-7367 and scenarios",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "authenticated_historical_sources",
+      "expected_value": [],
+      "field": "identity/status/validation/value-boundary",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "Exp7355 and Exp7340"
+    },
+    {
+      "check": "exp7358_command_boundary",
+      "expected_value": 1,
+      "field": "validation_contract_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "check": "historical_model_sidecar",
+      "expected_value": {
+        "current_MODEL_SPECS": [],
+        "current_model_invoked": false
+      },
+      "field": "current_MODEL_SPECS/current_model_invoked",
+      "observed_value": {
+        "current_MODEL_SPECS": [],
+        "current_model_invoked": false
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7355_v645_board_state/historical_model_receipts.json"
+    },
+    {
+      "check": "task_owned_destinations",
+      "expected_value": true,
+      "field": "parent paths",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "host"
+    }
+  ],
+  "promotion_score": 0,
+  "random_seed": null,
+  "raw_row_reduction": {
+    "blocked_boards": [
+      "GateMate"
+    ],
+    "boards": [
+      "KV260",
+      "GateMate",
+      "PolarFire"
+    ],
+    "complete": true,
+    "graduated_historical_boards": [
+      "KV260",
+      "PolarFire"
+    ],
+    "row_count": 3
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failure_count": 4,
+    "historical_failures": [
+      {
+        "classification": "unrelated_repository_wide_failure_observation",
+        "command": "PYTHONUNBUFFERED=1 PYTHONPATH=/home/ianblenke/github.com/ianblenke/carnot/python:/home/ianblenke/github.com/ianblenke/carnot .venv/bin/pytest tests/python/test_experiment_7300_v641_board_continuity.py tests/python/test_experiment_7314_v642_board_continuity.py -q --no-cov -n 0 -o addopts= --basetemp /tmp/exp7314-affected",
+        "date": "20260915",
+        "duration_s": 4.772386,
+        "exit_code": 1,
+        "log_sha256": "sha256:8455dbdb6229e9a9974019f86adbd6ccc556874b1c091f05881db1ae662064a8",
+        "resolved": false,
+        "source_experiment_id": 7314
+      },
+      {
+        "classification": "unrelated_repository_wide_failure_observation",
+        "command": ".venv/bin/pytest tests/python -q",
+        "date": "20260915",
+        "duration_s": null,
+        "exit_code": null,
+        "log_sha256": "sha256:a226a838ea6d527bc923abe765cc5e9c2b9b70f1df323aaf353d7f62226f6230",
+        "resolved": false,
+        "source_experiment_id": 7314
+      },
+      {
+        "cause": "private pytest basetemp parent was absent",
+        "classification": "affected_authoring_failure_corrected",
+        "date": "20260916",
+        "resolved": true,
+        "source_path": "results/raw/experiment_7341_v644_board_continuity/validation/failed_basetemp_parent_artifact.json",
+        "source_sha256": "sha256:0e03333f0346cc497d09ed49cc31394ff5b71779bcec65f651a83f6f0588d0ff",
+        "validation_receipts": [
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/focused tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/focused",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 2.5174543091561645,
+            "elapsed_s": 2.5174543091561645,
+            "exit_code": 1,
+            "log_hash": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/01_focused_pytest.log",
+            "log_sha256": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "name": "focused_pytest",
+            "output_tail": "\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 0.87s\n",
+            "passed": false,
+            "scope": "explicit_tests",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/coverage tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "run",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "-m",
+              "pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/coverage",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 4.1640213679056615,
+            "elapsed_s": 4.1640213679056615,
+            "exit_code": 1,
+            "log_hash": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/02_changed_module_coverage.log",
+            "log_sha256": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "name": "changed_module_coverage",
+            "output_tail": "sixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 1.59s\n",
+            "passed": false,
+            "scope": "explicit_tests_and_changed_modules",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' --show-missing --fail-under=100",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "report",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "--show-missing",
+              "--fail-under=100"
+            ],
+            "duration_s": 0.07214806508272886,
+            "elapsed_s": 0.07214806508272886,
+            "exit_code": 2,
+            "log_hash": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/03_changed_module_coverage_report.log",
+            "log_sha256": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "name": "changed_module_coverage_report",
+            "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7341_v644_board_continuity.py     328    247    25%   121-131, 150-151, 165, 171-199, 205-225, 231-234, 242-484, 506-529, 540-568, 574-635, 641, 667, 686, 713, 749, 755-757, 770-779, 789-830, 845, 925-1107, 1150-1289, 1295-1304, 1310-1314\n--------------------------------------------------------------------------------------\nTOTAL                                                      328    247    25%\nCoverage failure: total of 25 is less than fail-under=100\n",
+            "passed": false,
+            "scope": "changed_modules",
+            "timed_out": false
+          }
+        ]
+      },
+      {
+        "cause": "private pytest basetemp parent was absent",
+        "classification": "affected_authoring_failure_corrected",
+        "date": "20260916",
+        "resolved": true,
+        "source_path": "results/raw/experiment_7341_v644_board_continuity/validation/failed_basetemp_parent_artifact.json",
+        "source_sha256": "sha256:0e03333f0346cc497d09ed49cc31394ff5b71779bcec65f651a83f6f0588d0ff",
+        "validation_receipts": [
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/focused tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/focused",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 2.5174543091561645,
+            "elapsed_s": 2.5174543091561645,
+            "exit_code": 1,
+            "log_hash": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/01_focused_pytest.log",
+            "log_sha256": "sha256:6ccf2f66c2d43587b4bb978e6f8db2643ed342b7fb97ba2be0f35756c6ffb0dc",
+            "name": "focused_pytest",
+            "output_tail": "\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/focused'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/focused'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 0.87s\n",
+            "passed": false,
+            "scope": "explicit_tests",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage run --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7341-scoped/coverage tests/python/test_experiment_7341_v644_board_continuity.py -q",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "run",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "-m",
+              "pytest",
+              "-n",
+              "0",
+              "-o",
+              "addopts=",
+              "--no-cov",
+              "--basetemp=/tmp/carnot-exp7341-scoped/coverage",
+              "tests/python/test_experiment_7341_v644_board_continuity.py",
+              "-q"
+            ],
+            "duration_s": 4.1640213679056615,
+            "elapsed_s": 4.1640213679056615,
+            "exit_code": 1,
+            "log_hash": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/02_changed_module_coverage.log",
+            "log_sha256": "sha256:235623c1357791f32ad16f77683f3a59ef280c9fc5c8892ff1bf631644f83d83",
+            "name": "changed_module_coverage",
+            "output_tail": "sixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_new_receipt_records_eligibility_but_issues_no_operation _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_validation_failure_disqualifies_without_erasing_rows __\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_cold_reducer_atomic_writer_and_entrypoint_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n_ ERROR at setup of test_malformed_contract_and_external_precondition_fail_closed _\n\nself = PosixPath('/tmp/carnot-exp7341-scoped/coverage'), mode = 448\nparents = False, exist_ok = False\n\n    def mkdir(self, mode=0o777, parents=False, exist_ok=False):\n        \"\"\"\n        Create a new directory at this given path.\n        \"\"\"\n        try:\n>           os.mkdir(self, mode)\nE           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/carnot-exp7341-scoped/coverage'\n\n../../../.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/pathlib.py:1311: FileNotFoundError\n=========================== short test summary info ============================\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_preconditions_authenticate_diagnostic_chain_without_consuming_blocked_score\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_missing_receipt_records_three_terminal_dispositions\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_external_block_keeps_accounting_complete_and_readiness_zero\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_v644_hardware_path_keeps_extropic_and_kan_external\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_new_receipt_records_eligibility_but_issues_no_operation\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_validation_failure_disqualifies_without_erasing_rows\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_cold_reducer_atomic_writer_and_entrypoint_fail_closed\nERROR tests/python/test_experiment_7341_v644_board_continuity.py::test_malformed_contract_and_external_precondition_fail_closed\n8 errors in 1.59s\n",
+            "passed": false,
+            "scope": "explicit_tests_and_changed_modules",
+            "timed_out": false
+          },
+          {
+            "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage report --data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage '--include=*/experiment_7341_v644_board_continuity.py' --show-missing --fail-under=100",
+            "command_argv": [
+              "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/coverage",
+              "report",
+              "--data-file=/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7341_v644_board_continuity/validation/.coverage",
+              "--include=*/experiment_7341_v644_board_continuity.py",
+              "--show-missing",
+              "--fail-under=100"
+            ],
+            "duration_s": 0.07214806508272886,
+            "elapsed_s": 0.07214806508272886,
+            "exit_code": 2,
+            "log_hash": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "log_path": "results/raw/experiment_7341_v644_board_continuity/validation/scoped/03_changed_module_coverage_report.log",
+            "log_sha256": "sha256:5579088ab969987cc830f968f9d2bb15fbf0daed5238afb391c19624400a56ed",
+            "name": "changed_module_coverage_report",
+            "output_tail": "Name                                                     Stmts   Miss  Cover   Missing\n--------------------------------------------------------------------------------------\npython/carnot/experiment_7341_v644_board_continuity.py     328    247    25%   121-131, 150-151, 165, 171-199, 205-225, 231-234, 242-484, 506-529, 540-568, 574-635, 641, 667, 686, 713, 749, 755-757, 770-779, 789-830, 845, 925-1107, 1150-1289, 1295-1304, 1310-1314\n--------------------------------------------------------------------------------------\nTOTAL                                                      328    247    25%\nCoverage failure: total of 25 is less than fail-under=100\n",
+            "passed": false,
+            "scope": "changed_modules",
+            "timed_out": false
+          }
+        ]
+      }
+    ],
+    "incident_open": true,
+    "status": "degraded_open",
+    "unresolved_collection_error_observation_count": 0
+  },
+  "reproducibility_checksum": "sha256:54c72f872de5a36451477f5291cf0e390930f1c0a4b31f3a6589a853f6891bfd",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 32,
+        "unit": "fabric_samples"
+      },
+      "disposition": "graduated_preserved",
+      "error": null,
+      "evidence_date": "20260915",
+      "exact_next_condition": "none; any future access uses ssh kria only",
+      "execution_venue": "kv260_fpga_fabric",
+      "external_messages_issued": [],
+      "fabric_execution_completed": true,
+      "failed_value": null,
+      "fpga_sampling_claimed": true,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "none; any future access uses ssh kria only",
+      "observed_state": {
+        "median_latency_ms": 0.025465,
+        "programmable_logic_latency_transcript": true,
+        "sample_count": 32,
+        "synthesis_and_overlay_confirmed": true
+      },
+      "observed_venue": "kv260_fpga_fabric",
+      "prerequisite": "authenticated V640 row and fabric evidence hash chain",
+      "prerequisite_check": "authenticated V640 row and fabric evidence hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "processor_class": "fpga_fabric",
+      "procurement_operations_issued": [],
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json",
+          "sha256": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e"
+        },
+        {
+          "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+          "sha256": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2"
+        }
+      ],
+      "row_sha256": "sha256:39f7b04846de63f2da1b51ed59ead9550c5dbb7935507dda50f75615cdce9ef1",
+      "seed": null,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260"
+    },
+    {
+      "abstention": true,
+      "accepted_receipt_count": 0,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "board_availability": "attached_not_rechecked",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 0,
+        "unit": "new_hardware_runs"
+      },
+      "disposition": "blocked_changed_physical_state",
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "evidence_date": "20260916",
+      "exact_next_condition": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "execution_venue": "none_read_only",
+      "external_messages_issued": [],
+      "fabric_execution_completed": false,
+      "failed_value": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": false,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260916",
+      "latest_receipt_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "latest_receipt_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "metric": false,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_missing_receipt": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "observed_state": "operator_changed_physical_state_receipt_missing",
+      "observed_venue": "none_read_only",
+      "operator_author_evidence": null,
+      "operator_changed_conditions": {},
+      "operator_date_evidence": null,
+      "operator_evidence_hash": null,
+      "operator_source_path": null,
+      "physical_receipt_contract": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "prerequisite": "operator-authored USB/JTAG/cabling/board/power change after Exp6559",
+      "prerequisite_check": "operator-authored USB/JTAG/cabling/board/power change after Exp6559",
+      "present_availability_asserted": false,
+      "preserved_capability": "attached GateMate board; fabric execution not graduated",
+      "processor_class": "unavailable",
+      "procurement_operations_issued": [],
+      "row_sha256": "sha256:45b6d73f7059245feca661d191deede298ef9169a7fb2017d7ed3efaaddcc643",
+      "seed": null,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate"
+    },
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "board_availability": "available_at_preserved_execution",
+      "censored": false,
+      "complete_boundary_native_ten_x_score": 0,
+      "current_evidence": "read_only_artifact_aggregation",
+      "denominator": {
+        "count": 1,
+        "unit": "cpu_dispatches"
+      },
+      "disposition": "graduated_cpu_dispatch_preserved",
+      "error": null,
+      "evidence_date": "20260915",
+      "exact_next_condition": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "execution_venue": "polarfire_linux_cpu",
+      "external_messages_issued": [],
+      "fabric_execution_completed": false,
+      "failed_value": null,
+      "fpga_sampling_claimed": false,
+      "hardware_command_count": 0,
+      "hardware_operations_issued": [],
+      "historical_graduation_preserved": true,
+      "host_emulation": false,
+      "input_artifact_path": "results/experiment_7355_v645_board_state.json",
+      "input_artifact_sha256": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+      "installation_operations_issued": [],
+      "latest_receipt_authenticated": true,
+      "latest_receipt_date": "20260915",
+      "latest_receipt_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "latest_receipt_path": "results/experiment_7314_v642_board_continuity.json",
+      "metric": true,
+      "native_tenfold_speed_gate": null,
+      "new_hardware_execution_claimed": false,
+      "next_action": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "observed_state": {
+        "binary_sha256": "sha256:756f9e6bb80a1af495a1d37e40356f166f0fc3c50a6bffe9a9af8721b45ac27c",
+        "dispatch_completed": true,
+        "input_hash_matches": true,
+        "input_sha256": "sha256:1afb4db70c81817af732c457a9c2e5653250e4d7e6ccc57232536107a2bf3596",
+        "output_hash_matches": true,
+        "output_sha256": "sha256:220fade2b4c13e1b1a4ba300a5fe81acd7dfe9ec93c4fcb090c7573ed2f3af66",
+        "transport_exit_code": 0,
+        "workload_exit_code": 0
+      },
+      "observed_venue": "polarfire_linux_cpu",
+      "prerequisite": "authenticated V640 row and CPU dispatch hash chain",
+      "prerequisite_check": "authenticated V640 row and CPU dispatch hash chain",
+      "present_availability_asserted": false,
+      "preserved_capability": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "processor_class": "cpu",
+      "procurement_operations_issued": [],
+      "programmable_logic_sampling_observed": false,
+      "referenced_evidence": [
+        {
+          "path": "results/experiment_7300_v641_board_continuity.json",
+          "run_date": "20260913",
+          "sha256": "sha256:dc28d1d1cd8ce23f56c40a181783757ed939cc19c1ff4094b513f960502df38b"
+        },
+        {
+          "path": "results/experiment_7286_v640_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:0bb6cce3355c53e6303a980098039d0ce5d88e7d1246a2ed7620488a7e443a9f"
+        },
+        {
+          "path": "results/experiment_7272_v639_board_state.json",
+          "run_date": "20260913",
+          "sha256": "sha256:9e6728b703ef753c525017b50260baf301e4a732ccdfc880b1a59a53460837b6"
+        },
+        {
+          "path": "results/experiment_7258_v638_board_state.json",
+          "sha256": "sha256:62da951aa8ad80c5eee02c5261c7cfc6ea5b2c0c95e91cefb08234a87383b1e8"
+        },
+        {
+          "path": "results/experiment_7244_v637_board_disposition.json",
+          "sha256": "sha256:e0c12428c64825c77d31dcd94c150266f22e274a239daf06f8bbd375a6770d6a"
+        },
+        {
+          "path": "results/raw/experiment_7231/polarfire_dispatch.json",
+          "sha256": "sha256:d1c438da812a1c45d63d5d777050c5169dab6aac33bfee8b44f4f4152dd6b801"
+        },
+        {
+          "path": "results/experiment_7231_v636_board_continuity.json",
+          "sha256": "sha256:341ca079f8ca42ed26dcda1d57edba21cede9c0ca965265fed05121feec2b588"
+        }
+      ],
+      "row_sha256": "sha256:a659c881c068d6aab589d9afaa296140ef9f16ec8657b339da91247eea29d622",
+      "seed": null,
+      "smoke_repeated": false,
+      "source_artifact_hash": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+      "source_artifact_path": "results/experiment_7341_v644_board_continuity.json",
+      "source_terminal_class": "blocked",
+      "source_used_as_readiness_gate": false,
+      "terminal_criterion": "end-to-end hash-matched CPU dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": true,
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "run_date": "20260917",
+  "sample_size_budget": {
+    "board_rows_attempted": 3,
+    "board_rows_censored": 0,
+    "board_rows_completed": 3,
+    "board_rows_planned": 3,
+    "new_hardware_runs_attempted": 0,
+    "new_hardware_runs_censored": 0,
+    "new_hardware_runs_completed": 0,
+    "new_hardware_runs_planned": 0,
+    "stopping_rule": "account for exactly KV260, PolarFire, and GateMate; stop before hardware work"
+  },
+  "schema": "carnot.experiment_7367.v646_board_disposition.v1",
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7367_v646_board_disposition/board_rows.json": "sha256:61f58a5078874147f62b72164944bc62c1c97815f7d3c84aa82c3d07ceda43b6",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7367_v646_board_disposition/gatemate_physical_state_receipt_search.json": "sha256:008f9229c7a311e5f79f5f473ed77fcfc8773969ae642ebede8b5dce5828c510",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7367_v646_board_disposition/historical_model_receipts.json": "sha256:29c59fbfffeda4817c493bf114d0eb2fb53face0a9d996cbe71cf56543743241",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:b15e14f5cdaf12e0a170b22bfab94aed1f364aca76f7d2c51b694ba5c95e4692",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7355_v645_board_state.py": "sha256:69d082c07721d0d60c08260466c92bdf292c6f533b9329a59869a6b7de8fd32b",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7367_v646_board_disposition.py": "sha256:19a32626e135abe2e6a4c64db0fc7b545467ef18647519cf61c21b7218283c0c",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:7694b2fc08b50cf2cc3f82e468627e693da845b30681e4552950d623c53eba25",
+    "results/experiment_7340_v644_native_cost.json": "sha256:cd4b71d899dac882a9b05ac24bf2ecb46770044e2b8edcd1e4050cbc0d015954",
+    "results/experiment_7355_v645_board_state.json": "sha256:75db3ca25acc8dd88cfb97f385ef4d2aa2adc64d582fd4202cb96868d4f8134a",
+    "results/experiment_7358_v646_validation_contract.json": "sha256:0d2c2fe876ba303b21c9b5fe5b094d92851ea407d7d9f06ae9d8ca4d37475781",
+    "results/raw/experiment_7355_v645_board_state/historical_model_receipts.json": "sha256:2b475690a99f02969624065dcfaf8a84cedd3f524c507aa8fa9b9fc9a059da9b",
+    "scripts/experiments/experiment_7367_v646_board_disposition.py": "sha256:7404078b144ce9a0760e10210c7f51328c002f8ec2ce3d56af20f779b9b7363d",
+    "tests/python/test_experiment_7367_v646_board_disposition.py": "sha256:cb64fa6d56603eb43dba30dbe7264f2e4949f77f32bebce8e6f77837befeef89"
+  },
+  "source_artifact_states": {
+    "board_source": {
+      "authorizes_promotion": false,
+      "board_disposition_complete_score": 1,
+      "diagnostic_only": true,
+      "experiment_id": 7355,
+      "milestone": "2026.09.645",
+      "status": "blocked",
+      "verdict_class": "blocked"
+    },
+    "cost_source": {
+      "experiment_id": 7340,
+      "milestone": "2026.09.644",
+      "native_cost_complete_score": 1,
+      "native_ten_x_score": 0,
+      "status": "complete",
+      "verdict_class": "null"
+    },
+    "historical_model_source": {
+      "current_MODEL_SPECS": [],
+      "current_invocation_counts": {
+        "generations": {
+          "attempted": 0,
+          "cancelled": 0,
+          "completed": 0,
+          "failed": 0,
+          "in_flight": 0
+        },
+        "loads": {
+          "attempted": 0,
+          "cancelled": 0,
+          "completed": 0,
+          "failed": 0,
+          "in_flight": 0
+        }
+      },
+      "current_model_invoked": false,
+      "schema": "carnot.experiment_7355.historical_model_receipts.v1",
+      "source": {
+        "experiment_id": 7341,
+        "historical_MODEL_SPECS": [],
+        "historical_invocation_counts": {
+          "generations": {
+            "attempted": 0,
+            "cancelled": 0,
+            "completed": 0,
+            "failed": 0,
+            "in_flight": 0
+          },
+          "loads": {
+            "attempted": 0,
+            "cancelled": 0,
+            "completed": 0,
+            "failed": 0,
+            "in_flight": 0
+          }
+        },
+        "historical_model_invoked": false,
+        "path": "results/experiment_7341_v644_board_continuity.json",
+        "sha256": "sha256:f48ff080e61b0bded6072c862df15bba73bfedd0f67f9d06b1bace3de89cbf5f",
+        "status": "blocked",
+        "verdict_class": "blocked"
+      }
+    },
+    "validation_boundary": {
+      "experiment_id": "exp7358-validation-contract",
+      "validation_contract_ready_score": 1
+    }
+  },
+  "started_at_utc": "2026-09-17T10:13:19.019201+00:00",
+  "status": "blocked",
+  "task_id": "exp7367-board-disposition",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7367_v646_board_disposition",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7367_v646_board_disposition"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5952351440209895,
+      "ended_at_utc": "2026-09-17T10:13:11.703014+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:67f18ef4940bc94693a9a5b37f538dc96380de98ef40fe03a55f296c88ee7ac9",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7367_v646_board_disposition\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7367_v646_board_disposition.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7367_v646_board_disposition": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7367_v646_board_disposition.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T10:13:11.107315+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7367-oth7nzl0/basetemp/focused tests/python/test_experiment_7367_v646_board_disposition.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7367-oth7nzl0/basetemp/focused",
+        "tests/python/test_experiment_7367_v646_board_disposition.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 2.6897357190027833,
+      "ended_at_utc": "2026-09-17T10:13:14.393298+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:8ee01317196d6f2739df70655380a9128eebacde47c1b93d08a1b87797a42c77",
+      "name": "focused_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 0.99s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T10:13:11.703094+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7367-oth7nzl0/coverage/.coverage '--include=*/experiment_7367_v646_board_disposition.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7367-oth7nzl0/basetemp/coverage tests/python/test_experiment_7367_v646_board_disposition.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7367-oth7nzl0/coverage/.coverage",
+        "--include=*/experiment_7367_v646_board_disposition.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7367-oth7nzl0/basetemp/coverage",
+        "tests/python/test_experiment_7367_v646_board_disposition.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.376922596944496,
+      "ended_at_utc": "2026-09-17T10:13:18.770727+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:0dd9d93d2a37d437a82b4fe8376cc8c094bc53775f52e2123493ab6d14219281",
+      "name": "changed_module_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 1.72s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-17T10:13:14.393356+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7367_v646_board_disposition.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7367_v646_board_disposition.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7367-oth7nzl0/coverage/.coverage"
+      },
+      "duration_s": 0.06470283190719783,
+      "ended_at_utc": "2026-09-17T10:13:18.835832+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:e3122a29e7a689fea16aa8ebc3351ef9321e3473f286c307bcff90a899bec662",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7367_v646_board_disposition.py     242      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       242      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T10:13:18.770758+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7367_v646_board_disposition.py scripts/experiments/experiment_7367_v646_board_disposition.py tests/python/test_experiment_7367_v646_board_disposition.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7367_v646_board_disposition.py",
+        "scripts/experiments/experiment_7367_v646_board_disposition.py",
+        "tests/python/test_experiment_7367_v646_board_disposition.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.014747909968718886,
+      "ended_at_utc": "2026-09-17T10:13:18.851077+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T10:13:18.835875+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7367_v646_board_disposition.py scripts/experiments/experiment_7367_v646_board_disposition.py tests/python/test_experiment_7367_v646_board_disposition.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7367_v646_board_disposition.py",
+        "scripts/experiments/experiment_7367_v646_board_disposition.py",
+        "tests/python/test_experiment_7367_v646_board_disposition.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.015120851108804345,
+      "ended_at_utc": "2026-09-17T10:13:18.866623+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-17T10:13:18.851120+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7367_v646_board_disposition.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7367_v646_board_disposition.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.13165942509658635,
+      "ended_at_utc": "2026-09-17T10:13:18.998626+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-17T10:13:18.866671+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7367_v646_board_disposition.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7367_v646_board_disposition.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.01992270117625594,
+      "ended_at_utc": "2026-09-17T10:13:19.018924+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7367_v646_board_disposition/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-17T10:13:18.998656+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
