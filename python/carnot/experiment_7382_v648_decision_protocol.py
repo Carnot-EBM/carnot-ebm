@@ -808,7 +808,11 @@ def build_fixture_artifact() -> JsonDict:
         "MODEL_SPECS": [],
         "model_invoked": False,
         "invocation_counts": deepcopy(ZERO_INVOCATION_COUNTS),
-        "inference_substrate": {"kind": "analytic_fixture", "device": "host_cpu"},
+        "inference_substrate": {
+            "value": "host CPU analytic fixture",
+            "kind": "analytic_fixture",
+            "device": "host_cpu",
+        },
         "inference_substrate_class": "no_model_load",
         "execution_venue": "host",
         "duration_s": 1.0,
@@ -1198,6 +1202,7 @@ def _build_artifact(  # pragma: no cover
         "model_invoked": False,
         "invocation_counts": deepcopy(ZERO_INVOCATION_COUNTS),
         "inference_substrate": {
+            "value": "host CPU protocol grouping and PCIB feature extraction",
             "kind": "host_cpu_protocol_grouping_and_pcib_feature_extraction",
             "device_identity": platform.processor() or platform.machine(),
             "machine": platform.machine(),

@@ -319,6 +319,7 @@ def test_req_auto_018_artifact_validator_rejects_mutation() -> None:
 
     artifact = protocol.build_fixture_artifact()
     assert protocol.validate_artifact(artifact) == []
+    assert artifact["inference_substrate"]["value"] == "host CPU analytic fixture"
 
     mutated = deepcopy(artifact)
     mutated["model_invoked"] = True
