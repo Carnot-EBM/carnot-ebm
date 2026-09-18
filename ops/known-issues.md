@@ -9947,6 +9947,27 @@ file `tests/python/test_calibrated_decision_benchmark.py`, 31 tests. Full suite
 milestones should pick up actual `GAP-ORACLE-DISTINCT`/`GAP-DETECTOR-AUROC-4208`
 progress using the now-wired benchmark, not re-do this wiring task.
 
+**UPDATE 2026-09-18 (outer-loop, operator-directed): unstuck the circuit breaker
+that then blocked every round.** After the fix above shipped, two production rounds
+(2026-09-18T03:44Z, T04:13Z) tripped `AutoresearchConfig.max_consecutive_failures=10`
+at iteration 0 with no error text -- reproduced by hand and confirmed the cause:
+`ops/.autoresearch_experiment_log.json` (a local, gitignored cache, never committed)
+had 10 straight `rejected` entries at its tail, accumulated over many PRIOR rounds
+against the now-retired `double_well`/`rosenbrock` benchmarks plus `verifier_auroc`
+-- unrelated to the new benchmark's own code. `ExperimentLog.consecutive_failures()`
+checks this BEFORE the generator is ever called, so the breaker halted "for human
+review" exactly as designed (REQ-AUTO-009) -- correct behavior, not a bug, but a
+real standing block once tripped, since nothing can ever reduce a counter checked
+before any new attempt runs. Operator: "Let's get autoresearch unstuck." Backed up
+the full 102-entry log (45 accepted / 7 pending_review / 50 rejected) to
+`/tmp/.../scratchpad/autoresearch-backup/experiment_log_backup_20260918.json`
+before resetting the live file to `[]` -- the file is local operational bookkeeping,
+not a committed research record, so this is a cache reset, not a history deletion.
+Verified fixed: a fresh round immediately after ran a REAL codex call (no fable
+fallback needed this time), `iterations: 1, circuit_breaker_tripped: False`,
+proposed a real `verifier_auroc` hypothesis (rejected, not accepted -- an honest
+outcome, not a fabricated win).
+
 ### NEW 2026-08-31 (outer-loop) — GENERATOR-PROVENANCE HELPERS ARE LANDED BUT NOT WIRED; 4 ARTIFACT REBUILDS BLOCK THE CALL SITE
 
 `python/carnot/agentic/arc_eval_provenance.py` (REQ-ARC-WMTE-6790) is landed and tested — 6
