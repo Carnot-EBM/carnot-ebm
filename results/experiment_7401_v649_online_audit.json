@@ -82,7 +82,7 @@
     "verdict_class": "verdict_class is recorded directly under the Exp7401 audit contract.",
     "verifier_is_oracle": "verifier_is_oracle is recorded directly under the Exp7401 audit contract."
   },
-  "flagged_adversarial": false,
+  "flagged_adversarial": true,
   "gate_check_summary": {
     "all_required_passed": false,
     "first_required_failure": {
@@ -562,5 +562,18 @@
     }
   ],
   "verdict_class": "blocked",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial_provenance": {
+    "gate_version": "197e0a5eacacb09ce6607ae8bdfd507498082857f0d02ec2003a62c251b69a24",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-18T23:16:08Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7401_v649_online_audit.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+    }
+  ]
 }
