@@ -72768,3 +72768,111 @@ authorize promotion.
 **When** the independent reducer and strict terminal readers reload it
 **Then** changed contracts, dispositions, gates, scores, hashes, or checksums fail
 **And** only the validated terminal JSON is written atomically.
+
+## V648 advisory source and exact-contract receipt — 2026-09-18
+
+**Status:** Implemented. This receipt checks planning authorities and creates no science result.
+
+### REQ-REPORT-7381: Bind the exact V648 contract and preserve the V647 evidence boundary
+
+Exp7381 SHALL select `research-roadmap-next.yaml` only when its milestone is
+exactly `2026.09.648`. Otherwise, it SHALL select the active
+`research-roadmap.yaml` only when that file has the exact milestone. It SHALL
+parse the selected YAML and the single active Exact Task Contract table in the
+V648 design independently. It SHALL compare all fourteen rows in order, from
+`exp7381-contract` through `exp7394-capstone`, across ID, title, deliverable,
+phase, substrate class, and every structured gate. The advisory receipt SHALL
+not gate an independent science branch.
+
+The workflow SHALL run the existing roadmap schema, prior-failure, gate, and
+exclusion audits. It SHALL reject a retired dependency chain. Every declared
+prior failure SHALL keep `experiment_id`, `verdict`, `addressed_by`, and
+`retire_if_same_verdict`. Private copies SHALL test a missing and reordered
+task; changed milestone, title, path, phase, and substrate; a missing producer
+field; and a missing retirement flag. Each mutation SHALL fail its owning
+contract, schema, gate, or retirement check.
+
+Exp7381 SHALL append a dated V648 source-to-method map to
+`research-studying.md`. Rows SHALL cover SHIP, CalArena, CalVerT, online
+calibration, and thermodynamic learning. Each row SHALL keep a primary URL,
+checked date, adopted control or defer reason, and access status. One bounded
+source-delta request SHALL preserve an unavailable outcome without inventing a
+result. The receipt SHALL not claim a full Semantic Scholar citation census or
+change the frozen task roster.
+
+Exp7381 SHALL compare the preserved V647 design with the raw copy authenticated
+by Exp7369. It SHALL keep the V648 planning statement that the planning snapshot
+ended at V646 separate from the current ledger state. It SHALL use exact V647
+terminal artifacts and conductor records for the current evidence boundary.
+The disqualified Exp7372, Exp7376, and Exp7378 receipts SHALL retain their
+original hashes, classes, and adversarial flags in a labeled historical sidecar.
+No completed V647 work SHALL be rerun.
+
+The validation plan SHALL derive its fixed scoped commands from the actual
+Exp7358 command-plan builder and execute them through Exp7303. It SHALL create
+private base-temp parents. It SHALL require worktree imports, focused pytest
+with `-n 0`, cleared inherited addopts and no coverage, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test spec coverage. It SHALL preserve command-local `COVERAGE_FILE`.
+It SHALL not add an unexecuted `full_python_suite` check. No numbered E2E
+applies. The declared entrypoint and an independent cold artifact replay are
+the capability-level E2E checks.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. It SHALL record actual host work, real monotonic
+duration, UTC boundaries, phase spans, source hashes, contract and mutation
+rows, sample budgets, acceptance gates, validation receipts, repository health,
+and field principles. It SHALL independently reduce the candidate, run
+`scripts/adversarial_verify.py`, and run strict verdict-row consistency before
+the terminal atomic write.
+
+`contract_complete_score` SHALL equal one only when both authorities agree and
+all applicable executed checks pass. It is advisory. `science_value_score` and
+`promotion_score` SHALL remain zero. A missing external input SHALL use
+`blocked`; a contract or required-check defect SHALL use `disqualified`; only
+unfinished retryable Exp7381-owned work MAY use `partial`. Every blocked result
+SHALL name the upstream, failed check, exact field, expected value, and observed
+value.
+
+#### SCENARIO-REPORT-7381-CONTRACT: Both V648 authorities preserve fourteen exact rows
+
+**Given** the exact V648 YAML and Markdown authorities
+**When** Exp7381 parses and compares them independently
+**Then** fourteen ordered IDs, titles, paths, phases, substrates, and gate lists match
+**And** the advisory score does not become a prerequisite for another task.
+
+#### SCENARIO-REPORT-7381-MUTATIONS: Contract defects fail their owning checks
+
+**Given** private copies of an exact V648 contract
+**When** task, field, producer, and retirement mutations are applied
+**Then** each named contract, schema, gate, or retirement check rejects its mutation
+**And** a rejected mutation cannot create current science evidence.
+
+#### SCENARIO-REPORT-7381-SOURCES: Bounded access stays separate from method adoption
+
+**Given** the dated V648 primary sources and five method families
+**When** Exp7381 performs one bounded source-delta request
+**Then** every method row keeps its URL, checked date, access status, and control or defer reason
+**And** an unavailable source creates no invented result or citation census.
+
+#### SCENARIO-REPORT-7381-HISTORY: V647 disqualifications remain historical evidence
+
+**Given** preserved V647 design bytes, terminal artifacts, and conductor records
+**When** Exp7381 establishes the evidence boundary
+**Then** design-copy hashes agree and the current ledger state is labeled separately from the planning snapshot
+**And** Exp7372, Exp7376, and Exp7378 keep their original class, flag, and hash without rerun.
+
+#### SCENARIO-REPORT-7381-VALIDATION: The Exp7358 plan stays exact and scoped
+
+**Given** the Exp7358 command-plan builder and Exp7303 runner
+**When** Exp7381 validates and executes its affected command set
+**Then** each fixed required check runs once with explicit file scope
+**And** no unexecuted full-suite requirement appears in the required set.
+
+#### SCENARIO-REPORT-7381-ARTIFACT: Cold replay controls terminal publication
+
+**Given** raw authorities, source receipts, historical sidecars, and validation receipts
+**When** the reducer and both strict terminal readers reload the candidate
+**Then** changed identity, hash, row, gate, score, class, or checksum fails
+**And** only the valid terminal JSON is written atomically.

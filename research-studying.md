@@ -5865,3 +5865,22 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Scope boundary: this advisory map does not change the twelve-task V647
   roster. It adds no runtime dependency and makes no local science claim.
 <!-- EXP7369-V647-SOURCE-INGESTION-20260917-END -->
+
+<!-- EXP7381-V648-SOURCE-INGESTION-20260918-START -->
+## 2026-09-18 Exp7381 V648 source-to-method ingestion — INGESTED
+
+| Method family | Primary source | Adopted control or defer reason | Access status |
+|---|---|---|---|
+| SHIP | [Selective inference for hidden populations, arXiv:2608.21748](https://arxiv.org/abs/2608.21748) | Freeze a finite typed-policy grid. Calibrate the deployed policy. Treat an empty selected group as no certificate. The image domain is outside this experiment. | The planning review opened the primary record. Exp7381 makes one bounded delta request and preserves its actual outcome. |
+| CalArena | [CalArena, arXiv:2605.30188](https://arxiv.org/abs/2605.30188) | Use proper scores and strong simple calibration controls. Keep prevalence and logistic controls beside the Gibbs head. | The planning review opened the arXiv record and full text. |
+| CalVerT | [CalVerT, arXiv:2606.21777](https://arxiv.org/abs/2606.21777) | Keep confidence, evidence grounding, and action selection as separate fields. | The planning review opened the primary arXiv record. |
+| Online calibration | [Intermittent online calibration, arXiv:2503.10345](https://arxiv.org/abs/2503.10345) and [Online calibration, arXiv:2504.09096](https://arxiv.org/abs/2504.09096) | Reveal feedback after prediction. Compare delayed updates with frozen, no-feedback, recent-frequency, and online-logistic controls. Do not transfer an IID theorem to constructed drift. | The planning review opened both primary records. |
+| Thermodynamic learning | [Thermodynamic learning, arXiv:2609.04732](https://arxiv.org/abs/2609.04732) | Separate learned couplings from the invariant source target. Charge all update costs. Defer new hardware and coupling training. | The planning review opened the primary arXiv record. |
+
+- Access boundary: Exp7381 makes one bounded source-delta request. A timeout,
+  challenge, HTTP error, or unavailable page remains an access outcome.
+- Citation boundary: the V648 planning review performed only a partial Semantic
+  Scholar citation check. This ingestion does not claim a full citation census.
+- Scope boundary: this advisory map does not change the fourteen-task roster.
+  It adds no runtime dependency and creates no local science result.
+<!-- EXP7381-V648-SOURCE-INGESTION-20260918-END -->
