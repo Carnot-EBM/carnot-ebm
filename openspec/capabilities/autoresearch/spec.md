@@ -168,6 +168,89 @@ REQ-AUTO-025's `verifier_auroc` benchmark):
   construction — a freshly constructed `GibbsModel`'s output layer is
   zero-initialized).
 
+#### Experiment-local proper-score protocol
+
+An experiment-local protocol SHALL leave the standing conductor benchmark
+unchanged. It SHALL freeze the two raw PCIB features and the 2-4-1 Gibbs head.
+The head has 17 parameters. Its typed output SHALL contain `decision`,
+`p_incorrect`, `confidence_correct`, `model_version`, and `reason`.
+`confidence_correct` SHALL always equal `1 - p_incorrect`, including escalation.
+
+Before fitting, the protocol SHALL form connected groups from shared
+`question_id` values and exact normalized step-text duplicates. It SHALL
+quarantine rows with missing identifiers. The fixed salt
+`v648-calibration-7382` SHALL assign complete groups to training (40 percent),
+probability calibration (20 percent), policy calibration (20 percent), and
+final test (20 percent). Each partition SHALL contain at least ten incorrect
+examples. The manifest SHALL lock source hashes and exact group membership.
+
+The training partition SHALL also define a group-disjoint controlled archive
+replay. An independent fixed hash SHALL order its groups. The first half SHALL
+initialize weights, and the remaining groups SHALL form later blocks. The
+online reducer SHALL use 10,000 paired moving-block draws, block length 32,
+sensitivity length 64, and seed 7386307. This replay is not real-world temporal
+evidence. The final split is experiment-held-out, not virgin external evidence.
+
+The protocol SHALL pre-register seeds 7382001 through 7382005, at most 500
+optimizer steps, and one optimizer configuration. It SHALL compare training
+prevalence, L2 logistic calibration, raw balanced-NCE Gibbs, prior-corrected
+NCE Gibbs, and natural-prevalence Bernoulli Gibbs arms. NCE prior correction
+SHALL add `log(pi / (1 - pi))` to energy before the sigmoid. Affine probability
+calibration SHALL use only its own partition. Unknown labels and one-class
+fitting inputs SHALL fail closed.
+
+The policy SHALL freeze threshold pairs `(0.005, 0.50)`, `(0.01, 0.75)`,
+`(0.02, 0.90)`, `(0.03, 0.95)`, and `(0.05, 0.99)`. Policy selection SHALL use
+only policy-calibration groups and one label-blind representative per group.
+One-sided exact binomial bounds SHALL use simultaneous correction over all
+arms, seeds, threshold pairs, and action classes. Incorrect-accept risk SHALL
+not exceed 0.05. Correct-reject risk SHALL not exceed 0.10. An empty selected
+action SHALL have no certificate and SHALL be disabled.
+
+Primary comparisons SHALL use complete-population per-group Brier and log loss,
+plus typed-policy risk, coverage, and utility. A paired group bootstrap SHALL
+use 10,000 draws and seed 7382307. A value claim requires a Brier 95-percent
+upper delta below zero against both prevalence and logistic controls, non-worse
+log loss, coverage of at least 0.25, and no certified-risk coverage loss against
+logistic. Archive-only evidence SHALL remain a bounded claim. Insufficient
+evidence SHALL be a completed null.
+
+#### SCENARIO-AUTO-7382-01: Connected groups cannot cross roles
+
+**Given** rows that share either a question identifier or normalized step text,
+**when** the protocol builds and partitions connected groups,
+**then** every connected row has one group and one partition, while rows with a
+missing identifier appear in explicit quarantine records.
+
+#### SCENARIO-AUTO-7382-02: Probability conversion is stable and prior-aware
+
+**Given** finite and extreme energies and a training prevalence in `(0, 1)`,
+**when** the scorer converts energy to incorrect-label probability,
+**then** it stays finite, preserves the energy sign convention, and applies the
+training-only log-odds correction. One-class prevalence fails closed.
+
+#### SCENARIO-AUTO-7382-03: Typed decisions preserve confidence meaning
+
+**Given** valid probabilities and frozen accept and reject thresholds,
+**when** the policy emits accept, reject, or escalate,
+**then** confidence always means correctness probability. Invalid probability
+input escalates with an explicit reason and no invented numeric confidence.
+
+#### SCENARIO-AUTO-7382-04: Empty action sets cannot certify safety
+
+**Given** zero selected accept or reject groups,
+**when** the exact risk certificate is reduced,
+**then** the action is disabled and no certificate is emitted. Non-empty sets
+use the declared simultaneous correction and preserve their exact counts.
+
+#### SCENARIO-AUTO-7382-05: Test labels stay behind the evaluator boundary
+
+**Given** separate training, probability-calibration, policy-selection, and
+final-test readers,
+**when** ordinary protocol code requests rows,
+**then** only the trusted evaluator can read final-test labels. Fixture checks
+may prove plumbing, but they cannot establish learned calibration value.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
