@@ -18184,3 +18184,4 @@ code |
 | 2026-09-18 19:16 UTC | Qualify durable ARC episodes across timeout and re | OK | 120 passed, 1 warning in 15.47s |
 | 2026-09-18 19:45 UTC | Measure continuous affine calibration on later ver | OK | 90 passed, 1 warning in 7.93s |
 | 2026-09-18 20:09 UTC | Requalify bounded Qwen3.8 assignment transport | OK | 91 passed, 1 warning in 8.00s |
+| 2026-09-18 21:04 UTC | JANITOR: conductor auto-start | WARN | conductor PID 2568112 not alive; unit was inactive; started (REQ-CONDUCTOR-RESTART-1) |
