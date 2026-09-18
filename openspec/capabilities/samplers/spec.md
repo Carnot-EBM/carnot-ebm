@@ -5701,3 +5701,97 @@ source-law mismatch remains visible as a negative control.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7378 and SCENARIO-SAMPLER-7378-* | Planned | Planned |
+
+### REQ-SAMPLER-7392: Preserved Ising Evidence Reduction
+
+Carnot SHALL reduce the preserved Exp7377 laws and Exp7378 trace archive
+without running another chain. The reduction SHALL keep undefined conditional
+laws separate from exact finite-law fidelity and empirical chain quality.
+
+- REQ-SAMPLER-7392-PREFLIGHT: Exp7392 SHALL authenticate the exact Exp7377
+  law artifact, Exp7378 audit artifact, compressed trace archive, and every
+  cited Exp7378 validation log before dependent work. The current task SHALL
+  reject a missing, quarantined, blocked, partial, disqualified, or invalid
+  qualifying prerequisite. Exp7378 remains a labeled disqualified historical
+  diagnostic input. It SHALL never become current readiness evidence.
+- REQ-SAMPLER-7392-SUPPORT: The reduction SHALL independently enumerate every
+  source law with at most 12 variables. For every formula, beta, and each of
+  the three original energy arms, it SHALL distinguish contradictory clamps,
+  satisfiable clamps with no zero-energy state, and ordinary nonempty support.
+  A nonzero minimum energy SHALL retain a defined normalized Boltzmann law.
+- REQ-SAMPLER-7392-TRACES: The reduction SHALL use all original formulas,
+  betas, arms, chain IDs, and frozen budgets. It SHALL recompute trace hashes,
+  counts, energy residuals, marginal observables, autocorrelation, and
+  effective sample size from the archived samples. Empty-support rows SHALL
+  use sample size zero and null quality statistics.
+- REQ-SAMPLER-7392-GATES: The exact-law and finite-chain conclusions SHALL be
+  separate. The fixed energy, exact total-variation, observable-error, and ESS
+  thresholds SHALL remain `1e-12`, `1e-10`, `0.05`, and `1000`. The original
+  V647 all-cell gate, disqualification, adversarial flag, and failed checks
+  SHALL remain unchanged. A labeled nonempty-support reanalysis SHALL not
+  claim a prospective pass.
+- REQ-SAMPLER-7392-COLD: The same archive SHALL be cold-reduced twice. The
+  reducer SHALL fail closed for omitted cells, inconsistent clamps, stale
+  source versions, altered beta values, forged samples, and missing chain
+  costs. Missing archived bytes SHALL remain missing evidence. The task SHALL
+  not sample, change burn-in, tune beta, add a sampler, or port to hardware.
+- REQ-SAMPLER-7392-VALIDATION: The task SHALL use the Exp7358 scoped command
+  plan through the Exp7303 streaming runner. It SHALL require worktree imports,
+  focused tests, separate 100-percent changed-module coverage, scoped Ruff,
+  changed-module mypy, and scoped specification coverage. No numbered E2E
+  applies. The declared entrypoint and an independent cold replay of its
+  artifact form the capability-level E2E check.
+- REQ-SAMPLER-7392-ARTIFACT: The executable SHALL atomically write
+  `results/experiment_7392_v648_ising_reduction.json`. It SHALL use
+  `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM invocation counts,
+  `inference_substrate_class=cpu_exact_solver_or_simulator`, and
+  `execution_venue=host`. It SHALL retain measured phase spans, exact source
+  hashes, all rows, validation receipts, field principles, and a checksum.
+- REQ-SAMPLER-7392-SCORES: `ising_reduction_complete_score` SHALL equal one
+  only after complete authentic archived accounting and valid independent
+  checks. `law_preservation_confirmed_score` SHALL equal one only when
+  independent enumeration confirms source-law equivalence wherever the
+  conditional law is defined. Blocked or disqualified science SHALL keep both
+  readiness scores at zero. `promotion_score` SHALL always remain zero.
+
+#### SCENARIO-SAMPLER-7392-SUPPORT: Positive Minimum Energy Is Still A Law
+
+**Given** a consistent clamp whose permitted states all violate a source clause
+**When** Exp7392 enumerates the conditioned finite state space
+**Then** it reports nonempty support, a positive normalizer, and a defined law
+**And** it does not relabel the row as empty support.
+
+#### SCENARIO-SAMPLER-7392-EMPTY: Contradictory Clamp Has No Conditional Law
+
+**Given** both signs of one unit assumption
+**When** Exp7392 reduces its exact and archived rows
+**Then** the support size and sample size are zero
+**And** observable error, autocorrelation, and ESS are null.
+
+#### SCENARIO-SAMPLER-7392-PRESERVE: Historical Failure Remains Historical
+
+**Given** the preserved Exp7378 artifact with `execution_venue=host_cpu`
+**When** the unchanged Exp7378 validator and current reducer inspect it
+**Then** the closed-venue rejection and all original gates remain unchanged
+**And** the new artifact uses `execution_venue=host` without promoting V647.
+
+#### SCENARIO-SAMPLER-7392-ATTACKS: Archive Mutations Fail Closed
+
+**Given** one authentic cold reduction
+**When** a test omits a cell, changes a clamp, changes a source version or beta,
+forges a trace state, or removes a chain cost
+**Then** the reducer names the affected boundary and refuses readiness.
+
+#### SCENARIO-SAMPLER-7392-TERMINAL: Independent Replay Preserves The Null
+
+**Given** complete archived accounting and passing current required checks
+**When** the entrypoint writes and independently replays the terminal artifact
+**Then** reduction and defined-law scores can equal one
+**And** the unchanged failed V647 all-cell scientific gate keeps the verdict
+`null` and promotion zero.
+
+## Implementation Status (REQ-SAMPLER-7392)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7392 and SCENARIO-SAMPLER-7392-* | In progress | In progress |
