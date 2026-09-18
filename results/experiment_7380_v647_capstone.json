@@ -1,0 +1,2619 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "category": "completion",
+      "check": "exact_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "required_validation",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "category": "completion",
+      "check": "twelve_dispositions",
+      "expected": 12,
+      "observed": 12,
+      "passed": true
+    },
+    {
+      "category": "scientific_efficacy",
+      "check": "required_science_complete",
+      "expected": 1,
+      "observed": 0,
+      "passed": false
+    },
+    {
+      "category": "publication_scope",
+      "check": "historical_fover_gate_only",
+      "expected": {
+        "authorizes_external_publication": false,
+        "certifies_v647": false
+      },
+      "observed": {
+        "authorizes_external_publication": false,
+        "certifies_v647": false
+      },
+      "passed": true
+    },
+    {
+      "category": "promotion",
+      "check": "automatic_promotion",
+      "expected": 0,
+      "observed": 0,
+      "passed": true
+    }
+  ],
+  "active_research_roadmap_changed": false,
+  "completed_at_utc": "2026-09-18T02:40:54.151056+00:00",
+  "contract_receipt": {
+    "advisory": true,
+    "contract_match": true,
+    "contract_rows": [
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7369_v647_contract.json",
+          "gates": [],
+          "id": "exp7369-contract",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind V647 literature and the exact twelve-task contract"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 1,
+        "passed": true,
+        "unit_id": "exp7369-contract",
+        "yaml": {
+          "deliverable": "results/experiment_7369_v647_contract.json",
+          "gates": [],
+          "id": "exp7369-contract",
+          "order": 1,
+          "phase": 1,
+          "substrate": "aggregation",
+          "title": "Bind V647 literature and the exact twelve-task contract"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7370_v647_proof_memory.json",
+          "gates": [],
+          "id": "exp7370-proof-memory",
+          "order": 2,
+          "phase": 1,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Prototype versioned implication proofs for later constraint queries"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 2,
+        "passed": true,
+        "unit_id": "exp7370-proof-memory",
+        "yaml": {
+          "deliverable": "results/experiment_7370_v647_proof_memory.json",
+          "gates": [],
+          "id": "exp7370-proof-memory",
+          "order": 2,
+          "phase": 1,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Prototype versioned implication proofs for later constraint queries"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7371_v647_proof_boundary.json",
+          "gates": [
+            {
+              "artifact_field": "proof_fixture_ready_score",
+              "op": "==",
+              "upstream": "exp7370-proof-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7370-proof-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7370-proof-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7371-proof-boundary",
+          "order": 3,
+          "phase": 1,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Attack proof authority and seal prospective formula streams"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 3,
+        "passed": true,
+        "unit_id": "exp7371-proof-boundary",
+        "yaml": {
+          "deliverable": "results/experiment_7371_v647_proof_boundary.json",
+          "gates": [
+            {
+              "artifact_field": "proof_fixture_ready_score",
+              "op": "==",
+              "upstream": "exp7370-proof-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7370-proof-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7370-proof-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7371-proof-boundary",
+          "order": 3,
+          "phase": 1,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Attack proof authority and seal prospective formula streams"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7372_v647_qwen_canary.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            }
+          ],
+          "id": "exp7372-qwen-canary",
+          "order": 4,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Qualify bounded Qwen3.8 assignment proposals"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 4,
+        "passed": true,
+        "unit_id": "exp7372-qwen-canary",
+        "yaml": {
+          "deliverable": "results/experiment_7372_v647_qwen_canary.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            }
+          ],
+          "id": "exp7372-qwen-canary",
+          "order": 4,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Qualify bounded Qwen3.8 assignment proposals"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7373_v647_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            },
+            {
+              "artifact_field": "qwen_assignment_transport_ready_score",
+              "op": "==",
+              "upstream": "exp7372-qwen-canary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7372-qwen-canary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7372-qwen-canary",
+              "value": false
+            }
+          ],
+          "id": "exp7373-proposal-capture",
+          "order": 5,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Capture frozen Qwen3.8 proposals for distinct logical requests"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 5,
+        "passed": true,
+        "unit_id": "exp7373-proposal-capture",
+        "yaml": {
+          "deliverable": "results/experiment_7373_v647_proposal_capture.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            },
+            {
+              "artifact_field": "qwen_assignment_transport_ready_score",
+              "op": "==",
+              "upstream": "exp7372-qwen-canary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7372-qwen-canary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7372-qwen-canary",
+              "value": false
+            }
+          ],
+          "id": "exp7373-proposal-capture",
+          "order": 5,
+          "phase": 2,
+          "substrate": "model_bounded_generation",
+          "title": "Capture frozen Qwen3.8 proposals for distinct logical requests"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7374_v647_prospective_memory.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            },
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7373-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7373-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7373-proposal-capture",
+              "value": false
+            }
+          ],
+          "id": "exp7374-prospective-memory",
+          "order": 6,
+          "phase": 2,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure continuous learning from certified implication paths"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 6,
+        "passed": true,
+        "unit_id": "exp7374-prospective-memory",
+        "yaml": {
+          "deliverable": "results/experiment_7374_v647_prospective_memory.json",
+          "gates": [
+            {
+              "artifact_field": "proof_boundary_ready_score",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7371-proof-boundary",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7371-proof-boundary",
+              "value": false
+            },
+            {
+              "artifact_field": "candidate_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7373-proposal-capture",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7373-proposal-capture",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7373-proposal-capture",
+              "value": false
+            }
+          ],
+          "id": "exp7374-prospective-memory",
+          "order": 6,
+          "phase": 2,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Measure continuous learning from certified implication paths"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7375_v647_memory_audit.json",
+          "gates": [
+            {
+              "artifact_field": "proof_learning_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7374-prospective-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7374-prospective-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7374-prospective-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7375-memory-audit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently reduce proof-memory causality and cost"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 7,
+        "passed": true,
+        "unit_id": "exp7375-memory-audit",
+        "yaml": {
+          "deliverable": "results/experiment_7375_v647_memory_audit.json",
+          "gates": [
+            {
+              "artifact_field": "proof_learning_capture_complete_score",
+              "op": "==",
+              "upstream": "exp7374-prospective-memory",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7374-prospective-memory",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7374-prospective-memory",
+              "value": false
+            }
+          ],
+          "id": "exp7375-memory-audit",
+          "order": 7,
+          "phase": 2,
+          "substrate": "aggregation",
+          "title": "Independently reduce proof-memory causality and cost"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7376_v647_arc_outcomes.json",
+          "gates": [],
+          "id": "exp7376-arc-outcomes",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Collect new adapter-withheld ARC supervisor outcomes"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 8,
+        "passed": true,
+        "unit_id": "exp7376-arc-outcomes",
+        "yaml": {
+          "deliverable": "results/experiment_7376_v647_arc_outcomes.json",
+          "gates": [],
+          "id": "exp7376-arc-outcomes",
+          "order": 8,
+          "phase": 3,
+          "substrate": "model_bounded_generation",
+          "title": "Collect new adapter-withheld ARC supervisor outcomes"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7377_v647_ising_law.json",
+          "gates": [],
+          "id": "exp7377-ising-law",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Compile original-clause Boltzmann laws with entailment controls"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 9,
+        "passed": true,
+        "unit_id": "exp7377-ising-law",
+        "yaml": {
+          "deliverable": "results/experiment_7377_v647_ising_law.json",
+          "gates": [],
+          "id": "exp7377-ising-law",
+          "order": 9,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Compile original-clause Boltzmann laws with entailment controls"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7378_v647_ising_audit.json",
+          "gates": [
+            {
+              "artifact_field": "law_fixture_ready_score",
+              "op": "==",
+              "upstream": "exp7377-ising-law",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7377-ising-law",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7377-ising-law",
+              "value": false
+            }
+          ],
+          "id": "exp7378-ising-audit",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Validate Boltzmann marginals under cached entailment"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 10,
+        "passed": true,
+        "unit_id": "exp7378-ising-audit",
+        "yaml": {
+          "deliverable": "results/experiment_7378_v647_ising_audit.json",
+          "gates": [
+            {
+              "artifact_field": "law_fixture_ready_score",
+              "op": "==",
+              "upstream": "exp7377-ising-law",
+              "value": 1
+            },
+            {
+              "artifact_field": "verdict_class",
+              "op": "in",
+              "upstream": "exp7377-ising-law",
+              "value": [
+                "positive",
+                "circular_positive",
+                "null"
+              ]
+            },
+            {
+              "artifact_field": "flagged_adversarial",
+              "op": "==",
+              "upstream": "exp7377-ising-law",
+              "value": false
+            }
+          ],
+          "id": "exp7378-ising-audit",
+          "order": 10,
+          "phase": 3,
+          "substrate": "cpu_exact_solver_or_simulator",
+          "title": "Validate Boltzmann marginals under cached entailment"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7379_v647_hardware_envelope.json",
+          "gates": [],
+          "id": "exp7379-hardware-envelope",
+          "order": 11,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Bound proof-memory placement and preserve board prerequisites"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 11,
+        "passed": true,
+        "unit_id": "exp7379-hardware-envelope",
+        "yaml": {
+          "deliverable": "results/experiment_7379_v647_hardware_envelope.json",
+          "gates": [],
+          "id": "exp7379-hardware-envelope",
+          "order": 11,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Bound proof-memory placement and preserve board prerequisites"
+        }
+      },
+      {
+        "abstentions": [],
+        "arm": "markdown_vs_yaml",
+        "censored": false,
+        "checks": {
+          "deliverable": true,
+          "gate_fields_declared": true,
+          "gates": true,
+          "id": true,
+          "order": true,
+          "phase": true,
+          "substrate": true,
+          "title": true
+        },
+        "costs": {
+          "generation_calls": 0,
+          "model_loads": 0,
+          "network_requests": 0
+        },
+        "failures": [],
+        "markdown": {
+          "deliverable": "results/experiment_7380_v647_capstone.json",
+          "gates": [],
+          "id": "exp7380-capstone",
+          "order": 12,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile twelve outcomes and decide proof-memory continuation"
+        },
+        "metrics": {
+          "field_count": 8,
+          "matched_field_count": 8
+        },
+        "order": 12,
+        "passed": true,
+        "unit_id": "exp7380-capstone",
+        "yaml": {
+          "deliverable": "results/experiment_7380_v647_capstone.json",
+          "gates": [],
+          "id": "exp7380-capstone",
+          "order": 12,
+          "phase": 4,
+          "substrate": "aggregation",
+          "title": "Reconcile twelve outcomes and decide proof-memory continuation"
+        }
+      }
+    ],
+    "task_count": 12
+  },
+  "deployment_authorized": false,
+  "disposition_rows": [
+    {
+      "actual_path": "results/experiment_7369_v647_contract.json",
+      "declared_path": "results/experiment_7369_v647_contract.json",
+      "evidence_scope": "eligible_completed_evidence",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_v647_exact_advisory_contract",
+      "next_decision": "defer",
+      "order": 1,
+      "sha256": "sha256:8ed76e673d3e3b89f03c3ad6217b4edf2ad2c601b9f34b2c60d917efb1193060",
+      "source_kind": "declared_artifact",
+      "status": "complete",
+      "task_id": "exp7369-contract",
+      "title": "Bind V647 literature and the exact twelve-task contract",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "actual_path": "results/experiment_7370_v647_proof_memory.json",
+      "declared_path": "results/experiment_7370_v647_proof_memory.json",
+      "evidence_scope": "eligible_completed_evidence",
+      "failed_checks": [
+        {
+          "category": "scientific_efficacy",
+          "check": "prospective_learning_value",
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "terminal_blocking": false
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_proof_fixture_ready_learning_value_not_measured",
+      "next_decision": "continue",
+      "order": 2,
+      "sha256": "sha256:d3147f077f1b77c354fa7a5292a0c3db92e7c65b3c5fbd9d49635f5f9f16d2c9",
+      "source_kind": "declared_artifact",
+      "status": "complete_proof_fixture_ready_development_only",
+      "task_id": "exp7370-proof-memory",
+      "title": "Prototype versioned implication proofs for later constraint queries",
+      "verdict_class": "null"
+    },
+    {
+      "actual_path": "results/experiment_7371_v647_proof_boundary.json",
+      "declared_path": "results/experiment_7371_v647_proof_boundary.json",
+      "evidence_scope": "eligible_completed_evidence",
+      "failed_checks": [
+        {
+          "category": "scientific_efficacy",
+          "check": "live_proposal_cohort",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "terminal_blocking": false
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_null_proof_boundary_ready_learning_value_not_measured",
+      "next_decision": "continue",
+      "order": 3,
+      "sha256": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+      "source_kind": "declared_artifact",
+      "status": "complete_proof_boundary_ready_live_capture_not_started",
+      "task_id": "exp7371-proof-boundary",
+      "title": "Attack proof authority and seal prospective formula streams",
+      "verdict_class": "null"
+    },
+    {
+      "actual_path": "results/experiment_7372_v647_qwen_canary.json",
+      "declared_path": "results/experiment_7372_v647_qwen_canary.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_internal_artifact_validation_failed",
+      "next_decision": "defer",
+      "order": 4,
+      "sha256": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f",
+      "source_kind": "declared_artifact",
+      "status": "complete_internal_validation_failed",
+      "task_id": "exp7372-qwen-canary",
+      "title": "Qualify bounded Qwen3.8 assignment proposals",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_path": "results/experiment_7373_proposal_capture.json",
+      "declared_path": "results/experiment_7373_v647_proposal_capture.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [
+        {
+          "summary": "gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7372-qwen-canary.qwen_assignment_transport_ready_score (actual=0 == expected=1)"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "next_decision": "defer",
+      "order": 5,
+      "sha256": "sha256:744bfae6f8368194fb2986a5f603f64698a8841338cf5595f822a5962aeb7b90",
+      "source_kind": "conductor_pre_gate_artifact",
+      "status": "blocked",
+      "task_id": "exp7373-proposal-capture",
+      "title": "Capture frozen Qwen3.8 proposals for distinct logical requests",
+      "verdict_class": "blocked"
+    },
+    {
+      "actual_path": null,
+      "declared_path": "results/experiment_7374_v647_prospective_memory.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_upstream_retired",
+      "next_decision": "retire",
+      "order": 6,
+      "sha256": "sha256:32d3e0fba42f421526c4201ca54b2add1e6d868a99925b6ab102a420a3c18c74",
+      "source_kind": "conductor_log_record",
+      "status": "blocked",
+      "task_id": "exp7374-prospective-memory",
+      "title": "Measure continuous learning from certified implication paths",
+      "verdict_class": "blocked"
+    },
+    {
+      "actual_path": null,
+      "declared_path": "results/experiment_7375_v647_memory_audit.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_upstream_retired",
+      "next_decision": "retire",
+      "order": 7,
+      "sha256": "sha256:5d1ad6e84deec9942ca1ef57b0ee01de3596700ff8509a93f82567dbfc99e24f",
+      "source_kind": "conductor_log_record",
+      "status": "blocked",
+      "task_id": "exp7375-memory-audit",
+      "title": "Independently reduce proof-memory causality and cost",
+      "verdict_class": "blocked"
+    },
+    {
+      "actual_path": "results/experiment_7376_v647_arc_outcomes.json",
+      "declared_path": "results/experiment_7376_v647_arc_outcomes.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [
+        {
+          "artifact_field": "arc_outcome_capture_complete_score",
+          "check": "episode_accounting",
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "upstream": "results/raw/experiment_7376_v647_arc_outcomes/independent_reduction_input.json"
+        },
+        {
+          "artifact_field": "generation_calls_attempted>0",
+          "check": "bounded_generation_attempted",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "upstream": "invocation_counts"
+        },
+        {
+          "artifact_field": "all_required_commands_passed",
+          "check": "required_validation",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "upstream": "validation_receipts"
+        },
+        {
+          "artifact_field": "critical_finding",
+          "check": "adversarial_clear",
+          "expected": false,
+          "observed": true,
+          "passed": false,
+          "upstream": "adversarial_verify"
+        },
+        {
+          "artifact_field": "supervisor_support_ready_score",
+          "check": "support_floor",
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "upstream": "joined_runtime_events"
+        },
+        {
+          "artifact_field": "promotion_score",
+          "check": "promotion",
+          "expected": 1,
+          "observed": 0,
+          "passed": false,
+          "upstream": "protocol"
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_required_evidence",
+      "next_decision": "defer",
+      "order": 8,
+      "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5",
+      "source_kind": "declared_artifact",
+      "status": "complete_disqualified_required_evidence",
+      "task_id": "exp7376-arc-outcomes",
+      "title": "Collect new adapter-withheld ARC supervisor outcomes",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_path": "results/experiment_7377_v647_ising_law.json",
+      "declared_path": "results/experiment_7377_v647_ising_law.json",
+      "evidence_scope": "eligible_completed_evidence",
+      "failed_checks": [],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_circular_positive_exact_source_law_fixture_ready",
+      "next_decision": "defer",
+      "order": 9,
+      "sha256": "sha256:c0ccdce53df962a8bed7a90e159ba5a7e8d4c353483f8873d3b4c1570b013c69",
+      "source_kind": "declared_artifact",
+      "status": "complete_exact_source_law_fixture_ready",
+      "task_id": "exp7377-ising-law",
+      "title": "Compile original-clause Boltzmann laws with entailment controls",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "actual_path": "results/experiment_7378_v647_ising_audit.json",
+      "declared_path": "results/experiment_7378_v647_ising_audit.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [
+        {
+          "category": "scientific_efficacy",
+          "check": "all_source_cells_qualified",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "terminal_blocking": false
+        },
+        {
+          "category": "required_validation",
+          "check": "terminal_validation_passed",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "terminal_blocking": true
+        }
+      ],
+      "flagged_adversarial": true,
+      "honest_verdict": "complete_disqualified_ising_sampler_audit_evidence",
+      "next_decision": "defer",
+      "order": 10,
+      "sha256": "sha256:a9f6ae5b2f2d189cdb8d81542cb5ca6ef5ebc94f69208d5a933527834ac8afd8",
+      "source_kind": "declared_artifact",
+      "status": "complete_ising_audit_disqualified",
+      "task_id": "exp7378-ising-audit",
+      "title": "Validate Boltzmann marginals under cached entailment",
+      "verdict_class": "disqualified"
+    },
+    {
+      "actual_path": "results/experiment_7379_v647_hardware_envelope.json",
+      "declared_path": "results/experiment_7379_v647_hardware_envelope.json",
+      "evidence_scope": "accounting_only",
+      "failed_checks": [
+        {
+          "category": "external_prerequisite",
+          "check": "gatemate_changed_physical_state_receipt",
+          "expected_value": {
+            "changed_field_any_of": [
+              "cable",
+              "port",
+              "power",
+              "board",
+              "jtag",
+              "dirtyjtag"
+            ],
+            "operator_authored": true,
+            "provenance": [
+              "ops/known-issues.md",
+              "research-hardware-wishlist.md",
+              "ops/hardware-bringup-prep.md",
+              "ops/operator-followup.md"
+            ],
+            "receipt_date": ">20260823"
+          },
+          "field": "receipt_date/operator_authored/provenance/changed_field",
+          "observed_value": {
+            "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+            "accepted_receipt_count": 0,
+            "selected_source_path": null
+          },
+          "passed": false,
+          "upstream": "physical_state_receipt"
+        },
+        {
+          "category": "placement_input",
+          "check": "placement_source:Exp7374",
+          "expected_value": "readable JSON object",
+          "field": "path",
+          "observed_value": "missing",
+          "passed": false,
+          "upstream": "results/experiment_7374_v647_prospective_memory.json"
+        },
+        {
+          "category": "placement_input",
+          "check": "placement_source:Exp7378",
+          "expected_value": "positive|circular_positive|null",
+          "field": "verdict_class",
+          "observed_value": "disqualified",
+          "passed": false,
+          "upstream": "results/experiment_7378_v647_ising_audit.json"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and unavailable placement inputs create no speed claim",
+      "next_decision": "retire",
+      "order": 11,
+      "sha256": "sha256:9d42606c8f537cd06de0e83ac4ba83731ea5c9ea30694e220b164315be00b98d",
+      "source_kind": "declared_artifact",
+      "status": "blocked",
+      "task_id": "exp7379-hardware-envelope",
+      "title": "Bound proof-memory placement and preserve board prerequisites",
+      "verdict_class": "blocked"
+    },
+    {
+      "actual_path": "results/experiment_7380_v647_capstone.json",
+      "declared_path": "results/experiment_7380_v647_capstone.json",
+      "evidence_scope": "completed_capstone_accounting",
+      "failed_checks": [
+        {
+          "artifact_field": "verdict_class/flagged_adversarial",
+          "category": "required_validation",
+          "expected": {
+            "flagged_adversarial": false,
+            "verdict_class": [
+              "circular_positive",
+              "null",
+              "positive"
+            ]
+          },
+          "failed_check": "required_safety_or_validation",
+          "observed": {
+            "flagged_adversarial": true,
+            "verdict_class": "disqualified"
+          },
+          "passed": false,
+          "upstream": "exp7372-qwen-canary"
+        },
+        {
+          "artifact_field": "verdict_class/flagged_adversarial",
+          "category": "required_validation",
+          "expected": {
+            "flagged_adversarial": false,
+            "verdict_class": [
+              "circular_positive",
+              "null",
+              "positive"
+            ]
+          },
+          "failed_check": "required_safety_or_validation",
+          "observed": {
+            "flagged_adversarial": true,
+            "verdict_class": "disqualified"
+          },
+          "passed": false,
+          "upstream": "exp7376-arc-outcomes"
+        },
+        {
+          "artifact_field": "verdict_class/flagged_adversarial",
+          "category": "required_validation",
+          "expected": {
+            "flagged_adversarial": false,
+            "verdict_class": [
+              "circular_positive",
+              "null",
+              "positive"
+            ]
+          },
+          "failed_check": "required_safety_or_validation",
+          "observed": {
+            "flagged_adversarial": true,
+            "verdict_class": "disqualified"
+          },
+          "passed": false,
+          "upstream": "exp7378-ising-audit"
+        },
+        {
+          "artifact_field": "proof_learning_capture_complete_score",
+          "category": "external_prerequisite",
+          "expected": 1,
+          "failed_check": "required_proof_memory_evidence",
+          "observed": {
+            "accepted_for_science": false,
+            "source_kind": "conductor_log_record",
+            "verdict_class": "blocked"
+          },
+          "passed": false,
+          "upstream": "exp7374-prospective-memory"
+        },
+        {
+          "artifact_field": "proof_learning_audit_complete_score",
+          "category": "external_prerequisite",
+          "expected": 1,
+          "failed_check": "required_proof_memory_evidence",
+          "observed": {
+            "accepted_for_science": false,
+            "source_kind": "conductor_log_record",
+            "verdict_class": "blocked"
+          },
+          "passed": false,
+          "upstream": "exp7375-memory-audit"
+        }
+      ],
+      "flagged_adversarial": false,
+      "honest_verdict": "complete_disqualified_required_science_or_validation_failure: all twelve V647 dispositions are accounted for; required producer validation failed and proof-memory measurement plus audit were pre-gated",
+      "next_decision": "stop",
+      "order": 12,
+      "sha256": null,
+      "source_kind": "self",
+      "status": "complete_disqualified_v647_capstone",
+      "task_id": "exp7380-capstone",
+      "title": "Reconcile twelve outcomes and decide proof-memory continuation",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "duration_s": 15.475501709850505,
+  "execution_venue": "host",
+  "experiment_id": "exp7380-capstone",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Keep the list empty because the capstone intends no current model work.",
+    "acceptance_gate_results": "Keep expected, observed, and passed values separate for every gate.",
+    "active_research_roadmap_changed": "Record the measured V647 capstone value for active research roadmap changed.",
+    "completed_at_utc": "Record the measured V647 capstone value for completed at utc.",
+    "contract_receipt": "Record the measured V647 capstone value for contract receipt.",
+    "deployment_authorized": "Record the measured V647 capstone value for deployment authorized.",
+    "disposition_rows": "Name each exact artifact or pre-gate record, class, scope, failed checks, and decision.",
+    "duration_s": "Measure monotonic elapsed time without sleeping to meet a floor.",
+    "execution_venue": "Record host CPU work; V647 performs no current board execution here.",
+    "experiment_id": "Record the measured V647 capstone value for experiment id.",
+    "external_publication_authorized": "Record the measured V647 capstone value for external publication authorized.",
+    "field_principles": "Explain each ordinary field directly without wrapping values.",
+    "flagged_adversarial": "Preserve critical independent findings so affected producers cannot supply readiness.",
+    "gate_check_summary": "Name every failed upstream, check, field, expected value, and observed value.",
+    "historical_model_input_sidecars": "Record the measured V647 capstone value for historical model input sidecars.",
+    "honest_verdict": "Use complete scope for finished work and name unavailable external prerequisites.",
+    "host_computation": "Record the measured V647 capstone value for host computation.",
+    "inference_substrate": "Describe host aggregation and keep historical model provenance in labeled sidecars.",
+    "inference_substrate_class": "Use the closed aggregation class that matches actual work.",
+    "invocation_counts": "Count attempted and terminal current loads and generations; historical inputs do not count.",
+    "milestone": "Record the measured V647 capstone value for milestone.",
+    "milestone_disposition_complete_score": "One means exactly twelve ordered dispositions, not twelve science successes.",
+    "model_invoked": "Set true for any attempted current model load or generation, including failure.",
+    "next_research_decisions": "Tie every continue, retire, or defer decision to a measured bottleneck.",
+    "phase": "Record the measured V647 capstone value for phase.",
+    "phase_spans": "Record measured read, build, load, generate, evaluate, validate, and write spans.",
+    "preconditions_checked": "Record exact paths, producer identity, hash, class, and resource checks before reduction.",
+    "production_defaults_changed": "Record the measured V647 capstone value for production defaults changed.",
+    "promotion_score": "Keep zero because V647 authorizes no rollout or external publication.",
+    "publication_gate_results": "Preserve canonical G1-G4 under their historical FoVer-only scope.",
+    "random_seed": "Freeze the experiment and inherited resampling seeds.",
+    "readiness_score": "Record the measured V647 capstone value for readiness score.",
+    "release_or_push_authorized": "Record the measured V647 capstone value for release or push authorized.",
+    "repository_health": "Keep dated unrelated failures separate from required affected checks.",
+    "reproducibility_checksum": "Bind exact code, settings, authorities, protocol, hashes, and reduced rows.",
+    "required_checks_passed": "Record the measured V647 capstone value for required checks passed.",
+    "required_science_complete_score": "Require eligible proof-memory measurement and audit plus eligible Ising measurement.",
+    "research_conductor_changed": "Record the measured V647 capstone value for research conductor changed.",
+    "retirement_decisions": "Record prior and current verdicts, mechanism changes, and bounded retirement choices.",
+    "rows": "Keep the measured branch outcomes, metrics, costs, failures, and censoring behind claims.",
+    "run_date": "Use 20260918 with actual UTC start and completion timestamps.",
+    "sample_size_budget": "Separate planned, attempted, completed, censored, stopping, and remaining work.",
+    "schema": "Use a versioned schema with ordinary top-level experiment_id and milestone.",
+    "scientific_value_score": "Record the measured V647 capstone value for scientific value score.",
+    "source_artifact_hashes": "Bind every artifact or canonical conductor record used by the capstone.",
+    "started_at_utc": "Record the measured V647 capstone value for started at utc.",
+    "status": "Use a terminal state only after actual work and required affected validation.",
+    "title": "Record the measured V647 capstone value for title.",
+    "validation_receipts": "Retain exact argv, environment, scope, exit, duration, and log hash for checks.",
+    "verdict_class": "Use the closed class; partial is only unfinished retryable capstone-owned work.",
+    "verifier_is_oracle": "Mark true because exact proof and finite-law evaluators define truth."
+  },
+  "flagged_adversarial": true,
+  "gate_check_summary": {
+    "failed_count": 5,
+    "failures": [
+      {
+        "artifact_field": "verdict_class/flagged_adversarial",
+        "category": "required_validation",
+        "expected": {
+          "flagged_adversarial": false,
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "failed_check": "required_safety_or_validation",
+        "observed": {
+          "flagged_adversarial": true,
+          "verdict_class": "disqualified"
+        },
+        "passed": false,
+        "upstream": "exp7372-qwen-canary"
+      },
+      {
+        "artifact_field": "verdict_class/flagged_adversarial",
+        "category": "required_validation",
+        "expected": {
+          "flagged_adversarial": false,
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "failed_check": "required_safety_or_validation",
+        "observed": {
+          "flagged_adversarial": true,
+          "verdict_class": "disqualified"
+        },
+        "passed": false,
+        "upstream": "exp7376-arc-outcomes"
+      },
+      {
+        "artifact_field": "verdict_class/flagged_adversarial",
+        "category": "required_validation",
+        "expected": {
+          "flagged_adversarial": false,
+          "verdict_class": [
+            "circular_positive",
+            "null",
+            "positive"
+          ]
+        },
+        "failed_check": "required_safety_or_validation",
+        "observed": {
+          "flagged_adversarial": true,
+          "verdict_class": "disqualified"
+        },
+        "passed": false,
+        "upstream": "exp7378-ising-audit"
+      },
+      {
+        "artifact_field": "proof_learning_capture_complete_score",
+        "category": "external_prerequisite",
+        "expected": 1,
+        "failed_check": "required_proof_memory_evidence",
+        "observed": {
+          "accepted_for_science": false,
+          "source_kind": "conductor_log_record",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "upstream": "exp7374-prospective-memory"
+      },
+      {
+        "artifact_field": "proof_learning_audit_complete_score",
+        "category": "external_prerequisite",
+        "expected": 1,
+        "failed_check": "required_proof_memory_evidence",
+        "observed": {
+          "accepted_for_science": false,
+          "source_kind": "conductor_log_record",
+          "verdict_class": "blocked"
+        },
+        "passed": false,
+        "upstream": "exp7375-memory-audit"
+      }
+    ],
+    "first_failure": {
+      "artifact_field": "verdict_class/flagged_adversarial",
+      "category": "required_validation",
+      "expected": {
+        "flagged_adversarial": false,
+        "verdict_class": [
+          "circular_positive",
+          "null",
+          "positive"
+        ]
+      },
+      "failed_check": "required_safety_or_validation",
+      "observed": {
+        "flagged_adversarial": true,
+        "verdict_class": "disqualified"
+      },
+      "passed": false,
+      "upstream": "exp7372-qwen-canary"
+    },
+    "passed": false
+  },
+  "historical_model_input_sidecars": [
+    {
+      "counted_as_current_inference": false,
+      "historical_only": true,
+      "invocation_counts": {
+        "generation_calls_attempted": 4,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 4,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "historical_generation_calls": 0,
+        "historical_model_loads": 0,
+        "model_loads_attempted": 1,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0
+      },
+      "path": "results/experiment_7372_v647_qwen_canary.json",
+      "sha256": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f",
+      "task_id": "exp7372-qwen-canary"
+    },
+    {
+      "counted_as_current_inference": false,
+      "historical_only": true,
+      "invocation_counts": null,
+      "path": "results/experiment_7373_proposal_capture.json",
+      "sha256": "sha256:744bfae6f8368194fb2986a5f603f64698a8841338cf5595f822a5962aeb7b90",
+      "task_id": "exp7373-proposal-capture"
+    },
+    {
+      "counted_as_current_inference": false,
+      "historical_only": true,
+      "invocation_counts": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 1,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 1,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "path": "results/experiment_7376_v647_arc_outcomes.json",
+      "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5",
+      "task_id": "exp7376-arc-outcomes"
+    }
+  ],
+  "honest_verdict": "complete_disqualified_required_science_or_validation_failure: all twelve V647 dispositions are accounted for; required producer validation failed and proof-memory measurement plus audit were pre-gated",
+  "host_computation": {
+    "current_model_or_board_operations": 0,
+    "operation": "JSON/YAML/Markdown parsing, hashing, reduction, and scoped validation"
+  },
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.647",
+  "milestone_disposition_complete_score": 1,
+  "model_invoked": false,
+  "next_research_decisions": [
+    {
+      "branch": "proof_memory",
+      "condition": "Resume only after a clean bounded proposal transport receipt; reuse the sealed proof boundary.",
+      "decision": "defer",
+      "measured_bottleneck": "Exp7372 transport score 0 pre-gated Exp7373, Exp7374, and Exp7375."
+    },
+    {
+      "branch": "arc_supervisor",
+      "condition": "Do not fit or promote a selector without new completed live outcomes.",
+      "decision": "retire",
+      "measured_bottleneck": "Six attempts produced zero completed episodes and zero firings."
+    },
+    {
+      "branch": "ising_law",
+      "condition": "Repair validation and empty-support handling without changing the frozen law protocol.",
+      "decision": "continue",
+      "measured_bottleneck": "The exact law fixture passed, but 18 sample cells had empty support and terminal validation failed."
+    },
+    {
+      "branch": "hardware",
+      "condition": "No bring-up retry until an operator-authored physical change or eligible measured cost row exists.",
+      "decision": "defer",
+      "measured_bottleneck": "No eligible complete-service placement rows and no changed GateMate state receipt."
+    }
+  ],
+  "phase": 4,
+  "phase_spans": [
+    {
+      "duration_s": 0.28258211095817387,
+      "ended_elapsed_s": 0.28273284481838346,
+      "phase": "read",
+      "started_elapsed_s": 0.00015073386020958424
+    },
+    {
+      "duration_s": 3.1150411814451218e-06,
+      "ended_elapsed_s": 0.2827615689020604,
+      "phase": "load",
+      "started_elapsed_s": 0.28275845386087894
+    },
+    {
+      "duration_s": 1.843087375164032e-06,
+      "ended_elapsed_s": 0.2827655968721956,
+      "phase": "generate",
+      "started_elapsed_s": 0.28276375378482044
+    },
+    {
+      "duration_s": 0.0005882550030946732,
+      "ended_elapsed_s": 0.28335553500801325,
+      "phase": "build",
+      "started_elapsed_s": 0.2827672800049186
+    },
+    {
+      "duration_s": 14.060760652180761,
+      "ended_elapsed_s": 14.344123129965737,
+      "phase": "validate",
+      "started_elapsed_s": 0.28336247778497636
+    },
+    {
+      "duration_s": 1.1240077170077711,
+      "ended_elapsed_s": 15.47542995493859,
+      "phase": "validate",
+      "started_elapsed_s": 14.35142223793082
+    },
+    {
+      "duration_s": 9.328126907348633e-06,
+      "ended_elapsed_s": 15.475485899951309,
+      "phase": "write",
+      "started_elapsed_s": 15.475476812804118
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "REQ-REPORT-7380",
+      "check": "driving_requirement",
+      "expected": true,
+      "observed": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "tasks/order/fields/gates",
+      "check": "exact_contract",
+      "expected": {
+        "milestone": "2026.09.647",
+        "task_ids": [
+          "exp7369-contract",
+          "exp7370-proof-memory",
+          "exp7371-proof-boundary",
+          "exp7372-qwen-canary",
+          "exp7373-proposal-capture",
+          "exp7374-prospective-memory",
+          "exp7375-memory-audit",
+          "exp7376-arc-outcomes",
+          "exp7377-ising-law",
+          "exp7378-ising-audit",
+          "exp7379-hardware-envelope",
+          "exp7380-capstone"
+        ]
+      },
+      "observed": {
+        "milestone": "2026.09.647",
+        "task_ids": [
+          "exp7369-contract",
+          "exp7370-proof-memory",
+          "exp7371-proof-boundary",
+          "exp7372-qwen-canary",
+          "exp7373-proposal-capture",
+          "exp7374-prospective-memory",
+          "exp7375-memory-audit",
+          "exp7376-arc-outcomes",
+          "exp7377-ising-law",
+          "exp7378-ising-audit",
+          "exp7379-hardware-envelope",
+          "exp7380-capstone"
+        ]
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml + openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "accepted_for_science": true,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "circular_positive"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "circular_positive",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7369_v647_contract.json",
+        "sha256": "sha256:8ed76e673d3e3b89f03c3ad6217b4edf2ad2c601b9f34b2c60d917efb1193060"
+      },
+      "passed": true,
+      "upstream": "exp7369-contract"
+    },
+    {
+      "accepted_for_science": true,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "null"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "null",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7370_v647_proof_memory.json",
+        "sha256": "sha256:d3147f077f1b77c354fa7a5292a0c3db92e7c65b3c5fbd9d49635f5f9f16d2c9"
+      },
+      "passed": true,
+      "upstream": "exp7370-proof-memory"
+    },
+    {
+      "accepted_for_science": true,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "null"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "null",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7371_v647_proof_boundary.json",
+        "sha256": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4"
+      },
+      "passed": true,
+      "upstream": "exp7371-proof-boundary"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "disqualified"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "disqualified",
+        "flagged_adversarial": true,
+        "path": "results/experiment_7372_v647_qwen_canary.json",
+        "sha256": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f"
+      },
+      "passed": true,
+      "upstream": "exp7372-qwen-canary"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "blocked"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "blocked",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7373_proposal_capture.json",
+        "sha256": "sha256:744bfae6f8368194fb2986a5f603f64698a8841338cf5595f822a5962aeb7b90"
+      },
+      "passed": true,
+      "upstream": "exp7373-proposal-capture"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "blocked"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "blocked",
+        "flagged_adversarial": false,
+        "path": null,
+        "sha256": "sha256:32d3e0fba42f421526c4201ca54b2add1e6d868a99925b6ab102a420a3c18c74"
+      },
+      "passed": true,
+      "upstream": "exp7374-prospective-memory"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "blocked"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "blocked",
+        "flagged_adversarial": false,
+        "path": null,
+        "sha256": "sha256:5d1ad6e84deec9942ca1ef57b0ee01de3596700ff8509a93f82567dbfc99e24f"
+      },
+      "passed": true,
+      "upstream": "exp7375-memory-audit"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "disqualified"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "disqualified",
+        "flagged_adversarial": true,
+        "path": "results/experiment_7376_v647_arc_outcomes.json",
+        "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5"
+      },
+      "passed": true,
+      "upstream": "exp7376-arc-outcomes"
+    },
+    {
+      "accepted_for_science": true,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "circular_positive"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "circular_positive",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7377_v647_ising_law.json",
+        "sha256": "sha256:c0ccdce53df962a8bed7a90e159ba5a7e8d4c353483f8873d3b4c1570b013c69"
+      },
+      "passed": true,
+      "upstream": "exp7377-ising-law"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "disqualified"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "disqualified",
+        "flagged_adversarial": true,
+        "path": "results/experiment_7378_v647_ising_audit.json",
+        "sha256": "sha256:a9f6ae5b2f2d189cdb8d81542cb5ca6ef5ebc94f69208d5a933527834ac8afd8"
+      },
+      "passed": true,
+      "upstream": "exp7378-ising-audit"
+    },
+    {
+      "accepted_for_science": false,
+      "artifact_field": "path/hash/class/authenticated/flagged_adversarial",
+      "check": "preceding_disposition_source",
+      "expected": {
+        "authenticated": true,
+        "class": "blocked"
+      },
+      "observed": {
+        "authenticated": true,
+        "class": "blocked",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7379_v647_hardware_envelope.json",
+        "sha256": "sha256:9d42606c8f537cd06de0e83ac4ba83731ea5c9ea30694e220b164315be00b98d"
+      },
+      "passed": true,
+      "upstream": "exp7379-hardware-envelope"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "publication_gate_results": {
+    "authorizes_deployment": false,
+    "authorizes_external_publication": false,
+    "authorizes_release_or_push": false,
+    "certifies_v647": false,
+    "definitions": {
+      "G1": "headline measured",
+      "G2": "independently reproduced",
+      "G3": "prose narrowing-clean",
+      "G4": "numbers trace to artifacts"
+    },
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "internal_reducer_is_external_reproducer": false,
+    "paper_ready": true,
+    "scope": "historical_fover_paper_only",
+    "source_note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "unmet_gates": []
+  },
+  "random_seed": {
+    "experiment": 738020260918,
+    "resampling": 7371307
+  },
+  "readiness_score": 0,
+  "release_or_push_authorized": false,
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "20260918",
+    "historical_failures": [],
+    "status": "historical_observations_retained"
+  },
+  "reproducibility_checksum": "sha256:b6ee8aa00195cd8a890f0e40d1e78c4bb3aa6c7c49e3cc729468ba8ea7d6c9c7",
+  "required_checks_passed": true,
+  "required_science_complete_score": 0,
+  "research_conductor_changed": false,
+  "retirement_decisions": [
+    {
+      "branch": "v646_capstone_prior_failure",
+      "current_verdict": "complete_disqualified_required_science_or_validation_failure: all twelve V647 dispositions are accounted for; required producer validation failed and proof-memory measurement plus audit were pre-gated",
+      "decision": "preserve_not_same_verdict",
+      "mechanical_receipt": "research-roadmap.yaml exp7380-capstone.prior_failures[0]",
+      "mechanism_change": "V647 used proof-carrying implication paths and the executed scoped command plan.",
+      "previous_verdict": "complete_disqualified_required_science_or_validation_failure",
+      "same_exact_verdict": false
+    },
+    {
+      "branch": "boolean_schedule_acquisition",
+      "current_verdict": "unchanged_mechanism_not_run",
+      "decision": "retire",
+      "mechanical_receipt": "V647 design rerun discipline",
+      "mechanism_change": "none",
+      "previous_verdict": "null_or_disqualified",
+      "same_exact_verdict": true
+    },
+    {
+      "branch": "unsupported_supervisor_selector",
+      "current_verdict": "zero_completed_episodes_and_zero_firings",
+      "decision": "retire",
+      "mechanical_receipt": "Exp7376 rows and sample_size_budget",
+      "mechanism_change": "new outcome acquisition failed before selector support existed",
+      "previous_verdict": "supported_decision_count_zero",
+      "same_exact_verdict": true
+    },
+    {
+      "branch": "unchanged_hardware_bringup",
+      "current_verdict": "blocked_changed_physical_state",
+      "decision": "retire",
+      "mechanical_receipt": "Exp7379 gate_check_summary",
+      "mechanism_change": "none",
+      "previous_verdict": "blocked_changed_physical_state",
+      "same_exact_verdict": true
+    }
+  ],
+  "rows": [
+    {
+      "branch": "proof_memory",
+      "censored": true,
+      "completion_score": 0,
+      "failures": [
+        "prospective measurement retired",
+        "independent audit retired"
+      ],
+      "metrics": {
+        "causal_erasure_witnesses": null,
+        "complete_service_cost_upper_95": null,
+        "development_safety_ready": true,
+        "independent_audit_available": false,
+        "paid_query_ratio_upper_95": null,
+        "prospective_measurement_available": false
+      },
+      "promotes_readiness": false,
+      "source_tasks": [
+        "exp7370-proof-memory",
+        "exp7371-proof-boundary",
+        "exp7374-prospective-memory",
+        "exp7375-memory-audit"
+      ],
+      "value_score": 0,
+      "verifier_is_oracle": true
+    },
+    {
+      "branch": "fresh_model_proposals",
+      "censored": true,
+      "completion_score": 0,
+      "failures": [
+        "canary disqualified",
+        "proposal capture pre-gated"
+      ],
+      "metrics": {
+        "canary_transport_ready_score": 0,
+        "canary_verdict_class": "disqualified",
+        "capture_started": false,
+        "current_model_calls_counted_by_capstone": 0,
+        "oracle_verification_is_model_quality": false
+      },
+      "promotes_readiness": false,
+      "source_tasks": [
+        "exp7372-qwen-canary",
+        "exp7373-proposal-capture"
+      ],
+      "value_score": 0,
+      "verifier_is_oracle": true
+    },
+    {
+      "branch": "arc_outcomes",
+      "censored": true,
+      "completion_score": 0,
+      "failures": [
+        "no completed live episodes",
+        "no supported supervisor firing"
+      ],
+      "metrics": {
+        "attempted_episodes": 6,
+        "censored_episodes": 6,
+        "completed_episodes": 0,
+        "planned_episodes": 6,
+        "supervisor_firing_count": 0
+      },
+      "promotes_readiness": false,
+      "source_tasks": [
+        "exp7376-arc-outcomes"
+      ],
+      "value_score": 0,
+      "verifier_is_oracle": false
+    },
+    {
+      "branch": "ising_law_and_samples",
+      "censored": true,
+      "completion_score": 0,
+      "failures": [
+        "sampler audit terminal validation failed",
+        "18 empty-support cells"
+      ],
+      "metrics": {
+        "all_source_cells_qualified": false,
+        "completed_finite_law_rows": 216,
+        "completed_formulas": 24,
+        "completed_source_cells": 144,
+        "law_fixture_ready_score": 1,
+        "qualified_source_cells": 126,
+        "sample_audit_eligible": false
+      },
+      "promotes_readiness": false,
+      "source_tasks": [
+        "exp7377-ising-law",
+        "exp7378-ising-audit"
+      ],
+      "value_score": 0,
+      "verifier_is_oracle": true
+    },
+    {
+      "branch": "hardware_placement",
+      "censored": false,
+      "completion_score": 1,
+      "failures": [
+        "proof-memory placement input missing",
+        "Ising placement input disqualified",
+        "GateMate physical state unchanged"
+      ],
+      "metrics": {
+        "board_disposition_complete_score": 1,
+        "current_board_execution_count": 0,
+        "gatemate_changed_state_available": false,
+        "placement_measurement_available": false
+      },
+      "promotes_readiness": false,
+      "source_tasks": [
+        "exp7379-hardware-envelope"
+      ],
+      "value_score": 0,
+      "verifier_is_oracle": false
+    }
+  ],
+  "run_date": "20260918",
+  "sample_size_budget": {
+    "arc": {
+      "action_limit_per_episode": 128,
+      "aggregate_episode_work_budget_s": 1800,
+      "attempted_units": 6,
+      "censored_units": 6,
+      "completed_units": 0,
+      "games": 3,
+      "max_new_tokens_per_call": 256,
+      "model_call_limit_per_episode": 2,
+      "planned_units": 6,
+      "remaining_work": 0,
+      "seeds_per_game": 2,
+      "stopping_rule": "six sealed dispositions or the first fixed action, call, token, or elapsed ceiling"
+    },
+    "attempted_disposition_units": 12,
+    "censored_disposition_units": 0,
+    "completed_disposition_units": 12,
+    "ising_law": {
+      "attempted_finite_rows": 216,
+      "attempted_formulas": 24,
+      "attempted_negative_controls": 6,
+      "censored_finite_rows": 0,
+      "censored_formulas": 0,
+      "completed_finite_rows": 216,
+      "completed_formulas": 24,
+      "completed_negative_controls": 6,
+      "planned_beta_values": 3,
+      "planned_conditions": 3,
+      "planned_finite_rows": 216,
+      "planned_formulas": 24,
+      "planned_negative_controls": 6,
+      "remaining_work": 0,
+      "stopping_rule": "Enumerate every state for all frozen cells once; do not tune after results."
+    },
+    "ising_samples": {
+      "attempted_chains": 612,
+      "attempted_formulas": 24,
+      "attempted_negative_cells": 9,
+      "attempted_source_cells": 144,
+      "censored_samples_due_to_empty_support": 288000,
+      "completed_nonempty_chains": 540,
+      "completed_source_cells": 144,
+      "planned_chains": 612,
+      "planned_formulas": 24,
+      "planned_negative_cells": 9,
+      "planned_recorded_samples_per_nonempty_chain": 4000,
+      "planned_source_cells": 144,
+      "remaining_work": 0,
+      "stopping_rule": "Run the frozen budget once; never extend or tune after observed metrics.",
+      "structural_empty_support_chains": 72
+    },
+    "planned_disposition_units": 12,
+    "proof_memory": {
+      "censored_units": 2,
+      "completed_measurement_and_audit_units": 0,
+      "planned_measurement_and_audit_units": 2,
+      "remaining_work": 0,
+      "stopping_rule": "Preserve conductor retirement; do not invent or retry external inputs in the capstone."
+    },
+    "remaining_disposition_units": 0
+  },
+  "schema": "carnot.experiment_7380.v647_capstone.v1",
+  "scientific_value_score": 0,
+  "source_artifact_hashes": {
+    "active_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:de4ad441a1c567fdd966d74dea69fea81f9cdef403678196d46023eaac0db50b"
+    },
+    "exp7369-contract": {
+      "path": "results/experiment_7369_v647_contract.json",
+      "sha256": "sha256:8ed76e673d3e3b89f03c3ad6217b4edf2ad2c601b9f34b2c60d917efb1193060",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7370-proof-memory": {
+      "path": "results/experiment_7370_v647_proof_memory.json",
+      "sha256": "sha256:d3147f077f1b77c354fa7a5292a0c3db92e7c65b3c5fbd9d49635f5f9f16d2c9",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7371-proof-boundary": {
+      "path": "results/experiment_7371_v647_proof_boundary.json",
+      "sha256": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7372-qwen-canary": {
+      "path": "results/experiment_7372_v647_qwen_canary.json",
+      "sha256": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7373-proposal-capture": {
+      "path": "results/experiment_7373_proposal_capture.json",
+      "sha256": "sha256:744bfae6f8368194fb2986a5f603f64698a8841338cf5595f822a5962aeb7b90",
+      "source_file_sha256": null,
+      "source_kind": "conductor_pre_gate_artifact"
+    },
+    "exp7374-prospective-memory": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:32d3e0fba42f421526c4201ca54b2add1e6d868a99925b6ab102a420a3c18c74",
+      "source_file_sha256": "sha256:5fab83f7076183f8bd669594556f6e3fae67f9fe256552d62b3156ca43e08669",
+      "source_kind": "conductor_log_record"
+    },
+    "exp7375-memory-audit": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:5d1ad6e84deec9942ca1ef57b0ee01de3596700ff8509a93f82567dbfc99e24f",
+      "source_file_sha256": "sha256:5fab83f7076183f8bd669594556f6e3fae67f9fe256552d62b3156ca43e08669",
+      "source_kind": "conductor_log_record"
+    },
+    "exp7376-arc-outcomes": {
+      "path": "results/experiment_7376_v647_arc_outcomes.json",
+      "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7377-ising-law": {
+      "path": "results/experiment_7377_v647_ising_law.json",
+      "sha256": "sha256:c0ccdce53df962a8bed7a90e159ba5a7e8d4c353483f8873d3b4c1570b013c69",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7378-ising-audit": {
+      "path": "results/experiment_7378_v647_ising_audit.json",
+      "sha256": "sha256:a9f6ae5b2f2d189cdb8d81542cb5ca6ef5ebc94f69208d5a933527834ac8afd8",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "exp7379-hardware-envelope": {
+      "path": "results/experiment_7379_v647_hardware_envelope.json",
+      "sha256": "sha256:9d42606c8f537cd06de0e83ac4ba83731ea5c9ea30694e220b164315be00b98d",
+      "source_file_sha256": null,
+      "source_kind": "declared_artifact"
+    },
+    "v647_design": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:e8e149426b24fedb254b8fd72d50203c914bc723f8fd11d1e06786bb1aa1433d"
+    }
+  },
+  "started_at_utc": "2026-09-18T02:40:38.675569+00:00",
+  "status": "complete_disqualified_v647_capstone",
+  "title": "Reconcile twelve outcomes and decide proof-memory continuation",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7380_v647_capstone",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7380_v647_capstone"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5457664320711046,
+      "ended_at_utc": "2026-09-18T02:40:39.505053+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:ab4b7893325787dcdd02fa0dd9a999af15c7c19d43307fdc26bb4d1c33ce0fc8",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7380_v647_capstone\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7380_v647_capstone.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7380_v647_capstone": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7380_v647_capstone.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T02:40:38.958942+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7380-mhzpxeps/basetemp/focused tests/python/test_experiment_7380_v647_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7380-mhzpxeps/basetemp/focused",
+        "tests/python/test_experiment_7380_v647_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 4.856924625812098,
+      "ended_at_utc": "2026-09-18T02:40:44.362262+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:3ae74617795e0c4df74429a886f0f8a0dc67a2fdaf3193334a0c95a2ee97e734",
+      "name": "focused_pytest",
+      "output_tail": ".........                                                                [100%]\n9 passed in 3.14s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T02:40:39.505088+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7380-mhzpxeps/coverage/.coverage '--include=*/experiment_7380_v647_capstone.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7380-mhzpxeps/basetemp/coverage tests/python/test_experiment_7380_v647_capstone.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7380-mhzpxeps/coverage/.coverage",
+        "--include=*/experiment_7380_v647_capstone.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7380-mhzpxeps/basetemp/coverage",
+        "tests/python/test_experiment_7380_v647_capstone.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 8.340790732996538,
+      "ended_at_utc": "2026-09-18T02:40:52.703509+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:bd1b333dd4456bc578ac165ee227847c41e2e6a3a7bc74084331be45d9c76151",
+      "name": "changed_module_coverage",
+      "output_tail": ".........                                                                [100%]\n9 passed in 5.60s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-18T02:40:44.362292+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7380_v647_capstone.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7380_v647_capstone.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7380-mhzpxeps/coverage/.coverage"
+      },
+      "duration_s": 0.06940468912944198,
+      "ended_at_utc": "2026-09-18T02:40:52.773307+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:668b3b2f811546bb21c9da2101b4028cf91069153675279ec124bc1e16c0e965",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                             Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------\npython/carnot/experiment_7380_v647_capstone.py     293      0   100%\n------------------------------------------------------------------------------\nTOTAL                                              293      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T02:40:52.703563+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7380_v647_capstone.py scripts/experiments/experiment_7380_v647_capstone.py tests/python/test_experiment_7380_v647_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7380_v647_capstone.py",
+        "scripts/experiments/experiment_7380_v647_capstone.py",
+        "tests/python/test_experiment_7380_v647_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016038592206314206,
+      "ended_at_utc": "2026-09-18T02:40:52.789727+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T02:40:52.773335+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7380_v647_capstone.py scripts/experiments/experiment_7380_v647_capstone.py tests/python/test_experiment_7380_v647_capstone.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7380_v647_capstone.py",
+        "scripts/experiments/experiment_7380_v647_capstone.py",
+        "tests/python/test_experiment_7380_v647_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.009378113085404038,
+      "ended_at_utc": "2026-09-18T02:40:52.799557+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T02:40:52.789775+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7380_v647_capstone.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7380_v647_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.1302702808752656,
+      "ended_at_utc": "2026-09-18T02:40:52.930230+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T02:40:52.799579+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7380_v647_capstone.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7380_v647_capstone.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02188626490533352,
+      "ended_at_utc": "2026-09-18T02:40:52.952522+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T02:40:52.930285+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/publication_gate.py --json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/publication_gate.py",
+        "--json"
+      ],
+      "duration_s": 0.06646298407576978,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/publication/00_publication_gate.log",
+      "log_sha256": "sha256:e1b5f037271823dc0bcb132094749a1a0ce08f27d22c7f17573e052379a2a725",
+      "name": "publication_gate",
+      "output_tail": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n",
+      "passed": true,
+      "scope": "historical_fover_paper",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7380_v647_capstone import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v);print({'\"'\"'errors'\"'\"':e},flush=True);raise SystemExit(bool(e))' /tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7380_v647_capstone import validate_artifact;p=pathlib.Path(sys.argv[1]);v=json.loads(p.read_text());e=validate_artifact(v);print({'errors':e},flush=True);raise SystemExit(bool(e))",
+        "/tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5483849309384823,
+      "ended_at_utc": "2026-09-18T02:40:53.575873+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/terminal/00_independent_reducer/00_independent_reducer.log",
+      "log_sha256": "sha256:c1055b23bc92c9bfd026807244ea4bbf1999d4821ebb507d320cf2a26ff08cae",
+      "name": "independent_reducer",
+      "output_tail": "{'errors': []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_raw_evidence_replay",
+      "started_at_utc": "2026-09-18T02:40:53.027030+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5320866310503334,
+      "ended_at_utc": "2026-09-18T02:40:54.108477+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/terminal/01_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_safety",
+      "started_at_utc": "2026-09-18T02:40:53.575922+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/tmp/carnot-exp7380-mhzpxeps/experiment_7380_candidate.json"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.04208684409968555,
+      "ended_at_utc": "2026-09-18T02:40:54.150935+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7380_v647_capstone/validation/terminal/02_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "candidate_row_consistency",
+      "started_at_utc": "2026-09-18T02:40:54.108504+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}

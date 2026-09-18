@@ -72676,3 +72676,95 @@ at zero.
 **When** the independent reducer and both strict terminal tools inspect the candidate
 **Then** changed identities, hashes, rows, classes, gates, scores, or checksums fail
 **And** only the resulting valid terminal document is written atomically.
+
+## V647 capstone reconciliation — 2026-09-18
+
+**Status:** Planned. This host-only capstone accounts for all twelve contract slots without promoting unavailable science.
+
+### REQ-REPORT-7380: Reconcile the exact V647 contract and preserve terminal evidence
+
+Exp7380 SHALL select only the active roadmap with milestone `2026.09.647` and
+the matching V647 Exact Task Contract. It SHALL compare all twelve ordered
+rows across ID, title, deliverable, phase, substrate class, and structured
+gates. A contract mismatch SHALL be reported even when the Exp7369 receipt is
+advisory. The capstone SHALL inspect each exact preceding deliverable or its
+canonical conductor pre-gate record. It SHALL not invent a missing experiment
+artifact. It SHALL append its self row only after its own required checks
+finish.
+
+The capstone SHALL independently recompute proof-memory safety, causality, and
+complete cost from an eligible Exp7375 audit. It SHALL keep fresh model proposal
+quality separate from oracle-defined verification. It SHALL summarize only
+measured ARC outcome support and Ising law or sample evidence. A completed null,
+no ARC supervisor firing, or unchanged GateMate block SHALL remain accounted
+terminal evidence. Missing, retired, blocked, or otherwise ineligible required
+proof-memory or finite-law evidence SHALL produce `verdict_class=blocked` with
+an exact `gate_check_summary`. A required safety or validation failure SHALL
+produce `verdict_class=disqualified`. Only unfinished retryable Exp7380-owned
+work MAY use `partial`.
+
+Exp7380 SHALL run `scripts/publication_gate.py --json` and preserve the canonical
+G1 through G4 definitions for the historical FoVer paper. It SHALL label that
+scope separately from V647 and SHALL not treat an internal cold reducer as an
+external reproducer. Publication, release, push, deployment, and production
+enablement remain unauthorized. All readiness and scientific value gates that
+fail SHALL remain failed. `promotion_score` SHALL remain zero.
+
+The workflow SHALL derive its required validation names from the actual Exp7358
+scoped command plan and execute them through Exp7303. It SHALL require a
+worktree import, focused pytest with `-n 0`, cleared inherited addopts and no
+coverage, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and exact-test spec coverage. It SHALL not add an
+unexecuted `full_python_suite`. No numbered E2E applies. The declared entrypoint
+and an independent cold artifact replay are the capability-level E2E checks.
+It SHALL run adversarial verification and strict verdict-row consistency before
+the terminal atomic write.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+model invocation counts, `inference_substrate=aggregation_from_upstream_artifacts`,
+`inference_substrate_class=aggregation`, and `execution_venue=host`. Historical
+model receipts SHALL remain labeled and hash-bound. It SHALL record actual UTC
+boundaries, monotonic duration and phase spans, exact source hashes, raw rows,
+sample budgets, acceptance gates, validation receipts, repository health,
+field principles, branch decisions, retirement decisions, and publication
+gates. `milestone_disposition_complete_score` SHALL equal one only when exactly
+twelve ordered dispositions exist and the self row is terminal.
+`required_science_complete_score` SHALL equal one only when eligible completed
+proof-memory measurement and audit plus eligible completed Ising measurement
+exist; honest nulls MAY satisfy completion. These completion scores SHALL not
+authorize promotion.
+
+#### SCENARIO-REPORT-7380-CONTRACT: Exact artifacts and pre-gates fill twelve ordered slots
+
+**Given** the exact V647 YAML, Markdown contract, available deliverables, and conductor log
+**When** Exp7380 authenticates each contract slot in order
+**Then** every preceding row names an exact artifact hash or canonical pre-gate record
+**And** the twelfth row is added as a terminal self disposition after required checks.
+
+#### SCENARIO-REPORT-7380-SCIENCE: Missing learning evidence is blocked rather than partial
+
+**Given** a retired proof-memory chain or another unavailable required external input
+**When** Exp7380 reduces scientific completion and value
+**Then** the terminal class is blocked with the failed upstream, field, expectation, and observation
+**And** no completed null, expected ARC no-firing, or unchanged board block becomes retryable partial work.
+
+#### SCENARIO-REPORT-7380-CLAIMS: Independent reductions preserve evidence boundaries
+
+**Given** eligible proof-memory, ARC, Ising, and hardware evidence
+**When** Exp7380 recomputes the milestone claim ledger
+**Then** safety, causal benefit, complete cost, model quality, oracle verification, and samples stay distinct
+**And** every failed scientific value gate remains failed with readiness and promotion at zero.
+
+#### SCENARIO-REPORT-7380-PUBLICATION: Historical FoVer readiness does not certify V647
+
+**Given** the canonical publication-gate process and V647 results
+**When** Exp7380 records G1 through G4
+**Then** it preserves the exact FoVer-paper definitions and observed booleans
+**And** it grants no V647 publication, deployment, release, or production authority.
+
+#### SCENARIO-REPORT-7380-ARTIFACT: Scoped validation and cold replay control the atomic result
+
+**Given** the candidate, source sidecars, and exact scoped validation receipts
+**When** the independent reducer and strict terminal readers reload it
+**Then** changed contracts, dispositions, gates, scores, hashes, or checksums fail
+**And** only the validated terminal JSON is written atomically.
