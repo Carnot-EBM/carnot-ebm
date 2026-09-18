@@ -1,0 +1,7 @@
+Scanned 1 artifact(s); 1 flagged.
+
+[CRITICAL] expexp7384-arc-invocation-boundary () -- 3 flag(s)
+  - CRITICAL INFERENCE_PROVENANCE_CONTRADICTION Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='deterministic_qa_regression_no_llm', live_evidence_count=20, negative_evidence_count=14. The duration check fails closed until the invocation scope agrees.
+  - CRITICAL DURATION_TOO_SHORT             duration_s=47.878636 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.
+  - CRITICAL SUBSTRATE_CLASS_MISMATCH       inference_substrate_class=no_model_load says no model was loaded, but typed invocation evidence says one ran (['generation_calls_attempted', 'generation_calls_completed', 'model_invoked', 'model_loaded']). Contradictory.
+

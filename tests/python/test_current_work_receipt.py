@@ -1,4 +1,4 @@
-"""Tests for producer-side current-work receipts.
+"""Focused tests for producer-side current-work receipts.
 
 Spec refs: REQ-REPORT-7395, SCENARIO-REPORT-7395-CURRENT,
 SCENARIO-REPORT-7395-MUTATIONS.
@@ -7,7 +7,6 @@ SCENARIO-REPORT-7395-MUTATIONS.
 from __future__ import annotations
 
 from copy import deepcopy
-import json
 from pathlib import Path
 
 import pytest
@@ -15,157 +14,178 @@ import pytest
 from carnot.reporting import current_work_receipt as receipt
 
 
-def _sidecars(tmp_path: Path) -> list[dict[str, str]]:
-    scripted = tmp_path / "simulated_transport_events.json"
-    historical = tmp_path / "historical_model_receipts.json"
-    receipt.atomic_json(scripted, {"events": [{"generation_calls_attempted": 2}]})
-    receipt.atomic_json(historical, {"invocation_counts": {"model_loads_attempted": 1}})
-    return [
-        receipt.sidecar_reference(scripted, root=tmp_path, scope="simulated_transport"),
-        receipt.sidecar_reference(historical, root=tmp_path, scope="historical"),
-    ]
+def _event(state: str, timestamp: int) -> dict[str, object]:
+    """Return one event owned by the fixed test run."""
+
+    return {
+        "scope": "current",
+        "transport": "owned_runtime",
+        "run_id": "test-run",
+        "owner_pid": 42,
+        "call_id": "load-1",
+        "operation": "model_load",
+        "state": state,
+        "monotonic_ns": timestamp,
+    }
 
 
-def _valid_receipt(tmp_path: Path) -> dict:
+def _valid(tmp_path: Path) -> dict[str, object]:
+    """Build one complete no-model receipt with both sidecar scopes."""
+
+    historical = receipt.write_immutable_sidecar(
+        tmp_path / "historical.json",
+        scope="historical_model_receipts",
+        payload={"model_invoked": True},
+        root=tmp_path,
+    )
+    scripted = receipt.write_immutable_sidecar(
+        tmp_path / "scripted.json",
+        scope="simulated_transport_events",
+        payload={"simulated_transport_events": []},
+        root=tmp_path,
+    )
     return receipt.build_current_work_receipt(
-        inference_substrate="host CPU aggregation and exact receipt reduction",
-        inference_substrate_details={"device": "cpu", "software": "python"},
+        run_id="test-run",
+        owner_pid=42,
+        events=[],
+        inference_substrate="aggregation_from_upstream_artifacts",
+        inference_substrate_details={"device": "cpu"},
         inference_substrate_class="aggregation",
         execution_venue="host",
-        duration_s=2.0,
-        phase_spans=[{"phase": "evaluate", "start_s": 0.1, "end_s": 1.9}],
-        owned_run_events=[],
-        sidecar_references=_sidecars(tmp_path),
-        small_ebm_training={"performed": False},
+        started_monotonic_ns=1_000_000_000,
+        ended_monotonic_ns=3_000_000_000,
+        phase_spans=[{"phase": "evaluate", "start_s": 0.0, "end_s": 1.0}],
+        sidecar_references=[historical, scripted],
     )
 
 
-def test_scenario_report_7395_current_uses_only_owned_events(tmp_path: Path) -> None:
-    """SCENARIO-REPORT-7395-CURRENT excludes scripted and historical counts."""
+def test_scenario_report_7395_current_keeps_sidecar_counts_external(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7395-CURRENT uses only the empty owned ledger."""
 
-    value = _valid_receipt(tmp_path)
-    assert value["inference_substrate"] == "host CPU aggregation and exact receipt reduction"
-    assert value["inference_substrate_details"]["device"] == "cpu"
+    value = _valid(tmp_path)
     assert value["model_invoked"] is False
     assert value["invocation_counts"] == receipt.ZERO_INVOCATION_COUNTS
-    assert value["current_invocation_events"] == []
-    assert {row["scope"] for row in value["receipt_sidecars"]} == {
-        "historical",
-        "simulated_transport",
-    }
+    assert value["event_sha256"] == receipt.canonical_hash([])
     assert receipt.validate_current_work_receipt(value, root=tmp_path) == []
 
 
-def test_scenario_report_7395_current_counts_failed_attempts() -> None:
-    """REQ-REPORT-7395 counts a failed current load as an invocation attempt."""
+def test_scenario_report_7395_current_counts_a_failed_owned_load() -> None:
+    """SCENARIO-REPORT-7395-CURRENT counts failed attempts as invocation."""
 
-    events = [
-        {"event_id": "load-1", "operation": "model_load", "state": "attempted"},
-        {"event_id": "load-1", "operation": "model_load", "state": "failed"},
-    ]
+    events = [_event("attempted", 1), _event("failed", 2)]
     value = receipt.build_current_work_receipt(
-        inference_substrate="owned native model load attempt",
+        run_id="test-run",
+        owner_pid=42,
+        events=events,
+        inference_substrate="owned native load",
         inference_substrate_details={"device": "gpu"},
         inference_substrate_class="model_load_no_generation",
         execution_venue="host",
-        duration_s=61.0,
-        phase_spans=[{"phase": "load", "start_s": 0.0, "end_s": 60.5}],
-        owned_run_events=events,
-        sidecar_references=[],
-        small_ebm_training={"performed": False},
+        started_monotonic_ns=0,
+        ended_monotonic_ns=61_000_000_000,
     )
     assert value["model_invoked"] is True
-    assert value["invocation_counts"]["model_loads_attempted"] == 1
     assert value["invocation_counts"]["model_loads_failed"] == 1
-    assert value["invocation_counts"]["model_loads_in_flight"] == 0
     assert receipt.validate_current_work_receipt(value) == []
 
 
-@pytest.mark.parametrize(
-    ("mutation", "expected_error"),
-    [
-        ("unreported_load", "model_invoked_mismatch"),
-        ("falsified_duration", "phase_span_exceeds_duration:evaluate"),
-        ("dropped_failed_call", "invocation_counts_mismatch"),
-        ("missing_completion", "unfinished_current_invocation:gen-1"),
-        ("invalid_venue", "execution_venue_invalid"),
-        ("changed_source_hash", "sidecar_hash_mismatch:simulated_transport_events.json"),
-    ],
-)
-def test_scenario_report_7395_mutations_fail_closed(
-    tmp_path: Path, mutation: str, expected_error: str
-) -> None:
-    """SCENARIO-REPORT-7395-MUTATIONS rejects each named receipt defect."""
+def test_req_report_7395_validator_reports_reference_and_span_shapes(tmp_path: Path) -> None:
+    """REQ-REPORT-7395 reports malformed sidecars and phase rows directly."""
 
-    value = _valid_receipt(tmp_path)
-    if mutation == "unreported_load":
-        value["current_invocation_events"] = [
-            {"event_id": "load-1", "operation": "model_load", "state": "attempted"},
-            {"event_id": "load-1", "operation": "model_load", "state": "completed"},
-        ]
-    elif mutation == "falsified_duration":
-        value["duration_s"] = 0.5
-    elif mutation == "dropped_failed_call":
-        value["invocation_counts"]["generation_calls_failed"] = 1
-    elif mutation == "missing_completion":
-        value["current_invocation_events"] = [
-            {"event_id": "gen-1", "operation": "generation", "state": "attempted"}
-        ]
-        value["model_invoked"] = True
-        value["invocation_counts"]["generation_calls_attempted"] = 1
-        value["invocation_counts"]["generation_calls_in_flight"] = 1
-    elif mutation == "invalid_venue":
-        value["execution_venue"] = "host_cpu"
-    else:
-        path = tmp_path / "simulated_transport_events.json"
-        path.write_text(json.dumps({"events": []}), encoding="utf-8")
-    assert expected_error in receipt.validate_current_work_receipt(value, root=tmp_path)
-
-
-def test_req_report_7395_rejects_malformed_events_and_sidecars(tmp_path: Path) -> None:
-    """REQ-REPORT-7395 rejects bad event vocabulary and unscoped sidecars."""
-
-    value = _valid_receipt(tmp_path)
+    value = _valid(tmp_path)
     changed = deepcopy(value)
-    changed["inference_substrate"] = {"device": "cpu"}
-    changed["receipt_sidecars"][0]["scope"] = "current"
-    changed["current_invocation_events"] = [
-        {"event_id": "x", "operation": "training", "state": "started"}
-    ]
+    changed["phase_spans"] = ["bad"]
+    changed["receipt_sidecars"] = ["bad"]
     errors = receipt.validate_current_work_receipt(changed, root=tmp_path)
-    assert "inference_substrate_not_string" in errors
-    assert "sidecar_scope_invalid:simulated_transport_events.json" in errors
-    assert "event_operation_invalid:x" in errors
-    assert "event_state_invalid:x" in errors
-
-
-def test_req_report_7395_covers_ledger_and_reference_failure_shapes(tmp_path: Path) -> None:
-    """REQ-REPORT-7395 names contradictory transitions and malformed references."""
-
-    outside = tmp_path.parent / "outside-receipt.json"
-    receipt.atomic_json(outside, {"value": 1})
-    reference = receipt.sidecar_reference(outside, root=tmp_path, scope="historical")
-    assert reference["path"] == str(outside.resolve())
-
-    value = _valid_receipt(tmp_path)
-    value["duration_s"] = False
-    value["phase_spans"] = ["not-a-row"]
-    value["receipt_sidecars"].append("not-a-reference")
-    value["current_invocation_events"] = [
-        {"event_id": "changed", "operation": "model_load", "state": "attempted"},
-        {"event_id": "changed", "operation": "generation", "state": "completed"},
-        {"event_id": "terminal-only", "operation": "generation", "state": "failed"},
-        {"event_id": "double-terminal", "operation": "generation", "state": "attempted"},
-        {"event_id": "double-terminal", "operation": "generation", "state": "failed"},
-        {"event_id": "double-terminal", "operation": "generation", "state": "cancelled"},
-    ]
-    errors = receipt.validate_current_work_receipt(value, root=tmp_path)
-    assert "event_operation_changed:changed" in errors
-    assert "event_attempt_count_invalid:terminal-only" in errors
-    assert "event_terminal_count_invalid:double-terminal" in errors
-    assert "duration_invalid" in errors
-    assert "sidecar_reference_invalid" in errors
-
-    value["duration_s"] = 2.0
-    errors = receipt.validate_current_work_receipt(value, root=tmp_path)
     assert "phase_span_invalid" in errors
+    assert "sidecar_reference_invalid:0" in errors
+
+    changed = deepcopy(value)
+    changed["phase_spans"] = [{"phase": "late", "end_s": 3.0}]
+    assert "phase_span_exceeds_duration:late" in receipt.validate_current_work_receipt(
+        changed, root=tmp_path
+    )
+
+
+def test_req_report_7395_helper_defensive_branches(tmp_path: Path) -> None:
+    """REQ-REPORT-7395 names invalid identity, time, transitions, and references."""
+
+    outside = tmp_path.parent / "outside-current-work-sidecar.json"
+    receipt.atomic_json(outside, {"value": 1})
+    reference = receipt.sidecar_reference(outside, root=tmp_path, scope="historical_model_receipts")
+    assert reference["path"] == str(outside.resolve())
+    with pytest.raises(ValueError, match="sidecar_scope_invalid"):
+        receipt.sidecar_reference(outside, root=tmp_path, scope="current")
+    with pytest.raises(FileNotFoundError):
+        receipt.sidecar_reference(
+            tmp_path / "missing.json", root=tmp_path, scope="historical_model_receipts"
+        )
+
+    malformed = [
+        {**_event("attempted", 1), "monotonic_ns": False},
+        {**_event("attempted", 2), "call_id": "changed"},
+        {
+            **_event("completed", 3),
+            "call_id": "changed",
+            "operation": "generation",
+        },
+        {**_event("attempted", 4), "call_id": "double"},
+        {**_event("failed", 5), "call_id": "double"},
+        {**_event("cancelled", 6), "call_id": "double"},
+    ]
+    value = _valid(tmp_path)
+    value["current_invocation_events"] = malformed
+    value["event_count"] = len(malformed)
+    value["event_sha256"] = receipt.canonical_hash(malformed)
+    errors = receipt.validate_current_work_receipt(value, malformed, root=tmp_path)
+    assert "event_time_invalid:load-1" in errors
+    assert "operation_changed:changed" in errors
+    assert "duplicate_terminal:double" in errors
+
+    with pytest.raises(ValueError, match="monotonic_boundary_order_invalid"):
+        receipt.build_current_work_receipt(
+            run_id="test-run",
+            owner_pid=42,
+            events=[],
+            inference_substrate="aggregation_from_upstream_artifacts",
+            inference_substrate_details={},
+            inference_substrate_class="aggregation",
+            execution_venue="host",
+            started_monotonic_ns=2,
+            ended_monotonic_ns=1,
+        )
+    with pytest.raises(ValueError, match="invalid_current_event_ledger"):
+        receipt.build_current_work_receipt(
+            run_id="test-run",
+            owner_pid=42,
+            events=[_event("attempted", 1)],
+            inference_substrate="aggregation_from_upstream_artifacts",
+            inference_substrate_details={},
+            inference_substrate_class="aggregation",
+            execution_venue="host",
+            started_monotonic_ns=0,
+            ended_monotonic_ns=1,
+        )
+
+    changed = _valid(tmp_path)
+    changed.update(
+        inference_substrate_details="bad",
+        current_run_id=None,
+        current_owner_pid=None,
+        started_monotonic_ns=None,
+        ended_monotonic_ns=None,
+        duration_s=False,
+    )
+    errors = receipt.validate_current_work_receipt(changed, root=tmp_path)
+    assert "inference_substrate_details_invalid" in errors
+    assert "current_owner_identity_invalid" in errors
+    assert "monotonic_boundaries_invalid" in errors
+
+    changed = _valid(tmp_path)
+    changed["ended_monotonic_ns"] = 0
+    assert "monotonic_boundary_order_invalid" in receipt.validate_current_work_receipt(
+        changed, root=tmp_path
+    )
+    changed = _valid(tmp_path)
+    changed["duration_s"] = False
+    assert "duration_invalid" in receipt.validate_current_work_receipt(changed, root=tmp_path)

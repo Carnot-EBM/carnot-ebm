@@ -1,0 +1,1570 @@
+{
+  "payload": {
+    "sources": [
+      {
+        "flagged_adversarial": false,
+        "invocation_counts": {
+          "generation_calls_attempted": 4,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 4,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "historical_generation_calls": 0,
+          "historical_model_loads": 0,
+          "model_loads_attempted": 1,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 1,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        },
+        "path": "results/experiment_7383_v648_canary_reducer.json",
+        "sha256": "sha256:f5be7bf55890b1bf6c914e119cb8f55f2bc69d04fd7c5a5811018f42dc25d6ef",
+        "verdict_class": "disqualified"
+      },
+      {
+        "flagged_adversarial": true,
+        "historical_model_receipts": {
+          "authorizes_current_readiness": false,
+          "experiment_id": "exp7376-arc-outcomes",
+          "flagged_adversarial": true,
+          "historical_only": true,
+          "inference_substrate_class": "model_load_no_generation",
+          "original_invocation_counts": {
+            "generation_calls_attempted": 0,
+            "generation_calls_cancelled": 0,
+            "generation_calls_completed": 0,
+            "generation_calls_failed": 0,
+            "generation_calls_in_flight": 0,
+            "model_loads_attempted": 1,
+            "model_loads_cancelled": 0,
+            "model_loads_completed": 1,
+            "model_loads_failed": 0,
+            "model_loads_in_flight": 0,
+            "usable_answers": 0
+          },
+          "path": "results/experiment_7376_v647_arc_outcomes.json",
+          "raw_event_reduction": {
+            "counts": {
+              "generation_calls_attempted": 40,
+              "generation_calls_cancelled": 0,
+              "generation_calls_completed": 12,
+              "generation_calls_failed": 28,
+              "generation_calls_in_flight": 0,
+              "model_loads_attempted": 1,
+              "model_loads_cancelled": 0,
+              "model_loads_completed": 1,
+              "model_loads_failed": 0,
+              "model_loads_in_flight": 0,
+              "usable_answers": 4
+            },
+            "earliest_exception": "RuntimeError: episode_generation_call_limit_reached",
+            "raw_receipts": [
+              {
+                "call_id": "2739468-1969714833485681-c8ace5a12dc241fbbd2b099712cb6efd",
+                "child_pid": null,
+                "event_id": "sha256:35fc2e5c7c4cc328c912cf219e96f7e3a90fb692e07c2d0899004280b2c72534",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "model_load",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969714833507623,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969714833499267,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969714833485681-c8ace5a12dc241fbbd2b099712cb6efd",
+                "child_pid": 2739496,
+                "event_id": "sha256:8c2225343ed8a679a47ab0887d1e423c762a50831f481a319d6740b896a6be9c",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "model_load",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969714834558346,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969714833499267,
+                "state": "child_started"
+              },
+              {
+                "call_id": "2739468-1969714833485681-c8ace5a12dc241fbbd2b099712cb6efd",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969726849820404,
+                "event_id": "sha256:74c6b471b54574f6d20d3ada45309865465da9cd36ecc2c1dde485af9ce6d5c3",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "model_load",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969726849840652,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969714833499267,
+                "state": "completed",
+                "usable": null
+              },
+              {
+                "call_id": "2739468-1969809139376750-257d8088e1cf4fa98b16d18a68933138",
+                "child_pid": 2739496,
+                "event_id": "sha256:16dbf7234e8c59842f53af1fb775a70a8aeea08e6eea6f393e0992aced42d46d",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969809139438806,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969809139414260,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969809139376750-257d8088e1cf4fa98b16d18a68933138",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969824529209243,
+                "event_id": "sha256:252ce98d939ea25e30033abb903e9499a84e4a1139823e7b3839ef45794dc707",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969824529215114,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969809139414260,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1969824530523521-55482bccd65d422fa4c68637e5da3633",
+                "child_pid": 2739496,
+                "event_id": "sha256:1104c88a186933168c0e45c95ded78a7b186cbb29245767be15a6fb10edc52b3",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969824530565791,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969824530557705,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969824530523521-55482bccd65d422fa4c68637e5da3633",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969825747465978,
+                "event_id": "sha256:95880e7474f627665707f9946fa548689a2e9414dadd679a872e4fcdf79a53ad",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969825747471989,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969824530557705,
+                "state": "completed",
+                "usable": true
+              },
+              {
+                "call_id": "2739468-1969865187461659-602a2d9e646c4dad8b07d352b2cd2eef",
+                "child_pid": 2739496,
+                "event_id": "sha256:27e72ba549d1f46243cf4a588b641e30204bcb74aec39d72feade2e64dc20494",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969865187500451,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969865187486565,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969865187461659-602a2d9e646c4dad8b07d352b2cd2eef",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969865192895124,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:b15ae4299be0d8f83f5290b35e0c4360a71bf4124cf5f3e17f8bcd89efdf0767",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969865192927655,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969865187486565,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1969904334612326-0bd7a069a6d248168530b9d6a732acfa",
+                "child_pid": 2739496,
+                "event_id": "sha256:83f4d44e96474f12fcb0638743246ab9b9b128054b32465b397332b80f01c248",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969904334680794,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969904334654164,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969904334612326-0bd7a069a6d248168530b9d6a732acfa",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969904335629036,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:e62c28d189ebcd5a8abd3d891532ea1329301e6a27a439321bec03c336834302",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969904335639345,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969904334654164,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1969943823731958-feb57db15833407fb682c6207b2b5d80",
+                "child_pid": 2739496,
+                "event_id": "sha256:aa87544859553d676a2dc4cf6b03a24bc688992d868238b979354a38b6e94d62",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969943823773907,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969943823758287,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969943823731958-feb57db15833407fb682c6207b2b5d80",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969943824306407,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:94141de0620fd68cebc8f922b0ce3fd981b11fe8d8a8df1d17df1267df6404d0",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969943824313580,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969943823758287,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1969983214936675-f87723d1d8ce40e7810527706f45480a",
+                "child_pid": 2739496,
+                "event_id": "sha256:2e59ad80cae43d70f5a592403a9267eca1cdd961cbe14b0eef179483d7d6fe0f",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969983214975437,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969983214962804,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1969983214936675-f87723d1d8ce40e7810527706f45480a",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1969983216049164,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:15b3f0def656901772736393d8b29ca162ac7f0b6062f71e089b3fb922f3d7bb",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1969983216064753,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1969983214962804,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970022314201790-b5fb57dc3b264edfba77fabd60efd151",
+                "child_pid": 2739496,
+                "event_id": "sha256:40c530d33c07e5bf9ad41adb0f45aaaeb1571167b2343c20c50576c609152964",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970022314241104,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970022314227739,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970022314201790-b5fb57dc3b264edfba77fabd60efd151",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970022315053179,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:5057d2c231c9745db6ec9a3884357b4ef9df3b0226da252ee6434b78aebdd6b5",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970022315063078,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970022314227739,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970119480020542-5a38bb26e6094bb6a83a512ad1c8ad9a",
+                "child_pid": 2739496,
+                "event_id": "sha256:4c562f93b6e8879801fbd768c02a07d3adc72cdb88d938b190a1a6d356a734af",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970119480087197,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970119480063492,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970119480020542-5a38bb26e6094bb6a83a512ad1c8ad9a",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970126388573966,
+                "event_id": "sha256:23f57b15420da81824711e0d5bbad348b161e6ff207a88babf27d980bc9d5ffa",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970126388580238,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970119480063492,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1970126389606736-3afebb5ae3874aa3be90d31dccfc3db8",
+                "child_pid": 2739496,
+                "event_id": "sha256:542acf1b4f43c4057df9b1df13db314144616020645b55355aa8a61001ce9ef2",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970126389665175,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970126389653383,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970126389606736-3afebb5ae3874aa3be90d31dccfc3db8",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970127587261101,
+                "event_id": "sha256:9cb3ee430385b632cca8fdd3cc3e347ba0fba322046c8d1634dcfe98c47ce849",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970127587267954,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970126389653383,
+                "state": "completed",
+                "usable": true
+              },
+              {
+                "call_id": "2739468-1970167253068644-552a157842084ccda8ad7bd793e94221",
+                "child_pid": 2739496,
+                "event_id": "sha256:3e6eb9009579165d8864ed392fa303aed1b26ca0b1f3d25569f8fc7cec4150fc",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970167253110332,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970167253095795,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970167253068644-552a157842084ccda8ad7bd793e94221",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970167253867575,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:615542a5cdeb7dec6eb4a9c53fc5caa7f286bb8880c1cf4d33937e041865e07e",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970167253877974,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970167253095795,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970206478721599-48484390f51a45fcaeefa7149a4f8b04",
+                "child_pid": 2739496,
+                "event_id": "sha256:14b600b212c2f21fb91dd58b324958ca47f20c4c4a5e71dad3c75427825cc1d5",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970206478772405,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970206478757677,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970206478721599-48484390f51a45fcaeefa7149a4f8b04",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970206479546759,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:f6339c5a2f3726ea2f0bda875b32b0f16db6ab9abb1ef814937b47cdfd98307b",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970206479561256,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970206478757677,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970246108246599-35b4cff8e7b9455d83af300c914c83b5",
+                "child_pid": 2739496,
+                "event_id": "sha256:e6dfe54a154d7af3175a9f09e1fb3895f9c54ce1d5bd0a38039742f16afb52aa",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970246108271255,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970246108263631,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970246108246599-35b4cff8e7b9455d83af300c914c83b5",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970246108637052,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:acfd15cd5acf591a815b1ab08b3e3a6ba21ab56dcc274e881cd2bef55f6b3f30",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970246108642553,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970246108263631,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970285729519953-5d20c3318e8e402fa31c549e6aa2a7a2",
+                "child_pid": 2739496,
+                "event_id": "sha256:623ab992653ba61d56108708692d03f2b6abccc123e995376fc76e560a89c3bc",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970285729580967,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970285729557603,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970285729519953-5d20c3318e8e402fa31c549e6aa2a7a2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970285730873746,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:0d532cbfef056da9eb64e87149b53cbb35bb60e28c1007c82446ac7b0dce3dc9",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970285730886940,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970285729557603,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970325018241882-ff8555c2a63341988435feeae367dbf9",
+                "child_pid": 2739496,
+                "event_id": "sha256:58ebe9ddd0c09a587383d222d5fd102502830e9284591df65f4cffabfef50abd",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970325018279192,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970325018264664,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970325018241882-ff8555c2a63341988435feeae367dbf9",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970325019793767,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:64e5d87e473700e8116cd063ae64b1d2405051879542bb983d3e1f64a95bfd97",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970325019804857,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970325018264664,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970432389983429-5a2dcc314eff407ca83fc65407aba354",
+                "child_pid": 2739496,
+                "event_id": "sha256:16ff7ae0a56bed5794057fdbaa9ab6c9f0d50d4825b93d96b618782fc450947e",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970432390028654,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970432390011823,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970432389983429-5a2dcc314eff407ca83fc65407aba354",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970459642196306,
+                "event_id": "sha256:a780a246434a3b03a930f8aab26f8b206ea7b2970aa87f54fed7b73cf6ff4ba7",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970459642204271,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970432390011823,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1970459644660546-af45025f34034258839aac36d01d46e2",
+                "child_pid": 2739496,
+                "event_id": "sha256:9d590cd260e4660582552fb71d61b3fbb75895a8391e7208240c326ea774fcab",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970459644707263,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970459644698697,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970459644660546-af45025f34034258839aac36d01d46e2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970466933400656,
+                "event_id": "sha256:c4f67ea848182ba0f68701b8de1f574788d136227f08edbb6801ac384f9da192",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970466933407980,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970459644698697,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1970506052693954-0d3dcadb7ea94adcb65947161604379b",
+                "child_pid": 2739496,
+                "event_id": "sha256:272e3f41d18d4822fb7391ca0539e8c04fdd73e99895b5c58e94f1f3e6057714",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970506052733608,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970506052721926,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970506052693954-0d3dcadb7ea94adcb65947161604379b",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970506053648818,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:cb98155d96f9d4bbce3ff11bfa38f1ffc75933ad8fdce3341a30967824c0a4aa",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970506053662333,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970506052721926,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970545205524932-dfabdba9045b4594ba62ff826e73f4f2",
+                "child_pid": 2739496,
+                "event_id": "sha256:118439cbc31d204017b144bb80b24f5fb9337d6685afdec9c4dcbdb49401ac58",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970545205567482,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970545205552674,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970545205524932-dfabdba9045b4594ba62ff826e73f4f2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970545206395668,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:fd9ea883dc0a8481faae7e0712bb5a3e0e22ae58c26b195ef3f862474f43c143",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970545206405316,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970545205552674,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970584465696833-9df56e13d1764687915cefb403fc38a2",
+                "child_pid": 2739496,
+                "event_id": "sha256:01ad5016f4792c87d6a9c2043baa3c1c54c1ea9b13f8ca580c4b28e63423b631",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970584465725807,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970584465716309,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970584465696833-9df56e13d1764687915cefb403fc38a2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970584465995183,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:bf8b886c27f561b065d7c826d934ab0abeb84b79101ee01fd5d540b91dd496a5",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970584466006244,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970584465716309,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970623688831895-2607c72d97ae454c94b76f23edb25325",
+                "child_pid": 2739496,
+                "event_id": "sha256:5bd7aa603dbfd60c2a1d4a4093fd29eb5f1e0fec78a5c58e4e3f684dab4f3e08",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970623688871419,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970623688859006,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970623688831895-2607c72d97ae454c94b76f23edb25325",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970623689545526,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:08f75ae52bb82ce7a8c70db4a05af485d6c5ddeff719b2bef32aaa6b9ec42587",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970623689559021,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970623688859006,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970662872284790-8201fb8567274807b725de9084c625f2",
+                "child_pid": 2739496,
+                "event_id": "sha256:9d1f3eee763f2ec9e7735619421fd21f461a1cb6ddc4340b3b2bed424f13ea0d",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970662872326488,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970662872312462,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970662872284790-8201fb8567274807b725de9084c625f2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970662873058133,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:a481945a3fd12f03282c2e9054ebe9828a2ccaaf81529d7196e118fb9fa1070b",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970662873067921,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970662872312462,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970769146833132-3402fbbd27514fd5b5a45e31f91cb554",
+                "child_pid": 2739496,
+                "event_id": "sha256:3d9b43a00aa942949b880ebabeecfe2903a654016024658d3df2fed9a0448e62",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970769146865523,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970769146855084,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970769146833132-3402fbbd27514fd5b5a45e31f91cb554",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970776423329047,
+                "event_id": "sha256:e5fe6f65172909a5e00c05faba59ae368f3b44ca621e599460704fb5d250e895",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970776423333626,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970769146855084,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1970776425045572-7ee14ed758164205abef0106ccfb7e8f",
+                "child_pid": 2739496,
+                "event_id": "sha256:ad4b28120efd2379d2d4254980928259f8dfefc356a9af332cfccf95a7071804",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970776425075889,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970776425071280,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970776425045572-7ee14ed758164205abef0106ccfb7e8f",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970783690455557,
+                "event_id": "sha256:508daec983f5bbaaa9a3e75287157593fd92f7894839b775351a6ca07ca426bb",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970783690460266,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970776425071280,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1970823226742913-534bcac573b14cba9f46e78ac0a61b62",
+                "child_pid": 2739496,
+                "event_id": "sha256:42053a3d8b1cdbf18dc0804f8d2b60cecc3454bdf169ade0f18bcb16147692e2",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970823226799719,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970823226778470,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970823226742913-534bcac573b14cba9f46e78ac0a61b62",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970823229639164,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:fe4df8c490aee8c788447be659744bc371ad9c3c1f49123c30b06b3ee0498c32",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970823229670753,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970823226778470,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970862701805184-a43863d0d92c48cda3482a50d2c6b0f2",
+                "child_pid": 2739496,
+                "event_id": "sha256:c4242e834a44f389c9db390f212c532a398dfb566d641c1eabf94debe0b36822",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970862701846652,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970862701832095,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970862701805184-a43863d0d92c48cda3482a50d2c6b0f2",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970862702697360,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:175e60ca7d570874758d218ab9023560d372da2cd746c6cc86b7b334c94f9a85",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970862702707690,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970862701832095,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970902263783530-87e7d6fdd1c24acbb82e930a8cc97552",
+                "child_pid": 2739496,
+                "event_id": "sha256:94f779ae2935694ee6097cc3d43d4333f10f3f01777cd28e42cec331276474bc",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970902263826841,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970902263811262,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970902263783530-87e7d6fdd1c24acbb82e930a8cc97552",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970902264132575,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:8a8186d89ae4db20b09c5e6aa040ccba50180fbbd0db00589cfb89126622651f",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970902264139699,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970902263811262,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970941796619255-5491dbf90aba47eabef64d93f2b15133",
+                "child_pid": 2739496,
+                "event_id": "sha256:3c106c2220e0941889bb1679580cc1794da398c65e4d064c0897857402b003c7",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970941796660563,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970941796646266,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970941796619255-5491dbf90aba47eabef64d93f2b15133",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970941797849115,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:936fe01ff3c83f1c364d1f539e96c2b896442789549a931aa6deee5615aecf9e",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970941797864775,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970941796646266,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1970981314053636-bfb5741bfb9e4541bbef1d1171244eaf",
+                "child_pid": 2739496,
+                "event_id": "sha256:1c99b917080b67de72e355dbeeaa3d5bf5c9b20c61c289e858d631dacbba2c68",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970981314090385,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970981314079394,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1970981314053636-bfb5741bfb9e4541bbef1d1171244eaf",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1970981314774701,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:243cf51f9696ab3318e4ff514095757c5d7cccf752f1b5e7a0774e4df1f2f639",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1970981314789328,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1970981314079394,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971077801341102-d39622d2816640bca70b56070d8c84e7",
+                "child_pid": 2739496,
+                "event_id": "sha256:890e7e8115674d7f971ad14c36025f3f18860871ea857dce1816d28d010e1aa3",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971077801361580,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971077801353695,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971077801341102-d39622d2816640bca70b56070d8c84e7",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971090432545590,
+                "event_id": "sha256:855d8824a08d5646c19f16b4a1285c6f5d7bc6d5fd21d0f1f3af1b23ac386800",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971090432553445,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971077801353695,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1971090447229995-4e9da1751d724858a15c3d9799bdd4d5",
+                "child_pid": 2739496,
+                "event_id": "sha256:50a4f99647392e026ef13ee7b7bb317c6321dc6936d9a973079dfe92f38f8778",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971090447276693,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971090447266002,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971090447229995-4e9da1751d724858a15c3d9799bdd4d5",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971091633878524,
+                "event_id": "sha256:a512de1911f00637b777bdec80f147e9a6f2f4ff47cc1f38cc1fefac4f75f08d",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971091633885397,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971090447266002,
+                "state": "completed",
+                "usable": true
+              },
+              {
+                "call_id": "2739468-1971131106562159-9470675d327b479ab38597f6d3b1c468",
+                "child_pid": 2739496,
+                "event_id": "sha256:94d91bcb3c48d864a968243651b305a548deda07f8a923592064eab3d3d75b2c",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971131106602034,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971131106587907,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971131106562159-9470675d327b479ab38597f6d3b1c468",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971131107337626,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:b9657e60acd4b509c2092ed4587d118600d61f5d61b0150311047a25b2d76131",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971131107348526,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971131106587907,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971170501553562-4cd58d8086964f4484e1e0d7315b86c6",
+                "child_pid": 2739496,
+                "event_id": "sha256:3d85aaa364efd3f33f26b60315c79c9a360eef70236593800597eef3054d4458",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971170501593748,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971170501579211,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971170501553562-4cd58d8086964f4484e1e0d7315b86c6",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971170502249520,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:1ac9ba6bd782b6b276ddbc84475a94458a2f6f61b655a0415df8cda5207cf1ea",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971170502261723,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971170501579211,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971209950358890-e44ca086f7af4375a8d316adfc1763d0",
+                "child_pid": 2739496,
+                "event_id": "sha256:d9419e15fc938af60d46b9370b446f41c40bd8b14eaaead81f2a545e30ba2132",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971209950379839,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971209950373046,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971209950358890-e44ca086f7af4375a8d316adfc1763d0",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971209950914233,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:48ce99954df12c9930f1a4cdc29fef8d841460239d27fe63dbe3bcba32661625",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971209950919593,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971209950373046,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971249392168498-2016a04a9b1f4126939a53244ca029ba",
+                "child_pid": 2739496,
+                "event_id": "sha256:609f334e675f9c7946d637b9c94dc1c13b831ca6dd2d2644972ad6e85573cbbe",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971249392191511,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971249392184658,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971249392168498-2016a04a9b1f4126939a53244ca029ba",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971249392939827,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:fb37c4727140356185173224145f3c19477337f81ce4b5c9aa82af12601ba468",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971249392955226,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971249392184658,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971288755283291-2dbfc775a6fd4f4ca52252114905ed8b",
+                "child_pid": 2739496,
+                "event_id": "sha256:f8cd00dd174a0edce6682d452a51b022793a1650715b6ed711be86af2d9f5cf0",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971288755316363,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971288755306123,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971288755283291-2dbfc775a6fd4f4ca52252114905ed8b",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971288756156701,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:267f0c79264ac303eaa880ff1909f825dd6c44b4629fbf00f5a2583ee4e5710c",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971288756165117,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971288755306123,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971385101585033-318f6e64aa7e4e88a1425e09dbbe2296",
+                "child_pid": 2739496,
+                "event_id": "sha256:dadb7bbde78e73445533b80ccb27f5b3b76f62f6c8a91cbee8ef9317032bf1ed",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971385101645437,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971385101628445,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971385101585033-318f6e64aa7e4e88a1425e09dbbe2296",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971391869630503,
+                "event_id": "sha256:b0d2eea17e4c03f231de81f70e692d2d7371ca4443bd1137630266342a58eb2d",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971391869637045,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971385101628445,
+                "state": "completed",
+                "usable": false
+              },
+              {
+                "call_id": "2739468-1971391870746469-ef99c3cee912456092371b6f4de6c7de",
+                "child_pid": 2739496,
+                "event_id": "sha256:e83988206da4b1969cba4332f4c55912b0e5757e1a37a9fe58697b138eb2f096",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971391870801783,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971391870789570,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971391870746469-ef99c3cee912456092371b6f4de6c7de",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971393063061645,
+                "event_id": "sha256:effb1ef1955910104b4463d52ad6c5ffc109e930cbbcc25f0dc0d64b9c82fe08",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971393063069109,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971391870789570,
+                "state": "completed",
+                "usable": true
+              },
+              {
+                "call_id": "2739468-1971432482244313-a6423c7509034d669963b4560aceabaf",
+                "child_pid": 2739496,
+                "event_id": "sha256:fa3b3c9362f53f17d78f4ede74bb8f886bcb993276066e6387924890d66bf56c",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971432482285190,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971432482271003,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971432482244313-a6423c7509034d669963b4560aceabaf",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971432483358987,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:2264076eadbc2a8634f20948a7a1d29d967ca2615e023f1a51a7628490288252",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971432483369446,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971432482271003,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971471872935975-4757d0cb98fc47a99c347801cb4f38f1",
+                "child_pid": 2739496,
+                "event_id": "sha256:c685ee930e90a688796611ac6381faaeafed56769dd5ced0d449f543b0d1b2e2",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971471872993162,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971471872973715,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971471872935975-4757d0cb98fc47a99c347801cb4f38f1",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971471879342168,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:6d50796a4c8569b98543b2582714f74a72851de64d17a3e30532bc039bef5e30",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971471879384788,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971471872973715,
+                "state": "failed"
+              },
+              {
+                "call_id": "2739468-1971511330626352-d53d2a44c7994f8eb9ae514b0f8b34a3",
+                "child_pid": 2739496,
+                "event_id": "sha256:dd0c478bbba59d74ef5a8a971144e77bffbc978c29a6adf06e1a42214cb7e7ac",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971511330667008,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971511330651840,
+                "state": "attempted"
+              },
+              {
+                "call_id": "2739468-1971511330626352-d53d2a44c7994f8eb9ae514b0f8b34a3",
+                "child_pid": 2739496,
+                "ended_monotonic_ns": 1971511331044808,
+                "error": "RuntimeError: episode_generation_call_limit_reached",
+                "event_id": "sha256:b7330c7c0704ef97d8dbfee9aeedf2329af79f742363cd75cfa2b7cdfe6a8a7a",
+                "model_identity": {
+                  "model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+                  "model_repository": "unsloth/Qwen3.8-27B-GGUF",
+                  "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10"
+                },
+                "operation": "generation",
+                "owner_pid": 2739468,
+                "recorded_monotonic_ns": 1971511331051330,
+                "schema": "carnot.arc_inference_boundary_event.v1",
+                "started_monotonic_ns": 1971511330651840,
+                "state": "failed"
+              }
+            ],
+            "state": "successful_generation"
+          },
+          "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5",
+          "status": "complete_disqualified_required_evidence",
+          "verdict_class": "disqualified"
+        },
+        "path": "results/experiment_7384_v648_arc_invocation_boundary.json",
+        "sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6",
+        "verdict_class": "disqualified"
+      }
+    ]
+  },
+  "schema": "carnot.current_work_receipt.sidecar.v1",
+  "scope": "historical_model_receipts"
+}

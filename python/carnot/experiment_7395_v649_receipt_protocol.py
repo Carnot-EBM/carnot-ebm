@@ -30,6 +30,7 @@ from carnot import experiment_7383_v648_canary_reducer as exp7383
 from carnot.experiment_7329_v644_contract import parse_markdown_contract, parse_yaml_contract
 from carnot.experiment_7358_v646_validation_contract import (
     AffectedManifest,
+    EnvironmentCommandSpec,
     PlannedCommand,
     build_command_plan,
     reduce_affected_receipts,
@@ -65,8 +66,19 @@ EXP7384_RESULT = Path("results/experiment_7384_v648_arc_invocation_boundary.json
 
 TERMINAL_CHECK_NAMES = (
     "declared_entrypoint_cold_replay",
+    "independent_cold_reducer",
     "adversarial_verify",
     "verdict_row_consistency_strict",
+)
+AFFECTED_CHECK_NAMES = (
+    "worktree_imports",
+    "focused_pytest",
+    "changed_module_coverage",
+    "changed_module_coverage_report",
+    "ruff_check",
+    "ruff_format",
+    "changed_module_mypy",
+    "scoped_spec_coverage",
 )
 RECEIPT_MUTATIONS = (
     "unreported_load",
@@ -83,6 +95,8 @@ SOURCE_PATHS = (
     Path("CLAUDE.md"),
     Path("CODEX.md"),
     Path("research-program.md"),
+    Path("research-references.md"),
+    Path("research-studying.md"),
     Path("ops/exclusion_manifest.yaml"),
     Path("ops/e2e-test-plan.md"),
     Path("scripts/experiment_template.py"),
@@ -135,11 +149,17 @@ REQUIRED_FIELDS = frozenset(
         "model_invoked",
         "invocation_counts",
         "current_invocation_events",
+        "current_run_id",
+        "current_owner_pid",
+        "event_count",
+        "event_sha256",
         "inference_substrate",
         "inference_substrate_details",
         "inference_substrate_class",
         "execution_venue",
         "duration_s",
+        "started_monotonic_ns",
+        "ended_monotonic_ns",
         "phase_spans",
         "receipt_sidecars",
         "small_ebm_training",
@@ -312,6 +332,18 @@ def replay_assignment_and_proof(root: Path) -> JsonDict:
     }
 
 
+def reduce_assignment_boundary(root: Path) -> JsonDict:
+    """Expose assignment and proof reductions without calling an old launcher."""
+
+    replay = replay_assignment_and_proof(root)
+    return {
+        "assignment_reduction": replay["assignment"],
+        "proof_boundary_replay": replay["proof"],
+        "source_literal_fidelity_count": replay["source_literal_fidelity_count"],
+        "usable_gate": replay["usable_gate"],
+    }
+
+
 def yaml_contract_rows(roadmap: Mapping[str, Any]) -> list[JsonDict]:
     """Parse executable task rows without reading values from Markdown."""
 
@@ -355,6 +387,59 @@ def compare_contract_authorities(markdown: str, roadmap: Mapping[str, Any]) -> J
     }
 
 
+def _contract_comparison_rows(
+    markdown_rows: Sequence[Mapping[str, Any]], yaml_rows: Sequence[Mapping[str, Any]]
+) -> list[JsonDict]:
+    """Compare each ordered authority row without hiding missing positions."""
+
+    rows: list[JsonDict] = []
+    fields = ("id", "title", "deliverable", "phase", "substrate", "gates")
+    for index in range(max(len(markdown_rows), len(yaml_rows))):
+        expected = dict(markdown_rows[index]) if index < len(markdown_rows) else None
+        observed = dict(yaml_rows[index]) if index < len(yaml_rows) else None
+        checks = {
+            field: bool(expected and observed and expected.get(field) == observed.get(field))
+            for field in fields
+        }
+        rows.append(
+            {
+                "order": index + 1,
+                "expected": expected,
+                "observed": observed,
+                "checks": checks,
+                "failures": [field for field, passed in checks.items() if not passed],
+                "passed": all(checks.values()),
+            }
+        )
+    return rows
+
+
+def build_contract_comparison(root: Path) -> JsonDict:
+    """Read the active V649 YAML and retain its stale declared Markdown authority."""
+
+    roadmap = load_yaml(root / ROADMAP_PATH)
+    markdown = (root / DESIGN_PATH).read_text(encoding="utf-8")
+    summary = compare_contract_authorities(markdown, roadmap)
+    try:
+        markdown_contract = parse_markdown_contract(markdown)
+    except ValueError:
+        markdown_contract = {"milestone": None, "tasks": []}
+    try:
+        yaml_contract = parse_yaml_contract(roadmap)
+    except ValueError:
+        yaml_contract = {"milestone": None, "tasks": []}
+    contract_rows = _contract_comparison_rows(
+        markdown_contract.get("tasks") or [], yaml_contract.get("tasks") or []
+    )
+    return {
+        **summary,
+        "contract_complete_score": int(summary["passed"]),
+        "contract_rows": contract_rows,
+        "markdown_contract": markdown_contract,
+        "yaml_contract": yaml_contract,
+    }
+
+
 def run_contract_mutations(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
     """Prove count, order, and field comparisons reject private defects."""
 
@@ -385,6 +470,13 @@ def run_contract_mutations(rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
     ]
 
 
+def run_contract_mutation_controls(yaml_contract: Mapping[str, Any]) -> list[JsonDict]:
+    """Return explicit pass flags for the three advisory comparator controls."""
+
+    rows = yaml_contract.get("tasks") or []
+    return [{**row, "passed": row["rejected"]} for row in run_contract_mutations(rows)]
+
+
 def _write_sidecars(root: Path, directory: Path) -> list[JsonDict]:
     """Write scripted and historical evidence outside current provenance."""
 
@@ -392,10 +484,11 @@ def _write_sidecars(root: Path, directory: Path) -> list[JsonDict]:
     exp7384_artifact = load_json(root / EXP7384_RESULT)
     historical_path = directory / "historical_model_receipts.json"
     simulated_path = directory / "simulated_transport_events.json"
-    atomic_json(
+    historical = current_work_receipt.write_immutable_sidecar(
         historical_path,
-        {
-            "scope": "historical",
+        scope="historical_model_receipts",
+        root=directory,
+        payload={
             "sources": [
                 {
                     "path": EXP7383_RESULT.as_posix(),
@@ -416,10 +509,11 @@ def _write_sidecars(root: Path, directory: Path) -> list[JsonDict]:
             ],
         },
     )
-    atomic_json(
+    simulated = current_work_receipt.write_immutable_sidecar(
         simulated_path,
-        {
-            "scope": "simulated_transport",
+        scope="simulated_transport_events",
+        root=directory,
+        payload={
             "source_path": EXP7384_RESULT.as_posix(),
             "source_sha256": sha256_file(root / EXP7384_RESULT),
             "events": exp7384_artifact.get("scripted_scored_path", {}).get(
@@ -428,18 +522,22 @@ def _write_sidecars(root: Path, directory: Path) -> list[JsonDict]:
             "scripted_scored_path": exp7384_artifact.get("scripted_scored_path", {}),
         },
     )
-    return [
-        current_work_receipt.sidecar_reference(historical_path, root=directory, scope="historical"),
-        current_work_receipt.sidecar_reference(
-            simulated_path, root=directory, scope="simulated_transport"
-        ),
-    ]
+    return [historical, simulated]
 
 
-def _clean_receipt(sidecars: Sequence[Mapping[str, Any]]) -> JsonDict:
+def _clean_receipt(
+    sidecars: Sequence[Mapping[str, Any]],
+    *,
+    duration_s: float = 1.0,
+    phase_spans: Sequence[Mapping[str, Any]] = (),
+    owner_pid: int = 7395,
+) -> JsonDict:
     """Build the no-model fixture used by producer and unchanged-reader controls."""
 
     return current_work_receipt.build_current_work_receipt(
+        run_id="exp7395-current-run",
+        owner_pid=owner_pid,
+        events=[],
         inference_substrate="aggregation_from_upstream_artifacts",
         inference_substrate_details={
             "device": "host_cpu",
@@ -450,9 +548,9 @@ def _clean_receipt(sidecars: Sequence[Mapping[str, Any]]) -> JsonDict:
         },
         inference_substrate_class="aggregation",
         execution_venue="host",
-        duration_s=2.0,
-        phase_spans=[{"phase": "fixture", "start_s": 0.0, "end_s": 1.0}],
-        owned_run_events=[],
+        started_monotonic_ns=0,
+        ended_monotonic_ns=max(0, round(duration_s * 1_000_000_000)),
+        phase_spans=phase_spans,
         sidecar_references=sidecars,
         small_ebm_training={"performed": False, "kind": "none"},
     )
@@ -468,24 +566,38 @@ def run_receipt_controls(
     clean = _clean_receipt(sidecars)
     clean_errors = current_work_receipt.validate_current_work_receipt(clean, root=directory)
     rows: list[JsonDict] = []
+    attempted = {
+        "scope": "current",
+        "transport": "owned_runtime",
+        "run_id": "exp7395-current-run",
+        "owner_pid": 7395,
+        "call_id": "load-1",
+        "operation": "model_load",
+        "state": "attempted",
+        "monotonic_ns": 100_000_000,
+    }
+    failed = {**attempted, "state": "failed", "monotonic_ns": 200_000_000, "error": "fixture"}
     for mutation in RECEIPT_MUTATIONS:
         changed = deepcopy(clean)
         if mutation == "unreported_load":
-            changed["current_invocation_events"] = [
-                {"event_id": "load-1", "operation": "model_load", "state": "attempted"},
-                {"event_id": "load-1", "operation": "model_load", "state": "completed"},
-            ]
+            completed = {**attempted, "state": "completed", "monotonic_ns": 200_000_000}
+            changed["current_invocation_events"] = [attempted, completed]
         elif mutation == "falsified_duration":
             changed["duration_s"] = 0.5
         elif mutation == "dropped_failed_call":
-            changed["invocation_counts"]["generation_calls_failed"] = 1
-        elif mutation == "missing_completion":
-            changed["current_invocation_events"] = [
-                {"event_id": "gen-1", "operation": "generation", "state": "attempted"}
-            ]
+            changed["current_invocation_events"] = [attempted]
+            changed["event_count"] = 2
+            changed["event_sha256"] = current_work_receipt.canonical_hash([attempted, failed])
             changed["model_invoked"] = True
-            changed["invocation_counts"]["generation_calls_attempted"] = 1
-            changed["invocation_counts"]["generation_calls_in_flight"] = 1
+            changed["invocation_counts"]["model_loads_attempted"] = 1
+            changed["invocation_counts"]["model_loads_failed"] = 1
+        elif mutation == "missing_completion":
+            changed["current_invocation_events"] = [attempted]
+            changed["event_count"] = 1
+            changed["event_sha256"] = current_work_receipt.canonical_hash([attempted])
+            changed["model_invoked"] = True
+            changed["invocation_counts"]["model_loads_attempted"] = 1
+            changed["invocation_counts"]["model_loads_in_flight"] = 1
         elif mutation == "invalid_venue":
             changed["execution_venue"] = "host_cpu"
         else:
@@ -511,10 +623,52 @@ def run_receipt_controls(
     return rows, {**clean, "errors": clean_errors}
 
 
+def build_reader_fixture(current: Mapping[str, Any]) -> JsonDict:
+    """Build a small no-model artifact for the two unchanged safety readers."""
+
+    return {
+        "schema": "carnot.current_work_receipt.reader_fixture.v1",
+        "experiment_id": "exp7395-current-work-reader-fixture",
+        "run_date": RUN_DATE,
+        **deepcopy(dict(current)),
+        "random_seed": 7_395,
+        "reproducibility_checksum": current_work_receipt.canonical_hash(current),
+        "rows": [
+            {
+                "unit_id": "clean-current-work-fixture",
+                "arm": "owned_current_events_only",
+                "disposition": "complete",
+                "censored": False,
+                "metric": "receipt_validation_error_count",
+                "metric_value": 0.25,
+                "cost": {"current_llm_calls": 0},
+                "failure": None,
+            }
+        ],
+        "honest_verdict": "complete_null_clean_fixture_no_fresh_model_evidence",
+        "verdict_class": "null",
+        "flagged_adversarial": False,
+        "promotion_score": 0,
+        "fresh_model_evidence": False,
+    }
+
+
 def build_validation_plan(root: Path, private_root: Path) -> list[validation_scope.CommandSpec]:
     """Build the exact Exp7358 plan with three explicit changed modules."""
 
-    return build_command_plan(root, VALIDATION_MANIFEST, private_root)
+    commands = build_command_plan(root, VALIDATION_MANIFEST, private_root)
+    report = next(row for row in commands if row.name == "changed_module_coverage_report")
+    coverage_file = dict(getattr(report, "command_environment", ()))["COVERAGE_FILE"]
+    return [
+        EnvironmentCommandSpec(
+            row.name,
+            row.argv,
+            row.scope,
+            row.timeout_s,
+            (("COVERAGE_FILE", coverage_file),),
+        )
+        for row in commands
+    ]
 
 
 def validate_validation_plan(
@@ -524,14 +678,14 @@ def validate_validation_plan(
 
     errors = validate_command_plan(root, VALIDATION_MANIFEST, commands)
     counts = Counter(command.name for command in commands)
-    if counts != Counter(validation_scope.REQUIRED_CHECK_NAMES):
+    if counts != Counter(AFFECTED_CHECK_NAMES):
         errors.append("required_command_names_changed")
     if "full_python_suite" in counts:
         errors.append("full_python_suite_forbidden")
-    coverage = [row for row in commands if row.name == "changed_module_coverage_report"]
-    if len(coverage) != 1 or "COVERAGE_FILE" not in dict(
-        getattr(coverage[0], "command_environment", ()) if coverage else ()
-    ):
+    coverage = [
+        dict(getattr(row, "command_environment", ())).get("COVERAGE_FILE") for row in commands
+    ]
+    if len(coverage) != len(AFFECTED_CHECK_NAMES) or not coverage[0] or len(set(coverage)) != 1:
         errors.append("coverage_file_not_preserved")
     return list(dict.fromkeys(errors))
 
@@ -613,7 +767,7 @@ def _acceptance_gates(
 ) -> list[JsonDict]:
     """Reduce assignment and receipt readiness without using advisory contract status."""
 
-    affected = _receipts_pass(receipts, validation_scope.REQUIRED_CHECK_NAMES)
+    affected = _receipts_pass(receipts, AFFECTED_CHECK_NAMES)
     terminal = _receipts_pass(receipts, TERMINAL_CHECK_NAMES) if require_terminal else True
     values = (
         (
@@ -668,13 +822,11 @@ def build_artifact(
 
     replay = replay_assignment_and_proof(root)
     mutations, clean = run_receipt_controls(sidecar_dir, source_root=root)
-    roadmap = load_yaml(root / ROADMAP_PATH)
-    markdown = (root / DESIGN_PATH).read_text(encoding="utf-8")
-    contract = compare_contract_authorities(markdown, roadmap)
-    yaml_rows = yaml_contract_rows(roadmap)
-    contract_mutations = run_contract_mutations(yaml_rows)
+    contract = build_contract_comparison(root)
+    yaml_rows = contract["yaml_contract"]["tasks"]
+    contract_mutations = run_contract_mutation_controls(contract["yaml_contract"])
     gates = _acceptance_gates(replay, mutations, clean, receipts, require_terminal=require_terminal)
-    affected = _receipts_pass(receipts, validation_scope.REQUIRED_CHECK_NAMES)
+    affected = _receipts_pass(receipts, AFFECTED_CHECK_NAMES)
     terminal = _receipts_pass(receipts, TERMINAL_CHECK_NAMES) if require_terminal else True
     assignment_ready = int(
         replay["assignment"]["assignment_reducer_ready_score"] == 1
@@ -700,10 +852,12 @@ def build_artifact(
         verdict_class = "disqualified"
         honest_verdict = "complete_disqualified_receipt_or_validation_failure"
 
-    current = deepcopy(clean)
-    current.pop("errors", None)
-    current["duration_s"] = float(duration_s)
-    current["phase_spans"] = [deepcopy(dict(row)) for row in phase_spans]
+    current = _clean_receipt(
+        clean["receipt_sidecars"],
+        duration_s=duration_s,
+        phase_spans=phase_spans,
+        owner_pid=os.getpid(),
+    )
     rows = [*deepcopy(replay["assignment"]["rows"]), *deepcopy(mutations), *contract_mutations]
     artifact: JsonDict = {
         "schema": SCHEMA,
@@ -751,14 +905,14 @@ def build_artifact(
         "receipt_mutation_rows": mutations,
         "contract_rows": {
             "authority_comparison": contract,
-            "yaml_rows": yaml_rows,
+            "yaml_rows": deepcopy(yaml_rows),
             "mutation_rows": contract_mutations,
             "advisory_only": True,
         },
         "assignment_replay": replay,
         "contract_comparison": contract,
         "historical_diagnostic_rows": [deepcopy(dict(row)) for row in historical_diagnostics],
-        "required_check_names": [*validation_scope.REQUIRED_CHECK_NAMES, *TERMINAL_CHECK_NAMES],
+        "required_check_names": [*AFFECTED_CHECK_NAMES, *TERMINAL_CHECK_NAMES],
     }
     artifact["field_principles"] = _field_principles(tuple(artifact))
     artifact["reproducibility_checksum"] = artifact_checksum(artifact)
@@ -766,7 +920,11 @@ def build_artifact(
 
 
 def build_artifact_for_test(
-    root: Path, sidecar_dir: Path, receipts: Sequence[Mapping[str, Any]]
+    root: Path,
+    sidecar_dir: Path,
+    receipts: Sequence[Mapping[str, Any]] | None = None,
+    *,
+    validation_receipts: Sequence[Mapping[str, Any]] | None = None,
 ) -> JsonDict:
     """Build a deterministic terminal fixture from real immutable inputs."""
 
@@ -776,7 +934,7 @@ def build_artifact_for_test(
         sidecar_dir=sidecar_dir,
         preconditions=preconditions,
         source_hashes=hashes,
-        receipts=receipts,
+        receipts=validation_receipts if validation_receipts is not None else (receipts or []),
         started_at="2026-09-18T00:00:00Z",
         ended_at="2026-09-18T00:00:02Z",
         duration_s=2.0,
@@ -786,9 +944,10 @@ def build_artifact_for_test(
 
 def build_blocked_artifact(
     preconditions: Sequence[Mapping[str, Any]],
-    source_hashes: Mapping[str, str],
+    source_hashes: Mapping[str, str] | None = None,
     *,
-    started_at: str,
+    started_at: str | None = None,
+    started_at_utc: str | None = None,
     duration_s: float,
 ) -> JsonDict:
     """Publish exact external absence without success-shaped dependent evidence."""
@@ -796,13 +955,16 @@ def build_blocked_artifact(
     failed = next((deepcopy(dict(row)) for row in preconditions if not row.get("passed")), None)
     sidecars: list[JsonDict] = []
     current = current_work_receipt.build_current_work_receipt(
+        run_id="exp7395-blocked-run",
+        owner_pid=os.getpid(),
+        events=[],
         inference_substrate="aggregation_from_upstream_artifacts",
         inference_substrate_details={"device": "host_cpu", "work": "preconditions_only"},
         inference_substrate_class="aggregation",
         execution_venue="host",
-        duration_s=duration_s,
+        started_monotonic_ns=0,
+        ended_monotonic_ns=max(0, round(duration_s * 1_000_000_000)),
         phase_spans=[],
-        owned_run_events=[],
         sidecar_references=sidecars,
         small_ebm_training={"performed": False, "kind": "none"},
     )
@@ -813,13 +975,13 @@ def build_blocked_artifact(
         "phase": PHASE,
         "status": "blocked_required_immutable_input",
         "run_date": RUN_DATE,
-        "started_at_utc": started_at,
+        "started_at_utc": started_at_utc or started_at,
         "ended_at_utc": utc_now(),
         "preconditions_checked": [deepcopy(dict(row)) for row in preconditions],
         **current,
         "random_seed": {"experiment": 7_395_202_609_18, "mutations": 7_395_202_609_19},
         "reproducibility_checksum": "",
-        "source_artifact_hashes": dict(source_hashes),
+        "source_artifact_hashes": dict(source_hashes or {}),
         "rows": [],
         "sample_size_budget": {
             "planned_assignment_calls": 4,
@@ -835,6 +997,11 @@ def build_blocked_artifact(
             "failed_count": 1,
             "failed_checks": [failed],
             "first_failure": failed,
+            "check": (failed or {}).get("check", "required_immutable_input"),
+            "upstream": (failed or {}).get("upstream", EXPERIMENT_ID),
+            "artifact_field": (failed or {}).get("artifact_field", "bytes"),
+            "expected": (failed or {}).get("expected", "readable_nonempty_bytes"),
+            "observed": (failed or {}).get("observed"),
         },
         "verifier_is_oracle": True,
         "honest_verdict": "blocked_required_immutable_input",
@@ -851,7 +1018,7 @@ def build_blocked_artifact(
         "assignment_replay": {},
         "contract_comparison": {},
         "historical_diagnostic_rows": [],
-        "required_check_names": [*validation_scope.REQUIRED_CHECK_NAMES, *TERMINAL_CHECK_NAMES],
+        "required_check_names": [*AFFECTED_CHECK_NAMES, *TERMINAL_CHECK_NAMES],
     }
     artifact["field_principles"] = _field_principles(tuple(artifact))
     artifact["reproducibility_checksum"] = artifact_checksum(artifact)
@@ -888,21 +1055,28 @@ def validate_artifact(
             "model_invoked",
             "invocation_counts",
             "current_invocation_events",
+            "current_run_id",
+            "current_owner_pid",
+            "event_count",
+            "event_sha256",
             "inference_substrate",
             "inference_substrate_details",
             "inference_substrate_class",
             "execution_venue",
             "duration_s",
+            "started_monotonic_ns",
+            "ended_monotonic_ns",
             "phase_spans",
             "receipt_sidecars",
             "small_ebm_training",
         )
     }
-    errors.extend(
-        current_work_receipt.validate_current_work_receipt(
-            current_fields, root=sidecar_root or root / RAW_DIR
-        )
+    current_errors = current_work_receipt.validate_current_work_receipt(
+        current_fields, root=sidecar_root or root / RAW_DIR
     )
+    errors.extend(current_errors)
+    if current_errors:
+        errors.append("current_work_receipt_mismatch")
     if (
         artifact.get("MODEL_SPECS") != []
         or artifact.get("model_invoked") is not False
@@ -949,9 +1123,7 @@ def validate_artifact(
         )
         if artifact.get("acceptance_gate_results") != gates:
             errors.append("acceptance_gate_results_mismatch")
-        affected = _receipts_pass(
-            artifact.get("validation_receipts") or [], validation_scope.REQUIRED_CHECK_NAMES
-        )
+        affected = _receipts_pass(artifact.get("validation_receipts") or [], AFFECTED_CHECK_NAMES)
         terminal = (
             _receipts_pass(artifact.get("validation_receipts") or [], TERMINAL_CHECK_NAMES)
             if require_terminal
@@ -976,6 +1148,11 @@ def validate_artifact(
             errors.append("assignment_reducer_ready_score_mismatch")
         if artifact.get("receipt_protocol_ready_score") != expected_receipt:
             errors.append("receipt_protocol_ready_score_mismatch")
+        if (
+            artifact.get("assignment_reducer_ready_score") != expected_assignment
+            or artifact.get("receipt_protocol_ready_score") != expected_receipt
+        ):
+            errors.append("terminal_state_mismatch")
         if artifact.get("gate_check_summary") != _gate_summary(gates):
             errors.append("gate_check_summary_mismatch")
     if artifact.get("promotion_score") != 0:
@@ -989,6 +1166,15 @@ def terminal_command_specs(root: Path, candidate: Path) -> list[PlannedCommand]:
     """Build fresh-process replay and the two unchanged terminal readers."""
 
     python = str(root / ".venv/bin/python")
+    reducer_code = (
+        "import json,pathlib,sys;"
+        "from carnot.experiment_7395_v649_receipt_protocol import validate_artifact;"
+        "value=json.loads(pathlib.Path(sys.argv[1]).read_text());"
+        "errors=validate_artifact(value,sidecar_root=pathlib.Path(sys.argv[1]).parent,"
+        "require_terminal=False);"
+        "print(json.dumps({'errors':errors},sort_keys=True),flush=True);"
+        "raise SystemExit(bool(errors))"
+    )
     commands = (
         (
             "declared_entrypoint_cold_replay",
@@ -1001,6 +1187,11 @@ def terminal_command_specs(root: Path, candidate: Path) -> list[PlannedCommand]:
                 "--validate",
                 str(candidate),
             ),
+            "completion",
+        ),
+        (
+            "independent_cold_reducer",
+            (python, "-u", "-c", reducer_code, str(candidate)),
             "completion",
         ),
         (
@@ -1026,18 +1217,37 @@ def _historical_diagnostic_specs(root: Path) -> list[PlannedCommand]:  # pragma:
     """Replay unchanged failed V648 candidates without making them current evidence."""
 
     python = str(root / ".venv/bin/python")
-    return [
-        PlannedCommand(
-            validation_scope.CommandSpec(
-                f"historical_adversarial_exp{number}",
-                (python, "-u", "scripts/adversarial_verify.py", relative.as_posix()),
-                "historical_diagnostic_only",
-            ),
-            "historical_diagnostic_only",
-            False,
+    rows: list[PlannedCommand] = []
+    for number, relative in ((7383, EXP7383_RESULT), (7384, EXP7384_RESULT)):
+        rows.extend(
+            (
+                PlannedCommand(
+                    validation_scope.CommandSpec(
+                        f"historical_adversarial_exp{number}",
+                        (python, "-u", "scripts/adversarial_verify.py", relative.as_posix()),
+                        "historical_diagnostic_only",
+                    ),
+                    "historical_diagnostic_only",
+                    False,
+                ),
+                PlannedCommand(
+                    validation_scope.CommandSpec(
+                        f"historical_row_reader_exp{number}",
+                        (
+                            python,
+                            "-u",
+                            "scripts/verdict_row_consistency_lint.py",
+                            "--strict",
+                            relative.as_posix(),
+                        ),
+                        "historical_diagnostic_only",
+                    ),
+                    "historical_diagnostic_only",
+                    False,
+                ),
+            )
         )
-        for number, relative in ((7383, EXP7383_RESULT), (7384, EXP7384_RESULT))
-    ]
+    return rows
 
 
 def _span(

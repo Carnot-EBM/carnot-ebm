@@ -73182,11 +73182,23 @@ counts only from owned current-run events. The helper SHALL emit
 and reject an unfinished or contradictory event ledger. A current attempted
 load or generation SHALL set `model_invoked=true`, including failed attempts.
 
+Each owned event SHALL identify its current run, owner process, call,
+operation, state, and monotonic timestamp. Operations SHALL be `model_load` or
+`generation`. States SHALL be `attempted`, `completed`, `failed`, or
+`cancelled`. Each call SHALL contain one attempt and one later terminal state.
+The helper SHALL reject foreign, simulated, historical, duplicate, orphaned,
+or unfinished events in a current ledger. It SHALL bind the complete ledger to
+a digest and derive `duration_s` only from the supplied monotonic boundaries.
+
 Scripted transport events and historical model receipts SHALL be written to
 separate immutable JSON sidecars. The current artifact SHALL reference each
 sidecar by path, byte hash, and scope. It SHALL not nest a sidecar's positive
 invocation counters or substrate declaration as current provenance. Small EBM
 training SHALL remain in `small_ebm_training` and SHALL not imply an LLM load.
+The producer validator SHALL rehash each sidecar before accepting a receipt.
+It SHALL reject a changed hash, an invalid scope, a non-string substrate, a
+device mapping placed in the substrate field, a non-host venue, or a duration
+that differs from the monotonic boundaries.
 
 Exp7395 SHALL replay the unchanged Exp7383 and Exp7384 candidates through the
 unchanged adversarial verifier and preserve their findings. It SHALL run a
@@ -73273,4 +73285,4 @@ zero. A narrow receipt failure SHALL not cancel other milestone branches.
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-REPORT-7395 and SCENARIO-REPORT-7395-* | Planned: shared current-work receipt helper, Exp7395 host reducer, thin entrypoint, and hashed sidecars | Planned: focused RED tests, 100% changed-module coverage including Exp7383 paths, scoped validation, entrypoint E2E, cold replay, unchanged adversarial verifier, strict row consistency, and exact-test spec coverage |
+| REQ-REPORT-7395 and SCENARIO-REPORT-7395-* | Implemented: shared current-work receipt helper, Exp7395 host reducer, thin entrypoint, and immutable hashed sidecars | Verified: focused spec-linked tests pass with 100% changed-module coverage including Exp7383 paths; the frozen eight-check scoped plan, entrypoint E2E, cold replay, unchanged adversarial verifier, strict row consistency, and exact-test spec coverage all pass |
