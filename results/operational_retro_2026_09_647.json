@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.647",
+  "generated_at": "2026-09-18T02:52:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 37.9,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Collect new adapter-withheld ARC supervisor outcomes",
+      "duration_minutes": 31.02,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Validate Boltzmann marginals under cached entailment",
+      "duration_minutes": 3.26,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bind V647 literature and the exact twelve-task contract",
+      "duration_minutes": 1.31,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Attack proof authority and seal prospective formula streams",
+      "duration_minutes": 0.82,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qualify bounded Qwen3.8 assignment proposals",
+      "duration_minutes": 0.68,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 9 experiments in 37.9 minutes, including 2 compute-bound experiments. Collect new adapter-withheld ARC supervisor outcomes was the 31.02-minute critical path.",
+  "bottlenecks_identified": [
+    "Collect new adapter-withheld ARC supervisor outcomes occupied 31.02 of 37.9 minutes. The supplied data has no phase breakdown, so the cause of its duration is unknown.",
+    "GPU and runner telemetry is not aligned to experiment windows. The closing snapshot cannot establish compute-window efficiency or a missed parallel-model dispatch."
+  ],
+  "improvements_suggested": [
+    "Add phase timers and restartable checkpoints to the ARC supervisor-outcome task so a future long phase can be localized and resumed.",
+    "Add experiment-window GPU sampling with task ownership, model count, selected runner, and device allocation to each execution receipt.",
+    "Add dependency-aware placement of separate eligible single-model compute experiments on different idle GPUs. Keep single-model tasks on one GPU and invoke DualGPURunner only when two or more models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the ARC supervisor-outcome path with phase spans and restartable checkpoints.",
+    "Join GPU samples, process ownership, model count, runner choice, and device assignment to each task window.",
+    "Schedule independent compute experiments across available GPUs after dependency and memory checks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing reconstruction isolates the critical path but not its cause. The GPU snapshot is process-level rather than task-window evidence, so compute efficiency and DualGPURunner compliance remain undetermined; no measured counterfactual supports a nonzero savings estimate."
+}

@@ -6836,3 +6836,10 @@ The critical path for milestone .250:
 - theme: prospective structural-learning measurement dominated an all-compute execution while task-level phase and dispatch evidence was absent
 - key result: honest operational negative — the duration leader is clear, but its cause, sustained compute-window GPU efficiency, and any eligible multi-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.647
+
+- exp_range: no data available this milestone
+- theme: one ARC supervisor-outcome task dominated a mixed execution window while phase and dispatch evidence remained unaligned
+- key result: honest operational negative — the compute duration order is known, but the critical-path cause, task-window GPU efficiency, and any eligible parallel-model runner miss are not established
+- acceptance: no data available this milestone
