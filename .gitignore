@@ -114,6 +114,26 @@ models/openai_privacy_filter/
 results/**/*.pt
 results/*.pt
 
+# THIRD occurrence of the same incident class, 2026-09-18. The 2026-06-03 /
+# 2026-06-08 patterns below (`results/*.ckpt` etc.) only matched the TOP
+# LEVEL of results/, not nested paths -- 25 real *.ckpt files under
+# results/trm_runs/snapshots/ and results/trm_runs/<experiment>/ were still
+# tracked and pushed fine to GitHub in isolation (each under 100MB), but
+# combined with a 17GB cached GGUF model blob under
+# results/raw/experiment_NNNN/task_owned_model_cache/ (a HuggingFace-cache-
+# shaped directory, four separate copies under four different experiment
+# IDs) and ~30 oversized results/**/*.json[l] dumps, the accumulated push
+# exceeded GitHub's 2GB pack-size cap entirely, blocking every push for 19
+# days (2026-08-30 to 2026-09-18). Fixed both ways: git-filter-repo
+# --strip-blobs-bigger-than 90M purged the existing history (see
+# ops/known-issues.md 2026-09-18 entry for the full incident), and the
+# glob below is now recursive so this exact shape cannot recur silently.
+# A per-path .gitignore list is still fundamentally reactive against a
+# model-cache directory keyed by a changing experiment ID -- see the
+# known-issues entry's queued follow-up for a conductor-side hard size
+# gate at commit time, which is the only fix that closes this for good.
+results/raw/**/task_owned_model_cache/
+
 # Vivado intermediate / future-build artifacts.  The .gen/ subtree
 # contains >100 MB synthesized netlists (carnot_ising_bd_*_sim_netlist.v
 # and .vhdl) that GitHub also rejected.
@@ -272,11 +292,15 @@ ebt_tmp/
 # in results/ (25 small verifier safetensors, ~18MB, slipped in). These patterns stop
 # NEW verifier/abstraction weights from landing in git as they grow; the binaries live
 # on HF/IPFS keyed by CID, referenced from ops/verifier_registry.yaml. (2026-06-08)
-results/*.pt
-results/*.safetensors
-results/*.bin
-results/*.gguf
-results/*.ckpt
+# WIDENED 2026-09-18 (third occurrence, see results/**/*.pt comment above): these
+# were top-level-only (`results/*.ckpt`), which does not match a nested path like
+# `results/trm_runs/snapshots/ckpt_val0.626_ep11599.ckpt` -- exactly the shape that
+# contributed to the 2026-09-18 GitHub pack-size incident. Made recursive.
+results/**/*.pt
+results/**/*.safetensors
+results/**/*.bin
+results/**/*.gguf
+results/**/*.ckpt
 
 # ARC-AGI-3 SDK local cache (downloaded game envs + recordings) — not source
 environment_files/

@@ -9889,7 +9889,92 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-09-18: RETIRE THE TWO SATURATED AUTORESEARCH TOY BENCHMARKS, ADD THE CALIBRATED-DECISION BENCHMARK
+### NEW 2026-09-18: GITHUB PACK-SIZE INCIDENT — HISTORY REWRITTEN, CONDUCTOR-SIDE SIZE GATE STILL NEEDED
+
+**What happened.** GitHub push had been silently failing since 2026-08-30 (19 days,
+82 logged conductor timeout attempts) — first misread as a plain timeout, then as a
+gitea disk-space issue (real, separate, fixed same day — gitea's disk was actually
+full and is now restored). The real GitHub blocker was `remote: fatal: pack exceeds
+maximum allowed size (2.00 GiB)`, then, once batching was tried, `GH001: Large files
+detected` — several individual files over GitHub's 100MB hard per-file cap.
+
+**Full scan found 39 blobs over 90MB, dominated by:**
+- A **17GB cached GGUF model weight blob** (`unsloth/Qwen3.8-27B-GGUF`), committed
+  FOUR separate times under four different `results/raw/experiment_NNNN/
+  task_owned_model_cache/` directories (experiment IDs 7193/7206/7207/7221) — a
+  HuggingFace-cache-shaped directory that should never have been tracked at all.
+- ~9GB across `models/openai_privacy_filter/*.safetensors` / `*.onnx_data*` —
+  **already covered by an existing `.gitignore` rule**, tracked anyway because the
+  rule was added after these files were already committed (`git rm --cached` was
+  never run — the classic "ignore doesn't retroactively untrack" gap).
+- ~30 oversized `results/**/*.json[l]` result/checkpoint dumps, several under
+  `results/trm_runs/**/*.ckpt` — also gitignore-covered in principle, but the
+  existing pattern (`results/*.ckpt`) was **top-level only**, not recursive, so
+  nested paths slipped through silently.
+
+**This is the THIRD occurrence of this exact incident class.** The `.gitignore`
+comments at the `results/**/*.pt` block document a 2026-06-03 purge (a single
+765MB checkpoint blocked 143 commits) and a 2026-06-08 widening (missed
+`.safetensors`/`.bin`/`.gguf`/top-level `.pt`). Both prior fixes were "pattern
+list narrower than its concept" — exactly the bug class CLAUDE.md's QA-Layer
+Authenticity Discipline names generically. This occurrence is the same shape
+again, at 100x the scale (17GB vs 765MB) and with a moving-target path
+(`task_owned_model_cache` keyed by a different experiment ID each time,
+structurally un-listable in a static `.gitignore`).
+
+**Fix applied 2026-09-18 (operator-directed, "strip all 39, model weights don't
+belong in git"):**
+1. Full mirror backup taken before any destructive operation
+   (`git clone --mirror`), verified byte-identical to HEAD before proceeding.
+2. `git filter-repo --strip-blobs-bigger-than 90M --force` on the backup mirror
+   (size-based, not path-based, specifically because path lists keep proving
+   insufficient against a moving experiment-ID path). Verified: commit count
+   unchanged (25408 before and after — no commits dropped, only oversized blobs
+   stripped), CLAUDE.md byte-identical at HEAD, full tree diff showed exactly
+   the 30 stripped paths and nothing else changed. Repo size: 32GB -> 3.5GB.
+3. Force-pushed the rewritten history to GitHub in 15 chunks (the rewritten
+   history still shares no common ancestor with GitHub's stale 2026-08-30 ref,
+   so even the slimmed 3.5GB total needed batching to clear the 2GB-per-push
+   cap) and to gitea in one shot (no per-file cap there, just needed the disk
+   space already restored). Both remotes verified via `git ls-remote` to land
+   at the exact same rewritten tip (`b06d8ca21323e32f2d9227448ed4cc51b0cbe54e`).
+4. Primary working repo reset to the rewritten history (`git fetch` + `git
+   reset --hard`), verified clean `git status`, `git fsck --full` clean, and
+   `pytest tests/python/test_calibrated_decision_benchmark.py` (31 tests)
+   still green post-reset.
+5. `.gitignore` widened: `results/*.ckpt`/`.pt`/`.safetensors`/`.bin`/`.gguf`
+   made recursive (`results/**/*.ckpt` etc. — the top-level-only pattern was
+   the reason the trm_runs checkpoints slipped through), plus a new
+   `results/raw/**/task_owned_model_cache/` rule for the model-cache shape.
+6. **Conductor held for the duration** via `scripts/conductor-stop.sh` (writes
+   `~/.carnot/conductor-hold`, the real mechanism — a bare `systemctl stop`
+   was tried first and the janitor auto-restarted it within the hour per
+   `REQ-CONDUCTOR-RESTART-1`, exactly as that script's own comment warns).
+   Released after the reset was verified.
+
+**Explicitly NOT done, flagged as the real remaining gap.** A `.gitignore` list
+is reactive and path-based; it cannot catch a legitimately-named, differently-
+shaped large file the next time one appears (this incident's own 17GB blob
+proves a path-based rule is structurally insufficient against a
+per-experiment-ID cache directory). The fix that actually closes this per
+CLAUDE.md's Error Lifecycle ("convert the lesson into a check that fires, not
+prose to remember") is a **hard size gate inside the conductor's own commit
+path** (`scripts/research_conductor.py:git_commit_and_push` /
+`_stage_all_except_claimed`) — refuse to stage any file over a fixed threshold
+(e.g. 90MB) regardless of path, logging a clear `BLOCKED_OVERSIZED_FILE`
+reason rather than silently committing it. This was not implemented in this
+pass (out of scope for the operator's "fix the rewrite" directive) and is
+queued here as a hard pickup.
+
+**Local disk note (informational, not blocking).** The primary repo's local
+`.git` stayed at 32GB after the reset because old objects are still reachable
+from stray local branches (`worktree-agent-*`, `codex/issue-*`,
+`gemini-worktree`, `grammar-27b-trial2`, `outer-loop/*`) and the `main` reflog,
+all pointing at pre-rewrite history. `git fsck --full` is clean (no corruption)
+and both remotes are correctly slim (~3.5GB) — this is purely local disk
+housekeeping, not a correctness issue. Deferred; not part of this pickup.
+
+
 
 New standing floor per CLAUDE.md "Energy-Based Calibrated-Decision Training Floor"
 (2026-09-18 operator directive): every milestone reserves >=1 task toward training a
