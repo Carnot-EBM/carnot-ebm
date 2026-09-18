@@ -13,6 +13,65 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V648 scored invocation boundary diagnosis — 2026-09-18
+
+**Status:** Specified. This is host-only plumbing evidence and does not authorize
+a model run, selector change, or solve claim.
+
+### REQ-ARC-WMTE-7384: Preserve scored-path work across a bounded child timeout
+
+Experiment 7384 SHALL diagnose the actual Experiment 7376 parent and child
+boundary from immutable logs and durable episode files. It SHALL name the last
+confirmed event and first missing event. Historical model receipts SHALL keep
+their original hash, substrate class, and adversarial flag. They SHALL not count
+as current invocations or current readiness evidence.
+
+The reusable reducer SHALL prefer a valid terminal child session. When that
+session is missing after an owned aggregate timeout, it SHALL recover completed
+episode rows from the child's durable checkpoint. It SHALL classify the active
+scheduled unit as started and censored from its progress receipt. It SHALL
+classify later scheduled units as unstarted. It SHALL preserve the earliest
+exception and SHALL not replace completed work with synthetic zero-action rows.
+
+The diagnostic SHALL exercise the real `E3AgentPolicy` and `make_carnot_agent`
+path with scripted HTTP transport and game adapters withheld. A tool result
+SHALL reach a later scored-policy action. The diagnostic SHALL also distinguish
+failed load, successful load with no generation, attempted failed generation,
+and successful generation receipts. The current experiment SHALL load no model,
+perform no current LLM generation, and keep `promotion_score` at zero.
+
+The experiment SHALL run the Experiment 7358 scoped command plan through the
+Experiment 7303 runner with command-local `COVERAGE_FILE`. It SHALL run E2E-009,
+E2E-010, the LLM-disabled twelve-action `r11l` smoke, independent reduction,
+adversarial verification, and strict verdict-row consistency lint. Readiness
+can equal one only when the historical cause is reproduced, the corrected
+reducer preserves exact timeout accounting, the scripted scored path reaches an
+action, and all required checks pass.
+
+#### SCENARIO-ARC-WMTE-7384-TIMEOUT-RECOVERY
+
+- GIVEN a six-unit schedule, five durable completed rows, and progress in unit six
+- WHEN the aggregate timeout prevents the child terminal session write
+- THEN five rows remain completed, unit six is started and censored, and no unit is mislabeled unstarted
+- AND current invocation counts remain separate from labeled historical receipts.
+
+#### SCENARIO-ARC-WMTE-7384-SCORED-REACHABILITY
+
+- GIVEN scripted HTTP replies and no game adapter
+- WHEN the real agent factory constructs an `E3AgentPolicy`
+- THEN an HTTP tool result is consumed before a later scored-policy action
+- AND no live model is loaded or solve is credited.
+
+#### SCENARIO-ARC-WMTE-7384-RECEIPT-STATES
+
+- GIVEN raw load and generation boundary events
+- WHEN invocation states are reduced
+- THEN failed load, load-only, failed generation, and successful generation stay distinct
+- AND the earliest failure is retained without contradictory count fields.
+
+Implementation status: specified 2026-09-18. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V647 adapter-withheld supervisor outcome capture — 2026-09-17
 
 **Status:** Specified. A complete empty redirect ledger is a valid null result.

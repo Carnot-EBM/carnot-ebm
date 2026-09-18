@@ -1861,14 +1861,50 @@ def run_child_with_lease(
     try:
         session = json.loads(session_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
+        # A bounded parent can stop the child after an episode checkpoint but before
+        # the final session write. Keep those durable rows so downstream accounting
+        # does not replace real actions and generations with synthetic zeroes.
+        durable = {}
+        try:
+            durable = json.loads((raw_dir / "episode_rows.json").read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            pass
+        progress_rows = {}
+        for sealed in schedule:
+            episode_id = str(sealed.get("episode_id"))
+            progress_path = raw_dir / episode_id.replace(":", "__") / "run_progress.json"
+            try:
+                progress_rows[episode_id] = json.loads(progress_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                pass
+        from carnot.experiment_7384_v648_arc_invocation_boundary import (
+            recover_timeout_accounting,
+        )
+
+        recovered = recover_timeout_accounting(
+            schedule=schedule,
+            terminal_session=None,
+            durable_episode_rows=durable.get("rows", []),
+            progress_rows=progress_rows,
+            timed_out=timed_out,
+        )
         session = {
             "model_loaded": resident,
-            "model_invoked": False,
-            "episodes": [],
+            "model_invoked": any(
+                row.get("model_invoked") is True for row in durable.get("rows", [])
+            ),
+            "episodes": recovered["rows"],
             "requests": [],
             "phase_spans": [],
             "runtime_receipt": {},
-            "error": "live_child_did_not_write_session",
+            "timeout_accounting": recovered["accounting"],
+            "last_confirmed_event": recovered["last_confirmed_event"],
+            "first_missing_event": recovered["first_missing_event"],
+            "error": (
+                "live_child_did_not_write_session_recovered_episode_checkpoints"
+                if durable.get("rows")
+                else "live_child_did_not_write_session"
+            ),
         }
     if resident:
         lease.transition("unloading")
