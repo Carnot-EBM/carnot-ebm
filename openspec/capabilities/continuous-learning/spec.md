@@ -17732,3 +17732,128 @@ determinations, and the research roadmap.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7351 and SCENARIO-CL-7351-* | Implemented in `python/carnot/experiment_7351_v645_acquisition_prototype.py` with a thin executable wrapper. The learner uses only public domains and exact Boolean feedback. | `tests/python/test_experiment_7351_v645_acquisition_prototype.py` covers exact partial semantics, witness closure, private seals, development controls, unsupported fallback, cost reduction, terminal classification, and 100-percent changed-module coverage. The terminal result artifact supplies the bounded E2E measurement. |
+
+## REQ-CL-7399: Sealed Delayed-Adapter Online Trial
+
+Carnot SHALL measure the Exp7397 delayed affine adapter on the sealed Exp7382
+archive replay. Before dependent work, the experiment SHALL authenticate the
+exact Exp7397, Exp7382, and Exp7385 artifact bytes. Exp7397 SHALL have
+`delayed_adapter_ready_score=1`, an eligible closed verdict class, and
+`flagged_adversarial=false`. A failed structured gate SHALL write a row-free
+terminal `blocked_*` artifact. Its `gate_check_summary` SHALL retain the exact
+upstream path, check, field, expected value, and observed value.
+
+The trial SHALL train each initial 2-4-1 Gibbs head and affine initializer on
+the frozen initialization groups only. It SHALL emit immutable, code-free
+numeric checkpoints that a fresh NumPy process can score. Stream replay SHALL
+freeze Gibbs weights. It SHALL compare static affine Gibbs, adaptive affine
+Gibbs, online logistic raw features, recent-frequency Beta-Binomial, and the
+adaptive no-feedback control for all five registered seeds. The primary delay
+SHALL be one. Delay 32, reversed blocks, and the fixed 25 percent missing-label
+mask SHALL remain separate sensitivity conditions.
+
+Each row SHALL record the pre-update probability, typed action, feedback
+availability index, feedback disposition, state hash before and after the
+eligible commit, Brier contribution, log-loss contribution, and full measured
+cost. The experiment SHALL count failed and unscoreable units. It SHALL not
+tune a threshold, mask, order, update step, or stop rule after outcomes are
+visible.
+
+The trial SHALL cold-restart durable adapter state. It SHALL also erase
+eligible prior updates and compare the erased state with the no-feedback arm
+on the same later query. `causal_erasure_rows` SHALL attribute any prediction
+change only to earlier verified labels. It SHALL not use the current or a
+future label and SHALL not change sample order.
+
+The reducer SHALL recompute the registered paired moving-block intervals.
+Seeds SHALL be averaged inside event groups before resampling. Risk and
+coverage SHALL remain empirical archive-replay quantities. The full primary
+gate SHALL require the adaptive arm's block-32 Brier-delta upper interval below
+zero against each practical adaptive control, non-worse log loss, action risk
+within the frozen budgets, and no coverage loss. A complete but unresolved or
+worse result SHALL be terminal `null`, not blocked.
+
+`online_capture_complete_score` SHALL equal one only when all scheduled rows,
+feedback ledgers, initial checkpoints, restart checks, causal erasure checks,
+and required validations are complete and valid. It SHALL not depend on
+efficacy. `online_value_score` SHALL equal one only when the full registered
+primary gate passes. `promotion_score` SHALL remain zero.
+
+The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string that describes
+the current CPU, JAX, NumPy, and exact-reducer work. Device detail SHALL remain
+in `inference_substrate_details`. Tiny Gibbs and affine fitting SHALL be
+reported in `small_ebm_training` and SHALL not imply an LLM load.
+
+The trial SHALL measure feature extraction, energy scoring, affine prediction,
+eligible update, durable state write, and orchestration separately. It SHALL
+report latency distributions, serialized bytes, and update operation counts.
+It SHALL describe CPU scalar updates as the measured path and batched device
+score computation as future work. It SHALL make no measured 100-fold speed
+claim, real-time deployment claim, generator update, or production change.
+
+The affected check plan SHALL come from Exp7358 and run through Exp7303. It
+SHALL contain worktree imports, focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE`, use a private existing base-temp parent, and omit the full
+Python suite. The declared entrypoint and fresh-process cold replay SHALL serve
+as the capability E2E. The unchanged adversarial verifier and strict row
+consistency reader SHALL inspect the exact measured candidate before atomic
+terminal publication.
+
+### SCENARIO-CL-7399-GATE: Upstream eligibility fails closed
+
+- GIVEN changed, missing, ineligible, or adversarial Exp7397 evidence
+- WHEN the trial checks structured prerequisites and exact source identities
+- THEN no training or replay starts
+- AND the blocked artifact names the exact failed field and observed value.
+
+### SCENARIO-CL-7399-REPLAY: Every registered arm receives paired evidence
+
+- GIVEN the sealed initialization and later-group identities
+- WHEN five arms, five seeds, both delays, both orders, and the missing mask run
+- THEN every scheduled prediction is recorded before feedback
+- AND Gibbs weights, thresholds, event order, and feedback masks stay frozen.
+
+### SCENARIO-CL-7399-CHECKPOINT: Numeric state is independently scoreable
+
+- GIVEN an initial-only fitted Gibbs head and affine initializer
+- WHEN the checkpoint is loaded without the training reducer
+- THEN NumPy reproduces its energy and calibrated probability
+- AND the checkpoint hash changes after any numeric mutation.
+
+### SCENARIO-CL-7399-ERASURE: Only earlier verified labels explain adaptation
+
+- GIVEN a later query and a prefix of committed eligible feedback
+- WHEN prior updates are erased and the state is cold-restarted
+- THEN erased predictions match the paired no-feedback state
+- AND current labels, future labels, and reordered samples cannot affect the row.
+
+### SCENARIO-CL-7399-GATE-REDUCTION: Completion and value stay separate
+
+- GIVEN a valid complete replay whose registered benefit conjunction fails
+- WHEN independent reduction recomputes completion and efficacy
+- THEN `online_capture_complete_score=1` and `online_value_score=0`
+- AND the terminal verdict class is `null`, not blocked or partial.
+
+### SCENARIO-CL-7399-COST: Measured stages do not imply hardware speedup
+
+- GIVEN raw per-row and per-checkpoint timings
+- WHEN latency distributions and operation counts are reduced
+- THEN feature, energy, affine, update, write, and orchestration costs are separate
+- AND the report makes no real-time or measured 100-fold acceleration claim.
+
+### SCENARIO-CL-7399-ARTIFACT: Fresh readers control terminal publication
+
+- GIVEN exact raw rows, checkpoints, causal rows, gates, and scoped receipts
+- WHEN a fresh process recomputes rows and unchanged strict readers inspect them
+- THEN changed evidence, scores, hashes, or validation scope fails
+- AND only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-CL-7399)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7399 and SCENARIO-CL-7399-* | Planned: Exp7399 online trial module, thin entrypoint, numeric checkpoints, and terminal artifact. | Planned: spec-linked tests, 100 percent changed-module coverage, scoped affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test specification coverage. |
