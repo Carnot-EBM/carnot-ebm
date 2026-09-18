@@ -1,0 +1,1801 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "artifact_field": "preconditions_checked",
+      "category": "safety",
+      "check": "required_preconditions",
+      "expected": true,
+      "observed": true,
+      "operator": "is",
+      "passed": true,
+      "principle": "Missing immutable evidence stops dependent reduction.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "historical_model_inputs",
+      "category": "safety",
+      "check": "historical_canary_stays_disqualified",
+      "expected": {
+        "flagged_adversarial": true,
+        "verdict_class": "disqualified"
+      },
+      "observed": {
+        "flagged_adversarial": true,
+        "verdict_class": "disqualified"
+      },
+      "operator": "==",
+      "passed": true,
+      "principle": "Reducer repair cannot rehabilitate its quarantined input.",
+      "upstream": "results/experiment_7372_v647_qwen_canary.json"
+    },
+    {
+      "artifact_field": "rows",
+      "category": "completion",
+      "check": "four_raw_calls",
+      "expected": 4,
+      "observed": 4,
+      "operator": "==",
+      "passed": true,
+      "principle": "Every historical request and response must be replayed exactly once.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "assignment_reduction.usable_proposal_count",
+      "category": "completion",
+      "check": "usable_assignment_proposals",
+      "expected": 3,
+      "observed": 4,
+      "operator": ">=",
+      "passed": true,
+      "principle": "At least three usable responses pass; four cannot fail an equality accident.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "assignment_reduction.response_fidelity_count",
+      "category": "safety",
+      "check": "response_fidelity",
+      "expected": 4,
+      "observed": 4,
+      "operator": "==",
+      "passed": true,
+      "principle": "The decoded literals must match the exact raw response bytes.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "assignment_reduction.sat_extendible_count",
+      "category": "scientific_efficacy",
+      "check": "sat_extendibility_reported_separately",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "Transport success does not hide that no historical assignment extends to SAT.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "proof_boundary_replay_ready_score",
+      "category": "completion",
+      "check": "proof_boundary_replay",
+      "expected": 1,
+      "observed": 1,
+      "operator": "==",
+      "passed": true,
+      "principle": "All original proof checks and sealed bytes must remain valid.",
+      "upstream": "results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "MODEL_SPECS/model_invoked/invocation_counts",
+      "category": "safety",
+      "check": "current_model_invocations",
+      "expected": {
+        "MODEL_SPECS": [],
+        "counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        },
+        "model_invoked": false
+      },
+      "observed": {
+        "MODEL_SPECS": [],
+        "counts": {
+          "generation_calls_attempted": 0,
+          "generation_calls_cancelled": 0,
+          "generation_calls_completed": 0,
+          "generation_calls_failed": 0,
+          "generation_calls_in_flight": 0,
+          "model_loads_attempted": 0,
+          "model_loads_cancelled": 0,
+          "model_loads_completed": 0,
+          "model_loads_failed": 0,
+          "model_loads_in_flight": 0
+        },
+        "model_invoked": false
+      },
+      "operator": "==",
+      "passed": true,
+      "principle": "Historical calls never become current model work.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "execution_venue",
+      "category": "safety",
+      "check": "execution_venue_closed",
+      "expected": "host",
+      "observed": "host",
+      "operator": "==",
+      "passed": true,
+      "principle": "The current aggregation venue uses the closed host value.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "promotion_score",
+      "category": "promotion",
+      "check": "promotion_forbidden",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "principle": "This diagnosis never authorizes an external action.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "validation_receipts",
+      "category": "required_validation",
+      "check": "required_affected_validation",
+      "expected": true,
+      "observed": false,
+      "operator": "is",
+      "passed": false,
+      "principle": "Every scoped affected check must execute once and pass.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "scientific_value_score",
+      "category": "scientific_efficacy",
+      "check": "current_scientific_benefit",
+      "expected": null,
+      "observed": null,
+      "operator": "is",
+      "passed": true,
+      "principle": "This reducer diagnosis measures no current model benefit.",
+      "upstream": "exp7383-canary-reducer"
+    },
+    {
+      "artifact_field": "validation_receipts",
+      "category": "required_validation",
+      "check": "terminal_validation",
+      "expected": true,
+      "observed": false,
+      "operator": "is",
+      "passed": false,
+      "principle": "Declared replay, cold reduction, and both strict readers must pass.",
+      "upstream": "exp7383-canary-reducer"
+    }
+  ],
+  "active_research_roadmap_changed": false,
+  "assignment_reducer_ready_score": 0,
+  "assignment_reduction": {
+    "assignment_reducer_ready_score": 1,
+    "complete_response_count": 4,
+    "errors": [],
+    "historical_transport_ready_score": 1,
+    "response_fidelity_count": 4,
+    "rows": [
+      {
+        "call_index": 0,
+        "censored": false,
+        "cost": {
+          "completion_tokens": 12,
+          "latency_s": 0.6236404839437455,
+          "prompt_tokens": 220
+        },
+        "current_model_invocation": false,
+        "decoding_seed": 7372101,
+        "failure": null,
+        "formula_id": "dev-contradiction_cycle_balanced-0",
+        "historical": true,
+        "metric": "historical_assignment_transport_usable",
+        "metric_value": 1,
+        "request_bytes_valid": true,
+        "request_hash_valid": true,
+        "request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+        "response_fidelity_valid": true,
+        "response_hash_valid": true,
+        "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+        "runtime_identity_valid": true,
+        "sat_extendible": false,
+        "schema_valid": true,
+        "truncated": false,
+        "unit_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+        "usable_proposal": true,
+        "variable_references_valid": true
+      },
+      {
+        "call_index": 1,
+        "censored": false,
+        "cost": {
+          "completion_tokens": 12,
+          "latency_s": 0.6639936731662601,
+          "prompt_tokens": 242
+        },
+        "current_model_invocation": false,
+        "decoding_seed": 7372101,
+        "failure": null,
+        "formula_id": "dev-contradiction_cycle_balanced-1",
+        "historical": true,
+        "metric": "historical_assignment_transport_usable",
+        "metric_value": 1,
+        "request_bytes_valid": true,
+        "request_hash_valid": true,
+        "request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+        "response_fidelity_valid": true,
+        "response_hash_valid": true,
+        "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+        "runtime_identity_valid": true,
+        "sat_extendible": false,
+        "schema_valid": true,
+        "truncated": false,
+        "unit_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+        "usable_proposal": true,
+        "variable_references_valid": true
+      },
+      {
+        "call_index": 2,
+        "censored": false,
+        "cost": {
+          "completion_tokens": 12,
+          "latency_s": 0.7314176009967923,
+          "prompt_tokens": 242
+        },
+        "current_model_invocation": false,
+        "decoding_seed": 7372101,
+        "failure": null,
+        "formula_id": "dev-contradiction_cycle_imbalanced-0",
+        "historical": true,
+        "metric": "historical_assignment_transport_usable",
+        "metric_value": 1,
+        "request_bytes_valid": true,
+        "request_hash_valid": true,
+        "request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+        "response_fidelity_valid": true,
+        "response_hash_valid": true,
+        "response_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+        "runtime_identity_valid": true,
+        "sat_extendible": false,
+        "schema_valid": true,
+        "truncated": false,
+        "unit_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+        "usable_proposal": true,
+        "variable_references_valid": true
+      },
+      {
+        "call_index": 3,
+        "censored": false,
+        "cost": {
+          "completion_tokens": 10,
+          "latency_s": 0.749388654017821,
+          "prompt_tokens": 317
+        },
+        "current_model_invocation": false,
+        "decoding_seed": 7372101,
+        "failure": null,
+        "formula_id": "dev-contradiction_cycle_imbalanced-1",
+        "historical": true,
+        "metric": "historical_assignment_transport_usable",
+        "metric_value": 1,
+        "request_bytes_valid": true,
+        "request_hash_valid": true,
+        "request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+        "response_fidelity_valid": true,
+        "response_hash_valid": true,
+        "response_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+        "runtime_identity_valid": true,
+        "sat_extendible": false,
+        "schema_valid": true,
+        "truncated": false,
+        "unit_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+        "usable_proposal": true,
+        "variable_references_valid": true
+      }
+    ],
+    "runtime_identity_consistent": true,
+    "sat_extendible_count": 0,
+    "usable_proposal_count": 4
+  },
+  "capability_e2e_checks": [
+    "declared_entrypoint_replay",
+    "independent_reducer"
+  ],
+  "completed_at_utc": "2026-09-18T06:35:10.377590Z",
+  "current_llm_invocation_receipts": [],
+  "discrepancy_rows": [
+    {
+      "corrected_expected": 3,
+      "corrected_operator": ">=",
+      "corrected_passed": true,
+      "discrepancy_id": "usable_threshold_equality",
+      "exact_observed_value": 4,
+      "independently_reduced_value": 4,
+      "original_expected": 3,
+      "original_field": "acceptance_gate_results.usable_assignment_proposals",
+      "original_operator": "==",
+      "original_passed": false
+    },
+    {
+      "corrected_expected": 0,
+      "corrected_operator": "==",
+      "corrected_passed": true,
+      "discrepancy_id": "forbidden_promotion_target",
+      "exact_observed_value": 0,
+      "independently_reduced_value": 0,
+      "original_expected": 1,
+      "original_field": "acceptance_gate_results.promotion",
+      "original_operator": "==",
+      "original_passed": false
+    },
+    {
+      "corrected_expected": "host",
+      "corrected_operator": "==",
+      "corrected_passed": true,
+      "discrepancy_id": "execution_venue_not_closed_string",
+      "exact_observed_value": {
+        "board_execution": false,
+        "cuda_device_index": 1,
+        "cuda_device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "host": "icbfl1"
+      },
+      "independently_reduced_value": "host",
+      "original_expected": "host",
+      "original_field": "execution_venue",
+      "original_operator": "=="
+    },
+    {
+      "corrected_expected": "circular_positive",
+      "corrected_operator": "==",
+      "corrected_passed": true,
+      "discrepancy_id": "oracle_positive_class",
+      "exact_observed_value": "positive",
+      "independently_reduced_value": "circular_positive",
+      "original_expected": "circular_positive",
+      "original_field": "verdict_class",
+      "original_operator": "=="
+    },
+    {
+      "corrected_expected": 1,
+      "corrected_operator": "==",
+      "corrected_passed": true,
+      "discrepancy_id": "internal_readiness_disagreement",
+      "exact_observed_value": 0,
+      "independently_reduced_value": 1,
+      "original_expected": 1,
+      "original_field": "qwen_assignment_transport_ready_score",
+      "original_operator": "=="
+    }
+  ],
+  "duration_s": 21.06642763200216,
+  "execution_venue": "host",
+  "experiment_id": "exp7383-canary-reducer",
+  "external_publication_authorized": false,
+  "field_principles": {
+    "MODEL_SPECS": "Use an empty list because this task performs no current LLM work.",
+    "acceptance_gate_results": "Keep expected, observed, operator, and passed separate for every gate.",
+    "active_research_roadmap_changed": "This field keeps one part of the reducer receipt auditable.",
+    "assignment_reducer_ready_score": "One only after corrected reduction, four authentic calls, and terminal readers agree.",
+    "assignment_reduction": "This field keeps one part of the reducer receipt auditable.",
+    "capability_e2e_checks": "This field keeps one part of the reducer receipt auditable.",
+    "completed_at_utc": "This field keeps one part of the reducer receipt auditable.",
+    "current_llm_invocation_receipts": "This field keeps one part of the reducer receipt auditable.",
+    "discrepancy_rows": "Show original and independently reduced values with explicit comparison operators.",
+    "duration_s": "Measure monotonic duration and never invent time or sleep to meet a floor.",
+    "execution_venue": "Use the closed host string and keep device detail in inference_substrate.",
+    "experiment_id": "This field keeps one part of the reducer receipt auditable.",
+    "external_publication_authorized": "This field keeps one part of the reducer receipt auditable.",
+    "field_principles": "Explain every output field without wrapping ordinary values.",
+    "flagged_adversarial": "A critical current finding excludes this producer from readiness.",
+    "fresh_canary_required": "This field keeps one part of the reducer receipt auditable.",
+    "gate_check_summary": "Name the exact failed check, upstream, field, expected value, and observed value.",
+    "historical_model_inputs": "Keep original model, code, raw hashes, verdict, and flag outside current inference.",
+    "honest_verdict": "Use complete_ for finished scope and blocked_ for unavailable external input.",
+    "inference_substrate": "Record actual host CPU aggregation and keep historical CUDA provenance labeled.",
+    "inference_substrate_class": "Use aggregation for the actual current computation without padding.",
+    "invocation_counts": "Keep all current LLM counts at zero; historical calls stay separate.",
+    "milestone": "This field keeps one part of the reducer receipt auditable.",
+    "model_invoked": "False because this task attempts no current model load or generation.",
+    "numbered_e2e_applicable": "This field keeps one part of the reducer receipt auditable.",
+    "phase": "This field keeps one part of the reducer receipt auditable.",
+    "phase_spans": "Measure read, build, load, generate, evaluate, validate, and write boundaries.",
+    "preconditions_checked": "Exact paths, producer identity/hash/class and resource checks before dependent work.",
+    "production_defaults_changed": "This field keeps one part of the reducer receipt auditable.",
+    "promotion_score": "Always zero because this task authorizes no rollout, weight change, or publication.",
+    "proof_boundary_replay": "This field keeps one part of the reducer receipt auditable.",
+    "proof_boundary_replay_ready_score": "One only while original proof checks and sealed manifest bytes remain valid.",
+    "random_seed": "Freeze current and retained historical seeds for reproducible reduction.",
+    "repository_health": "Keep unrelated dated observations separate from required affected checks.",
+    "reproducibility_checksum": "Bind exact code, settings, sources, raw rows, and decisions.",
+    "required_check_names": "This field keeps one part of the reducer receipt auditable.",
+    "research_conductor_changed": "This field keeps one part of the reducer receipt auditable.",
+    "rows": "Retain each historical call outcome, metric, cost, failure, and censoring disposition.",
+    "run_date": "Use 20260918 plus actual start/end UTC timestamps.",
+    "sample_size_budget": "Predeclare four replay units and stop without retry or replacement.",
+    "schema": "Versioned schema with ordinary top-level experiment_id and milestone.",
+    "scientific_value_score": "This field keeps one part of the reducer receipt auditable.",
+    "small_ebm_training": "This field keeps one part of the reducer receipt auditable.",
+    "source_artifact_hashes": "Preserve exact producer and immutable evidence byte hashes.",
+    "started_at_utc": "This field keeps one part of the reducer receipt auditable.",
+    "status": "Terminal only after actual work and required validation; no success-shaped bootstrap artifact.",
+    "terminal_check_names": "This field keeps one part of the reducer receipt auditable.",
+    "validation_receipts": "Retain executed argv, environment, scope, exit, duration, and log hash.",
+    "verdict_class": "Use the closed verdict class without turning completion into efficacy.",
+    "verifier_is_oracle": "True because formal SAT evaluation defines assignment truth."
+  },
+  "flagged_adversarial": false,
+  "fresh_canary_required": {
+    "experiment_id": "exp7388-proposal-capture",
+    "required_calls": 4,
+    "satisfied_by_this_receipt": false
+  },
+  "gate_check_summary": {
+    "artifact_field": "validation_receipts",
+    "expected_value": true,
+    "failed_check": "required_affected_validation",
+    "failed_check_count": 2,
+    "observed_value": false,
+    "passed": false,
+    "upstream": "exp7383-canary-reducer"
+  },
+  "historical_model_inputs": {
+    "artifact_path": "results/experiment_7372_v647_qwen_canary.json",
+    "artifact_sha256": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f",
+    "authorizes_current_readiness": false,
+    "candidate_path": "results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json",
+    "candidate_sha256": "sha256:6363003e1e23ded9166efbbd7e9d20e66508898d0d016b9541c7bfad48f9177f",
+    "counted_as_current": false,
+    "historical_execution_venue": {
+      "board_execution": false,
+      "cuda_device_index": 1,
+      "cuda_device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "host": "icbfl1"
+    },
+    "historical_experiment_id": "exp7372-v647-qwen-canary",
+    "historical_flagged_adversarial": true,
+    "historical_inference_substrate_class": "model_bounded_generation",
+    "historical_invocation_counts": {
+      "generation_calls_attempted": 4,
+      "generation_calls_cancelled": 0,
+      "generation_calls_completed": 4,
+      "generation_calls_failed": 0,
+      "generation_calls_in_flight": 0,
+      "historical_generation_calls": 0,
+      "historical_model_loads": 0,
+      "model_loads_attempted": 1,
+      "model_loads_cancelled": 0,
+      "model_loads_completed": 1,
+      "model_loads_failed": 0,
+      "model_loads_in_flight": 0
+    },
+    "historical_model_specs": [
+      "unsloth/Qwen3.8-27B-GGUF"
+    ],
+    "historical_only": true,
+    "historical_verdict": "complete_disqualified_internal_artifact_validation_failed",
+    "historical_verdict_class": "disqualified",
+    "label": "historical_exp7372_disqualified_not_current_inference",
+    "native_load_receipt": {
+      "attempted": true,
+      "cancelled": false,
+      "completed": true,
+      "error": null,
+      "failed": false,
+      "in_flight": false
+    },
+    "native_load_receipt_sha256": "sha256:420e32bde9be3de383d67d9077c3d2ead97bf0fd510a2a34c296b5b980349e89",
+    "native_runner_receipt": {
+      "cleanup": {
+        "action": "terminated",
+        "bounded": true,
+        "leak_free": true,
+        "signals_sent": [
+          {
+            "signal": "SIGTERM",
+            "target": "process_group"
+          }
+        ],
+        "unrelated_process_kill_count_delta": 0,
+        "wait_status": "exited_zombie"
+      },
+      "comm": "llama-server",
+      "command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "--model",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "50927",
+        "--ctx-size",
+        "4096",
+        "--n-gpu-layers",
+        "all",
+        "--split-mode",
+        "none",
+        "--parallel",
+        "1",
+        "--batch-size",
+        "512",
+        "--ubatch-size",
+        "512",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0",
+        "--fit",
+        "off",
+        "--offline",
+        "--jinja",
+        "--reasoning",
+        "off",
+        "--no-webui",
+        "--log-verbosity",
+        "3"
+      ],
+      "command_hash": "sha256:d8faab9b0e63e61db93a17087c33e1d7e15932743d78ee1fcf28bc78197ee000",
+      "cuda_provenance_ok": true,
+      "exists": true,
+      "gpu_index": 1,
+      "gpu_provenance": {
+        "cuda_log_evidence": true,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "logged_layer_receipt": null,
+        "owned_compute_apps": [
+          {
+            "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 50927 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+            "gpu_index": 1,
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "owned_by_task": true,
+            "pid": 2724968,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 16340
+          }
+        ],
+        "provenance_ok": true,
+        "server_pid": 2724968,
+        "server_pid_start_ticks": 196604111,
+        "task_owned_vram_mb": 16340
+      },
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+      "lease_release": {
+        "checksum": "sha256:591d1eea57e420761664ebc9f595edc5e54716f6ff56c8bd4780c7bc955dc87f",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:9d7eb061ee2765a88ef91bec49f8dfb4606af86c1eddf0638d9462d58359c19e",
+        "phase": "terminal_complete",
+        "pid": 2724905,
+        "pid_start_ticks": 196603919,
+        "released": true,
+        "signals_sent": []
+      },
+      "model_bytes": 17106775008,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "native_chat_template": true,
+      "native_tokenizer": "embedded_gguf",
+      "owned_by_current_uid": true,
+      "owned_by_task": true,
+      "parent_identity": {
+        "pid": 2724905,
+        "start_time_ticks": 196603919
+      },
+      "pid": 2724968,
+      "ppid": 2724905,
+      "process_group_id": 2724968,
+      "quantization": "Q4_K_M",
+      "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "served_model_response": {
+        "data": [
+          {
+            "aliases": [],
+            "created": 1789674367,
+            "id": "Qwen3.8-27B-Q4_K_M.gguf",
+            "meta": {
+              "n_ctx": 4096,
+              "n_ctx_train": 262144,
+              "n_embd": 5120,
+              "n_params": 27320697856,
+              "n_vocab": 248320,
+              "size": 17095778304,
+              "vocab_type": 2
+            },
+            "object": "model",
+            "owned_by": "llamacpp",
+            "tags": []
+          }
+        ],
+        "models": [
+          {
+            "capabilities": [
+              "completion"
+            ],
+            "description": "",
+            "details": {
+              "families": [
+                ""
+              ],
+              "family": "",
+              "format": "gguf",
+              "parameter_size": "",
+              "parent_model": "",
+              "quantization_level": ""
+            },
+            "digest": "",
+            "model": "Qwen3.8-27B-Q4_K_M.gguf",
+            "modified_at": "",
+            "name": "Qwen3.8-27B-Q4_K_M.gguf",
+            "parameters": "",
+            "size": "",
+            "tags": [
+              ""
+            ],
+            "type": "model"
+          }
+        ],
+        "object": "list"
+      },
+      "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "session_id": 2724968,
+      "single_model_instance": true,
+      "start_time_ticks": 196604111,
+      "state": "R",
+      "task_owned_vram_mb": 16340,
+      "uid": 1000
+    },
+    "native_runner_receipt_sha256": "sha256:88e79b582e35c5a26f75f810ce8833acfaddaa8f663475eca90f8eec7e4af281",
+    "native_transport_hashes": {
+      "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_00.json": "sha256:f877825164a161221bedb2972fdc9165e28f2f1343036887162debf3642d9cdb",
+      "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_01.json": "sha256:f97c1439628a9fddac1121361f5b1646fee705f01cf0470783b90bd6901fd8a0",
+      "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_02.json": "sha256:641641392c298d8c265c93951b56435269508aa00da535cb58dbb067c2eec9f9",
+      "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_03.json": "sha256:5f60bc01545e8bda5922ad5c77ca432d0d85ae044bc2d2a97c8cae46a3b7e71d",
+      "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/llama_server_2853297611839229850.log": "sha256:e16219a892528e6b09dc84acb432c2cec8f8e9717bf323e25eb91a9e1179ea8a"
+    },
+    "raw_call_hashes": {
+      "results/raw/experiment_7372_v647_qwen_canary/call_00.json": "sha256:2db34062aaacf090ef30cff496cfc35a9799d523082a9f4aec85327d6d9bcfbb",
+      "results/raw/experiment_7372_v647_qwen_canary/call_01.json": "sha256:ec8cce93fdd10544ed6ec7801c6c5dd9acd09bcd7b748bc3cb383be0eb08e4dd",
+      "results/raw/experiment_7372_v647_qwen_canary/call_02.json": "sha256:5e4f0f957291f3b0730263e6c033fe040679214a7aedef67b1caf6bbbe4476b6",
+      "results/raw/experiment_7372_v647_qwen_canary/call_03.json": "sha256:b9682672e0593b4510cdb771c7c716d1e5f4ab0c84d7d9cdbf4025762f538ef8"
+    },
+    "runtime_identity_receipt_sha256": [
+      "sha256:0ae97cfd0c6a5c7b9231b9f75caed63475d25c5cb7713d488c360c624dee730f",
+      "sha256:0ae97cfd0c6a5c7b9231b9f75caed63475d25c5cb7713d488c360c624dee730f",
+      "sha256:0ae97cfd0c6a5c7b9231b9f75caed63475d25c5cb7713d488c360c624dee730f",
+      "sha256:0ae97cfd0c6a5c7b9231b9f75caed63475d25c5cb7713d488c360c624dee730f"
+    ],
+    "terminal_validator_log_hashes": {
+      "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/00_declared_entrypoint_replay.log": "sha256:fb9750565688799f8220fb8288c050a166dbc3818c1831dfd8444e4e85e47269",
+      "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/01_independent_reducer.log": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/02_adversarial_verify.log": "sha256:9eaccdfa4602f63c6fe4e75d425c012b760eb9d22d47a6703b061bf39055fb0b",
+      "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/03_verdict_row_consistency_strict.log": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f"
+    }
+  },
+  "honest_verdict": "complete_disqualified_reducer_or_validation_defect",
+  "inference_substrate": {
+    "device": "x86_64",
+    "jax_platform": "cpu",
+    "jax_work_performed": false,
+    "kind": "host_cpu_json_and_exact_sat_aggregation",
+    "native_cuda_work_performed": false,
+    "python": "3.12.13",
+    "resource_lease": "host_cpu_no_exclusive_accelerator"
+  },
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "milestone": "2026.09.648",
+  "model_invoked": false,
+  "numbered_e2e_applicable": false,
+  "phase": 1,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-18T06:34:49.332029Z",
+      "completed_units": 46,
+      "duration_s": 0.020827243104577065,
+      "end_elapsed_s": 0.02084608911536634,
+      "phase": "read",
+      "start_elapsed_s": 1.884601078927517e-05
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:34:49.334065Z",
+      "completed_units": 4,
+      "duration_s": 0.001995334168896079,
+      "end_elapsed_s": 0.022884484147652984,
+      "phase": "build",
+      "start_elapsed_s": 0.020889149978756905
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:34:49.334084Z",
+      "completed_units": 0,
+      "duration_s": 3.1050294637680054e-06,
+      "end_elapsed_s": 0.022903359029442072,
+      "phase": "load",
+      "start_elapsed_s": 0.022900253999978304
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:34:49.334092Z",
+      "completed_units": 0,
+      "duration_s": 2.273824065923691e-06,
+      "end_elapsed_s": 0.022911173989996314,
+      "phase": "generate",
+      "start_elapsed_s": 0.02290890016593039
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:34:49.953201Z",
+      "completed_units": 4,
+      "duration_s": 0.6191030580084771,
+      "end_elapsed_s": 0.6420187011826783,
+      "phase": "evaluate",
+      "start_elapsed_s": 0.02291564317420125
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:35:07.658612Z",
+      "completed_units": 8,
+      "duration_s": 17.70529363397509,
+      "end_elapsed_s": 18.347429685061797,
+      "phase": "validate_affected",
+      "start_elapsed_s": 0.6421360510867089
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:35:07.665654Z",
+      "completed_units": 1,
+      "duration_s": 0.007015495095402002,
+      "end_elapsed_s": 18.354471820173785,
+      "phase": "write_candidate",
+      "start_elapsed_s": 18.347456325078383
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:35:10.377482Z",
+      "completed_units": 4,
+      "duration_s": 2.7117991079576313,
+      "end_elapsed_s": 21.06630123499781,
+      "phase": "validate_terminal",
+      "start_elapsed_s": 18.354502127040178
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T06:35:10.377610Z",
+      "completed_units": 1,
+      "duration_s": 8.125300519168377e-05,
+      "end_elapsed_s": 21.066428935155272,
+      "phase": "write",
+      "start_elapsed_s": 21.06634768215008
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/adversarial_verify.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/experiment_7372_v647_qwen_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7372_v647_qwen_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/experiment_7371_v647_proof_boundary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7371_v647_proof_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/experiment_7370_v647_proof_memory.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7370_v647_proof_memory.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/learning/implication_memory.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/learning/implication_memory.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:openspec/capabilities/constraint-verification/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:python/carnot/experiment_7383_v648_canary_reducer.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7383_v648_canary_reducer.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:scripts/experiments/experiment_7383_v648_canary_reducer.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7383_v648_canary_reducer.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:tests/python/test_experiment_7383_v648_canary_reducer.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7383_v648_canary_reducer.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/experiment_7372_v647_qwen_canary.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7372_v647_qwen_canary.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/call_00.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/call_00.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/call_01.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/call_01.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/call_02.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/call_02.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/call_03.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/call_03.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_00.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_00.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_01.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_01.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_02.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_02.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_03.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_03.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/owned_runtime/llama_server_2853297611839229850.log",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/llama_server_2853297611839229850.log"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/validation/terminal/00_declared_entrypoint_replay.log",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/00_declared_entrypoint_replay.log"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/validation/terminal/01_independent_reducer.log",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/01_independent_reducer.log"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/validation/terminal/02_adversarial_verify.log",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/02_adversarial_verify.log"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7372_v647_qwen_canary/validation/terminal/03_verdict_row_consistency_strict.log",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/03_verdict_row_consistency_strict.log"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/experiment_7370_v647_proof_memory.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7370_v647_proof_memory.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/experiment_7371_v647_proof_boundary.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7371_v647_proof_boundary.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:data/v647_implication_stream_manifest.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "data/v647_implication_stream_manifest.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/development_formulas.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/evaluation_streams.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/evaluation_streams.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/live_proposal_requests.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/live_proposal_requests.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/authority_attacks.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/authority_attacks.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "blocking": true,
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/synthetic_evidence.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/synthetic_evidence.json"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "blocking": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7383",
+      "observed_value": "REQ-REPORT-7383",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "identity/class/flag/substrate",
+      "authorizes_current_readiness": false,
+      "blocking": true,
+      "check": "historical_canary_quarantine",
+      "expected_value": {
+        "experiment_id": "exp7372-v647-qwen-canary",
+        "flagged_adversarial": true,
+        "inference_substrate_class": "model_bounded_generation",
+        "verdict_class": "disqualified"
+      },
+      "historical_only": true,
+      "observed_value": {
+        "experiment_id": "exp7372-v647-qwen-canary",
+        "flagged_adversarial": true,
+        "inference_substrate_class": "model_bounded_generation",
+        "verdict_class": "disqualified"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7372_v647_qwen_canary.json"
+    },
+    {
+      "artifact_field": "exp7383-canary-reducer",
+      "blocking": true,
+      "check": "current_task_not_retired",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "proof_boundary_replay": {
+    "cold_reload_error_count": 0,
+    "errors": [],
+    "manifest_path": "data/v647_implication_stream_manifest.json",
+    "manifest_sha256": "sha256:6c0a312a8e34da96c2f2308b84c503bd8d064f59a8bc78caa41cf2b187d95fab",
+    "proof_boundary_artifact_sha256": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+    "proof_boundary_reduction": {
+      "affected_validation_passed": true,
+      "authority_controls_passed": true,
+      "learning_value_score": 0,
+      "live_cohort_complete": false,
+      "preconditions_passed": true,
+      "promotion_score": 0,
+      "proof_boundary_ready_score": 1,
+      "protocol_complete": true,
+      "rows_complete": true,
+      "safety_passed": true,
+      "synthetic_efficacy_passed": true,
+      "synthetic_metrics": {
+        "bootstrap_draws": 10000,
+        "bootstrap_seed": 7371307,
+        "complete_service_cost_ratio_bootstrap_95_upper": {
+          "persistent_incremental_exact_solver": 0.7800108350657953,
+          "persistent_source_graph_reachability_cache": 0.5216586298805672
+        },
+        "erasure_witness_count": 608,
+        "erasure_witness_stream_count": 32,
+        "exact_decision_coverage": 1.0,
+        "false_proof_rejections": 0,
+        "invalid_sat_outputs": 0,
+        "paid_exact_query_ratio_bootstrap_95_upper": {
+          "persistent_incremental_exact_solver": 0.20833333333333334,
+          "persistent_source_graph_reachability_cache": 0.2631578947368421
+        },
+        "stale_version_effects": 0,
+        "valid_utility": true
+      },
+      "terminal_validation_passed": true,
+      "witness_gate_passed": true
+    },
+    "proof_boundary_replay_ready_score": 1,
+    "proof_memory_artifact_sha256": "sha256:d3147f077f1b77c354fa7a5292a0c3db92e7c65b3c5fbd9d49635f5f9f16d2c9",
+    "proof_memory_reduction": {
+      "affected_validation_passed": true,
+      "development_erasure_witness_present": true,
+      "independent_exact_checks_passed": true,
+      "learning_value_score": 0,
+      "memory_bounds_passed": true,
+      "panel_complete": true,
+      "preconditions_passed": true,
+      "promotion_score": 0,
+      "proof_fixture_ready_score": 1,
+      "safety_controls_passed": true,
+      "terminal_validation_passed": true
+    },
+    "proof_memory_replay_ready_score": 1,
+    "protocol_error_count": 0
+  },
+  "proof_boundary_replay_ready_score": 0,
+  "random_seed": {
+    "experiment": 738320260918,
+    "historical_decoding": 7372101,
+    "historical_resampling": 7372301
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "as_of": "2026-09-18",
+    "status": "affected_scope_only",
+    "unrelated_findings": []
+  },
+  "reproducibility_checksum": "sha256:a49771f7871b207d40a3dda62feaeb3ee826cfe2c1b5d596027542856d35da1a",
+  "required_check_names": [
+    "worktree_imports",
+    "focused_pytest",
+    "changed_module_coverage",
+    "changed_module_coverage_report",
+    "ruff_check",
+    "ruff_format",
+    "changed_module_mypy",
+    "scoped_spec_coverage"
+  ],
+  "research_conductor_changed": false,
+  "rows": [
+    {
+      "call_index": 0,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6236404839437455,
+        "prompt_tokens": 220
+      },
+      "current_model_invocation": false,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_balanced-0",
+      "historical": true,
+      "metric": "historical_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 1,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6639936731662601,
+        "prompt_tokens": 242
+      },
+      "current_model_invocation": false,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_balanced-1",
+      "historical": true,
+      "metric": "historical_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 2,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.7314176009967923,
+        "prompt_tokens": 242
+      },
+      "current_model_invocation": false,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_imbalanced-0",
+      "historical": true,
+      "metric": "historical_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 3,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 10,
+        "latency_s": 0.749388654017821,
+        "prompt_tokens": 317
+      },
+      "current_model_invocation": false,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_imbalanced-1",
+      "historical": true,
+      "metric": "historical_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    }
+  ],
+  "run_date": "20260918",
+  "sample_size_budget": {
+    "attempted_units": 4,
+    "censored_units": 0,
+    "completed_units": 4,
+    "planned_units": 4,
+    "remaining_work": 0,
+    "stopping_rule": "Replay each of four immutable calls once; do not retry, replace, or generate.",
+    "unstarted_units": 0
+  },
+  "schema": "carnot.exp7383.v648.canary_reducer.v1",
+  "scientific_value_score": 0,
+  "small_ebm_training": {
+    "gibbs_updates": 0,
+    "note": "No Gibbs fitting is needed for immutable receipt aggregation.",
+    "performed": false,
+    "training_steps": 0
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "data/v647_implication_stream_manifest.json": "sha256:6c0a312a8e34da96c2f2308b84c503bd8d064f59a8bc78caa41cf2b187d95fab",
+    "openspec/capabilities/constraint-verification/spec.md": "sha256:e6f92997c1deecfe34b654b3d6fb492a19214a8b22e3613c77b1c8ffff0a4e7d",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:b24f9d7771ed0f91355ebaa3e29ee2f87589ecde032b28ac49055233e5c1f94f",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7370_v647_proof_memory.py": "sha256:a67c62b2215d4b5374c8115cdb1897bcf57af976f14815fd3661d143716b5182",
+    "python/carnot/experiment_7371_v647_proof_boundary.py": "sha256:f7eb2fb09060cd703eb64c1b0642c5cb12cc53812063d08981c2e127d35029be",
+    "python/carnot/experiment_7372_v647_qwen_canary.py": "sha256:5e84fa1f9e4ca9205cd80ce376e02e5a4af76c48a17e91b89270f2e10536358a",
+    "python/carnot/experiment_7383_v648_canary_reducer.py": "sha256:b066b8c596e9d96b9e64d87a6a0e0e1884b69c2a1dbacf8284b9ac598a5ed588",
+    "python/carnot/learning/implication_memory.py": "sha256:94624d1ce2d04a3e96a8080e2884ef304fa0b18f14e63dae2c41f76f44b2c134",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7370_v647_proof_memory.json": "sha256:d3147f077f1b77c354fa7a5292a0c3db92e7c65b3c5fbd9d49635f5f9f16d2c9",
+    "results/experiment_7371_v647_proof_boundary.json": "sha256:105908686733be404961f98b820fb9edccc2caf2f8fed37db5a29b506fcad3b4",
+    "results/experiment_7372_v647_qwen_canary.json": "sha256:14d6fb34564e1d6df86063342008ebe25c2abac86534f7c6e1c60f02ff09424f",
+    "results/raw/experiment_7371_v647_proof_boundary/authority_attacks.json": "sha256:facd39c087df7a40969cdb191490ff313cf08347c7271c543950ca4092e30015",
+    "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json": "sha256:e2f5dd66fc7c7385cfd785b121535c8ac104ab62e46d0ae770431d46724bca0b",
+    "results/raw/experiment_7371_v647_proof_boundary/evaluation_streams.json": "sha256:b9f3e8a361c93cb9712ca8c46fa33d3d6cc52987dcff58a1114198534d824e28",
+    "results/raw/experiment_7371_v647_proof_boundary/live_proposal_requests.json": "sha256:700c49c99a3ea60b8bd24de64b1f5df31a5c33a85612caf3dc1c2689da6c51ae",
+    "results/raw/experiment_7371_v647_proof_boundary/synthetic_evidence.json": "sha256:50ca263f01aec74fd71d966dbe46f3b239caeebbf346d33c32ca1cac7498f459",
+    "results/raw/experiment_7372_v647_qwen_canary/call_00.json": "sha256:2db34062aaacf090ef30cff496cfc35a9799d523082a9f4aec85327d6d9bcfbb",
+    "results/raw/experiment_7372_v647_qwen_canary/call_01.json": "sha256:ec8cce93fdd10544ed6ec7801c6c5dd9acd09bcd7b748bc3cb383be0eb08e4dd",
+    "results/raw/experiment_7372_v647_qwen_canary/call_02.json": "sha256:5e4f0f957291f3b0730263e6c033fe040679214a7aedef67b1caf6bbbe4476b6",
+    "results/raw/experiment_7372_v647_qwen_canary/call_03.json": "sha256:b9682672e0593b4510cdb771c7c716d1e5f4ab0c84d7d9cdbf4025762f538ef8",
+    "results/raw/experiment_7372_v647_qwen_canary/measured-terminal-candidate.json": "sha256:6363003e1e23ded9166efbbd7e9d20e66508898d0d016b9541c7bfad48f9177f",
+    "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_00.json": "sha256:f877825164a161221bedb2972fdc9165e28f2f1343036887162debf3642d9cdb",
+    "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_01.json": "sha256:f97c1439628a9fddac1121361f5b1646fee705f01cf0470783b90bd6901fd8a0",
+    "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_02.json": "sha256:641641392c298d8c265c93951b56435269508aa00da535cb58dbb067c2eec9f9",
+    "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/call_03.json": "sha256:5f60bc01545e8bda5922ad5c77ca432d0d85ae044bc2d2a97c8cae46a3b7e71d",
+    "results/raw/experiment_7372_v647_qwen_canary/owned_runtime/llama_server_2853297611839229850.log": "sha256:e16219a892528e6b09dc84acb432c2cec8f8e9717bf323e25eb91a9e1179ea8a",
+    "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/00_declared_entrypoint_replay.log": "sha256:fb9750565688799f8220fb8288c050a166dbc3818c1831dfd8444e4e85e47269",
+    "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/01_independent_reducer.log": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/02_adversarial_verify.log": "sha256:9eaccdfa4602f63c6fe4e75d425c012b760eb9d22d47a6703b061bf39055fb0b",
+    "results/raw/experiment_7372_v647_qwen_canary/validation/terminal/03_verdict_row_consistency_strict.log": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7383_v648_canary_reducer.py": "sha256:244dd4d87b6d8973a7f9440c7e63ef8b5f6c85996e9fff013f874551a00107fe",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7383_v648_canary_reducer.py": "sha256:5c6df34f28c2d7fa9e6b9dbedbeb9bd8a5c294a691052418bae47346a9a66736"
+  },
+  "started_at_utc": "2026-09-18T06:34:49.311182Z",
+  "status": "complete_required_validation_failed",
+  "terminal_check_names": [
+    "declared_entrypoint_replay",
+    "independent_reducer",
+    "adversarial_verify",
+    "verdict_row_consistency_strict"
+  ],
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7383_v648_canary_reducer",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7383_v648_canary_reducer"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.46067457902245224,
+      "ended_at_utc": "2026-09-18T06:34:50.415037+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:0c87072b719fb39b5afbe29093d72c93eac11b2ffeaca9a7c8489aabe1e600ca",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7383_v648_canary_reducer\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7383_v648_canary_reducer.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7383_v648_canary_reducer": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7383_v648_canary_reducer.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T06:34:49.953862+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7383-validation-wwc4rbgc/basetemp/focused tests/python/test_experiment_7383_v648_canary_reducer.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7383-validation-wwc4rbgc/basetemp/focused",
+        "tests/python/test_experiment_7383_v648_canary_reducer.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 5.393084907904267,
+      "ended_at_utc": "2026-09-18T06:34:55.808608+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:dcd242165e5b4e88b6b5c6a90d2e169e6dbd6fbe08e289dc17e5a505ae9e56bd",
+      "name": "focused_pytest",
+      "output_tail": "..............                                                           [100%]\n14 passed in 3.70s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T06:34:50.415101+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7383-validation-wwc4rbgc/coverage/.coverage '--include=*/experiment_7383_v648_canary_reducer.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7383-validation-wwc4rbgc/basetemp/coverage tests/python/test_experiment_7383_v648_canary_reducer.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7383-validation-wwc4rbgc/coverage/.coverage",
+        "--include=*/experiment_7383_v648_canary_reducer.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7383-validation-wwc4rbgc/basetemp/coverage",
+        "tests/python/test_experiment_7383_v648_canary_reducer.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 11.613980843918398,
+      "ended_at_utc": "2026-09-18T06:35:07.422864+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:0088416fbfed65a6cc0e0797e4e471307c984c3899bebd2214daf753a2855ff6",
+      "name": "changed_module_coverage",
+      "output_tail": "..............                                                           [100%]\n14 passed in 8.87s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-18T06:34:55.808639+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7383_v648_canary_reducer.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7383_v648_canary_reducer.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7383-validation-wwc4rbgc/coverage/.coverage"
+      },
+      "duration_s": 0.08091320912353694,
+      "ended_at_utc": "2026-09-18T06:35:07.504225+00:00",
+      "exit_code": 2,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:b268d810163c97caea55c918df371c25ba4d6f37d01f0b49b32afc86ac0ae681",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7383_v648_canary_reducer.py     381     37    90%   262, 435-436, 489, 495-496, 499, 550, 568, 659, 661, 663, 684, 689, 695, 851, 853, 1047, 1049, 1336, 1344, 1351, 1369, 1372, 1380, 1386, 1388, 1391, 1394, 1396, 1418-1426, 1429, 1436-1480\n------------------------------------------------------------------------------------\nTOTAL                                                    381     37    90%\nCoverage failure: total of 90 is less than fail-under=100\n",
+      "passed": false,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T06:35:07.422894+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7383_v648_canary_reducer.py scripts/experiments/experiment_7383_v648_canary_reducer.py tests/python/test_experiment_7383_v648_canary_reducer.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7383_v648_canary_reducer.py",
+        "scripts/experiments/experiment_7383_v648_canary_reducer.py",
+        "tests/python/test_experiment_7383_v648_canary_reducer.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.012367518153041601,
+      "ended_at_utc": "2026-09-18T06:35:07.517093+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T06:35:07.504287+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7383_v648_canary_reducer.py scripts/experiments/experiment_7383_v648_canary_reducer.py tests/python/test_experiment_7383_v648_canary_reducer.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7383_v648_canary_reducer.py",
+        "scripts/experiments/experiment_7383_v648_canary_reducer.py",
+        "tests/python/test_experiment_7383_v648_canary_reducer.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010979934129863977,
+      "ended_at_utc": "2026-09-18T06:35:07.528492+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T06:35:07.517138+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7383_v648_canary_reducer.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7383_v648_canary_reducer.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.09806153806857765,
+      "ended_at_utc": "2026-09-18T06:35:07.626839+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T06:35:07.528521+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7383_v648_canary_reducer.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7383_v648_canary_reducer.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.03113839402794838,
+      "ended_at_utc": "2026-09-18T06:35:07.658370+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T06:35:07.626868+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/experiments/experiment_7383_v648_canary_reducer.py --date 20260918 --validate /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/experiments/experiment_7383_v648_canary_reducer.py",
+        "--date",
+        "20260918",
+        "--validate",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 1.0906778040807694,
+      "ended_at_utc": "2026-09-18T06:35:08.756774+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/terminal/00_declared_entrypoint_replay/00_declared_entrypoint_replay.log",
+      "log_sha256": "sha256:986dcea34aa034dfc9bc0bf710805567483176aa26fe61e5b934c49daa102f9c",
+      "name": "declared_entrypoint_replay",
+      "output_tail": "{\"errors\": []}\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-18T06:35:07.665710+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7383_v648_canary_reducer import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v,require_terminal=False);print(e,flush=True);raise SystemExit(bool(e))' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,pathlib,sys;from carnot.experiment_7383_v648_canary_reducer import validate_artifact;v=json.loads(pathlib.Path(sys.argv[1]).read_text());e=validate_artifact(v,require_terminal=False);print(e,flush=True);raise SystemExit(bool(e))",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json"
+      ],
+      "command_category": "completion",
+      "command_environment": {},
+      "duration_s": 1.0575077389366925,
+      "ended_at_utc": "2026-09-18T06:35:09.814857+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/terminal/01_independent_reducer/00_independent_reducer.log",
+      "log_sha256": "sha256:37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "name": "independent_reducer",
+      "output_tail": "[]\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-18T06:35:08.756828+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.5358544341288507,
+      "ended_at_utc": "2026-09-18T06:35:10.351190+00:00",
+      "exit_code": 1,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/terminal/02_adversarial_verify/00_adversarial_verify.log",
+      "log_sha256": "sha256:379f2cab95cc43e67ed107704d09a39a142415f40950be7b9291e52e7942dff4",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[WARN] expexp7383-canary-reducer () -- 2 flag(s)\n  - WARN     SUBSTRATE_DECLARATION_MALFORMED inference_substrate is a dict with keys ['device', 'jax_platform', 'jax_work_performed', 'kind', 'native_cuda_work_performed', 'python'] and no 'value'; treated as missing. Declare a string description plus inference_substrate_class, and put evidence in typed invocation fields.\n  - WARN     METHODOLOGY_MISSING            Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n\n",
+      "passed": false,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-18T06:35:09.814920+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7383_v648_canary_reducer/measured-terminal-candidate.json"
+      ],
+      "command_category": "safety",
+      "command_environment": {},
+      "duration_s": 0.02601612010039389,
+      "ended_at_utc": "2026-09-18T06:35:10.377455+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7383_v648_canary_reducer/validation/terminal/03_verdict_row_consistency_strict/00_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "required": true,
+      "scope": "measured_candidate",
+      "started_at_utc": "2026-09-18T06:35:10.351219+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": true
+}

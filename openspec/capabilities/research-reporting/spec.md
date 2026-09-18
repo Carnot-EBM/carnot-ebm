@@ -72876,3 +72876,94 @@ value.
 **When** the reducer and both strict terminal readers reload the candidate
 **Then** changed identity, hash, row, gate, score, class, or checksum fails
 **And** only the valid terminal JSON is written atomically.
+
+## V648 assignment receipt reducer repair — 2026-09-18
+
+**Status:** Specified. This host-only diagnosis repairs receipt reduction and does not repeat model inference.
+
+### REQ-REPORT-7383: Reduce immutable canary receipts with explicit operators
+
+Exp7383 SHALL authenticate the terminal Exp7372 artifact, its measured candidate,
+four raw call records, native runtime evidence, and terminal validator logs before
+dependent work. It SHALL preserve the historical disqualification, adversarial
+flag, model identity, raw hashes, and original invocation counts. It SHALL not
+count those historical calls as current inference.
+
+The reducer SHALL recompute response and request hashes, fixed decoding seeds,
+runtime identity, response fidelity, supported variable IDs, truncation,
+assignment usability, and SAT extendibility as separate fields. It SHALL use
+explicit gate operators. In particular, usable assignments SHALL use `>= 3`,
+promotion SHALL use `== 0`, the current venue SHALL use `== host`, and an
+oracle-positive claim SHALL require `circular_positive`. Counts of two, three,
+and four usable assignments SHALL exercise the threshold boundary.
+
+Tampered response hashes, changed seeds, unsupported variable IDs, truncated
+outputs, missing runtime identity, and a false readiness claim SHALL fail cold
+reduction. Four authentic usable calls SHALL pass the corrected transport
+threshold even when all four assignments fail SAT extendibility. Transport
+evidence SHALL not become current model readiness or scientific efficacy.
+
+Exp7383 SHALL replay the Exp7370 and Exp7371 public-clause proof checks from the
+stored raw rows. It SHALL authenticate the unchanged sealed stream manifest and
+producer hashes. `proof_boundary_replay_ready_score` SHALL equal one only when
+the original proof controls, protocol checks, and manifest checks remain valid.
+No formula, request, seed, threshold, or historical byte MAY change.
+
+`assignment_reducer_ready_score` SHALL equal one only when the corrected reducer,
+all four exact raw calls, and terminal readers agree. The score qualifies the
+reducer and inherited development evidence only. Exp7372 SHALL remain
+disqualified, and Exp7388 SHALL still require its own bounded four-call canary.
+
+The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, all current LLM
+invocation counts to zero, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Historical model evidence SHALL remain in
+`historical_model_inputs`. The result SHALL set `promotion_score=0` and SHALL
+keep device detail in `inference_substrate`.
+
+The workflow SHALL derive the exact affected command plan through Exp7358 and
+execute it through Exp7303. It SHALL require worktree imports, focused pytest,
+separate 100 percent changed-module coverage, scoped Ruff check and format,
+changed-module mypy, and exact-test spec coverage. It SHALL run the declared
+entrypoint, cold-reduce the candidate, run adversarial verification, and run
+strict row consistency before an atomic terminal write. No numbered E2E applies.
+
+#### SCENARIO-REPORT-7383-OPERATORS: Threshold and closed values remain explicit
+
+**Given** reducer fixtures with two, three, and four usable assignments
+**When** the receipt gates are evaluated
+**Then** only three and four pass the `>= 3` threshold
+**And** promotion zero, host venue, and circular-positive oracle classification pass their exact operators.
+
+#### SCENARIO-REPORT-7383-MUTATIONS: Raw receipt mutations fail independently
+
+**Given** an authentic raw call and one mutation at a time
+**When** its hash, seed, variable ID, truncation, runtime identity, or readiness is changed
+**Then** the reducer rejects the owning check
+**And** no failed mutation produces current model or science readiness.
+
+#### SCENARIO-REPORT-7383-REPLAY: Historical transport and proof evidence stay bounded
+
+**Given** the four exact Exp7372 calls and the Exp7370 and Exp7371 public evidence
+**When** independent reducers replay the stored bytes
+**Then** usability, fidelity, and SAT extendibility remain separate
+**And** proof replay is ready only while every source and sealed-manifest hash matches.
+
+#### SCENARIO-REPORT-7383-HISTORY: A repaired reducer does not rehabilitate its input
+
+**Given** the disqualified and adversarially flagged Exp7372 producer
+**When** Exp7383 stores a successful reducer diagnosis
+**Then** Exp7372 keeps its original verdict, flag, model class, and hashes
+**And** a later fresh canary remains required before new capture.
+
+#### SCENARIO-REPORT-7383-ARTIFACT: Scoped validation controls atomic publication
+
+**Given** a measured candidate and exact current validation receipts
+**When** the independent reducer and both strict readers inspect it
+**Then** a changed row, gate, score, class, source hash, or checksum fails
+**And** only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-REPORT-7383)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7383 and SCENARIO-REPORT-7383-* | Planned: Exp7383 reducer module, thin entrypoint, raw diagnosis, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
