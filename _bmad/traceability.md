@@ -2898,3 +2898,29 @@ Future tasks must add their driving REQ-* and failing tests before changing
 implementation. The V646 validation failure and scientific nulls remain intact.
 The prior V645 design bytes are preserved in
 `openspec/change-proposals/research-roadmap-v645-preserved-20260917.md`.
+
+## 2026-09-18 — V648 research plan staged (not executed)
+
+Milestone `2026.09.648` has exactly fourteen tasks, exp7381 through exp7394,
+in four phases. The matching authorities are
+`openspec/change-proposals/research-roadmap-vNEXT.md` and
+`research-roadmap-next.yaml`. The active V647 roadmap is unchanged.
+The prior design is preserved byte-for-byte in
+`openspec/change-proposals/research-roadmap-v647-preserved-20260918.md`.
+
+| PRD requirement | Planned work | Existing capability; status |
+|---|---|---|
+| FR-12 verifiable reasoning | Exp7382, Exp7385, Exp7387: typed Gibbs decisions, separate calibration roles, proper scores, prevalence/logistic controls and independent audit | autoresearch (REQ-AUTO-018), research-reporting; proposed, no new training run |
+| FR-11 autonomous learning | Exp7386: delayed-feedback numeric updates, frozen/online controls, erasure and temporal-block analysis | autoresearch, continuous-learning; proposed, no learning benefit claimed |
+| FR-11 / FR-12 | Exp7383, Exp7388–Exp7390: correct current receipt reduction, capture fresh Qwen proposals, preserve the original prospective proof-memory test and audit | constraint-verification, continuous-learning; V647 disqualifications remain intact |
+| FR-07 / FR-12 | Exp7384, Exp7391: reproduce the missing-first-action cause before a bounded adapter-withheld live ARC run | arc-world-model-trust-energy; proposed, no credited solve |
+| FR-07 / NFR-01 | Exp7392–Exp7393: archived finite-law/support reduction and measured host placement bounds | ising-backend, samplers, research-reporting; no new chains or board execution |
+| FR-09 / FR-10 | Exp7381 and Exp7394: exact fourteen-task contract and independent branch dispositions | research-reporting; plan staged, capstone not executed |
+
+Each future implementation task must extend its driving REQ-* and failing
+tests before code changes. This planning update changes no capability
+implementation status. The literature delta is recorded in
+research-references.md under the dated V648 review. Planning checks passed:
+independent fourteen-row comparison, eight contract mutations, 123 actual
+conductor gate-reader cases, schema/prior-failure/gate audits, and 62 existing
+roadmap-consumer tests with their spec references.

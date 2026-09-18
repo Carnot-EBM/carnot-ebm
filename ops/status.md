@@ -16655,3 +16655,31 @@ non-degenerate weight set recomputes a real, in-range result.
 Explicitly not done: no weight update to the mandated 27B generator; no
 change to the ARC live agent; `ops/verifier_gaps.md`'s two gap entries are
 not yet closed, only now have a benchmark that can close them.
+
+## 2026-09-18 — V648 research plan ready for activation
+
+The requested next milestone, `2026.09.648`, is staged with fourteen tasks
+(exp7381–exp7394) across four phases. Its design in
+`openspec/change-proposals/research-roadmap-vNEXT.md` exactly matches
+`research-roadmap-next.yaml`. Active milestone V647 remains unchanged.
+
+The plan prioritizes a calibrated accept/reject/escalate Gibbs head, actual
+delayed-feedback learning, and the V647 prospective proof test that never ran.
+It requires diagnosis of ARC's missing first action before another live
+measurement. Ising work reduces existing traces with explicit support
+accounting; hardware work preserves board prerequisites and bounds placement
+from measured host costs. Both LLM tasks mandate Qwen3.8-27B GGUF and bounded
+generation. No generator training or production promotion is planned.
+
+V647 established proof/source-law fixtures but not learning value: the canary
+receipt and ARC/Ising evidence were disqualified, and downstream proof science
+was pre-gated. Preserve those determinations. The new reference review covers
+the requested primary and secondary sources, with partial Semantic Scholar
+citation coverage explicitly recorded.
+
+Planning validation: fourteen exact contract rows, eight rejected contract
+mutations, 123 gate-reader cases, schema/prior-failure/gate checks, and 62
+focused tests passed; spec-reference coverage passed. The next step is normal
+conductor activation of the staged plan. No V648 experiment, GPU run or
+physical-board action was executed during planning. The original V647 design
+is archived as `research-roadmap-v647-preserved-20260918.md`.

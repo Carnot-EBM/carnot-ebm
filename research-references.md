@@ -45182,3 +45182,91 @@ Operator-supplied URL, read directly (not a milestone planner sweep):
   external corroboration of the north-star framing, not as a technical
   source. There is no method to adopt here.
   - Not yet built. Flagged for a future bounded task, not implemented here.
+
+## 2026-09-18 — V648 planning source review
+
+This review precedes the V648 design. The working tree already contains the
+2026-09-18 calibrated-decision directive. Dates below use the observed UTC date.
+New papers are research inputs, not Carnot results. Rechecked papers retain
+that label. No vendor performance claim supplies local hardware evidence.
+
+### Promising methods
+
+| Primary source | Verified scope | Carnot hypothesis and limit |
+|---|---|---|
+| [Calibrate What You SHIP, 2608.21748v1](https://arxiv.org/html/2608.21748v1), 2026-08-22; new ledger entry | Calibrates the output of a complete release policy. A fixed threshold grid permits simultaneous risk bounds on independent calibration rollouts. Empty accepted sets yield no certificate. | Evaluate typed accept/reject/escalate decisions after selection. Split model training, probability calibration, policy-threshold selection and final evaluation. This is a text-verifier adaptation of a vision study, not its reproduction. Exchangeability does not follow under drift. |
+| [CalArena, 2605.30188v2](https://arxiv.org/html/2605.30188v2), revised 2026-06-01; new ledger entry | Compares post-hoc calibration methods using proper scoring rules across tabular and vision tasks. | Compare the small Gibbs head with a training-prevalence predictor and regularized logistic calibration. Report Brier score and log loss beside discrimination. Better AUROC alone cannot qualify calibration. |
+| [CalVerT, 2606.21777](https://arxiv.org/abs/2606.21777), 2026-06-19; new ledger entry | Gives QA agents separate confidence and grounding telemetry. The authors test both trained and untrained integrations. | Preserve source-check results and learned risk as separate fields. A probability is not an exact proof. Carnot's first test uses its existing small verifier features, without a new retrieval product or generator fine-tune. |
+| [Mirror Online Conformal Prediction with Intermittent Feedback, 2503.10345](https://arxiv.org/abs/2503.10345), 2025-03-13; checked | Studies runtime calibration with intermittent feedback and compact updates. Its guarantees concern prediction-set coverage. | Test predict-before-feedback updates, explicit delays, frozen controls and restart. Do not transfer set-coverage guarantees to selective acceptance or to a changing EBM. |
+| [High dimensional online calibration, 2504.09096](https://arxiv.org/abs/2504.09096), 2025-04-12; checked | Uses mixtures of forecasters over recent windows and studies convergence requirements. | Include a cheap recent-frequency control. A tiny neural selector must beat simple online statistics before its hardware path matters. No small-sample theorem is inferred. |
+| [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732), 2026-09-04; new ledger entry | Studies memorization and generalization in an Ising system with annealed couplings and data supplied as external fields. | Keep training dynamics separate from the target sampling law. Defer a new physical-learning branch until current finite-law evidence is valid. |
+
+### Required topic sweep
+
+- **Energy-based verification and reasoning:** rechecked
+  [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) and
+  [ARM–EBM, 2512.15605](https://arxiv.org/abs/2512.15605).
+  Compatibility optimization and an equivalent energy representation do not
+  certify source semantics. The bounded next step is a small decision head.
+- **Neural constraint satisfaction:** checked
+  [AS2, 2603.18436](https://arxiv.org/abs/2603.18436).
+  Differentiable soft symbolic reasoning motivates an explicit distinction
+  between graded feasibility and an exact certificate. No new solver is selected.
+- **Ising ML and hardware:** checked Thermodynamic learning above and rechecked
+  [FPGA–ASIC co-design, 2602.15985v2](https://arxiv.org/abs/2602.15985v2),
+  revised 2026-09-04. The latter treats digital orchestration as a first-class
+  cost. Measure the complete service boundary before a hardware port.
+- **Hallucination detection and mitigation:** the Hugging Face scan found
+  CalVerT and CalArena. Their arXiv records and the CalArena full text were
+  opened. The generated discovery summaries are not scientific authority.
+- **Kolmogorov–Arnold Networks:** rechecked
+  [KAC, 2503.21076](https://arxiv.org/abs/2503.21076) and
+  [KAN-CL, 2605.12306](https://arxiv.org/abs/2605.12306).
+  Continual classification remains relevant, but it does not establish
+  calibrated probabilities. Defer another architecture until simple controls
+  and the existing Gibbs head establish useful headroom.
+- **Energy-guided/constrained generation:** checked
+  [ETS, 2601.21484](https://arxiv.org/abs/2601.21484).
+  It estimates energy terms for inference-time sampling. Keep selection cost
+  and probability distortion explicit. Do not reopen the retired text-ranker
+  or finite-ID answer-transport constructions.
+- **Continual constraint systems:** the online-calibration sources above and
+  [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792), rechecked, motivate
+  separating prediction from committed updates. This suggests controls for
+  delayed learning; it does not establish a Carnot benefit.
+
+### Secondary-source checks
+
+- **OpenReview:** searched ICLR/NeurIPS/ICML EBM work. The
+  [EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg) identifies itself as
+  published at ICLR 2026. The search also returned
+  [NRGPT](https://openreview.net/pdf?id=B3Muyi2zgo), describing causal energy
+  updates. These are architecture context, not authority for a new local claim.
+- **Semantic Scholar:** browser calls returned internal errors. Direct Graph
+  API calls returned HTTP 200 for both
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds&limit=20).
+  The EBT response contained 20 entries plus a next-page pointer; the ARM–EBM
+  response contained eight entries. This was a partial citation scan. Opened
+  [Cross-Block Conditioning, 2609.14934](https://arxiv.org/abs/2609.14934),
+  Memoir, and [False First Steps, 2602.02991](https://arxiv.org/abs/2602.02991).
+  Retain them as background. The distributional text-scorer citation does not
+  reopen PHASE D. These successful calls supersede only this pass's access
+  status, not the historical V647 rate-limit record.
+- **Hugging Face Papers:** checked
+  [CalVerT's discovery page](https://huggingface.co/papers/2606.21777) and
+  [CalArena's discovery page](https://huggingface.co/papers/2605.30188), then
+  followed primary sources. No downloaded model or dataset is required.
+- **GitHub trending:** opened the monthly
+  [Python](https://github.com/trending/python?since=monthly) and
+  [Rust](https://github.com/trending/rust?since=monthly) lists. No relevant
+  new EBM/constraint/KAN dependency was selected. Author-linked code is not
+  called trending without list evidence.
+- **Extropic:** opened [writing](https://extropic.ai/writing) and
+  [Z1T](https://extropic.ai/writing/z1t). The index again exposed navigation;
+  the article describes probabilistic hardware/software co-design. This is
+  vendor context. It establishes neither owned access nor Carnot timing.
+- **Logical Intelligence:** opened
+  [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  The public architecture separates language interfaces and energy reasoning.
+  No reproducible local implementation was established by this review.

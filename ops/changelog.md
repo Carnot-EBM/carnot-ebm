@@ -20094,3 +20094,20 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-18: Shipped the Energy-Based Calibrated-Decision Training Floor (new CLAUDE.md standing rule, operator directive after reading TypeSafe AI's "Jev" product page). Removed the saturated `double_well`/`rosenbrock` toy benchmarks from `scripts/autoresearch_conductor_round.py`'s standing rotation (both solved to machine precision on their first fire, every round since wasted). Added `python/carnot/autoresearch/calibrated_decision_benchmark.py` (REQ-AUTO-018): a hypothesis trains a small `GibbsModel` via NCE loss over raw PCIB features, targeting `ops/verifier_gaps.md`'s `GAP-ORACLE-DISTINCT`/`GAP-DETECTOR-AUROC-4208`, reusing `code_improvement.py`'s previously-unwired training-loop pattern. Wired into the conductor round script and the fresh-subprocess recompute worker (additive `brier` key). Updated six pre-existing tests that used `double_well` as a fake-generator test vector, added `tests/python/test_calibrated_decision_benchmark.py` (31 tests). 150 tests pass; ruff/mypy clean. Spec: REQ-AUTO-018, `openspec/capabilities/autoresearch/spec.md`.
 - 2026-09-18: Reconcile twelve outcomes and decide proof-memory continuation (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_science_or_validation_failure: all twelve V647 dispositions are accounted for; required producer validation failed and proof-memory measurement plus audit were pre-gated; results/experiment_7380_v647_capstone.json
 - 2026-09-18: Added the milestone 2026.09.647 operational retrospective. Nine experiments completed in 37.9 minutes, including two compute-bound experiments. Collect new adapter-withheld ARC supervisor outcomes took 31.02 minutes; Qualify bounded Qwen3.8 assignment proposals took 0.68 minutes. The supplied data does not identify why the longer task was slow, establish task-window GPU efficiency, or show an eligible parallel-model DualGPURunner miss. The next tooling target is phase timing and task-aligned GPU, process, model-count, runner, and device receipts. Estimated savings are 0% because no measured counterfactual is available. Artifact: results/operational_retro_2026_09_647.json.
+
+- 2026-09-18: In response to the request to plan the milestone after completed
+  V647, staged `2026.09.648` with exactly fourteen experiments (exp7381–exp7394)
+  across four phases. Authored matching `research-roadmap-next.yaml` and
+  `openspec/change-proposals/research-roadmap-vNEXT.md`; preserved the V647
+  design in `research-roadmap-v647-preserved-20260918.md`. Added the literature
+  review to `research-references.md` before design. The plan trains and audits
+  calibrated Gibbs decisions, measures delayed-feedback learning, repairs
+  evidenced receipt/invocation boundaries, finishes the original proof-memory
+  study, and reduces archived Ising/hardware evidence without physical retries.
+  All comparative tasks require rows, every prompt mandates flushed progress
+  and sub-600-second gaps, reused scopes have complete retirement metadata,
+  and both LLM tasks use Qwen3.8 bounded generation. Validation passed: exact
+  fourteen-row contract, eight contract mutations, 123 real gate-reader cases,
+  schema/prior-failure/gate audits, 62 roadmap-consumer tests, and scoped spec
+  coverage. No experiments were executed; active roadmap and conductor source
+  remain unchanged.

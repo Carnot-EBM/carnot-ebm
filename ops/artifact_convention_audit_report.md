@@ -9,11 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
+| CHECKABLE | 7 |
 | AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
 
-## experiment_7361_v646_fresh_plan_capture.json
+## experiment_7371_v647_proof_boundary.json
 
 **AGGREGATE_ONLY**
 
@@ -21,15 +20,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The capture met its scientific-value gate by producing 128 publicly faithful proposals, while promotion remained unauthorized.
+The synthetic comparative-efficacy gate passed across the five experimental arms.
 
 ## WHAT IS MISSING
-Per-unit proposal-validity results for each evaluation call supporting `"scientific_value":{"observed":128,"passed":true}`; `"call_manifest.evaluation_calls"` contains call IDs, hashes, and runtime receipts, but no per-call metric or faithful-proposal count.
+Per-unit, per-arm metric rows for each formula stream, family, seed, or condition are missing; `"acceptance_gate_results"` records `"synthetic_comparative_efficacy"` as `"observed": true` and `"passed": true`, and asserts `"complete_five_arm_rows"` passed, but the displayed `"erasure_witness_rows"` contain no five-arm comparative metrics.
 
 ## THE CHECK A READER CANNOT DO
-Did the 128 qualifying proposals arise broadly across evaluation units, or from only a few duplicated or unusually productive calls?
+Did the claimed comparative advantage occur broadly across formula streams, or was the aggregate gate driven by a few outliers or degenerate controls?
 
-## experiment_7362_v646_prospective_learning.json
+## experiment_7372_v647_qwen_canary.json
 
 **CHECKABLE**
 
@@ -37,7 +36,23 @@ Did the 128 qualifying proposals arise broadly across evaluation units, or from 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment completed but was disqualified because required validation failed.
+The completed canary was disqualified because internal artifact validation failed, specifically a `qwen_assignment_transport_ready_score_mismatch`.
+
+## WHAT IS MISSING
+nothing; `raw_call_rows` provides per-call outcomes, while `gate_check_summary`, `acceptance_gate_results`, and `internal_validation_errors` identify the failed checks and observed values.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7373_proposal_capture.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because 3 of 6 prerequisite gates failed, beginning with `qwen_assignment_transport_ready_score` being 0 when 1 was required.
 
 ## WHAT IS MISSING
 nothing
@@ -45,7 +60,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7363_learning_audit.json
+## experiment_7376_v647_arc_outcomes.json
 
 **CHECKABLE**
 
@@ -53,7 +68,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because 2 of 3 upstream gates failed.
+The run completed but was disqualified because six required gates failed.
 
 ## WHAT IS MISSING
 nothing
@@ -61,23 +76,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7364_v646_acquisition_adjudication.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The acquisition adjudication is null because the scientific cost gate failed: CI95 upper 0.9652615826317683 was not below 0.90.
-
-## WHAT IS MISSING
-The complete `"paired_cost_rows"` array is missing: the artifact truncates mid-row despite `"independent_reduction.complete_cost_ratio_ci95.context_clusters": 30`; `"gate_check_summary.failed_checks"` supplies the failed check and observed value.
-
-## THE CHECK A READER CANNOT DO
-Do all 30 per-context cost rows reproduce the reported CI95 upper bound of 0.9652615826317683?
-
-## experiment_7365_v646_supervisor_support.json
+## experiment_7377_v647_ising_law.json
 
 **CHECKABLE**
 
@@ -85,7 +84,7 @@ Do all 30 per-context cost rows reproduce the reported CI95 upper bound of 0.965
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The completed audit found insufficient supported outcomes, so the support, scientific-value, and promotion gates were not met.
+All terminal acceptance gates passed, including preservation of the source law under proof assistance and detection of intentional law changes.
 
 ## WHAT IS MISSING
 nothing
@@ -93,7 +92,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7366_supervisor_live.json
+## experiment_7378_v647_ising_audit.json
 
 **CHECKABLE**
 
@@ -101,15 +100,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `supervisor_trial_ready_score` was 0 but was required to equal 1.
+The run failed the terminal validation gate (`terminal_validation_passed`) and was not automatically promoted.
 
 ## WHAT IS MISSING
-nothing
+nothing; `acceptance_gate_results` identifies the failed check with `observed: false`, and `cell_results` provides per-cell evidence.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7367_v646_board_disposition.json
+## experiment_7379_v647_hardware_envelope.json
 
 **CHECKABLE**
 
@@ -117,15 +116,15 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because no qualifying operator-authored GateMate physical-state change receipt existed after Exp6559, while all three board dispositions were recorded and readiness, value, and promotion remained zero.
+The task was blocked because no qualifying operator-authored GateMate physical-state change was recorded after Exp6559, while unavailable placement inputs support no speed claim.
 
 ## WHAT IS MISSING
-nothing
+nothing; `gate_check_summary.failures`, `first_failure`, `honest_verdict`, `board_rows.error`, and `placement_envelope_rows.error` identify the failed checks and observed values.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7368_v646_capstone.json
+## experiment_7380_v647_capstone.json
 
 **CHECKABLE**
 
@@ -133,10 +132,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-All twelve V646 dispositions were accounted for, but advancement was disqualified because Exp7362 failed required validation and the independent learning audit was pre-gated.
+All twelve V647 dispositions were accounted for, but the capstone was disqualified because required producer validation failed and the proof-memory measurement and audit were pre-gated.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"gate_check_summary"`, `"acceptance_gate_results"`, and per-task `"disposition_rows"` record the failed checks, expected values, observed values, and affected upstream tasks.
 
 ## THE CHECK A READER CANNOT DO
 none
