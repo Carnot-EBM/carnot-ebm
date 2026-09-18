@@ -1,0 +1,75 @@
+You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game 'r11l'.
+
+The game state is a 2x2 integer grid (logical resolution; colors [0, 1, 2, 3, 4]). You are
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the FULL set of changed cells as run-length runs of the
+form r<row>c<col0>:<v0>x<n0>,<v1>x<n1>,... — each run is a horizontal span of changed cells
+starting at (row, col0); within that span, the NEW values are themselves given as
+<value>x<count> pairs left-to-right (so a span of 6 changed cells that are all now color 5
+appears as "5x6", not six separate "5"s). To apply a transition's delta to the prior grid, for
+each run walk its <value>x<count> pairs in order, setting <count> consecutive cells starting at
+the next unfilled column (starting at col0) to <value>; all other cells are unchanged. The delta
+is COMPLETE (not truncated). Full grids (the INITIAL
+grid and, if shown, the WIN STATE grid) use a DIFFERENT run-length form to stay compact on large
+boards: one line per row, "r<row>:<v0>x<n0>,<v1>x<n1>,...". Each row's runs are listed
+left-to-right and cover EVERY column with no gaps and no overlap, so the starting column of each
+run is IMPLICIT: it equals the sum of the counts of all runs before it in that row (the first run
+in a row starts at column 0). To reconstruct a full grid, for each row walk its runs in order,
+placing <n> consecutive cells of value <v> starting at the next unfilled column.
+Actions are integers 1-7; ACTION6 is a click
+with data={'x':px,'y':py} in PIXEL coords (pixel = logical*1); others are
+keyboard/directional with data=None.
+
+Write a Python file at results/arc_e3/r11l/world_model.py with EXACTLY two functions:
+
+    import numpy as np
+    def engine(grid, action, data):
+        # grid: np.ndarray (logical HxW int). Return the predicted next grid (same shape).
+        ...
+    def is_level_complete(grid):
+        # return True if `grid` is a level-complete / win state, else False.
+        ...
+
+Induce the transition RULES from the observed data (movement, gravity, toggling,
+pushing, collection, etc.). Prefer SIMPLE GENERAL rules over per-frame special cases.
+Use only numpy + stdlib. Do not read files or network. Make engine() pure and
+deterministic. Write ONLY that one file.
+
+OBSERVED TRANSITIONS:
+INITIAL GRID (one full example of the state layout, run-length encoded; all grids are this shape):
+r0:0x2
+r1:0x2
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c0:1x2 r1c0:1x2
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c0:2x2 r1c0:2x2
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c0:3x2 r1c0:3x2
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c0:4x2 r1c0:4x2
+--- ACTION1 (level 0->0): changed cells (FULL, run-length) = r0c0:5x2 r1c0:5x2
+OBJECT STRUCTURE (same frames, connected-component view -- use object shape ids to track objects across the deltas above):
+INITIAL OBJECTS (connected components; obj<id>: color bbox=(y0,x0,y1,x1) px=<pixels> shape=<translation-invariant id>):
+  obj0: color=0 bbox=(0, 0, 1, 1) px=4 centroid=(0.5,0.5) shape=7ffceaba4b1e960e
+  containment (parent->children): {}
+  adjacency (touching id pairs): []
+  NOTE: two objects with the SAME shape id are the SAME object type regardless of position; use this to track objects across the transition deltas above.
+
+You have TOOLS. Use them instead of simulating grids in your head:
+
+  * diff_grids(t) -- every cell transition t changed, with the action taken.
+  * query_region(t, r0, r1, c0, c1, which) -- plain integer cells, no run-length decoding.
+  * find_objects(t, which, predicate_code, max_objects) -- bounded color components
+    filtered by Python source that defines accept(obj). Use it for object-level evidence.
+  * run_engine_on_transitions(code) -- RUNS your candidate engine on the observed
+    transitions and returns concrete mismatches plus a held-out score. This is the only
+    reliable test of a rule hypothesis. Do NOT hand-trace transforms; submit the
+    candidate and read the report.
+  * run_goal_on_states(code) -- runs a candidate is_level_complete on observed grids.
+
+Do not hardcode observed coordinates: the report flags that, and held-out transitions
+will fail. Prefer simple general rules.
+
+You have a LIMITED number of turns. Only engines submitted through
+run_engine_on_transitions count for anything; inspection alone scores zero. Submit
+your FIRST candidate engine within your first 3 tool calls, even if it is rough --
+the mismatch report is how you learn the rules, and you refine from it.
+
+Return exactly one JSON object per turn: {"name": "TOOL_NAME", "arguments": {"<every required parameter>": ...}}. Every required parameter of the chosen tool must be present and non-empty; run_engine_on_transitions requires the FULL Python source in "code". Use the tool schemas below. Submit complete engine and goal source with run_engine_on_transitions. Do not emit XML, fences, or a separate final answer.
+[{"type": "function", "function": {"name": "run_engine_on_transitions", "description": "Execute a candidate engine(grid, action, data) on the observed transitions. Returns accuracy, cell_recall, up to 5 concrete mismatches (true change vs your prediction), static defects, a hardcoded-coordinate scan, and an aggregate-only held-out score. Use this instead of simulating grids in your head. Submit FULL standalone code (import numpy as np + def engine).", "parameters": {"type": "object", "properties": {"code": {"type": "string", "description": "Complete Python source defining engine(grid, action, data)"}}, "required": ["code"]}}}, {"type": "function", "function": {"name": "query_region", "description": "Read a rectangular region of one observed transition's grid as plain integer rows (no run-length decoding needed). which='before' is the grid the action was taken in; 'after' is the result.", "parameters": {"type": "object", "properties": {"t": {"type": "integer", "description": "transition index (0-based)"}, "r0": {"type": "integer", "description": "first row (inclusive)"}, "r1": {"type": "integer", "description": "last row (exclusive)"}, "c0": {"type": "integer", "description": "first column (inclusive)"}, "c1": {"type": "integer", "description": "last column (exclusive)"}, "which": {"type": "string", "enum": ["before", "after"]}}, "required": ["t", "r0", "r1", "c0", "c1"]}}}, {"type": "function", "function": {"name": "diff_grids", "description": "List every cell one observed transition changed: {r, c, before, after}, plus the action taken. Cheap; prefer this over reconstructing deltas mentally.", "parameters": {"type": "object", "properties": {"t": {"type": "integer", "description": "transition index (0-based)"}}, "required": ["t"]}}}, {"type": "function", "function": {"name": "run_goal_on_states", "description": "Execute a candidate is_level_complete(grid) on every observed grid. Returns the value per grid and any exceptions. A predicate constant across all observed grids carries no signal for the search.", "parameters": {"type": "object", "properties": {"code": {"type": "string", "description": "Complete Python source defining is_level_complete(grid)"}}, "required": ["code"]}}}, {"type": "function", "function": {"name": "find_objects", "description": "Find same-color connected components in one observed before/after grid, then filter compact object facts with bounded Python predicate code. The source must define accept(obj) and may read color, pixel_count, bbox, centroid, height, and width. Results and generated-code execution are bounded.", "parameters": {"type": "object", "properties": {"t": {"type": "integer", "description": "transition index (0-based)"}, "which": {"type": "string", "enum": ["before", "after"]}, "predicate_code": {"type": "string", "description": "Python source defining accept(obj) -> bool"}, "max_objects": {"type": "integer", "description": "requested result cap; clamped to 32"}}, "required": ["t", "which", "predicate_code", "max_objects"]}}}, {"type": "function", "function": {"name": "list_transitions", "description": "Index of the observed transitions WITHOUT their grids: for each, the index t, the action, the grid shape, how many cells changed, and the bounding box of the change (changed_cells -1 means the shape itself changed). Call this FIRST to see what evidence exists, then use query_region or diff_grids on the transitions that matter. Cheaper than reading every grid.", "parameters": {"type": "object", "properties": {}}}}]

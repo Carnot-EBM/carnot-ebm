@@ -1,0 +1,1692 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": [
+    {
+      "artifact_field": "all_current_inputs_authenticated",
+      "category": "precondition",
+      "check": "preconditions",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "preconditions_checked"
+    },
+    {
+      "artifact_field": "terminal_zero_vs_durable_actions",
+      "category": "completion",
+      "check": "historical_timeout_correction",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7376_v647_arc_outcomes"
+    },
+    {
+      "artifact_field": "restart_parity",
+      "category": "completion",
+      "check": "restart_parity",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "episode_recovery_rows"
+    },
+    {
+      "artifact_field": "planned=completed+censored+unstarted",
+      "category": "completion",
+      "check": "episode_accounting",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "sample_size_budget"
+    },
+    {
+      "artifact_field": "adapter_disabled_and_solution_paths_denied",
+      "category": "safety",
+      "check": "solution_path_denial",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "rows"
+    },
+    {
+      "artifact_field": "independent_reader_passed",
+      "category": "safety",
+      "check": "independent_checkpoint_reader",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "checkpoint_receipts"
+    },
+    {
+      "artifact_field": "separate_hash_bound_sidecars",
+      "category": "safety",
+      "check": "provenance_sidecar_separation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "provenance_sidecars"
+    },
+    {
+      "artifact_field": "required_scoped_commands",
+      "category": "required_validation",
+      "check": "affected_validation",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "validation_receipts"
+    },
+    {
+      "artifact_field": "E2E-009/E2E-010/offline_smoke",
+      "category": "required_validation",
+      "check": "e2e_plumbing",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "validation_receipts"
+    },
+    {
+      "artifact_field": "all_terminal_readers_passed",
+      "category": "safety",
+      "check": "terminal_safety",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "terminal_validation_receipts"
+    },
+    {
+      "artifact_field": "invocation_counts",
+      "category": "safety",
+      "check": "current_llm_invocations",
+      "expected": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "observed": {
+        "generation_calls_attempted": 0,
+        "generation_calls_cancelled": 0,
+        "generation_calls_completed": 0,
+        "generation_calls_failed": 0,
+        "generation_calls_in_flight": 0,
+        "model_loads_attempted": 0,
+        "model_loads_cancelled": 0,
+        "model_loads_completed": 0,
+        "model_loads_failed": 0,
+        "model_loads_in_flight": 0,
+        "usable_answers": 0
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "current_process"
+    },
+    {
+      "artifact_field": "credited_solve",
+      "category": "efficacy",
+      "check": "scientific_efficacy",
+      "expected": null,
+      "observed": null,
+      "operator": "is",
+      "passed": true,
+      "upstream": "protocol"
+    },
+    {
+      "artifact_field": "promotion_score",
+      "category": "promotion",
+      "check": "automatic_promotion",
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true,
+      "upstream": "protocol"
+    }
+  ],
+  "active_research_roadmap_changed": false,
+  "arc_checkpoint_ready_score": 1,
+  "checkpoint_receipts": [
+    {
+      "episode_id": "r11l:seed-7398",
+      "journal_checksum": "sha256:41cab285702b4c20e80f38add3410de21b3cd3035c23fa3ebaa7e386b0658476",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_first_request/checkpoints/r11l_seed-7398.json",
+      "sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "state_hash": "sha256:000567d9f510fbfa9b2b044b23c2dd7368677f70fbe5f3db9471e8c371ba7a76"
+    },
+    {
+      "episode_id": "r11l:seed-17398",
+      "journal_checksum": "sha256:f0a19bfa42dbc4332e5fb0fd669e271a541d1debebf6232240a0fefcf9b9e566",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_first_request/checkpoints/r11l_seed-17398.json",
+      "sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "state_hash": "sha256:3f2f2fe04533e05ee48be737d263c378fccedc766682e01244421345fabdf965"
+    },
+    {
+      "episode_id": "r11l:seed-7398",
+      "journal_checksum": "sha256:41cab285702b4c20e80f38add3410de21b3cd3035c23fa3ebaa7e386b0658476",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_request/checkpoints/r11l_seed-7398.json",
+      "sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "state_hash": "sha256:000567d9f510fbfa9b2b044b23c2dd7368677f70fbe5f3db9471e8c371ba7a76"
+    },
+    {
+      "episode_id": "r11l:seed-17398",
+      "journal_checksum": "sha256:f0a19bfa42dbc4332e5fb0fd669e271a541d1debebf6232240a0fefcf9b9e566",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_request/checkpoints/r11l_seed-17398.json",
+      "sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "state_hash": "sha256:3f2f2fe04533e05ee48be737d263c378fccedc766682e01244421345fabdf965"
+    },
+    {
+      "episode_id": "r11l:seed-7398",
+      "journal_checksum": "sha256:41cab285702b4c20e80f38add3410de21b3cd3035c23fa3ebaa7e386b0658476",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_action/checkpoints/r11l_seed-7398.json",
+      "sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "state_hash": "sha256:000567d9f510fbfa9b2b044b23c2dd7368677f70fbe5f3db9471e8c371ba7a76"
+    },
+    {
+      "episode_id": "r11l:seed-17398",
+      "journal_checksum": "sha256:f0a19bfa42dbc4332e5fb0fd669e271a541d1debebf6232240a0fefcf9b9e566",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_action/checkpoints/r11l_seed-17398.json",
+      "sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "state_hash": "sha256:3f2f2fe04533e05ee48be737d263c378fccedc766682e01244421345fabdf965"
+    },
+    {
+      "episode_id": "r11l:seed-7398",
+      "journal_checksum": "sha256:41cab285702b4c20e80f38add3410de21b3cd3035c23fa3ebaa7e386b0658476",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/between_episodes/checkpoints/r11l_seed-7398.json",
+      "sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "state_hash": "sha256:000567d9f510fbfa9b2b044b23c2dd7368677f70fbe5f3db9471e8c371ba7a76"
+    },
+    {
+      "episode_id": "r11l:seed-17398",
+      "journal_checksum": "sha256:f0a19bfa42dbc4332e5fb0fd669e271a541d1debebf6232240a0fefcf9b9e566",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/between_episodes/checkpoints/r11l_seed-17398.json",
+      "sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "state_hash": "sha256:3f2f2fe04533e05ee48be737d263c378fccedc766682e01244421345fabdf965"
+    },
+    {
+      "episode_id": "r11l:seed-7398",
+      "journal_checksum": "sha256:41cab285702b4c20e80f38add3410de21b3cd3035c23fa3ebaa7e386b0658476",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_final_aggregation/checkpoints/r11l_seed-7398.json",
+      "sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "state_hash": "sha256:000567d9f510fbfa9b2b044b23c2dd7368677f70fbe5f3db9471e8c371ba7a76"
+    },
+    {
+      "episode_id": "r11l:seed-17398",
+      "journal_checksum": "sha256:f0a19bfa42dbc4332e5fb0fd669e271a541d1debebf6232240a0fefcf9b9e566",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_final_aggregation/checkpoints/r11l_seed-17398.json",
+      "sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "state_hash": "sha256:3f2f2fe04533e05ee48be737d263c378fccedc766682e01244421345fabdf965"
+    }
+  ],
+  "credited_solve": false,
+  "duration_s": 66.622615,
+  "ended_at_utc": "2026-09-18T19:12:03.427181+00:00",
+  "episode_recovery_rows": [
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_first_request/checkpoints/r11l_seed-7398.json",
+      "checkpoint_sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-7398:action_completed:0",
+      "episode_id": "r11l:seed-7398",
+      "event_count": 5,
+      "interruption_boundary": "before_first_request",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_first_request/checkpoints/r11l_seed-17398.json",
+      "checkpoint_sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-17398:action_completed:0",
+      "episode_id": "r11l:seed-17398",
+      "event_count": 5,
+      "interruption_boundary": "before_first_request",
+      "recovered_from_checkpoint": false,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_request/checkpoints/r11l_seed-7398.json",
+      "checkpoint_sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-7398:action_completed:0",
+      "episode_id": "r11l:seed-7398",
+      "event_count": 5,
+      "interruption_boundary": "after_request",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_request/checkpoints/r11l_seed-17398.json",
+      "checkpoint_sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-17398:action_completed:0",
+      "episode_id": "r11l:seed-17398",
+      "event_count": 5,
+      "interruption_boundary": "after_request",
+      "recovered_from_checkpoint": false,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_action/checkpoints/r11l_seed-7398.json",
+      "checkpoint_sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-7398:action_completed:0",
+      "episode_id": "r11l:seed-7398",
+      "event_count": 5,
+      "interruption_boundary": "after_action",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/after_action/checkpoints/r11l_seed-17398.json",
+      "checkpoint_sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-17398:action_completed:0",
+      "episode_id": "r11l:seed-17398",
+      "event_count": 5,
+      "interruption_boundary": "after_action",
+      "recovered_from_checkpoint": false,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/between_episodes/checkpoints/r11l_seed-7398.json",
+      "checkpoint_sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-7398:action_completed:0",
+      "episode_id": "r11l:seed-7398",
+      "event_count": 5,
+      "interruption_boundary": "between_episodes",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/between_episodes/checkpoints/r11l_seed-17398.json",
+      "checkpoint_sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-17398:action_completed:0",
+      "episode_id": "r11l:seed-17398",
+      "event_count": 5,
+      "interruption_boundary": "between_episodes",
+      "recovered_from_checkpoint": false,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_final_aggregation/checkpoints/r11l_seed-7398.json",
+      "checkpoint_sha256": "sha256:d4d2eb1c1c70a2bb762b350bd478ad39a4ea096ce47a55b9308fc574748bcb5f",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-7398:action_completed:0",
+      "episode_id": "r11l:seed-7398",
+      "event_count": 5,
+      "interruption_boundary": "before_final_aggregation",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    },
+    {
+      "censored": false,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/scripted-checkpoints/before_final_aggregation/checkpoints/r11l_seed-17398.json",
+      "checkpoint_sha256": "sha256:1f0f24db90727565c733c8006d258526006792f139ea449ee05c375678ee57ac",
+      "disposition": "complete",
+      "durable_source_event_id": "r11l:seed-17398:action_completed:0",
+      "episode_id": "r11l:seed-17398",
+      "event_count": 5,
+      "interruption_boundary": "before_final_aggregation",
+      "recovered_from_checkpoint": true,
+      "restart_parity": true
+    }
+  ],
+  "execution_venue": "host",
+  "experiment_id": "exp7398-arc-checkpoint",
+  "field_principles": {
+    "MODEL_SPECS": "An empty list states that no current LLM was loaded.",
+    "acceptance_gate_results": "Each gate records category, operator, expected, observed, and pass state.",
+    "active_research_roadmap_changed": "The active_research_roadmap_changed field retains directly auditable experiment evidence.",
+    "arc_checkpoint_ready_score": "One means restart, accounting, denial, and reader checks passed.",
+    "checkpoint_receipts": "The checkpoint_receipts field retains directly auditable experiment evidence.",
+    "credited_solve": "The credited_solve field retains directly auditable experiment evidence.",
+    "duration_s": "Monotonic task duration is measured without padding.",
+    "ended_at_utc": "The ended_at_utc field retains directly auditable experiment evidence.",
+    "episode_recovery_rows": "Durable event IDs and restart parity prove exact-once recovery.",
+    "execution_venue": "The closed host value identifies the execution venue.",
+    "experiment_id": "The experiment_id field retains directly auditable experiment evidence.",
+    "field_principles": "This map explains each top-level field.",
+    "flagged_adversarial": "Critical reader findings prevent readiness.",
+    "gate_check_summary": "Every failure identifies its upstream path and field.",
+    "generator_weights_changed": "The generator_weights_changed field retains directly auditable experiment evidence.",
+    "historical_correction": "The historical_correction field retains directly auditable experiment evidence.",
+    "honest_verdict": "The terminal verdict limits the finding to checkpoint qualification.",
+    "inference_substrate": "This string describes current CPU, hash, and scripted work.",
+    "inference_substrate_class": "The closed no-model class applies to current work.",
+    "inference_substrate_details": "Device and software facts stay separate from the substrate string.",
+    "interruption_controls": "The interruption_controls field retains directly auditable experiment evidence.",
+    "invocation_counts": "Exact current zeros exclude archived and simulated calls.",
+    "milestone": "The milestone field retains directly auditable experiment evidence.",
+    "model_invoked": "False distinguishes scripted transport from a real LLM attempt.",
+    "phase_spans": "Real phase boundaries expose validation and checkpoint timing.",
+    "preconditions_checked": "Exact hashes and eligibility checks precede dependent work.",
+    "production_defaults_changed": "The production_defaults_changed field retains directly auditable experiment evidence.",
+    "promotion_score": "Zero forbids automatic rollout, publication, or weight changes.",
+    "provenance_sidecars": "Separate hashes isolate historical runtime and scripted transport evidence.",
+    "random_seed": "Frozen fixture and experiment seeds make scripted work repeatable.",
+    "repository_health": "Unrelated broad health stays separate from affected checks.",
+    "reproducibility_checksum": "The checksum binds code, inputs, protocol, and raw rows.",
+    "required_check_names": "The required_check_names field retains directly auditable experiment evidence.",
+    "research_conductor_changed": "The research_conductor_changed field retains directly auditable experiment evidence.",
+    "rows": "Per-unit rows expose metrics, costs, failures, and dispositions.",
+    "run_date": "The requested date includes actual UTC start and end timestamps.",
+    "sample_size_budget": "Planned, attempted, completed, censored, and unstarted work stay distinct.",
+    "schema": "A versioned schema lets strict readers reject incompatible records.",
+    "small_ebm_training": "The small_ebm_training field retains directly auditable experiment evidence.",
+    "solve_provenance": "Development proxy prevents scripted actions from receiving solve credit.",
+    "source_artifact_hashes": "Byte hashes retain exact source identity and role.",
+    "started_at_utc": "The started_at_utc field retains directly auditable experiment evidence.",
+    "status": "The status field retains directly auditable experiment evidence.",
+    "supervisor_ordering_changed": "The supervisor_ordering_changed field retains directly auditable experiment evidence.",
+    "validation_receipts": "Command arguments, environment, timing, exit, and log hashes support audit.",
+    "verdict_class": "The closed class separates null plumbing evidence from efficacy.",
+    "verifier_is_oracle": "False states that this plumbing check is not a correctness oracle."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": true,
+    "failed_checks": [],
+    "failed_count": 0,
+    "first_failure": null
+  },
+  "generator_weights_changed": false,
+  "historical_correction": {
+    "corrected_accounting": {
+      "attempted_units": 6,
+      "censored_units": 1,
+      "completed_units": 5,
+      "planned_units": 6,
+      "unstarted_units": 0
+    },
+    "durable_completed_action_count": 624,
+    "first_missing_event": "child_terminal_session_write",
+    "last_confirmed_event": "induction_started",
+    "terminal_summary_action_count": 0
+  },
+  "honest_verdict": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+  "inference_substrate": "Host CPU JSON/hash reduction, atomic checkpoint I/O, and scripted HTTP transport through the real scored ARC policy; no current LLM or board run.",
+  "inference_substrate_class": "no_model_load",
+  "inference_substrate_details": {
+    "device": "host_cpu",
+    "jax_platform": "cpu",
+    "platform": "Linux-7.2.0-1-cachyos-x86_64-with-glibc2.44",
+    "processor": "x86_64",
+    "software": "CPython JSON/hash reduction and scripted urllib transport"
+  },
+  "interruption_controls": [
+    {
+      "boundary": "before_first_request",
+      "completed_units": 2,
+      "independent_reader_passed": true,
+      "interruption_observed": true,
+      "passed": true,
+      "restart_parity": true,
+      "unique_action_event_count": 2
+    },
+    {
+      "boundary": "after_request",
+      "completed_units": 2,
+      "independent_reader_passed": true,
+      "interruption_observed": true,
+      "passed": true,
+      "restart_parity": true,
+      "unique_action_event_count": 2
+    },
+    {
+      "boundary": "after_action",
+      "completed_units": 2,
+      "independent_reader_passed": true,
+      "interruption_observed": true,
+      "passed": true,
+      "restart_parity": true,
+      "unique_action_event_count": 2
+    },
+    {
+      "boundary": "between_episodes",
+      "completed_units": 2,
+      "independent_reader_passed": true,
+      "interruption_observed": true,
+      "passed": true,
+      "restart_parity": true,
+      "unique_action_event_count": 2
+    },
+    {
+      "boundary": "before_final_aggregation",
+      "completed_units": 2,
+      "independent_reader_passed": true,
+      "interruption_observed": true,
+      "passed": true,
+      "restart_parity": true,
+      "unique_action_event_count": 2
+    }
+  ],
+  "invocation_counts": {
+    "generation_calls_attempted": 0,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 0,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 0,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 0,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0,
+    "usable_answers": 0
+  },
+  "milestone": "2026.09.649",
+  "model_invoked": false,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-18T19:10:56.821180+00:00",
+      "completed_units": 29,
+      "duration_s": 0.01656,
+      "ended_elapsed_s": 0.016599,
+      "phase": "read",
+      "started_elapsed_s": 3.9e-05
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T19:11:08.935830+00:00",
+      "completed_units": 10,
+      "duration_s": 12.114606,
+      "ended_elapsed_s": 12.131254,
+      "phase": "evaluate",
+      "started_elapsed_s": 0.016648
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T19:12:02.415934+00:00",
+      "completed_units": 11,
+      "duration_s": 53.480016,
+      "ended_elapsed_s": 65.611349,
+      "phase": "validate",
+      "started_elapsed_s": 12.131334
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T19:12:03.427173+00:00",
+      "completed_units": 3,
+      "duration_s": 54.49126,
+      "ended_elapsed_s": 66.622594,
+      "phase": "validate_terminal",
+      "started_elapsed_s": 12.131334
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T19:12:03.427186+00:00",
+      "completed_units": 1,
+      "duration_s": 4e-06,
+      "ended_elapsed_s": 66.622616,
+      "phase": "write",
+      "started_elapsed_s": 66.622612
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7384_v648_arc_invocation_boundary.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7384_v648_arc_invocation_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7376_v647_arc_outcomes.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7376_v647_arc_outcomes.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7345_v645_arc_resume_check.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7345_v645_arc_resume_check.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/agentic/arc_competition_agent.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/arc_loop_solve.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "scripts/arc_loop_solve.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/arc_solve_registry.yaml",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7384_v648_arc_invocation_boundary.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7384_v648_arc_invocation_boundary.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7376_v647_arc_outcomes.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7376_v647_arc_outcomes.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7376_v647_arc_outcomes/live_session.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7376_v647_arc_outcomes/live_session.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7376_v647_arc_outcomes/episode_rows.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7376_v647_arc_outcomes/episode_rows.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7376_v647_arc_outcomes/frozen_schedule.json",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7376_v647_arc_outcomes/frozen_schedule.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7376_v647_arc_outcomes/receipt_events.jsonl",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7376_v647_arc_outcomes/receipt_events.jsonl"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7398_v649_arc_checkpoint.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7398_v649_arc_checkpoint.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7398_v649_arc_checkpoint.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7398_v649_arc_checkpoint.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+      "expected": "readable_nonempty_bytes",
+      "observed": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7398_v649_arc_checkpoint.py"
+    },
+    {
+      "artifact_field": "REQ-ARC-WMTE-7398",
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "artifact_field": "exp7398-arc-checkpoint",
+      "category": "precondition",
+      "check": "current_task_not_quarantined",
+      "expected": false,
+      "observed": false,
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "producer_identity_class_and_flag",
+      "category": "historical_diagnostic_only",
+      "check": "quarantined_predecessor_identity",
+      "expected": {
+        "experiment_id": "exp7384-arc-invocation-boundary",
+        "flagged_adversarial": true,
+        "inference_substrate_class": "no_model_load",
+        "status": "complete_disqualified_required_evidence",
+        "verdict_class": "disqualified"
+      },
+      "observed": {
+        "experiment_id": "exp7384-arc-invocation-boundary",
+        "flagged_adversarial": true,
+        "inference_substrate_class": "no_model_load",
+        "status": "complete_disqualified_required_evidence",
+        "verdict_class": "disqualified"
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7384_v648_arc_invocation_boundary.json"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "provenance_sidecars": {
+    "historical_runtime": {
+      "authorizes_current_readiness": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/sidecars/historical_runtime.json",
+      "scope": "historical",
+      "sha256": "sha256:47342026151b8bb879126da003ab476c32b49428a63caa8db0b47a83ef564e8b"
+    },
+    "scripted_transport": {
+      "authorizes_efficacy": false,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/sidecars/scripted_transport.json",
+      "scope": "development_proxy",
+      "sha256": "sha256:4c31004839efceffda28fbfc753c069b3f32e549107aab245c3242a0a7097fa4"
+    }
+  },
+  "random_seed": {
+    "experiment": 7398,
+    "resampling": null,
+    "scripted_transport": [
+      7398,
+      17398
+    ]
+  },
+  "repository_health": {
+    "affects_required_checks": false,
+    "status": "not_assessed_by_scoped_experiment",
+    "unrelated_failures": []
+  },
+  "reproducibility_checksum": "sha256:727868441121b2d3d95fd47d9740ee1d80aec01dbf5693d0ff725491a52adac3",
+  "required_check_names": [
+    "worktree_imports",
+    "focused_pytest",
+    "changed_module_coverage",
+    "changed_module_coverage_report",
+    "ruff_check",
+    "ruff_format",
+    "changed_module_mypy",
+    "scoped_spec_coverage",
+    "e2e_009",
+    "e2e_010",
+    "e2e_offline_smoke"
+  ],
+  "research_conductor_changed": false,
+  "rows": [
+    {
+      "arm": "historical_timeout_correction",
+      "censored": false,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "bp35",
+      "metrics": {
+        "environment_action_count": 124
+      },
+      "scope": "historical",
+      "seed": 737620260917,
+      "unit_id": "bp35:seed-737620260917"
+    },
+    {
+      "arm": "historical_timeout_correction",
+      "censored": false,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "bp35",
+      "metrics": {
+        "environment_action_count": 124
+      },
+      "scope": "historical",
+      "seed": 1737620260917,
+      "unit_id": "bp35:seed-1737620260917"
+    },
+    {
+      "arm": "historical_timeout_correction",
+      "censored": false,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "cn04",
+      "metrics": {
+        "environment_action_count": 125
+      },
+      "scope": "historical",
+      "seed": 737620260917,
+      "unit_id": "cn04:seed-737620260917"
+    },
+    {
+      "arm": "historical_timeout_correction",
+      "censored": false,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "cn04",
+      "metrics": {
+        "environment_action_count": 125
+      },
+      "scope": "historical",
+      "seed": 1737620260917,
+      "unit_id": "cn04:seed-1737620260917"
+    },
+    {
+      "arm": "historical_timeout_correction",
+      "censored": false,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "dc22",
+      "metrics": {
+        "environment_action_count": 126
+      },
+      "scope": "historical",
+      "seed": 737620260917,
+      "unit_id": "dc22:seed-737620260917"
+    },
+    {
+      "arm": "historical_timeout_correction",
+      "censored": true,
+      "costs": {
+        "current_llm_calls": 0
+      },
+      "disposition": "started_censored_timeout",
+      "failure": "aggregate_episode_work_timeout",
+      "game": "dc22",
+      "metrics": {
+        "environment_action_count": 25
+      },
+      "scope": "historical",
+      "seed": 1737620260917,
+      "unit_id": "dc22:seed-1737620260917"
+    },
+    {
+      "arm": "before_first_request",
+      "censored": false,
+      "condition": "before_first_request",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 7398,
+      "unit_id": "r11l:seed-7398"
+    },
+    {
+      "arm": "before_first_request",
+      "censored": false,
+      "condition": "before_first_request",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 17398,
+      "unit_id": "r11l:seed-17398"
+    },
+    {
+      "arm": "after_request",
+      "censored": false,
+      "condition": "after_request",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 7398,
+      "unit_id": "r11l:seed-7398"
+    },
+    {
+      "arm": "after_request",
+      "censored": false,
+      "condition": "after_request",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 17398,
+      "unit_id": "r11l:seed-17398"
+    },
+    {
+      "arm": "after_action",
+      "censored": false,
+      "condition": "after_action",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 7398,
+      "unit_id": "r11l:seed-7398"
+    },
+    {
+      "arm": "after_action",
+      "censored": false,
+      "condition": "after_action",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 17398,
+      "unit_id": "r11l:seed-17398"
+    },
+    {
+      "arm": "between_episodes",
+      "censored": false,
+      "condition": "between_episodes",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 7398,
+      "unit_id": "r11l:seed-7398"
+    },
+    {
+      "arm": "between_episodes",
+      "censored": false,
+      "condition": "between_episodes",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 17398,
+      "unit_id": "r11l:seed-17398"
+    },
+    {
+      "arm": "before_final_aggregation",
+      "censored": false,
+      "condition": "before_final_aggregation",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 7398,
+      "unit_id": "r11l:seed-7398"
+    },
+    {
+      "arm": "before_final_aggregation",
+      "censored": false,
+      "condition": "before_final_aggregation",
+      "costs": {
+        "current_llm_calls": 0,
+        "scripted_http_requests": 2
+      },
+      "disposition": "complete",
+      "failure": null,
+      "game": "r11l",
+      "metrics": {
+        "action": 1,
+        "later_policy_action": true,
+        "tool_result_consumed": true
+      },
+      "scope": "development_proxy",
+      "seed": 17398,
+      "unit_id": "r11l:seed-17398"
+    }
+  ],
+  "run_date": "20260918",
+  "sample_size_budget": {
+    "attempted_units": 10,
+    "censored_units": 0,
+    "completed_units": 10,
+    "effective_independent_group_count": 5,
+    "planned_units": 10,
+    "stop_rule": "Run two scripted episodes at each of five fixed interruption boundaries.",
+    "unit_limit": 10,
+    "unstarted_units": 0
+  },
+  "schema": "carnot.exp7398.v649_arc_checkpoint.v1",
+  "small_ebm_training": {
+    "kind": "none",
+    "performed": false
+  },
+  "solve_provenance": "development_proxy",
+  "source_artifact_hashes": {
+    "AGENTS.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/AGENTS.md",
+      "role": "current_input",
+      "sha256": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a"
+    },
+    "CLAUDE.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "role": "current_input",
+      "sha256": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b"
+    },
+    "CODEX.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "role": "current_input",
+      "sha256": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "role": "current_input",
+      "sha256": "sha256:0cb1d3b3321cbb317313514fcd6d18864937ea0f57a51f85a38be4ab58974b2e"
+    },
+    "openspec/capabilities/research-reporting/spec.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "role": "current_input",
+      "sha256": "sha256:6273946a345667fa6c1474c11e757ae31df90f69098946637b68354e8527af0c"
+    },
+    "ops/arc_solve_registry.yaml": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml",
+      "role": "current_input",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    },
+    "ops/e2e-test-plan.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/e2e-test-plan.md",
+      "role": "current_input",
+      "sha256": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "role": "current_input",
+      "sha256": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e"
+    },
+    "python/carnot/agentic/arc_competition_agent.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_competition_agent.py",
+      "role": "current_input",
+      "sha256": "sha256:168a0f758369392a162a7cf7b73643175e99a3bfacff34210ae9c7bb9d7b4359"
+    },
+    "python/carnot/experiment_7345_v645_arc_resume_check.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7345_v645_arc_resume_check.py",
+      "role": "current_input",
+      "sha256": "sha256:fa09cb395ebb2e655e9030a654ecc175823d4888fac9f9dc971ac7eb880c8192"
+    },
+    "python/carnot/experiment_7358_v646_validation_contract.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7358_v646_validation_contract.py",
+      "role": "current_input",
+      "sha256": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c"
+    },
+    "python/carnot/experiment_7376_v647_arc_outcomes.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7376_v647_arc_outcomes.py",
+      "role": "current_input",
+      "sha256": "sha256:34c93a6ac7c88cedddc773d5b1caf3cb97a8ddd96b2ba7826746f3941eb554bc"
+    },
+    "python/carnot/experiment_7384_v648_arc_invocation_boundary.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7384_v648_arc_invocation_boundary.py",
+      "role": "current_input",
+      "sha256": "sha256:fb3c5a158ad7e1138b0b762a044648bc184110352587d98c2eb2f44d7c98bab6"
+    },
+    "python/carnot/experiment_7398_v649_arc_checkpoint.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7398_v649_arc_checkpoint.py",
+      "role": "current_input",
+      "sha256": "sha256:da9ad048d268bae239b00152b08cdf0a0b3ff0465b68e2782e9af0217ec154e0"
+    },
+    "python/carnot/reporting/experiment_7303_validation_scope.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/reporting/experiment_7303_validation_scope.py",
+      "role": "current_input",
+      "sha256": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead"
+    },
+    "research-program.md": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "role": "current_input",
+      "sha256": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9"
+    },
+    "results/experiment_7376_v647_arc_outcomes.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7376_v647_arc_outcomes.json",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:26f3db4ec7ceeb3b8de805b3e29de31652893e1c2b990fa7b096718debbac0f5"
+    },
+    "results/experiment_7384_v648_arc_invocation_boundary.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6"
+    },
+    "results/raw/experiment_7376_v647_arc_outcomes/episode_rows.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7376_v647_arc_outcomes/episode_rows.json",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:3eb89be391a1c9fe6d033e892eaefdff0396b1d0e38e610820eee6dcbdbec11b"
+    },
+    "results/raw/experiment_7376_v647_arc_outcomes/frozen_schedule.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7376_v647_arc_outcomes/frozen_schedule.json",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:0b76e9f77d88b0ccb0aa2f90a4453b37821fc9494b67681e6e7b35f34f510b40"
+    },
+    "results/raw/experiment_7376_v647_arc_outcomes/live_session.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7376_v647_arc_outcomes/live_session.json",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:69a901da961912bd2172db36b3d6395da4dd3d7a46622b835b506957ba1ca7b5"
+    },
+    "results/raw/experiment_7376_v647_arc_outcomes/receipt_events.jsonl": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7376_v647_arc_outcomes/receipt_events.jsonl",
+      "role": "historical_diagnostic_evidence",
+      "sha256": "sha256:399c85390d7a9fbbf1e46706d438e8f20b9efda3b533546a921d9c6b30872242"
+    },
+    "results/raw/experiment_7398_v649_arc_checkpoint/sidecars/historical_runtime.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/sidecars/historical_runtime.json",
+      "role": "historical_sidecar",
+      "sha256": "sha256:47342026151b8bb879126da003ab476c32b49428a63caa8db0b47a83ef564e8b"
+    },
+    "results/raw/experiment_7398_v649_arc_checkpoint/sidecars/scripted_transport.json": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/sidecars/scripted_transport.json",
+      "role": "development_proxy_sidecar",
+      "sha256": "sha256:4c31004839efceffda28fbfc753c069b3f32e549107aab245c3242a0a7097fa4"
+    },
+    "scripts/arc_loop_solve.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py",
+      "role": "current_input",
+      "sha256": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca"
+    },
+    "scripts/experiment_template.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_template.py",
+      "role": "current_input",
+      "sha256": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+    },
+    "scripts/experiments/experiment_7398_v649_arc_checkpoint.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7398_v649_arc_checkpoint.py",
+      "role": "current_input",
+      "sha256": "sha256:94bea771b4adc0e92a56e82c9a4e8c2ec92cc3a81ac33f717d751282f1f6a246"
+    },
+    "tests/python/test_experiment_7398_v649_arc_checkpoint.py": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+      "role": "current_input",
+      "sha256": "sha256:8abccf9e51ea5b823db99b316a9ece89776ba20de6342a1c7c74ea849ebb637f"
+    }
+  },
+  "started_at_utc": "2026-09-18T19:10:56.804570+00:00",
+  "status": "complete_null_arc_checkpoint_ready_no_live_efficacy_claim",
+  "supervisor_ordering_changed": false,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7398_v649_arc_checkpoint",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7398_v649_arc_checkpoint"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.4420054261572659,
+      "ended_at_utc": "2026-09-18T19:11:09.378792+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:d2d3bbf010cd922ca883ce3500acef031dd0baf119bfd19f43de063c4e714cf8",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7398_v649_arc_checkpoint\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7398_v649_arc_checkpoint.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7398_v649_arc_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7398_v649_arc_checkpoint.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T19:11:08.936479+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7398-validation-ox23vkb_/scoped/basetemp/focused tests/python/test_experiment_7398_v649_arc_checkpoint.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7398-validation-ox23vkb_/scoped/basetemp/focused",
+        "tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 8.923831277992576,
+      "ended_at_utc": "2026-09-18T19:11:18.303082+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:41e937016d59c72b1406d17135b3a98b8846b9b2c0fcf1d74353633166b0a92f",
+      "name": "focused_pytest",
+      "output_tail": ".......................................                                  [100%]\n39 passed in 5.89s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T19:11:09.378826+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7398-validation-ox23vkb_/scoped/coverage/.coverage '--include=*/experiment_7398_v649_arc_checkpoint.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7398-validation-ox23vkb_/scoped/basetemp/coverage tests/python/test_experiment_7398_v649_arc_checkpoint.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7398-validation-ox23vkb_/scoped/coverage/.coverage",
+        "--include=*/experiment_7398_v649_arc_checkpoint.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7398-validation-ox23vkb_/scoped/basetemp/coverage",
+        "tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 19.151915849884972,
+      "ended_at_utc": "2026-09-18T19:11:37.455313+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:04ceb5dcb28c31f94fd652c55edfd0296e7c4286587432ca56af041035952eff",
+      "name": "changed_module_coverage",
+      "output_tail": ".......................................                                  [100%]\n39 passed in 15.04s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-18T19:11:18.303117+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7398_v649_arc_checkpoint.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7398_v649_arc_checkpoint.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7398-validation-ox23vkb_/scoped/coverage/.coverage"
+      },
+      "duration_s": 0.07872035214677453,
+      "ended_at_utc": "2026-09-18T19:11:37.534308+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:2054667e321f2700b1feb3cd955d0f60e025a105e53f93a477df9431ac58b1fa",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                   Stmts   Miss  Cover   Missing\n------------------------------------------------------------------------------------\npython/carnot/experiment_7398_v649_arc_checkpoint.py     449      0   100%\n------------------------------------------------------------------------------------\nTOTAL                                                    449      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T19:11:37.455343+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7398_v649_arc_checkpoint.py scripts/experiments/experiment_7398_v649_arc_checkpoint.py tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7398_v649_arc_checkpoint.py",
+        "scripts/experiments/experiment_7398_v649_arc_checkpoint.py",
+        "tests/python/test_experiment_7398_v649_arc_checkpoint.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.016212288988754153,
+      "ended_at_utc": "2026-09-18T19:11:37.550856+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T19:11:37.534337+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7398_v649_arc_checkpoint.py scripts/experiments/experiment_7398_v649_arc_checkpoint.py tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7398_v649_arc_checkpoint.py",
+        "scripts/experiments/experiment_7398_v649_arc_checkpoint.py",
+        "tests/python/test_experiment_7398_v649_arc_checkpoint.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.010562666924670339,
+      "ended_at_utc": "2026-09-18T19:11:37.561735+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T19:11:37.550891+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7398_v649_arc_checkpoint.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7398_v649_arc_checkpoint.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.14906488708220422,
+      "ended_at_utc": "2026-09-18T19:11:37.711203+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T19:11:37.561754+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7398_v649_arc_checkpoint.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7398_v649_arc_checkpoint.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.02262025512754917,
+      "ended_at_utc": "2026-09-18T19:11:37.734217+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/scoped/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T19:11:37.711258+00:00",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7398-validation-ox23vkb_/e2e/e2e009 tests/python/test_arc_induction_state_persistence.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7398-validation-ox23vkb_/e2e/e2e009",
+        "tests/python/test_arc_induction_state_persistence.py",
+        "-q"
+      ],
+      "duration_s": 11.394436874892563,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/e2e/00_e2e_009.log",
+      "log_sha256": "sha256:f8ead227585ea3cfdcf76c705e414771c1075fb6706f0e26c384a623d7281a28",
+      "name": "e2e_009",
+      "output_tail": "........................................                                 [100%]\n40 passed in 8.31s\n",
+      "passed": true,
+      "scope": "E2E-009 cross-call ARC induction memory",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7398-validation-ox23vkb_/e2e/e2e010 tests/python/test_arc_tool_grammar_transport.py -q",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7398-validation-ox23vkb_/e2e/e2e010",
+        "tests/python/test_arc_tool_grammar_transport.py",
+        "-q"
+      ],
+      "duration_s": 10.14786616503261,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/e2e/01_e2e_010.log",
+      "log_sha256": "sha256:459f7611ddf61c3318f0a26c57196f2bde78cb9cfaafe04c42e25db029eb4865",
+      "name": "e2e_010",
+      "output_tail": "..................................................                       [100%]\n50 passed in 7.00s\n",
+      "passed": true,
+      "scope": "E2E-010 local grammar tool transport",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/arc_loop_solve.py --mechanism e3 --game r11l --max-actions 12 --output /tmp/exp7398-validation-ox23vkb_/e2e/r11l-twelve-action-smoke.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/arc_loop_solve.py",
+        "--mechanism",
+        "e3",
+        "--game",
+        "r11l",
+        "--max-actions",
+        "12",
+        "--output",
+        "/tmp/exp7398-validation-ox23vkb_/e2e/r11l-twelve-action-smoke.json"
+      ],
+      "duration_s": 3.1384796949569136,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/e2e/02_e2e_offline_smoke.log",
+      "log_sha256": "sha256:b636dcf772f68d3f9b00b4425605f06192044ac7043d76c7edad995c0ff05342",
+      "name": "e2e_offline_smoke",
+      "output_tail": "INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00\n2026-09-18 15:12:01 | INFO | Created new scorecard: a6ffd9a5-a2b8-44d0-9fed-1ea85f292832\n2026-09-18 15:12:01 | INFO | Found latest version of r11l: r11l-495a7899 (downloaded: 2026-06-08 07:25:26.282968+00:00)\n2026-09-18 15:12:01 | INFO | Successfully loaded game class R11l from /home/ianblenke/github.com/ianblenke/carnot/environment_files/r11l/495a7899/r11l.py\n  wrote /tmp/exp7398-validation-ox23vkb_/e2e/r11l-twelve-action-smoke.json\n",
+      "passed": true,
+      "scope": "E2E-009 LLM-disabled twelve-action environment smoke",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,sys; from carnot.experiment_7398_v649_arc_checkpoint import independent_reduce_file; r=independent_reduce_file(sys.argv[1]); print(json.dumps(r,sort_keys=True)); raise SystemExit(0 if r['\"'\"'matches_declared'\"'\"'] else 1)' /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "-c",
+        "import json,sys; from carnot.experiment_7398_v649_arc_checkpoint import independent_reduce_file; r=independent_reduce_file(sys.argv[1]); print(json.dumps(r,sort_keys=True)); raise SystemExit(0 if r['matches_declared'] else 1)",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.4360193081665784,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/terminal/00_independent_reducer.log",
+      "log_sha256": "sha256:752095e8e13d85079af33684a31969daba02126af6d1e74cb3da00afd702b8d5",
+      "name": "independent_reducer",
+      "output_tail": "{\"accounting_exact\": true, \"declared_arc_checkpoint_ready_score\": 1, \"matches_declared\": true, \"reduced_arc_checkpoint_ready_score\": 1, \"restart_parity\": true, \"validation_errors\": []}\n",
+      "passed": true,
+      "scope": "independent terminal reduction",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/adversarial_verify.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.5462170350365341,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/terminal/01_adversarial_verify.log",
+      "log_sha256": "sha256:4b13d01dbba94b025713f2d1941fdfe7b25cc4fe067de47e7994557c36adae5e",
+      "name": "adversarial_verify",
+      "output_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "scope": "unchanged adversarial verifier",
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u scripts/verdict_row_consistency_lint.py --strict /home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json",
+      "command_argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "scripts/verdict_row_consistency_lint.py",
+        "--strict",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7398_v649_arc_checkpoint/measured_terminal_candidate.json"
+      ],
+      "duration_s": 0.02242750092409551,
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7398_v649_arc_checkpoint/validation/terminal/02_verdict_row_consistency_strict.log",
+      "log_sha256": "sha256:ee074d5bb8b91ca76fdccddf28bef0972686a2b5f2b4ba3b16b180901e0b938f",
+      "name": "verdict_row_consistency_strict",
+      "output_tail": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "scope": "strict row-to-verdict consistency",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

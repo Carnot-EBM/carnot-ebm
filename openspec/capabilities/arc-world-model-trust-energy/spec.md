@@ -13,6 +13,75 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V649 durable scored-path episode checkpoint — 2026-09-18
+
+**Status:** Specified. This qualification uses host CPU work and scripted
+transport. It supplies no live-model or ARC efficacy evidence.
+
+### REQ-ARC-WMTE-7398: Recover scored-policy actions exactly once after interruption
+
+Experiment 7398 SHALL authenticate the immutable Experiment 7376 journals and
+the quarantined Experiment 7384 receipt before dependent work. It SHALL recover
+completed historical episodes before it classifies the interrupted episode.
+It SHALL keep completed, censored, and unstarted dispositions separate. Raw
+historical invocation receipts and scripted transport receipts SHALL be written
+to separate hash-bound sidecars. Historical positive invocation counters SHALL
+not appear in the current invocation fields.
+
+The reusable child runner SHALL atomically checkpoint each episode event. Each
+event SHALL bind its stable event ID, episode state hash, prior event hash, and
+event content. Resume SHALL reject malformed, truncated, duplicate, reordered,
+tampered, or state-mismatched journals. A durable action SHALL be recovered
+exactly once. A completed episode SHALL not execute again. The runner SHALL
+support interruption before the first request, after a request, after an action,
+between episodes, and before final aggregation.
+
+The qualification SHALL use `make_carnot_agent` and `E3AgentPolicy` through
+scripted HTTP transport. It SHALL exercise the policy, tool result, resume, and
+later-action path with game adapters and solution paths denied. Production flags
+and supervisor order SHALL remain unchanged. The current experiment SHALL load
+no model, perform no LLM generation or board run, credit no solve, and keep
+`promotion_score=0`.
+
+`arc_checkpoint_ready_score` SHALL equal one only when restart parity, exact
+episode accounting, path denial, independent journal reading, affected checks,
+E2E-009, E2E-010, the LLM-off environment smoke, independent artifact reduction,
+adversarial verification, and strict row consistency all pass. A contradiction
+or failed required check SHALL disqualify readiness. The producer SHALL publish
+the terminal JSON atomically and SHALL leave historical artifacts unchanged.
+
+#### SCENARIO-ARC-WMTE-7398-INTERRUPTION-MATRIX
+
+- GIVEN two scored-policy episodes and one selected interruption boundary
+- WHEN the child stops before a request, after a request, after an action,
+  between episodes, or before final aggregation
+- THEN resume retains every durable action exactly once and completes both rows
+- AND completed episodes are not executed again.
+
+#### SCENARIO-ARC-WMTE-7398-JOURNAL-INTEGRITY
+
+- GIVEN a valid atomic episode journal
+- WHEN a reader sees truncated JSON, a duplicate event ID, changed event bytes,
+  a broken hash chain, or a different episode state hash
+- THEN the journal is rejected and readiness remains zero.
+
+#### SCENARIO-ARC-WMTE-7398-PROVENANCE-BOUNDARY
+
+- GIVEN immutable historical model receipts and current scripted transport
+- WHEN the terminal artifact is reduced
+- THEN current model invocation fields remain exact zeros
+- AND each non-current evidence class remains in its own hash-bound sidecar.
+
+#### SCENARIO-ARC-WMTE-7398-SCORED-PATH
+
+- GIVEN scripted replies with adapters and solution paths denied
+- WHEN the real agent factory creates an `E3AgentPolicy`
+- THEN a tool result reaches a later policy request and a valid action checkpoint
+- AND `solve_provenance=development_proxy` with `credited_solve=false`.
+
+Implementation status: specified 2026-09-18. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V648 scored invocation boundary diagnosis — 2026-09-18
 
 **Status:** Specified. This is host-only plumbing evidence and does not authorize
