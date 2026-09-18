@@ -73169,3 +73169,108 @@ strict row consistency SHALL control the atomic terminal write.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7394 and SCENARIO-REPORT-7394-* | Planned: Exp7394 host reducer, thin entrypoint, exact disposition evidence, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+## V649 current-work receipt protocol — 2026-09-18
+
+**Status:** Specified. This host aggregation repairs producer-side provenance and repeats no model inference.
+
+### REQ-REPORT-7395: Separate current invocation evidence from scripted and historical receipts
+
+Exp7395 SHALL provide a shared producer helper that derives current invocation
+counts only from owned current-run events. The helper SHALL emit
+`inference_substrate` as a string, place device and software evidence in
+`inference_substrate_details`, use the closed `execution_venue=host` value,
+and reject an unfinished or contradictory event ledger. A current attempted
+load or generation SHALL set `model_invoked=true`, including failed attempts.
+
+Scripted transport events and historical model receipts SHALL be written to
+separate immutable JSON sidecars. The current artifact SHALL reference each
+sidecar by path, byte hash, and scope. It SHALL not nest a sidecar's positive
+invocation counters or substrate declaration as current provenance. Small EBM
+training SHALL remain in `small_ebm_training` and SHALL not imply an LLM load.
+
+Exp7395 SHALL replay the unchanged Exp7383 and Exp7384 candidates through the
+unchanged adversarial verifier and preserve their findings. It SHALL run a
+correctly scoped fixture through that verifier and the strict row reader.
+Mutations SHALL reject an unreported load, a falsified duration, a dropped
+failed call, a missing completion, an invalid venue, and a changed sidecar
+hash. A clean fixture SHALL not count as fresh model evidence.
+
+The assignment reducer replay SHALL preserve integer-literal parsing and keep
+source-literal fidelity separate from SAT extendibility. Its usable threshold
+SHALL be `>= 3` of four. Exp7371 proof evidence SHALL be cold-replayed without
+changing its bytes. The old Exp7372 and V648 artifacts SHALL retain their
+original verdicts, flags, and historical scope.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL freeze the eight required names, preserve command-local
+`COVERAGE_FILE`, reject `full_python_suite`, and require 100 percent coverage
+for the new modules and the previously uncovered Exp7383 reducer paths. A real
+affected failure SHALL disqualify readiness.
+
+Exp7395 SHALL compare the active V649 YAML with a V649 Markdown Exact Task
+Contract when that authority exists. It SHALL compare fourteen ordered task
+IDs, titles, deliverables, phases, substrate classes, and structured gates.
+Missing, reordered, and wrong-field controls SHALL fail. This contract result
+is advisory and SHALL not cancel independent branch work.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. It SHALL record measured duration, UTC and monotonic
+phase spans, source hashes, unit rows, budgets, categorized gates, exact
+validation receipts, repository health, and field principles. It SHALL write
+terminal JSON atomically after cold replay, adversarial verification, and
+strict row consistency. No numbered E2E applies.
+
+`assignment_reducer_ready_score` SHALL equal one only when assignment
+reduction, proof replay, focused coverage, and required validation pass.
+`receipt_protocol_ready_score` SHALL independently require the clean fixture,
+all receipt mutations, and terminal readers. `promotion_score` SHALL remain
+zero. A narrow receipt failure SHALL not cancel other milestone branches.
+
+#### SCENARIO-REPORT-7395-CURRENT: Owned current events are the only current counters
+
+**Given** current, scripted, and historical invocation evidence
+**When** the shared helper builds a receipt
+**Then** only owned current events determine `model_invoked` and current counts
+**And** scripted and historical evidence remains in hash-bound sidecars.
+
+#### SCENARIO-REPORT-7395-MUTATIONS: Receipt defects fail at the producer boundary
+
+**Given** one valid no-model receipt fixture
+**When** load, duration, failure, completion, venue, and sidecar-hash mutations are applied
+**Then** each mutation fails its named producer or unchanged-reader check
+**And** the valid fixture remains clean without becoming model evidence.
+
+#### SCENARIO-REPORT-7395-REDUCER: Assignment syntax and satisfiability remain separate
+
+**Given** the four immutable Exp7372 calls and the unchanged Exp7371 proof boundary
+**When** the published reducers cold-replay them
+**Then** at least three usable integer-literal responses qualify the reducer
+**And** source fidelity, SAT extendibility, and historical eligibility remain separate.
+
+#### SCENARIO-REPORT-7395-VALIDATION: The affected plan is exact and reaches full coverage
+
+**Given** the Exp7358 planner and explicit changed modules and tests
+**When** Exp7303 executes the frozen eight checks
+**Then** focused tests, changed-module coverage, Ruff, mypy, imports, and spec coverage pass
+**And** no full Python suite command is appended or launched.
+
+#### SCENARIO-REPORT-7395-CONTRACT: Fourteen V649 rows are advisory evidence
+
+**Given** the active V649 YAML and its declared Markdown authority
+**When** both authorities are parsed independently
+**Then** all fourteen ordered fields and gates agree or exact differences are retained
+**And** missing, reordered, and wrong-field mutations are rejected without gating other branches.
+
+#### SCENARIO-REPORT-7395-ARTIFACT: Cold readers control atomic terminal publication
+
+**Given** raw reducer, receipt, contract, and validation rows
+**When** a fresh process reloads the measured candidate
+**Then** source, count, duration, gate, score, class, or checksum drift fails
+**And** only the validated terminal artifact is published atomically.
+
+## Implementation Status (REQ-REPORT-7395)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7395 and SCENARIO-REPORT-7395-* | Planned: shared current-work receipt helper, Exp7395 host reducer, thin entrypoint, and hashed sidecars | Planned: focused RED tests, 100% changed-module coverage including Exp7383 paths, scoped validation, entrypoint E2E, cold replay, unchanged adversarial verifier, strict row consistency, and exact-test spec coverage |

@@ -5884,3 +5884,34 @@ CEGIS-refinement history (the standing hold this scan's Finding 2 respects) · a
 - Scope boundary: this advisory map does not change the fourteen-task roster.
   It adds no runtime dependency and creates no local science result.
 <!-- EXP7381-V648-SOURCE-INGESTION-20260918-END -->
+
+<!-- EXP7395-V649-SOURCE-INGESTION-20260918-START -->
+## 2026-09-18 V649 source-to-method ingestion — INGESTED
+
+This mapping copies the dated V649 planning review from
+`research-references.md`. It adds no new search or local reproduction claim.
+
+| Primary source and date | Finding and bounded research use |
+|---|---|
+| [ORCA: Online Reasoning Calibration, 2604.01170v2](https://arxiv.org/html/2604.01170v2), revised 2026-08-06 | Test a small online energy-offset adapter with verified delayed feedback, frozen predictions, and complete update cost. This is not ORCA replication. Carnot claims no hidden-state meta-learning or conformal theorem transfer. |
+| [CORD: Prediction-Preserving Repair for Post-hoc Calibration, 2609.01072v2](https://arxiv.org/abs/2609.01072v2), revised 2026-09-02 | Count raw decision changes, calibrated decision changes, and typed policy actions separately. Keep answer identity fixed. Do not apply its multiclass construction to a binary risk head. |
+| [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047), 2026-07-19 | Record source size, query type, solver effort, parse outcome, and semantic outcome separately on the frozen implication stream. Do not choose a stream after seeing outputs. |
+| [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792), 2026-07-22 | Preserve separate prediction and commit phases, restart equivalence, and erasure controls. Its fixed-budget learning-speed result is limited to procedural recall. |
+| [Mirror Online Conformal Prediction with Intermittent Feedback, 2503.10345v5](https://arxiv.org/abs/2503.10345v5), revised 2025-07-07 | Use explicit observation delays and missing-label controls. Prediction-set coverage does not certify selective action risk under drift. |
+
+- Energy reasoning: EBT, ARM–EBM, and HSRM remain architecture context. Do
+  not call text features hidden states without authenticated GGUF access.
+- Constraint satisfaction: PAL and T-SKM-Net reinforce the separation of
+  syntax, satisfiability, and source meaning. Existing implication proofs get
+  a trial before a new projection stack.
+- Calibration and KANs: Distributional EBMs, PostHoc FREE, and KAC motivate
+  confound checks and calibrated splines. Defer architecture expansion until
+  current feature-collision diagnostics justify it.
+- Decoding, sampling, and hardware: the reviewed VLM energy-guided decoder is
+  outside this text scope. Preserve separate learning, sampling, and feasible
+  assignment claims. Include orchestration, transfer, verification, and update
+  costs in placement analysis.
+- Access boundary: the dated review retained partial Semantic Scholar results,
+  primary arXiv/OpenReview links, and vendor context. It did not establish a
+  citation census, owned Z1 hardware, or a reproducible Kona implementation.
+<!-- EXP7395-V649-SOURCE-INGESTION-20260918-END -->

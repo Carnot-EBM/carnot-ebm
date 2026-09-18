@@ -324,3 +324,25 @@ def test_scenario_report_7383_validator_rejects_structural_mutations(tmp_path: P
 
     terminal = mod._terminal_commands(ROOT, tmp_path / "candidate.json")
     assert [row.spec.name for row in terminal] == list(mod.TERMINAL_CHECK_NAMES)
+
+
+def test_req_report_7395_finishes_exp7383_numeric_and_hash_paths(tmp_path: Path) -> None:
+    """REQ-REPORT-7395 covers Exp7383 integer parsing and source-hash failures."""
+
+    assert mod.compare("is", None, None) is True
+    assert mod._response_content({"raw_response": {"choices": []}}) is None
+
+    calls, formulas = _raw_evidence()
+    changed = deepcopy(calls)
+    changed[0]["raw_reply"] = '{"assignments":[1.0,-2]}'
+    changed[0]["raw_reply_sha256"] = mod.sha256_text(changed[0]["raw_reply"])
+    changed[0]["raw_response"]["choices"][0]["message"]["content"] = changed[0]["raw_reply"]
+    changed[0]["decoded_assignments"] = None
+    reduced = mod.reduce_assignment_receipts(changed, formulas)
+    assert "variable_reference_invalid:0" in reduced["errors"]
+    assert reduced["rows"][0]["sat_extendible"] is False
+
+    artifact = mod.build_artifact_for_test(ROOT, _passing_receipts())
+    artifact["source_artifact_hashes"] = {"missing.json": "sha256:bad"}
+    artifact["reproducibility_checksum"] = mod.artifact_checksum(artifact)
+    assert "source_hash_mismatch:missing.json" in mod.validate_artifact(artifact, root=ROOT)
