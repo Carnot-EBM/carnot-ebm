@@ -18163,3 +18163,4 @@ code |
 | 2026-09-18 06:19 UTC | Prototype typed energy decisions and seal calibrat | OK | 113 passed, 1 warning in 9.91s |
 | 2026-09-18 06:39 UTC | Repair assignment receipt reduction without repeat | OK | 97 passed, 1 warning in 12.46s |
 | 2026-09-18 07:02 UTC | Harden the live ARC child invocation and first-act | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 120 passed, 1 warning in 10.96s |
+| 2026-09-18 07:35 UTC | Train and measure calibrated Gibbs decisions again | OK | 93 passed, 1 warning in 9.18s |
