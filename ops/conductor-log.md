@@ -18165,3 +18165,4 @@ code |
 | 2026-09-18 07:02 UTC | Harden the live ARC child invocation and first-act | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 120 passed, 1 warning in 10.96s |
 | 2026-09-18 07:35 UTC | Train and measure calibrated Gibbs decisions again | OK | 93 passed, 1 warning in 9.18s |
 | 2026-09-18 08:45 UTC | Measure continuous decision learning with delayed  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 10.45s |
+| 2026-09-18 08:48 UTC | Audit policy calibration leakage and continuous-le | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7386-online-decisions.online_capture_complete_score (actual=0 == expected=1) |
