@@ -251,6 +251,109 @@ final-test readers,
 **then** only the trusted evaluator can read final-test labels. Fixture checks
 may prove plumbing, but they cannot establish learned calibration value.
 
+### REQ-AUTO-7385: Execute the sealed calibrated-decision training protocol
+
+Exp7385 SHALL authenticate the exact Exp7382 artifact before dependent work.
+The check SHALL include its byte hash, terminal status, verdict class,
+adversarial flag, readiness score, required-gate summary, partition hash,
+partition membership, source corpus hash, and trusted-label sidecar hash.
+Missing, blocked, partial, disqualified, flagged, quarantined, or changed input
+SHALL produce a terminal blocked artifact. The block SHALL name the exact path,
+field, expected value, and observed value. Historical diagnostic inputs SHALL
+not become current readiness evidence.
+
+The experiment SHALL use the frozen Exp7382 rows, five seeds, five arms,
+2-4-1 architecture, Adam settings, and 500-step limit. It SHALL fit only on
+training rows. The five arms SHALL remain training prevalence, L2 logistic,
+raw balanced-NCE Gibbs, prior-corrected NCE Gibbs, and natural-prevalence
+Bernoulli Gibbs. The last arm is the pre-registered primary value arm. Final
+outcomes SHALL not select an arm or architecture. Each arm and seed SHALL keep
+its real loss curve, initial and final weight hashes, update count, numeric
+weights, optimizer state, and checkpoint hash.
+
+Affine probability calibration SHALL use only probability-calibration groups.
+Policy selection SHALL use only policy-calibration groups. It SHALL evaluate
+all frozen threshold pairs. It SHALL select the largest certified coverage,
+then the largest utility, then the earliest registered pair. Certification
+SHALL use the pre-registered 250-test correction before final labels are read.
+An empty or uncertified action SHALL escalate.
+
+After all weights, transforms, and policies are sealed, a fresh trusted
+subprocess SHALL score final-test labels exactly once. Its request SHALL contain
+plain numeric state only. It SHALL reject missing hashes, extra keys, wrong
+shapes, non-finite values, and executable payloads. A direct Gibbs energy and
+an independent NumPy recomputation SHALL agree on development inputs before
+final scoring.
+
+The artifact SHALL emit one final row for every arm, seed, and final group.
+Each row SHALL contain the group ID, label, raw energy, calibrated probability,
+typed decision, Brier contribution, log-loss contribution, correctness, action
+risk, and measured scoring cost. It SHALL retain prevalence and logistic rows
+when a learned arm wins. It SHALL report Brier, log loss, AUROC, PR-AUC,
+prevalence, typed-policy risk, coverage, utility, policy certificates, and
+10,000-draw paired group intervals with seed 7382307.
+
+`calibration_value_score` SHALL equal one only when the primary
+natural-prevalence Bernoulli Gibbs arm has a Brier interval strictly below both
+controls, non-worse mean log loss against both controls, certified and observed
+action risk within the registered budgets, at least 0.25 coverage, and no
+paired coverage loss against logistic. A valid efficacy miss SHALL be a
+completed null. `decision_capture_complete_score` SHALL depend on sealed row
+and validation completeness, not benefit. `promotion_score` SHALL remain zero.
+The evidence SHALL remain a reused single-archive result and SHALL not close a
+general verifier-moat gap.
+
+The current run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current LLM invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. It SHALL record CPU/JAX work and Gibbs updates under
+`small_ebm_training`. It SHALL save numeric checkpoints below
+`results/checkpoints/experiment_7385_v648_decision_training/`.
+
+The workflow SHALL use the Exp7358 command-plan boundary and the Exp7303
+runner. It SHALL run focused tests, 100 percent changed-module coverage, scoped
+Ruff check and format, changed-module mypy, scoped specification coverage, a
+cold artifact reducer, adversarial verification, strict verdict-row
+consistency, the declared entrypoint, and an independent cold replay. No
+numbered E2E check applies because this is an isolated experiment.
+
+#### SCENARIO-AUTO-7385-01: Ineligible protocol input blocks before fitting
+
+**Given** an Exp7382 artifact with a changed hash, ineligible terminal class,
+failed required gate, or adversarial flag,
+**when** Exp7385 checks its prerequisites,
+**then** it emits an exact `blocked_*` gate summary
+**and** performs no fit, calibration, policy selection, or final scoring.
+
+#### SCENARIO-AUTO-7385-02: Training and calibration roles stay sealed
+
+**Given** the authenticated Exp7382 partition membership,
+**when** all arm and seed states are fitted and calibrated,
+**then** weights use training rows only and affine transforms use probability
+calibration rows only
+**and** every completed fit has a numeric checkpoint and real update record.
+
+#### SCENARIO-AUTO-7385-03: Policy choices precede final-test access
+
+**Given** fitted and probability-calibrated states,
+**when** threshold pairs are certified and selected,
+**then** only policy-calibration representatives determine the selection
+**and** empty or uncertified actions map to escalation.
+
+#### SCENARIO-AUTO-7385-04: Trusted scoring rejects unsafe state
+
+**Given** a sealed plain-numeric scoring request,
+**when** it has an extra key, wrong shape, non-finite value, executable value,
+or missing protocol hash,
+**then** the trusted scorer rejects it before it reads final labels
+**and** valid state produces exactly one row per arm, seed, and final group.
+
+#### SCENARIO-AUTO-7385-05: Completion and benefit remain independent
+
+**Given** all pre-registered rows and required checks are complete,
+**when** the primary Brier, log-loss, risk, and coverage conjunction misses,
+**then** decision capture is complete and calibration value remains zero
+**and** the terminal verdict is null rather than partial or positive.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
