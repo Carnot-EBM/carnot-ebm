@@ -73400,3 +73400,126 @@ inspect the exact candidate before atomic terminal publication.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7396 and SCENARIO-REPORT-7396-* | Implemented: Exp7396 static audit module, thin entrypoint, diagnosis rows, and terminal artifact | Verified: focused spec-linked tests pass with 100% changed-module coverage; frozen affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage pass |
+
+## V649 delayed affine energy calibration — 2026-09-18
+
+**Status:** Specified. This experiment tests a bounded adapter over a frozen
+Gibbs representation. It does not reuse the disqualified V648 online result.
+
+### REQ-REPORT-7397: Adapt only a delayed two-scalar energy calibration
+
+Exp7397 SHALL authenticate the exact Exp7382 protocol, Exp7385 training
+artifact, source corpus, and affected-check contract before dependent work.
+A failed structured gate SHALL produce a terminal `blocked_*` artifact. Its
+`gate_check_summary` SHALL name the upstream path, check, field, expected
+value, and observed value.
+
+The experiment SHALL fit a 2-4-1 Gibbs head on the frozen initialization
+groups only. It SHALL use natural-prevalence Bernoulli loss, seeds 7397001
+through 7397005, and at most 500 steps. Stream replay SHALL freeze every
+Gibbs weight. The adaptive arm SHALL update only `a` and `b` in
+`p_incorrect = sigmoid(a * E + b)`. Each newly verified label SHALL cause one
+Bernoulli-loss gradient step with learning rate 0.01 and gradient norm capped
+at one. The update SHALL project `a` to `[0.25, 4]` and `b` to `[-8, 8]`.
+
+Each event SHALL seal its prediction before feedback can become visible. The
+ledger SHALL include the feedback availability index, label authority,
+numeric state, and state hash. Missing, early, repeated, non-finite, or erased
+feedback SHALL not cause an unauthorized update. Restart and erasure replay
+SHALL reproduce the corresponding state exactly.
+
+The replay SHALL use Exp7382's group-disjoint initialization and later-group
+split. It SHALL never read final-test labels. It SHALL preserve the original
+hash order and one declared reversed-block sensitivity order. Neither order
+is real chronology. It SHALL measure delay one as primary. Delay 32 and a
+deterministic 25 percent missing-label mask SHALL remain separate sensitivity
+conditions. Each arm SHALL receive the same event and feedback mask.
+
+The frozen arms SHALL be static affine Gibbs, adaptive affine Gibbs, online
+logistic on the two raw features, recent-frequency Beta-Binomial with a 128
+event window and Beta(1,1), and an adaptive no-feedback control. Thresholds
+SHALL remain fixed after selection on the disjoint policy-calibration role.
+The risk budgets and simultaneous correction from Exp7382 SHALL remain
+unchanged. The V648 full-head result SHALL appear only as ineligible context.
+
+Before measured replay, analytic controls SHALL cover informative and constant
+energy, future-label denial, duplicate feedback, restart equality, update
+erasure, non-finite input, constant predictions, and no-feedback behavior.
+Rows SHALL retain Brier loss, log loss, action, churn contribution, prediction
+latency, update latency, state, and disposition.
+
+The primary scientific gate SHALL use 10,000 paired moving-block bootstrap
+draws, block length 32, and seed 7399307. A block length of 64 SHALL remain a
+sensitivity result. Seeds SHALL be averaged within event units. The adaptive
+arm SHALL need an upper Brier-delta interval below zero against each practical
+control, non-worse mean log loss, observed action risks within the fixed
+budgets, and no coverage loss. A failed benefit gate SHALL remain a valid
+terminal null. This replay supplies no conformal or real-time chronology
+guarantee.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero
+current invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string. It SHALL
+describe CPU, JAX, and exact-solver work. Device detail SHALL stay in
+`inference_substrate_details`. `promotion_score` SHALL remain zero.
+`delayed_adapter_ready_score` SHALL depend on sealed protocol, tested update
+authority, complete rows, and successful required checks. It SHALL not depend
+on scientific efficacy.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL include worktree imports, focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy,
+and exact-test specification coverage. It SHALL use a private existing base
+temp parent and a command-local coverage file. It SHALL not add a full-suite
+command. The declared entrypoint and a fresh-process cold replay SHALL serve
+as the capability E2E. Adversarial verification and strict row consistency
+SHALL inspect the exact measured candidate before atomic publication.
+
+#### SCENARIO-REPORT-7397-AUTHORITY: Prediction precedes one authorized commit
+
+**Given** a sealed prediction with delayed verified feedback,
+**when** the label becomes available,
+**then** one clipped projected affine update is committed
+**and** early, missing, repeated, and erased feedback cannot add an update.
+
+#### SCENARIO-REPORT-7397-FROZEN: The Gibbs representation never changes
+
+**Given** an initialized 2-4-1 Gibbs head and an online replay,
+**when** adaptive feedback updates occur,
+**then** the Gibbs weight hash remains constant
+**and** only the two affine scalars can change.
+
+#### SCENARIO-REPORT-7397-REPLAY: Frozen groups and masks stay paired
+
+**Given** the Exp7382 initialization and later-group identities,
+**when** both registered orders and all feedback conditions run,
+**then** every arm receives the same group and feedback mask
+**and** no final-test label is read.
+
+#### SCENARIO-REPORT-7397-CONTROLS: Analytic failures are detected before measurement
+
+**Given** informative, constant, early, duplicate, restart, erasure,
+non-finite, and no-feedback fixtures,
+**when** the development controls execute,
+**then** every expected transition and denial is recorded before real replay.
+
+#### SCENARIO-REPORT-7397-GATE: Paired event units control the benefit claim
+
+**Given** complete primary delay-one rows with seeds averaged per event,
+**when** the sealed moving-block procedure compares the adaptive arm,
+**then** all three practical-control Brier intervals and the registered
+log-loss, risk, and coverage checks determine efficacy without affecting
+mechanism readiness.
+
+#### SCENARIO-REPORT-7397-ARTIFACT: Scoped checks control atomic publication
+
+**Given** exact sources, raw rows, state transitions, and the frozen check plan,
+**when** fresh-process replay and unchanged strict readers inspect the candidate,
+**then** changed sources, reductions, scores, gates, or checks fail
+**and** only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-REPORT-7397)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7397 and SCENARIO-REPORT-7397-* | Implemented: delayed calibration module, experiment module, thin entrypoint, and terminal null artifact | Verified: spec-linked unit tests pass with 100% changed-module coverage; affected checks, entrypoint E2E, cold replay, adversarial verification, and strict row consistency pass |
