@@ -20126,3 +20126,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-18: Prototype a bounded energy-offset learner with delayed feedback (⚠️ Research Finding) — honest_verdict=complete_null_delayed_affine_registered_benefit_not_demonstrated; results/experiment_7397_v649_delayed_adapter.json
 - 2026-09-18: Qualify durable ARC episodes across timeout and restart (⚠️ Research Finding) — honest_verdict=complete_null_arc_checkpoint_ready_no_live_efficacy_claim; results/experiment_7398_v649_arc_checkpoint.json
 - 2026-09-18: Measure continuous affine calibration on later verified outcomes (⚠️ Research Finding) — honest_verdict=complete_null_online_registered_benefit_not_demonstrated; results/experiment_7399_v649_online_trial.json
+- 2026-09-18: Requalify bounded Qwen3.8 assignment transport (⚠️ Research Finding) — honest_verdict=complete_circular_positive_assignment_transport_ready_4_of_4; results/experiment_7400_v649_assignment_canary.json
