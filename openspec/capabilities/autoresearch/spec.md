@@ -354,6 +354,105 @@ or missing protocol hash,
 **then** decision capture is complete and calibration value remains zero
 **and** the terminal verdict is null rather than partial or positive.
 
+### REQ-AUTO-7386: Replay delayed-feedback online decisions without future-label leakage
+
+Exp7386 SHALL authenticate the exact Exp7382 protocol artifact before dependent
+work. The gate SHALL check the artifact hash, terminal status, allowed verdict
+class, adversarial flag, ready score, required-gate summary, partition hash,
+source corpus hash, and the frozen online membership. A missing, quarantined,
+blocked, partial, disqualified, flagged, or changed input SHALL produce a
+terminal `blocked_*` artifact with the exact expected and observed gate values.
+
+The experiment SHALL initialize a natural-prevalence Bernoulli Gibbs head and
+an L2 logistic comparator on only the frozen initialization half. It SHALL use
+seeds 7382001 through 7382005. It SHALL replay only Exp7382 later groups in the
+fixed hash order and in a constructed four-block feature-quantile order. The
+second order is a covariate-shift challenge and SHALL not relabel examples.
+
+Each order SHALL run feedback delays of zero and eight group decisions. Every
+fourth group SHALL omit feedback by a label-blind position rule. Each adaptive
+arm SHALL predict and record its probability, typed decision, state version,
+pending feedback count, and state hash before feedback is visible. Admitted
+feedback SHALL cause at most one SGD step per group. Replay buffers SHALL hold
+at most 128 groups. A frozen Gibbs arm, bounded online Gibbs arm, online
+logistic arm, recent-frequency arm, and no-feedback Gibbs arm SHALL remain
+separate. The experiment SHALL also run a feedback-permutation control with the
+same delays and update count.
+
+After half of each stream, every adaptive arm SHALL cold-restart from durable
+numeric state. Development controls SHALL cover corrupt-state rollback and a
+revoked-label update. Erasure controls SHALL restore the snapshot from before
+each later block and compare predictions on the same later groups. No future
+label SHALL affect an earlier prediction.
+
+The artifact SHALL retain every group, arm, seed, order, and delay outcome.
+Each row SHALL include probability, loss, action, update count, model lineage,
+state hash, pending feedback, service time, and feedback admission. It SHALL
+report 10,000 paired moving-block resamples with seed 7386307 and block length
+32. It SHALL repeat the frozen sensitivity check at block length 64. Identical
+block indices SHALL compare arms, with seeds averaged inside each block.
+
+Conditions SHALL remain separate. Online value requires the later-block Brier
+95-percent upper delta below zero against frozen Gibbs and online logistic, no
+increase in incorrect accepts at matched coverage, and strictly smaller benefit
+after true-feedback erasure. A permutation benefit or zero decision change
+invalidates a learning claim. These intervals describe only the fixed archive
+replay. They are not IID population certificates.
+
+`online_capture_complete_score` SHALL equal one only when all registered
+streams, controls, causal ordering checks, restart checks, and required
+validation complete. `online_learning_value_score` SHALL equal one only when
+every value gate passes for every order and delay condition. A valid efficacy
+miss SHALL be a completed null. `promotion_score` SHALL remain zero.
+
+The run SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM
+invocation counts, `inference_substrate_class=no_model_load`, and
+`execution_venue=host`. It SHALL record CPU/JAX fitting under
+`small_ebm_training`, set `continuous_self_learning_task=true`, keep the
+controller experiment-local and default-off, and make no unmeasured speedup
+claim. The validation workflow SHALL use the Exp7358 command plan and Exp7303
+runner. It SHALL execute the declared entrypoint, an independent cold replay,
+adversarial verification, and strict verdict-row consistency. No numbered E2E
+check applies to this isolated experiment.
+
+#### SCENARIO-AUTO-7386-01: An ineligible protocol blocks before fitting
+
+**Given** an Exp7382 artifact with a changed hash, unavailable terminal class,
+failed required gate, or adversarial flag,
+**when** Exp7386 checks all upstream conditions,
+**then** it emits a terminal blocked artifact with an exact gate summary
+**and** performs no initialization, replay, update, or resampling.
+
+#### SCENARIO-AUTO-7386-02: Prediction precedes delayed feedback
+
+**Given** a frozen stream and a delay of zero or eight decisions,
+**when** an adaptive arm handles one group,
+**then** its durable prediction references the state that existed before any
+feedback released at that decision
+**and** omitted or revoked feedback never changes the adaptive state.
+
+#### SCENARIO-AUTO-7386-03: Restart and rollback preserve causal state
+
+**Given** a durable midpoint snapshot and a pre-update snapshot,
+**when** the controller cold-restarts or encounters corrupt state,
+**then** valid state resumes with identical predictions and lineage
+**and** corrupt state rolls back without admitting an update.
+
+#### SCENARIO-AUTO-7386-04: Erasure and permutation expose false learning
+
+**Given** the same later groups and admitted-update budget,
+**when** true feedback is erased or permuted,
+**then** paired rows compare the resulting probabilities and actions
+**and** retained benefit under erasure or permutation prevents a value claim.
+
+#### SCENARIO-AUTO-7386-05: Completion is independent of online value
+
+**Given** all streams, controls, rows, resamples, and required checks complete,
+**when** any later-block benefit, action-safety, erasure, permutation, or
+decision-change gate fails,
+**then** online capture remains complete and online learning value stays zero
+**and** the terminal verdict is complete null rather than partial or positive.
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
