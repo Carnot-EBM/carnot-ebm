@@ -18172,3 +18172,4 @@ code |
 | 2026-09-18 08:54 UTC | Measure adapter-withheld live ARC after first-acti | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7384-arc-invocation-boundary.arc_invocation_ready_score (actual=0 == expected=1) |
 | 2026-09-18 09:29 UTC | Recompute frozen Ising evidence with explicit supp | OK | 94 passed, 1 warning in 53.36s |
 | 2026-09-18 10:51 UTC | Bound decision-head placement and preserve attache | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ependent_reduc |
+| 2026-09-18 12:14 UTC | Bound decision-head placement and preserve attache | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: te:running] Th |
