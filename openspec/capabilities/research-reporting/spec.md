@@ -73615,3 +73615,109 @@ mechanism readiness.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7397 and SCENARIO-REPORT-7397-* | Implemented: delayed calibration module, experiment module, thin entrypoint, and terminal null artifact | Verified: spec-linked unit tests pass with 100% changed-module coverage; affected checks, entrypoint E2E, cold replay, adversarial verification, and strict row consistency pass |
+
+## V649 independent online-trial audit — 2026-09-18
+
+**Status:** Specified. This host aggregation always diagnoses the attempted
+Exp7399 branch. It confirms value only from eligible, complete evidence.
+
+### REQ-REPORT-7401: Audit the attempted online branch without a clean-producer pre-gate
+
+Exp7401 SHALL authenticate the exact Exp7397 and Exp7399 artifacts, the sealed
+Exp7382 protocol, the Exp7385 training artifact, the source corpus, and every
+numeric checkpoint used by Exp7399. It SHALL record each source byte hash and
+the producer's original verdict and adversarial flag in a hash-bound sidecar.
+It SHALL not copy historical invocation counts into current invocation fields.
+
+No whole-task structured pre-gate applies. Exp7401 SHALL diagnose present but
+ineligible evidence. Missing unchanged inputs SHALL produce a terminal
+`blocked_*` artifact. Invalid present evidence SHALL produce a terminal
+`disqualified` artifact. Both outcomes SHALL name the exact failed upstream
+field in `gate_check_summary`. Only eligible, complete evidence can confirm
+online value.
+
+In a fresh process, Exp7401 SHALL independently rebuild every registered
+prediction from code-free checkpoints and sealed raw features. It SHALL
+independently apply delayed affine and logistic gradient updates, recent-label
+updates, typed action selection, Brier loss, log loss, action-risk
+denominators, group summaries, paired moving-block intervals, cold restart,
+and prior-update erasure. The audit SHALL not import a producer reducer.
+Changing a typed action SHALL remain separate from correcting the original
+answer.
+
+The audit SHALL retain one compact row for every ordering, feedback condition,
+seed, arm, and event. Each row SHALL contain the metric contributions, action,
+action harm, cost, disposition, and a comparison with the producer row. It
+SHALL retain failed, censored, and unstarted dispositions. A prevalence
+baseline is valid, but a learned constant scorer SHALL not claim
+discrimination.
+
+Private copies SHALL test a future-label leak, a duplicate update, a swapped
+partition, a missing cost, a changed probability, and deletion of a favorable
+seed. Each mutation SHALL be rejected by the check that owns that boundary.
+
+`online_audit_complete_score` SHALL equal one only when independent row,
+update, metric, interval, restart, erasure, mutation, and required validation
+checks pass. `online_value_confirmed_score` SHALL equal one only when the
+producer is eligible and its original registered efficacy conjunction also
+passes after independent reduction. A valid failed efficacy gate SHALL remain
+terminal `null`. Exp7401 SHALL make no generator, population-calibration,
+real-time, or deployment claim. `promotion_score` SHALL remain zero.
+
+The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string that describes
+the CPU, NumPy, JAX checkpoint, and exact-reducer work. Device and software
+details SHALL remain in `inference_substrate_details`. Small Gibbs or affine
+training SHALL appear only in `small_ebm_training`.
+
+The affected command plan SHALL come from Exp7358 and execute through Exp7303.
+It SHALL include worktree imports, focused pytest with `-n 0`, separate 100
+percent changed-module coverage, scoped Ruff check and format, changed-module
+mypy, and exact-test specification coverage. It SHALL preserve command-local
+`COVERAGE_FILE`, use an existing private base-temp parent, and omit the full
+Python suite. The declared entrypoint and fresh-process cold replay SHALL serve
+as the capability E2E. The unchanged adversarial verifier and strict verdict
+row consistency reader SHALL inspect the exact measured candidate before
+atomic terminal publication.
+
+#### SCENARIO-REPORT-7401-DIAGNOSIS: Ineligible evidence stays diagnosable
+
+**Given** an attempted Exp7399 artifact is present but fails an eligibility field
+**When** Exp7401 authenticates and independently reduces its raw evidence
+**Then** valid diagnostic rows remain in a disqualified terminal artifact
+**And** no value, readiness, promotion, generator, or population claim is made.
+
+#### SCENARIO-REPORT-7401-REPLAY: Fresh arithmetic reproduces every unit
+
+**Given** sealed checkpoints, features, orders, masks, policies, and feedback delays
+**When** the fresh audit process replays each registered unit
+**Then** probabilities, updates, losses, actions, risks, intervals, restart, and erasure reproduce
+**And** the audit imports no producer reducer.
+
+#### SCENARIO-REPORT-7401-MUTATIONS: Six private evidence changes fail closed
+
+**Given** private copies of otherwise valid evidence
+**When** future labels, duplicate updates, partitions, costs, probabilities, or seeds change
+**Then** all six mutations are rejected by named checks
+**And** no mutated evidence reaches the published source files.
+
+#### SCENARIO-REPORT-7401-VALUE: Completion and online value remain separate
+
+**Given** complete independently reproduced evidence whose original efficacy conjunction fails
+**When** Exp7401 classifies the terminal result
+**Then** `online_audit_complete_score=1` and `online_value_confirmed_score=0`
+**And** the honest verdict is complete null rather than blocked or partial.
+
+#### SCENARIO-REPORT-7401-ARTIFACT: Fresh readers control publication
+
+**Given** exact sources, compact audit rows, mutation rows, and scoped receipts
+**When** fresh-process replay and unchanged strict readers inspect the candidate
+**Then** changed evidence, reductions, scores, gates, hashes, or validation scope fail
+**And** only a valid terminal JSON is published atomically.
+
+## Implementation Status (REQ-REPORT-7401)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7401 and SCENARIO-REPORT-7401-* | Planned: independent audit module, thin entrypoint, source sidecar, compact rows, and terminal artifact | Planned: spec-linked RED tests, 100 percent changed-module coverage, exact affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped spec coverage |
