@@ -72967,3 +72967,108 @@ strict row consistency before an atomic terminal write. No numbered E2E applies.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7383 and SCENARIO-REPORT-7383-* | Planned: Exp7383 reducer module, thin entrypoint, raw diagnosis, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V648 decision-head hardware placement — 2026-09-18
+
+**Status:** Specified. This host analysis performs no model or board operation.
+
+### REQ-REPORT-7393: Bound placement from current stage costs and preserve board prerequisites
+
+Exp7393 SHALL authenticate the exact Exp7379 hardware-envelope bytes and each
+KV260, GateMate, and PolarFire receipt that Exp7379 cites. It SHALL preserve
+KV260 as historical FPGA-fabric execution with future SSH-only access and
+`k_max<=5`. It SHALL preserve PolarFire as hash-matched CPU dispatch, not FPGA
+sampling. It SHALL use the approved changed-state receipt search. A GateMate
+receipt qualifies only when an operator-authored source records a dated cable,
+port, power, board, JTAG, or DirtyJTAG change after Exp6559.
+
+Exp7393 SHALL inspect Exp7385, Exp7386, and Exp7389 once. A stage producer is
+eligible only when its identity is exact, its terminal class is `positive`,
+`circular_positive`, or `null`, its adversarial flag is false, and its required
+capture and validation gates pass. Missing, blocked, partial, disqualified, or
+flagged producers SHALL remain named unavailable rows. Historical diagnosis
+SHALL not become current readiness.
+
+For eligible measured rows, the reducer SHALL report prediction, update,
+certificate, serialization, and orchestration costs. It SHALL compute each
+component fraction only when the complete measured service denominator exists.
+It SHALL not replace a missing complete boundary with Exp7340 or another old
+kernel benchmark. A missing stage or denominator SHALL produce null fractions
+and an exact failed field.
+
+The reducer SHALL count the 17 selector parameters from actual numeric Exp7385
+checkpoint values. It SHALL record the checkpoint file byte size and the
+minimal 17-value transfer payload at the stored numeric width. It SHALL label
+the 100-fold device rate as assumed. The Amdahl result SHALL include the finite
+bound, the infinite-device upper bound, and the necessary unaccelerated
+fraction `<=0.01`. If orchestration dominates, or if the complete boundary is
+unavailable, the recommendation SHALL be CPU retention or batching before a
+port.
+
+The device plan SHALL include CPU, GPU, NPU, and sparse proof-check FPGA paths.
+It SHALL not install a driver, load a model, contact a board, use SSH, flash a
+device, download data, make a purchase, or contact a vendor. Extropic Z1T SHALL
+remain dated vendor context and not an available local substrate.
+
+Exp7393 SHALL emit exactly one disposition row for KV260, GateMate, and
+PolarFire. If the GateMate state is unchanged, the terminal result SHALL be
+`blocked_changed_physical_state`. `board_disposition_complete_score` SHALL be
+one when all three rows authenticate. `hardware_ready_score`,
+`hardware_value_score`, and `promotion_score` SHALL remain zero. This expected
+external block SHALL not gate the V648 capstone.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. It SHALL record actual host work, monotonic duration,
+UTC boundaries, phase spans, source hashes, raw rows, sample budgets, gates,
+validation receipts, repository health, and field principles. Historical model
+receipts SHALL keep their original hash, class, and flag in a labeled sidecar.
+
+The validation plan SHALL come from the actual Exp7358 builder and run through
+Exp7303. It SHALL require worktree imports, focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test spec coverage. It SHALL preserve command-local `COVERAGE_FILE` and
+SHALL not add an unexecuted full-suite check. No numbered E2E applies. The
+declared entrypoint, independent cold replay, adversarial verification, and
+strict row consistency SHALL control the atomic terminal write.
+
+#### SCENARIO-REPORT-7393-SOURCES: Invalid or missing stages do not become placement evidence
+
+**Given** a valid Exp7385 null, a disqualified flagged Exp7386, and absent Exp7389
+**When** Exp7393 reduces current stage costs
+**Then** only Exp7385 contributes eligible measured values
+**And** missing complete-service costs keep fractions and speed bounds null.
+
+#### SCENARIO-REPORT-7393-CHECKPOINT: Actual numeric state fixes the transfer estimate
+
+**Given** an authenticated Exp7385 numeric checkpoint for the 2-4-1 selector
+**When** Exp7393 walks its numeric weight tree
+**Then** it counts exactly 17 scalar parameters and records actual file bytes
+**And** it reports a 68-byte float32 payload as an estimate, not a transfer measurement.
+
+#### SCENARIO-REPORT-7393-BOARDS: GateMate absence completes only board accounting
+
+**Given** authenticated Exp7379 board rows and no newer operator physical receipt
+**When** Exp7393 builds all three board dispositions
+**Then** KV260 fabric and PolarFire CPU evidence keep separate venue labels
+**And** GateMate remains blocked while all hardware readiness and value scores stay zero.
+
+#### SCENARIO-REPORT-7393-PLACEMENT: Complete service time controls the Amdahl bound
+
+**Given** a synthetic eligible row with all five stage costs and a complete denominator
+**When** Exp7393 evaluates a 100-fold assumed device rate
+**Then** it computes component fractions and finite and infinite Amdahl bounds
+**And** it requires an unaccelerated fraction no greater than 0.01 for the target.
+
+#### SCENARIO-REPORT-7393-ARTIFACT: Scoped validation controls atomic publication
+
+**Given** the candidate, raw evidence, exact scoped receipts, and terminal readers
+**When** an independent reducer reloads the artifact
+**Then** changed identity, rows, source hashes, scores, gates, or checksum fail
+**And** only the valid terminal JSON is written atomically.
+
+## Implementation Status (REQ-REPORT-7393)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7393 and SCENARIO-REPORT-7393-* | Planned: Exp7393 host reducer, thin entrypoint, evidence sidecars, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |

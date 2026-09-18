@@ -18171,3 +18171,4 @@ code |
 | 2026-09-18 08:53 UTC | Independently audit proof-memory causality and com | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7389-proof-learning, exp7389-proof-learning, exp7389-proof-learning) |
 | 2026-09-18 08:54 UTC | Measure adapter-withheld live ARC after first-acti | GATE_BLOCK | gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7384-arc-invocation-boundary.arc_invocation_ready_score (actual=0 == expected=1) |
 | 2026-09-18 09:29 UTC | Recompute frozen Ising evidence with explicit supp | OK | 94 passed, 1 warning in 53.36s |
+| 2026-09-18 10:51 UTC | Bound decision-head placement and preserve attache | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: ependent_reduc |

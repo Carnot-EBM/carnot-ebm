@@ -1,0 +1,1742 @@
+{
+  "MODEL_SPECS": [],
+  "acceptance_gate_results": {
+    "affected_validation": {
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true
+    },
+    "board_accounting": {
+      "expected": [
+        "KV260",
+        "GateMate",
+        "PolarFire"
+      ],
+      "observed": [
+        "KV260",
+        "GateMate",
+        "PolarFire"
+      ],
+      "operator": "set_equal",
+      "passed": true
+    },
+    "changed_physical_state": {
+      "expected": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "observed": null,
+      "operator": "contract_match",
+      "passed": false
+    },
+    "complete_service_measurement": {
+      "expected": "all five measured stage costs",
+      "observed": [
+        "measured_partial_stage_costs",
+        "placement_input_unavailable",
+        "placement_input_unavailable"
+      ],
+      "operator": "any_complete_boundary",
+      "passed": false
+    },
+    "hardware_safety": {
+      "expected": "zero model, board, download, install, purchase, and vendor operations",
+      "observed": 0,
+      "operator": "==",
+      "passed": true
+    },
+    "hardware_value": {
+      "expected": "measured current hardware acceleration",
+      "observed": null,
+      "operator": "present",
+      "passed": false
+    },
+    "hundred_x_necessary_condition": {
+      "expected": {
+        "unaccelerated_fraction": "<=0.01"
+      },
+      "observed": null,
+      "operator": "<=",
+      "passed": false
+    },
+    "promotion": {
+      "expected": 0,
+      "observed": 0,
+      "operator": "==",
+      "passed": true
+    },
+    "source_authentication": {
+      "expected": true,
+      "observed": true,
+      "operator": "==",
+      "passed": true
+    }
+  },
+  "amdahl_protocol": {
+    "assumed_device_rate": 100.0,
+    "assumed_device_rate_is_measured": false,
+    "formula": "1 / (unaccelerated_fraction + replaceable_fraction / assumed_device_rate)",
+    "hundred_x_unaccelerated_fraction_max": 0.01,
+    "infinite_device_limit": "1 / unaccelerated_fraction",
+    "necessary_not_sufficient": true,
+    "requires_complete_measured_service": true
+  },
+  "board_disposition_complete_score": 1,
+  "board_rows": [
+    {
+      "architecture_limit": "k_max<=5",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none; any future access uses ssh kria only",
+      "fpga_sampling_claimed": true,
+      "future_access": "ssh_only",
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "kv260_fpga_fabric",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:0c85f975bae5228eb68f0acfc273fe711458d04ea6ff44d45d8b75c22fe4d1b0",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_preserved",
+      "unit_id": "board:KV260"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "censored": false,
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_prerequisite": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260916",
+      "last_authenticated_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "last_authenticated_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "last_authenticated_venue": "none_read_only",
+      "metric": false,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:343fdd35086078109085ef656d6a51033f08ccc511e3931a748fc94735b87e4c",
+      "row_type": "board_disposition",
+      "terminal_state": "blocked_changed_physical_state",
+      "unit_id": "board:GateMate"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": true,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "polarfire_linux_cpu",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:c44b1574497e5599acd91c7ec34d29f9f95efbe11b62d4dfcd8b3c79ab2f22b5",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_cpu_dispatch_preserved",
+      "unit_id": "board:PolarFire"
+    }
+  ],
+  "changed_state_receipt": null,
+  "completed_at_utc": "2026-09-18T09:45:02.492080+00:00",
+  "device_paths": [
+    {
+      "available_for_current_task": true,
+      "device": "CPU",
+      "operation_performed": false,
+      "role": "retain current 17-parameter selector and batch orchestration"
+    },
+    {
+      "available_for_current_task": false,
+      "device": "GPU",
+      "operation_performed": false,
+      "role": "future batched dense-head control after a complete cost boundary"
+    },
+    {
+      "available_for_current_task": false,
+      "device": "NPU",
+      "driver_installed": false,
+      "operation_performed": false,
+      "role": "future low-rate selector control after driver and complete-boundary evidence"
+    },
+    {
+      "available_for_current_task": false,
+      "device": "sparse proof-check FPGA",
+      "operation_performed": false,
+      "role": "future sparse proof checking; not the PolarFire CPU dispatch"
+    },
+    {
+      "architecture_limit": "k_max<=5",
+      "available_for_current_task": false,
+      "device": "KV260",
+      "future_access": "ssh_only",
+      "operation_performed": false,
+      "role": "graduated historical fabric path"
+    },
+    {
+      "available_for_current_task": false,
+      "context_date": "20260904",
+      "device": "Extropic Z1T",
+      "operation_performed": false,
+      "owned_by_carnot": false,
+      "role": "vendor context only",
+      "vendor_contacted": false
+    }
+  ],
+  "duplicate_required_commands": [],
+  "duration_s": 2.197092665126547,
+  "execution_venue": "host",
+  "experiment_id": 7393,
+  "failed_required_commands": [],
+  "field_principles": {
+    "MODEL_SPECS": "List current LLM models; this host aggregation uses none.",
+    "acceptance_gate_results": "Separate expected, observed, operator, and pass state for each gate.",
+    "amdahl_protocol": "Retain the ordinary amdahl_protocol value with its evidence scope.",
+    "board_disposition_complete_score": "Equal one for three authenticated board rows, including the block.",
+    "board_rows": "Keep each board's date, hash, venue, state, and exact next prerequisite.",
+    "changed_state_receipt": "Store a qualifying operator receipt or null with an exact failed check.",
+    "completed_at_utc": "Retain the ordinary completed_at_utc value with its evidence scope.",
+    "device_paths": "Retain the ordinary device_paths value with its evidence scope.",
+    "duplicate_required_commands": "Retain the ordinary duplicate_required_commands value with its evidence scope.",
+    "duration_s": "Use measured monotonic time without sleep or invented duration.",
+    "execution_venue": "Use the closed host value and keep device detail in other fields.",
+    "experiment_id": "Retain the ordinary experiment_id value with its evidence scope.",
+    "failed_required_commands": "Retain the ordinary failed_required_commands value with its evidence scope.",
+    "field_principles": "Explain each output field without wrapping its ordinary value.",
+    "flagged_adversarial": "Flag a critical current validator finding and exclude readiness.",
+    "gate_check_summary": "Name each failed upstream, field, expected value, and observed value.",
+    "hardware_operations": "Retain the ordinary hardware_operations value with its evidence scope.",
+    "hardware_ready_score": "Remain zero because no current board operation or qualification occurs.",
+    "hardware_value_score": "Remain zero because a projection is not measured hardware acceleration.",
+    "honest_verdict": "Name the unchanged external GateMate absence precisely.",
+    "host_computation": "Retain the ordinary host_computation value with its evidence scope.",
+    "inference_substrate": "Describe actual host JSON, checkpoint, hash, and arithmetic work.",
+    "inference_substrate_class": "Use the closed aggregation class for this host reducer.",
+    "invocation_counts": "Keep zero current calls separate from labeled historical source metadata.",
+    "milestone": "Retain the ordinary milestone value with its evidence scope.",
+    "missing_required_commands": "Retain the ordinary missing_required_commands value with its evidence scope.",
+    "model_invoked": "Set true for any attempted current LLM load or generation; none occurred.",
+    "phase": "Retain the ordinary phase value with its evidence scope.",
+    "phase_spans": "Record measured read, build, load, generate, evaluate, validate, and write spans.",
+    "placement_envelope_rows": "Use complete measured fractions or name each missing stage exactly.",
+    "placement_recommendation": "Retain the ordinary placement_recommendation value with its evidence scope.",
+    "preconditions_checked": "Record exact source paths, hashes, classes, gates, and receipt checks.",
+    "prior_failure_recurrence": "Retain the ordinary prior_failure_recurrence value with its evidence scope.",
+    "promotion_score": "Remain zero because no rollout, weight change, or publication is authorized.",
+    "random_seed": "Use null because this deterministic reduction performs no resampling.",
+    "repository_health": "Keep unrelated dated health separate from affected checks.",
+    "reproducibility_checksum": "Bind code, sources, protocol, rows, gates, and validation receipts.",
+    "required_checks_passed": "Retain the ordinary required_checks_passed value with its evidence scope.",
+    "rows": "Retain every board and placement row with costs, failures, and censoring.",
+    "run_date": "Use 20260918 with actual UTC start and completion timestamps.",
+    "sample_size_budget": "Declare planned, attempted, eligible, censored, and unstarted units.",
+    "schema": "Version the schema while keeping experiment_id and milestone at the top level.",
+    "selector_checkpoint": "Retain the ordinary selector_checkpoint value with its evidence scope.",
+    "source_artifact_hashes": "Bind exact producer bytes and keep missing inputs explicit.",
+    "source_artifact_states": "Retain the ordinary source_artifact_states value with its evidence scope.",
+    "started_at_utc": "Retain the ordinary started_at_utc value with its evidence scope.",
+    "status": "Publish a terminal state only after real work and required validation.",
+    "task_id": "Retain the ordinary task_id value with its evidence scope.",
+    "validation_receipts": "Retain executed argv, environment, scope, exit, duration, and log hash.",
+    "verdict_class": "Use blocked for unchanged external absence and disqualified for validation failure.",
+    "verifier_is_oracle": "Disclose that the reducer defines record truth, not hardware efficacy."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "check_count": 29,
+    "checks": [
+      {
+        "category": "required_source",
+        "check": "source_bytes:AGENTS.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "AGENTS.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:CODEX.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "CODEX.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:CLAUDE.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "CLAUDE.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:research-program.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "research-program.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/exclusion_manifest.yaml",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/e2e-test-plan.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/e2e-test-plan.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/hardware-bringup-prep.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/hardware-bringup-prep.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:research-hardware-wishlist.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "research-hardware-wishlist.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:ops/known-issues.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "ops/known-issues.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7379_v647_hardware_envelope.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7379_v647_hardware_envelope.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7340_v644_native_cost.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7340_v644_native_cost.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7385_v648_decision_training.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7385_v648_decision_training.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7386_v648_online_decisions.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7386_v648_online_decisions.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:results/experiment_7358_v646_validation_contract.json",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "results/experiment_7358_v646_validation_contract.json"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7379_v647_hardware_envelope.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7379_v647_hardware_envelope.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:python/carnot/experiment_7393_v648_hardware_placement.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "python/carnot/experiment_7393_v648_hardware_placement.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:tests/python/test_experiment_7393_v648_hardware_placement.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "tests/python/test_experiment_7393_v648_hardware_placement.py"
+      },
+      {
+        "category": "required_source",
+        "check": "source_bytes:scripts/experiments/experiment_7393_v648_hardware_placement.py",
+        "expected_value": "readable_nonempty_bytes",
+        "field": "bytes",
+        "observed_value": "readable_nonempty_bytes",
+        "passed": true,
+        "upstream": "scripts/experiments/experiment_7393_v648_hardware_placement.py"
+      },
+      {
+        "category": "required_source",
+        "check": "driving_capability",
+        "expected_value": "REQ-REPORT-7393",
+        "field": "REQ-*",
+        "observed_value": "REQ-REPORT-7393",
+        "passed": true,
+        "upstream": "openspec/capabilities/research-reporting/spec.md"
+      },
+      {
+        "category": "required_source",
+        "check": "authenticated_exp7379_hardware_envelope",
+        "expected_value": [
+          7379,
+          "blocked",
+          1,
+          true
+        ],
+        "field": "identity/class/board_rows/latest_receipts",
+        "observed_value": [
+          7379,
+          "blocked",
+          1,
+          true
+        ],
+        "passed": true,
+        "upstream": "results/experiment_7379_v647_hardware_envelope.json"
+      },
+      {
+        "category": "required_source",
+        "check": "exp7358_command_boundary",
+        "expected_value": 1,
+        "field": "validation_contract_ready_score",
+        "observed_value": 1,
+        "passed": true,
+        "upstream": "results/experiment_7358_v646_validation_contract.json"
+      },
+      {
+        "category": "external_prerequisite",
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7385",
+        "expected_value": "all prediction/update/certificate/serialization/orchestration costs",
+        "field": "complete_service_time_s",
+        "observed_value": {
+          "certificate": null,
+          "orchestration": null,
+          "prediction": 1.0519327901343189e-05,
+          "serialization": null,
+          "update": null
+        },
+        "passed": false,
+        "upstream": "results/experiment_7385_v648_decision_training.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7386",
+        "expected_value": "positive|circular_positive|null",
+        "field": "verdict_class",
+        "observed_value": "disqualified",
+        "passed": false,
+        "upstream": "results/experiment_7386_v648_online_decisions.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7389",
+        "expected_value": "readable JSON object",
+        "field": "path",
+        "observed_value": "missing",
+        "passed": false,
+        "upstream": "results/experiment_7389_v648_proof_learning.json"
+      },
+      {
+        "category": "required_validation",
+        "check": "affected_required_validation",
+        "expected_value": true,
+        "field": "required_checks_passed",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "Exp7303 scoped runner through Exp7358 command plan"
+      }
+    ],
+    "failed_count": 4,
+    "failures": [
+      {
+        "category": "external_prerequisite",
+        "check": "gatemate_changed_physical_state_receipt",
+        "expected_value": {
+          "changed_field_any_of": [
+            "cable",
+            "port",
+            "power",
+            "board",
+            "jtag",
+            "dirtyjtag"
+          ],
+          "operator_authored": true,
+          "provenance": [
+            "ops/known-issues.md",
+            "research-hardware-wishlist.md",
+            "ops/hardware-bringup-prep.md",
+            "ops/operator-followup.md"
+          ],
+          "receipt_date": ">20260823"
+        },
+        "field": "receipt_date/operator_authored/provenance/changed_field",
+        "observed_value": {
+          "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+          "accepted_receipt_count": 0,
+          "selected_source_path": null
+        },
+        "passed": false,
+        "upstream": "physical_state_receipt"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7385",
+        "expected_value": "all prediction/update/certificate/serialization/orchestration costs",
+        "field": "complete_service_time_s",
+        "observed_value": {
+          "certificate": null,
+          "orchestration": null,
+          "prediction": 1.0519327901343189e-05,
+          "serialization": null,
+          "update": null
+        },
+        "passed": false,
+        "upstream": "results/experiment_7385_v648_decision_training.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7386",
+        "expected_value": "positive|circular_positive|null",
+        "field": "verdict_class",
+        "observed_value": "disqualified",
+        "passed": false,
+        "upstream": "results/experiment_7386_v648_online_decisions.json"
+      },
+      {
+        "category": "placement_input",
+        "check": "placement_source:Exp7389",
+        "expected_value": "readable JSON object",
+        "field": "path",
+        "observed_value": "missing",
+        "passed": false,
+        "upstream": "results/experiment_7389_v648_proof_learning.json"
+      }
+    ],
+    "first_failure": {
+      "check": "gatemate_changed_physical_state_receipt",
+      "expected_value": {
+        "changed_field_any_of": [
+          "cable",
+          "port",
+          "power",
+          "board",
+          "jtag",
+          "dirtyjtag"
+        ],
+        "operator_authored": true,
+        "provenance": [
+          "ops/known-issues.md",
+          "research-hardware-wishlist.md",
+          "ops/hardware-bringup-prep.md",
+          "ops/operator-followup.md"
+        ],
+        "receipt_date": ">20260823"
+      },
+      "field": "receipt_date/operator_authored/provenance/changed_field",
+      "observed_value": {
+        "absence": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+        "accepted_receipt_count": 0,
+        "selected_source_path": null
+      },
+      "upstream": "physical_state_receipt"
+    },
+    "passed": false
+  },
+  "hardware_operations": {
+    "device_access": 0,
+    "downloads": 0,
+    "driver_installations": 0,
+    "flash": 0,
+    "fpga": 0,
+    "jtag": 0,
+    "model_generations": 0,
+    "model_loads": 0,
+    "native_benchmarks": 0,
+    "purchases": 0,
+    "reset": 0,
+    "ssh": 0,
+    "usb": 0,
+    "vendor_contacts": 0
+  },
+  "hardware_ready_score": 0,
+  "hardware_value_score": 0,
+  "honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and incomplete stage costs create no speed claim",
+  "host_computation": {
+    "hostname": "icbfl1",
+    "machine": "x86_64",
+    "operation": "CPython JSON parsing, SHA-256 hashing, checkpoint counting, and Amdahl arithmetic",
+    "processor": "host_cpu",
+    "small_ebm_training": {
+      "historical_sources_only": [
+        "Exp7385",
+        "Exp7386"
+      ],
+      "performed_in_current_task": false
+    }
+  },
+  "inference_substrate": "host_cpu_json_checkpoint_hash_and_amdahl_reduction",
+  "inference_substrate_class": "aggregation",
+  "invocation_counts": {
+    "current": {
+      "generations": {
+        "attempted": 0,
+        "cancelled": 0,
+        "completed": 0,
+        "failed": 0,
+        "in_flight": 0
+      },
+      "loads": {
+        "attempted": 0,
+        "cancelled": 0,
+        "completed": 0,
+        "failed": 0,
+        "in_flight": 0
+      }
+    },
+    "historical": {
+      "sidecar_count": 1,
+      "sidecars": [
+        {
+          "label": "historical_hash_bound_no_current_model_work",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7393_v648_hardware_placement/historical_model_inputs.json",
+          "sha256": "sha256:5124b1e0fa16c69f8ebbc93e8c441cb3a468ad4ce3f10e205b5cd870f5d58ed9"
+        }
+      ]
+    }
+  },
+  "milestone": "2026.09.648",
+  "missing_required_commands": [],
+  "model_invoked": false,
+  "phase": 4,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492057+00:00",
+      "completed_units": 24,
+      "duration_s": 2.1958387489430606,
+      "ended_monotonic_offset_s": 2.1958460330497473,
+      "phase": "read",
+      "started_monotonic_offset_s": 7.284106686711311e-06
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492069+00:00",
+      "completed_units": 3,
+      "duration_s": 0.0005612650420516729,
+      "ended_monotonic_offset_s": 2.196407407987863,
+      "phase": "build",
+      "started_monotonic_offset_s": 2.195846142945811
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492071+00:00",
+      "completed_units": 0,
+      "duration_s": 7.008202373981476e-08,
+      "ended_monotonic_offset_s": 2.1964076480362564,
+      "phase": "load",
+      "started_monotonic_offset_s": 2.1964075779542327
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492073+00:00",
+      "completed_units": 0,
+      "duration_s": 1.41095370054245e-07,
+      "ended_monotonic_offset_s": 2.1964079290628433,
+      "phase": "generate",
+      "started_monotonic_offset_s": 2.1964077879674733
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492074+00:00",
+      "completed_units": 6,
+      "duration_s": 2.2563152015209198e-05,
+      "ended_monotonic_offset_s": 2.19643078208901,
+      "phase": "evaluate",
+      "started_monotonic_offset_s": 2.1964082189369947
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492076+00:00",
+      "completed_units": 8,
+      "duration_s": 6.637396290898323e-05,
+      "ended_monotonic_offset_s": 2.196497216122225,
+      "phase": "validate",
+      "started_monotonic_offset_s": 2.196430842159316
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T09:45:02.492078+00:00",
+      "completed_units": 3,
+      "duration_s": 0.000595377990975976,
+      "ended_monotonic_offset_s": 2.197092665126547,
+      "phase": "write",
+      "started_monotonic_offset_s": 2.1964972871355712
+    }
+  ],
+  "placement_envelope_rows": [
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "complete measured service denominator is unavailable",
+      "expected_value": "all prediction/update/certificate/serialization/orchestration costs",
+      "failed_field": "complete_service_time_s",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": 1.0519327901343189e-05,
+      "observed_value": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": 1.0519327901343189e-05,
+        "serialization": null,
+        "update": null
+      },
+      "outcome": "measured_partial_stage_costs",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:9339cbe3d72cb123a01ce8ab4ad7c2262a4b62d9121518d318a2eba8013d4b2c",
+      "row_type": "placement_envelope",
+      "source_class": "null",
+      "source_evidence_eligible": true,
+      "source_experiment": "Exp7385",
+      "source_path": "results/experiment_7385_v648_decision_training.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": 1.0519327901343189e-05,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7385"
+    },
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "verdict_class: expected 'positive|circular_positive|null', observed 'disqualified'",
+      "expected_value": "positive|circular_positive|null",
+      "failed_field": "verdict_class",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "disqualified",
+      "outcome": "placement_input_unavailable",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:ed11e845391edfb66e635847675782d6adc482ba7520252b751ddc22625361cb",
+      "row_type": "placement_envelope",
+      "source_class": "disqualified",
+      "source_evidence_eligible": false,
+      "source_experiment": "Exp7386",
+      "source_path": "results/experiment_7386_v648_online_decisions.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7386"
+    },
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "path: expected 'readable JSON object', observed 'missing'",
+      "expected_value": "readable JSON object",
+      "failed_field": "path",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "missing",
+      "outcome": "placement_input_unavailable",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:4d0958c6abd764007d2327836c43e83e6fade257fc063696c1770125d6c1af74",
+      "row_type": "placement_envelope",
+      "source_class": "missing",
+      "source_evidence_eligible": false,
+      "source_experiment": "Exp7389",
+      "source_path": "results/experiment_7389_v648_proof_learning.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7389"
+    }
+  ],
+  "placement_recommendation": "retain_cpu_or_batch_before_port",
+  "preconditions_checked": [
+    {
+      "category": "required_source",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/hardware-bringup-prep.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/hardware-bringup-prep.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:research-hardware-wishlist.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "research-hardware-wishlist.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:ops/known-issues.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "ops/known-issues.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7379_v647_hardware_envelope.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7379_v647_hardware_envelope.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7340_v644_native_cost.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7340_v644_native_cost.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7385_v648_decision_training.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7385_v648_decision_training.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7386_v648_online_decisions.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7386_v648_online_decisions.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:results/experiment_7358_v646_validation_contract.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7379_v647_hardware_envelope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7379_v647_hardware_envelope.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:python/carnot/experiment_7393_v648_hardware_placement.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7393_v648_hardware_placement.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:tests/python/test_experiment_7393_v648_hardware_placement.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7393_v648_hardware_placement.py"
+    },
+    {
+      "category": "required_source",
+      "check": "source_bytes:scripts/experiments/experiment_7393_v648_hardware_placement.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7393_v648_hardware_placement.py"
+    },
+    {
+      "category": "required_source",
+      "check": "driving_capability",
+      "expected_value": "REQ-REPORT-7393",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7393",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "category": "required_source",
+      "check": "authenticated_exp7379_hardware_envelope",
+      "expected_value": [
+        7379,
+        "blocked",
+        1,
+        true
+      ],
+      "field": "identity/class/board_rows/latest_receipts",
+      "observed_value": [
+        7379,
+        "blocked",
+        1,
+        true
+      ],
+      "passed": true,
+      "upstream": "results/experiment_7379_v647_hardware_envelope.json"
+    },
+    {
+      "category": "required_source",
+      "check": "exp7358_command_boundary",
+      "expected_value": 1,
+      "field": "validation_contract_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7358_v646_validation_contract.json"
+    }
+  ],
+  "prior_failure_recurrence": {
+    "addressed_by": "preserve board evidence and inspect new decision-head costs without a physical retry",
+    "prior_honest_verdict": "blocked_changed_physical_state: no operator-authored dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change exists after Exp6559; three board dispositions are complete and unavailable placement inputs create no speed claim",
+    "retire_if_same_verdict": true,
+    "same_external_block": true,
+    "source_experiment": "exp7379-hardware-envelope"
+  },
+  "promotion_score": 0,
+  "random_seed": null,
+  "repository_health": {
+    "affects_required_checks": false,
+    "historical_failure_count": 0,
+    "historical_failures": [],
+    "incident_open": false,
+    "status": "healthy",
+    "unresolved_collection_error_observation_count": 0
+  },
+  "reproducibility_checksum": "sha256:c7fb2eeeaafa5588ba53d2989be455bd22737e4746c7c9d2bed94e26c0823f7c",
+  "required_checks_passed": true,
+  "rows": [
+    {
+      "architecture_limit": "k_max<=5",
+      "availability_class": "graduated_historical",
+      "board": "KV260",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none; any future access uses ssh kria only",
+      "fpga_sampling_claimed": true,
+      "future_access": "ssh_only",
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "kv260_fpga_fabric",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:0c85f975bae5228eb68f0acfc273fe711458d04ea6ff44d45d8b75c22fe4d1b0",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_preserved",
+      "unit_id": "board:KV260"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "blocked",
+      "board": "GateMate",
+      "censored": false,
+      "error": "no operator-authored dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "exact_next_prerequisite": "operator records a dated GateMate cable, port, board, power, or DirtyJTAG change after Exp6559",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": false,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260916",
+      "last_authenticated_hash": "sha256:8b3f1d3cc55ed0f68d81c25d85d33552d2fde69a702814e11b76712f48945d68",
+      "last_authenticated_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7355_v645_board_state/gatemate_physical_state_receipt_search.json",
+      "last_authenticated_venue": "none_read_only",
+      "metric": false,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:343fdd35086078109085ef656d6a51033f08ccc511e3931a748fc94735b87e4c",
+      "row_type": "board_disposition",
+      "terminal_state": "blocked_changed_physical_state",
+      "unit_id": "board:GateMate"
+    },
+    {
+      "architecture_limit": null,
+      "availability_class": "graduated_historical",
+      "board": "PolarFire",
+      "censored": false,
+      "error": null,
+      "exact_next_prerequisite": "none for CPU dispatch; FPGA sampling remains a separate future task",
+      "fpga_sampling_claimed": false,
+      "future_access": null,
+      "hash_matched_cpu_dispatch": true,
+      "historical_evidence_only": true,
+      "last_authenticated_date": "20260915",
+      "last_authenticated_hash": "sha256:c83cc85d16c082898992b3d34197d5d6bb07dfae5cd5bb9beca10bbbc20d51e6",
+      "last_authenticated_path": "results/experiment_7314_v642_board_continuity.json",
+      "last_authenticated_venue": "polarfire_linux_cpu",
+      "metric": true,
+      "new_hardware_execution_claimed": false,
+      "present_reachability_asserted": false,
+      "row_sha256": "sha256:c44b1574497e5599acd91c7ec34d29f9f95efbe11b62d4dfcd8b3c79ab2f22b5",
+      "row_type": "board_disposition",
+      "terminal_state": "graduated_cpu_dispatch_preserved",
+      "unit_id": "board:PolarFire"
+    },
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "complete measured service denominator is unavailable",
+      "expected_value": "all prediction/update/certificate/serialization/orchestration costs",
+      "failed_field": "complete_service_time_s",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": 1.0519327901343189e-05,
+      "observed_value": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": 1.0519327901343189e-05,
+        "serialization": null,
+        "update": null
+      },
+      "outcome": "measured_partial_stage_costs",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:9339cbe3d72cb123a01ce8ab4ad7c2262a4b62d9121518d318a2eba8013d4b2c",
+      "row_type": "placement_envelope",
+      "source_class": "null",
+      "source_evidence_eligible": true,
+      "source_experiment": "Exp7385",
+      "source_path": "results/experiment_7385_v648_decision_training.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": 1.0519327901343189e-05,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7385"
+    },
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "verdict_class: expected 'positive|circular_positive|null', observed 'disqualified'",
+      "expected_value": "positive|circular_positive|null",
+      "failed_field": "verdict_class",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "disqualified",
+      "outcome": "placement_input_unavailable",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:ed11e845391edfb66e635847675782d6adc482ba7520252b751ddc22625361cb",
+      "row_type": "placement_envelope",
+      "source_class": "disqualified",
+      "source_evidence_eligible": false,
+      "source_experiment": "Exp7386",
+      "source_path": "results/experiment_7386_v648_online_decisions.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7386"
+    },
+    {
+      "assumed_device_rate": 100.0,
+      "assumed_device_rate_is_measured": false,
+      "bounded_full_service_speedup": null,
+      "censored": true,
+      "complete_boundary_eligible": false,
+      "complete_service_time_s": null,
+      "diagnostic_measurements_used_for_readiness": false,
+      "error": "path: expected 'readable JSON object', observed 'missing'",
+      "expected_value": "readable JSON object",
+      "failed_field": "path",
+      "hundred_x_necessary_condition": {
+        "condition_scope": "not_evaluable_without_complete_measured_service",
+        "observed_unaccelerated_fraction": null,
+        "passed": false,
+        "target_total_speedup": 100.0,
+        "unaccelerated_fraction_max": 0.01
+      },
+      "infinite_device_upper_bound": null,
+      "measured_replaceable_fraction": null,
+      "metric": null,
+      "observed_value": "missing",
+      "outcome": "placement_input_unavailable",
+      "recommendation": "retain_cpu_or_batch_before_port",
+      "row_sha256": "sha256:4d0958c6abd764007d2327836c43e83e6fade257fc063696c1770125d6c1af74",
+      "row_type": "placement_envelope",
+      "source_class": "missing",
+      "source_evidence_eligible": false,
+      "source_experiment": "Exp7389",
+      "source_path": "results/experiment_7389_v648_proof_learning.json",
+      "stage_costs_s": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "stage_fractions": {
+        "certificate": null,
+        "orchestration": null,
+        "prediction": null,
+        "serialization": null,
+        "update": null
+      },
+      "unaccelerated_fraction": null,
+      "unit_id": "placement:Exp7389"
+    }
+  ],
+  "run_date": "20260918",
+  "sample_size_budget": {
+    "board_rows_attempted": 3,
+    "board_rows_censored": 0,
+    "board_rows_completed": 3,
+    "board_rows_planned": 3,
+    "complete_service_rows": 0,
+    "new_hardware_runs_attempted": 0,
+    "new_hardware_runs_censored": 0,
+    "new_hardware_runs_completed": 0,
+    "new_hardware_runs_planned": 0,
+    "placement_rows_censored": 3,
+    "placement_sources_attempted": 3,
+    "placement_sources_eligible": 1,
+    "placement_sources_planned": 3,
+    "placement_sources_unavailable": 2,
+    "remaining_work": 0,
+    "stopping_rule": "inspect Exp7385, Exp7386, and Exp7389 once; authenticate three board rows; stop before any model, driver, network, board, purchase, or vendor operation",
+    "unstarted_units": 0
+  },
+  "schema": "carnot.experiment_7393.v648_hardware_placement.v1",
+  "selector_checkpoint": {
+    "architecture": {
+      "hidden_dims": [
+        4
+      ],
+      "input_dim": 2,
+      "output_dim": 1
+    },
+    "arm": "natural_prevalence_bernoulli_gibbs",
+    "assumed_device_numeric_format": "float32",
+    "bytes_per_parameter": 4,
+    "checkpoint_file_bytes": 2814,
+    "checkpoint_path": "results/checkpoints/experiment_7385_v648_decision_training/natural_prevalence_bernoulli_gibbs_7382001.json",
+    "checkpoint_sha256": "sha256:a93d7eb86200729a6c1db97475d98c1ef0265d94566d10b25bc8e7abb9139df8",
+    "estimate_scope": "minimum numeric weights only; excludes protocol and framing",
+    "estimated_minimum_transfer_bytes": 68,
+    "numeric_parameter_count": 17,
+    "seed": 7382001,
+    "source_experiment": "Exp7385",
+    "transfer_is_measured": false
+  },
+  "source_artifact_hashes": {
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7393_v648_hardware_placement/gatemate_changed_state_search.json": "sha256:5c50b11af3b4422846e1cf7c267850bf745a7194e66a385b5b4a3f8410c1a42b",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7393_v648_hardware_placement/hardware_placement_evidence.json": "sha256:211ab51161de8b60cfd180ab8715f40d00f564e6d383b6e7b3257158be0e1bb1",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7393_v648_hardware_placement/historical_model_inputs.json": "sha256:5124b1e0fa16c69f8ebbc93e8c441cb3a468ad4ce3f10e205b5cd870f5d58ed9",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:0aab5ac12ac794bdcc127aa69e16fb9c1065ca6148abe9cb36403b38404ab0d1",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e",
+    "ops/hardware-bringup-prep.md": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+    "ops/known-issues.md": "sha256:291f1311c47c49ae2a061d62f86a4a7f6b5a20609b17eb3f51ae16a94d5c430b",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7379_v647_hardware_envelope.py": "sha256:7edf6945f1a50ef255ba37d01335ec2beada0402c3be08cc57807e3af056dbc7",
+    "python/carnot/experiment_7393_v648_hardware_placement.py": "sha256:a738b3622a4492a3d7d61ff517bede2c471eca5df85aedb2a023b150ce1c624e",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7340_v644_native_cost.json": "sha256:cd4b71d899dac882a9b05ac24bf2ecb46770044e2b8edcd1e4050cbc0d015954",
+    "results/experiment_7358_v646_validation_contract.json": "sha256:0d2c2fe876ba303b21c9b5fe5b094d92851ea407d7d9f06ae9d8ca4d37475781",
+    "results/experiment_7379_v647_hardware_envelope.json": "sha256:9d42606c8f537cd06de0e83ac4ba83731ea5c9ea30694e220b164315be00b98d",
+    "results/experiment_7385_v648_decision_training.json": "sha256:05cb5c7fb56fa5afa9ec8b450315ea00534229ec477890a84b412355f8ede87b",
+    "results/experiment_7386_v648_online_decisions.json": "sha256:ab5eca8c1e040161cf6c85364913324c75f498d59d3de36b5040c3da3e511bea",
+    "results/experiment_7389_v648_proof_learning.json": null,
+    "scripts/experiments/experiment_7393_v648_hardware_placement.py": "sha256:7da6a485ed4d1d0964cc3a2d30176ab2fb0f6775e660f484fe9a35302f837a61",
+    "tests/python/test_experiment_7393_v648_hardware_placement.py": "sha256:0d003a8f181a269ddf1069c92e1cb94beb0b6c7de860bbd4b56d0fb71abfb16d"
+  },
+  "source_artifact_states": {
+    "hardware_source": {
+      "authenticated_board_receipts": {
+        "GateMate": true,
+        "KV260": true,
+        "PolarFire": true
+      },
+      "board_disposition_complete_score": 1,
+      "experiment_id": 7379,
+      "flagged_adversarial": false,
+      "verdict_class": "blocked"
+    },
+    "native_cost_source": {
+      "historical_diagnostic_only": true,
+      "path": "results/experiment_7340_v644_native_cost.json",
+      "used_as_current_complete_boundary": false
+    },
+    "stage_sources": {
+      "Exp7385": {
+        "available": true,
+        "experiment_id": "exp7385-decision-training",
+        "flagged_adversarial": false,
+        "path": "results/experiment_7385_v648_decision_training.json",
+        "status": "complete_decision_training_null",
+        "verdict_class": "null"
+      },
+      "Exp7386": {
+        "available": true,
+        "experiment_id": "exp7386-online-decisions",
+        "flagged_adversarial": true,
+        "path": "results/experiment_7386_v648_online_decisions.json",
+        "status": "complete_online_decisions_disqualified",
+        "verdict_class": "disqualified"
+      },
+      "Exp7389": {
+        "available": false,
+        "experiment_id": null,
+        "flagged_adversarial": null,
+        "path": "results/experiment_7389_v648_proof_learning.json",
+        "status": null,
+        "verdict_class": null
+      }
+    }
+  },
+  "started_at_utc": "2026-09-18T09:45:00.294958+00:00",
+  "status": "blocked",
+  "task_id": "exp7393-hardware-placement",
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7393_v648_hardware_placement",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7393_v648_hardware_placement"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.5583977568894625,
+      "ended_at_utc": "2026-09-18T09:44:36.622719+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:53a482ce28592af9c67a376270ed50445249bde8bab39a24d2985cb4f062b66b",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7393_v648_hardware_placement\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7393_v648_hardware_placement.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7393_v648_hardware_placement": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7393_v648_hardware_placement.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T09:44:36.063370+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7393-y40k6q9w/basetemp/focused tests/python/test_experiment_7393_v648_hardware_placement.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7393-y40k6q9w/basetemp/focused",
+        "tests/python/test_experiment_7393_v648_hardware_placement.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 10.71774810901843,
+      "ended_at_utc": "2026-09-18T09:44:47.340768+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:0e3c648ae228056894999fafed2e35df89ab4f836a867efa34abb5b0bf26a51d",
+      "name": "focused_pytest",
+      "output_tail": "........                                                                 [100%]\n8 passed in 8.97s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T09:44:36.622754+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/carnot-exp7393-y40k6q9w/coverage/.coverage '--include=*/experiment_7393_v648_hardware_placement.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/carnot-exp7393-y40k6q9w/basetemp/coverage tests/python/test_experiment_7393_v648_hardware_placement.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/carnot-exp7393-y40k6q9w/coverage/.coverage",
+        "--include=*/experiment_7393_v648_hardware_placement.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/carnot-exp7393-y40k6q9w/basetemp/coverage",
+        "tests/python/test_experiment_7393_v648_hardware_placement.py",
+        "-q"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 12.683636153116822,
+      "ended_at_utc": "2026-09-18T09:45:00.024808+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:8d009da447488fe176932717e5217ca6f3d4591c21867efde495742d79fa88b9",
+      "name": "changed_module_coverage",
+      "output_tail": "........                                                                 [100%]\n8 passed in 9.89s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-18T09:44:47.340799+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7393_v648_hardware_placement.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7393_v648_hardware_placement.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/carnot-exp7393-y40k6q9w/coverage/.coverage"
+      },
+      "duration_s": 0.07832907000556588,
+      "ended_at_utc": "2026-09-18T09:45:00.103608+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:ab93f1cc68093db67a22f59906a18f313ed0d0a7f75aaea58816a268e6cdf217",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                       Stmts   Miss  Cover   Missing\n----------------------------------------------------------------------------------------\npython/carnot/experiment_7393_v648_hardware_placement.py     339      0   100%\n----------------------------------------------------------------------------------------\nTOTAL                                                        339      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T09:45:00.024866+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7393_v648_hardware_placement.py scripts/experiments/experiment_7393_v648_hardware_placement.py tests/python/test_experiment_7393_v648_hardware_placement.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7393_v648_hardware_placement.py",
+        "scripts/experiments/experiment_7393_v648_hardware_placement.py",
+        "tests/python/test_experiment_7393_v648_hardware_placement.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.014337294036522508,
+      "ended_at_utc": "2026-09-18T09:45:00.118209+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T09:45:00.103636+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7393_v648_hardware_placement.py scripts/experiments/experiment_7393_v648_hardware_placement.py tests/python/test_experiment_7393_v648_hardware_placement.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7393_v648_hardware_placement.py",
+        "scripts/experiments/experiment_7393_v648_hardware_placement.py",
+        "tests/python/test_experiment_7393_v648_hardware_placement.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.0117172219324857,
+      "ended_at_utc": "2026-09-18T09:45:00.130169+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T09:45:00.118237+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7393_v648_hardware_placement.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7393_v648_hardware_placement.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.14065562700852752,
+      "ended_at_utc": "2026-09-18T09:45:00.271046+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:81678ec31f48a65d4ec18ed2b180f99a0369bec3add5bc5d14eeceaefe87ae23",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T09:45:00.130182+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7393_v648_hardware_placement.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7393_v648_hardware_placement.py"
+      ],
+      "command_category": "required_validation",
+      "command_environment": {},
+      "duration_s": 0.023247632896527648,
+      "ended_at_utc": "2026-09-18T09:45:00.294669+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7393_v648_hardware_placement/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T09:45:00.271074+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}
