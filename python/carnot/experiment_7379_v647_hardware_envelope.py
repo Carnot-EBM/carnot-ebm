@@ -34,7 +34,7 @@ JsonDict = dict[str, Any]
 EXPERIMENT_ID = 7379
 TASK_ID = "exp7379-hardware-envelope"
 MILESTONE = "2026.09.647"
-RUN_DATE = "20260917"
+RUN_DATE = "20260918"
 SCHEMA = "carnot.experiment_7379.v647_hardware_envelope.v1"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -883,7 +883,7 @@ def _field_principles(keys: Sequence[str]) -> dict[str, str]:
     specific = {
         "schema": "Version the schema while keeping experiment_id and milestone ordinary top-level fields.",
         "status": "Use a terminal state only after real work and required validation.",
-        "run_date": "Use 20260917 together with actual UTC start and completion timestamps.",
+        "run_date": "Use 20260918 together with actual UTC start and completion timestamps.",
         "preconditions_checked": "Record exact paths, identities, hashes, classes, and resources before reduction.",
         "MODEL_SPECS": "List intended current models; host-only aggregation intends none.",
         "model_invoked": "Set true for any attempted current load or generation; this task attempted none.",

@@ -279,6 +279,8 @@ def test_blocked_gatemate_finishes_board_accounting_without_hardware_claim(tmp_p
     assert boards["PolarFire"]["fpga_sampling_claimed"] is False
     assert boards["GateMate"]["terminal_state"] == "blocked_changed_physical_state"
     assert artifact["status"] == "blocked"
+    assert experiment.RUN_DATE == "20260918"
+    assert artifact["run_date"] == "20260918"
     assert artifact["verdict_class"] == "blocked"
     assert artifact["honest_verdict"].startswith("blocked_changed_physical_state:")
     assert artifact["changed_state_receipt"] is None

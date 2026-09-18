@@ -120,9 +120,17 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "python"))
 
+from carnot.autoresearch import calibrated_decision_benchmark as _calibrated_decision_module  # noqa: E402
 from carnot.autoresearch import orchestrator as _orchestrator_module  # noqa: E402
 from carnot.autoresearch import verifier_auroc_benchmark as _verifier_auroc_module  # noqa: E402
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics  # noqa: E402
+from carnot.autoresearch.calibrated_decision_benchmark import (  # noqa: E402
+    CALIBRATED_DECISION_BENCHMARK_NAME,
+    HIDDEN_DIM,
+    INPUT_DIM,
+    measure_default_calibration_energy,
+    train_features_for_prompt,
+)
 from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker  # noqa: E402
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog  # noqa: E402
 from carnot.autoresearch.hypothesis_generator import (  # noqa: E402
@@ -144,6 +152,8 @@ from carnot.autoresearch.verifier_auroc_benchmark import (  # noqa: E402
     measure_default_weight_energy,
     train_rows_for_prompt,
 )
+from carnot.models.gibbs import GibbsConfig, GibbsModel  # noqa: E402
+from carnot.training.nce import nce_loss  # noqa: E402
 from carnot.verify.pcib_probe import PCIBProbe  # noqa: E402
 
 # REQ-AUTO-025 CRITICAL-2 fix (2026-09-16 adversarial review): every benchmark's
@@ -161,6 +171,7 @@ def default_benchmark_data() -> dict[str, Any]:
     every test file does -- never pays the cost of loading and splitting
     `data/fover_corpus_v4.json` (REQ-AUTO-025) unless a round actually runs.
     """
+    calibrated_decision_features = train_features_for_prompt()
     return {
         "dim": 2,
         # REQ-AUTO-025: the verifier_auroc benchmark's TRAINING split only --
@@ -178,6 +189,18 @@ def default_benchmark_data() -> dict[str, Any]:
         # module (or any other carnot.* module) to read the held-out split
         # or corrupt the trusted recompute path from inside its own run().
         "PCIBProbe": PCIBProbe,
+        # REQ-AUTO-018: same Variant-A pattern as PCIBProbe above --
+        # GibbsModel/GibbsConfig/nce_loss are handed to the hypothesis
+        # directly rather than via `from carnot.models.gibbs import ...` /
+        # `from carnot.training.nce import ...`, both of which are blocked
+        # by the same `carnot` import-root block. Only the TRAINING split's
+        # raw PCIB features are exposed; the held-out split stays reachable
+        # only from this trusted process.
+        "calibrated_decision_train_correct": calibrated_decision_features["correct"],
+        "calibrated_decision_train_incorrect": calibrated_decision_features["incorrect"],
+        "GibbsModel": GibbsModel,
+        "GibbsConfig": GibbsConfig,
+        "nce_loss": nce_loss,
     }
 
 
@@ -197,35 +220,18 @@ DEFAULT_FABLE_TIMEOUT_S = 600
 # for a self-reported final_energy -- the exact self-report gap adversarial
 # review 2026-09-12 finding 1 exploited), this prompt asks for a final_state
 # and tells the hypothesis its own final_energy claim, if any, is IGNORED.
-# The real energy is recomputed by trusted harness code from final_state via
-# toy_benchmarks.py, never by the sandboxed hypothesis.
+# The real energy is recomputed by trusted harness code from final_state,
+# never by the sandboxed hypothesis.
+#
+# CLAUDE.md "Energy-Based Calibrated-Decision Training Floor" (2026-09-18):
+# double_well/rosenbrock (REQ-AUTO-021's original fitness target #1) were
+# retired from this prompt -- both were driven to exact machine-precision
+# zero on the first production fire (2026-09-13) and every round since has
+# re-solved an already-solved problem with zero headroom left. Removing them
+# frees the slot for calibrated_decision (REQ-AUTO-018) below.
 AUTORESEARCH_SYSTEM_PROMPT = """\
-You are proposing an optimization procedure for a numerical benchmark in the \
-Carnot autoresearch pipeline. Two benchmarks exist, each over `dim` real-valued \
-coordinates (see the current baseline context for `dim`):
-
-- double_well: E(x) = sum_i (x_i^2 - 1)^2. Global minimum E=0 at every \
-coordinate equal to +1 or -1.
-- rosenbrock: E(x) = sum_i [100*(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]. Global \
-minimum E=0 at every coordinate equal to 1. Needs at least 2 dimensions.
-
-Write a Python function `run(benchmark_data) -> dict` that runs an actual \
-optimization procedure (gradient descent, random search, simulated annealing, \
-anything real) starting from `benchmark_data["dim"]` coordinates, and returns:
-
-    {"double_well": {"final_state": [x0, x1, ...], "wall_clock_seconds": ...}}
-
-or the equivalent under "rosenbrock". `final_state` is a plain list of floats,\
- the point your procedure converged to.
-
-IMPORTANT: do NOT return "final_energy" -- it will be IGNORED. The harness \
-independently recomputes the true energy from your `final_state` using the \
-real formula above, so there is no way to claim a result you did not actually \
-reach. Only your `final_state` and how you found it matter. Do NOT hardcode \
-the analytic minimum (e.g. returning [1, 1, ...] without deriving it) -- the \
-research value is in the procedure, not the coordinates.
-
-A third benchmark also exists:
+You are proposing an optimization procedure for a benchmark in the Carnot \
+autoresearch pipeline. Two benchmarks exist:
 
 - verifier_auroc: `benchmark_data["verifier_auroc_train_rows"]` is a list of \
 {"step_text": str, "label": "correct" or "incorrect"} training examples. \
@@ -246,7 +252,39 @@ directly are blocked) -- your own AUROC on the training rows is never \
 trusted or seen by the evaluator. Do not assume the probe's own documented \
 default weights (0.5, 0.5) are good; measure and search. A weight pair that \
 scores every training row identically (e.g. (0.0, 0.0)) will be rejected as \
-degenerate, not accepted."""
+degenerate, not accepted.
+
+- calibrated_decision: `benchmark_data["calibrated_decision_train_correct"]` \
+and `benchmark_data["calibrated_decision_train_incorrect"]` are each a list \
+of [entity_uptake, falsifiability_score] pairs (two floats per row) -- the \
+same underlying corpus as verifier_auroc, but the raw PCIB signals \
+themselves rather than a weighted combination. `benchmark_data["GibbsModel"]` \
+and `benchmark_data["GibbsConfig"]` are classes; `benchmark_data["nce_loss"]` \
+is a function. Do NOT write `import carnot` or anything under it -- blocked, \
+same as above; these are handed to you directly for exactly that reason. \
+Build `cfg = benchmark_data["GibbsConfig"](input_dim=2, hidden_dims=[4]); \
+model = benchmark_data["GibbsModel"](cfg, key=...)`. Train it with real \
+gradient steps: convert the correct/incorrect row lists to arrays, call \
+`benchmark_data["nce_loss"](model, correct_array, incorrect_array)` \
+(correct rows are the "data" NCE should push to LOW energy, incorrect rows \
+are the "noise" NCE should push to HIGH energy -- a real, established reuse \
+of NCE as a binary classifier, not a misuse), take the gradient, and update \
+`model.layers[0]`, `model.output_weight`, `model.output_bias` for real \
+epochs. Return {"calibrated_decision": {"final_state": {"w1": <the 4x2 \
+first-layer weight matrix as a nested list>, "b1": <the 4-element first-layer \
+bias as a list>, "w_out": <the 4-element output weight as a list>, "b_out": \
+<the output bias as a float>}, "wall_clock_seconds": ...}}. The architecture \
+(input_dim=2, hidden_dims=[4]) is FIXED -- do not change it, the harness can \
+only rescore a final_state of this exact shape. The harness independently \
+rescores your trained weights (both an energy AND a calibration score) \
+against a DIFFERENT held-out set you cannot read -- your own training-set \
+metric is never trusted. A weight set that scores every training row \
+identically will be rejected as degenerate, not accepted.
+
+For EITHER benchmark, do NOT return "final_energy" -- it will be IGNORED. \
+The harness independently recomputes the true metrics from your \
+`final_state`, so there is no way to claim a result you did not actually \
+reach. Only your `final_state` and how you found it matter."""
 
 
 def _subprocess_recompute_energy(benchmark_name: str, final_state: Any) -> float | None:
@@ -290,6 +328,41 @@ def _subprocess_recompute_energy(benchmark_name: str, final_state: Any) -> float
         return None
 
 
+def _subprocess_recompute_calibrated_decision(final_state: Any) -> dict[str, float] | None:
+    """Same fresh-process trust boundary as `_subprocess_recompute_energy`
+    above, but for the calibrated_decision benchmark (REQ-AUTO-018), which
+    reports TWO trusted numbers (`final_energy` and `brier`) instead of one.
+    Kept as its own function rather than widening
+    `_subprocess_recompute_energy`'s return type, so every existing caller of
+    that function (double_well/rosenbrock/verifier_auroc) is untouched."""
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(_RECOMPUTE_WORKER)],
+            input=json.dumps(
+                {
+                    "benchmark_name": CALIBRATED_DECISION_BENCHMARK_NAME,
+                    "final_state": final_state,
+                }
+            ),
+            capture_output=True,
+            text=True,
+            timeout=_RECOMPUTE_TIMEOUT_S,
+            check=False,
+        )
+        if proc.returncode != 0:
+            return None
+        result = json.loads(proc.stdout.strip())
+        energy = result.get("energy")
+        brier = result.get("brier")
+        if not (isinstance(energy, (int, float)) and energy == energy):
+            return None
+        if not (isinstance(brier, (int, float)) and brier == brier):
+            return None
+        return {"final_energy": float(energy), "brier": float(brier)}
+    except (subprocess.TimeoutExpired, OSError, json.JSONDecodeError, ValueError, AttributeError):
+        return None
+
+
 def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
     """The one seam between the sandbox and the evaluator (REQ-AUTO-021,
     hardened by REQ-AUTO-025's CRITICAL-2 fix -- see
@@ -314,6 +387,11 @@ def _recompute_metrics(raw_metrics: dict[str, Any]) -> dict[str, Any]:
             energy = _subprocess_recompute_energy(name, bench_metrics.get("final_state"))
             if energy is not None:
                 entry["final_energy"] = energy
+        elif name == CALIBRATED_DECISION_BENCHMARK_NAME:
+            result = _subprocess_recompute_calibrated_decision(bench_metrics.get("final_state"))
+            if result is not None:
+                entry["final_energy"] = result["final_energy"]
+                entry["brier"] = result["brier"]
         verified[name] = entry
     return verified
 
@@ -337,6 +415,15 @@ def _verified_execute_hypothesis(
     original_split_corpus = _verifier_auroc_module._split_corpus
     original_load_corpus_rows = _verifier_auroc_module._load_corpus_rows
     original_toy_energy_functions = dict(BENCHMARK_ENERGY_FUNCTIONS)
+    # REQ-AUTO-018: same defense-in-depth restore for calibrated_decision_
+    # benchmark.py's private helpers/caches, even though the production
+    # sandbox_config already blocks `carnot` imports entirely (see
+    # `run_round` below) -- a direct caller using a permissive config should
+    # not be able to poison this module's caches either.
+    original_cd_binary_auroc = _calibrated_decision_module._binary_auroc
+    original_cd_split_features = _calibrated_decision_module._split_features
+    original_cd_load_corpus_rows = _calibrated_decision_module._load_corpus_rows
+    original_cd_pcib_features = _calibrated_decision_module._pcib_features
     try:
         result = execute_hypothesis(hypothesis_code, benchmark_data, config, docker_config)
     finally:
@@ -347,6 +434,13 @@ def _verified_execute_hypothesis(
         original_split_corpus.cache_clear()
         BENCHMARK_ENERGY_FUNCTIONS.clear()
         BENCHMARK_ENERGY_FUNCTIONS.update(original_toy_energy_functions)
+        _calibrated_decision_module._binary_auroc = original_cd_binary_auroc
+        _calibrated_decision_module._split_features = original_cd_split_features
+        _calibrated_decision_module._load_corpus_rows = original_cd_load_corpus_rows
+        _calibrated_decision_module._pcib_features = original_cd_pcib_features
+        original_cd_load_corpus_rows.cache_clear()
+        original_cd_split_features.cache_clear()
+        original_cd_pcib_features.cache_clear()
     if not result.success:
         return result
     return SandboxResult(
@@ -383,28 +477,38 @@ class _energy_verification_patch:
 
 
 def seed_baselines() -> BaselineRecord:
-    """The same starting point as scripts/demo_autoresearch.py -- do not drift from it."""
+    """The starting point for a fresh baseline cache.
+
+    CLAUDE.md "Energy-Based Calibrated-Decision Training Floor" (2026-09-18):
+    double_well/rosenbrock (scripts/demo_autoresearch.py's original seeds,
+    REQ-AUTO-021's fitness target #1) are deliberately NOT seeded here any
+    more -- both were driven to exact machine-precision zero on the first
+    production fire (2026-09-13); every round since re-solved an
+    already-solved problem with zero headroom left. An EXISTING cache that
+    already has entries for them keeps those entries untouched (see
+    `_merge_missing_seed_benchmarks` -- it only adds names missing from the
+    loaded record, never removes one), so this only affects a genuinely
+    fresh cache, or a fresh benchmark being added to an existing one.
+    """
     record = BaselineRecord(version="0.1.0")
-    record.benchmarks["double_well"] = BenchmarkMetrics(
-        benchmark_name="double_well",
-        final_energy=0.05,
-        convergence_steps=5000,
-        wall_clock_seconds=2.0,
-    )
-    record.benchmarks["rosenbrock"] = BenchmarkMetrics(
-        benchmark_name="rosenbrock",
-        final_energy=0.5,
-        convergence_steps=10000,
-        wall_clock_seconds=5.0,
-    )
-    # REQ-AUTO-025: unlike the two toy-benchmark seeds above (illustrative
-    # placeholders, not measurements -- the true global minimum for both is
-    # 0), this seed IS a real measurement: PCIBProbe's own documented default
-    # weights (0.5, 0.5), scored against the actual held-out corpus split.
-    # See verifier_auroc_benchmark.py's module docstring for the number.
+    # REQ-AUTO-025: a real measurement, not an illustrative placeholder --
+    # PCIBProbe's own documented default weights (0.5, 0.5), scored against
+    # the actual held-out corpus split. See verifier_auroc_benchmark.py's
+    # module docstring for the number.
     record.benchmarks[VERIFIER_AUROC_BENCHMARK_NAME] = BenchmarkMetrics(
         benchmark_name=VERIFIER_AUROC_BENCHMARK_NAME,
         final_energy=measure_default_weight_energy(),
+        convergence_steps=0,
+        wall_clock_seconds=0.0,
+    )
+    # REQ-AUTO-018: also a real measurement -- a freshly constructed,
+    # UNTRAINED GibbsModel's zero-initialized output layer scores exactly
+    # chance (AUROC 0.5) on the held-out split. See
+    # calibrated_decision_benchmark.py's module docstring for why this is
+    # the honest seed, not a fabricated placeholder.
+    record.benchmarks[CALIBRATED_DECISION_BENCHMARK_NAME] = BenchmarkMetrics(
+        benchmark_name=CALIBRATED_DECISION_BENCHMARK_NAME,
+        final_energy=measure_default_calibration_energy()["final_energy"],
         convergence_steps=0,
         wall_clock_seconds=0.0,
     )

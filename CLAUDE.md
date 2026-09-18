@@ -74,7 +74,11 @@ was green the whole time because its pattern list was narrower than its
 concept. Working rule: `git status` BEFORE `git add -A` after any test run)** ·
 ARC-AGI-3 IS a Live Hidden-Game Discovery Agent (foundational framing — read FIRST for any
 ARC work; the deliverable is the live runtime discovery loop, NOT trained weights or offline
-public-game replays; an offline null may be a corpus artifact).
+public-game replays; an offline null may be a corpus artifact) ·
+Energy-Based Calibrated-Decision Training Floor (2026-09-18 — reserves >=1 milestone slot
+toward training a calibrated typed-decision policy from Carnot's own verifiers; closes
+`GAP-ORACLE-DISTINCT`/`GAP-DETECTOR-AUROC-4208`; does NOT touch the mandated generator's
+weights or the ARC live agent).
 
 **Publication readiness — `publication_blocker_count` is DEPRECATED.** It was
 redefinable (moved 105→10 by recount between capstones v303/v304) and could not
@@ -4873,6 +4877,98 @@ is the backstop. Cross-refs: `feedback_literature_priority_discipline` (memory),
 `feedback_sweep_dedupe_protocol` (memory, the sweep helpers),
 `docs/research-notes/search-layer-literature-2026-06-11.md` (the exemplar),
 `feedback_sota_ingestion_cycle` (memory).
+
+## Energy-Based Calibrated-Decision Training Floor (MANDATORY — 2026-09-18)
+
+**Origin:** 2026-09-18 operator directive, after reading a marketing page for
+a commercial product ("Jev," from TypeSafe AI) that trains a model to output
+typed decisions with a calibrated confidence score instead of text, and gates
+autonomy on that score. The page names no published method — no paper, no
+equations, no benchmark. The operator's ask is not to copy it: build the same
+KIND of capability from Carnot's own energy-based-model research.
+
+Research at the time this rule was written found the target is not a new
+idea for this project — it is an ALREADY-LOGGED open gap, just not phrased
+this way. `ops/verifier_gaps.md` names it three times under existing IDs:
+`GAP-ORACLE-DISTINCT` and `GAP-DETECTOR-AUROC-4208` (this one duplicated
+under two experiment IDs). All three say the same thing: an existing
+verifier or detector already produces a discriminating signal, but nothing
+trains a SELECTION POLICY that converts that signal into a calibrated
+decision. Closing any of these IS "training something like Jev," grounded
+in work this project already started.
+
+**The rule.** Every milestone's `research-roadmap-next.yaml` reserves at
+least ONE task toward training a policy that converts an existing Carnot
+verifier's or detector's signal into a calibrated, typed decision
+(accept / reject / escalate, with a confidence number), built from Carnot's
+own energy-model substrate. Qualifying work is any of:
+
+1. Work that closes or advances `GAP-ORACLE-DISTINCT` or
+   `GAP-DETECTOR-AUROC-4208` in `ops/verifier_gaps.md`.
+2. Work on the `calibrated_decision` autoresearch benchmark (see below) or
+   any successor benchmark scoring calibration (Expected Calibration Error,
+   Brier score) rather than only AUROC.
+3. Adding a calibration metric to an existing verifier's evaluation where
+   none exists today.
+
+**What does NOT count.** Naming this floor does not authorize:
+
+- Any weight update to the mandated 27B generator
+  (`unsloth/Qwen3.8-27B-GGUF`). This floor trains small `GibbsModel`-scale
+  selectors — the SOTA Local Models mandate is unaffected, and full
+  fine-tuning of the generator is a separate, much larger, unscoped effort.
+- Touching the ARC live agent or its own standing floor (the AVO-Method
+  Adoption rule and the Generalization-Testing Floor above) — a different,
+  already-governed program.
+- Reverse-engineering or claiming to reproduce TypeSafe's RLCD algorithm.
+  Nothing about it is published; a claim to have copied it would be
+  fabrication. Cite it as inspiration only, per the framing already logged
+  in `research-references.md`'s 2026-09-17 TypeSafe AI note.
+
+**The starting substrate (why this is buildable now, not a research
+proposal).** `python/carnot/autoresearch/code_improvement.py` already
+contains a sandboxed hypothesis template whose `run()` body IS a training
+loop: build a `GibbsModel` (`carnot.models.gibbs`), compute an NCE loss
+(`carnot.training.nce`), take `jax.grad`, and apply manual gradient steps
+before scoring held-out accuracy — inside the same
+`run(benchmark_data) -> dict` contract every `scripts/autoresearch_conductor_round.py`
+benchmark already uses. This module was not wired into the standing
+autoresearch rotation before this rule shipped a `calibrated_decision`
+benchmark reusing that pattern. The mechanism already existed; it was
+unused, not missing.
+
+**A note on the two benchmarks this floor's first increment retired.**
+`double_well` and `rosenbrock` (`python/carnot/autoresearch/toy_benchmarks.py`)
+were solved to exact machine-precision zero the first round they ever ran
+(2026-09-13) and every round since re-solved an already-solved problem —
+zero headroom, by the benchmark's own docstring. Removing them from the
+standing rotation is not scope reduction of this floor; it frees the wasted
+slot for the calibration work this rule requires.
+
+**Mechanical enforcement.** WARN-only heuristic in the roadmap activation
+path, mirroring `scripts/arc_levelup_guarantee_lint.py`'s soft-gate
+precedent for the ARC Generalization-Testing Floor: a new, unproven
+detection heuristic should not hard-block a milestone. Promote to a hard
+gate only after several milestones show what a compliant task prompt
+actually looks like — do not hand-tune the heuristic against one roadmap.
+
+**Why this is in CLAUDE.md, not just `ops/known-issues.md`.** Same
+defense-in-depth as every sibling standing floor in this file: a
+known-issues.md entry is consumed and rotated per milestone; the planner
+reads CLAUDE.md as required input on every plan generation. That is what
+makes "at least one slot, every milestone, indefinitely" durable rather
+than a one-off.
+
+**Cross-references:** 2026-09-18 operator directive (origin) ·
+`ops/verifier_gaps.md` `GAP-ORACLE-DISTINCT` / `GAP-DETECTOR-AUROC-4208`
+(the target this floor closes) · `python/carnot/autoresearch/code_improvement.py`
+(the reused training-loop pattern) ·
+`python/carnot/autoresearch/calibrated_decision_benchmark.py` (the new
+benchmark) · `research-references.md` 2026-09-17 TypeSafe AI note (the
+inspiration, cited not copied) · CLAUDE.md "ARC-AGI-3 Generalization-Testing
+Floor" and "SOTA-Ingestion Cycle Discipline" (the structural precedents this
+rule follows) · CLAUDE.md "SOTA Local Models" (the generator-training
+exclusion this rule does not touch).
 
 ## Development Workflow (MANDATORY)
 

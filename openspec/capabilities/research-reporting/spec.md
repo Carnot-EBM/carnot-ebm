@@ -72618,6 +72618,9 @@ board accounting. `board_disposition_complete_score` SHALL equal one only when
 KV260, GateMate, and PolarFire are all authenticated. `hardware_ready_score`,
 `hardware_value_score`, and `promotion_score` SHALL remain zero.
 
+The terminal artifact SHALL use `run_date=20260918`. It SHALL pair that frozen
+execution label with actual UTC start and completion timestamps.
+
 The wishlist reconciliation SHALL retain Extropic Z1T as a dated V647 vendor
 announcement, not measured Carnot hardware. It SHALL assume neither TSU nor NPU
 access. No USB, SSH, JTAG, flash, reset, installation, download, purchase,

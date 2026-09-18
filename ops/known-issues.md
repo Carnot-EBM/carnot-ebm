@@ -9889,6 +9889,43 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-09-18: RETIRE THE TWO SATURATED AUTORESEARCH TOY BENCHMARKS, ADD THE CALIBRATED-DECISION BENCHMARK
+
+New standing floor per CLAUDE.md "Energy-Based Calibrated-Decision Training Floor"
+(2026-09-18 operator directive): every milestone reserves >=1 task toward training a
+policy that converts an existing Carnot verifier/detector's signal into a calibrated,
+typed decision, built from Carnot's own energy-model substrate. This entry names the
+concrete first task, not a research proposal — the pieces already exist.
+
+**Note on the header format.** This entry deliberately uses a colon after the date,
+not the em-dash most recent entries above use. `scripts/overdue_priority_lint.py`'s
+`PRIORITY_HEADER` regex requires the colon form to detect pickup — the em-dash form
+is invisible to it. That is a real, separately-discovered gap in the two entries
+below this one; not fixed retroactively here, only avoided in this new entry.
+
+**Why the two toy benchmarks are the first thing to cut.** `double_well` and
+`rosenbrock` (`python/carnot/autoresearch/toy_benchmarks.py`) were driven to exact
+machine-precision zero the first round they ever ran (2026-09-13) — every round
+since has re-solved an already-solved problem with zero headroom left, matching the
+observed 0-accepted / 5-rejected pattern on every subsequent round.
+
+**Task: wire `calibrated_decision_benchmark.py` into the standing rotation.**
+1. Remove `double_well`/`rosenbrock` from `scripts/autoresearch_conductor_round.py`'s
+   active baseline seed set.
+2. Add `python/carnot/autoresearch/calibrated_decision_benchmark.py` (new module,
+   modeled on `verifier_auroc_benchmark.py`'s registration shape): a hypothesis
+   trains a small `GibbsModel` classifier via NCE loss against a held-out
+   (correct, violating) corpus, reusing the training-loop pattern already present
+   in `code_improvement.py` (:227-264) — do not reinvent it. Score both
+   `final_energy` and an Expected Calibration Error field.
+3. This directly targets `ops/verifier_gaps.md`'s `GAP-ORACLE-DISTINCT` and
+   `GAP-DETECTOR-AUROC-4208` — a verifier/detector signal exists, nothing trains a
+   selection policy from it. Closing either gap, even partially, satisfies this
+   milestone's reserved slot.
+
+**Explicitly out of scope for this task:** any weight update to the mandated
+`unsloth/Qwen3.8-27B-GGUF` generator; anything touching the ARC live agent.
+
 ### NEW 2026-08-31 (outer-loop) — GENERATOR-PROVENANCE HELPERS ARE LANDED BUT NOT WIRED; 4 ARTIFACT REBUILDS BLOCK THE CALL SITE
 
 `python/carnot/agentic/arc_eval_provenance.py` (REQ-ARC-WMTE-6790) is landed and tested — 6

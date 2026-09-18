@@ -28,6 +28,29 @@ def _init_repo(path: Path) -> None:
     subprocess.run(["git", "commit", "-q", "-m", "seed"], cwd=path, check=True)
 
 
+def _seed_baseline_cache(tmp_path: Path, benchmark_name: str, final_energy: float) -> Path:
+    """Write a baseline cache file with one benchmark entry -- simulates a
+    pre-existing production cache that still carries a retired benchmark's
+    baseline (see `seed_baselines`' docstring, CLAUDE.md "Energy-Based
+    Calibrated-Decision Training Floor": an existing cache keeps entries
+    `seed_baselines()` no longer defines; only a fresh cache omits them).
+    Lets tests exercise accept/commit mechanics against `double_well` --
+    a deterministic, easily hand-computed energy function -- without
+    double_well needing to remain part of the production seed."""
+    ops_dir = tmp_path / "ops"
+    ops_dir.mkdir(parents=True, exist_ok=True)
+    record = acr.BaselineRecord(version="0.1.0")
+    record.benchmarks[benchmark_name] = acr.BenchmarkMetrics(
+        benchmark_name=benchmark_name,
+        final_energy=final_energy,
+        convergence_steps=0,
+        wall_clock_seconds=0.0,
+    )
+    cache_path = ops_dir / ".autoresearch_baselines.json"
+    record.save(cache_path)
+    return cache_path
+
+
 def _make_entry(entry_id: str = "auto-001") -> ExperimentEntry:
     return ExperimentEntry(
         id=entry_id,
@@ -764,6 +787,7 @@ class TestRunRound:
         (run_round -> generator closure -> commit_accepted_hypothesis) that
         must attribute correctly."""
         _init_repo(tmp_path)
+        _seed_baseline_cache(tmp_path, "double_well", 0.05)
 
         def fake_generator(
             _model,
@@ -873,6 +897,7 @@ class TestRunRound:
 
     def test_bounded_run_commits_only_accepted_winners(self, tmp_path: Path) -> None:
         _init_repo(tmp_path)
+        _seed_baseline_cache(tmp_path, "double_well", 0.05)
 
         def fake_generator(
             _model,
@@ -998,6 +1023,7 @@ class TestRunRound:
         this hypothesis's own numbers, not whatever the baseline happened to
         be after the WHOLE round finished."""
         _init_repo(tmp_path)
+        _seed_baseline_cache(tmp_path, "double_well", 0.05)
 
         def fake_generator(
             _model,
@@ -1046,28 +1072,43 @@ class TestRunRound:
 
 
 class TestSeedBaselines:
-    def test_matches_demo_autoresearch(self) -> None:
+    def test_matches_the_two_active_benchmarks(self) -> None:
+        """CLAUDE.md "Energy-Based Calibrated-Decision Training Floor"
+        (2026-09-18): double_well/rosenbrock are no longer seeded here --
+        both were driven to machine-precision zero on their first
+        production fire and every round since re-solved an already-solved
+        problem. The active seed set is now verifier_auroc (REQ-AUTO-025)
+        and calibrated_decision (REQ-AUTO-018), both real measurements."""
         record = acr.seed_baselines()
-        assert record.benchmarks["double_well"].final_energy == 0.05
-        assert record.benchmarks["rosenbrock"].final_energy == 0.5
+        assert set(record.benchmarks.keys()) == {"verifier_auroc", "calibrated_decision"}
 
     def test_verifier_auroc_seed_is_a_real_measurement(self) -> None:
-        """REQ-AUTO-025: unlike the two illustrative placeholders above, this
-        seed must equal an actual recomputation, not a hand-typed number."""
+        """REQ-AUTO-025: this seed must equal an actual recomputation, not
+        a hand-typed number."""
         record = acr.seed_baselines()
         assert record.benchmarks["verifier_auroc"].final_energy == (
             acr.measure_default_weight_energy()
         )
 
+    def test_calibrated_decision_seed_is_a_real_measurement(self) -> None:
+        """REQ-AUTO-018: same discipline as verifier_auroc above -- this
+        seed must equal an actual recomputation (the honest chance-level
+        number for an untrained model), not a hand-typed placeholder."""
+        record = acr.seed_baselines()
+        assert (
+            record.benchmarks["calibrated_decision"].final_energy
+            == (acr.measure_default_calibration_energy()["final_energy"])
+        )
+
     def test_load_falls_back_to_seed_when_cache_missing(self, tmp_path: Path) -> None:
         record = acr.load_baselines(tmp_path / "does_not_exist.json")
-        assert record.benchmarks["double_well"].final_energy == 0.05
+        assert set(record.benchmarks.keys()) == {"verifier_auroc", "calibrated_decision"}
 
     def test_load_falls_back_to_seed_on_corrupt_cache(self, tmp_path: Path) -> None:
         cache = tmp_path / "corrupt.json"
         cache.write_text("not json")
         record = acr.load_baselines(cache)
-        assert record.benchmarks["double_well"].final_energy == 0.05
+        assert set(record.benchmarks.keys()) == {"verifier_auroc", "calibrated_decision"}
 
     def test_a_cache_predating_verifier_auroc_gets_it_seeded(self, tmp_path: Path) -> None:
         """REQ-AUTO-025 CRITICAL-1 fix (2026-09-16 adversarial review): the
