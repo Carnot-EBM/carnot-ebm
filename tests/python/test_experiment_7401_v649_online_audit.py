@@ -1,4 +1,4 @@
-"""Spec-linked tests for the independent V649 online audit.
+"""Tests for the V649 independent online-trial audit.
 
 Spec refs: REQ-REPORT-7401 and SCENARIO-REPORT-7401-DIAGNOSIS through
 SCENARIO-REPORT-7401-ARTIFACT.
@@ -7,199 +7,253 @@ SCENARIO-REPORT-7401-ARTIFACT.
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 import math
+from pathlib import Path
 
 import pytest
 
 from carnot import experiment_7401_v649_online_audit as audit
 
 
-def _bundle() -> dict:
-    checkpoint = {
-        "schema": "carnot.exp7399.numeric_checkpoint.v1",
-        "seed": 7397001,
-        "training_authority": "frozen_initialization_groups_only",
-        "initial_group_count": 2,
-        "initial_group_ids_sha256": audit.canonical_hash(["initial-0", "initial-1"]),
-        "future_stream_groups_used": 0,
-        "gibbs_steps": 2,
-        "weights": {
-            "w1": [[1.0, 0.0], [0.0, 1.0], [0.5, -0.5], [-0.5, 0.5]],
-            "b1": [0.0, 0.0, 0.0, 0.0],
-            "w_out": [1.0, -1.0, 0.5, -0.5],
-            "b_out": 0.1,
-        },
-        "affine": {"a": 1.0, "b": -1.0},
-        "logistic_weights": {"coef": [0.2, -0.1], "bias": -1.5},
-    }
-    stream = [
-        {
-            "group_id": f"later-{index}",
-            "source_row_index": 10 + index,
-            "partition": "training",
-            "entity_uptake": uptake,
-            "falsifiability_score": falsifiability,
-            "label": label,
-        }
-        for index, (uptake, falsifiability, label) in enumerate(
-            ((0.2, 0.1, 0), (0.8, 0.4, 1), (0.4, 0.9, 0), (0.7, 0.2, 1))
-        )
-    ]
-    policy = {
-        "accept_enabled": True,
-        "accept_threshold": 0.25,
-        "reject_enabled": True,
-        "reject_threshold": 0.75,
-    }
-    condition = {"name": "primary_delay_1", "delay": 1, "missing_fraction": 0.0}
+def _event(event_id: str, *, label: int, energy: float = 0.0) -> dict[str, object]:
     return {
-        "checkpoint": checkpoint,
-        "initial_labels": [0, 1],
-        "stream": stream,
-        "policy": policy,
-        "condition": condition,
+        "event_id": event_id,
+        "group_id": event_id,
+        "partition": "training",
+        "features": [energy, 1.0],
+        "raw_energy": energy,
+        "label": label,
+        "feedback_disposition": "committed",
+        "full_cost_s": 0.01,
     }
 
 
-def test_independent_numeric_replay_covers_updates_and_actions() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-REPLAY."""
+def _unit() -> dict[str, object]:
+    return {
+        "arm": "adaptive_affine_gibbs",
+        "seed": 7397001,
+        "affine": {"a": 1.0, "b": 0.0},
+        "learning_rate": 0.01,
+        "gradient_norm_cap": 1.0,
+    }
 
-    bundle = _bundle()
-    first_energy = audit.gibbs_energy(
-        bundle["checkpoint"]["weights"],
-        [bundle["stream"][0]["entity_uptake"], bundle["stream"][0]["falsifiability_score"]],
+
+def _policy() -> dict[str, object]:
+    return {
+        "accept_threshold": 0.25,
+        "reject_threshold": 0.75,
+        "accept_enabled": True,
+        "reject_enabled": True,
+    }
+
+
+def test_fresh_affine_replay_updates_only_after_prediction() -> None:
+    """SCENARIO-REPORT-7401-REPLAY: fresh scalar arithmetic reproduces rows."""
+
+    rows = audit.recompute_stream(
+        [_event("g0", label=1), _event("g1", label=0)], _unit(), _policy()
     )
-    assert math.isfinite(first_energy)
-    replay = audit.replay_registered_unit(
-        bundle["checkpoint"],
-        bundle["initial_labels"],
-        bundle["stream"],
-        ordering="fixed_hash_order",
-        condition=bundle["condition"],
-        seed=7397001,
-        policy=bundle["policy"],
-    )
+    assert rows[0]["probability"] == pytest.approx(0.5)
+    assert rows[0]["brier_loss"] == pytest.approx(0.25)
+    assert rows[0]["log_loss"] == pytest.approx(-math.log(0.5))
+    assert rows[0]["prediction_before_feedback"] is True
+    assert rows[0]["state_hash_before_update"] != rows[0]["state_hash_after_update"]
+    assert rows[1]["probability"] > 0.5
+    assert rows[0]["typed_action_changed"] is False
+    assert rows[0]["original_answer_corrected"] is False
 
-    assert len(replay["rows"]) == len(audit.ARMS) * len(bundle["stream"])
-    adaptive = [row for row in replay["rows"] if row["arm"] == "adaptive_affine_gibbs"]
-    assert adaptive[0]["update_count"] == 0
-    assert adaptive[-1]["update_count"] == 2
-    assert all(row["brier_loss"] == pytest.approx((row["probability"] - row["label"]) ** 2) for row in adaptive)
-    assert replay["restart_receipt"]["prediction_parity"] is True
-    assert replay["erasure_receipt"]["passed"] is True
-    assert all("original_answer_correct" in row and "typed_action_changed" in row for row in adaptive)
+    duplicate = [_event("g0", label=1), _event("g0", label=0)]
+    with pytest.raises(ValueError, match="duplicate_update"):
+        audit.recompute_stream(duplicate, _unit(), _policy())
+    leaked = _event("leak", label=1)
+    leaked["label_visible_before_prediction"] = True
+    with pytest.raises(ValueError, match="future_label_leak"):
+        audit.recompute_stream([leaked], _unit(), _policy())
 
 
-def test_producer_comparison_rejects_changed_probability_and_cost() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-REPLAY."""
+def test_private_mutations_all_fail_closed() -> None:
+    """SCENARIO-REPORT-7401-MUTATIONS: all six private mutations are rejected."""
 
-    bundle = _bundle()
-    replay = audit.replay_registered_unit(
-        bundle["checkpoint"],
-        bundle["initial_labels"],
-        bundle["stream"],
-        ordering="fixed_hash_order",
-        condition=bundle["condition"],
-        seed=7397001,
-        policy=bundle["policy"],
-    )
-    producer = []
-    for row in replay["rows"]:
-        producer.append(
+    evidence = audit.build_fixture_evidence()
+    assert audit.evidence_errors(evidence) == []
+    rows = audit.run_mutation_checks(evidence)
+    assert [row["mutation"] for row in rows] == list(audit.MUTATIONS)
+    assert all(row["rejected"] is True for row in rows)
+    assert all(row["rejecting_check"] for row in rows)
+    assert evidence == audit.build_fixture_evidence()
+
+    constant = audit.build_fixture_evidence()
+    constant["discrimination_claim"] = True
+    for row in constant["rows"]:
+        row["probability"] = 0.5
+    assert "learned_constant_discrimination_claim" in audit.evidence_errors(constant)
+    constant["scorer_class"] = "prevalence_baseline"
+    assert "learned_constant_discrimination_claim" not in audit.evidence_errors(constant)
+
+
+def test_missing_current_producers_are_exact_blockers(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7401-DIAGNOSIS: absent unchanged inputs block by exact path."""
+
+    spec = tmp_path / audit.SPEC_PATH
+    spec.parent.mkdir(parents=True)
+    spec.write_text("REQ-REPORT-7401\n", encoding="utf-8")
+    for relative in audit.SUPPORTING_INPUTS:
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("support\n", encoding="utf-8")
+    checks, hashes, sources = audit.collect_preconditions(tmp_path)
+    missing = [row for row in checks if row["passed"] is False]
+    assert [row["upstream"] for row in missing] == [
+        audit.ADAPTER_PATH.as_posix(),
+        audit.TRIAL_PATH.as_posix(),
+    ]
+    assert all(row["artifact_field"] == "bytes" for row in missing)
+    assert audit.SPEC_PATH.as_posix() in hashes
+    assert sources[audit.ADAPTER_PATH.as_posix()]["verdict_class"] is None
+
+    adapter = tmp_path / audit.ADAPTER_PATH
+    trial = tmp_path / audit.TRIAL_PATH
+    adapter.write_text(
+        json.dumps(
             {
-                **{key: row[key] for key in audit.ROW_ID_FIELDS},
-                "probability": row["probability"],
-                "brier_loss": row["brier_loss"],
-                "log_loss": row["log_loss"],
-                "typed_action": row["typed_action"],
-                "full_cost_s": 0.001,
-                "prediction_before_feedback": True,
+                "experiment_id": "exp7397-delayed-adapter",
+                "delayed_adapter_ready_score": 1,
+                "flagged_adversarial": False,
+                "verdict_class": "null",
             }
-        )
-    compared = audit.compare_producer_rows(replay["rows"], producer)
-    assert audit.audit_row_errors(compared, len(compared)) == []
-
-    changed = deepcopy(compared)
-    changed[0]["producer_probability"] += 0.1
-    changed[0]["probability_matches"] = False
-    assert "probability_mismatch" in audit.audit_row_errors(changed, len(changed))
-    changed = deepcopy(compared)
-    changed[0]["full_cost_s"] = None
-    assert "missing_cost" in audit.audit_row_errors(changed, len(changed))
-
-
-def test_all_six_private_mutations_are_rejected() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-MUTATIONS."""
-
-    fixture = audit.build_fixture_artifact()
-    mutations = audit.run_mutation_suite(fixture)
-    assert [row["mutation"] for row in mutations] == list(audit.MUTATION_NAMES)
-    assert all(row["rejected"] is True and row["rejecting_check"] for row in mutations)
-
-
-def test_complete_null_keeps_audit_and_value_separate() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-VALUE."""
-
-    fixture = audit.build_fixture_artifact()
-    fixture["producer_eligibility"]["eligible"] = True
-    fixture["producer_registered_efficacy"]["passed"] = False
-    fixture["mutation_rows"] = audit.run_mutation_suite(fixture)
-    audit.finalize_fixture(fixture)
-
-    reduced = audit.independent_reduce(fixture)
-    assert reduced["online_audit_complete_score"] == 1
-    assert reduced["online_value_confirmed_score"] == 0
-    assert audit.classify_terminal(True, True, False) == (
-        "complete_online_audit_null",
-        "null",
-        "complete_null_online_registered_benefit_not_confirmed",
+        ),
+        encoding="utf-8",
     )
-    assert audit.validate_artifact(fixture) == []
-
-
-def test_ineligible_present_evidence_is_disqualified_but_diagnosed() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-DIAGNOSIS."""
-
-    assert audit.classify_terminal(False, True, False) == (
-        "disqualified_online_audit_input",
-        "disqualified",
-        "complete_disqualified_online_input_diagnosed",
+    trial.write_text(
+        json.dumps(
+            {
+                "experiment_id": "exp7399-online-trial",
+                "online_capture_complete_score": 1,
+                "flagged_adversarial": False,
+                "verdict_class": "null",
+            }
+        ),
+        encoding="utf-8",
     )
-    assert audit.classify_terminal(None, False, False)[1] == "blocked"
-    bad = audit.build_fixture_artifact()
-    bad["producer_eligibility"]["eligible"] = False
-    bad["online_value_confirmed_score"] = 1
-    assert "value_requires_eligible_producer" in audit.validate_artifact(bad)
+    present_checks, _, _ = audit.collect_preconditions(tmp_path)
+    assert all(row["passed"] is True for row in present_checks)
+    non_object = tmp_path / "non-object.json"
+    non_object.write_text("[]", encoding="utf-8")
+    assert audit._load_object(non_object) == {}
 
+    artifact = audit.build_blocked_artifact(
+        run_date=audit.RUN_DATE,
+        started_at="2026-09-18T00:00:00+00:00",
+        completed_at="2026-09-18T00:00:01+00:00",
+        duration_s=1.0,
+        preconditions=checks,
+        source_hashes=hashes,
+        source_sidecar={"path": "sidecar.json", "sha256": "sha256:test"},
+        validation_receipts=[],
+        phase_spans=[],
+    )
+    assert artifact["verdict_class"] == "blocked"
+    assert artifact["honest_verdict"].startswith("blocked_")
+    assert artifact["inference_substrate_class"] == "aggregation"
+    assert artifact["execution_venue"] == "host"
+    assert artifact["MODEL_SPECS"] == []
+    assert artifact["model_invoked"] is False
+    assert artifact["rows"] == []
+    assert artifact["online_audit_complete_score"] == 0
+    assert artifact["online_value_confirmed_score"] == 0
+    assert artifact["promotion_score"] == 0
+    assert (
+        artifact["gate_check_summary"]["first_required_failure"]["upstream"]
+        == audit.ADAPTER_PATH.as_posix()
+    )
+    assert audit.validate_artifact(artifact) == []
 
-def test_artifact_validation_rejects_identity_scores_and_checksum() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-ARTIFACT."""
-
-    fixture = audit.build_fixture_artifact()
-    fixture["mutation_rows"] = audit.run_mutation_suite(fixture)
-    fixture["producer_eligibility"]["eligible"] = True
-    fixture["producer_registered_efficacy"]["passed"] = False
-    audit.finalize_fixture(fixture)
-    assert audit.validate_artifact(fixture) == []
-
-    changed = deepcopy(fixture)
+    changed = deepcopy(artifact)
+    changed["online_value_confirmed_score"] = 1
+    assert "blocked_scores_nonzero" in audit.validate_artifact(changed)
+    changed = deepcopy(artifact)
     changed["MODEL_SPECS"] = ["historical-model"]
-    changed["promotion_score"] = 1
-    changed["reproducibility_checksum"] = "sha256:changed"
-    errors = audit.validate_artifact(changed)
-    assert "substrate_declaration_mismatch" in errors
-    assert "promotion_nonzero" in errors
-    assert "reproducibility_checksum_mismatch" in errors
+    assert "substrate_declaration_mismatch" in audit.validate_artifact(changed)
+    assert audit.validate_artifact([]) == ["artifact_not_object"]
+    for mutation, expected in (
+        ({"schema": "wrong"}, "identity_mismatch"),
+        ({"verifier_is_oracle": True}, "oracle_declaration_mismatch"),
+        ({"gate_check_summary": {}}, "blocked_gate_summary_missing"),
+        ({"rows": [{}]}, "blocked_artifact_has_dependent_rows"),
+        ({"promotion_score": 1}, "promotion_nonzero"),
+        ({"field_principles": {}}, "field_principles_incomplete"),
+    ):
+        changed = deepcopy(artifact)
+        changed.update(mutation)
+        assert expected in audit.validate_artifact(changed)
 
 
-def test_precondition_rows_keep_exact_failure_and_source_class() -> None:
-    """REQ-REPORT-7401; SCENARIO-REPORT-7401-DIAGNOSIS."""
+def test_classification_keeps_completion_and_value_separate() -> None:
+    """SCENARIO-REPORT-7401-VALUE: completion does not imply online value."""
 
-    passed = audit.precondition_row("producer_status", "producer.json", "status", "complete", "complete")
-    failed = audit.precondition_row("producer_flag", "producer.json", "flag", False, True)
-    summary = audit.gate_summary([passed, failed])
-    assert passed["passed"] is True
-    assert summary["first_required_failure"]["artifact_field"] == "flag"
-    assert audit.source_outcome(False, []) == "blocked"
-    assert audit.source_outcome(True, [failed]) == "disqualified"
-    assert audit.source_outcome(True, [passed]) == "eligible"
+    complete_null = audit.classify_terminal(
+        inputs_present=True,
+        inputs_valid=True,
+        audit_complete=True,
+        efficacy_passed=False,
+        required_validation_passed=True,
+    )
+    assert complete_null == {
+        "verdict_class": "null",
+        "honest_verdict": "complete_null_online_value_not_confirmed",
+        "online_audit_complete_score": 1,
+        "online_value_confirmed_score": 0,
+    }
+    assert audit.classify_terminal(False, False, False, False, True)["verdict_class"] == "blocked"
+    assert audit.classify_terminal(True, False, True, True, True)["verdict_class"] == "disqualified"
+    assert audit.classify_terminal(True, True, True, True, False)["verdict_class"] == "disqualified"
+    assert audit.classify_terminal(True, True, True, True, True)["verdict_class"] == "positive"
+    assert audit._sigmoid(-1000.0) == pytest.approx(0.0)
+    assert audit._typed_action(0.1, _policy()) == "accept"
+    assert audit._typed_action(0.9, _policy()) == "reject"
+
+
+def test_affected_plan_and_atomic_artifact_contract(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-REPORT-7401-ARTIFACT: scoped commands and atomic readers stay fixed."""
+
+    private = tmp_path / "private"
+    commands = audit.build_validation_commands(Path.cwd(), private)
+    assert [command.name for command in commands] == list(
+        audit.validation_scope.REQUIRED_CHECK_NAMES
+    )
+    assert audit.validate_command_plan(Path.cwd(), audit.V649_MANIFEST, commands) == []
+    argv = [argument for command in commands for argument in command.argv]
+    assert "tests/python" not in argv
+    assert "full_python_suite" not in [command.name for command in commands]
+    assert any(argument.startswith("--basetemp=") for argument in argv)
+
+    target = tmp_path / "value.json"
+    audit.atomic_json(target, {"b": 2, "a": 1})
+    assert json.loads(target.read_text()) == {"a": 1, "b": 2}
+    assert audit.sha256_file(target).startswith("sha256:")
+
+    args = audit.parse_args(["--date", audit.RUN_DATE, "--output", str(target)])
+    assert args.date == audit.RUN_DATE
+    monkeypatch.setattr(audit, "run_experiment", lambda *args, **kwargs: {"status": "blocked"})
+    assert audit.main(["--date", audit.RUN_DATE, "--output", str(target)]) == 0
+    with pytest.raises(SystemExit, match="--date is required"):
+        audit.main([])
+
+    blocked = audit.build_blocked_artifact(
+        run_date=audit.RUN_DATE,
+        started_at="2026-09-18T00:00:00+00:00",
+        completed_at="2026-09-18T00:00:01+00:00",
+        duration_s=1.0,
+        preconditions=[
+            audit._precondition("missing", audit.TRIAL_PATH.as_posix(), "bytes", "present", None)
+        ],
+        source_hashes={},
+        source_sidecar={},
+        validation_receipts=[],
+        phase_spans=[],
+    )
+    audit.atomic_json(target, blocked)
+    assert audit.main(["--cold-replay", str(target)]) == 0
