@@ -139,6 +139,35 @@ The system shall support transfer of optimization knowledge across model tiers:
 - The `to_prompt_context()` method accepts a target model tier and includes relevant lessons from other tiers
 - Tier-specific edge cases are stored in the references subdirectory, not propagated as general lessons
 
+### REQ-AUTO-018: Calibrated-Decision Benchmark
+
+Per CLAUDE.md "Energy-Based Calibrated-Decision Training Floor" (2026-09-18), the
+system shall provide an autoresearch benchmark that trains a small energy-based
+selector to convert an existing verifier's raw signal into a calibrated decision,
+rather than only tuning a linear combination of that signal (the limitation of
+REQ-AUTO-025's `verifier_auroc` benchmark):
+
+- A hypothesis trains a `carnot.models.gibbs.GibbsModel` (fixed architecture:
+  `input_dim=2, hidden_dims=[4]`) via `carnot.training.nce.nce_loss`, over the raw
+  PCIB entity-uptake / falsifiability-score features of `data/fover_corpus_v4.json`
+  (the same corpus REQ-AUTO-025 uses, but the two features unweighted, not the
+  probe's weighted combination), treating "correct" rows as NCE's low-energy data
+  and "incorrect" rows as its high-energy noise.
+- `GibbsModel`/`GibbsConfig`/`nce_loss` are handed to the hypothesis directly via
+  `benchmark_data` (never importable — the sandbox blocks all `carnot` imports),
+  the same trust pattern REQ-AUTO-025 established for `PCIBProbe`.
+- The harness recomputes TWO independently-measured numbers from a hypothesis's
+  claimed `final_state` (never a self-reported value), in a fresh subprocess per
+  REQ-AUTO-025's CRITICAL-2 hardening: `final_energy = 1.0 - auroc` (the sole
+  gating metric, matching every other benchmark's convention) and `brier` (mean
+  squared error between `sigmoid(energy)` and the true label — a calibration
+  measure, reported but not yet gating).
+- A weight set that scores every held-out row identically shall be rejected as
+  degenerate from the accept path, except when honestly measuring the untrained
+  default's seed value (which is exactly the degenerate/chance case by
+  construction — a freshly constructed `GibbsModel`'s output layer is
+  zero-initialized).
+
 ### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
 
 When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
@@ -280,6 +309,25 @@ raises AssertionError for any domain below the threshold.
 **Then** `to_prompt_context(model_tier="gibbs")` includes the Ising HMC lesson
 **And** the generator's prompt contains this cross-tier knowledge
 **And** the generated hypothesis tries HMC on the Gibbs tier
+
+### SCENARIO-AUTO-018-A: Real Weights Recompute Real Calibrated-Decision Metrics
+
+**Given** a hypothesis trains a `GibbsModel` and reports `final_state` (its trained
+weights, as plain nested lists/floats)
+**When** the harness recomputes `final_energy` and `brier` against the fixed
+held-out split
+**Then** both numbers are real, independently measured, and bounded in `[0.0, 1.0]`
+**And** the hypothesis's own training-set metric is never trusted or seen by the
+evaluator
+
+### SCENARIO-AUTO-018-B: A Degenerate Weight Set Is Rejected From the Accept Path
+
+**Given** a hypothesis's weights score every held-out row identically (e.g. an
+all-zero output layer)
+**When** the harness recomputes its metrics
+**Then** the result is `None`, not a fabricated chance-level "improvement"
+**And** the SAME zero-initialized state, measured with `reject_degenerate=False`
+for the seed-baseline path only, honestly reports `final_energy=0.5, brier=0.25`
 
 ### SCENARIO-LEARN-015: extract_patterns Groups CaseMemory by Violation Family
 
@@ -2357,6 +2405,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
 | REQ-AUTO-024 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 5 Python (shared conductor-round test file) |
 | REQ-AUTO-025 | N/A | Implemented, hardened same-day per 2026-09-16 adversarial review (`python/carnot/autoresearch/verifier_auroc_benchmark.py`, `scripts/autoresearch_conductor_round.py`, `scripts/_autoresearch_energy_recompute_worker.py`) | 31 Python (`test_autoresearch_verifier_auroc_benchmark.py`) + 13 shared conductor-round test file + 1 shared toy-benchmarks test file |
+| REQ-AUTO-018 | N/A | Implemented (`python/carnot/autoresearch/calibrated_decision_benchmark.py`, `scripts/autoresearch_conductor_round.py`, `scripts/_autoresearch_energy_recompute_worker.py`) | 31 Python (`test_calibrated_decision_benchmark.py`) + shared conductor-round test file |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |

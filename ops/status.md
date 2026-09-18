@@ -16609,3 +16609,49 @@ witnesses and failed cost gates. The plan preserves all those findings and
 does not repeat its unchanged schedule-acquisition chain. New LLM work uses
 `unsloth/Qwen3.8-27B-GGUF` with bounded-generation substrate declarations.
 The current roadmap and conductor are unchanged. No V647 experiment has run.
+
+## 2026-09-18 — Energy-Based Calibrated-Decision Training Floor shipped
+
+New standing floor in CLAUDE.md: every milestone reserves at least one task
+toward training a calibrated typed-decision policy from Carnot's own
+verifiers, built after reading a marketing page for a commercial product
+("Jev") that trains this way with no published method. The concrete target
+was already logged in `ops/verifier_gaps.md` under `GAP-ORACLE-DISTINCT` and
+`GAP-DETECTOR-AUROC-4208`: a verifier signal exists, nothing trains a
+selection policy from it.
+
+First increment, same session, fully wired and tested:
+
+- `double_well`/`rosenbrock` removed from the standing autoresearch rotation
+  (`scripts/autoresearch_conductor_round.py`'s `seed_baselines()` and hypothesis
+  prompt). Both were driven to machine-precision zero on their first
+  production fire (2026-09-13); every round since re-solved an already-solved
+  problem with zero headroom.
+- New benchmark `python/carnot/autoresearch/calibrated_decision_benchmark.py`
+  (REQ-AUTO-018): a hypothesis trains a small `GibbsModel` via NCE loss over
+  the raw PCIB entity-uptake/falsifiability-score features (the same corpus
+  REQ-AUTO-025 uses, unweighted), reusing `code_improvement.py`'s
+  training-loop pattern, which was not wired into the standing rotation
+  before this. The harness recomputes both `final_energy` (the gating metric)
+  and `brier` (a calibration measure, reported not yet gating) in a fresh
+  subprocess, the same trust boundary REQ-AUTO-025 established.
+- `scripts/_autoresearch_energy_recompute_worker.py`'s JSON contract widened
+  additively (`brier` key, `None` for every other benchmark).
+- Six pre-existing tests in `test_autoresearch_conductor_round.py` that used
+  `double_well` as a fake-generator test vector were updated, not deleted — a
+  new `_seed_baseline_cache` helper writes an explicit legacy baseline entry
+  for the three `TestRunRound` tests that need one; the three `TestSeedBaselines`
+  tests now assert the new active benchmark set.
+- New test file `tests/python/test_calibrated_decision_benchmark.py`, 31 tests.
+
+Verified: 150 tests pass across `test_autoresearch_conductor_round.py`,
+`test_autoresearch_verifier_auroc_benchmark.py`, `test_autoresearch_toy_benchmarks.py`,
+and the new file. `ruff check`, `ruff format --check`, and `mypy` clean on
+every touched file. A live end-to-end check (real corpus load, real
+recompute subprocess round-trip) confirmed the seed measures exactly the
+honest chance-level numbers (`final_energy=0.5, brier=0.25`) and a random
+non-degenerate weight set recomputes a real, in-range result.
+
+Explicitly not done: no weight update to the mandated 27B generator; no
+change to the ARC live agent; `ops/verifier_gaps.md`'s two gap entries are
+not yet closed, only now have a benchmark that can close them.

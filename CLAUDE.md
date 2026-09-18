@@ -4906,8 +4906,8 @@ own energy-model substrate. Qualifying work is any of:
 1. Work that closes or advances `GAP-ORACLE-DISTINCT` or
    `GAP-DETECTOR-AUROC-4208` in `ops/verifier_gaps.md`.
 2. Work on the `calibrated_decision` autoresearch benchmark (see below) or
-   any successor benchmark scoring calibration (Expected Calibration Error,
-   Brier score) rather than only AUROC.
+   any successor benchmark scoring calibration (Brier score) rather than
+   only AUROC.
 3. Adding a calibration metric to an existing verifier's evaluation where
    none exists today.
 
@@ -4945,12 +4945,14 @@ zero headroom, by the benchmark's own docstring. Removing them from the
 standing rotation is not scope reduction of this floor; it frees the wasted
 slot for the calibration work this rule requires.
 
-**Mechanical enforcement.** WARN-only heuristic in the roadmap activation
-path, mirroring `scripts/arc_levelup_guarantee_lint.py`'s soft-gate
-precedent for the ARC Generalization-Testing Floor: a new, unproven
-detection heuristic should not hard-block a milestone. Promote to a hard
-gate only after several milestones show what a compliant task prompt
-actually looks like — do not hand-tune the heuristic against one roadmap.
+**Mechanical enforcement (pending, honor-discipline for now).** No lint
+exists yet. When one is built, it should be a WARN-only heuristic in the
+roadmap activation path, mirroring `scripts/arc_levelup_guarantee_lint.py`'s
+soft-gate precedent for the ARC Generalization-Testing Floor: a new,
+unproven detection heuristic should not hard-block a milestone. Until then
+this rule is honor-discipline at the planner layer alone, the same starting
+state as most new MANDATORY rules in this file — the planner reads CLAUDE.md
+as required input on every plan generation.
 
 **Why this is in CLAUDE.md, not just `ops/known-issues.md`.** Same
 defense-in-depth as every sibling standing floor in this file: a

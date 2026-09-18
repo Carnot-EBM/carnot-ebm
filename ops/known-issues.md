@@ -9917,7 +9917,7 @@ observed 0-accepted / 5-rejected pattern on every subsequent round.
    trains a small `GibbsModel` classifier via NCE loss against a held-out
    (correct, violating) corpus, reusing the training-loop pattern already present
    in `code_improvement.py` (:227-264) — do not reinvent it. Score both
-   `final_energy` and an Expected Calibration Error field.
+   `final_energy` and a Brier score field.
 3. This directly targets `ops/verifier_gaps.md`'s `GAP-ORACLE-DISTINCT` and
    `GAP-DETECTOR-AUROC-4208` — a verifier/detector signal exists, nothing trains a
    selection policy from it. Closing either gap, even partially, satisfies this
@@ -9925,6 +9925,27 @@ observed 0-accepted / 5-rejected pattern on every subsequent round.
 
 **Explicitly out of scope for this task:** any weight update to the mandated
 `unsloth/Qwen3.8-27B-GGUF` generator; anything touching the ARC live agent.
+
+**UPDATE 2026-09-18 (outer-loop): SHIPPED, same session as this entry.** All three
+task steps landed: `double_well`/`rosenbrock` removed from `seed_baselines()` and
+the hypothesis prompt; `python/carnot/autoresearch/calibrated_decision_benchmark.py`
+added (real `GibbsModel`/NCE training loop, fixed `input_dim=2, hidden_dims=[4]`
+architecture, own independently-salted corpus split, `final_energy` + `brier`
+both computed in the fresh-subprocess trust boundary); wired into
+`scripts/autoresearch_conductor_round.py` (imports, prompt, `default_benchmark_data`,
+`seed_baselines`, `_recompute_metrics` dispatch, the `_verified_execute_hypothesis`
+restore block) and `scripts/_autoresearch_energy_recompute_worker.py` (additive
+`brier` key on the worker's JSON contract). Six pre-existing tests in
+`test_autoresearch_conductor_round.py` that used `double_well` as a convenient
+fake-generator test vector were updated (a `_seed_baseline_cache` helper now writes
+an explicit legacy baseline entry for those three `TestRunRound` tests, and the
+three `TestSeedBaselines` tests now assert the new active benchmark set). New test
+file `tests/python/test_calibrated_decision_benchmark.py`, 31 tests. Full suite
+(`test_autoresearch_conductor_round.py` + `test_autoresearch_verifier_auroc_benchmark.py`
++ `test_autoresearch_toy_benchmarks.py` + the new file), ruff, and mypy all clean —
+150 tests passed. This closes the milestone's reserved slot for this cycle; future
+milestones should pick up actual `GAP-ORACLE-DISTINCT`/`GAP-DETECTOR-AUROC-4208`
+progress using the now-wired benchmark, not re-do this wiring task.
 
 ### NEW 2026-08-31 (outer-loop) — GENERATOR-PROVENANCE HELPERS ARE LANDED BUT NOT WIRED; 4 ARTIFACT REBUILDS BLOCK THE CALL SITE
 
