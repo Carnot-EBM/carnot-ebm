@@ -20111,3 +20111,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
   schema/prior-failure/gate audits, 62 roadmap-consumer tests, and scoped spec
   coverage. No experiments were executed; active roadmap and conductor source
   remain unchanged.
+- 2026-09-18: Bind V648 sources and the exact fourteen-task contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v648_contract_or_validation_defect; results/experiment_7381_v648_contract.json
