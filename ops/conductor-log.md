@@ -18142,3 +18142,15 @@ code |
 | 2026-09-17 21:42 UTC | Compile original-clause Boltzmann laws with entail | OK | 89 passed, 1 warning in 7.65s |
 | 2026-09-17 22:15 UTC | Validate Boltzmann marginals under cached entailme | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 94 passed, 1 warning in 8.68s |
 | 2026-09-17 23:38 UTC | Bound proof-memory placement and preserve board pr | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 56"] == experi |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 3: OPEN 21 days: SILENT_NON_FIRING on harness |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7203_v634_hardware_correction.json age-week 1: OPEN 7 days: CLAIM_OVE |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_emit_no_llm_by_name_warning age-week 1: OPEN 7 days: SIL |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7215_v635_down_up_prototype.json age-week 1: OPEN 7 days: CLAIM_OVERS |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_path_tokens age-week 1: OPEN 7 days: SILENT_NON_FI |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claim_evidence_scope age-week 1: OPEN 7 days: SILENT_NON |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_methodology_claims_live_inference age-week 1: OPEN 7 day |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_identity_claims_live_inference age-week 1: OPEN 7 days:  |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 0: OPEN 6 day |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_rate_metric_field age-week 0: OPEN 1 days: SILENT_NON |
+| 2026-09-18 00:29 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7361_v646_fresh_plan_capture.json age-week 0: OPEN 1 days: CLAIM_OVER |
+| 2026-09-18 01:00 UTC | Bound proof-memory placement and preserve board pr | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: 65%; pytest r |
