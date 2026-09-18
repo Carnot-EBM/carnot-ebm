@@ -1,0 +1,81 @@
+{
+  "experiment": 7391,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-18",
+  "started_at": "2026-09-18T08:53:32.636417+00:00",
+  "finished_at": "2026-09-18T08:53:32.636417+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Measure adapter-withheld live ARC after first-action repair",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7384-arc-invocation-boundary",
+  "failed_field": "arc_invocation_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+  "failed_evidence_sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7384-arc-invocation-boundary",
+    "failed_field": "arc_invocation_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+    "failed_evidence_sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6"
+  },
+  "gate_check_summary": "gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7384-arc-invocation-boundary.arc_invocation_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7384-arc-invocation-boundary",
+      "artifact_field": "arc_invocation_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+      "artifact_sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6"
+    },
+    {
+      "upstream": "exp7384-arc-invocation-boundary",
+      "artifact_field": "verdict_class",
+      "op": "in",
+      "expected": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "expected_type": "list",
+      "actual": "disqualified",
+      "actual_type": "str",
+      "passed": false,
+      "reason": "actual='disqualified' in expected=['positive', 'circular_positive', 'null']",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+      "artifact_sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6"
+    },
+    {
+      "upstream": "exp7384-arc-invocation-boundary",
+      "artifact_field": "flagged_adversarial",
+      "op": "==",
+      "expected": false,
+      "expected_type": "bool",
+      "actual": true,
+      "actual_type": "bool",
+      "passed": false,
+      "reason": "actual=True == expected=False",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7384_v648_arc_invocation_boundary.json",
+      "artifact_sha256": "sha256:b95c82b7c3badb5ab1b2bbdf10b15ebdf598f358cd0fcbf81b366df6409b69f6"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

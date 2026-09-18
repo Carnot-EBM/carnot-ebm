@@ -18166,3 +18166,6 @@ code |
 | 2026-09-18 07:35 UTC | Train and measure calibrated Gibbs decisions again | OK | 93 passed, 1 warning in 9.18s |
 | 2026-09-18 08:45 UTC | Measure continuous decision learning with delayed  | FLAGGED | adversarial_verify CRITICAL: preexisting_flagged_adversarial — result quarantined, not a clean success, excluded from headline / capstone. 87 passed, 1 warning in 10.45s |
 | 2026-09-18 08:48 UTC | Audit policy calibration leakage and continuous-le | GATE_BLOCK | gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7386-online-decisions.online_capture_complete_score (actual=0 == expected=1) |
+| 2026-09-18 08:51 UTC | Capture bounded Qwen3.8 proposals through the corr | GATE_BLOCK | gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7383-canary-reducer.assignment_reducer_ready_score (actual=0 == expected=1) |
+| 2026-09-18 08:53 UTC | Measure prospective implication-memory value on se | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7388-proposal-capture, exp7388-proposal-capture, exp7388-proposal-capture) |
+| 2026-09-18 08:53 UTC | Independently audit proof-memory causality and com | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7389-proof-learning, exp7389-proof-learning, exp7389-proof-learning) |
