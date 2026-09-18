@@ -1,0 +1,212 @@
+{
+  "asserted_literals_match_raw_response": true,
+  "attempted": true,
+  "call_index": 2,
+  "censored": false,
+  "completion_tokens": 12,
+  "cost": {
+    "completion_tokens": 12,
+    "latency_s": 0.729281865991652,
+    "prompt_tokens": 242
+  },
+  "decoded_assignments": [
+    1,
+    -2,
+    3,
+    4
+  ],
+  "error": null,
+  "finish_reason": "stop",
+  "formula_id": "dev-contradiction_cycle_imbalanced-0",
+  "formula_source_hash": "sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2",
+  "formula_valid": false,
+  "formula_version": "dev-contradiction_cycle_imbalanced-0-v1",
+  "latency_s": 0.729281865991652,
+  "max_new_tokens": 128,
+  "metric": "partial_assignment_transport",
+  "metric_value": 1,
+  "n_vars": 12,
+  "parse_errors": [],
+  "parse_status": "valid",
+  "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+  "prompt_sha256": "sha256:ba4c2fbe010e59c2209d27240524a3a440e16d16aed218d75bffd1a08fa6b0a0",
+  "prompt_tokens": 242,
+  "raw_reply": "{\"assignments\":[1,-2,3,4]}",
+  "raw_reply_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+  "raw_request": {
+    "cache_prompt": false,
+    "max_tokens": 128,
+    "messages": [
+      {
+        "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+        "role": "user"
+      }
+    ],
+    "seed": 7372101,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDldLFstOSwxMF0sWy0xMCwxMV0sWy0xMSwxMl0sWy0xMiw2XSxbLTYsMV1dLFwiZm9ybXVsYV9pZFwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjoxMixcInNvdXJjZV9oYXNoXCI6XCJzaGEyNTY6YTJkMDJhYTcyZjZmYmE1N2MwMmY4YmJhZTNlMWQ2NmU2MzNjMjY1ZGRmOGI3ZjNlMTlhMDFhMzIzMTRkMDhlMlwiLFwidmVyc2lvblwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+  "raw_request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"assignments\":[1,-2,3,4]}",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789761875,
+    "id": "chatcmpl-r7OYb7OZamrKwPYj8thNJKpFz8k8uBR6",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 276.345,
+      "predicted_n": 12,
+      "predicted_per_second": 43.4239808934484,
+      "predicted_per_token_ms": 23.028750000000002,
+      "prompt_ms": 286.302,
+      "prompt_n": 242,
+      "prompt_per_second": 845.2612975110198,
+      "prompt_per_token_ms": 1.1830661157024793
+    },
+    "usage": {
+      "completion_tokens": 12,
+      "prompt_tokens": 242,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 254
+    }
+  },
+  "request_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+  "response_fidelity_valid": true,
+  "runtime_identity_receipt": {
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "37777",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+    "model_bytes": 17106775008,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 3453506,
+      "start_time_ticks": 205354746
+    },
+    "pid": 3453581,
+    "ppid": 3453506,
+    "process_group_id": 3453581,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789761873,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "session_id": 3453581,
+    "start_time_ticks": 205354916,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "schema_valid": true,
+  "terminal_state": "response",
+  "truncated": false,
+  "usable_proposal": true,
+  "variable_references_valid": true
+}

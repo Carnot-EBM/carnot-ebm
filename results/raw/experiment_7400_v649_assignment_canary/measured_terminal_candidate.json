@@ -1,0 +1,2237 @@
+{
+  "MODEL_SPECS": [
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "acceptance_gate_results": [
+    {
+      "artifact_field": "prerequisites",
+      "category": "completion",
+      "check": "prerequisites",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "four_terminal_calls",
+      "category": "completion",
+      "check": "four_terminal_calls",
+      "expected_value": 4,
+      "observed_value": 4,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "usable_source_faithful_assignments",
+      "category": "efficacy",
+      "check": "usable_source_faithful_assignments",
+      "expected_value": 3,
+      "observed_value": 4,
+      "operator": ">=",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "qualified_event_reduction",
+      "category": "evidence",
+      "check": "qualified_event_reduction",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "owned_all_layer_cuda_runtime",
+      "category": "evidence",
+      "check": "owned_all_layer_cuda_runtime",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "affected_validation",
+      "category": "validation",
+      "check": "affected_validation",
+      "expected_value": true,
+      "observed_value": true,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "terminal_readers",
+      "category": "validation",
+      "check": "terminal_readers",
+      "expected_value": [
+        "not_yet_executed",
+        "passed"
+      ],
+      "observed_value": "not_yet_executed",
+      "operator": "in",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "adversarial_clean",
+      "category": "safety",
+      "check": "adversarial_clean",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    },
+    {
+      "artifact_field": "promotion_disabled",
+      "category": "safety",
+      "check": "promotion_disabled",
+      "expected_value": 0,
+      "observed_value": 0,
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7400-v649-assignment-canary"
+    }
+  ],
+  "capability_e2e_checks": [
+    "declared_entrypoint",
+    "fresh_process_cold_replay"
+  ],
+  "complete_response_count": 4,
+  "completed_at_utc": "2026-09-18T20:04:46.584613Z",
+  "current_invocation_events": [
+    {
+      "call_id": "model-load",
+      "monotonic_ns": 2053549160114847,
+      "operation": "model_load",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "attempted",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "model-load",
+      "monotonic_ns": 2053573406269011,
+      "operation": "model_load",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "completed",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-0",
+      "monotonic_ns": 2053573484611981,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "attempted",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-0",
+      "monotonic_ns": 2053574180327285,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "completed",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-1",
+      "monotonic_ns": 2053574181400871,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "attempted",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-1",
+      "monotonic_ns": 2053574844209340,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "completed",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-2",
+      "monotonic_ns": 2053574845124058,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "attempted",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-2",
+      "monotonic_ns": 2053575577028691,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "completed",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-3",
+      "monotonic_ns": 2053575577526997,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "attempted",
+      "transport": "owned_runtime"
+    },
+    {
+      "call_id": "generation-3",
+      "monotonic_ns": 2053576323702633,
+      "operation": "generation",
+      "owner_pid": 3453506,
+      "run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+      "scope": "current",
+      "state": "completed",
+      "transport": "owned_runtime"
+    }
+  ],
+  "current_owner_pid": 3453506,
+  "current_run_id": "exp7400-v649-assignment-canary:3453506:2053549089339350",
+  "duration_s": 38.927393,
+  "event_count": 10,
+  "event_sha256": "sha256:4031c87de35b246bdb4ed4933e3bea164966a256bceda536135a4360e819810f",
+  "execution_venue": "host",
+  "experiment_id": "exp7400-v649-assignment-canary",
+  "field_principles": {
+    "MODEL_SPECS": "Name the current Qwen GGUF for fresh LLM work; keep small Gibbs training separate.",
+    "acceptance_gate_results": "Keep validation, safety, completion, and efficacy gates separate with both operands.",
+    "duration_s": "Measure current task time monotonically and record scientific and validation spans separately.",
+    "execution_venue": "Use the closed host string instead of a hostname or device mapping.",
+    "field_principles": "Explain fields without wrapping numeric gates or ordinary dictionaries.",
+    "flagged_adversarial": "Preserve critical verifier findings and never use invalid science for readiness.",
+    "gate_check_summary": "Every blocked result names upstream path, check, field, expected value, and observed value.",
+    "honest_verdict": "Use complete_ for finished work and blocked_ for an unchanged missing prerequisite.",
+    "inference_substrate": "Describe current work with a string and keep device and software facts in details.",
+    "inference_substrate_class": "Use model_bounded_generation for these fixed short outputs and never pad runtime.",
+    "invocation_counts": "Derive current owned load and generation dispositions from events, never historical evidence.",
+    "model_invoked": "Set true for an attempted current real model load or generation, including failure.",
+    "owned_runtime_receipt": "Bind current PID, start tick, GGUF hash, CUDA offload, and resource ownership evidence.",
+    "phase_spans": "Retain actual phase boundaries, heartbeat checkpoints, and completed units.",
+    "preconditions_checked": "Authenticate exact inputs, eligibility, cache, runner, device, and entrypoint before dependent work.",
+    "promotion_score": "Keep zero; the canary cannot roll out, update weights, publish, or submit externally.",
+    "qwen_assignment_transport_ready_score": "Require at least three usable fresh proposals plus sound evidence and validation.",
+    "random_seed": "Freeze experiment and resampling seeds before observing outputs.",
+    "repository_health": "Keep unrelated broad-suite observations separate while affected failures remain disqualifying.",
+    "reproducibility_checksum": "Bind current code, settings, inputs, protocol, events, and raw rows.",
+    "rows": "Keep every call, condition, metric contribution, cost, failure, and censoring disposition.",
+    "run_date": "Use 20260918 and preserve actual UTC start and completion timestamps.",
+    "sample_size_budget": "Predeclare planned, attempted, completed, censored, unstarted, limits, stop rule, and independent groups.",
+    "schema": "Use a versioned schema and ordinary identity fields; publish terminal state only after measured work and checks.",
+    "source_artifact_hashes": "Hash exact producer, code, model, runner, sidecar, and raw evidence bytes.",
+    "transport_rows": "Retain all four request hashes, budgets, source literals, parse, fidelity, extendibility, and cost fields.",
+    "validation_receipts": "Retain exact argv, scoped environment, check name, exit, duration, and hashed log, including failures.",
+    "verdict_class": "Use only positive, circular_positive, null, blocked, disqualified, or partial.",
+    "verifier_is_oracle": "Mark true because exact SAT evaluation defines correctness; transport remains a separate metric."
+  },
+  "flagged_adversarial": false,
+  "gate_check_summary": {
+    "all_passed": true,
+    "artifact_field": "gate_check_summary",
+    "check": "all_required_checks",
+    "expected_value": true,
+    "failed_checks": [],
+    "failed_count": 0,
+    "observed_value": true,
+    "operator": "==",
+    "passed": true,
+    "path": "results/experiment_7400_v649_assignment_canary.json",
+    "upstream": "exp7400-v649-assignment-canary"
+  },
+  "generator_weights_changed": false,
+  "historical_receipt_sidecars": [
+    {
+      "path": "results/raw/experiment_7400_v649_assignment_canary/historical_exp7395_receipt.json",
+      "scope": "historical_model_receipts",
+      "sha256": "sha256:8d1e2988e2dad038d735ff71b78e232f89c3bb036a825077e95f05c4ac11d17b"
+    }
+  ],
+  "honest_verdict": "complete_circular_positive_assignment_transport_ready_4_of_4",
+  "inference_mode": "live_gpu",
+  "inference_substrate": "owned_native_cuda_llama_cpp_bounded_generation",
+  "inference_substrate_class": "model_bounded_generation",
+  "inference_substrate_details": {
+    "embedded_chat_template": true,
+    "embedded_tokenizer": true,
+    "gpu_name": "NVIDIA GeForce RTX 3090",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "model": "unsloth/Qwen3.8-27B-GGUF",
+    "quantization": "Q4_K_M",
+    "runner": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+  },
+  "invocation_counts": {
+    "generation_calls_attempted": 4,
+    "generation_calls_cancelled": 0,
+    "generation_calls_completed": 4,
+    "generation_calls_failed": 0,
+    "generation_calls_in_flight": 0,
+    "model_loads_attempted": 1,
+    "model_loads_cancelled": 0,
+    "model_loads_completed": 1,
+    "model_loads_failed": 0,
+    "model_loads_in_flight": 0
+  },
+  "learning_claim": false,
+  "milestone": "2026.09.649",
+  "model_invoked": true,
+  "model_settings": {
+    "bytes": 17106775008,
+    "chat_template_sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "decoding": {
+      "max_new_tokens": 128,
+      "repair_attempts": 0,
+      "retry_budget": 0,
+      "seed": 7372101,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "embedded_tokenizer_detail": "embedded GGUF tokenizer OK (7 tokens on probe)",
+    "embedded_tokenizer_loadable": true,
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "model_block_count": 65,
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "quantization": "Q4_K_M",
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+  },
+  "numbered_e2e_applicable": false,
+  "observed_qwen_assignment_transport_ready_score": 1,
+  "owned_runtime_receipt": {
+    "cleanup": {
+      "action": "terminated",
+      "bounded": true,
+      "leak_free": true,
+      "signals_sent": [
+        {
+          "signal": "SIGTERM",
+          "target": "process_group"
+        }
+      ],
+      "unrelated_process_kill_count_delta": 0,
+      "wait_status": "exited_zombie"
+    },
+    "comm": "llama-server",
+    "command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "--model",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "37777",
+      "--ctx-size",
+      "4096",
+      "--n-gpu-layers",
+      "all",
+      "--split-mode",
+      "none",
+      "--parallel",
+      "1",
+      "--batch-size",
+      "512",
+      "--ubatch-size",
+      "512",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0",
+      "--fit",
+      "off",
+      "--offline",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--no-webui",
+      "--log-verbosity",
+      "3"
+    ],
+    "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+    "cuda_provenance_ok": true,
+    "exists": true,
+    "gpu_index": 1,
+    "gpu_provenance": {
+      "cuda_log_evidence": true,
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "logged_layer_receipt": null,
+      "owned_compute_apps": [
+        {
+          "command": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server --model /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf --host 127.0.0.1 --port 37777 --ctx-size 4096 --n-gpu-layers all --split-mode none --parallel 1 --batch-size 512 --ubatch-size 512 --cache-type-k q8_0 --cache-type-v q8_0 --fit off --offline --jinja --reasoning off --no-webui --log-verbosity 3",
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "owned_by_task": true,
+          "pid": 3453581,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 16340
+        }
+      ],
+      "provenance_ok": true,
+      "server_pid": 3453581,
+      "server_pid_start_ticks": 205354916,
+      "task_owned_vram_mb": 16340
+    },
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+    "lease_release": {
+      "checksum": "sha256:ade83568fce0ca83a9bd71b8ae117bdc2f6335dce7367d041381a2d108c56d2b",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+      "phase": "terminal_complete",
+      "pid": 3453506,
+      "pid_start_ticks": 205354746,
+      "released": true,
+      "signals_sent": []
+    },
+    "model_bytes": 17106775008,
+    "model_load": {
+      "attempted": true,
+      "cancelled": false,
+      "completed": true,
+      "error": null,
+      "failed": false,
+      "in_flight": false
+    },
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "native_chat_template": true,
+    "native_tokenizer": "embedded_gguf",
+    "offload": {
+      "actual_offloaded_layers": 65,
+      "all_layers_offloaded": true,
+      "evidence_method": "all-layer native command plus owned PID CUDA log and resident VRAM",
+      "owned_vram_mb": 16340,
+      "requested_gpu_layers": "all",
+      "total_model_layers": 65
+    },
+    "owned_by_current_uid": true,
+    "owned_by_task": true,
+    "parent_identity": {
+      "pid": 3453506,
+      "start_time_ticks": 205354746
+    },
+    "pid": 3453581,
+    "ppid": 3453506,
+    "process_group_id": 3453581,
+    "quantization": "Q4_K_M",
+    "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "served_model_response": {
+      "data": [
+        {
+          "aliases": [],
+          "created": 1789761873,
+          "id": "Qwen3.8-27B-Q4_K_M.gguf",
+          "meta": {
+            "n_ctx": 4096,
+            "n_ctx_train": 262144,
+            "n_embd": 5120,
+            "n_params": 27320697856,
+            "n_vocab": 248320,
+            "size": 17095778304,
+            "vocab_type": 2
+          },
+          "object": "model",
+          "owned_by": "llamacpp",
+          "tags": []
+        }
+      ],
+      "models": [
+        {
+          "capabilities": [
+            "completion"
+          ],
+          "description": "",
+          "details": {
+            "families": [
+              ""
+            ],
+            "family": "",
+            "format": "gguf",
+            "parameter_size": "",
+            "parent_model": "",
+            "quantization_level": ""
+          },
+          "digest": "",
+          "model": "Qwen3.8-27B-Q4_K_M.gguf",
+          "modified_at": "",
+          "name": "Qwen3.8-27B-Q4_K_M.gguf",
+          "parameters": "",
+          "size": "",
+          "tags": [
+            ""
+          ],
+          "type": "model"
+        }
+      ],
+      "object": "list"
+    },
+    "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "session_id": 3453581,
+    "start_time_ticks": 205354916,
+    "state": "R",
+    "task_owned_vram_mb": 16340,
+    "uid": 1000
+  },
+  "phase": 2,
+  "phase_spans": [
+    {
+      "checkpoint_at_utc": "2026-09-18T20:04:07.665575Z",
+      "checkpoint_times_s": [
+        0.004864
+      ],
+      "completed_units": 34,
+      "duration_s": 0.004779,
+      "end_s": 0.004864,
+      "heartbeat_times_s": [],
+      "phase": "preconditions_static",
+      "start_s": 8.5e-05
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T20:04:08.852243Z",
+      "checkpoint_times_s": [
+        1.191536
+      ],
+      "completed_units": 4,
+      "duration_s": 1.186652,
+      "end_s": 1.191536,
+      "heartbeat_times_s": [],
+      "phase": "preconditions_runtime",
+      "start_s": 0.004884
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T20:04:36.562685Z",
+      "checkpoint_times_s": [
+        28.901978
+      ],
+      "completed_units": 4,
+      "duration_s": 27.708357,
+      "end_s": 28.901978,
+      "heartbeat_times_s": [],
+      "phase": "model_load_and_generation",
+      "start_s": 1.193621
+    },
+    {
+      "checkpoint_at_utc": "2026-09-18T20:04:36.566022Z",
+      "checkpoint_times_s": [
+        28.905314
+      ],
+      "completed_units": 4,
+      "duration_s": 0.00332,
+      "end_s": 28.905314,
+      "heartbeat_times_s": [],
+      "phase": "reduction",
+      "start_s": 28.901994
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "artifact_field": "run_date",
+      "category": "precondition",
+      "check": "run_date",
+      "expected_value": "20260918",
+      "observed_value": "20260918",
+      "operator": "==",
+      "passed": true,
+      "upstream": "execution_contract"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:AGENTS.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "AGENTS.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "CLAUDE.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "CODEX.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "research-program.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:ops/e2e-test-plan.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/e2e-test-plan.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiment_template.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "scripts/experiment_template.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/reporting/experiment_7303_validation_scope.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/reporting/experiment_7303_validation_scope.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7358_v646_validation_contract.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7358_v646_validation_contract.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7372_v647_qwen_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7372_v647_qwen_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7383_v648_canary_reducer.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7383_v648_canary_reducer.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7371_v647_proof_boundary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7371_v647_proof_boundary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7209_v635_span_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7209_v635_span_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/inference/sota_models.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/inference/sota_models.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:data/v647_implication_stream_manifest.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "data/v647_implication_stream_manifest.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/constraint-verification/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/constraint-verification/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:python/carnot/experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "python/carnot/experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:scripts/experiments/experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "scripts/experiments/experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "tests/python/test_experiment_7400_v649_assignment_canary.py"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/experiment_7395_v649_receipt_protocol.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "bytes",
+      "category": "precondition",
+      "check": "source_bytes:results/raw/experiment_7371_v647_proof_boundary/development_formulas.json",
+      "expected_value": "readable_nonempty_bytes",
+      "observed_value": "readable_nonempty_bytes",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json"
+    },
+    {
+      "artifact_field": "REQ-*",
+      "category": "precondition",
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7400",
+      "observed_value": "REQ-REPORT-7400",
+      "operator": "==",
+      "passed": true,
+      "upstream": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "category": "precondition",
+      "check": "producer_experiment_id",
+      "expected_value": "exp7395-receipt-protocol",
+      "observed_value": "exp7395-receipt-protocol",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "milestone",
+      "category": "precondition",
+      "check": "producer_milestone",
+      "expected_value": "2026.09.649",
+      "observed_value": "2026.09.649",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "assignment_reducer_ready_score",
+      "category": "precondition",
+      "check": "assignment_reducer_ready",
+      "expected_value": 1,
+      "observed_value": 1,
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "verdict_class",
+      "category": "precondition",
+      "check": "producer_verdict_class",
+      "expected_value": [
+        "positive",
+        "circular_positive",
+        "null"
+      ],
+      "observed_value": "null",
+      "operator": "in",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "flagged_adversarial",
+      "category": "precondition",
+      "check": "producer_adversarial_flag",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "source_artifact_hashes.python/carnot/experiment_7395_v649_receipt_protocol.py",
+      "category": "precondition",
+      "check": "qualified_code_hash:python/carnot/experiment_7395_v649_receipt_protocol.py",
+      "expected_value": "sha256:704cd7bde919bc23164b57eef239d958ec666c68ab27d79de745ea4a088acbad",
+      "observed_value": "sha256:704cd7bde919bc23164b57eef239d958ec666c68ab27d79de745ea4a088acbad",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "source_artifact_hashes.python/carnot/reporting/current_work_receipt.py",
+      "category": "precondition",
+      "check": "qualified_code_hash:python/carnot/reporting/current_work_receipt.py",
+      "expected_value": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "observed_value": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "source_artifact_hashes.python/carnot/experiment_7383_v648_canary_reducer.py",
+      "category": "precondition",
+      "check": "qualified_code_hash:python/carnot/experiment_7383_v648_canary_reducer.py",
+      "expected_value": "sha256:3d0f5389ced434d18da1209a1f4a34029020d6db5256cb4620c54baba36385e0",
+      "observed_value": "sha256:3d0f5389ced434d18da1209a1f4a34029020d6db5256cb4620c54baba36385e0",
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/experiment_7395_v649_receipt_protocol.json"
+    },
+    {
+      "artifact_field": "experiment_id",
+      "category": "precondition",
+      "check": "not_excluded",
+      "expected_value": false,
+      "observed_value": false,
+      "operator": "==",
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "artifact_field": "development_formulas",
+      "category": "precondition",
+      "check": "four_frozen_development_prompts",
+      "expected_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "observed_value": {
+        "count": 4,
+        "selection_error": null
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json"
+    },
+    {
+      "artifact_field": "CARNOT_FORCE_LIVE",
+      "category": "precondition",
+      "check": "force_live_mode",
+      "expected_value": "1",
+      "observed_value": "1",
+      "operator": "==",
+      "passed": true,
+      "upstream": "process_environment"
+    },
+    {
+      "artifact_field": "MODEL_SPECS",
+      "category": "precondition",
+      "check": "cached_current_qwen_gguf",
+      "expected_value": {
+        "chat_template": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_block_count_positive": true,
+        "tokenizer": true
+      },
+      "observed_value": {
+        "chat_template": true,
+        "exists": true,
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "model_block_count_positive": true,
+        "tokenizer": true
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "cached_current_model"
+    },
+    {
+      "artifact_field": "runner_capabilities",
+      "category": "precondition",
+      "check": "native_cuda_runner",
+      "expected_value": {
+        "errors": [],
+        "server_hash_present": true
+      },
+      "observed_value": {
+        "errors": [],
+        "server_hash_present": true
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    {
+      "artifact_field": "owned_runtime_receipt",
+      "category": "precondition",
+      "check": "one_owned_rtx3090_slot",
+      "expected_value": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "observed_value": {
+        "minimum_rtx3090_slots": 1,
+        "query_ok": true
+      },
+      "operator": "==",
+      "passed": true,
+      "upstream": "nvidia-smi_and_gpu_lease_journal"
+    }
+  ],
+  "production_defaults_changed": false,
+  "promotion_score": 0,
+  "qwen_assignment_transport_ready_score": 1,
+  "random_seed": {
+    "experiment": 7372101,
+    "resampling": 7372301
+  },
+  "raw_call_rows": [
+    {
+      "path": "results/raw/experiment_7400_v649_assignment_canary/call_00.json",
+      "sha256": "sha256:7196cb848b707461056cc6233f2308f7966b2ec4ab658166af25a016f28b89d0"
+    },
+    {
+      "path": "results/raw/experiment_7400_v649_assignment_canary/call_01.json",
+      "sha256": "sha256:f23b1b9327bf1c8780865626e1d7066522da4c4d03dad7e746e933159ba37c5e"
+    },
+    {
+      "path": "results/raw/experiment_7400_v649_assignment_canary/call_02.json",
+      "sha256": "sha256:6065920bb48b0bee693d02be0d8243d583d3c7b895994eda7f060db3f9b7ec1a"
+    },
+    {
+      "path": "results/raw/experiment_7400_v649_assignment_canary/call_03.json",
+      "sha256": "sha256:2f60a5bdbb1df4814238ad9d8a2a874589b79c4b9bb2e316cb8448521c300b51"
+    }
+  ],
+  "repository_health": {
+    "affected_reduction": {
+      "duplicate_required_commands": [],
+      "expected_import_count": 1,
+      "failed_required_commands": [],
+      "installed_imports": [],
+      "missing_required_commands": [],
+      "observed_import_count": 1,
+      "passed": true,
+      "plan_errors": [],
+      "required_checks_passed": true
+    },
+    "affects_required_checks": false,
+    "status": "healthy",
+    "unrelated_broad_suite_observations": []
+  },
+  "reproducibility_checksum": "sha256:f531290fbf989b3652352968a2d200d1cf7a789df8fb698cec1fd7fd66c82dc9",
+  "research_conductor_changed": false,
+  "rows": [
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 0,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6929101939313114,
+        "prompt_tokens": 220
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-0",
+      "formula_source_hash": "sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-0-v1",
+      "latency_s": 0.6929101939313114,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 8,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+      "prompt_sha256": "sha256:31f4fc10645b3a3d530dbd63fd629e16bf3a6e22428c352573c4b7a8ca13bbd0",
+      "prompt_tokens": 220,
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,1],[8,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-0\",\"n_vars\":8,\"source_hash\":\"sha256:f779a3b2d01cf58ba2a6a31558d640c7996b2c122003dbd0c82d08ea3d564e46\",\"version\":\"dev-contradiction_cycle_balanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDFdLFs4LC0xXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjo4LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjpmNzc5YTNiMmQwMWNmNThiYTJhNmEzMTU1OGQ2NDBjNzk5NmIyYzEyMjAwM2RiZDBjODJkMDhlYTNkNTY0ZTQ2XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789761873,
+        "id": "chatcmpl-KRRfDWL3YIlwFMy8mSrpxVyqufgsCark",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 286.965,
+          "predicted_n": 12,
+          "predicted_per_second": 41.816946317495166,
+          "predicted_per_token_ms": 23.913749999999997,
+          "prompt_ms": 383.093,
+          "prompt_n": 220,
+          "prompt_per_second": 574.2730877358762,
+          "prompt_per_token_ms": 1.7413318181818183
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 220,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 232
+        }
+      },
+      "request_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "37777",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 3453506,
+          "start_time_ticks": 205354746
+        },
+        "pid": 3453581,
+        "ppid": 3453506,
+        "process_group_id": 3453581,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789761873,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 3453581,
+        "start_time_ticks": 205354916,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 1,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6606058920733631,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        -4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_balanced-1",
+      "formula_source_hash": "sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_balanced-1-v1",
+      "latency_s": 0.6606058920733631,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+      "prompt_sha256": "sha256:68e1f1f48197523ef7b74c5588562530bccccc669af2051ce5d4e26e67d1b401",
+      "prompt_tokens": 242,
+      "raw_reply": "{\"assignments\":[1,-2,3,-4]}",
+      "raw_reply_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,2],[-2,12],[-12,1],[12,-1]],\"formula_id\":\"dev-contradiction_cycle_balanced-1\",\"n_vars\":12,\"source_hash\":\"sha256:ad30930d1a6faec1b5d5c39ffea691e94883cf5458851c0b81156e91d6cd0977\",\"version\":\"dev-contradiction_cycle_balanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDJdLFstMiwxMl0sWy0xMiwxXSxbMTIsLTFdXSxcImZvcm11bGFfaWRcIjpcImRldi1jb250cmFkaWN0aW9uX2N5Y2xlX2JhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjEyLFwic291cmNlX2hhc2hcIjpcInNoYTI1NjphZDMwOTMwZDFhNmZhZWMxYjVkNWMzOWZmZWE2OTFlOTQ4ODNjZjU0NTg4NTFjMGI4MTE1NmU5MWQ2Y2QwOTc3XCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9iYWxhbmNlZC0xLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,-4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789761874,
+        "id": "chatcmpl-s7rA2fX3p8egnxJJi2WW5rtuwzEFnHw9",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 276.61,
+          "predicted_n": 12,
+          "predicted_per_second": 43.38237952351686,
+          "predicted_per_token_ms": 23.050833333333333,
+          "prompt_ms": 287.133,
+          "prompt_n": 242,
+          "prompt_per_second": 842.8150021070375,
+          "prompt_per_token_ms": 1.1864999999999999
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "request_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "37777",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 3453506,
+          "start_time_ticks": 205354746
+        },
+        "pid": 3453581,
+        "ppid": 3453506,
+        "process_group_id": 3453581,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789761873,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 3453581,
+        "start_time_ticks": 205354916,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 2,
+      "censored": false,
+      "completion_tokens": 12,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.729281865991652,
+        "prompt_tokens": 242
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3,
+        4
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-0",
+      "formula_source_hash": "sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-0-v1",
+      "latency_s": 0.729281865991652,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 12,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+      "prompt_sha256": "sha256:ba4c2fbe010e59c2209d27240524a3a440e16d16aed218d75bffd1a08fa6b0a0",
+      "prompt_tokens": 242,
+      "raw_reply": "{\"assignments\":[1,-2,3,4]}",
+      "raw_reply_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,2],[-2,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,6],[-6,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-0\",\"n_vars\":12,\"source_hash\":\"sha256:a2d02aa72f6fba57c02f8bbae3e1d66e633c265ddf8b7f3e19a01a32314d08e2\",\"version\":\"dev-contradiction_cycle_imbalanced-0-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsMl0sWy0yLDNdLFstMyw0XSxbLTQsNV0sWy01LDZdLFstNiw3XSxbLTcsOF0sWy04LDldLFstOSwxMF0sWy0xMCwxMV0sWy0xMSwxMl0sWy0xMiw2XSxbLTYsMV1dLFwiZm9ybXVsYV9pZFwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wXCIsXCJuX3ZhcnNcIjoxMixcInNvdXJjZV9oYXNoXCI6XCJzaGEyNTY6YTJkMDJhYTcyZjZmYmE1N2MwMmY4YmJhZTNlMWQ2NmU2MzNjMjY1ZGRmOGI3ZjNlMTlhMDFhMzIzMTRkMDhlMlwiLFwidmVyc2lvblwiOlwiZGV2LWNvbnRyYWRpY3Rpb25fY3ljbGVfaW1iYWxhbmNlZC0wLXYxXCJ9Iiwicm9sZSI6InVzZXIifV0sInNlZWQiOjczNzIxMDEsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+      "raw_request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3,4]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789761875,
+        "id": "chatcmpl-r7OYb7OZamrKwPYj8thNJKpFz8k8uBR6",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 276.345,
+          "predicted_n": 12,
+          "predicted_per_second": 43.4239808934484,
+          "predicted_per_token_ms": 23.028750000000002,
+          "prompt_ms": 286.302,
+          "prompt_n": 242,
+          "prompt_per_second": 845.2612975110198,
+          "prompt_per_token_ms": 1.1830661157024793
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 242,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 254
+        }
+      },
+      "request_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "37777",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 3453506,
+          "start_time_ticks": 205354746
+        },
+        "pid": 3453581,
+        "ppid": 3453506,
+        "process_group_id": 3453581,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789761873,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 3453581,
+        "start_time_ticks": 205354916,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "asserted_literals_match_raw_response": true,
+      "attempted": true,
+      "call_index": 3,
+      "censored": false,
+      "completion_tokens": 10,
+      "cost": {
+        "completion_tokens": 10,
+        "latency_s": 0.7435852608177811,
+        "prompt_tokens": 317
+      },
+      "decoded_assignments": [
+        1,
+        -2,
+        3
+      ],
+      "error": null,
+      "finish_reason": "stop",
+      "formula_id": "dev-contradiction_cycle_imbalanced-1",
+      "formula_source_hash": "sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac",
+      "formula_valid": false,
+      "formula_version": "dev-contradiction_cycle_imbalanced-1-v1",
+      "latency_s": 0.7435852608177811,
+      "max_new_tokens": 128,
+      "metric": "partial_assignment_transport",
+      "metric_value": 1,
+      "n_vars": 24,
+      "parse_errors": [],
+      "parse_status": "valid",
+      "prompt": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+      "prompt_sha256": "sha256:41de7e1c4c077ad2daac6d3d872ba088f790e98fcb1f7a40326b2476c17a82fd",
+      "prompt_tokens": 317,
+      "raw_reply": "{\"assignments\":[1,-2,3]}",
+      "raw_reply_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+      "raw_request": {
+        "cache_prompt": false,
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return exactly one JSON object and no other text. The assignments list must contain two to four distinct nonzero signed integer literals. Do not return an answer label, explanation, markdown, or a full assignment unless it has at most four literals.\nOUTPUT_SCHEMA={\"assignments\":[\"signed_integer_literal\",\"signed_integer_literal\"]}\nFORMULA={\"clauses\":[[-1,3],[-3,4],[-4,5],[-5,6],[-6,7],[-7,8],[-8,9],[-9,10],[-10,11],[-11,12],[-12,13],[-13,14],[-14,15],[-15,16],[-16,17],[-17,18],[-18,19],[-19,20],[-20,21],[-21,22],[-22,23],[-23,2],[-2,24],[-24,12],[-12,1]],\"formula_id\":\"dev-contradiction_cycle_imbalanced-1\",\"n_vars\":24,\"source_hash\":\"sha256:334c96a98973b8a13f4c2870841636ad47065dbe77bc30f676a8a03f783684ac\",\"version\":\"dev-contradiction_cycle_imbalanced-1-v1\"}",
+            "role": "user"
+          }
+        ],
+        "seed": 7372101,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIGV4YWN0bHkgb25lIEpTT04gb2JqZWN0IGFuZCBubyBvdGhlciB0ZXh0LiBUaGUgYXNzaWdubWVudHMgbGlzdCBtdXN0IGNvbnRhaW4gdHdvIHRvIGZvdXIgZGlzdGluY3Qgbm9uemVybyBzaWduZWQgaW50ZWdlciBsaXRlcmFscy4gRG8gbm90IHJldHVybiBhbiBhbnN3ZXIgbGFiZWwsIGV4cGxhbmF0aW9uLCBtYXJrZG93biwgb3IgYSBmdWxsIGFzc2lnbm1lbnQgdW5sZXNzIGl0IGhhcyBhdCBtb3N0IGZvdXIgbGl0ZXJhbHMuXG5PVVRQVVRfU0NIRU1BPXtcImFzc2lnbm1lbnRzXCI6W1wic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiLFwic2lnbmVkX2ludGVnZXJfbGl0ZXJhbFwiXX1cbkZPUk1VTEE9e1wiY2xhdXNlc1wiOltbLTEsM10sWy0zLDRdLFstNCw1XSxbLTUsNl0sWy02LDddLFstNyw4XSxbLTgsOV0sWy05LDEwXSxbLTEwLDExXSxbLTExLDEyXSxbLTEyLDEzXSxbLTEzLDE0XSxbLTE0LDE1XSxbLTE1LDE2XSxbLTE2LDE3XSxbLTE3LDE4XSxbLTE4LDE5XSxbLTE5LDIwXSxbLTIwLDIxXSxbLTIxLDIyXSxbLTIyLDIzXSxbLTIzLDJdLFstMiwyNF0sWy0yNCwxMl0sWy0xMiwxXV0sXCJmb3JtdWxhX2lkXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTFcIixcIm5fdmFyc1wiOjI0LFwic291cmNlX2hhc2hcIjpcInNoYTI1NjozMzRjOTZhOTg5NzNiOGExM2Y0YzI4NzA4NDE2MzZhZDQ3MDY1ZGJlNzdiYzMwZjY3NmE4YTAzZjc4MzY4NGFjXCIsXCJ2ZXJzaW9uXCI6XCJkZXYtY29udHJhZGljdGlvbl9jeWNsZV9pbWJhbGFuY2VkLTEtdjFcIn0iLCJyb2xlIjoidXNlciJ9XSwic2VlZCI6NzM3MjEwMSwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+      "raw_request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"assignments\":[1,-2,3]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789761876,
+        "id": "chatcmpl-8Lm4nbLRhHEfMvdqM7jsAoZAoDOgfn9d",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 232.268,
+          "predicted_n": 10,
+          "predicted_per_second": 43.05371381335354,
+          "predicted_per_token_ms": 23.2268,
+          "prompt_ms": 346.826,
+          "prompt_n": 317,
+          "prompt_per_second": 914.0029870886266,
+          "prompt_per_token_ms": 1.0940883280757099
+        },
+        "usage": {
+          "completion_tokens": 10,
+          "prompt_tokens": 317,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 327
+        }
+      },
+      "request_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+      "response_fidelity_valid": true,
+      "runtime_identity_receipt": {
+        "comm": "llama-server",
+        "command": [
+          "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "--model",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "37777",
+          "--ctx-size",
+          "4096",
+          "--n-gpu-layers",
+          "all",
+          "--split-mode",
+          "none",
+          "--parallel",
+          "1",
+          "--batch-size",
+          "512",
+          "--ubatch-size",
+          "512",
+          "--cache-type-k",
+          "q8_0",
+          "--cache-type-v",
+          "q8_0",
+          "--fit",
+          "off",
+          "--offline",
+          "--jinja",
+          "--reasoning",
+          "off",
+          "--no-webui",
+          "--log-verbosity",
+          "3"
+        ],
+        "command_hash": "sha256:b2a784a855ca9521758f356438d9efa5b46b87d81392fb3e59f70c69b05cddfe",
+        "cuda_provenance_ok": true,
+        "exists": true,
+        "gpu_index": 1,
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:5931d3ce0c021796fd7211f90e49b9ef0c99014a7a9abcb17fc28791dab6da26",
+        "model_bytes": 17106775008,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "model_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "native_chat_template": true,
+        "native_tokenizer": "embedded_gguf",
+        "owned_by_current_uid": true,
+        "owned_by_task": true,
+        "parent_identity": {
+          "pid": 3453506,
+          "start_time_ticks": 205354746
+        },
+        "pid": 3453581,
+        "ppid": 3453506,
+        "process_group_id": 3453581,
+        "quantization": "Q4_K_M",
+        "served_model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "served_model_response": {
+          "data": [
+            {
+              "aliases": [],
+              "created": 1789761873,
+              "id": "Qwen3.8-27B-Q4_K_M.gguf",
+              "meta": {
+                "n_ctx": 4096,
+                "n_ctx_train": 262144,
+                "n_embd": 5120,
+                "n_params": 27320697856,
+                "n_vocab": 248320,
+                "size": 17095778304,
+                "vocab_type": 2
+              },
+              "object": "model",
+              "owned_by": "llamacpp",
+              "tags": []
+            }
+          ],
+          "models": [
+            {
+              "capabilities": [
+                "completion"
+              ],
+              "description": "",
+              "details": {
+                "families": [
+                  ""
+                ],
+                "family": "",
+                "format": "gguf",
+                "parameter_size": "",
+                "parent_model": "",
+                "quantization_level": ""
+              },
+              "digest": "",
+              "model": "Qwen3.8-27B-Q4_K_M.gguf",
+              "modified_at": "",
+              "name": "Qwen3.8-27B-Q4_K_M.gguf",
+              "parameters": "",
+              "size": "",
+              "tags": [
+                ""
+              ],
+              "type": "model"
+            }
+          ],
+          "object": "list"
+        },
+        "server_executable_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "server_executable_sha256": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+        "session_id": 3453581,
+        "start_time_ticks": 205354916,
+        "state": "R",
+        "task_owned_vram_mb": 16340,
+        "uid": 1000
+      },
+      "schema_valid": true,
+      "terminal_state": "response",
+      "truncated": false,
+      "usable_proposal": true,
+      "variable_references_valid": true
+    }
+  ],
+  "run_date": "20260918",
+  "sample_size_budget": {
+    "attempted": 4,
+    "censored": 0,
+    "completed": 4,
+    "effective_independent_group_count": 4,
+    "max_new_tokens_per_unit": 128,
+    "model_load_timeout_s": 600.0,
+    "planned": 4,
+    "request_timeout_s": 180.0,
+    "stop_rule": "attempt four frozen prompts once; no retries, repair, replacement, or padding",
+    "unstarted": 0
+  },
+  "sat_extendible_count": 0,
+  "schema": "carnot.exp7400.v649.assignment_canary.v1",
+  "scientific_duration_s": 27.708373,
+  "source_artifact_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:7f962dd4033ba1d50fcaa1373f47352aeb0ff8ff2b038ba6fc7de1c2314b779b",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:99bfa282fbc6c46255b71b1f275d6fa8e199e6c1ede8589067976414a70c1991",
+    "ops/e2e-test-plan.md": "sha256:819c2811d2315c1c1d3b3166e9b824ab95b02f5976e296064e4802fce75b9bd2",
+    "ops/exclusion_manifest.yaml": "sha256:3de67e0ec76ac86c19fa59d3c5d82aa56e3051bf3fac4d66bc672c872540795e",
+    "python/carnot/experiment_7358_v646_validation_contract.py": "sha256:1a5f154ecbb2cc15282759fbc618fa05abc6dcb1711d91e3c6fa7000be79579c",
+    "python/carnot/experiment_7372_v647_qwen_canary.py": "sha256:5e84fa1f9e4ca9205cd80ce376e02e5a4af76c48a17e91b89270f2e10536358a",
+    "python/carnot/experiment_7383_v648_canary_reducer.py": "sha256:3d0f5389ced434d18da1209a1f4a34029020d6db5256cb4620c54baba36385e0",
+    "python/carnot/experiment_7395_v649_receipt_protocol.py": "sha256:704cd7bde919bc23164b57eef239d958ec666c68ab27d79de745ea4a088acbad",
+    "python/carnot/experiment_7400_v649_assignment_canary.py": "sha256:2e75d50a5749e5336c043a6e3c232ec25deb580bb6e6ad901c04622df140ef7c",
+    "python/carnot/reporting/current_work_receipt.py": "sha256:428d1696eef0820ce9df519532743aeccb8ec1156eb8c1b52fa0c8f72bf16a10",
+    "python/carnot/reporting/experiment_7303_validation_scope.py": "sha256:63cf4083441212377e21edecc1499fbe6df8c22e1754ce8f315894afaea18ead",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "results/experiment_7395_v649_receipt_protocol.json": "sha256:2887bcba5a3e0161d30919a862dbd02831bbf486d85fe782fa12f8e14c7a8638",
+    "results/raw/experiment_7371_v647_proof_boundary/development_formulas.json": "sha256:e2f5dd66fc7c7385cfd785b121535c8ac104ab62e46d0ae770431d46724bca0b",
+    "results/raw/experiment_7400_v649_assignment_canary/call_00.json": "sha256:7196cb848b707461056cc6233f2308f7966b2ec4ab658166af25a016f28b89d0",
+    "results/raw/experiment_7400_v649_assignment_canary/call_01.json": "sha256:f23b1b9327bf1c8780865626e1d7066522da4c4d03dad7e746e933159ba37c5e",
+    "results/raw/experiment_7400_v649_assignment_canary/call_02.json": "sha256:6065920bb48b0bee693d02be0d8243d583d3c7b895994eda7f060db3f9b7ec1a",
+    "results/raw/experiment_7400_v649_assignment_canary/call_03.json": "sha256:2f60a5bdbb1df4814238ad9d8a2a874589b79c4b9bb2e316cb8448521c300b51",
+    "results/raw/experiment_7400_v649_assignment_canary/historical_exp7395_receipt.json": "sha256:8d1e2988e2dad038d735ff71b78e232f89c3bb036a825077e95f05c4ac11d17b",
+    "scripts/adversarial_verify.py": "sha256:941c931701a51eb3553d3e37b51b2ea7b1c3d595315d5864be6ef822ba2b80fa",
+    "scripts/experiments/experiment_7400_v649_assignment_canary.py": "sha256:255c1bf621e63bf250b43e31210a4584561ee85a4b7f6651247a4c6e8d17deb5",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7400_v649_assignment_canary.py": "sha256:684fe7305836c3ea40b20bf97a614112f16396d1e50005dea77af60736f98666"
+  },
+  "source_literal_fidelity_count": 4,
+  "started_at_utc": "2026-09-18T20:04:07.660704Z",
+  "status": "complete_candidate_awaiting_terminal_readers",
+  "transport_rows": [
+    {
+      "call_index": 0,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6929101939313114,
+        "prompt_tokens": 220
+      },
+      "current_model_invocation": true,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_balanced-0",
+      "historical": false,
+      "metric": "current_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:858f828b7c5491e537cbfb26e6d9536512ae7ec11d3f8399eb66e74509104116",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-00-dev-contradiction_cycle_balanced-0",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 1,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.6606058920733631,
+        "prompt_tokens": 242
+      },
+      "current_model_invocation": true,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_balanced-1",
+      "historical": false,
+      "metric": "current_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:3e14447c0d78ecb1e91907de87b30d95ccdd9a9feedc093682e6d1ec48064ea3",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:fabe68a48282e9ea3566121e3973b08ed873dbf9382a5d3aa8203a4ab96b83e3",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-01-dev-contradiction_cycle_balanced-1",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 2,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 12,
+        "latency_s": 0.729281865991652,
+        "prompt_tokens": 242
+      },
+      "current_model_invocation": true,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_imbalanced-0",
+      "historical": false,
+      "metric": "current_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:8f1f4e684ce3f3f7f87c413e30ee45d227ad6001be4bf89f136c27e5b306c2b1",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:c5f172ce39b31745ba0e8cc1e6d4ff71a2200430b74b0adf00412cb504a8ac0d",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-02-dev-contradiction_cycle_imbalanced-0",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    },
+    {
+      "call_index": 3,
+      "censored": false,
+      "cost": {
+        "completion_tokens": 10,
+        "latency_s": 0.7435852608177811,
+        "prompt_tokens": 317
+      },
+      "current_model_invocation": true,
+      "decoding_seed": 7372101,
+      "failure": null,
+      "formula_id": "dev-contradiction_cycle_imbalanced-1",
+      "historical": false,
+      "metric": "current_assignment_transport_usable",
+      "metric_value": 1,
+      "request_bytes_valid": true,
+      "request_hash_valid": true,
+      "request_sha256": "sha256:eda7dff253f559dee536abab09bc867260f41daf3aa69883e9fd4dedb728cc53",
+      "response_fidelity_valid": true,
+      "response_hash_valid": true,
+      "response_sha256": "sha256:887136011262ea6f180da7cffadcd6ca1e35c44891c6fe02f9dd261c986ddc73",
+      "runtime_identity_valid": true,
+      "sat_extendible": false,
+      "schema_valid": true,
+      "truncated": false,
+      "unit_id": "exp7372-canary-03-dev-contradiction_cycle_imbalanced-1",
+      "usable_proposal": true,
+      "variable_references_valid": true
+    }
+  ],
+  "usable_proposal_count": 4,
+  "validation_duration_s": 10.022069,
+  "validation_receipts": [
+    {
+      "command": ".venv/bin/python -u -c 'import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n' --exp7303-resolve-imports . carnot.experiment_7400_v649_assignment_canary",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "-c",
+        "import importlib\nimport json\nfrom pathlib import Path\nimport sys\n\nmarker = sys.argv.index(\"--exp7303-resolve-imports\")\nroot = Path(sys.argv[marker + 1]).resolve()\nsys.path[:] = [str(root / \"python\"), str(root), *sys.path]\nresolved = {}\nfor name in sys.argv[marker + 2:]:\n    module = importlib.import_module(name)\n    resolved[name] = str(Path(module.__file__).resolve())\nprint(json.dumps({\"resolved_imports\": resolved}, sort_keys=True), flush=True)\nallowed = (root / \"python\").resolve()\nraise SystemExit(any(not Path(value).is_relative_to(allowed) for value in resolved.values()))\n",
+        "--exp7303-resolve-imports",
+        ".",
+        "carnot.experiment_7400_v649_assignment_canary"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.5302497630473226,
+      "ended_at_utc": "2026-09-18T20:04:37.097239+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/00_worktree_imports/00_worktree_imports.log",
+      "log_sha256": "sha256:f77dedf9e0f2b1ff90596be133bdf12959ccfcd4af6d59aba6e870413503120c",
+      "name": "worktree_imports",
+      "output_tail": "{\"resolved_imports\": {\"carnot.experiment_7400_v649_assignment_canary\": \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7400_v649_assignment_canary.py\"}}\n",
+      "passed": true,
+      "required": true,
+      "resolved_imports": {
+        "carnot.experiment_7400_v649_assignment_canary": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7400_v649_assignment_canary.py"
+      },
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T20:04:36.566639+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7400-validation-jutbwjwr/basetemp/focused tests/python/test_experiment_7400_v649_assignment_canary.py -q",
+      "command_argv": [
+        ".venv/bin/pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7400-validation-jutbwjwr/basetemp/focused",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py",
+        "-q"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 3.0555582931265235,
+      "ended_at_utc": "2026-09-18T20:04:40.153309+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/01_focused_pytest/00_focused_pytest.log",
+      "log_sha256": "sha256:9651fe43c31d08dc9c4bb6f99587b30caf0003190dfd07376d97b640fc023ed1",
+      "name": "focused_pytest",
+      "output_tail": "..........                                                               [100%]\n10 passed in 0.99s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T20:04:37.097282+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage run --data-file=/tmp/exp7400-validation-jutbwjwr/coverage/.coverage '--include=*/experiment_7400_v649_assignment_canary.py' -m pytest -n 0 -o addopts= --no-cov --basetemp=/tmp/exp7400-validation-jutbwjwr/basetemp/coverage tests/python/test_experiment_7400_v649_assignment_canary.py -q",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "run",
+        "--data-file=/tmp/exp7400-validation-jutbwjwr/coverage/.coverage",
+        "--include=*/experiment_7400_v649_assignment_canary.py",
+        "-m",
+        "pytest",
+        "-n",
+        "0",
+        "-o",
+        "addopts=",
+        "--no-cov",
+        "--basetemp=/tmp/exp7400-validation-jutbwjwr/basetemp/coverage",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py",
+        "-q"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 4.890497234184295,
+      "ended_at_utc": "2026-09-18T20:04:45.044391+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/02_changed_module_coverage/00_changed_module_coverage.log",
+      "log_sha256": "sha256:07c62d90cd4c38a4dcb4358f2732172aeb84165d7fbf18f46605e76ea3dbc0ec",
+      "name": "changed_module_coverage",
+      "output_tail": "..........                                                               [100%]\n10 passed in 1.84s\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests_and_changed_modules",
+      "started_at_utc": "2026-09-18T20:04:40.153383+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/coverage report '--include=*/experiment_7400_v649_assignment_canary.py' --show-missing --fail-under=100",
+      "command_argv": [
+        ".venv/bin/coverage",
+        "report",
+        "--include=*/experiment_7400_v649_assignment_canary.py",
+        "--show-missing",
+        "--fail-under=100"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {
+        "COVERAGE_FILE": "/tmp/exp7400-validation-jutbwjwr/coverage/.coverage"
+      },
+      "duration_s": 0.08335878094658256,
+      "ended_at_utc": "2026-09-18T20:04:45.128265+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/03_changed_module_coverage_report/00_changed_module_coverage_report.log",
+      "log_sha256": "sha256:f59d85b1a4b33b8b5e1a0970b80ace00c32694054241f9fb0e474d65900d5526",
+      "name": "changed_module_coverage_report",
+      "output_tail": "Name                                                      Stmts   Miss  Cover   Missing\n---------------------------------------------------------------------------------------\npython/carnot/experiment_7400_v649_assignment_canary.py     270      0   100%\n---------------------------------------------------------------------------------------\nTOTAL                                                       270      0   100%\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T20:04:45.044469+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff check python/carnot/experiment_7400_v649_assignment_canary.py scripts/experiments/experiment_7400_v649_assignment_canary.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "check",
+        "python/carnot/experiment_7400_v649_assignment_canary.py",
+        "scripts/experiments/experiment_7400_v649_assignment_canary.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.0136671990621835,
+      "ended_at_utc": "2026-09-18T20:04:45.142289+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/04_ruff_check/00_ruff_check.log",
+      "log_sha256": "sha256:82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "name": "ruff_check",
+      "output_tail": "All checks passed!\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T20:04:45.128297+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/ruff format --check python/carnot/experiment_7400_v649_assignment_canary.py scripts/experiments/experiment_7400_v649_assignment_canary.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/ruff",
+        "format",
+        "--check",
+        "python/carnot/experiment_7400_v649_assignment_canary.py",
+        "scripts/experiments/experiment_7400_v649_assignment_canary.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.010788982966914773,
+      "ended_at_utc": "2026-09-18T20:04:45.153561+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/05_ruff_format/00_ruff_format.log",
+      "log_sha256": "sha256:eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd",
+      "name": "ruff_format",
+      "output_tail": "3 files already formatted\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_files",
+      "started_at_utc": "2026-09-18T20:04:45.142332+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/mypy python/carnot/experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/mypy",
+        "python/carnot/experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 1.4099897458218038,
+      "ended_at_utc": "2026-09-18T20:04:46.564081+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/06_changed_module_mypy/00_changed_module_mypy.log",
+      "log_sha256": "sha256:3fbdf4bf8ebd55087ac6c6f660ba94cf0d3e6a5046ee1a416867f866e364cb33",
+      "name": "changed_module_mypy",
+      "output_tail": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "required": true,
+      "scope": "changed_modules",
+      "started_at_utc": "2026-09-18T20:04:45.153602+00:00",
+      "timed_out": false
+    },
+    {
+      "command": ".venv/bin/python -u scripts/check_spec_coverage.py tests/python/test_experiment_7400_v649_assignment_canary.py",
+      "command_argv": [
+        ".venv/bin/python",
+        "-u",
+        "scripts/check_spec_coverage.py",
+        "tests/python/test_experiment_7400_v649_assignment_canary.py"
+      ],
+      "command_category": "required_affected_validation",
+      "command_environment": {},
+      "duration_s": 0.019684862112626433,
+      "ended_at_utc": "2026-09-18T20:04:46.584380+00:00",
+      "exit_code": 0,
+      "log_path": "results/raw/experiment_7400_v649_assignment_canary/validation/affected/07_scoped_spec_coverage/00_scoped_spec_coverage.log",
+      "log_sha256": "sha256:6644208cd27e4922e3d0a384c76d7ab391526c4699a11e15ca8d08878d4ad867",
+      "name": "scoped_spec_coverage",
+      "output_tail": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "required": true,
+      "scope": "explicit_tests",
+      "started_at_utc": "2026-09-18T20:04:46.564137+00:00",
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}

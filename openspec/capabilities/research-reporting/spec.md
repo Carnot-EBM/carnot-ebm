@@ -73287,6 +73287,98 @@ zero. A narrow receipt failure SHALL not cancel other milestone branches.
 |---|---|---|
 | REQ-REPORT-7395 and SCENARIO-REPORT-7395-* | Implemented: shared current-work receipt helper, Exp7395 host reducer, thin entrypoint, and immutable hashed sidecars | Verified: focused spec-linked tests pass with 100% changed-module coverage including Exp7383 paths; the frozen eight-check scoped plan, entrypoint E2E, cold replay, unchanged adversarial verifier, strict row consistency, and exact-test spec coverage all pass |
 
+## V649 bounded assignment canary — 2026-09-18
+
+**Status:** Specified. This phase makes four fresh current-model calls and makes no learning claim.
+
+### REQ-REPORT-7400: Qualify current Qwen assignment transport with fresh bounded generation
+
+Exp7400 SHALL authenticate the exact Exp7395 artifact before model work. It
+SHALL require `assignment_reducer_ready_score=1`, an eligible verdict class,
+`flagged_adversarial=false`, and the exact declared hashes of the Exp7395
+producer, current-work receipt helper, and Exp7383 reducer. A failed structured
+gate SHALL write a terminal `blocked_*` artifact whose `gate_check_summary`
+names the upstream path, check, field, expected value, and observed value.
+
+Exp7400 SHALL resolve only cached `unsloth/Qwen3.8-27B-GGUF` through
+`cached_current_model()`. It SHALL use the GGUF's embedded tokenizer and chat
+template with a task-owned native CUDA runner and one leased RTX 3090. It SHALL
+not download, install, use Transformers tokenization, substitute a legacy
+model, simulate output, or terminate an unrelated process. The runtime receipt
+SHALL bind the process ID and start tick, GGUF and runner hashes, lease, CUDA
+device, owned memory, and actual all-layer offload evidence.
+
+The experiment SHALL reuse the four frozen Exp7372 development prompts, seed
+7372101, deterministic settings, and 128-token cap. It SHALL attempt each
+request once. Each row SHALL preserve exact prompt and reply bytes, request and
+response hashes, token counts, failure or censoring state, parser result,
+source-literal fidelity, satisfiability, and measured cost. At least three of
+four schema-valid, source-faithful assignments SHALL be required for transport
+readiness. Satisfiability SHALL remain a separate measurement.
+
+Current invocation counts SHALL be reduced from the unchanged qualified event
+reducer. Historical producer evidence SHALL stay in a hash-bound sidecar and
+shall not contribute to current counts. The experiment SHALL declare
+`inference_substrate_class=model_bounded_generation`, `execution_venue=host`,
+and the ten-second authentic duration floor without sleeping or padding.
+
+The affected command list SHALL come from Exp7358 and run through Exp7303. It
+SHALL contain exactly the eight scoped checks, preserve command-local
+`COVERAGE_FILE`, use `-n 0 -o addopts= --no-cov` and a private existing
+`--basetemp` parent, and never add `full_python_suite`. The entrypoint replay,
+independent cold reducer, unchanged adversarial verifier, and strict row
+consistency reader SHALL validate the measured candidate before atomic terminal
+publication. No numbered E2E applies because no shared runtime, training,
+sampling, serialization, or Rust behavior changes.
+
+`qwen_assignment_transport_ready_score` SHALL equal one only when at least
+three fresh proposals are usable, all four calls have terminal dispositions,
+the owned runtime and evidence are sound, affected checks pass, and all terminal
+readers pass. A completed low-yield run SHALL be terminal null. A missing
+unchanged external prerequisite SHALL be blocked. A current required-check
+failure SHALL be disqualified. `promotion_score` SHALL remain zero.
+
+#### SCENARIO-REPORT-7400-GATE: Producer identity fails closed before runtime work
+
+**Given** the Exp7395 artifact and its declared implementation hashes
+**When** any eligibility field, byte hash, cache, runner, or device check fails
+**Then** no dependent generation starts and the exact failed value is retained
+**And** the blocked artifact reports zero current invocation attempts.
+
+#### SCENARIO-REPORT-7400-TRANSPORT: Parsing and satisfiability remain separate
+
+**Given** four fresh deterministic responses to the frozen development prompts
+**When** the unchanged assignment parser and independent reducer replay them
+**Then** schema-valid source-faithful proposals count toward the three-of-four threshold
+**And** a well-parsed unsatisfiable proposal remains usable transport evidence.
+
+#### SCENARIO-REPORT-7400-RUNTIME: One owned CUDA instance supplies all calls
+
+**Given** a cached current GGUF, native runner, and free RTX 3090 lease
+**When** the bounded capture loads once and makes four requests
+**Then** every attempted operation appears in the owned current event ledger
+**And** the receipt binds one PID, start tick, lease, model hash, device, and all-layer offload.
+
+#### SCENARIO-REPORT-7400-VALIDATION: Only affected checks gate readiness
+
+**Given** the Exp7358 affected manifest for the new module, entrypoint, and test
+**When** Exp7303 executes the frozen command plan
+**Then** all eight scoped checks, including 100 percent changed-module coverage, pass
+**And** no broad Python suite or unrelated repository-health check gates readiness.
+
+#### SCENARIO-REPORT-7400-ARTIFACT: Exact raw evidence controls terminal publication
+
+**Given** raw request and response files, invocation events, and command receipts
+**When** fresh processes reload and independently reduce the measured candidate
+**Then** changed rows, hashes, counts, gates, scores, class, or checksum fail
+**And** the atomic terminal artifact preserves every failed or censored disposition.
+
+## Implementation Status (REQ-REPORT-7400)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7400 and SCENARIO-REPORT-7400-* | Planned: fresh bounded Qwen canary, reusable host module, and thin entrypoint | Planned: spec-linked RED tests, 100% changed-module coverage, exact affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and scoped spec coverage |
+
 ## V649 static calibrated-decision diagnosis — 2026-09-18
 
 **Status:** Specified. This host aggregation audits the completed Exp7385 null without using Exp7386 as a prerequisite.
