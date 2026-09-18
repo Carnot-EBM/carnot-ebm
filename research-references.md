@@ -45270,3 +45270,99 @@ that label. No vendor performance claim supplies local hardware evidence.
   [Kona](https://logicalintelligence.com/kona-ebms-energy-based-models).
   The public architecture separates language interfaces and energy reasoning.
   No reproducible local implementation was established by this review.
+
+## 2026-09-18 — V649 planning source review
+
+Read before writing the V649 experiment roster. This is a fresh source check,
+including a partial citation walk, not evidence that Carnot reproduced any
+paper. Existing entries and negative results remain authoritative in scope.
+
+### Methods worth testing
+
+| Primary source and date | Finding and bounded research use |
+|---|---|
+| [ORCA: Online Reasoning Calibration, 2604.01170v2](https://arxiv.org/html/2604.01170v2), revised 2026-08-06 | Uses a small adaptive calibration module and evaluates the deployed sampling procedure. Test a much smaller online energy-offset adapter with verified delayed feedback, frozen predictions, and complete update cost. This is an adaptation, not ORCA replication: no hidden-state meta-learning or transfer of its conformal theorem is claimed. |
+| [CORD: Prediction-Preserving Repair for Post-hoc Calibration, 2609.01072v2](https://arxiv.org/abs/2609.01072v2), revised 2026-09-02 | Separates calibration quality from changes to the underlying top-1 prediction. Add decision-change accounting: changing accept/reject/escalate is different from improving an answer. Keep original answer identity fixed. Do not impose CORD's multiclass construction on a binary risk head. |
+| [Solver-Hard Is Not Model-Hard, 2607.17047](https://arxiv.org/abs/2607.17047), 2026-07-19 | Near-matched constraint density does not make solver effort a reliable proxy for model difficulty; surface relabeling can matter. Record source size, query type, solver effort and model parse/semantic outcomes separately on the already frozen implication stream. Never select an easier stream after seeing outputs. |
+| [Memoir, 2607.20792](https://arxiv.org/abs/2607.20792), 2026-07-22, rechecked | Its fixed-budget comparison finds a learning-speed cost from coupled reads/writes. Preserve separate prediction and commit phases, restart equivalence, and erasure controls in continuous learning. The result is scoped to its procedural recall task. |
+| [Mirror Online Conformal Prediction with Intermittent Feedback, 2503.10345v5](https://arxiv.org/abs/2503.10345v5), revised 2025-07-07, rechecked | Compact updates under intermittent feedback motivate explicit observation delays and missing-label controls. Coverage of prediction sets does not certify Carnot's selective action risk under drift. |
+
+### Required topic sweep and deferred alternatives
+
+- **Energy-based verification/reasoning:** rechecked
+  [EBT, 2507.02092](https://arxiv.org/abs/2507.02092) and
+  [ARM–EBM, 2512.15605v4](https://arxiv.org/abs/2512.15605v4), revised
+  2026-05-25. Their energy formulations motivate compact learned decisions,
+  but do not establish semantic correctness of an extracted constraint.
+  [HSRM, 2608.30841](https://arxiv.org/abs/2608.30841), 2026-08-31,
+  reads generator hidden states at reasoning boundaries. Keep it as a future
+  alternative pending authenticated hidden-state access from the mandated GGUF;
+  do not substitute text features and call them hidden states.
+- **Neural constraint satisfaction:** checked
+  [PAL, 2503.19466](https://arxiv.org/abs/2503.19466), 2025-03-25, and
+  [T-SKM-Net, 2512.10461](https://arxiv.org/abs/2512.10461), 2025-12-11.
+  Exact renormalization and explicit feasible-set assumptions reinforce the
+  distinction between syntax, satisfiability, and source meaning. No new
+  projection stack is justified while existing implication proofs await a trial.
+- **Hallucination mitigation:**
+  [Distributional EBMs, 2605.18871](https://arxiv.org/abs/2605.18871),
+  2026-05-15, separates learned quality and analytical constraint penalties,
+  and reports a model-identity shortcut in code. Retain confound checks; do
+  not reopen Carnot's retired external-text ranker family. The new calibrated
+  decision work consumes the existing small verifier signal, not a LoRA text
+  scorer or best-of-N selection pool.
+- **KANs:** checked
+  [PostHoc FREE Calibrating on KANs, 2503.01195](https://arxiv.org/abs/2503.01195),
+  2025-03-03, and rechecked
+  [KAC, 2503.21076](https://arxiv.org/abs/2503.21076), 2025-03-27.
+  Expressive splines need calibration too. Defer architecture expansion until
+  current feature-collision and simple-control diagnostics justify it.
+- **Energy-guided decoding:** checked
+  [Energy-Guided Decoding for Object Hallucination Mitigation, 2507.07731](https://arxiv.org/abs/2507.07731),
+  2025-07-10. Its VLM layer-selection setting is outside the current text and
+  constraint scope. No equivalent GGUF token-steering claim follows.
+- **Ising ML/sampling:** checked
+  [Learning-to-sample phase transition, 2605.24752](https://arxiv.org/abs/2605.24752),
+  2026-05-23, and rechecked
+  [Thermodynamic learning, 2609.04732](https://arxiv.org/abs/2609.04732),
+  2026-09-04. Parameter learning, faithful sampling and finding a feasible
+  assignment are separate questions. Preserve the prior failed all-cell
+  sampler gate; another unchanged finite-law sweep is not selected.
+- **Hardware:** rechecked
+  [FPGA–ASIC co-design, 2602.15985](https://arxiv.org/abs/2602.15985).
+  Include orchestration, transfers, verification and updates in placement
+  costs. A fast isolated score kernel cannot establish a service speedup.
+
+### Secondary sources and access receipts
+
+- **OpenReview:** searched 2025–2026 ICLR/ICML/NeurIPS energy work and opened
+  the [EBT forum](https://openreview.net/forum?id=ZBj3Qp1bYg); the indexed
+  [paper](https://openreview.net/pdf?id=ZBj3Qp1bYg) identifies ICLR 2026.
+  This supplies conference context, not additional local evidence.
+- **Semantic Scholar:** browser API opens failed. Direct Graph API requests
+  succeeded with HTTP 200 for
+  [EBT citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?fields=title,year,externalIds,url&limit=20)
+  and [ARM–EBM citations](https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?fields=title,year,externalIds,url&limit=20).
+  EBT returned twenty entries and a next-page pointer; ARM–EBM returned eight
+  with no next page. Opened the primary records for Solver-Hard, Memoir and
+  Distributional EBMs. This is a partial citation review, not a citation census.
+- **Hugging Face Papers:** searched verification/calibration and followed
+  [ORCA](https://huggingface.co/papers/2604.01170) and
+  [CORD](https://huggingface.co/papers/2609.01072) to arXiv. Generated discovery
+  summaries are not the method authority.
+- **GitHub:** checked [weekly trending](https://github.com/trending?since=weekly)
+  and [monthly Python trending](https://github.com/trending/python?since=monthly).
+  No relevant dependency was selected from the returned lists. Also inspected
+  the author-linked [KAC repository](https://github.com/Ethanhuhuhu/KAC);
+  discovery through a paper does not establish trending status.
+- **Extropic:** checked [writing](https://extropic.ai/writing),
+  [Z1T](https://extropic.ai/writing/z1t), dated 2026-09-04 in the article,
+  and the [summer update](https://extropic.ai/writing/from-one-to-one-billion?card=z1-2).
+  Z1T discusses sparse probabilistic chips coupled with digital accelerators;
+  the index also lists Torx and thermalizers. Treat efficiency claims as vendor
+  results. This does not establish owned Z1 access, local timing, or a delivery date.
+- **Logical Intelligence:** rechecked
+  [Kona 1.0](https://logicalintelligence.com/kona-ebms-energy-based-models).
+  The public description separates language interaction and constraint
+  enforcement. No reproducible implementation or calibrated error guarantee
+  was established by this check. Use as architectural context only.

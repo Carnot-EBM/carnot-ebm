@@ -167,3 +167,4 @@ of truth, not this line.)
 | 2026-09-17 | qa_layer_authenticity_audit | adversarial_verify.py::_is_rate_metric_field | SILENT_NON_FIRING | OPEN | |
 | 2026-09-17 | experiment_claim_audit | experiment_7361_v646_fresh_plan_capture.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-18 | experiment_claim_audit | experiment_7377_v647_ising_law.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-18 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_null_delta_descriptor | SILENT_NON_FIRING | OPEN | |

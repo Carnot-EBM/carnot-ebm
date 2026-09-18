@@ -11,12 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 1 |
-| SKIPPED_ALREADY_FLAGGED | 4 |
+| CLAIM_SUPPORTED | 4 |
+| NO_CLAIM | 3 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7371_v647_proof_boundary.json
+## experiment_7385_v648_decision_training.json
 
 **CLAIM_SUPPORTED**
 
@@ -24,25 +23,25 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The synthetic proof-boundary protocol is complete and ready, while learning value and live-cohort efficacy remain unmeasured.
+The calibrated decision head demonstrated no registered value on the bounded evaluation.
 
 ## WHAT WOULD REFUTE IT
-A required synthetic boundary gate failing—such as an accepted authority attack, invalid SAT output, false-proof rejection, stale-version effect, incomplete rows, insufficient erasure witnesses, lost exact-decision coverage, or failure against the persistent exact-solver or reachability-cache cost controls—would refute boundary readiness.
+The primary arm would need to pass the complete registered value conjunction, especially a Brier-score improvement whose paired 95% confidence interval is below zero against both the logistic and training-prevalence controls.
 
 ## WAS THAT CHECKED
-Yes. The artifact checks synthetic safety, protocol and row completeness, erasure witnesses, exact-decision coverage, adversarial authority attacks, and cost ratios against two serious persistent comparators. The oracle defines formal correctness, but the artifact does not claim that the verifier or learning system adds value; it explicitly reports zero learning value and says the live cohort was not collected.
+Yes. The artifact compares the preregistered primary arm against both controls using paired confidence intervals. It beat the logistic control on Brier score, but its interval against the training-prevalence control crossed zero, so the registered value gate failed. The oracle-defined labels do not create circularity for this null claim because the artifact makes no positive claim about verifier value.
 
 ## EVIDENCE
-`"honest_verdict": "complete_null_proof_boundary_ready_learning_value_not_measured"`; `"proof_boundary_ready_score": 1`; `"learning_value_score": 0`; `"live_cohort_complete": false`; `"live_proposal_cohort"`; `"observed": false`; `"status": "frozen_not_collected_by_exp7371"`; `"model_invoked": false`; `"verifier_is_oracle": true`; `"rows_complete": true`; `"safety_passed": true`; `"protocol_complete": true`; `"authority_controls_passed": true`; `"exact_decision_coverage": 1.0`; `"false_proof_rejections": 0`; `"invalid_sat_outputs": 0`; `"stale_version_effects": 0`; `"erasure_witness_count": 608`; `"persistent_incremental_exact_solver"`; `"persistent_source_graph_reachability_cache"`; `"synthetic_rows_censored": 0`; `"synthetic_rows_completed": 3840`
+`honest_verdict`: `complete_null_calibrated_decision_head_no_registered_value`; `primary_value_arm`: `natural_prevalence_bernoulli_gibbs`; `choices_sealed_before_final_test`: `true`; `brier_ci_below_both_controls`: `false`; `calibration_value_score`: `0`; `passed`: `false`; `training_prevalence`; `brier_delta`; `ci95`: `[-0.0003270994119388504, 2.327706365149327e-06]`; `l2_logistic_calibration`; `ci95`: `[-7.488123656868094e-05, -1.5393199902023303e-05]`; `verdict_class`: `null`; `verifier_is_oracle`: `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7372_v647_qwen_canary.json
+## experiment_7386_v648_online_decisions.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_7373_proposal_capture.json
+## experiment_7387_decision_audit.json
 
 **NO_CLAIM**
 
@@ -53,48 +52,62 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no outcome claim to falsify; if the title were treated as claiming successful proposal capture, a blocked pre-gate with no captured proposals would refute it.
+Not applicable; this is a blocked-gate receipt and reports no experimental result or comparative claim.
 
 ## WAS THAT CHECKED
-No; execution stopped at the pre-gate, so no method outcome or comparative test occurred.
+No; the experiment was blocked at the pre-gate, so the titled audit was not conducted.
 
 ## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"blocked_at_layer": "conductor_pre_gate"`, `"duration_s": 0.0`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"gate_check_summary": "gate-unsat(final): 3 of 6 gate(s) failed; first failure: exp7386-online-decisions.online_capture_complete_score (actual=0 == expected=1)"`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7376_v647_arc_outcomes.json
+## experiment_7388_proposal_capture.json
 
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7377_v647_ising_law.json
-
-**CLAIM_OVERSTATED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_OVERSTATED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-Exact enumeration establishes that the fixture is ready and that proof assistance preserves the source law.
+no claim
 
 ## WHAT WOULD REFUTE IT
-An independently computed energy or probability mismatch, an undetected intentional law mutation, or proof assistance performing no better than the source-only baseline would refute the claimed added value.
+There is no comparative or value claim to falsify; this is a blocked pre-gate receipt, not an experiment result.
 
 ## WAS THAT CHECKED
-No. Exhaustive rows and negative controls were checked, but correctness was defined by the same oracle used to certify it; no independent verifier was used. Moreover, the serious source-only baseline was present and tied the proof-assisted arm exactly.
+No. The method was never evaluated; only prerequisite gates were checked.
 
 ## EVIDENCE
-`"verdict_class": "circular_positive"`; `"verifier_is_oracle": true`; `"inference_substrate": "host_cpu_exact_2cnf_enumeration_no_model"`; `"condition": "source_only"`; `"condition": "proof_assisted_source_only"`; `"compiled_normalizer": 36.17717151469089`; `"source_normalizer": 36.17717151469089`; `"source_law_total_variation": 0.0`; `"law_fixture_ready_score": 1`; `"promotion_score": 0`
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"blocked_at_layer"`: `"conductor_pre_gate"`; `"gate_check_summary"`: `"gate-unsat(final): 4 of 6 gate(s) failed; first failure: exp7383-canary-reducer.assignment_reducer_ready_score (actual=0 == expected=1)"`
 
 ## RECOMMENDATION
-NARROW_CLAIM
+KEEP
 
-## experiment_7378_v647_ising_audit.json
+## experiment_7391_arc_generalization.json
 
-**SKIPPED_ALREADY_FLAGGED**
+**NO_CLAIM**
 
-## experiment_7379_v647_hardware_envelope.json
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact reports a blocked prerequisite check and makes no result or comparative claim about ARC generalization.
+
+## WAS THAT CHECKED
+No. The experiment stopped at the conductor pre-gate, so no ARC measurement rows were produced or evaluated.
+
+## EVIDENCE
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"gate_check_summary": "gate-unsat(final): 3 of 3 gate(s) failed; first failure: exp7384-arc-invocation-boundary.arc_invocation_ready_score (actual=0 == expected=1)"`, `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7392_v648_ising_reduction.json
 
 **CLAIM_SUPPORTED**
 
@@ -102,20 +115,60 @@ NARROW_CLAIM
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The run is blocked because no qualifying post-Exp6559 GateMate physical-state receipt exists, all three board dispositions were accounted for, and unavailable placement inputs support no speed claim.
+The completed Ising reduction is disqualified because a required validation or safety gate failed.
 
 ## WHAT WOULD REFUTE IT
-A qualifying operator-authored GateMate cable, port, board, power, JTAG, or DirtyJTAG change after Exp6559; an unaccounted required board; or an eligible measured placement row showing hardware gain would refute the headline.
+All terminal-blocking required-validation and safety checks passing—specifically, `capability_e2e_passed` being true—would refute the disqualification claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact checked the specified physical-state provenance, explicitly accounted for KV260, GateMate, and PolarFire, and inspected both planned placement sources. Those checks could have found a qualifying receipt or eligible placement measurement, but instead found no accepted receipt and two unavailable placement inputs. The oracle defines record truth, but the artifact makes no claim that this verifier adds hardware value.
+Yes. The acceptance-gate summary and independent reduction explicitly checked the capability end-to-end gate; it failed, while safety passed, so the disjunctive headline remains true.
 
 ## EVIDENCE
-`"changed_state_receipt": null`; `"accepted_receipt_count": 0`; `"passed": false`; `"board_accounting"`; `"observed": ["KV260", "GateMate", "PolarFire"]`; `"placement_sources_attempted": 2`; `"placement_sources_eligible": 0`; `"placement_sources_unavailable": 2`; `"performance_evidence_eligible": false`; `"hardware_value_score": 0`; `"new_hardware_runs_attempted": 0`; `"new_hardware_execution_claimed": false`; `"verifier_is_oracle": true`; `"verdict_class": "blocked"`
+`"honest_verdict": "complete_disqualified_ising_reduction_validation_or_safety_failure"`; `"verdict_class": "disqualified"`; `"check": "capability_e2e_passed"`; `"observed": false`; `"passed": false`; `"terminal_blocking": true`; `"required_validation_passed": false`; `"current_safety_passed": true`; `"promotion_score": 0`; `"prospective_pass_claimed": false`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7380_v647_capstone.json
+## experiment_7393_v648_hardware_placement.json
 
-**SKIPPED_ALREADY_FLAGGED**
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Hardware placement remains blocked because no qualifying GateMate physical-state change was recorded after Exp6559, and incomplete service-cost measurements support no acceleration claim.
+
+## WHAT WOULD REFUTE IT
+A qualifying operator-authored, dated GateMate cable, port, board, power, JTAG, or DirtyJTAG change after Exp6559—or complete measured service costs demonstrating current hardware acceleration—would refute the corresponding headline conclusions.
+
+## WAS THAT CHECKED
+Yes. The artifact searched the specified provenance for a qualifying physical-state receipt, checked all three placement inputs for a complete service boundary, and explicitly withheld hardware-readiness, hardware-value, and speed claims. The oracle relationship is disclosed, but the claim concerns recorded inputs and blocking status rather than the verifier’s added value.
+
+## EVIDENCE
+`"changed_state_receipt": null`; `"accepted_receipt_count": 0`; `"selected_source_path": null`; `"passed": false`; `"complete_service_rows": 0`; `"hardware_value_score": 0`; `"hardware_ready_score": 0`; `"new_hardware_runs_attempted": 0`; `"assumed_device_rate_is_measured": false`; `"complete measured service denominator is unavailable"`; `"three board dispositions are complete and incomplete stage costs create no speed claim"`; `"verifier_is_oracle": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7394_v648_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+All fourteen V648 tasks were accounted for, but required science failed because online learning was disqualified on validation and safety while the decision audit and proof-memory measurement and audit were pre-gated.
+
+## WHAT WOULD REFUTE IT
+Fewer than fourteen accounted dispositions, a valid online-learning result that passed required validation and safety, or evidence that the decision audit or proof-memory measurement and audit actually ran and produced eligible results.
+
+## WAS THAT CHECKED
+Yes. The artifact checks the fourteen-disposition count, reports the online arm’s expected and observed gate states, and identifies the audit and proof-memory sources as blocked pre-gate records. These checks could have recorded passing or completed outcomes instead.
+
+## EVIDENCE
+`"fourteen_dispositions"`, `"expected": 14`, `"observed": 14`, `"passed": true`, `"required_science_complete"`, `"expected": 1`, `"observed": 0`, `"passed": false`, `"required_online_measurement"`, `"class": "disqualified"`, `"flag": true`, `"score": 0`, `"decision_audit_complete_score"`, `"proof_learning_capture_complete_score"`, `"proof_audit_complete_score"`, `"verdict_class": "blocked"`, `"source_kind": "conductor_pre_gate_artifact"`, `"source_kind": "conductor_log_record"`, `"scientific_value_score": 0`, `"promotion_score": 0`
+
+## RECOMMENDATION
+KEEP
