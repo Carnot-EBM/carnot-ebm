@@ -73072,3 +73072,100 @@ strict row consistency SHALL control the atomic terminal write.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7393 and SCENARIO-REPORT-7393-* | Planned: Exp7393 host reducer, thin entrypoint, evidence sidecars, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
+
+## V648 fourteen-outcome capstone — 2026-09-18
+
+**Status:** Specified. This host aggregation performs no current model work.
+
+### REQ-REPORT-7394: Account for every V648 task without promoting unavailable evidence
+
+Exp7394 SHALL independently parse the active V648 YAML and its named design.
+It SHALL emit fourteen ordered disposition rows for exp7381 through exp7394.
+Each row SHALL keep the full task ID and numeric experiment identity. A
+producer artifact SHALL use its exact path and byte hash. An absent producer
+SHALL use an authenticated conductor pre-gate record and SHALL not invent a
+producer JSON object. The self-row SHALL become terminal only after required
+validation and terminal readers finish.
+
+Exp7394 SHALL independently reduce static calibration, online learning,
+proof-memory learning, ARC reachability and generalization, frozen Ising laws,
+and hardware placement. A valid no-benefit measurement SHALL remain completed
+null science. A reused archive SHALL not become an independent external test.
+Expected GateMate blockage and valid ARC no-progress SHALL not invalidate
+unrelated completed science.
+
+Required science SHALL include Exp7385 static calibration, Exp7386 online
+learning, Exp7387's audit, Exp7389 proof learning, and Exp7390's audit. An
+absent or externally blocked required input SHALL produce `verdict_class=blocked`
+and an exact `gate_check_summary`. A failed required safety or validation gate
+SHALL produce `verdict_class=disqualified`. An unchanged external absence SHALL
+not produce `partial`. Readiness and value scores SHALL remain zero for blocked
+or disqualified science.
+
+The capstone SHALL preserve the unmodified G1-G4 output from
+`scripts/publication_gate.py --json`. It SHALL state that the gate certifies
+the historical FoVer scope, not V648. It SHALL make no publication, submission,
+push, production enablement, or generator-weight change.
+
+Each branch SHALL receive a continue, retire, or defer decision based on its
+measured bottleneck. Same-verdict retirement SHALL use only an existing
+authorized exclusion-manifest receipt. A narrow failure SHALL not retire a
+wider mechanism. Operations analysis SHALL use measured phase spans and task
+receipts, not an ending device snapshot or an inferred concurrency claim.
+
+The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, all current LLM
+invocation counts to zero, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. Historical model evidence SHALL keep its original hash,
+class, flag, and producer label. The artifact SHALL include all required
+ordinary fields, exact source hashes, raw reduction rows, budgets, categorized
+gates, validation receipts, repository health, field principles, a measured
+duration, and complete phase spans. `promotion_score` SHALL remain zero.
+
+The validation plan SHALL come from the actual Exp7358 builder and run through
+Exp7303. It SHALL require worktree imports, focused pytest, separate 100 percent
+changed-module coverage, scoped Ruff check and format, changed-module mypy, and
+exact-test spec coverage. It SHALL preserve command-local `COVERAGE_FILE` and
+SHALL not add an unexecuted full-suite check. No numbered E2E applies. The
+declared entrypoint, independent cold replay, adversarial verification, and
+strict row consistency SHALL control the atomic terminal write.
+
+#### SCENARIO-REPORT-7394-DISPOSITIONS: Exact evidence fills fourteen ordered slots
+
+**Given** the active V648 task list, producer artifacts, and conductor records
+**When** Exp7394 authenticates every task in conductor order
+**Then** it emits exactly fourteen dispositions with full and numeric identities
+**And** absent deliverables cite exact pre-gate records instead of invented JSON.
+
+#### SCENARIO-REPORT-7394-TERMINAL: Required absence is blocked and failed safety is disqualified
+
+**Given** eligible, null, blocked, disqualified, flagged, and absent producer evidence
+**When** the required-science reducer evaluates the five required measurements and audits
+**Then** missing or externally blocked evidence yields blocked with an exact failed field
+**And** a failed required safety or validation gate yields disqualified, never partial.
+
+#### SCENARIO-REPORT-7394-CLAIMS: Branch conclusions preserve their evidence boundaries
+
+**Given** static, online, proof, ARC, Ising, and hardware branch evidence
+**When** the capstone builds claim rows and next-research decisions
+**Then** completed null science remains complete and archive reuse stays non-independent
+**And** expected board blockage does not erase unrelated completed measurements.
+
+#### SCENARIO-REPORT-7394-PUBLICATION: Historical FoVer readiness stays scoped
+
+**Given** the canonical publication-gate subprocess output
+**When** Exp7394 records G1 through G4
+**Then** it preserves every canonical value without modification
+**And** it denies V648 certification and automatic external publication.
+
+#### SCENARIO-REPORT-7394-ARTIFACT: Scoped checks and cold replay control terminal publication
+
+**Given** candidate rows, exact sources, current validation receipts, and terminal readers
+**When** the independent reducer reloads the candidate
+**Then** changed identity, order, hashes, classifications, scores, gates, or checksum fail
+**And** only a valid terminal JSON is written atomically after all checks finish.
+
+## Implementation Status (REQ-REPORT-7394)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7394 and SCENARIO-REPORT-7394-* | Planned: Exp7394 host reducer, thin entrypoint, exact disposition evidence, and terminal artifact | Planned: focused RED tests, scoped 100% changed-module coverage, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage |
