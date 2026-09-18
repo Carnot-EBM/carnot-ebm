@@ -4832,3 +4832,29 @@ builder defect with corpus-wide reach).
 Nothing in the two-layer discriminator above needs revising. lp85's window is degenerate
 INPUT, not degraded ENCODING, and `cell_recall 1.0` on it is honest measurement of a
 worthless corpus — which is exactly the case layer 1 catches before induction runs.
+
+### GAP-DECISION-PCIB-OBSERVABLES-7396: static decision features have limited source grounding
+
+- **status:** open after independent static null diagnosis on 2026-09-18.
+- **evidence:** Exp7385 remains an eligible completed null. An independent Exp7396 reduction
+  matches all 25 arm-seed summaries and registered paired intervals. The unchanged Brier gate
+  still fails. Exp7386 remains disqualified and flagged. Its only consumed facts are the
+  `affected_validation_mismatch`, the appended broad-suite timeout, and the flagged status.
+- **observed feature limit:** the diagnostic training and probability-calibration sample has
+  3,950 rows and 22 conflicting feature cells. The empirical within-cell Bayes Brier floor is
+  0.0084469. This is an in-sample descriptive floor, not a population impossibility result.
+  The label-permutation mean floor is 0.0168795 over 200 frozen draws.
+- **context limit:** the PCIB feature call uses an empty context. Entity uptake therefore uses
+  the first half of the response as a proxy. FoVer provides row IDs, not source questions.
+  3,386 of 3,950 diagnostic rows (85.72 percent) have no conclusion marker. No source evidence
+  supports arithmetic false-positive claims.
+- **decision limit:** the static policies make no reject actions. Fifteen of 25 arm-seed units
+  accept at least 95 percent of rows. The primary arm accepts 6,613 of 6,615 seed-level rows.
+  Under the low error prevalence, near-universal majority acceptance is not added learned value.
+- **missing discriminator:** features tied to the real source question and claim structure.
+  They must add held-out proper-score value beyond prevalence and logistic controls.
+- **candidate design:** recover authenticated source questions before expanding the model. Add
+  source-grounded entity, conclusion, and claim-type features. Repeat the same registered static
+  gate before any wider architecture or online claim.
+- **priority:** high for the calibrated-decision branch. Keep the valid static null available to
+  downstream decisions while `static_value_confirmed_score` remains zero.

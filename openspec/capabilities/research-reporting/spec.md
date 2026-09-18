@@ -73286,3 +73286,117 @@ zero. A narrow receipt failure SHALL not cancel other milestone branches.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7395 and SCENARIO-REPORT-7395-* | Implemented: shared current-work receipt helper, Exp7395 host reducer, thin entrypoint, and immutable hashed sidecars | Verified: focused spec-linked tests pass with 100% changed-module coverage including Exp7383 paths; the frozen eight-check scoped plan, entrypoint E2E, cold replay, unchanged adversarial verifier, strict row consistency, and exact-test spec coverage all pass |
+
+## V649 static calibrated-decision diagnosis — 2026-09-18
+
+**Status:** Specified. This host aggregation audits the completed Exp7385 null without using Exp7386 as a prerequisite.
+
+### REQ-REPORT-7396: Audit the static null and diagnose observable feature limits
+
+Exp7396 SHALL authenticate the exact Exp7382 partition artifact, Exp7385
+artifact, every Exp7385 numeric checkpoint, and the source corpus. Exp7382
+and Exp7385 SHALL pass their original eligibility fields before dependent
+diagnosis starts. A failed structured gate SHALL emit a terminal `blocked_*`
+artifact with `gate_check_summary` naming the upstream path, check, field,
+expected value, and observed value.
+
+The audit SHALL independently recompute Brier score, log loss, PR-AUC, action
+confusion counts, calibration bounds, and paired group intervals from Exp7385
+rows. It SHALL not import the Exp7385 reducer. It SHALL preserve the original
+seeds and the failed Brier efficacy gate. An analytic informative fixture and
+a label-permutation control SHALL prove that the diagnostic reducer can detect
+real discrimination before the observed result is called a null.
+
+Feature diagnosis SHALL use only training and probability-calibration rows.
+It SHALL verify exact group and duplicate separation. It SHALL emit one row
+for each identical feature vector with conflicting labels. Each row SHALL
+contain the partition, vector hash, label counts, and empirical within-cell
+Bayes Brier floor. These floors describe the observed sample only. They SHALL
+not become population impossibility claims or permit future-label access.
+
+The context audit SHALL record that `PCIBProbe` receives empty context and
+therefore uses the first response half as its entity proxy. It SHALL not call
+that proxy a source question. It SHALL treat FoVer question IDs as identifiers,
+not question provenance. It SHALL measure how often the entity and conclusion
+proxies are constant and how often rows lack conclusion markers. It SHALL not
+synthesize questions from labels or claim arithmetic false positives without
+source evidence.
+
+The decision audit SHALL keep each answer identity fixed. It SHALL count raw
+binary prediction changes, calibrated binary prediction changes, and typed
+policy action changes separately. It SHALL state when thresholds accept almost
+all rows and SHALL not call majority-class acceptance learned value.
+
+Exp7386 SHALL remain diagnostic-only. Exp7396 MAY read its failed logs only to
+record `affected_validation_mismatch`, the appended broad-suite timeout, and
+its flagged disqualified status. It SHALL not reuse or rehabilitate Exp7386
+online metrics. `static_audit_complete_score` SHALL equal one when independent
+static accounting and required validation pass. `static_value_confirmed_score`
+SHALL equal one only when the unchanged Exp7385 registered value gate passes.
+A valid completed null can supply both downstream scientific decisions while
+the two scores remain separate.
+
+The artifact SHALL declare `MODEL_SPECS=[]`, `model_invoked=false`, zero current
+LLM invocation counts, `inference_substrate_class=aggregation`, and
+`execution_venue=host`. `inference_substrate` SHALL be a string. Device and
+software details SHALL stay in `inference_substrate_details`. Historical
+receipts SHALL remain in hash-bound sidecars. `promotion_score` SHALL remain
+zero.
+
+The affected command list SHALL come from Exp7358 before Exp7303 executes it.
+It SHALL freeze worktree imports, focused pytest with `-n 0 -o addopts=
+--no-cov`, separate 100 percent changed-module coverage, scoped Ruff check and
+format, changed-module mypy, and exact-test specification coverage. It SHALL
+use a private existing base-temp parent and a command-local `COVERAGE_FILE`.
+It SHALL not append or run `full_python_suite`. No numbered E2E applies. The
+declared entrypoint and a fresh-process cold replay SHALL serve as the
+capability E2E. Adversarial verification and strict row consistency SHALL
+inspect the exact candidate before atomic terminal publication.
+
+#### SCENARIO-REPORT-7396-PRECONDITIONS: Static sources gate diagnosis independently
+
+**Given** exact eligible Exp7382 and Exp7385 inputs and a disqualified Exp7386,
+**when** Exp7396 authenticates its sources,
+**then** Exp7385 proceeds without an Exp7386 eligibility dependency
+**and** any static-source mismatch blocks with one exact gate summary.
+
+#### SCENARIO-REPORT-7396-METRICS: Independent reduction preserves the registered null
+
+**Given** the sealed Exp7385 final rows and frozen seeds,
+**when** Exp7396 independently recomputes proper scores, actions, and intervals,
+**then** the recomputed values match the stored evidence within numeric tolerance
+**and** the unchanged Brier conjunction remains failed.
+
+#### SCENARIO-REPORT-7396-FEATURES: Observable collisions stay descriptive
+
+**Given** training and probability-calibration feature rows only,
+**when** Exp7396 groups identical vectors and tests informative and permuted controls,
+**then** each conflicting cell reports its empirical Bayes Brier floor
+**and** the report makes no population impossibility or source-question claim.
+
+#### SCENARIO-REPORT-7396-CONTEXT: Empty context and row IDs are not questions
+
+**Given** the Exp7382 PCIB feature construction and the FoVer corpus schema,
+**when** Exp7396 traces context and conclusion proxies,
+**then** it records first-half fallback and missing conclusion-marker rates
+**and** it does not infer missing questions or unsupported arithmetic errors.
+
+#### SCENARIO-REPORT-7396-DECISIONS: Binary changes and typed actions remain distinct
+
+**Given** one fixed answer ID for each scored group,
+**when** raw, calibrated, and policy decisions are compared,
+**then** each change type receives a separate count
+**and** near-universal acceptance is not counted as learned value.
+
+#### SCENARIO-REPORT-7396-ARTIFACT: Scoped checks control atomic publication
+
+**Given** the candidate, exact sources, raw diagnosis rows, and frozen check plan,
+**when** fresh-process replay and unchanged strict readers inspect it,
+**then** changed metrics, sources, scores, gates, or checksum fail
+**and** only a valid terminal artifact is written atomically.
+
+## Implementation Status (REQ-REPORT-7396)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7396 and SCENARIO-REPORT-7396-* | Implemented: Exp7396 static audit module, thin entrypoint, diagnosis rows, and terminal artifact | Verified: focused spec-linked tests pass with 100% changed-module coverage; frozen affected checks, entrypoint E2E, cold replay, adversarial verification, strict row consistency, and exact-test spec coverage pass |
