@@ -6843,3 +6843,10 @@ The critical path for milestone .250:
 - theme: one ARC supervisor-outcome task dominated a mixed execution window while phase and dispatch evidence remained unaligned
 - key result: honest operational negative — the compute duration order is known, but the critical-path cause, task-window GPU efficiency, and any eligible parallel-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.648
+
+- exp_range: no data available this milestone
+- theme: all-compute execution concentrated elapsed time in evidence recomputation and decision learning while instrumentation remained task-agnostic
+- key result: honest operational negative — the record ranks the costly jobs, but no data available this milestone assigns the cost to an internal stage, validates accelerator occupancy during a task, or demonstrates a qualifying parallel-runner omission
+- acceptance: no data available this milestone
