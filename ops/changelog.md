@@ -20114,3 +20114,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-18: Bind V648 sources and the exact fourteen-task contract (⚠️ Research Finding) — honest_verdict=complete_disqualified_v648_contract_or_validation_defect; results/experiment_7381_v648_contract.json
 - 2026-09-18: Prototype typed energy decisions and seal calibration partitions (⚠️ Research Finding) — honest_verdict=complete_null_protocol_ready_no_real_data_learning_tested; results/experiment_7382_v648_decision_protocol.json
 - 2026-09-18: Repair assignment receipt reduction without repeating inference (⚠️ Research Finding) — honest_verdict=complete_disqualified_reducer_or_validation_defect; results/experiment_7383_v648_canary_reducer.json
+- 2026-09-18: Harden the live ARC child invocation and first-action boundary (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7384_v648_arc_invocation_boundary.json
