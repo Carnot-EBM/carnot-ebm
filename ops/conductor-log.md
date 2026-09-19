@@ -18198,3 +18198,4 @@ code |
 | 2026-09-19 00:37 UTC | Measure certified memory independently on sealed s | OK | 110 passed, 1 warning in 45.67s |
 | 2026-09-19 00:39 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 00:41 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
+| 2026-09-19 00:43 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
