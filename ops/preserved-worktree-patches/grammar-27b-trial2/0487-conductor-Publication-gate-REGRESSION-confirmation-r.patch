@@ -1,0 +1,1058 @@
+From 54fb86b7e5922fcfe77332bb04a31cbe06c6f2e6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 13:33:01 -0400
+Subject: [PATCH 00487/11171] [conductor] Publication-gate REGRESSION
+ confirmation: run scripts/publication_gate.py --json and confirm G1 (headline
+ measured), G2 (independently reproduced -- the CI reproducer), G3 (prose
+ narrowing-clean), G4 (numbers trace to primary artifacts) ALL still pass and
+ paper_ready stays TRUE after the .349 wiring/product changes; confirm the
+ frozen FoVer 0.9131 is unchanged. The standing convergence invariant guard
+ (north-star sec-2). Aggregation/check only; changes no gate definition; edits
+ no operator-curated doc.
+
+Automated research step by research conductor.
+Task ID: exp3814-publication-gate-regression-confirmation
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/publication/spec.md     |  38 ++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...lication_gate_regression_confirmation.json | 157 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...ublication_gate_regression_confirmation.py | 406 ++++++++++++++++++
+ ...ublication_gate_regression_confirmation.py | 216 ++++++++++
+ 14 files changed, 842 insertions(+), 20 deletions(-)
+ create mode 100644 results/experiment_3814_publication_gate_regression_confirmation.json
+ create mode 100644 scripts/experiment_3814_publication_gate_regression_confirmation.py
+ create mode 100644 tests/python/test_experiment_3814_publication_gate_regression_confirmation.py
+
+diff --git a/openspec/capabilities/publication/spec.md b/openspec/capabilities/publication/spec.md
+index 057923a582..cd59f68de4 100644
+--- a/openspec/capabilities/publication/spec.md
++++ b/openspec/capabilities/publication/spec.md
+@@ -2154,6 +2154,43 @@ cites all three upstream artifacts, identifies FoVer 0.9131 as the sole
+ defensible headline, emits the doc-update proposal, and leaves
+ operator-curated documents unedited.
+ 
++### REQ-PUBLISH-3814: Publication Gate Regression Confirmation
++
++The Exp 3814 publication-gate regression runner MUST execute the existing
++`scripts/publication_gate.py --json` gate under the repository `.venv/bin/python`
++and MUST record the G1, G2, G3, G4, and `paper_ready` booleans exactly as the
++gate reports them. The runner SHALL NOT redefine any gate, SHALL NOT edit
++`ops/north-star.md`, SHALL NOT edit operator-curated documents, and SHALL NOT
++modify `scripts/research_conductor.py`.
++
++The runner MUST read
++`results/experiment_2850_fover_dual_condition_integrity_v4.json` as the frozen
++FoVer headline source and set `frozen_fover_auroc_unchanged` only when the
++condition-A production AUROC rounds to `0.9131`. If the interpreter, gate
++script, or headline source artifact is unavailable, the runner MUST write an
++honest blocked artifact rather than fabricating a pass. The artifact
++`results/experiment_3814_publication_gate_regression_confirmation.json` MUST
++use `inference_substrate="aggregation_from_upstream_artifacts"`, include
++`honest_verdict`, `g1_pass`, `g2_pass`, `g3_pass`, `g4_pass`, `paper_ready`,
++`frozen_fover_auroc_unchanged`, `any_gate_regressed`,
++`gate_definitions_unchanged`, `cited_upstream_artifacts`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`, avoid live-model substrate
++markers, and pass `scripts/adversarial_verify.py` without critical flags.
++
++The terminal complete verdict MUST equal
++`complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_paper_ready_true_frozen_fover_0.9131_unchanged_no_gate_redefined`.
++
++### SCENARIO-PUBLISH-3814: Publication Gate Regression Confirmation Preserves Frozen Gate
++
++**Given** the repository `.venv/bin/python`, `scripts/publication_gate.py`, and
++the frozen FoVer headline source artifact are available
++**When** the Exp 3814 runner executes
++**Then** it records the full publication-gate JSON, sets all four gate booleans
++and `paper_ready` from that JSON, confirms the frozen FoVer AUROC remains
++`0.9131`, sets `any_gate_regressed == false`,
++`gate_definitions_unchanged == true`, cites the gate source artifacts, and
++leaves the fixed gate definitions unchanged.
++
+ ### REQ-PUBLISH-3723: v340 Convergence Capstone And Hardened G-Gate Recheck
+ 
+ The Exp 3723 v340 capstone runner MUST aggregate `publication_gate.py --json`
+@@ -2309,6 +2346,7 @@ verdict, `reproduced_auroc_mean == null`, `per_seed_aurocs == []`, and
+ | REQ-PUBLISH-3723 | Proposed | Exp 3723 v340 convergence capstone and hardened G-gate recheck |
+ | REQ-PUBLISH-3792 | Implemented | Exp 3792 product-headline G4 provenance confirmation |
+ | REQ-PUBLISH-3812 | Implemented | Exp 3812 product-headline status consolidation |
++| REQ-PUBLISH-3814 | Planned | Exp 3814 publication gate regression confirmation |
+ 
+ ### REQ-PUBLISH-026: HuggingFace Publish Retry
+ The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 6c30a0fcd9..95c6148098 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -56,3 +56,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - INVARIANT regression: auroc_within_frozen_ci=True drifted from frozen 0.9131
+ - artifact: results/experiment_3778_fr11_self_learning_v18_tier2_constraint_memory.json
++
++## experiment_3813_fr11_v21_fast_path_robustness.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - INVARIANT regression: effective_auroc_in_frozen_ci=False drifted from frozen 0.9131
++- artifact: results/experiment_3813_fr11_v21_fast_path_robustness.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3031000dd6..68770653a1 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 147,
+   "code_violations": 0,
+-  "experiments_checked": 2915,
++  "experiments_checked": 2916,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 7b2145f936..8ddef6ed52 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T17:17:52.512259Z",
+-  "duration_s": 0.009872198104858398,
++  "run_date": "2026-06-04T17:31:18.818004Z",
++  "duration_s": 0.007280588150024414,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "71519339048b1d7b81b816f666d72d78611847f8ed29cd67a2151cda2bc10a09",
++  "reproducibility_checksum": "aa7af75f5301712ac4a3afcfb8161e0d9e9d8e93fe4a4ca1d8d94d23711f066b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "5632c3015c9981feb7a70df0ba88b40055875154"
++    "adversarial_verify_version": "1045d649fefeb49ae3e5bbc2c66d9b94e7c03036"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index d668495d98..c4f2b45042 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T17:17:52.525013Z",
+-  "duration_s": 0.009041786193847656,
++  "run_date": "2026-06-04T17:31:18.826716Z",
++  "duration_s": 0.006689310073852539,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "5ed9ba38f79df57f2553114a244228d983348ac1f58f0c41869802f075fcc078",
++  "reproducibility_checksum": "093d3a0014b8917fb69c47b9eca48b8d18d1e19794a065b4e903b4b19059cb4c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "5632c3015c9981feb7a70df0ba88b40055875154"
++    "adversarial_verify_version": "1045d649fefeb49ae3e5bbc2c66d9b94e7c03036"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d227d3213a..e50a1995de 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1114349365234375,
++  "efficiency_gains_ms": 2.0864009857177734,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index e5ef5b1514..bc5312bfac 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3483102321624756,
++  "duration_s": 0.30452394485473633,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 0174a6d063..57f02dab71 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.855400089174509e-05,
++  "duration_s": 2.834299812093377e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3814_publication_gate_regression_confirmation.json b/results/experiment_3814_publication_gate_regression_confirmation.json
+new file mode 100644
+index 0000000000..7c1a08f50c
+--- /dev/null
++++ b/results/experiment_3814_publication_gate_regression_confirmation.json
+@@ -0,0 +1,157 @@
++{
++  "any_gate_regressed": false,
++  "cited_upstream_artifacts": [
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "gate_runner",
++      "sha256": "e69f55eb33295352f65e27d1586d5bfcadcde2988dbb5e870d39155de46640c4"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/north-star.md",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "gate_definition",
++      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
++      "random_seed": 42,
++      "random_seeds_used": [
++        42,
++        137,
++        271,
++        314,
++        1729
++      ],
++      "reproducibility_checksum": "b3d8a0ea0ed6180e0120eb909513436d2e0a43055fe09d096d57d93faf21c2c9",
++      "role": "g1_g4_headline_source",
++      "sha256": "b1beb0456398b3a0cc5c673ff40a6e192f514c084346a6467b8d0acd31028f93"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/publication_gate_state.json",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "g2_manual_state",
++      "sha256": "46fc9829af95ec5465a6adaf11ca507d92ef9eef7188520b09707a2c8e37ffa8"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/reproduction-runbook-fover-headline.md",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "g2_reproduction_runbook",
++      "sha256": "d06304a4186fc29c76536954f906c7e0cdf1f250e48217487b4be5bc55ff6145"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/technical-report.md",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "g3_technical_report_source",
++      "sha256": "f7c7832ddd26843f07a689a75ee563a1adf81effe571577c7fc4a1cd1bceee90"
++    },
++    {
++      "exists": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex",
++      "random_seed": null,
++      "random_seeds_used": null,
++      "reproducibility_checksum": null,
++      "role": "g3_paper_source",
++      "sha256": "7ce70cb4407b60236756ad9abd1afc722d5110e33bf368cd46fe5d78a74af4ca"
++    }
++  ],
++  "duration_s": 0.106825,
++  "experiment": 3814,
++  "field_principles": {
++    "any_gate_regressed": "BARE bool -- surfaces any regression honestly for the operator.",
++    "cited_upstream_artifacts": "Provenance for the gate sources.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "frozen_fover_auroc_unchanged": "BARE bool -- the frozen 0.9131 headline is unchanged.",
++    "g1_pass": "BARE bool -- headline measured (FoVer 0.9131, 5-seed, CI, adversarial-clean) still passes.",
++    "g2_pass": "BARE bool -- the independent CI reproducer still attests the headline within CI.",
++    "g3_pass": "BARE bool -- prose stays narrowing-clean.",
++    "g4_pass": "BARE bool -- headline numbers still trace to a primary artifact with random_seed + reproducibility_checksum.",
++    "gate_definitions_unchanged": "BARE bool -- no gate was redefined to show progress.",
++    "honest_verdict": "Terminal prefix; the regression-check outcome.",
++    "inference_substrate": "Runs the gate script and records booleans; no live model.",
++    "paper_ready": "BARE bool -- G1 and G2 and G3 and G4.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift."
++  },
++  "frozen_fover_auroc": 0.9131,
++  "frozen_fover_auroc_unchanged": true,
++  "g1_pass": true,
++  "g2_pass": true,
++  "g3_pass": true,
++  "g4_pass": true,
++  "gate_definition_sha256_after": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
++  "gate_definition_sha256_before": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
++  "gate_definition_source": "/home/ianblenke/github.com/ianblenke/carnot/ops/north-star.md",
++  "gate_definitions_unchanged": true,
++  "headline_source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2850_fover_dual_condition_integrity_v4.json",
++  "honest_verdict": "complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_paper_ready_true_frozen_fover_0.9131_unchanged_no_gate_redefined",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "paper_ready": true,
++  "preconditions": {
++    "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++    "ok": true,
++    "publication_gate_script": "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
++    "publication_gate_script_exists": true,
++    "resolved_executable": "/usr/bin/python3.14",
++    "venv_python": true
++  },
++  "publication_gate_command": {
++    "command": [
++      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
++      "/home/ianblenke/github.com/ianblenke/carnot/scripts/publication_gate.py",
++      "--json"
++    ],
++    "returncode": 0,
++    "stderr": "",
++    "stdout": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}\n"
++  },
++  "publication_gate_json": {
++    "gates": {
++      "G1": {
++        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      },
++      "G2": {
++        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
++        "pass": true
++      },
++      "G3": {
++        "detail": "no retracted phrasings asserted as live claims",
++        "hits": [],
++        "pass": true
++      },
++      "G4": {
++        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
++        "pass": true,
++        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
++      }
++    },
++    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
++    "paper_ready": true,
++    "unmet_gates": []
++  },
++  "random_seed": 3814,
++  "reproducibility_checksum": "b7addaa51d43df7c770dad0e7fceecf7b09dc0e11a3b8036802928aa4f34e461",
++  "schema": "carnot.publication_gate_regression_confirmation.v1",
++  "spec_refs": [
++    "REQ-PUBLISH-3814",
++    "SCENARIO-PUBLISH-3814"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1d1eb0432a..bca4b06262 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T17:17:44Z",
+-  "finished_at": "2026-06-04T17:17:44Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-04T17:31:10Z",
++  "finished_at": "2026-06-04T17:31:10Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a290213d6e..e782a55c4d 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T17:17:44Z",
+-  "finished_at": "2026-06-04T17:17:44Z",
++  "started_at": "2026-06-04T17:31:10Z",
++  "finished_at": "2026-06-04T17:31:10Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 50ce64b2f6..a623d48db7 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T17:17:44Z",
+-  "finished_at": "2026-06-04T17:17:44Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-04T17:31:10Z",
++  "finished_at": "2026-06-04T17:31:10Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3814_publication_gate_regression_confirmation.py b/scripts/experiment_3814_publication_gate_regression_confirmation.py
+new file mode 100644
+index 0000000000..391b1bb052
+--- /dev/null
++++ b/scripts/experiment_3814_publication_gate_regression_confirmation.py
+@@ -0,0 +1,406 @@
++#!/usr/bin/env python3
++"""Exp 3814: record the publication-gate regression check.
++
++This runner does not define publication readiness itself. It executes the
++existing fixed G1-G4 gate, records the booleans it returns, and checks that the
++frozen FoVer headline source still rounds to 0.9131.
++
++Spec refs: REQ-PUBLISH-3814, SCENARIO-PUBLISH-3814.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++import subprocess
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++OUTPUT_REL_PATH = Path("results/experiment_3814_publication_gate_regression_confirmation.json")
++OUTPUT_PATH = PROJECT_ROOT / OUTPUT_REL_PATH
++GATE_REL_PATH = Path("scripts/publication_gate.py")
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++HEADLINE_REL_PATH = Path("results/experiment_2850_fover_dual_condition_integrity_v4.json")
++
++RANDOM_SEED = 3814
++FROZEN_FOVER_AUROC = 0.9131
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_VERDICT = (
++    "complete: publication_gate_regression_confirmed_g1_g2_g3_g4_pass_"
++    "paper_ready_true_frozen_fover_0.9131_unchanged_no_gate_redefined"
++)
++BLOCKED_INTERPRETER_VERDICT = "blocked_interpreter_or_publication_gate_unavailable"
++BLOCKED_GATE_VERDICT = "blocked_publication_gate_json_unavailable"
++BLOCKED_HEADLINE_VERDICT = "blocked_frozen_fover_headline_source_missing"
++
++SOURCE_REL_PATHS: Mapping[str, Path] = {
++    "gate_runner": GATE_REL_PATH,
++    "gate_definition": NORTH_STAR_REL_PATH,
++    "g1_g4_headline_source": HEADLINE_REL_PATH,
++    "g2_manual_state": Path("ops/publication_gate_state.json"),
++    "g2_reproduction_runbook": Path("ops/reproduction-runbook-fover-headline.md"),
++    "g3_technical_report_source": Path("docs/technical-report.md"),
++    "g3_paper_source": Path("docs/arxiv-paper/main.tex"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "g1_pass",
++    "g2_pass",
++    "g3_pass",
++    "g4_pass",
++    "paper_ready",
++    "frozen_fover_auroc_unchanged",
++    "any_gate_regressed",
++    "gate_definitions_unchanged",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES: Mapping[str, str] = {
++    "honest_verdict": "Terminal prefix; the regression-check outcome.",
++    "inference_substrate": "Runs the gate script and records booleans; no live model.",
++    "g1_pass": (
++        "BARE bool -- headline measured (FoVer 0.9131, 5-seed, CI, "
++        "adversarial-clean) still passes."
++    ),
++    "g2_pass": (
++        "BARE bool -- the independent CI reproducer still attests the headline within CI."
++    ),
++    "g3_pass": "BARE bool -- prose stays narrowing-clean.",
++    "g4_pass": (
++        "BARE bool -- headline numbers still trace to a primary artifact with "
++        "random_seed + reproducibility_checksum."
++    ),
++    "paper_ready": "BARE bool -- G1 and G2 and G3 and G4.",
++    "frozen_fover_auroc_unchanged": (
++        "BARE bool -- the frozen 0.9131 headline is unchanged."
++    ),
++    "any_gate_regressed": (
++        "BARE bool -- surfaces any regression honestly for the operator."
++    ),
++    "gate_definitions_unchanged": (
++        "BARE bool -- no gate was redefined to show progress."
++    ),
++    "cited_upstream_artifacts": "Provenance for the gate sources.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++def _absolute(root: Path, relative_path: Path) -> Path:
++    return (root / relative_path).resolve()
++
++
++def _sha256_file(path: Path) -> str | None:
++    if not path.exists():
++        return None
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _load_json(path: Path) -> JsonDict:
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):  # pragma: no cover - malformed fixtures are not useful here
++        return {}
++    return payload if isinstance(payload, dict) else {}
++
++
++def _source_entry(root: Path, role: str, relative_path: Path) -> JsonDict:
++    path = _absolute(root, relative_path)
++    payload = _load_json(path) if path.suffix == ".json" else {}
++    return {
++        "role": role,
++        "path": str(path),
++        "exists": path.exists(),
++        "sha256": _sha256_file(path),
++        "random_seed": payload.get("random_seed"),
++        "random_seeds_used": payload.get("random_seeds_used"),
++        "reproducibility_checksum": payload.get("reproducibility_checksum"),
++    }
++
++
++def _interpreter_preconditions(root: Path, executable: str | Path | None = None) -> JsonDict:
++    exe = Path(executable or sys.executable)
++    resolved_exe = exe.resolve()
++    gate_path = _absolute(root, GATE_REL_PATH)
++    venv_python = ".venv" in exe.parts or ".venv" in resolved_exe.parts
++    return {
++        "executable": str(exe),
++        "resolved_executable": str(resolved_exe),
++        "venv_python": venv_python,
++        "publication_gate_script_exists": gate_path.exists(),
++        "publication_gate_script": str(gate_path),
++        "ok": bool(venv_python and gate_path.exists()),
++    }
++
++
++def _run_publication_gate_json(root: Path, executable: str | Path | None = None) -> JsonDict:
++    exe = str(Path(executable or sys.executable))
++    gate_path = _absolute(root, GATE_REL_PATH)
++    command = [exe, str(gate_path), "--json"]
++    try:
++        completed = subprocess.run(
++            command,
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++            timeout=30.0,
++        )
++    except (OSError, subprocess.TimeoutExpired) as exc:  # pragma: no cover - host failure path
++        return {
++            "ok": False,
++            "command": command,
++            "returncode": None,
++            "stdout": "",
++            "stderr": str(exc),
++            "data": {},
++        }
++    if completed.returncode != 0:
++        return {
++            "ok": False,
++            "command": command,
++            "returncode": completed.returncode,
++            "stdout": completed.stdout,
++            "stderr": completed.stderr,
++            "data": {},
++        }
++    try:
++        parsed = json.loads(completed.stdout)
++    except json.JSONDecodeError:
++        parsed = {}
++        parsed_ok = False
++    else:
++        parsed_ok = isinstance(parsed, dict)
++    return {
++        "ok": parsed_ok,
++        "command": command,
++        "returncode": completed.returncode,
++        "stdout": completed.stdout,
++        "stderr": completed.stderr,
++        "data": parsed if isinstance(parsed, dict) else {},
++    }
++
++
++def _gate_bool(gate_data: Mapping[str, Any], gate_name: str) -> bool:
++    gates = gate_data.get("gates")
++    if not isinstance(gates, Mapping):
++        return False
++    gate = gates.get(gate_name)
++    return bool(gate.get("pass", False)) if isinstance(gate, Mapping) else False
++
++
++def _frozen_fover_auroc(root: Path) -> float | None:
++    payload = _load_json(_absolute(root, HEADLINE_REL_PATH))
++    value = payload.get("condition_a_production_auroc_mean")
++    if isinstance(value, bool) or not isinstance(value, int | float):
++        return None
++    return round(float(value), 4)
++
++
++def _duration(started: float, now_s: float | None) -> float:
++    ended = time.perf_counter() if now_s is None else float(now_s)
++    return max(round(ended - started, 6), 0.0001)
++
++
++def _verdict(
++    *,
++    preconditions_ok: bool,
++    gate_ok: bool,
++    frozen_fover_auroc_unchanged: bool,
++    any_gate_regressed: bool,
++    gate_definitions_unchanged: bool,
++) -> str:
++    if not preconditions_ok:
++        return BLOCKED_INTERPRETER_VERDICT
++    if not gate_ok:
++        return BLOCKED_GATE_VERDICT
++    if not frozen_fover_auroc_unchanged:
++        return BLOCKED_HEADLINE_VERDICT
++    if any_gate_regressed:
++        return "complete: publication_gate_regression_detected_operator_review_required"
++    if not gate_definitions_unchanged:
++        return "complete: publication_gate_definition_changed_operator_review_required"
++    return TERMINAL_VERDICT
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    filtered = dict(payload)
++    filtered["reproducibility_checksum"] = ""
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = PROJECT_ROOT,
++    *,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    executable: str | Path | None = None,
++) -> JsonDict:
++    root_path = Path(root)
++    started = time.perf_counter() if started_s is None else float(started_s)
++    north_star_path = _absolute(root_path, NORTH_STAR_REL_PATH)
++    north_star_sha_before = _sha256_file(north_star_path)
++    preconditions = _interpreter_preconditions(root_path, executable)
++
++    if publication_gate_data is None:
++        gate_run = _run_publication_gate_json(root_path, executable)
++        gate_data = gate_run["data"] if gate_run["ok"] else {}
++    else:
++        gate_data = dict(publication_gate_data)
++        gate_run = {
++            "ok": True,
++            "command": ["injected_publication_gate_data"],
++            "returncode": 0,
++            "stdout": json.dumps(gate_data, sort_keys=True),
++            "stderr": "",
++            "data": gate_data,
++        }
++
++    g1 = _gate_bool(gate_data, "G1")
++    g2 = _gate_bool(gate_data, "G2")
++    g3 = _gate_bool(gate_data, "G3")
++    g4 = _gate_bool(gate_data, "G4")
++    paper_ready = bool(gate_data.get("paper_ready", False))
++    any_gate_regressed = not (g1 and g2 and g3 and g4 and paper_ready)
++    frozen_fover_auroc = _frozen_fover_auroc(root_path)
++    frozen_fover_auroc_unchanged = frozen_fover_auroc == FROZEN_FOVER_AUROC
++    north_star_sha_after = _sha256_file(north_star_path)
++    gate_definitions_unchanged = (
++        north_star_sha_before is not None and north_star_sha_before == north_star_sha_after
++    )
++    duration_s = _duration(started, now_s)
++
++    artifact = {
++        "experiment": 3814,
++        "schema": "carnot.publication_gate_regression_confirmation.v1",
++        "spec_refs": ["REQ-PUBLISH-3814", "SCENARIO-PUBLISH-3814"],
++        "honest_verdict": _verdict(
++            preconditions_ok=bool(preconditions["ok"]),
++            gate_ok=bool(gate_run["ok"]),
++            frozen_fover_auroc_unchanged=frozen_fover_auroc_unchanged,
++            any_gate_regressed=any_gate_regressed,
++            gate_definitions_unchanged=gate_definitions_unchanged,
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "publication_gate_json": gate_data,
++        "publication_gate_command": {
++            "command": gate_run["command"],
++            "returncode": gate_run["returncode"],
++            "stdout": gate_run["stdout"],
++            "stderr": gate_run["stderr"],
++        },
++        "g1_pass": g1,
++        "g2_pass": g2,
++        "g3_pass": g3,
++        "g4_pass": g4,
++        "paper_ready": paper_ready,
++        "frozen_fover_auroc": frozen_fover_auroc,
++        "frozen_fover_auroc_unchanged": frozen_fover_auroc_unchanged,
++        "any_gate_regressed": any_gate_regressed,
++        "gate_definitions_unchanged": gate_definitions_unchanged,
++        "gate_definition_source": str(north_star_path),
++        "gate_definition_sha256_before": north_star_sha_before,
++        "gate_definition_sha256_after": north_star_sha_after,
++        "headline_source_artifact": str(_absolute(root_path, HEADLINE_REL_PATH)),
++        "preconditions": preconditions,
++        "cited_upstream_artifacts": [
++            _source_entry(root_path, role, relative_path)
++            for role, relative_path in SOURCE_REL_PATHS.items()
++        ],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": duration_s,
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def write_json(path: Path, payload: Mapping[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise AssertionError(message)  # pragma: no cover
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    _require(set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact), "missing required fields")
++    _require(set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"]), "missing principles")
++    _require(artifact["inference_substrate"] == INFERENCE_SUBSTRATE, "wrong substrate")
++    for key in (
++        "g1_pass",
++        "g2_pass",
++        "g3_pass",
++        "g4_pass",
++        "paper_ready",
++        "frozen_fover_auroc_unchanged",
++        "any_gate_regressed",
++        "gate_definitions_unchanged",
++    ):
++        _require(isinstance(artifact[key], bool), f"{key} must be a bare bool")
++    _require(artifact["random_seed"] == RANDOM_SEED, "wrong random seed")
++    _require(artifact["reproducibility_checksum"] == payload_checksum(artifact), "checksum mismatch")
++    encoded = json.dumps(artifact, sort_keys=True)
++    _require("GGUF" not in encoded and "CUDA" not in encoded, "forbidden substrate marker")
++    _require("live_llm_inference" not in encoded, "forbidden live-model marker")
++    if artifact["honest_verdict"] == TERMINAL_VERDICT:
++        _require(artifact["paper_ready"] is True, "terminal verdict requires paper_ready")
++        _require(artifact["any_gate_regressed"] is False, "terminal verdict requires no regression")
++        _require(artifact["frozen_fover_auroc_unchanged"] is True, "terminal verdict requires frozen AUROC")
++        _require(artifact["gate_definitions_unchanged"] is True, "terminal verdict requires fixed gate")
++    else:
++        _require(str(artifact["honest_verdict"]).startswith(("blocked_", "complete:")), "bad verdict")
++
++
++def run(
++    root: Path | str = PROJECT_ROOT,
++    *,
++    publication_gate_data: Mapping[str, Any] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    executable: str | Path | None = None,
++) -> Path:
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        publication_gate_data=publication_gate_data,
++        started_s=started_s,
++        now_s=now_s,
++        executable=executable,
++    )
++    validate_artifact(artifact)
++    output_path = root_path / OUTPUT_REL_PATH
++    write_json(output_path, artifact)
++    return output_path
++
++
++def main() -> int:  # pragma: no cover - CLI wrapper
++    out_path = run(PROJECT_ROOT)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3814_publication_gate_regression_confirmation.py b/tests/python/test_experiment_3814_publication_gate_regression_confirmation.py
+new file mode 100644
+index 0000000000..dc186e7b94
+--- /dev/null
++++ b/tests/python/test_experiment_3814_publication_gate_regression_confirmation.py
+@@ -0,0 +1,216 @@
++"""Tests for Exp 3814 publication-gate regression confirmation.
++
++Spec refs: REQ-PUBLISH-3814, SCENARIO-PUBLISH-3814.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++from scripts import experiment_3814_publication_gate_regression_confirmation as exp3814
++
++
++SPEC_PATH = Path("openspec/capabilities/publication/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _gate_data(*, paper_ready: bool = True) -> dict[str, object]:
++    gates = {
++        "G1": {"pass": True, "detail": "headline measured", "source": "experiment_2850.json"},
++        "G2": {"pass": True, "detail": "external CI reproducer"},
++        "G3": {"pass": True, "detail": "narrowing clean", "hits": []},
++        "G4": {"pass": True, "detail": "seed/checksum present", "source": "experiment_2850.json"},
++    }
++    if not paper_ready:
++        gates["G3"]["pass"] = False
++    return {
++        "paper_ready": paper_ready,
++        "gates": gates,
++        "unmet_gates": [] if paper_ready else ["G3"],
++        "note": "Stable 4-condition gate",
++    }
++
++
++def _seed_repo(root: Path, *, include_headline: bool = True) -> dict[Path, str]:
++    gate_script = root / "scripts" / "publication_gate.py"
++    gate_script.parent.mkdir(parents=True, exist_ok=True)
++    gate_payload = json.dumps(_gate_data(), sort_keys=True)
++    gate_script.write_text(
++        "import json\n"
++        f"GATE = json.loads({gate_payload!r})\n"
++        "def evaluate():\n"
++        "    return GATE\n"
++        "if __name__ == '__main__':\n"
++        "    print(json.dumps(evaluate()))\n",
++        encoding="utf-8",
++    )
++    if include_headline:
++        _write_json(
++            root / "results" / "experiment_2850_fover_dual_condition_integrity_v4.json",
++            {
++                "condition_a_production_auroc_mean": 0.9131335999999999,
++                "n_seeds": 5,
++                "random_seed": 42,
++                "random_seeds_used": [42, 137, 271, 314, 1729],
++                "reproducibility_checksum": "b3d8a0ea0ed6180e0120eb909513436d2e0a43055",
++                "adversarial_verify_passed": True,
++                "live_model_invoked": False,
++            },
++        )
++    _write_json(
++        root / "ops" / "publication_gate_state.json",
++        {"g2_independent_reproducer": True, "g2_evidence": "CI run"},
++    )
++    files = {
++        root / "ops" / "north-star.md": "fixed gate definitions before\n",
++        root / "ops" / "reproduction-runbook-fover-headline.md": "G2 runbook before\n",
++        root / "docs" / "technical-report.md": "technical before\n",
++        root / "docs" / "arxiv-paper" / "main.tex": "paper before\n",
++        root / "scripts" / "research_conductor.py": "conductor before\n",
++    }
++    for path, text in files.items():
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(text, encoding="utf-8")
++    return files
++
++
++def test_req_publish_3814_spec_anchor_exists() -> None:
++    """REQ-PUBLISH-3814: OpenSpec declares the regression-confirmation contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-PUBLISH-3814" in spec
++    assert "SCENARIO-PUBLISH-3814" in spec
++    assert exp3814.OUTPUT_REL_PATH.as_posix() in spec
++    assert exp3814.TERMINAL_VERDICT in spec
++
++
++def test_scenario_publish_3814_records_gate_booleans_and_provenance(tmp_path: Path) -> None:
++    """SCENARIO-PUBLISH-3814: G1-G4 pass and the frozen FoVer AUROC is unchanged."""
++
++    untouched = _seed_repo(tmp_path)
++
++    out_path = exp3814.run(
++        tmp_path,
++        started_s=10.0,
++        now_s=11.25,
++        executable=sys.executable,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    exp3814.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == exp3814.TERMINAL_VERDICT
++    assert set(exp3814.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3814.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3814.INFERENCE_SUBSTRATE
++    assert artifact["g1_pass"] is True
++    assert artifact["g2_pass"] is True
++    assert artifact["g3_pass"] is True
++    assert artifact["g4_pass"] is True
++    assert artifact["paper_ready"] is True
++    assert artifact["frozen_fover_auroc"] == 0.9131
++    assert artifact["frozen_fover_auroc_unchanged"] is True
++    assert artifact["any_gate_regressed"] is False
++    assert artifact["gate_definitions_unchanged"] is True
++    assert artifact["publication_gate_json"] == _gate_data()
++    assert artifact["random_seed"] == 3814
++    assert artifact["duration_s"] == 1.25
++    assert artifact["reproducibility_checksum"] == exp3814.payload_checksum(artifact)
++
++    cited_paths = {Path(entry["path"]).name for entry in artifact["cited_upstream_artifacts"]}
++    assert "publication_gate.py" in cited_paths
++    assert "experiment_2850_fover_dual_condition_integrity_v4.json" in cited_paths
++    assert "publication_gate_state.json" in cited_paths
++    assert "north-star.md" in cited_paths
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "live_llm_inference" not in encoded
++
++    for path, original in untouched.items():
++        assert path.read_text(encoding="utf-8") == original
++
++
++def test_req_publish_3814_missing_headline_source_blocks_without_fabrication(
++    tmp_path: Path,
++) -> None:
++    """REQ-PUBLISH-3814: missing FoVer source writes blocked_ without a fake pass."""
++
++    _seed_repo(tmp_path, include_headline=False)
++
++    artifact = exp3814.build_artifact(
++        tmp_path,
++        publication_gate_data=_gate_data(),
++        started_s=20.0,
++        now_s=20.5,
++        executable=sys.executable,
++    )
++
++    exp3814.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_frozen_fover_headline_source_missing"
++    assert artifact["g1_pass"] is True
++    assert artifact["g2_pass"] is True
++    assert artifact["g3_pass"] is True
++    assert artifact["g4_pass"] is True
++    assert artifact["paper_ready"] is True
++    assert artifact["frozen_fover_auroc"] is None
++    assert artifact["frozen_fover_auroc_unchanged"] is False
++    assert artifact["any_gate_regressed"] is False
++    assert artifact["gate_definitions_unchanged"] is True
++    assert artifact["reproducibility_checksum"] == exp3814.payload_checksum(artifact)
++
++
++def test_req_publish_3814_blocked_and_regression_branches_are_explicit(
++    tmp_path: Path,
++) -> None:
++    """REQ-PUBLISH-3814: blocked and regressed outcomes are closed-set honest records."""
++
++    _seed_repo(tmp_path)
++    gate_script = tmp_path / "scripts" / "publication_gate.py"
++
++    gate_script.write_text("import sys\nsys.exit(3)\n", encoding="utf-8")
++    failed = exp3814._run_publication_gate_json(tmp_path, sys.executable)
++    assert failed["ok"] is False
++    assert failed["returncode"] == 3
++
++    gate_script.write_text("print('not json')\n", encoding="utf-8")
++    invalid = exp3814._run_publication_gate_json(tmp_path, sys.executable)
++    assert invalid["ok"] is False
++    assert invalid["data"] == {}
++
++    assert exp3814._gate_bool({}, "G1") is False
++    assert exp3814._verdict(
++        preconditions_ok=False,
++        gate_ok=True,
++        frozen_fover_auroc_unchanged=True,
++        any_gate_regressed=False,
++        gate_definitions_unchanged=True,
++    ) == exp3814.BLOCKED_INTERPRETER_VERDICT
++    assert exp3814._verdict(
++        preconditions_ok=True,
++        gate_ok=False,
++        frozen_fover_auroc_unchanged=True,
++        any_gate_regressed=False,
++        gate_definitions_unchanged=True,
++    ) == exp3814.BLOCKED_GATE_VERDICT
++    assert exp3814._verdict(
++        preconditions_ok=True,
++        gate_ok=True,
++        frozen_fover_auroc_unchanged=True,
++        any_gate_regressed=True,
++        gate_definitions_unchanged=True,
++    ) == "complete: publication_gate_regression_detected_operator_review_required"
++    assert exp3814._verdict(
++        preconditions_ok=True,
++        gate_ok=True,
++        frozen_fover_auroc_unchanged=True,
++        any_gate_regressed=False,
++        gate_definitions_unchanged=False,
++    ) == "complete: publication_gate_definition_changed_operator_review_required"
+-- 
+2.55.0
+

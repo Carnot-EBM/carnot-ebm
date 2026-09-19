@@ -1,0 +1,67 @@
+From e2b668ab351d9b84caa118af7e3a04e510ded847 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 07:06:43 -0400
+Subject: [PATCH 00623/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  3 +++
+ ops/conductor-state.json                             |  2 +-
+ ...2_graph_grounding_fact_verifier_prototype_v2.json | 12 ++++++++++--
+ 4 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 303dfb1c64..198717362b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 46, "phase": "iteration_start", "last_beat": "2026-06-05T10:14:59Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 47, "phase": "iteration_start", "last_beat": "2026-06-05T11:06:41Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c41474b67d..2aa1be60e9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7873,3 +7873,6 @@ ERROR: {
+ | 2026-06-05 10:12 UTC | MOAT SCISSOR AT SCALE (re-issue of exp3847; supers | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3858-build-balanced-step-error-corpus-v |
+ | 2026-06-05 10:14 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+ | 2026-06-05 10:14 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
++| 2026-06-05 11:04 UTC | Graph-grounding fact-verifier PROTOTYPE (NEW archi | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-05 11:06 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
++| 2026-06-05 11:06 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3859-moat-scissor-at-scale-v3) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 8ca9ff2033..8af57f5b0a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 46, "phase": "iteration_start", "started_at": "2026-06-05T10:14:59Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 47, "phase": "iteration_start", "started_at": "2026-06-05T11:06:41Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json b/results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json
+index a990a54561..3a0703c3f7 100644
+--- a/results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json
++++ b/results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json
+@@ -78,5 +78,13 @@
+   "scripts_research_conductor_modified": false,
+   "tests_run": [],
+   "triple_extraction_method": "rule_based",
+-  "verifier_authenticity_disclosed": true
+-}
++  "verifier_authenticity_disclosed": true,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=1.020443 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

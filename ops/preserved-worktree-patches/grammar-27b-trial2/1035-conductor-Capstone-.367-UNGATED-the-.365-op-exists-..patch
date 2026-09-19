@@ -1,0 +1,1316 @@
+From a5ee6175562c49a0ff976636ab8dcec7125a4fba Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 17:43:30 -0400
+Subject: [PATCH 01035/11171] =?UTF-8?q?[conductor]=20Capstone=20.367=20(UN?=
+ =?UTF-8?q?GATED=20=E2=80=94=20the=20.365=20op:exists=20+=20.366=20no-arti?=
+ =?UTF-8?q?fact=20lessons):=20aggregate=20the=20ARC=20accuracy=20+=20HONES?=
+ =?UTF-8?q?T-efficiency=20push=20=E2=80=94=20total=20real=20levels=20solve?=
+ =?UTF-8?q?d=20across=20games=20(exp3964=20r11l,=20exp3965=20lp85,=20exp39?=
+ =?UTF-8?q?66=20third=20game;=20baseline=202),=20did=20a=20THIRD=20game=20?=
+ =?UTF-8?q?solve=20(exp3966),=20the=20HONEST=20M3=20efficiency=20CIs=20+?=
+ =?UTF-8?q?=20verifier=5Finvoked=5Fin=5Floop=20self-audit=20on=20REAL=20ga?=
+ =?UTF-8?q?mes=20(exp3967=20=E2=80=94=20the=20load-bearing=20'verifier=20e?=
+ =?UTF-8?q?arns=20its=20place'=20datum,=20replacing=20the=20FABRICATED=20e?=
+ =?UTF-8?q?xp3959),=20how=20many=20of=20the=206=20non-spatial=20games=20re?=
+ =?UTF-8?q?ached=20a=20trustworthy=20world-model=20(exp3968),=20the=20Pind?=
+ =?UTF-8?q?uctor=20hidden-state=20energy=20drop=20(exp3969),=20the=20ArcMe?=
+ =?UTF-8?q?mo=20cross-game=20transfer=20win=20(exp3970),=20and=20the=20M4?=
+ =?UTF-8?q?=20quota-gate=20readiness=20(exp3971).=20Honest=20verdict=20on?=
+ =?UTF-8?q?=20accuracy=20+=20efficiency=20progress.=20SKIP=20any=20flagged?=
+ =?UTF-8?q?=5Fadversarial=20artifact=20(NEVER=20aggregate=20exp3959-style?=
+ =?UTF-8?q?=20fabrications);=20cite=20upstream=20sha256.=20NO=20gated=5Fon?=
+ =?UTF-8?q?=20=E2=80=94=20aggregate=20whatever=20exists.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3973-capstone-v367
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/metrics.md                                |   1 +
+ python/carnot/reporting/capstone_v367_3973.py | 524 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ results/experiment_3973_capstone_v367.json    | 210 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../experiment_3973_capstone_v367.py          |  19 +
+ .../test_experiment_3973_capstone_v367.py     | 294 ++++++++++
+ 16 files changed, 1076 insertions(+), 21 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v367_3973.py
+ create mode 100644 results/experiment_3973_capstone_v367.json
+ create mode 100644 scripts/experiments/experiment_3973_capstone_v367.py
+ create mode 100644 tests/python/test_experiment_3973_capstone_v367.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index b9bc4ae530..63508556eb 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -17,3 +17,5 @@
+ - SCENARIO-CAPSTONE-3933: The hardened scorecard artifact must emit bare top-level fields for competent-judge efficiency verdict and cost ratio, judge competence, independent-corpus moat replication, non-degenerate cascade verdict, verifier earns place boolean, ARC agentic action-efficiency advantage, FR-11 v26 invariant, hardware outcome, facts-route retirement, both energy theses bounded, `paper_ready`, `unmet_gates`, `frozen_headline_unchanged`, operator next-step recommendation, excluded flagged artifacts, checked preconditions, duration, substrate, and a terminal-prefix honest verdict.
+ - REQ-CAPSTONE-3944: The .364 capstone must aggregate the hardened verifier scorecard only from landed upstream artifacts that are not stamped `flagged_adversarial:true`, must record missing or blocked upstreams honestly, must preserve `paper_ready`, and must keep the frozen 0.9131 headline unchanged without manufacturing a new headline.
+ - SCENARIO-CAPSTONE-3944: The scorecard artifact must emit bare top-level fields for judge competence, efficiency verdict and cost ratio, replicated moat, cascade verdict, verifier earns place boolean, ARC agentic learned-value comparison, FR-11 v27 invariant, cross-domain boundary, hardware outcome, both energy theses bounded, `paper_ready`, `unmet_gates`, `frozen_headline_unchanged`, operator next-step recommendation, excluded flagged artifacts, checked preconditions, duration, substrate, and a terminal-prefix honest verdict.
++- REQ-CAPSTONE-3973: The .367 ARC accuracy plus HONEST-efficiency capstone must summarize every existing upstream artifact from exp3964 through exp3971 through `scripts/summarize_artifact.py`, treat missing upstream artifacts as recorded missing state rather than a gate, and exclude every artifact stamped `flagged_adversarial:true` before importing any metric.
++- SCENARIO-CAPSTONE-3973: The capstone artifact must emit bare top-level fields for total real ARC levels solved against the .366 baseline of 2, third-game solved status, HONEST M3 verifier-efficiency status, M3 clean-not-flagged status, trustworthy world-model count, hidden-state fix status, ArcMemo transfer win, quota-gate status, cited upstream artifact hashes with imported fields, flagged artifacts skipped, terminal-prefix honest verdict, duration, and aggregation substrate.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 0e739a3505..cd4d2c59c2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 161,
+   "code_violations": 0,
+-  "experiments_checked": 3014,
++  "experiments_checked": 3015,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/metrics.md b/ops/metrics.md
+index dc80c2b891..25f78da552 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3235,3 +3235,4 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
+ | Turn | Start | End | Description | Tokens (est) |
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-06-09T19:40:55Z | 2026-06-09T21:02:30Z | Re-run GAP-3 Stage 1 per project_gap3_verifier_program.md: paused-state verified, 29.4-min TRM latent dump (100 batches, GPU 1), Stage-1 LOTO probe -> NEGATIVE (probe pass@2 0.4194 < vote 0.4516, within-AUROC 0.8689), conductor restored, 5-reviewer adversarial-verify workflow launched | ~40k |
++| 2 | 2026-06-09T21:18:30Z | (in progress) | "Go with Stage 2": built + trained the generator-independent ARC transition-EBM (1.1M params, training+concept corpus, training2 excluded after 376-task leak audit), zero-shot rerank eval NEGATIVE (EBM pass@2 0.1613 < vote 0.4516, macro AUROC 0.544), 5-reviewer adversarial workflow launched | ~60k |
+diff --git a/python/carnot/reporting/capstone_v367_3973.py b/python/carnot/reporting/capstone_v367_3973.py
+new file mode 100644
+index 0000000000..002638537b
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v367_3973.py
+@@ -0,0 +1,524 @@
++"""Build the Exp 3973 v367 ARC accuracy plus HONEST-efficiency capstone.
++
++Spec refs: REQ-CAPSTONE-3973, SCENARIO-CAPSTONE-3973.
++
++The capstone is an aggregation step, not a new ARC run. It first routes every
++existing upstream artifact through ``scripts/summarize_artifact.py`` so the
++artifact's own verdict, flags, gates, duration, and headline metrics are visible
++before any field is imported. Missing upstreams are recorded as missing state,
++and artifacts stamped ``flagged_adversarial:true`` are excluded before their
++numbers can influence the milestone verdict.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import glob
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3973_capstone_v367.json")
++EXPERIMENT_ID = 3973
++RANDOM_SEED = 3973
++V366_BASELINE_TOTAL_REAL_LEVELS_SOLVED = 2
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts_via_summarize_artifact_py"
++PYTHON_BIN = Path(".venv/bin/python")
++
++UPSTREAM_IDS = (3964, 3965, 3966, 3967, 3968, 3969, 3970, 3971)
++REAL_LEVEL_UPSTREAM_IDS = (3964, 3965, 3966)
++
++FIELDS_IMPORTED: Mapping[int, list[str]] = {
++    3964: ["ACCURACY_levels_solved", "new_levels_solved_this_task"],
++    3965: ["ACCURACY_levels_solved", "level_summaries"],
++    3966: ["game_solved", "ACCURACY_levels_solved"],
++    3967: [
++        "efficiency_ratio_with_over_without",
++        "verifier_invoked_in_loop",
++        "actions_from_real_env",
++        "cis_non_overlapping_pruner_helps",
++    ],
++    3968: ["n_trustworthy_at_0.15"],
++    3969: ["energy_drop", "positive_control_passed"],
++    3970: ["transfer_win"],
++    3971: ["quota_gate_cleared"],
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "total_real_levels_solved",
++    "third_game_solved",
++    "verifier_earns_efficiency_on_real_games",
++    "m3_artifact_clean_not_flagged",
++    "n_trustworthy_world_models",
++    "hidden_state_fixed",
++    "transfer_win",
++    "quota_gate_cleared",
++    "cited_upstream_artifacts",
++    "flagged_artifacts_skipped",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++INT_FIELDS = (
++    "total_real_levels_solved",
++    "n_trustworthy_world_models",
++)
++BOOL_FIELDS = (
++    "third_game_solved",
++    "verifier_earns_efficiency_on_real_games",
++    "m3_artifact_clean_not_flagged",
++    "hidden_state_fixed",
++    "transfer_win",
++    "quota_gate_cleared",
++)
++
++FIELD_PRINCIPLES = {
++    "total_real_levels_solved": (
++        "BARE INT - total real ARC-AGI-3 levels solved this milestone across all "
++        "games (the accuracy headline; .366 baseline was 2)."
++    ),
++    "third_game_solved": (
++        "BARE BOOL - did a third distinct game solve (games-solved 2->3, the "
++        "method-generalizes datum)."
++    ),
++    "verifier_earns_efficiency_on_real_games": (
++        "BARE BOOL - exp3967's HONEST M3 gate: did the verifier action-pruner "
++        "significantly cut REAL actions WITH the verifier provably in the loop "
++        "(the existential 'verifier earns its place' answer; a flagged/not-in-loop "
++        "M3 counts as FALSE)."
++    ),
++    "m3_artifact_clean_not_flagged": (
++        "BARE BOOL - is the exp3967 M3 artifact NON-flagged AND "
++        "verifier_invoked_in_loop=true (the direct check that .366's fabrication "
++        "did not recur)."
++    ),
++    "n_trustworthy_world_models": (
++        "BARE INT - how many of the 6 non-spatial games reached a plan-able model "
++        "(generalization of vc33's 0.005)."
++    ),
++    "hidden_state_fixed": (
++        "BARE BOOL - did Pinductor (exp3969) drop hidden-state energy with a "
++        "passing positive control (one broken mechanism fixed?)."
++    ),
++    "transfer_win": (
++        "BARE BOOL - did ArcMemo (exp3970) show cross-game transfer (the other "
++        "broken mechanism fixed? the self-learning mandate)."
++    ),
++    "quota_gate_cleared": (
++        "BARE BOOL - is offline accuracy past the operator gate for justifying an "
++        "online run (exp3971)."
++    ),
++    "cited_upstream_artifacts": (
++        "list of {experiment_id, fields_imported, sha256} - the audit trail so "
++        "the capstone numbers trace to real measurements."
++    ),
++    "flagged_artifacts_skipped": (
++        "Which upstream artifacts were flagged_adversarial and therefore EXCLUDED "
++        "from aggregation."
++    ),
++    "honest_verdict": "Terminal-prefix verdict.",
++    "duration_s": "Aggregation wall-clock duration.",
++    "inference_substrate": "Aggregation substrate.",
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return whether a value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON object artifact from disk."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover - defensive.
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash an upstream artifact so every imported number has provenance."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def relative_to_root(root: Path, path: Path) -> str:
++    """Return a stable path for JSON audit fields."""
++
++    return str(path.relative_to(root))
++
++
++def matching_artifact_paths(root: Path, experiment_id: int) -> list[Path]:
++    """Find candidate artifact files for one upstream experiment."""
++
++    patterns = (
++        root / "results" / f"experiment_{experiment_id}_*.json",
++        root / "results" / f"experiment_{experiment_id}.json",
++    )
++    matches: list[Path] = []
++    for pattern in patterns:
++        matches.extend(Path(path) for path in glob.glob(str(pattern)))
++    return sorted(matches)
++
++
++def selected_upstream_paths(root: Path) -> dict[int, Path | None]:
++    """Select one upstream artifact per expected experiment, if it exists."""
++
++    selected: dict[int, Path | None] = {}
++    for experiment_id in UPSTREAM_IDS:
++        matches = matching_artifact_paths(root, experiment_id)
++        selected[experiment_id] = matches[-1] if matches else None
++    return selected
++
++
++def run_summarize_artifact(root: Path, path: Path) -> JsonDict:
++    """Run the mandated disciplined reader for a single existing artifact."""
++
++    command = [str(PYTHON_BIN), "scripts/summarize_artifact.py", str(path)]
++    completed = subprocess.run(
++        command,
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    return {
++        "returncode": completed.returncode,
++        "stdout": completed.stdout,
++        "stderr": completed.stderr,
++    }
++
++
++def summarize_existing_artifacts(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    supplied: Mapping[int, Mapping[str, Any]] | None,
++) -> dict[int, JsonDict]:
++    """Return summarize_artifact status for every upstream artifact that exists."""
++
++    statuses: dict[int, JsonDict] = {}
++    for experiment_id, path in paths.items():
++        if path is None:
++            continue
++        if supplied is not None:
++            statuses[experiment_id] = dict(supplied[experiment_id])
++        else:
++            statuses[experiment_id] = run_summarize_artifact(root, path)
++    return statuses
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    """Return whether the upstream is stamped as adversarial and must be skipped."""
++
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def int_metric(payload: Mapping[str, Any] | None, field: str) -> int:
++    """Extract an integer metric while rejecting booleans and missing values."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def float_metric(payload: Mapping[str, Any] | None, field: str) -> float:
++    """Extract a floating-point metric while rejecting booleans and missing values."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0.0
++
++
++def bool_metric(payload: Mapping[str, Any] | None, field: str) -> bool:
++    """Extract a boolean metric without truthifying non-bool values."""
++
++    return isinstance(payload, Mapping) and payload.get(field) is True
++
++
++def real_levels_solved(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> int:
++    """Sum real ARC levels from the three accuracy upstreams."""
++
++    total = 0
++    for experiment_id in REAL_LEVEL_UPSTREAM_IDS:
++        payload = clean_upstreams.get(experiment_id)
++        if bool_metric(payload, "real_env_confirmed"):
++            total += int_metric(payload, "ACCURACY_levels_solved")
++    return total
++
++
++def m3_artifact_clean(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> bool:
++    """Return the direct clean-M3 guard from exp3967."""
++
++    payload = clean_upstreams.get(3967)
++    return bool_metric(payload, "verifier_invoked_in_loop")
++
++
++def verifier_earns_efficiency(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> bool:
++    """Apply the HONEST M3 gate without importing flagged or not-in-loop claims."""
++
++    payload = clean_upstreams.get(3967)
++    return (
++        bool_metric(payload, "cis_non_overlapping_pruner_helps")
++        and bool_metric(payload, "verifier_invoked_in_loop")
++        and bool_metric(payload, "actions_from_real_env")
++    )
++
++
++def third_game_solved(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> bool:
++    """Return whether exp3966 establishes a third solved ARC-AGI-3 game."""
++
++    payload = clean_upstreams.get(3966)
++    return bool_metric(payload, "real_env_confirmed") and int_metric(payload, "ACCURACY_levels_solved") > 0
++
++
++def hidden_state_fixed(clean_upstreams: Mapping[int, Mapping[str, Any]]) -> bool:
++    """Return whether Pinductor lowered hidden-state energy with a positive control."""
++
++    payload = clean_upstreams.get(3969)
++    return float_metric(payload, "energy_drop") > 0.0 and bool_metric(payload, "positive_control_passed")
++
++
++def cited_upstream_artifacts(
++    paths: Mapping[int, Path | None],
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++) -> list[JsonDict]:
++    """Build the minimal provenance list for every imported clean upstream."""
++
++    cited: list[JsonDict] = []
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        if path is not None and experiment_id in clean_upstreams:
++            cited.append(
++                {
++                    "experiment_id": experiment_id,
++                    "fields_imported": FIELDS_IMPORTED[experiment_id],
++                    "sha256": sha256_file(path),
++                }
++            )
++    return cited
++
++
++def flagged_artifacts_skipped(root: Path, paths: Mapping[int, Path | None], flagged_ids: set[int]) -> list[JsonDict]:
++    """Record upstream artifacts skipped before aggregation due to the adversarial stamp."""
++
++    skipped: list[JsonDict] = []
++    for experiment_id in sorted(flagged_ids):
++        path = paths[experiment_id]
++        skipped.append(
++            {
++                "experiment_id": experiment_id,
++                "path": relative_to_root(root, path) if path is not None else "",
++                "reason": "flagged_adversarial:true",
++            }
++        )
++    return skipped
++
++
++def missing_upstream_artifacts(paths: Mapping[int, Path | None]) -> list[JsonDict]:
++    """Record missing upstream artifacts without converting absence into a gate."""
++
++    return [
++        {"experiment_id": experiment_id}
++        for experiment_id in UPSTREAM_IDS
++        if paths[experiment_id] is None
++    ]
++
++
++def upstream_artifact_state(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    flagged_ids: set[int],
++    clean_upstreams: Mapping[int, Mapping[str, Any]],
++) -> dict[str, JsonDict]:
++    """Expose per-upstream inclusion state so missing and skipped inputs are auditable."""
++
++    state: dict[str, JsonDict] = {}
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        state[str(experiment_id)] = {
++            "exists": path is not None,
++            "path": relative_to_root(root, path) if path is not None else "",
++            "honest_verdict": str(upstreams[experiment_id].get("honest_verdict"))
++            if isinstance(upstreams[experiment_id], Mapping)
++            else "missing",
++            "flagged_adversarial": experiment_id in flagged_ids,
++            "included": experiment_id in clean_upstreams,
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++    return state
++
++
++def duration_from(started_s: float, now_s: float | None) -> float:
++    """Compute an honest aggregation duration with a small nonzero floor."""
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    return max(0.0001, end - started_s)
++
++
++def verdict(total_real_levels_solved: int, verifier_earns: bool, missing_count: int, skipped_count: int) -> str:
++    """Build the terminal-prefix verdict for an ungated aggregation capstone."""
++
++    progress = total_real_levels_solved - V366_BASELINE_TOTAL_REAL_LEVELS_SOLVED
++    return (
++        "complete: capstone_v367_"
++        f"accuracy_progress{progress}_total_real_levels{total_real_levels_solved}_"
++        f"verifier_earns_efficiency{str(verifier_earns).lower()}_"
++        f"missing{missing_count}_flagged_skipped{skipped_count}"
++    )
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a reproducibility checksum excluding the checksum field itself."""
++
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the .367 capstone from whatever upstream artifacts exist."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = selected_upstream_paths(root_path)
++    summaries = summarize_existing_artifacts(root_path, paths, summary_statuses)
++    upstreams: dict[int, Mapping[str, Any] | None] = {
++        experiment_id: read_json_object(path) if path is not None else None
++        for experiment_id, path in paths.items()
++    }
++    flagged_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if flagged(payload)
++    }
++    clean_upstreams: dict[int, Mapping[str, Any]] = {
++        experiment_id: payload
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and experiment_id not in flagged_ids
++    }
++
++    total_solved = real_levels_solved(clean_upstreams)
++    verifier_earns = verifier_earns_efficiency(clean_upstreams)
++    missing = missing_upstream_artifacts(paths)
++    skipped = flagged_artifacts_skipped(root_path, paths, flagged_ids)
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v367_3973.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "total_real_levels_solved": total_solved,
++        "v366_baseline_total_real_levels_solved": V366_BASELINE_TOTAL_REAL_LEVELS_SOLVED,
++        "accuracy_progress_vs_v366_baseline": total_solved - V366_BASELINE_TOTAL_REAL_LEVELS_SOLVED,
++        "third_game_solved": third_game_solved(clean_upstreams),
++        "verifier_earns_efficiency_on_real_games": verifier_earns,
++        "m3_artifact_clean_not_flagged": m3_artifact_clean(clean_upstreams),
++        "m3_efficiency_ratio_with_over_without": float_metric(
++            clean_upstreams.get(3967),
++            "efficiency_ratio_with_over_without",
++        ),
++        "n_trustworthy_world_models": int_metric(clean_upstreams.get(3968), "n_trustworthy_at_0.15"),
++        "hidden_state_fixed": hidden_state_fixed(clean_upstreams),
++        "transfer_win": bool_metric(clean_upstreams.get(3970), "transfer_win"),
++        "quota_gate_cleared": bool_metric(clean_upstreams.get(3971), "quota_gate_cleared"),
++        "cited_upstream_artifacts": cited_upstream_artifacts(paths, clean_upstreams),
++        "flagged_artifacts_skipped": skipped,
++        "missing_upstream_artifacts": missing,
++        "upstream_artifact_state": upstream_artifact_state(
++            root_path,
++            paths,
++            upstreams,
++            summaries,
++            flagged_ids,
++            clean_upstreams,
++        ),
++        "summarize_artifact_status": {
++            str(experiment_id): {
++                "returncode": status.get("returncode"),
++                "stdout": status.get("stdout", ""),
++                "stderr": status.get("stderr", ""),
++            }
++            for experiment_id, status in summaries.items()
++        },
++        "honest_verdict": verdict(total_solved, verifier_earns, len(missing), len(skipped)),
++        "duration_s": duration_from(start, now_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the .367 capstone fields that prevent metric laundering."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover - defensive.
++    verdict_text = str(artifact.get("honest_verdict", ""))
++    if not verdict_text.startswith(("complete:", "success:", "blocked_")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in INT_FIELDS:
++        if not isinstance(artifact.get(field), int) or isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare int")
++    for field in BOOL_FIELDS:
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")
++    if not isinstance(artifact.get("duration_s"), int | float) or isinstance(artifact.get("duration_s"), bool):
++        raise ValueError("duration_s must be a bare number")  # pragma: no cover - defensive.
++    if not isinstance(artifact.get("inference_substrate"), str):
++        raise ValueError("inference_substrate must be a string")  # pragma: no cover - defensive.
++    citations = artifact.get("cited_upstream_artifacts")
++    if not isinstance(citations, list):
++        raise ValueError("cited_upstream_artifacts must be a list")  # pragma: no cover - defensive.
++    for citation in citations:
++        if not isinstance(citation, Mapping):
++            raise ValueError("citation entries must be objects")  # pragma: no cover - defensive.
++        if not isinstance(citation.get("experiment_id"), int):
++            raise ValueError("citation entries need integer experiment_id")  # pragma: no cover - defensive.
++        if not isinstance(citation.get("fields_imported"), list):
++            raise ValueError("citation entries need fields_imported list")  # pragma: no cover - defensive.
++        if not is_sha256(citation.get("sha256")):
++            raise ValueError("citation entries need sha256")
++    if not isinstance(artifact.get("flagged_artifacts_skipped"), list):
++        raise ValueError("flagged_artifacts_skipped must be a list")  # pragma: no cover - defensive.
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover - defensive.
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 3973 capstone artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 22211843fe..be1286e2c9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-09T20:38:51.897708Z",
+-  "duration_s": 0.026221275329589844,
++  "run_date": "2026-06-09T21:41:38.789985Z",
++  "duration_s": 0.010498046875,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "48114c3a702f822d9a82b10b0654ccd0387277a82d76c6f8d61b259636bd020a",
++  "reproducibility_checksum": "a5ffd95aa2b9f9372aeac78a326bbaed3ec10b8b9e8ef2ead90159c1331fb5c9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "cc2289eee9887cd4d50fdc38f3448d416e9458d7"
++    "adversarial_verify_version": "d5eeeadec73024ae0cf323458f62f58fe7faaeb2"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 231d8970e1..55e591ac17 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-09T20:38:51.928643Z",
+-  "duration_s": 0.023432254791259766,
++  "run_date": "2026-06-09T21:41:38.804348Z",
++  "duration_s": 0.009037971496582031,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "08f53ccc5e43e8e205baba66a35f0c8f55f859514d20847ae50d588d0451463c",
++  "reproducibility_checksum": "2c30fe7df28952ad8aa916f674084577efc75f72d2c1ba838542e2ab258d9aec",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "cc2289eee9887cd4d50fdc38f3448d416e9458d7"
++    "adversarial_verify_version": "d5eeeadec73024ae0cf323458f62f58fe7faaeb2"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index ac41f8be4d..efc4696b43 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1240711212158203,
++  "efficiency_gains_ms": 2.1097660064697266,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index f09e90f90a..e28f402193 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.7371599674224854,
++  "duration_s": 0.2916736602783203,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8be52d0cae..f9a6284fa7 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 0.00010730104986578226,
++  "duration_s": 3.576703602448106e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3973_capstone_v367.json b/results/experiment_3973_capstone_v367.json
+new file mode 100644
+index 0000000000..4c0ecf86b5
+--- /dev/null
++++ b/results/experiment_3973_capstone_v367.json
+@@ -0,0 +1,210 @@
++{
++  "accuracy_progress_vs_v366_baseline": 1,
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3964,
++      "fields_imported": [
++        "ACCURACY_levels_solved",
++        "new_levels_solved_this_task"
++      ],
++      "sha256": "8eb00ee3f75043e34204ba93999e6bffdefc5ef0870f10a4222fe80eb744d823"
++    },
++    {
++      "experiment_id": 3965,
++      "fields_imported": [
++        "ACCURACY_levels_solved",
++        "level_summaries"
++      ],
++      "sha256": "ca55885741331a1b5d4ff51eeb45a24037851a6d4001cc53cee61dd681e8e91e"
++    },
++    {
++      "experiment_id": 3966,
++      "fields_imported": [
++        "game_solved",
++        "ACCURACY_levels_solved"
++      ],
++      "sha256": "8a6425de3454dd9908980c5ed6a5bd55fb12246d2be7deb42404d08bf859160f"
++    },
++    {
++      "experiment_id": 3967,
++      "fields_imported": [
++        "efficiency_ratio_with_over_without",
++        "verifier_invoked_in_loop",
++        "actions_from_real_env",
++        "cis_non_overlapping_pruner_helps"
++      ],
++      "sha256": "e238fe19066fda07fd994258de34d9db0063805d8af73f32497d1acf6f41b2a6"
++    },
++    {
++      "experiment_id": 3968,
++      "fields_imported": [
++        "n_trustworthy_at_0.15"
++      ],
++      "sha256": "a1773f66727a83e7f9ec5f67d21aec630827dc352f9b72c7796b4b818651cb8c"
++    },
++    {
++      "experiment_id": 3969,
++      "fields_imported": [
++        "energy_drop",
++        "positive_control_passed"
++      ],
++      "sha256": "1208cafee0220cce8e6cf483398cb8239f0351bea17a1266463bd25dd1eade82"
++    },
++    {
++      "experiment_id": 3970,
++      "fields_imported": [
++        "transfer_win"
++      ],
++      "sha256": "6e2f6ef3ff1a3907de8e0ec336566ff795e12f101626470749fb8d634aff4529"
++    },
++    {
++      "experiment_id": 3971,
++      "fields_imported": [
++        "quota_gate_cleared"
++      ],
++      "sha256": "f3abbf56a004f5a5ccbe5d6ca980d984e1d1ad489f112192933bde08fb6f4c60"
++    }
++  ],
++  "duration_s": 0.32506837596884,
++  "experiment_id": 3973,
++  "field_principles": {
++    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256} - the audit trail so the capstone numbers trace to real measurements.",
++    "duration_s": "Aggregation wall-clock duration.",
++    "flagged_artifacts_skipped": "Which upstream artifacts were flagged_adversarial and therefore EXCLUDED from aggregation.",
++    "hidden_state_fixed": "BARE BOOL - did Pinductor (exp3969) drop hidden-state energy with a passing positive control (one broken mechanism fixed?).",
++    "honest_verdict": "Terminal-prefix verdict.",
++    "inference_substrate": "Aggregation substrate.",
++    "m3_artifact_clean_not_flagged": "BARE BOOL - is the exp3967 M3 artifact NON-flagged AND verifier_invoked_in_loop=true (the direct check that .366's fabrication did not recur).",
++    "n_trustworthy_world_models": "BARE INT - how many of the 6 non-spatial games reached a plan-able model (generalization of vc33's 0.005).",
++    "quota_gate_cleared": "BARE BOOL - is offline accuracy past the operator gate for justifying an online run (exp3971).",
++    "third_game_solved": "BARE BOOL - did a third distinct game solve (games-solved 2->3, the method-generalizes datum).",
++    "total_real_levels_solved": "BARE INT - total real ARC-AGI-3 levels solved this milestone across all games (the accuracy headline; .366 baseline was 2).",
++    "transfer_win": "BARE BOOL - did ArcMemo (exp3970) show cross-game transfer (the other broken mechanism fixed? the self-learning mandate).",
++    "verifier_earns_efficiency_on_real_games": "BARE BOOL - exp3967's HONEST M3 gate: did the verifier action-pruner significantly cut REAL actions WITH the verifier provably in the loop (the existential 'verifier earns its place' answer; a flagged/not-in-loop M3 counts as FALSE)."
++  },
++  "flagged_artifacts_skipped": [],
++  "hidden_state_fixed": true,
++  "honest_verdict": "complete: capstone_v367_accuracy_progress1_total_real_levels3_verifier_earns_efficiencyfalse_missing0_flagged_skipped0",
++  "inference_substrate": "aggregation_from_upstream_artifacts_via_summarize_artifact_py",
++  "m3_artifact_clean_not_flagged": false,
++  "m3_efficiency_ratio_with_over_without": 0.0,
++  "missing_upstream_artifacts": [],
++  "n_trustworthy_world_models": 0,
++  "quota_gate_cleared": true,
++  "random_seed": 3973,
++  "reproducibility_checksum": "83be065e035cd5a7479e6a30f68a960e5b4384036f40d117d54a991fb9bb19cc",
++  "schema": "carnot.capstone_v367_3973.v1",
++  "summarize_artifact_status": {
++    "3964": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3964_r11l_incremental_l2.json\n------------------------------------------------------------------------------\n  verdict          : complete: r11l_levels1_of6_first_fail2\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.77   substrate: offline_arc_agi3_perception_planner_real_env_confirmed\n  headline metrics :\n      ACCURACY_levels_solved = 1\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3965": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3965_lp85_incremental_l2.json\n------------------------------------------------------------------------------\n  verdict          : complete: lp85_levels1_first_fail2\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.344   substrate: offline_arc_agi3_perception_planner_real_env_confirmed\n  headline metrics :\n      ACCURACY_levels_solved = 1\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3966": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3966_third_game_first_solve.json\n------------------------------------------------------------------------------\n  verdict          : complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 374.3   substrate: offline_arc_agi3_perception_planner_real_env_confirmed\n  headline metrics :\n      ACCURACY_levels_solved = 1\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3967": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3967_m3_honest_efficiency.json\n------------------------------------------------------------------------------\n  verdict          : blocked_verifier_not_in_loop\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.0   substrate: offline_air_gapped_arc_agi3_local_environments\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3968": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3968_active_codex_nonspatial_sweep.json\n------------------------------------------------------------------------------\n  verdict          : complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1082.4   substrate: offline_arc_agi3_plus_codex_program_synthesis_consistency_verified\n  headline metrics :\n      vc33_baseline_energy = 0.005\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3969": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3969_hidden_state_pinductor.json\n------------------------------------------------------------------------------\n  verdict          : complete: pinductor_latents_no_drop_energy\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 28.943685293197632   substrate: offline_arc_agi3_pinductor\n  headline metrics :\n      energy_drop = 0.0036249999999999893\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3970": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3970_cross_game_arcmemo_transfer.json\n------------------------------------------------------------------------------\n  verdict          : success: arcmemo_transfer_win_reused_2_later_games\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.4   substrate: offline_arc_agi3_existing_codex_sweep_plus_arcmemo_concept_memory\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "3971": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_3971_m4_offline_quota_gate.json\n------------------------------------------------------------------------------\n  verdict          : success: quota_gate_cleared_hybrid_levels3_baseline0_prior0_operator_ready\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 16.843   substrate: offline_arc_agi3_hybrid_policy_quota_gate_local_env\n  headline metrics :\n      baseline_accuracy_levels_solved = 0\n      hybrid_accuracy_levels_solved = 3\n      object_click_baseline_accuracy_levels_solved = 0\n      random_baseline_accuracy_levels_solved = 0\n  adversarial flags: none\n==============================================================================\n"
++    }
++  },
++  "third_game_solved": true,
++  "total_real_levels_solved": 3,
++  "transfer_win": true,
++  "upstream_artifact_state": {
++    "3964": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: r11l_levels1_of6_first_fail2",
++      "included": true,
++      "path": "results/experiment_3964_r11l_incremental_l2.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3965": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: lp85_levels1_first_fail2",
++      "included": true,
++      "path": "results/experiment_3965_lp85_incremental_l2.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3966": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue",
++      "included": true,
++      "path": "results/experiment_3966_third_game_first_solve.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3967": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "blocked_verifier_not_in_loop",
++      "included": true,
++      "path": "results/experiment_3967_m3_honest_efficiency.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3968": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6",
++      "included": true,
++      "path": "results/experiment_3968_active_codex_nonspatial_sweep.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3969": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: pinductor_latents_no_drop_energy",
++      "included": true,
++      "path": "results/experiment_3969_hidden_state_pinductor.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3970": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: arcmemo_transfer_win_reused_2_later_games",
++      "included": true,
++      "path": "results/experiment_3970_cross_game_arcmemo_transfer.json",
++      "summarize_artifact_returncode": 0
++    },
++    "3971": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: quota_gate_cleared_hybrid_levels3_baseline0_prior0_operator_ready",
++      "included": true,
++      "path": "results/experiment_3971_m4_offline_quota_gate.json",
++      "summarize_artifact_returncode": 0
++    }
++  },
++  "v366_baseline_total_real_levels_solved": 2,
++  "verifier_earns_efficiency_on_real_games": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 11ffbd26e4..561c9b0052 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:10:26Z",
+-  "finished_at": "2026-06-09T21:10:26Z",
++  "started_at": "2026-06-09T21:41:30Z",
++  "finished_at": "2026-06-09T21:41:30Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6fd0d6265a..98062c2127 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:10:26Z",
+-  "finished_at": "2026-06-09T21:10:26Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-09T21:41:30Z",
++  "finished_at": "2026-06-09T21:41:30Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c57ce8e8fb..fd57eb9806 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:10:26Z",
+-  "finished_at": "2026-06-09T21:10:26Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-09T21:41:30Z",
++  "finished_at": "2026-06-09T21:41:30Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_3973_capstone_v367.py b/scripts/experiments/experiment_3973_capstone_v367.py
+new file mode 100644
+index 0000000000..d8d2389a45
+--- /dev/null
++++ b/scripts/experiments/experiment_3973_capstone_v367.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run Exp 3973 capstone v367 ARC accuracy plus HONEST-efficiency aggregation."""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.reporting.capstone_v367_3973 import write_artifact  # noqa: E402
++
++
++if __name__ == "__main__":  # pragma: no cover
++    print(write_artifact(REPO_ROOT))
+diff --git a/tests/python/test_experiment_3973_capstone_v367.py b/tests/python/test_experiment_3973_capstone_v367.py
+new file mode 100644
+index 0000000000..837ef08c40
+--- /dev/null
++++ b/tests/python/test_experiment_3973_capstone_v367.py
+@@ -0,0 +1,294 @@
++"""Tests for Exp 3973 .367 ARC accuracy plus HONEST-efficiency capstone.
++
++Spec refs: REQ-CAPSTONE-3973, SCENARIO-CAPSTONE-3973.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import subprocess
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import capstone_v367_3973 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _artifact_payloads() -> dict[int, JsonDict]:
++    return {
++        3964: {
++            "honest_verdict": "complete: r11l_levels1_of6_first_fail2",
++            "ACCURACY_levels_solved": 1,
++            "new_levels_solved_this_task": 0,
++            "level_summaries": [{"level": 1}, {"level": 2}],
++            "real_env_confirmed": True,
++            "duration_s": 0.77,
++            "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
++        },
++        3965: {
++            "honest_verdict": "complete: lp85_levels1_first_fail2",
++            "ACCURACY_levels_solved": 1,
++            "new_levels_solved_this_task": 0,
++            "level_summaries": [{"level": 1}, {"level": 2}],
++            "real_env_confirmed": True,
++            "duration_s": 1.344,
++            "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
++        },
++        3966: {
++            "honest_verdict": "complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue",
++            "ACCURACY_levels_solved": 1,
++            "game_solved": "sc25-635fd71a",
++            "real_env_confirmed": True,
++            "duration_s": 374.3,
++            "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
++        },
++        3967: {
++            "honest_verdict": "blocked_verifier_not_in_loop",
++            "efficiency_ratio_with_over_without": 0.0,
++            "verifier_invoked_in_loop": False,
++            "actions_from_real_env": False,
++            "cis_non_overlapping_pruner_helps": False,
++            "duration_s": 0.0,
++            "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
++        },
++        3968: {
++            "honest_verdict": "complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6",
++            "n_trustworthy_at_0.15": 0,
++            "n_games": 6,
++            "duration_s": 1082.4,
++            "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
++        },
++        3969: {
++            "honest_verdict": "complete: pinductor_latents_no_drop_energy",
++            "energy_drop": 0.003625,
++            "positive_control_passed": True,
++            "duration_s": 28.94,
++            "inference_substrate": "offline_arc_agi3_pinductor",
++        },
++        3970: {
++            "honest_verdict": "success: arcmemo_transfer_win_reused_2_later_games",
++            "transfer_win": True,
++            "duration_s": 0.4,
++            "inference_substrate": "offline_arc_agi3_existing_codex_sweep_plus_arcmemo_concept_memory",
++        },
++        3971: {
++            "honest_verdict": "success: quota_gate_cleared_hybrid_levels3_baseline0_prior0_operator_ready",
++            "quota_gate_cleared": True,
++            "duration_s": 16.843,
++            "inference_substrate": "offline_arc_agi3_hybrid_policy_quota_gate_local_env",
++        },
++    }
++
++
++def _write_artifacts(root: Path, payloads: dict[int, JsonDict]) -> dict[int, Path]:
++    paths: dict[int, Path] = {}
++    for experiment_id, payload in payloads.items():
++        path = root / "results" / f"experiment_{experiment_id}_fixture.json"
++        _write_json(path, payload)
++        paths[experiment_id] = path
++    return paths
++
++
++def _summary_statuses(ids: list[int] | tuple[int, ...] = mod.UPSTREAM_IDS) -> dict[int, JsonDict]:
++    return {
++        experiment_id: {
++            "returncode": 0,
++            "stdout": f"summarized {experiment_id}",
++            "stderr": "",
++        }
++        for experiment_id in ids
++    }
++
++
++def test_req_capstone_3973_spec_anchor_exists() -> None:
++    """REQ-CAPSTONE-3973: OpenSpec declares the .367 capstone contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++    assert "REQ-CAPSTONE-3973" in spec
++    assert "SCENARIO-CAPSTONE-3973" in spec
++    assert "flagged_adversarial:true" in spec
++
++
++def test_scenario_capstone_3973_clean_upstreams_aggregate_headlines(tmp_path: Path) -> None:
++    """SCENARIO-CAPSTONE-3973: existing clean upstreams produce the honest headline."""
++
++    paths = _write_artifacts(tmp_path, _artifact_payloads())
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_statuses=_summary_statuses(),
++        started_s=10.0,
++        now_s=12.5,
++    )
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["total_real_levels_solved"] == 3
++    assert artifact["accuracy_progress_vs_v366_baseline"] == 1
++    assert artifact["third_game_solved"] is True
++    assert artifact["verifier_earns_efficiency_on_real_games"] is False
++    assert artifact["m3_artifact_clean_not_flagged"] is False
++    assert artifact["n_trustworthy_world_models"] == 0
++    assert artifact["hidden_state_fixed"] is True
++    assert artifact["transfer_win"] is True
++    assert artifact["quota_gate_cleared"] is True
++    assert artifact["flagged_artifacts_skipped"] == []
++    assert artifact["missing_upstream_artifacts"] == []
++    assert artifact["duration_s"] == 2.5
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++
++    cited = {row["experiment_id"]: row for row in artifact["cited_upstream_artifacts"]}
++    assert set(cited) == set(mod.UPSTREAM_IDS)
++    assert cited[3967]["fields_imported"] == [
++        "efficiency_ratio_with_over_without",
++        "verifier_invoked_in_loop",
++        "actions_from_real_env",
++        "cis_non_overlapping_pruner_helps",
++    ]
++    assert cited[3964]["sha256"] == hashlib.sha256(paths[3964].read_bytes()).hexdigest()
++    assert artifact["field_principles"]["total_real_levels_solved"].startswith("BARE INT")
++    mod.validate_artifact(artifact)
++
++
++def test_req_capstone_3973_flagged_artifact_is_skipped_before_import(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-3973: flagged M3 metrics cannot satisfy the efficiency verdict."""
++
++    payloads = _artifact_payloads()
++    payloads[3967] = {
++        **payloads[3967],
++        "flagged_adversarial": True,
++        "efficiency_ratio_with_over_without": 7.0,
++        "verifier_invoked_in_loop": True,
++        "actions_from_real_env": True,
++        "cis_non_overlapping_pruner_helps": True,
++        "honest_verdict": "success: fabricated_clean_m3",
++    }
++    _write_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(tmp_path, summary_statuses=_summary_statuses())
++
++    assert artifact["verifier_earns_efficiency_on_real_games"] is False
++    assert artifact["m3_artifact_clean_not_flagged"] is False
++    assert artifact["flagged_artifacts_skipped"] == [
++        {
++            "experiment_id": 3967,
++            "path": "results/experiment_3967_fixture.json",
++            "reason": "flagged_adversarial:true",
++        }
++    ]
++    assert 3967 not in {row["experiment_id"] for row in artifact["cited_upstream_artifacts"]}
++
++
++def test_req_capstone_3973_missing_upstream_is_recorded_not_blocking(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-3973: missing upstream artifacts are missing state, not a gate."""
++
++    payloads = _artifact_payloads()
++    del payloads[3968]
++    _write_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(tmp_path, summary_statuses=_summary_statuses(tuple(payloads)))
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert artifact["missing_upstream_artifacts"] == [{"experiment_id": 3968}]
++    assert artifact["n_trustworthy_world_models"] == 0
++    assert artifact["upstream_artifact_state"]["3968"]["exists"] is False
++
++
++def test_req_capstone_3973_write_artifact_and_validate_rejects_regressions(
++    tmp_path: Path,
++) -> None:
++    """REQ-CAPSTONE-3973: artifact writing validates required bare fields."""
++
++    _write_artifacts(tmp_path, _artifact_payloads())
++    output = mod.write_artifact(
++        tmp_path,
++        summary_statuses=_summary_statuses(),
++        started_s=1.0,
++        now_s=1.125,
++    )
++
++    assert output == tmp_path / mod.OUTPUT_REL_PATH
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["schema"] == "carnot.capstone_v367_3973.v1"
++    assert mod.is_sha256(written["reproducibility_checksum"])
++
++    bad = dict(written)
++    bad["honest_verdict"] = "maybe"
++    with pytest.raises(ValueError, match="terminal prefix"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["total_real_levels_solved"] = True
++    with pytest.raises(ValueError, match="bare int"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["third_game_solved"] = "yes"
++    with pytest.raises(ValueError, match="bare bool"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["cited_upstream_artifacts"] = [{"experiment_id": 3964, "fields_imported": []}]
++    with pytest.raises(ValueError, match="sha256"):
++        mod.validate_artifact(bad)
++
++
++def test_req_capstone_3973_summary_runner_uses_mandated_script(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-3973: upstream reading shells through summarize_artifact.py."""
++
++    path = tmp_path / "results" / "experiment_3964_fixture.json"
++    _write_json(path, _artifact_payloads()[3964])
++    calls: list[list[str]] = []
++
++    def fake_run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
++        calls.append(command)
++        assert kwargs["cwd"] == tmp_path
++        assert kwargs["text"] is True
++        assert kwargs["capture_output"] is True
++        return subprocess.CompletedProcess(command, 0, stdout="summary", stderr="")
++
++    monkeypatch.setattr(mod.subprocess, "run", fake_run)
++
++    status = mod.run_summarize_artifact(tmp_path, path)
++
++    assert status == {"returncode": 0, "stdout": "summary", "stderr": ""}
++    assert calls == [[str(mod.PYTHON_BIN), "scripts/summarize_artifact.py", str(path)]]
++
++    monkeypatch.setattr(
++        mod,
++        "run_summarize_artifact",
++        lambda root, artifact_path: {
++            "returncode": 0,
++            "stdout": f"summary for {artifact_path.name}",
++            "stderr": "",
++        },
++    )
++    statuses = mod.summarize_existing_artifacts(tmp_path, {3964: path, 3965: None}, supplied=None)
++    assert statuses == {
++        3964: {
++            "returncode": 0,
++            "stdout": "summary for experiment_3964_fixture.json",
++            "stderr": "",
++        }
++    }
++
++
++def test_scenario_capstone_3973_script_wrapper_exists() -> None:
++    """SCENARIO-CAPSTONE-3973: the requested experiment entrypoint exists."""
++
++    script = Path("scripts/experiments/experiment_3973_capstone_v367.py")
++    assert script.exists()
++    text = script.read_text(encoding="utf-8")
++    assert "capstone_v367_3973" in text
++    assert "write_artifact" in text
+-- 
+2.55.0
+

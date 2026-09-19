@@ -1,0 +1,43 @@
+From 1075d3adaf66891d077bd086d4710496304d1752 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 04:23:04 -0400
+Subject: [PATCH 00596/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7a5830db3a..47c5041b03 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-06-05T08:20:49Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 28, "phase": "iteration_start", "last_beat": "2026-06-05T08:23:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f4959a80b6..c348bd58b3 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7852,3 +7852,4 @@ ERROR: {
+ | 2026-06-05 08:16 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.03s |
+ | 2026-06-05 08:18 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
+ | 2026-06-05 08:18 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.16s |
++| 2026-06-05 08:21 UTC | LDT-lattice margin sharpening: exp3833 landed LATT | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.56s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 67d5aab8cf..5e858511fa 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 27, "phase": "iteration_start", "started_at": "2026-06-05T08:20:49Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 28, "phase": "iteration_start", "started_at": "2026-06-05T08:23:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

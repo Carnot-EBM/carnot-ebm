@@ -1,0 +1,75 @@
+From 8a9f5a39444a36ab3351e6eaf9aa1fb4a72e5cd5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 04:05:33 -0400
+Subject: [PATCH 01405/11171] [conductor] Operational retrospective for
+ milestone 2026.06.377
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  1 +
+ results/operational_retro_2026_06_377.json | 29 ++++++++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_377.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 406e5cfb95..580d168dd0 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5187,3 +5187,9 @@ The critical path for milestone .250:
+ - theme: 11th consecutive false-zero detector gap — while .375 actually RE-RAN the headline off-ARC verifier-power question on the un-saturated EvalPlus corpus to see if the demo-fit/best-arm CI now excludes zero with oracle headroom
+ - key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .375 shipped exp4054-exp4065: per the .375 capstone (exp4065) the headline question — did the verifier transfer significantly off-ARC on the un-saturated EvalPlus corpus? — came back STILL ACCUMULATING (exp4057 accumulated-N=0; the backgrounded EvalPlus best-arm bootstrap-CI run under-accumulated, reported as PROGRESS-not-retirement per its own four-outcome rubric), G3 decentralization MoE base also STILL ACCUMULATING (exp4063 GAP-DECENTRALIZATION-MOE-BASE-4048 pending), the EFFICIENCY arm came back NULL (verifier-as-action-pruner showed no equal-solve-rate action/wallclock reduction), and ArcMemo v8's RICHER cross-game concept library STILL showed NO cross-game transfer (exp4062, like v7). Accuracy held flat at 8 games solved (no new game this window) and hardware continuity was recorded (KV260 already terminal from .374); 1 flagged-skipped. So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
+ - acceptance: retro-data 0/0 (false-zero); per .375 capstone exp4065 the milestone came back still-accumulating / not-decision-grade — G1 off-ARC verifier power STILL ACCUMULATING (accumulated-N=0), G3 decentralization STILL ACCUMULATING, EFFICIENCY null, SELF-LEARNING no cross-game transfer (ArcMemo v8) — while ACCURACY held at 8 games and HARDWARE continuity held (KV260 terminal); 1 flagged-skipped
++
++### Milestone 2026.06.377
++- exp_range: exp4077-exp4085 (per the on-disk ops/changelog.md window read this turn; the authoritative milestone-scoped timing detector again falsely reported 0 — extending the false-zero streak documented for 11 consecutive milestones through .375, with .376 having no retro on file)
++- theme: False-zero detector gap again — while .377 actually ran the verifier-as-reward RFT pivot (the project's central bet: does verifier-certified training beat the cold base / gold-SFT held-out?)
++- key result: Honest negative twice over. (1) Retro data: 0 experiment commits since activation; both GPUs idle at the snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null. (2) Real .377 (per capstone exp4085): the verifier-as-reward RFT pivot BLOCKED at its precision gate — exp4077 measured verifier certification precision 0.6818 < the 0.85 corpus-trust threshold, so the RFT-CORRECT corpus was poisoned and exp4078 train + exp4079 ARC held-out eval could not run (blocked_precision_gate_unmet); the Sudoku positive control (exp4080) and 9th-game solve (exp4082, ft09-0d8bbf25 at action 4) both completed but were flagged_adversarial and capstone-skipped; SOTA ingestion (exp4081) and registry/gaps hygiene (exp4083) landed clean. So the pivot's first decision-grade attempt produced an honest blocked-not-validated, and the zero timing is a detector artifact (detector_gap_suspected=true) — observability, not execution.
++- acceptance: retro-data 0/0 (false-zero); per .377 capstone exp4085 the headline pivot question (did verifier-as-reward RFT beat gold-SFT held-out?) returned BLOCKED — precision gate unmet (0.6818<0.85), no ARC RFT held-out eval; Sudoku control + 9th game flagged-skipped; SOTA-ingestion + registry-hygiene clean
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4576381740..6aa667c7fa 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8989,3 +8989,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-12: VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regression guard): bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 (vote 0.4516 -> gated 0.5806) numbers from cached candidates (zero codex/GGUF -- the regression guard the safety-gate ships on). RECORD the .377 pivot outcome from exp4079 into ops/verifier_gaps.md (new entry: VERIFIER-AS-REWARD-RFT -- did verifier-certified training beat the cold base / gold-SFT held-out?). Note the pivot in ops/verifier_registry.yaml (the verifier now has a TRAINING-time role, not only inference). Keep the registry/gaps the honest source of truth. (⚠️ Blocked) — honest_verdict=complete: gap4_arc1_reproduced_True_safety_gate_regression_True_pivot_verifier_as_reward_rft_blocked; results/experiment_4083_verifier_registry_gaps_hygiene.json
+ - 2026-06-12: Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE): per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> the operator re-plugged it 2026-06-11, IDCODE GM1Ax confirmed; next step toward n=16 Ising tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board. (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only; results/experiment_4084_hardware_continuity.json
+ - 2026-06-12: Capstone .377 (UNGATED): the milestone's headline question is DID VERIFIER-AS-REWARD RFT BEAT GOLD-SFT HELD-OUT -- the pivot's first decision-grade result? Aggregate: PIVOT = exp4079 (rft_heldout vs cold_base CI-excl-0 AND vs sft; the verifier-as-reward gate) + exp4080 (Sudoku positive control reproduced -> is the ARC result trustworthy?); DECENTRALIZATION-AS-DISTILLATION = did exp4079's RFT move the local rate toward codex (abstraction latent)?; ACCURACY = exp4082 (total_games_solved); SOTA = exp4081. Honest verdict on whether the pivot's first experiment validated verifier-as-reward (or produced an honest negative + a logged gap). SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists. (⚠️ Blocked) — honest_verdict=complete: capstone_v377_pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9_flagged_skipped4; results/experiment_4085_capstone_v377.json
++- 2026-06-12: OPERATIONAL RETRO .377 — milestone-scoped timing detector again FALSE-ZEROED (reported 0 experiment commits since activation; both RTX 3090s idle at 2026-06-12T08:00:40Z with 0 compute-bound tasks → gpu_idle_on_compute_bound_tasks=null, correctly NOT flagged per the GPU-idle rule). On-disk ops/changelog.md (read this turn) shows .377 actually shipped exp4077-exp4085 — the same observability gap documented for 11 consecutive milestones through .375 (.376 has no retro on file). Real .377 (per capstone exp4085): the verifier-as-reward RFT pivot BLOCKED at its precision gate — exp4077 measured verifier certification precision 0.6818 < the 0.85 corpus-trust threshold, so the RFT-CORRECT corpus was poisoned and exp4078 train + exp4079 ARC held-out eval did not run (blocked_precision_gate_unmet); Sudoku positive control (exp4080) + 9th-game solve (exp4082) both completed but were flagged_adversarial and capstone-skipped; SOTA ingestion (exp4081) + registry/gaps hygiene (exp4083) landed clean. Locked fields kept at 0/0/null (the detector's reading); interpretive fields reconstruct the real range from on-disk evidence. Highest-leverage fix: repair the false-zero detector (12+ consecutive empty-timing retros) + add a commit-time per-task timing ledger. results/operational_retro_2026_06_377.json
+diff --git a/results/operational_retro_2026_06_377.json b/results/operational_retro_2026_06_377.json
+new file mode 100644
+index 0000000000..0d0664547d
+--- /dev/null
++++ b/results/operational_retro_2026_06_377.json
+@@ -0,0 +1,29 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.377",
++  "generated_at": "2026-06-12T08:00:40Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "The milestone-scoped timing detector reported 0 experiment commits since .377 activation, so the locked numeric fields are 0/0 and both RTX 3090s were idle (0% util, 4MB) at the 2026-06-12T08:00:40Z snapshot -- correct behaviour with no compute-bound task present, hence gpu_idle_on_compute_bound_tasks stays null. However, the on-disk ops/changelog.md read this turn shows .377 actually shipped exp4077-exp4085 (all dated 2026-06-12), so the zero is a FALSE-ZERO detector artifact -- the same observability gap the research-log documents for 11 consecutive milestones through .375. The real .377 story (per capstone exp4085) is a verifier-as-reward RFT pivot that honestly BLOCKED at its precision gate, not an idle milestone.",
++  "bottlenecks_identified": [
++    "FALSE-ZERO timing detector (PRIMARY, recurring): the milestone-scoped query found 0 commits, but ops/changelog.md (read this turn) shows exp4077-exp4085 committed under .377 on 2026-06-12. This is the same detector gap recorded for 11 consecutive milestones through .375 (.363/.365/.366/.367/.368/.369/.370/.372/.373/.374/.375), with .376 having no retro on file. The recurring operational failure is OBSERVABILITY, not execution -- every retro since .363 has had to reconstruct the exp range from the changelog by hand.",
++    "No per-experiment timing or duration data exists in any authoritative source this milestone, so the retro's core function (rank compute-bound tasks by wall time) has zero input -- a direct downstream consequence of the false-zero detector, not of the experiments themselves.",
++    "NOT a bottleneck (stated explicitly per the GPU-idle interpretation rule): GPU idle at 0%. With 0 compute-bound tasks in the timing block, idle GPUs are correct; gpu_idle_on_compute_bound_tasks stays null and GPU idle is NOT flagged."
++  ],
++  "improvements_suggested": [
++    "Fix the milestone-scoped timing detector so it attributes exp4077-exp4085 to .377 using the same signal the changelog/capstone use (parse ops/changelog.md dated entries or the capstone's cited upstream range) instead of a git-log-since-activation-marker query that has now missed 12+ milestones. This single fix restores slowest-experiment analysis for every future retro.",
++    "Until the detector is fixed, have the retro task auto-reconstruct the exp range from ops/changelog.md (the documented manual workaround) and emit a self-flag so a false-zero is never silently reported as an idle milestone.",
++    "Emit per-task duration_s into a machine-readable timing ledger at commit time (not only inside the per-experiment JSON artifacts), so wall-time ranking survives even when the git-range detector misses the milestone."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Repair the false-zero milestone-scoped timing detector -- it has produced empty timing data for 12+ consecutive milestones (11 documented through .375, plus .376 with no retro, now .377), which is the single recurring operational defect blocking every efficiency retro.",
++    "Add a commit-time per-task timing ledger so duration and GPU-utilisation data is captured independently of the broken git-range query.",
++    "Auto-reconstruct the exp range from ops/changelog.md inside the retro task and self-flag the detector gap, so a false-zero self-reports instead of producing a misleading idle-milestone retro."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "A retro whose authoritative timing block reads 0/0 while the changelog shows nine shipped tasks (exp4077-exp4085) is itself the finding: the recurring failure is the observability detector, not the milestone. The honest move is to keep the locked 0/0 (the detector's reading) while reconstructing the real exp range from on-disk evidence and naming the gap -- exactly what the last 11 retros did. Fixing the detector once would convert a dozen hand-reconstructed retros back into real wall-time analysis."
++}
+-- 
+2.55.0
+

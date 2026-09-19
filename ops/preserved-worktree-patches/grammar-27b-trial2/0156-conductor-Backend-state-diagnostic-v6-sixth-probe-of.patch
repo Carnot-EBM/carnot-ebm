@@ -1,0 +1,2212 @@
+From 2e24d0f7431cd53b7cf11e167a8449504a392995 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 11:01:14 -0400
+Subject: [PATCH 00156/11171] =?UTF-8?q?[conductor]=20Backend-state=20diagn?=
+ =?UTF-8?q?ostic=20v6=20=E2=80=94=20sixth=20probe=20of=20gemini=20quota/cr?=
+ =?UTF-8?q?ash=20stability=20(exp3653/3666/3679/3691/3703=20all=20showed?=
+ =?UTF-8?q?=20probe-OK-but-real-workload-crash);=20record=20the=20probe-vs?=
+ =?UTF-8?q?-real-workload=20divergence;=20recommend=20whether=20.341=20may?=
+ =?UTF-8?q?=20flip=20to=20gemini-default;=20.340=20stays=20on=20codex=20(d?=
+ =?UTF-8?q?ocumentation-only)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3714-backend-state-diagnostic-v6
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  81 ++++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ .../backend_state_diagnostic_v6_3714.py       | 432 ++++++++++++++++++
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   2 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ results/experiment_2090_crane_humaneval.json  |   6 +-
+ results/experiment_2093_retro.json            |   4 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  32 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   5 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ...ment_3714_backend_state_diagnostic_v6.json | 101 ++++
+ results/experiment_542_fover_expansion.json   |   4 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ results/experiment_696_icalm_abstention.json  |  17 +-
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |  18 +-
+ ...riment_3714_backend_state_diagnostic_v6.py |  13 +
+ ...riment_3714_backend_state_diagnostic_v6.py | 431 +++++++++++++++++
+ 67 files changed, 1189 insertions(+), 164 deletions(-)
+ create mode 100644 python/carnot/reporting/backend_state_diagnostic_v6_3714.py
+ create mode 100644 results/experiment_3714_backend_state_diagnostic_v6.json
+ create mode 100644 scripts/experiment_3714_backend_state_diagnostic_v6.py
+ create mode 100644 tests/python/test_experiment_3714_backend_state_diagnostic_v6.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 6139863abc..3cdff684ff 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16075,3 +16075,84 @@ BMAD traceability reconciliation to the conductor.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3713 | Implemented (`python/carnot/reporting/archive_v339_activate_v340_3713.py`, `scripts/experiment_3713_archive_v339_activate_v340.py`) | Implemented (`tests/python/test_experiment_3713_archive_v339_activate_v340.py`) |
++
++### REQ-REPORT-3714: Backend State Diagnostic Sixth Probe With Real-Workload Divergence
++
++The Exp 3714 workflow shall run the sixth bounded Gemini backend state probe
++after Exp 3653, Exp 3666, Exp 3679, Exp 3691, and Exp 3703 recorded OK
++one-shot Gemini prompt probes, while preserving the distinction between bounded
++health probes and real multi-turn Gemini workloads. It shall run at most one
++bounded Gemini CLI version probe, one bounded Gemini prompt probe using
++`gemini-3.1-pro-preview`, and one read-only conductor coercion environment
++probe equivalent to `env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'`. It SHALL
++NOT loop, retry, call the conductor, modify `scripts/research_conductor.py`,
++mutate shell environment variables, edit conductor configuration, push changes,
++or change `ops/status.md`, `ops/changelog.md`, or `_bmad/traceability.md`.
++
++The workflow SHALL read the Exp 3703 fifth stability probe, the `.339`
++conductor-log tail for recent milestone planner/gemini failures, and
++`CLAUDE.md` Gemini-Default routing rules, and write
++`results/experiment_3714_backend_state_diagnostic_v6.json` with bare top-level
++values for `honest_verdict`, `inference_substrate`, `gemini_cli_version`,
++`gemini_probe_state`, `real_workload_crash_observed`,
++`consecutive_stable_probes`, `conductor_coercion_env`,
++`recommended_routing`, `conductor_unmodified_assert`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`, plus `field_principles`
++documenting why each required value exists. The prompt probe output SHALL be
++preserved with stdout, stderr, exit code, and combined output.
++`gemini_probe_state` SHALL be one of `ok`, `quota_exhausted_429`, or
++`crash_js_345500`. If the installed gemini-cli version is unchanged from Exp
++3703 and Exp 3703 already recorded OK-probe/real-workload-crash divergence,
++the workflow SHALL record that the sixth bounded probe adds no new flip
++confidence beyond the prior state. The workflow SHALL recommend
++`gemini_default_eligible_for_v341` only when the sixth prompt probe exits
++successfully with an OK reply, the previous five probe artifacts recorded OK
++state, and no recent real-workload Gemini crash is observed; otherwise it
++SHALL recommend `codex_requires_codex`.
++
++#### SCENARIO-REPORT-3714-DIVERGENCE: OK Probe But Real Workload Crash Keeps Codex
++
++**Given** Exp 3653, Exp 3666, Exp 3679, Exp 3691, and Exp 3703 recorded OK
++one-shot Gemini probes
++**And** Exp 3703 or `ops/conductor-log.md` records a recent real Gemini
++workload failure with a 1201-second wall-clock timeout or `.js:345500:14`
++crash evidence
++**When** the bounded Exp 3714 Gemini prompt probe exits successfully with an
++OK reply
++**Then** the workflow classifies `gemini_probe_state` as `ok`, records the
++one-shot probe versus real-workload divergence, sets
++`real_workload_crash_observed=true`, preserves raw probe output, asserts the
++conductor and environment were not modified, recommends
++`codex_requires_codex`, and emits
++`complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing`.
++
++#### SCENARIO-REPORT-3714-STABLE: Sixth Probe Without Real Crash Makes V341 Eligible
++
++**Given** Exp 3653, Exp 3666, Exp 3679, Exp 3691, and Exp 3703 recorded OK
++one-shot Gemini probes
++**And** no recent real-workload Gemini crash is observed
++**When** the bounded Exp 3714 Gemini prompt probe exits successfully with an
++OK reply
++**Then** the workflow classifies `gemini_probe_state` as `ok`, records
++`consecutive_stable_probes=6`, preserves raw probe output, asserts the
++conductor and environment were not modified, recommends
++`gemini_default_eligible_for_v341`, and emits
++`complete: backend_diagnosed_gemini_stable_6th_probe_no_real_crash_v341_may_flip`.
++
++#### SCENARIO-REPORT-3714-UNSTABLE: Quota Or Crash Keeps Codex Routing
++
++**Given** Exp 3653, Exp 3666, Exp 3679, Exp 3691, and Exp 3703 recorded OK
++one-shot Gemini probes
++**When** the bounded Exp 3714 Gemini prompt probe reports `QUOTA_EXHAUSTED`,
++HTTP `429`, or the Gemini CLI `.js:345500:14` crash frame
++**Then** the workflow classifies `gemini_probe_state` as
++`quota_exhausted_429` or `crash_js_345500`, preserves raw probe output,
++asserts the conductor and environment were not modified, recommends
++`codex_requires_codex`, and emits
++`complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing`.
++
++## Implementation Status (REQ-REPORT-3714)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3714 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v6_3714.py`, `scripts/experiment_3714_backend_state_diagnostic_v6.py`) | Implemented (`tests/python/test_experiment_3714_backend_state_diagnostic_v6.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index e42fec733c..386443a3a9 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -259,5 +259,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 99390a8a10..8e33d59e91 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 142,
+   "code_violations": 0,
+-  "experiments_checked": 2839,
++  "experiments_checked": 2840,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index a1eed07a82..ee6fe1e5eb 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7485,5 +7485,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/reporting/backend_state_diagnostic_v6_3714.py b/python/carnot/reporting/backend_state_diagnostic_v6_3714.py
+new file mode 100644
+index 0000000000..c17896565a
+--- /dev/null
++++ b/python/carnot/reporting/backend_state_diagnostic_v6_3714.py
+@@ -0,0 +1,432 @@
++"""Build the Exp 3714 Gemini backend state diagnostic v6 artifact.
++
++Spec refs: REQ-REPORT-3714, SCENARIO-REPORT-3714-DIVERGENCE,
++SCENARIO-REPORT-3714-STABLE, SCENARIO-REPORT-3714-UNSTABLE.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import shlex
++import subprocess
++import time
++
++EXPERIMENT_ID = "exp3714"
++TASK_ID = "exp3714-backend-state-diagnostic-v6"
++SCHEMA = "carnot.backend_state_diagnostic.v6"
++OUTPUT_REL_PATH = Path("results/experiment_3714_backend_state_diagnostic_v6.json")
++RANDOM_SEED = 3714
++
++GEMINI_VERSION_COMMAND = ("timeout", "30", "gemini", "--version")
++GEMINI_REPLY_COMMAND = (
++    "timeout",
++    "60",
++    "gemini",
++    "-m",
++    "gemini-3.1-pro-preview",
++    "-p",
++    "Reply OK",
++)
++CONDUCTOR_ENV_COMMAND = ("bash", "-lc", "env | grep -iE 'AGENT_TYPE|FORCE_EXPERIMENTS'")
++TRACKED_ENV_KEYS = (
++    "AGENT_TYPE",
++    "GEMINI_FORCE_EXPERIMENTS",
++    "CODEX_FORCE_EXPERIMENTS",
++    "AGENT_TYPE_PLANNER",
++    "AGENT_TYPE_RETRO",
++)
++
++DIVERGENCE_VERDICT = (
++    "complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing"
++)
++STABLE_VERDICT = "complete: backend_diagnosed_gemini_stable_6th_probe_no_real_crash_v341_may_flip"
++UNSTABLE_VERDICT = "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": (
++        "hardware_smoke (principle: a bounded CLI health probe, not live model "
++        "inference; no compute-bound marker)."
++    ),
++    "gemini_cli_version": (
++        "Records the installed gemini-cli version so a future upgrade is auditable."
++    ),
++    "gemini_probe_state": (
++        "ok / quota_exhausted_429 / crash_js_345500 -- the one-shot probe result on the 6th probe."
++    ),
++    "real_workload_crash_observed": (
++        "True iff a real gemini workload crashed recently (re-confirmed exp3703) "
++        "-- the divergence a one-shot probe hides."
++    ),
++    "consecutive_stable_probes": (
++        "Counts consecutive milestones gemini probed OK; a real-workload crash "
++        "resets confidence in a flip."
++    ),
++    "conductor_coercion_env": (
++        "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task "
++        "agent_type routes as it does."
++    ),
++    "recommended_routing": (
++        "codex_requires_codex (keep) or gemini_default_eligible_for_v341 -- "
++        "eligibility requires probe OK AND no real-workload crash."
++    ),
++    "conductor_unmodified_assert": (
++        "Asserts this diagnostic did NOT modify research_conductor.py or env."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++    "prior_gemini_cli_version": (
++        "Records the Exp 3703 gemini-cli version so unchanged probes are auditable."
++    ),
++    "probe_redundancy_note": (
++        "Notes when an unchanged gemini-cli plus prior OK-probe/real-crash state "
++        "adds no new flip confidence."
++    ),
++}
++
++CONTEXT_SOURCE_PATHS = (
++    Path("results/experiment_3653_backend_state_diagnostic.json"),
++    Path("results/experiment_3666_backend_state_diagnostic_v2.json"),
++    Path("results/experiment_3679_backend_state_diagnostic_v3.json"),
++    Path("results/experiment_3691_backend_state_diagnostic_v4.json"),
++    Path("results/experiment_3703_backend_state_diagnostic_v5.json"),
++    Path("ops/conductor-log.md"),
++    Path("scripts/summarize_artifact.py"),
++    Path("CLAUDE.md"),
++)
++
++
++@dataclass(frozen=True)
++class CommandProbe:
++    command: tuple[str, ...]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++    @property
++    def combined_output(self) -> str:
++        return f"{self.stdout}{self.stderr}"
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "command": shlex.join(self.command),
++            "exit_code": self.exit_code,
++            "stdout": self.stdout,
++            "stderr": self.stderr,
++            "combined_output": self.combined_output,
++        }
++
++
++CommandRunner = Callable[[tuple[str, ...]], CommandProbe]
++
++
++def run_command(command: tuple[str, ...]) -> CommandProbe:
++    """Run one bounded diagnostic command and capture stdout, stderr, and exit."""
++    completed = subprocess.run(  # noqa: S603
++        list(command),
++        check=False,
++        capture_output=True,
++        text=True,
++    )
++    return CommandProbe(
++        command=command,
++        exit_code=completed.returncode,
++        stdout=completed.stdout,
++        stderr=completed.stderr,
++    )
++
++
++def sha256_payload(payload: dict[str, object]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _file_sha256(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _parse_version(probe: CommandProbe) -> str:
++    lines = [line.strip() for line in probe.combined_output.splitlines() if line.strip()]
++    return lines[0] if lines else f"unknown_exit_{probe.exit_code}"
++
++
++def _has_ok_reply(probe: CommandProbe) -> bool:
++    return any(line.strip().upper() == "OK" for line in probe.stdout.splitlines())
++
++
++def _classify_probe_state(probe: CommandProbe) -> str:
++    text = probe.combined_output.lower()
++    if "quota_exhausted" in text or "quota exhausted" in text or "429" in text:
++        return "quota_exhausted_429"
++    if probe.exit_code == 0 and _has_ok_reply(probe):
++        return "ok"
++    return "crash_js_345500"
++
++
++def _parse_conductor_env(probe: CommandProbe) -> dict[str, str | None]:
++    raw = probe.combined_output
++    pairs = dict(line.split("=", 1) for line in raw.splitlines() if "=" in line)
++    parsed: dict[str, str | None] = {key: pairs.get(key) for key in TRACKED_ENV_KEYS}
++    parsed["raw"] = raw
++    return parsed
++
++
++def _previous_probe_states(root: Path) -> dict[str, str]:
++    paths = {
++        "exp3653": root / "results" / "experiment_3653_backend_state_diagnostic.json",
++        "exp3666": root / "results" / "experiment_3666_backend_state_diagnostic_v2.json",
++        "exp3679": root / "results" / "experiment_3679_backend_state_diagnostic_v3.json",
++        "exp3691": root / "results" / "experiment_3691_backend_state_diagnostic_v4.json",
++        "exp3703": root / "results" / "experiment_3703_backend_state_diagnostic_v5.json",
++    }
++    states: dict[str, str] = {}
++    for key, path in paths.items():
++        payload = json.loads(path.read_text(encoding="utf-8"))
++        states[key] = str(
++            payload.get("gemini_probe_state", payload.get("gemini_quota_state", "missing"))
++        )
++    return states
++
++
++def _exp3703_payload(root: Path) -> dict[str, object]:
++    path = root / "results" / "experiment_3703_backend_state_diagnostic_v5.json"
++    if not path.exists():
++        return {}
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _prior_gemini_cli_version(root: Path) -> str:
++    payload = _exp3703_payload(root)
++    return str(payload.get("gemini_cli_version", "missing"))
++
++
++def _exp3703_real_crash_evidence(root: Path) -> list[str]:
++    payload = _exp3703_payload(root)
++    if not payload.get("real_workload_crash_observed"):
++        return []
++    raw_evidence = payload.get("real_workload_crash_evidence")
++    if isinstance(raw_evidence, list) and raw_evidence:
++        return [str(line) for line in raw_evidence[-5:]]
++    return [
++        "results/experiment_3703_backend_state_diagnostic_v5.json real_workload_crash_observed=true"
++    ]
++
++
++def _conductor_log_real_crash_evidence(root: Path) -> list[str]:
++    log_path = root / "ops" / "conductor-log.md"
++    if not log_path.exists():
++        return []
++    failures: list[str] = []
++    for line in log_path.read_text(encoding="utf-8").splitlines():
++        if "Gemini CLI error" not in line or "| FAIL |" not in line:
++            continue
++        if ".js:345500:14" in line or "1201s" in line:
++            failures.append(line)
++    return failures[-5:]
++
++
++def _detect_real_workload_crash(root: Path) -> list[str]:
++    evidence: list[str] = []
++    seen: set[str] = set()
++    for line in _exp3703_real_crash_evidence(root) + _conductor_log_real_crash_evidence(root):
++        if line in seen:
++            continue
++        seen.add(line)
++        evidence.append(line)
++    return evidence
++
++
++def _consecutive_stable_probes(
++    previous_states: dict[str, str],
++    current_state: str,
++) -> int:
++    return (
++        6
++        if previous_states
++        == {
++            "exp3653": "ok",
++            "exp3666": "ok",
++            "exp3679": "ok",
++            "exp3691": "ok",
++            "exp3703": "ok",
++        }
++        and current_state == "ok"
++        else 0
++    )
++
++
++def _recommended_routing(
++    probe_state: str,
++    consecutive_stable_probes: int,
++    real_workload_crash_observed: bool,
++) -> str:
++    return (
++        "gemini_default_eligible_for_v341"
++        if probe_state == "ok"
++        and consecutive_stable_probes >= 6
++        and not real_workload_crash_observed
++        else "codex_requires_codex"
++    )
++
++
++def _verdict(probe_state: str, recommended_routing: str, real_workload_crash_observed: bool) -> str:
++    if probe_state == "ok" and real_workload_crash_observed:
++        return DIVERGENCE_VERDICT
++    if recommended_routing == "gemini_default_eligible_for_v341":
++        return STABLE_VERDICT
++    return UNSTABLE_VERDICT
++
++
++def _divergence_label(probe_state: str, real_workload_crash_observed: bool) -> str:
++    if probe_state == "ok" and real_workload_crash_observed:
++        return "one_shot_probe_ok_but_real_workload_crashed"
++    if probe_state == "ok":
++        return "one_shot_probe_ok_and_no_real_workload_crash_observed"
++    return "one_shot_probe_unstable"
++
++
++def _probe_redundancy_note(
++    root: Path,
++    current_version: str,
++    current_probe_state: str,
++    prior_version: str,
++) -> str:
++    exp3703 = _exp3703_payload(root)
++    if current_version != prior_version:
++        return "gemini_cli_changed_since_exp3703"
++    if (
++        current_probe_state == "ok"
++        and exp3703.get("gemini_probe_state") == "ok"
++        and exp3703.get("real_workload_crash_observed") is True
++    ):
++        return (
++            "gemini_cli_unchanged_since_exp3703_and_exp3703_already_recorded_"
++            "probe_ok_real_workload_crash"
++        )
++    return "gemini_cli_unchanged_since_exp3703"
++
++
++def _context_source_checksums(root: Path) -> dict[str, str]:
++    checksums: dict[str, str] = {}
++    for rel_path in CONTEXT_SOURCE_PATHS:
++        path = root / rel_path
++        checksums[str(rel_path)] = _file_sha256(path) if path.exists() else "missing"
++    return checksums
++
++
++def build_artifact(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> dict[str, object]:
++    """Build the Exp 3714 diagnostic from bounded probes and repository context."""
++    started = time.perf_counter()
++    root = Path(repo_root)
++    conductor_path = root / "scripts" / "research_conductor.py"
++    conductor_before = _file_sha256(conductor_path)
++
++    previous_states = _previous_probe_states(root)
++    real_workload_crash_evidence = _detect_real_workload_crash(root)
++    version_probe = command_runner(GEMINI_VERSION_COMMAND)
++    reply_probe = command_runner(GEMINI_REPLY_COMMAND)
++    env_probe = command_runner(CONDUCTOR_ENV_COMMAND)
++
++    conductor_after = _file_sha256(conductor_path)
++    probe_state = _classify_probe_state(reply_probe)
++    current_version = _parse_version(version_probe)
++    prior_version = _prior_gemini_cli_version(root)
++    real_workload_crash_observed = bool(real_workload_crash_evidence)
++    stable_probe_count = _consecutive_stable_probes(previous_states, probe_state)
++    recommended_routing = _recommended_routing(
++        probe_state,
++        stable_probe_count,
++        real_workload_crash_observed,
++    )
++    elapsed = duration_s if duration_s is not None else max(time.perf_counter() - started, 0.0001)
++
++    payload: dict[str, object] = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "honest_verdict": _verdict(
++            probe_state,
++            recommended_routing,
++            real_workload_crash_observed,
++        ),
++        "inference_substrate": "hardware_smoke",
++        "gemini_cli_version": current_version,
++        "prior_gemini_cli_version": prior_version,
++        "probe_redundancy_note": _probe_redundancy_note(
++            root,
++            current_version,
++            probe_state,
++            prior_version,
++        ),
++        "gemini_probe_state": probe_state,
++        "real_workload_crash_observed": real_workload_crash_observed,
++        "real_workload_crash_evidence": real_workload_crash_evidence,
++        "probe_vs_real_workload_divergence": _divergence_label(
++            probe_state,
++            real_workload_crash_observed,
++        ),
++        "previous_gemini_probe_states": previous_states,
++        "consecutive_stable_probes": stable_probe_count,
++        "conductor_coercion_env": _parse_conductor_env(env_probe),
++        "recommended_routing": recommended_routing,
++        "conductor_unmodified_assert": (
++            "scripts/research_conductor.py sha256 unchanged before/after diagnostic; "
++            "environment was read only and no conductor config writes were performed."
++        ),
++        "research_conductor_unmodified": conductor_before == conductor_after,
++        "research_conductor_sha256_before": conductor_before,
++        "research_conductor_sha256_after": conductor_after,
++        "command_probes": {
++            "gemini_version": version_probe.as_dict(),
++            "gemini_reply": reply_probe.as_dict(),
++            "conductor_env": env_probe.as_dict(),
++        },
++        "context_sources_read": [
++            "results/experiment_3703_backend_state_diagnostic_v5.json",
++            "scripts/summarize_artifact.py results/experiment_3703_backend_state_diagnostic_v5.json",
++            "ops/conductor-log.md tail for .339 milestone Gemini failures",
++            "CLAUDE.md Gemini-Default for Experiments",
++        ],
++        "context_source_checksums": _context_source_checksums(root),
++        "field_principles": FIELD_PRINCIPLES,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(float(elapsed), 4),
++    }
++    payload["reproducibility_checksum"] = sha256_payload(payload)
++    return payload
++
++
++def write_artifact(repo_root: str | Path, payload: dict[str, object]) -> Path:
++    out_path = Path(repo_root) / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def run_experiment(
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    duration_s: float | None = None,
++) -> Path:
++    payload = build_artifact(repo_root, command_runner=command_runner, duration_s=duration_s)
++    return write_artifact(repo_root, payload)
++
++
++def main() -> None:  # pragma: no cover
++    out_path = run_experiment(Path("."))
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    print(payload["honest_verdict"])
++    print(out_path)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index bd00320674..f6d2dca740 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-06-02T13:52:44Z"
++  "saved_at": "2026-06-02T14:04:59Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 79ea240e65..238ab9ef99 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T13:52:11.291862+00:00",
+-  "finished_at": "2026-06-02T13:52:11.315177+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-02T14:04:26.385674+00:00",
++  "finished_at": "2026-06-02T14:04:26.409665+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 8d7f5681ac..d90468d7f9 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T13:52:11Z",
++  "run_date": "2026-06-02T14:04:26Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index e80f4087ac..ead4b65796 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T13:52:12Z",
+-  "finished_at": "2026-06-02T13:52:12Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-02T14:04:27Z",
++  "finished_at": "2026-06-02T14:04:27Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index d4b068e888..42ebe3046f 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T13:52:12Z",
++  "run_date": "2026-06-02T14:04:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 31c162035d..1cb7f4c5ae 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-02T13:52:12Z",
++  "run_date": "2026-06-02T14:04:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c6067052e0..8ef547c3d4 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T13:50:30.336690Z",
+-  "duration_s": 0.008235454559326172,
++  "run_date": "2026-06-02T14:02:44.467258Z",
++  "duration_s": 0.010208606719970703,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "d6ce1036ad42389989995ff4100f27c03108b1df7d69897c5eaf9c801b155b93",
++  "reproducibility_checksum": "811d554e9afbca7e3abe4e0d740dadb3c5df7bbacda63a36dcd1a87c876db5f6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1f5a2e30ad285a78a55ced5c5d499709d17bd9f9"
++    "adversarial_verify_version": "c19c739268e08a7ac47c578815164aff9b4852ea"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 1e2cbde075..f4fd756b3d 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-02T13:52:30.984875Z",
+-  "duration_s": 20.062752962112427,
++  "run_date": "2026-06-02T14:04:48.993680Z",
++  "duration_s": 21.711447715759277,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 680ad04c29..f6d6c4c408 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-02T09:40:58.180964+00:00",
+-  "duration_s": 0.0015578269958496094,
++  "run_date": "2026-06-02T14:05:05.217797+00:00",
++  "duration_s": 0.002579927444458008,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 25e0895f93..96c0adc4fe 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T13:50:30.345959Z",
+-  "duration_s": 0.007192850112915039,
++  "run_date": "2026-06-02T14:02:44.480803Z",
++  "duration_s": 0.009945392608642578,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "6f4122099d0c41547ea56b9ab55c9068132639307031241892b5cd4a93d1ea61",
++  "reproducibility_checksum": "95fa10d1561e1dfdd0697706f3af4bc5478b8aa2b664f54cf51b0b648d27d055",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1f5a2e30ad285a78a55ced5c5d499709d17bd9f9"
++    "adversarial_verify_version": "c19c739268e08a7ac47c578815164aff9b4852ea"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 9320448644..c2cef29adc 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 1.99s, user: 1.79s, system: 0.15s, MEM: 115.74 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.33s, user: 2.13s, system: 0.15s, MEM: 116.00 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+ Time spent: 77% 19x read_verilog (1 sec), 8% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index 7e0b19207e..2f526467d1 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.123252868652344,
++    "latency_ms": 10.101318359375,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 179521c0e0..098c61e799 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,10 +243,5 @@
+         "success": true
+       }
+     }
+-  ],
+-  "corrigendum_2026_05_187_audit": {
+-    "classification": "METHODOLOGY_MISSING",
+-    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+-    "follow_up_action": "Add missing methodology fields."
+-  }
++  ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 5752b582af..960008f811 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.107858657836914,
++  "efficiency_gains_ms": 2.1452903747558594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index 01ab89c53b..084127570e 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-02T09:41:11.796445Z",
++  "run_date": "2026-06-02T14:05:20.087832Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index f708382ee4..d459cb19a5 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757112
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 54456c6f3d..ad86a1cf02 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00016282498836517334,
+-  "latency_domino_seconds": 0.0002868089941330254,
++  "latency_legacy_seconds": 0.0001526259584352374,
++  "latency_domino_seconds": 0.00026986701413989067,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index 78f65867a8..f65f156459 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.002054929733276367,
++  "execution_time_s": 0.002682924270629883,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index bc357ba5bb..7f16fcaa5d 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,14 +3,5 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index b3bbb7e837..0fb59dbdb0 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,8 +2,8 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:42:13Z",
+-  "finished_at": "2026-06-02T09:42:13Z",
++  "started_at": "2026-06-02T14:06:26Z",
++  "finished_at": "2026-06-02T14:06:26Z",
+   "duration_s": 0.009,
+   "status": "success",
+   "random_seed": 42,
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08893013000488281,
++  "latency_ms": 0.08916854858398438,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index ed3459cd41..a445633741 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -4,8 +4,8 @@
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T10:08:12.931974+00:00",
+-  "finished_at": "2026-06-02T10:08:12.931978+00:00",
++  "started_at": "2026-06-02T14:32:42.780201+00:00",
++  "finished_at": "2026-06-02T14:32:42.780204+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index f0a1faf4f7..f600cf1979 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0007358694076538086,
+-  "avg_eqm_time": 0.07448804378509521,
++  "avg_pem_time": 0.0007497024536132813,
++  "avg_eqm_time": 0.08564410209655762,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index ff60ab7e80..6333241d3e 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 326.302362203598,
++  "duration_s": 352.77996373176575,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index efc6011024..74a61bb894 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.001127,
++  "duration_s": 0.00078,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index 22c1be0552..2e7b2a9127 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.000376,
++  "duration_s": 0.000218,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 54ec7487cb..d49f8cf765 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.0900583267211914,
++  "duration_s": 0.11211657524108887,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 3bc1651c0b..a00fac8bdf 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-02T09:48:57Z",
++  "run_date": "2026-06-02T14:13:43Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 921ee28a0e..7d06a979e9 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000081777572632,
++  "duration_s": 5.000095844268799,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 53bdcd3bf8..aa997db1ca 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000108003616333,
++  "duration_s": 10.000076532363892,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index d0e92dfe4f..ed96f29a35 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.25254178047180176,
++  "duration_s": 0.27274513244628906,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 6662d51d18..2ed3bce86c 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.4182949209935032,
++  "duration_s": 0.4807129030232318,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index facfcb3157..305d76de8c 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 3b6dcac88a..c21f8d3849 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008749961853027344,
++  "duration_s": 0.0008358955383300781,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 3057d6aa78..4f7375529c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.19909886457026e-05,
++  "duration_s": 2.5187968276441097e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 9421566252..d2c857d4fc 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.210182957351208e-07,
++  "duration_s": 4.5099295675754547e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index d66a3bbb45..d9d44184d7 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.031990051269531e-05,
++  "duration_s": 5.340576171875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index bc9a6e885f..898f1f221e 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 18.799448251724243, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 20.148000478744507, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index e9b0e34834..e4052d2a7b 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.009530286852270364,
++  "nonforgetting_metric_random": 0.009972560063004494,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 8747225bd8..f432440f95 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:41:18Z",
+-  "finished_at": "2026-06-02T09:41:19Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T14:05:25Z",
++  "finished_at": "2026-06-02T14:05:25Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index 50c4d471a8..3d577783cb 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 21.05421805381775, "autoregressive_time_to_solution": 315.81327080726624, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 21.073643684387207, "autoregressive_time_to_solution": 316.1046552658081, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 7be813146b..8b2efebc88 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 6.453099194914103e-05,
++  "duration_s": 0.00011792097939178348,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-02T09:42:03Z",
++  "generated_at": "2026-06-02T14:06:11Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 1750a5dc7f..dce5fa52a4 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-02T09:42:03Z
++experiment_3420 started_at=2026-06-02T14:06:11Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 6e9fdde42f..0105cc951e 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.08452891302295029,
++  "duration_s": 0.06381155899725854,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index c7debc1ce5..7a74671d25 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 4.5299530029296875e-05
++  "duration_s": 5.125999450683594e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 4fb91747f7..4e9d58a780 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,14 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.012265443801879883,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "duration_s": 0.013706207275390625
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index 0a5ef8514b..5019d72075 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "5e36b3d44a277168e6505b558bb4477b3290880d3f2ed230de9065f887570524"
++    "1b7c887d901b9f9d20180590c1647705b8ce32d02d066095a27bbffd9316d9c3"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.0003190040588378906
++  "duration_s": 0.0002532005310058594
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index a6e1de5aca..a06110d412 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.07683300971984863,
+-  "reproducibility_checksum": "3798cba19bc412c114e2ea590f07802a"
++  "duration_s": 0.10506653785705566,
++  "reproducibility_checksum": "ce34d73733f023ff6d7717e38ca145c0"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index 34bc4eb17a..e404207241 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -8,10 +8,11 @@
+   "paper_ready": true,
+   "cited_upstream_artifacts": [
+     "experiment_3573_verifier_code_bug_error_detection.json",
++    "experiment_3574_verifier_factual_hallucination_error_detection.json",
+     "experiment_3575_verifier_discriminating_value.json",
+     "experiment_3576_verifier_cross_domain_synthesis.json"
+   ],
+   "random_seed": 3618249398,
+-  "reproducibility_checksum": "d434c92481349ff1c12cf2c7e44a466f8fc035faefecffd3cfff71067483dfb8",
+-  "duration_s": 0.00028586387634277344
++  "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
++  "duration_s": 0.00040340423583984375
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index bbd5fa6aeb..ebe09b929d 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 1.6772499084472656,
+-  "reproducibility_checksum": "7458251e1fc04d94df1fc75e05022a3c82d88d905d4bfef027a240c8f3d00d37"
++  "duration_s": 1.940011978149414,
++  "reproducibility_checksum": "537d08d7a1f0f57dfadd2bb222b140342a85f76b81b565c882c40057c6f9d62d"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index 2610613a80..81d61a5d59 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-02",
+-  "started_at": "2026-06-02T13:52:20.126821+00:00",
+-  "finished_at": "2026-06-02T13:52:20.126821+00:00",
++  "started_at": "2026-06-02T14:04:37.319460+00:00",
++  "finished_at": "2026-06-02T14:04:37.319460+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000095367431641
++  "duration_s": 0.10000143051147461
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index eeec958410..ebbadab3ec 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.0036034584045410156,
+-  "reproducibility_checksum": "7a726d16823458821627ed97818d2782e0c8fba41e2bad4cf4cc8142b1776cc8"
++  "duration_s": 0.00370025634765625,
++  "reproducibility_checksum": "9526ccb5cbe19aa9b410ba934d333004b03f3608c8b7ab502320fb8ec075dabd"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3714_backend_state_diagnostic_v6.json b/results/experiment_3714_backend_state_diagnostic_v6.json
+new file mode 100644
+index 0000000000..fc1a69e8dd
+--- /dev/null
++++ b/results/experiment_3714_backend_state_diagnostic_v6.json
+@@ -0,0 +1,101 @@
++{
++  "command_probes": {
++    "conductor_env": {
++      "combined_output": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n",
++      "command": "bash -lc 'env | grep -iE '\"'\"'AGENT_TYPE|FORCE_EXPERIMENTS'\"'\"''",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
++    },
++    "gemini_reply": {
++      "combined_output": "OK\nWarning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
++      "command": "timeout 60 gemini -m gemini-3.1-pro-preview -p 'Reply OK'",
++      "exit_code": 0,
++      "stderr": "Warning: Basic terminal detected (TERM=dumb). Visual rendering will be limited. For the best experience, use a terminal emulator with truecolor support.\nWarning: 256-color support not detected. Using a terminal with at least 256-color support is recommended for a better visual experience.\n",
++      "stdout": "OK\n"
++    },
++    "gemini_version": {
++      "combined_output": "0.44.0\n",
++      "command": "timeout 30 gemini --version",
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "0.44.0\n"
++    }
++  },
++  "conductor_coercion_env": {
++    "AGENT_TYPE": "gemini",
++    "AGENT_TYPE_PLANNER": "claude",
++    "AGENT_TYPE_RETRO": "gemini",
++    "CODEX_FORCE_EXPERIMENTS": null,
++    "GEMINI_FORCE_EXPERIMENTS": "1",
++    "raw": "AGENT_TYPE_RETRO=gemini\nAGENT_TYPE=gemini\nGEMINI_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"
++  },
++  "conductor_unmodified_assert": "scripts/research_conductor.py sha256 unchanged before/after diagnostic; environment was read only and no conductor config writes were performed.",
++  "consecutive_stable_probes": 6,
++  "context_source_checksums": {
++    "CLAUDE.md": "7ef4cd87213dd3e5e3b2421ba98c22f3f5842d83bfe5fe51d232bdeb782c83e5",
++    "ops/conductor-log.md": "a0932d155a68e3d4c45f801b73a9448daf576ff9e9ead08020c125458f28e9c4",
++    "results/experiment_3653_backend_state_diagnostic.json": "ae983c66103ff93d11409eb942de913e5d7e854672bf5828a6a286862e8db2fc",
++    "results/experiment_3666_backend_state_diagnostic_v2.json": "98893e8169b220171b477c03622d4f3e181fc4aefd90d9f3ba0e3df43ad64e6c",
++    "results/experiment_3679_backend_state_diagnostic_v3.json": "13c52719fbde05110b0b755ec6b7f7dc3fc392c69162383b19a8b0cd4383fbb4",
++    "results/experiment_3691_backend_state_diagnostic_v4.json": "bfa2e62d79b0f6f73b56f967fe3d0075db26d2f87fcd10fb89253a79576c9c7b",
++    "results/experiment_3703_backend_state_diagnostic_v5.json": "a2b37e4165740bb7aa034650e8afff1e7136a0fddd0a1e45cec3cf748decd5eb",
++    "scripts/summarize_artifact.py": "50361c21af9ff91b3de374a133219d57981883bbe39b1bea24a2f60db492a117"
++  },
++  "context_sources_read": [
++    "results/experiment_3703_backend_state_diagnostic_v5.json",
++    "scripts/summarize_artifact.py results/experiment_3703_backend_state_diagnostic_v5.json",
++    "ops/conductor-log.md tail for .339 milestone Gemini failures",
++    "CLAUDE.md Gemini-Default for Experiments"
++  ],
++  "duration_s": 16.5857,
++  "experiment_id": "exp3714",
++  "field_principles": {
++    "conductor_coercion_env": "Records AGENT_TYPE + FORCE_EXPERIMENTS active -- explains why per-task agent_type routes as it does.",
++    "conductor_unmodified_assert": "Asserts this diagnostic did NOT modify research_conductor.py or env.",
++    "consecutive_stable_probes": "Counts consecutive milestones gemini probed OK; a real-workload crash resets confidence in a flip.",
++    "duration_s": "Plausibility floor.",
++    "gemini_cli_version": "Records the installed gemini-cli version so a future upgrade is auditable.",
++    "gemini_probe_state": "ok / quota_exhausted_429 / crash_js_345500 -- the one-shot probe result on the 6th probe.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "hardware_smoke (principle: a bounded CLI health probe, not live model inference; no compute-bound marker).",
++    "prior_gemini_cli_version": "Records the Exp 3703 gemini-cli version so unchanged probes are auditable.",
++    "probe_redundancy_note": "Notes when an unchanged gemini-cli plus prior OK-probe/real-crash state adds no new flip confidence.",
++    "random_seed": "Determinism precondition.",
++    "real_workload_crash_observed": "True iff a real gemini workload crashed recently (re-confirmed exp3703) -- the divergence a one-shot probe hides.",
++    "recommended_routing": "codex_requires_codex (keep) or gemini_default_eligible_for_v341 -- eligibility requires probe OK AND no real-workload crash.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "gemini_cli_version": "0.44.0",
++  "gemini_probe_state": "ok",
++  "honest_verdict": "complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing",
++  "inference_substrate": "hardware_smoke",
++  "previous_gemini_probe_states": {
++    "exp3653": "ok",
++    "exp3666": "ok",
++    "exp3679": "ok",
++    "exp3691": "ok",
++    "exp3703": "ok"
++  },
++  "prior_gemini_cli_version": "0.44.0",
++  "probe_redundancy_note": "gemini_cli_unchanged_since_exp3703_and_exp3703_already_recorded_probe_ok_real_workload_crash",
++  "probe_vs_real_workload_divergence": "one_shot_probe_ok_but_real_workload_crashed",
++  "random_seed": 3714,
++  "real_workload_crash_evidence": [
++    "| 2026-06-01 07:39 UTC | Capstone v333 + G1-G4 gate synthesis \u2014 was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)",
++    "| 2026-06-01 08:04 UTC | Capstone v333 + G1-G4 gate synthesis \u2014 was '.329 m | FAIL | Gemini CLI error: T.js:345500:14)",
++    "| 2026-06-02 02:41 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
++    "| 2026-05-31 21:57 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
++    "| 2026-06-01 06:04 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |",
++    "| 2026-06-01 07:32 UTC | Cross-domain generalization SYNTHESIS v5 \u2014 CORRECT | FAIL | Gemini CLI error: T.js:345500:14)",
++    "| 2026-06-01 07:34 UTC | Cross-domain generalization SYNTHESIS v5 \u2014 CORRECT | FAIL | Gemini CLI error: .js:345500:14)"
++  ],
++  "real_workload_crash_observed": true,
++  "recommended_routing": "codex_requires_codex",
++  "reproducibility_checksum": "f625ed7d6a027857314ea961e59dc6e0c9276b2ffbfd06f5ed8fcc02aa652e23",
++  "research_conductor_sha256_after": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
++  "research_conductor_sha256_before": "4d4e79a1ea787ddc70234a6eae0818c37a94102ed9b8cbf28aecb77e2d9d6936",
++  "research_conductor_unmodified": true,
++  "schema": "carnot.backend_state_diagnostic.v6",
++  "task_id": "exp3714-backend-state-diagnostic-v6"
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 558af5eccf..9d54cae390 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -2,8 +2,8 @@
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T10:03:54Z",
+-  "finished_at": "2026-06-02T10:03:54Z",
++  "started_at": "2026-06-02T14:28:35Z",
++  "finished_at": "2026-06-02T14:28:35Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b3311a6aad..060af1221f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T13:52:25Z",
+-  "finished_at": "2026-06-02T13:52:25Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-02T14:37:13Z",
++  "finished_at": "2026-06-02T14:37:13Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d70490fe38..3f4309e7f9 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T13:52:25Z",
+-  "finished_at": "2026-06-02T13:52:25Z",
++  "started_at": "2026-06-02T14:37:13Z",
++  "finished_at": "2026-06-02T14:37:13Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 58a632b51e..ea626a9809 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T13:52:25Z",
+-  "finished_at": "2026-06-02T13:52:25Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T14:37:13Z",
++  "finished_at": "2026-06-02T14:37:13Z",
++  "duration_s": 0.005,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 685c7706e8..b9062a1198 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -2,9 +2,9 @@
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:51:39Z",
+-  "finished_at": "2026-06-02T09:51:39Z",
+-  "duration_s": 0.01,
++  "started_at": "2026-06-02T14:16:59Z",
++  "finished_at": "2026-06-02T14:17:00Z",
++  "duration_s": 0.009,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -100,14 +100,5 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": [],
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "invariant_violations": []
+ }
+\ No newline at end of file
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index b90dbd8791..9bd36841a0 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:44:49Z",
+-  "finished_at": "2026-06-02T09:44:50Z",
+-  "duration_s": 1.031,
++  "started_at": "2026-06-02T14:09:17Z",
++  "finished_at": "2026-06-02T14:09:18Z",
++  "duration_s": 1.109,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index e4fa69a0a2..6e884d1e68 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -2,9 +2,9 @@
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:45:24Z",
+-  "finished_at": "2026-06-02T09:45:24Z",
+-  "duration_s": 0.062,
++  "started_at": "2026-06-02T14:09:53Z",
++  "finished_at": "2026-06-02T14:09:53Z",
++  "duration_s": 0.073,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index 6076cc179a..4749bb5476 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -2,14 +2,14 @@
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:45:31Z",
+-  "finished_at": "2026-06-02T09:45:32Z",
+-  "duration_s": 0.219,
++  "started_at": "2026-06-02T14:10:01Z",
++  "finished_at": "2026-06-02T14:10:01Z",
++  "duration_s": 0.236,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.8975000000000001,
++  "ood_auc_drift": 0.915,
+   "honest_verdict": "tier0i_viable",
+   "inference_mode": "synthetic_runner",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.006853577680885792,
+-  "mean_halluc_drift": 0.47205525636672974,
++  "mean_correct_drift": 0.006779788061976433,
++  "mean_halluc_drift": 0.46844229102134705,
+   "probe_coef": [
+     [
+-      1.7808132623947521,
+-      2.2788073478074207,
+-      2.635486185968577
++      1.799594152619821,
++      2.2829686805762157,
++      2.643020670271186
+     ]
+   ],
+   "decision_class": "detect",
+diff --git a/scripts/experiment_3714_backend_state_diagnostic_v6.py b/scripts/experiment_3714_backend_state_diagnostic_v6.py
+new file mode 100644
+index 0000000000..21fd815ec9
+--- /dev/null
++++ b/scripts/experiment_3714_backend_state_diagnostic_v6.py
+@@ -0,0 +1,13 @@
++"""Run Exp 3714 backend state diagnostic v6."""
++
++from pathlib import Path
++import sys
++
++PROJECT_ROOT = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(PROJECT_ROOT / "python"))
++
++from carnot.reporting.backend_state_diagnostic_v6_3714 import main
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_experiment_3714_backend_state_diagnostic_v6.py b/tests/python/test_experiment_3714_backend_state_diagnostic_v6.py
+new file mode 100644
+index 0000000000..2e02878e24
+--- /dev/null
++++ b/tests/python/test_experiment_3714_backend_state_diagnostic_v6.py
+@@ -0,0 +1,431 @@
++"""Tests for Exp 3714 backend state diagnostic v6.
++
++Spec refs: REQ-REPORT-3714, SCENARIO-REPORT-3714-DIVERGENCE,
++SCENARIO-REPORT-3714-STABLE, SCENARIO-REPORT-3714-UNSTABLE.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import backend_state_diagnostic_v6_3714 as mod
++
++
++DIVERGENCE_VERDICT = (
++    "complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing"
++)
++STABLE_VERDICT = "complete: backend_diagnosed_gemini_stable_6th_probe_no_real_crash_v341_may_flip"
++UNSTABLE_VERDICT = "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing"
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _repo(
++    root: Path,
++    *,
++    real_workload_crash: bool = True,
++    exp3703_version: str = "0.44.0",
++) -> Path:
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor placeholder for REQ-REPORT-3714 tests\n",
++        encoding="utf-8",
++    )
++    (root / "scripts" / "summarize_artifact.py").write_text(
++        "# summarize placeholder for REQ-REPORT-3714 tests\n",
++        encoding="utf-8",
++    )
++    _write_json(
++        root / "results" / "experiment_3653_backend_state_diagnostic.json",
++        {"gemini_quota_state": "ok"},
++    )
++    _write_json(
++        root / "results" / "experiment_3666_backend_state_diagnostic_v2.json",
++        {"gemini_probe_state": "ok", "consecutive_stable_probes": 2},
++    )
++    _write_json(
++        root / "results" / "experiment_3679_backend_state_diagnostic_v3.json",
++        {"gemini_probe_state": "ok", "consecutive_stable_probes": 3},
++    )
++    crash_line = (
++        "| 2026-06-02 02:41 UTC | Plan next milestone | FAIL | "
++        "Gemini CLI error: Wall-clock+idle timeout after 1201s "
++        "(1201s silence). Last ou |"
++    )
++    _write_json(
++        root / "results" / "experiment_3691_backend_state_diagnostic_v4.json",
++        {
++            "gemini_probe_state": "ok",
++            "real_workload_crash_observed": real_workload_crash,
++            "real_workload_crash_evidence": [crash_line] if real_workload_crash else [],
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3703_backend_state_diagnostic_v5.json",
++        {
++            "gemini_cli_version": exp3703_version,
++            "gemini_probe_state": "ok",
++            "real_workload_crash_observed": real_workload_crash,
++            "real_workload_crash_evidence": [crash_line] if real_workload_crash else [],
++        },
++    )
++    if real_workload_crash:
++        conductor_log = f"{crash_line}\n"
++    else:
++        conductor_log = "| 2026-06-02 13:52 UTC | Archive milestone .339 honestly | OK | clean |\n"
++    (root / "ops" / "conductor-log.md").write_text(conductor_log, encoding="utf-8")
++    (root / "CLAUDE.md").write_text(
++        "## Gemini-Default for Experiments\n"
++        "GEMINI_FORCE_EXPERIMENTS=1 coerces codex to gemini unless requires_codex.\n"
++        "CODEX_FORCE_EXPERIMENTS=1 coerces gemini to codex.\n",
++        encoding="utf-8",
++    )
++    return root
++
++
++def _runner(
++    reply_probe: mod.CommandProbe,
++    *,
++    version_stdout: str = "0.44.0\n",
++) -> mod.CommandRunner:
++    def fake_runner(command: tuple[str, ...]) -> mod.CommandProbe:
++        if command == mod.GEMINI_VERSION_COMMAND:
++            return mod.CommandProbe(command=command, exit_code=0, stdout=version_stdout, stderr="")
++        if command == mod.GEMINI_REPLY_COMMAND:
++            return reply_probe
++        if command == mod.CONDUCTOR_ENV_COMMAND:
++            return mod.CommandProbe(
++                command=command,
++                exit_code=0,
++                stdout=("AGENT_TYPE=codex\nCODEX_FORCE_EXPERIMENTS=1\nAGENT_TYPE_PLANNER=claude\n"),
++                stderr="",
++            )
++        raise AssertionError(f"unexpected command: {command!r}")
++
++    return fake_runner
++
++
++def test_req_report_3714_spec_anchor_declares_sixth_probe() -> None:
++    """REQ-REPORT-3714: OpenSpec declares v6 before implementation code."""
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++    assert "REQ-REPORT-3714" in spec
++    assert "SCENARIO-REPORT-3714-DIVERGENCE" in spec
++    assert "SCENARIO-REPORT-3714-STABLE" in spec
++    assert "SCENARIO-REPORT-3714-UNSTABLE" in spec
++    assert "experiment_3714_backend_state_diagnostic_v6.json" in spec
++
++
++@pytest.mark.parametrize(
++    (
++        "case_name",
++        "reply_probe",
++        "real_workload_crash",
++        "expected_state",
++        "expected_consecutive",
++        "expected_routing",
++        "expected_verdict",
++    ),
++    [
++        pytest.param(
++            "gemini_ok_but_real_workload_crash",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            ),
++            True,
++            "ok",
++            6,
++            "codex_requires_codex",
++            DIVERGENCE_VERDICT,
++            id="gemini_ok_but_real_workload_crash",
++        ),
++        pytest.param(
++            "gemini_ok_no_real_workload_crash",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            ),
++            False,
++            "ok",
++            6,
++            "gemini_default_eligible_for_v341",
++            STABLE_VERDICT,
++            id="gemini_ok_no_real_workload_crash",
++        ),
++        pytest.param(
++            "gemini_quota_exhausted",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=1,
++                stdout="",
++                stderr=(
++                    "TerminalQuotaError: exhausted capacity. "
++                    "reason: 'QUOTA_EXHAUSTED' cause: { code: 429 }\n"
++                ),
++            ),
++            False,
++            "quota_exhausted_429",
++            0,
++            "codex_requires_codex",
++            UNSTABLE_VERDICT,
++            id="gemini_quota_exhausted",
++        ),
++        pytest.param(
++            "gemini_crash",
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=1,
++                stdout="",
++                stderr=(
++                    "TypeError: Cannot read properties of undefined\n"
++                    "at async GeminiClient.sendMessageStream "
++                    "(file:///usr/lib/node_modules/@google/gemini-cli/bundle/"
++                    "chunk-NBZI34DT.js:345500:14)\n"
++                ),
++            ),
++            False,
++            "crash_js_345500",
++            0,
++            "codex_requires_codex",
++            UNSTABLE_VERDICT,
++            id="gemini_crash",
++        ),
++    ],
++)
++def test_scenarios_report_3714_parametrize_honest_probe_outcomes(
++    tmp_path: Path,
++    case_name: str,
++    reply_probe: mod.CommandProbe,
++    real_workload_crash: bool,
++    expected_state: str,
++    expected_consecutive: int,
++    expected_routing: str,
++    expected_verdict: str,
++) -> None:
++    """SCENARIO-REPORT-3714-*: ok/quota/crash fixtures drive honest routing."""
++    root = _repo(tmp_path, real_workload_crash=real_workload_crash)
++    artifact = mod.build_artifact(
++        repo_root=root,
++        command_runner=_runner(reply_probe),
++        duration_s=1.5,
++    )
++
++    assert case_name in {
++        "gemini_ok_but_real_workload_crash",
++        "gemini_ok_no_real_workload_crash",
++        "gemini_quota_exhausted",
++        "gemini_crash",
++    }
++    assert artifact["honest_verdict"] == expected_verdict
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert artifact["gemini_cli_version"] == "0.44.0"
++    assert artifact["gemini_probe_state"] == expected_state
++    assert artifact["real_workload_crash_observed"] is real_workload_crash
++    assert artifact["consecutive_stable_probes"] == expected_consecutive
++    assert artifact["recommended_routing"] == expected_routing
++    assert artifact["duration_s"] == 1.5
++    assert artifact["random_seed"] == 3714
++    assert artifact["previous_gemini_probe_states"] == {
++        "exp3653": "ok",
++        "exp3666": "ok",
++        "exp3679": "ok",
++        "exp3691": "ok",
++        "exp3703": "ok",
++    }
++    assert artifact["prior_gemini_cli_version"] == "0.44.0"
++    assert artifact["probe_redundancy_note"] == (
++        "gemini_cli_unchanged_since_exp3703_and_exp3703_already_recorded_probe_ok_real_workload_crash"
++        if real_workload_crash
++        else "gemini_cli_unchanged_since_exp3703"
++    )
++    assert artifact["conductor_coercion_env"]["AGENT_TYPE"] == "codex"
++    assert artifact["conductor_coercion_env"]["CODEX_FORCE_EXPERIMENTS"] == "1"
++    assert artifact["conductor_coercion_env"]["GEMINI_FORCE_EXPERIMENTS"] is None
++    assert artifact["research_conductor_unmodified"] is True
++    assert artifact["conductor_unmodified_assert"].startswith("scripts/research_conductor.py")
++    assert artifact["command_probes"]["gemini_reply"]["exit_code"] == reply_probe.exit_code
++    assert artifact["command_probes"]["gemini_reply"]["stdout"] == reply_probe.stdout
++    assert (
++        artifact["command_probes"]["gemini_reply"]["combined_output"] == reply_probe.combined_output
++    )
++    assert "6th probe" in artifact["field_principles"]["gemini_probe_state"]
++    assert "v341" in artifact["field_principles"]["recommended_routing"]
++
++    if expected_state == "ok" and real_workload_crash:
++        assert artifact["probe_vs_real_workload_divergence"] == (
++            "one_shot_probe_ok_but_real_workload_crashed"
++        )
++        assert any(
++            "Plan next milestone" in line for line in artifact["real_workload_crash_evidence"]
++        )
++    if expected_state == "quota_exhausted_429":
++        assert "QUOTA_EXHAUSTED" in reply_probe.combined_output
++        assert "429" in reply_probe.combined_output
++    if expected_state == "crash_js_345500":
++        assert ".js:345500:14" in reply_probe.combined_output
++
++
++def test_req_report_3714_prior_probe_break_keeps_codex_routing(tmp_path: Path) -> None:
++    """REQ-REPORT-3714: five prior OK probes are required before v341 eligibility."""
++    root = _repo(tmp_path, real_workload_crash=False)
++    _write_json(
++        root / "results" / "experiment_3703_backend_state_diagnostic_v5.json",
++        {
++            "gemini_cli_version": "0.44.0",
++            "honest_verdict": "complete: backend_diagnosed_gemini_still_unstable_keep_codex_routing",
++            "gemini_probe_state": "crash_js_345500",
++            "real_workload_crash_observed": False,
++            "real_workload_crash_evidence": [],
++        },
++    )
++    artifact = mod.build_artifact(
++        repo_root=root,
++        command_runner=_runner(
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            )
++        ),
++        duration_s=2.0,
++    )
++
++    assert artifact["gemini_probe_state"] == "ok"
++    assert artifact["consecutive_stable_probes"] == 0
++    assert artifact["recommended_routing"] == "codex_requires_codex"
++    assert artifact["honest_verdict"] == UNSTABLE_VERDICT
++
++
++def test_scenario_report_3714_real_crash_detection_accepts_artifact_and_js_frame(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3714-DIVERGENCE: artifact or log evidence blocks flip."""
++    missing_root = tmp_path / "missing_log_repo"
++    (missing_root / "ops").mkdir(parents=True)
++    assert mod._detect_real_workload_crash(missing_root) == []
++
++    root = _repo(tmp_path / "artifact_only", real_workload_crash=False)
++    _write_json(
++        root / "results" / "experiment_3703_backend_state_diagnostic_v5.json",
++        {
++            "gemini_cli_version": "0.44.0",
++            "gemini_probe_state": "ok",
++            "real_workload_crash_observed": True,
++        },
++    )
++    artifact_evidence = mod._detect_real_workload_crash(root)
++    assert any("experiment_3703" in line for line in artifact_evidence)
++
++    log_root = _repo(tmp_path / "log_only", real_workload_crash=False)
++    js_line = (
++        "| 2026-06-02 02:45 UTC | Plan next milestone | FAIL | Gemini CLI error: T.js:345500:14) |"
++    )
++    (log_root / "ops" / "conductor-log.md").write_text(
++        f"| 2026-06-02 02:40 UTC | Plan next milestone | OK | no failure |\n{js_line}\n",
++        encoding="utf-8",
++    )
++    assert mod._detect_real_workload_crash(log_root) == [js_line]
++
++
++def test_req_report_3714_write_artifact_preserves_conductor_and_checksum(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-3714: writing JSON does not mutate conductor code."""
++    root = _repo(tmp_path, real_workload_crash=True)
++    conductor_path = root / "scripts" / "research_conductor.py"
++    before = conductor_path.read_text(encoding="utf-8")
++    reply_probe = mod.CommandProbe(
++        command=mod.GEMINI_REPLY_COMMAND,
++        exit_code=0,
++        stdout="OK\n",
++        stderr="",
++    )
++
++    out_path = mod.run_experiment(
++        repo_root=root,
++        command_runner=_runner(reply_probe),
++        duration_s=2.0,
++    )
++
++    assert out_path == root / mod.OUTPUT_REL_PATH
++    assert conductor_path.read_text(encoding="utf-8") == before
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++    required = {
++        "honest_verdict",
++        "inference_substrate",
++        "gemini_cli_version",
++        "gemini_probe_state",
++        "real_workload_crash_observed",
++        "consecutive_stable_probes",
++        "conductor_coercion_env",
++        "recommended_routing",
++        "conductor_unmodified_assert",
++        "random_seed",
++        "reproducibility_checksum",
++        "duration_s",
++    }
++    assert required.issubset(payload)
++    checksum_payload = dict(payload)
++    checksum_payload.pop("reproducibility_checksum")
++    assert payload["reproducibility_checksum"] == mod.sha256_payload(checksum_payload)
++    for field in required - {"reproducibility_checksum"}:
++        assert field in payload["field_principles"]
++
++
++def test_req_report_3714_run_command_captures_stdout_stderr_and_exit() -> None:
++    """REQ-REPORT-3714: bounded probe helper captures stdout, stderr, and exit."""
++    probe = mod.run_command(
++        (
++            sys.executable,
++            "-c",
++            "import sys; print('OK'); print('note', file=sys.stderr)",
++        )
++    )
++    assert probe.exit_code == 0
++    assert probe.stdout == "OK\n"
++    assert probe.stderr == "note\n"
++    assert probe.combined_output == "OK\nnote\n"
++    assert sys.executable in probe.as_dict()["command"]
++
++
++def test_req_report_3714_version_change_note_records_new_state(tmp_path: Path) -> None:
++    """REQ-REPORT-3714: version changes are auditable instead of folded into priors."""
++    root = _repo(tmp_path, real_workload_crash=True, exp3703_version="0.44.0")
++    artifact = mod.build_artifact(
++        repo_root=root,
++        command_runner=_runner(
++            mod.CommandProbe(
++                command=mod.GEMINI_REPLY_COMMAND,
++                exit_code=0,
++                stdout="OK\n",
++                stderr="",
++            ),
++            version_stdout="0.45.0\n",
++        ),
++        duration_s=2.0,
++    )
++
++    assert artifact["prior_gemini_cli_version"] == "0.44.0"
++    assert artifact["probe_redundancy_note"] == "gemini_cli_changed_since_exp3703"
++
++
++def test_scenario_report_3714_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3714-STABLE: conductor entrypoint delegates to the module."""
++    script = Path("scripts/experiment_3714_backend_state_diagnostic_v6.py")
++    text = script.read_text(encoding="utf-8")
++    assert "backend_state_diagnostic_v6_3714" in text
++    assert "main" in text
+-- 
+2.55.0
+

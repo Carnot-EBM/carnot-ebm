@@ -1,0 +1,33 @@
+From ce79188f80a619c6d822d1f9e081353f1c9b486a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 04:36:18 -0400
+Subject: [PATCH 01104/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-state.json     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6673c75e10..fde6da60f5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2084558, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-10T08:35:06Z"}
+\ No newline at end of file
++{"pid": 2085900, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-10T08:36:17Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 3f77b09b7b..5fbc07ae2c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2084558, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-10T08:35:06Z"}
+\ No newline at end of file
++{"pid": 2085900, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-10T08:36:17Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

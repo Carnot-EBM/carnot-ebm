@@ -1,0 +1,84 @@
+From 3f478e74acb1d9682b3344c65595d5bdc6af05c8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 22:07:30 -0400
+Subject: [PATCH 00068/11171] [conductor] Operational retrospective for
+ milestone 2026.06.337
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/research-log.md                       |  6 ++++++
+ ops/changelog.md                           |  8 ++++++++
+ results/operational_retro_2026_06_337.json | 21 +++++++++++++++++++++
+ 3 files changed, 35 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_337.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 2cd01c0201..705b64dce9 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -4915,3 +4915,9 @@ The critical path for milestone .250:
+ - theme: Operational Retrospective
+ - key result: Honest negative: no experiment commits found since activation of 2026.06.335.
+ - acceptance: 0/0 criteria met
++
++### Milestone 2026.06.337
++- exp_range: no data available this milestone
++- theme: Operational Retrospective
++- key result: Honest negative: no experiment commits found since activation of 2026.06.337.
++- acceptance: 0/0 criteria met
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 584342fb92..ac7766eb51 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -1,5 +1,9 @@
+ # Carnot — Changelog
+ 
++## 2026-06-02 (Milestone 2026.06.337 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_337.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: no data available this milestone.
++
+ ## 2026-06-01 (Milestone 2026.06.337 Research Planning — outer-loop Claude Opus 4.8)
+ 
+ - [outer-loop] Planned milestone `2026.06.337` ("PROMOTE the headline + SCOPE the product honestly") after all `.336` tasks completed. Triggered by the `.336` outcomes: dependency-aware ensemble weighting beat Carnot clean + de-tautologized (exp3667: AUROC 0.9332 vs 0.9194) AND generalized held-out (exp3668 → "headline_re_freeze_candidate_for_v337"); facts genuinely domain-bound on REAL RAGTruth (exp3670, facts-generalization RETIRED); ensemble adds NO best-of-N selection value even with headroom (exp3672, earned-negative); detector shipped math-strong/code-blind (exp3671, code AUROC 0.5); paper_ready stayed TRUE (exp3677).
+@@ -858,6 +862,10 @@
+ - Milestone 2026.05.207 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.207. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+ # Carnot — Changelog
+ 
++## 2026-06-02 (Milestone 2026.06.337 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_337.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: no data available this milestone.
++
+ ## 2026-05-17 (Milestone 2026.05.216 Operational Retrospective)
+ 
+ - Milestone 2026.05.216 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.216. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+diff --git a/results/operational_retro_2026_06_337.json b/results/operational_retro_2026_06_337.json
+new file mode 100644
+index 0000000000..b127fd0053
+--- /dev/null
++++ b/results/operational_retro_2026_06_337.json
+@@ -0,0 +1,21 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.337",
++  "generated_at": "2026-06-02T02:05:44Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "No experiment commits found since activation. Consequently, no compute-bound runtimes, GPU utilization, or bottlenecks can be assessed.",
++  "bottlenecks_identified": [],
++  "improvements_suggested": [
++    "no data available this milestone"
++  ],
++  "top_3_highest_leverage_actions": [
++    "no data available this milestone"
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "As no experiments were executed in this milestone, there is no operational data to reflect upon."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

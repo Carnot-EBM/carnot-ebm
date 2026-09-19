@@ -1,0 +1,2020 @@
+From cd4f7bef8864dca581dce829c6169841e0963de6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 13:38:23 -0400
+Subject: [PATCH 01295/11171] [conductor] Capstone .374 (UNGATED): the
+ milestone's headline question is DID THE VERIFIER TRANSFER SIGNIFICANTLY
+ OFF-ARC (CI now excludes zero?), AND IS THE SEARCH LAYER SALVAGEABLE WITH
+ CLOSED-LOOP GROUNDING? Aggregate: G1 VERIFIER-POWER = exp4045 (does the
+ off-ARC demo-fit CI EXCLUDE zero at full HumanEval+MBPP, or does a stronger
+ discriminator close it, or is the magnitude honestly small?); G2
+ ROBUST-PLANNING = exp4046 (did closed-loop per-step grounding break vc33's
+ wall where open-loop exploited the WM and failed -- closed_loop_broke_wall +
+ per_step_wm_real_divergence_rate?); G3 DECENTRALIZATION = exp4048 (did the
+ MoE base beat the 0.2581 12B ceiling -- latent vs absent vs
+ retired-non-measurement?); ACCURACY = exp4049 (total_games_solved);
+ SELF-LEARNING = exp4050 (cross_game_transfer_win); HARDWARE = exp4052 (kv260
+ terminal?). Honest verdict. SKIP any flagged_adversarial artifact; cite
+ upstream sha256. NO gated_on -- aggregate whatever exists.
+
+Automated research step by research conductor.
+Task ID: exp4053-capstone-v374
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/capstone/spec.md        |   2 +
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/reporting/capstone_v374_4053.py | 719 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  38 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ results/experiment_4053_capstone_v374.json    | 360 +++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ scripts/experiments/exp4053_capstone_v374.py  |  19 +
+ .../test_experiment_4053_capstone_v374.py     | 437 +++++++++++
+ 27 files changed, 1591 insertions(+), 54 deletions(-)
+ create mode 100644 python/carnot/reporting/capstone_v374_4053.py
+ create mode 100644 results/experiment_4053_capstone_v374.json
+ create mode 100644 scripts/experiments/exp4053_capstone_v374.py
+ create mode 100644 tests/python/test_experiment_4053_capstone_v374.py
+
+diff --git a/openspec/capabilities/capstone/spec.md b/openspec/capabilities/capstone/spec.md
+index 3601627d53..3b185dd734 100644
+--- a/openspec/capabilities/capstone/spec.md
++++ b/openspec/capabilities/capstone/spec.md
+@@ -31,3 +31,5 @@
+ - SCENARIO-CAPSTONE-4028: The capstone artifact must emit bare top-level fields for `honest_verdict`, `pivot_central_bet_advanced`, `new_levels_this_milestone`, `inference_substrate`, `planning_result`, `search_vs_representation_diagnosis`, `decentralization_branch_taken`, `selection_retirement`, `accuracy_memory_efficiency_deltas`, `cited_upstream_artifacts`, and `flagged_artifacts_skipped`, with the planning result defined from exp4021 real-env-confirmed search progress and exp4024 game progress, the decentralization branch imported only from a clean exp4022 artifact otherwise reported as skipped, selection retirement defined from exp4023, memory delta from exp4025 action counts, efficiency delta from exp4026 wall-clock/token ratios, and `pivot_central_bet_advanced` true only when clean search over the verified simulator solves at least one new level past the prior planning wall.
+ - REQ-CAPSTONE-4041: The .373 capstone must summarize every existing upstream artifact from exp4029 through exp4040 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` before importing metrics, cite every included upstream artifact by sha256, and honestly convert the milestone's three open arguments into measurements: G1 verifier off-ARC generality, G2 search-layer generalization past r11l, and G3 sovereign stronger-base scaling.
+ - SCENARIO-CAPSTONE-4041: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, bare boolean `verifier_generalized_off_arc`, bare boolean `search_layer_generalized`, `decentralization_diagnosis`, bare integer `total_games_solved`, `flagged_artifacts_skipped`, `cited_upstream_artifacts`, and `inference_substrate`, with G1 defined from exp4032 off-ARC transfer outcome and CI, G2 defined from exp4035 `search_layer_generalizes`, `heuristic_was_non_bespoke`, and `nodes_expanded` for vc33, G3 defined from exp4037 stronger-base coverage relative to the 0.2581 baseline and latent/absent diagnosis, and the accuracy/self-learning/hardware deltas imported from clean exp4038, exp4039, and exp4040.
++- REQ-CAPSTONE-4053: The .374 capstone must summarize every final upstream artifact from exp4042 through exp4052 through `scripts/summarize_artifact.py`, skip every artifact stamped `flagged_adversarial:true` before importing metrics, cite every included upstream artifact by sha256, and honestly decide whether G1 off-ARC transfer, G2 closed-loop search grounding, and G3 tractable decentralization are decision-grade measurements.
++- SCENARIO-CAPSTONE-4053: The capstone artifact must emit principle-annotated top-level fields for `honest_verdict`, bare boolean `verifier_transferred_off_arc_significantly`, bare boolean `search_layer_salvageable_closed_loop`, `decentralization_diagnosis`, bare integer `total_games_solved`, `flagged_artifacts_skipped`, `cited_upstream_artifacts`, and `inference_substrate`, with G1 defined from exp4045 demo-fit CI, full-power task floor, and best arm; G2 defined from exp4046 `closed_loop_broke_wall`, `per_step_wm_real_divergence_rate`, and `real_env_confirmed` for vc33; G3 defined from exp4048 MoE-base coverage against 0.2581 and latent/absent/uninformative/retired diagnosis; and accuracy, self-learning, and hardware deltas imported from clean exp4049, exp4050, and exp4052.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a9828c5a76..5aeeb0ac4c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3083,
++  "experiments_checked": 3084,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/capstone_v374_4053.py b/python/carnot/reporting/capstone_v374_4053.py
+new file mode 100644
+index 0000000000..ca9c4f4c44
+--- /dev/null
++++ b/python/carnot/reporting/capstone_v374_4053.py
+@@ -0,0 +1,719 @@
++"""Build the Exp 4053 v374 decision-grade measurement capstone.
++
++Spec refs: REQ-CAPSTONE-4053, SCENARIO-CAPSTONE-4053.
++
++The .374 milestone asks whether three .373 arguments became decision-grade
++measurements. Positive outcomes are not required: a clean negative, a
++closed-loop ceiling, or a retired non-measurement must be preserved as the
++headline instead of being rounded into a win.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_4053_capstone_v374.json")
++EXPERIMENT_ID = 4053
++RANDOM_SEED = 4053
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++PYTHON_BIN = Path(".venv/bin/python")
++BASELINE_12B_COVERAGE = 0.2581
++MOE_TASK_FLOOR = 30
++
++UPSTREAM_IDS = (4042, 4043, 4044, 4045, 4046, 4047, 4048, 4049, 4050, 4051, 4052)
++DEFAULT_UPSTREAM_PATHS: Mapping[int, Path] = {
++    4042: Path("results/experiment_4042_archive_v373_activate_v374.json"),
++    4043: Path("results/experiment_4043_sota_ingestion_receipt.json"),
++    4044: Path("results/experiment_4044_offarc_transfer_power_build.json"),
++    4045: Path("results/experiment_4045_offarc_transfer_power.json"),
++    4046: Path("results/experiment_4046_closed_loop_replan_over_vc33_wm.json"),
++    4047: Path("results/experiment_4047_decentralization_moe_base_build.json"),
++    4048: Path("results/experiment_4048_decentralization_moe_base.json"),
++    4049: Path("results/experiment_4049_eighth_game_explore_first.json"),
++    4050: Path("results/experiment_4050_arcmemo_cross_game_transfer_v7.json"),
++    4051: Path("results/experiment_4051_verifier_registry_and_gaps_hygiene.json"),
++    4052: Path("results/experiment_4052_hardware_continuity.json"),
++}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "verifier_transferred_off_arc_significantly",
++    "search_layer_salvageable_closed_loop",
++    "decentralization_diagnosis",
++    "total_games_solved",
++    "flagged_artifacts_skipped",
++    "cited_upstream_artifacts",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefix verdict naming positive, negative, ceiling, retired, and skipped outcomes.",
++    "verifier_transferred_off_arc_significantly": (
++        "BARE BOOL - the operator TOP-PRIORITY question: does the off-ARC transfer CI exclude zero at full N?"
++    ),
++    "search_layer_salvageable_closed_loop": (
++        "BARE BOOL - the G2 question: did closed-loop grounding break vc33's wall in the real env?"
++    ),
++    "decentralization_diagnosis": (
++        "latent | absent | uninformative | retired_non_measurement | flagged_skipped - the G3 branch resolved."
++    ),
++    "total_games_solved": "BARE INT - the monotonic ARC accuracy counter after clean exp4049 evidence.",
++    "flagged_artifacts_skipped": "Upstreams excluded before metric import because flagged_adversarial or live critical.",
++    "cited_upstream_artifacts": "Included upstream experiment ids and sha256 provenance only.",
++    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
++}
++
++
++def is_sha256(value: object) -> bool:
++    """Return true when a value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Load a JSON object artifact; capstone inputs are field-addressed dicts."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} did not contain a JSON object")  # pragma: no cover - defensive guard.
++    return payload
++
++
++def sha256_file(path: Path) -> str:
++    """Hash an included upstream artifact for provenance."""
++
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def relative_to_root(root: Path, path: Path) -> str:
++    """Return a stable repository-relative path for audit fields."""
++
++    try:
++        return str(path.relative_to(root))
++    except ValueError:  # pragma: no cover - external root guard.
++        return str(path)
++
++
++def selected_upstream_paths(root: Path | str) -> dict[int, Path | None]:
++    """Select the intended final artifact for each .374 upstream id."""
++
++    root_path = Path(root)
++    return {
++        experiment_id: (path if (path := root_path / DEFAULT_UPSTREAM_PATHS[experiment_id]).exists() else None)
++        for experiment_id in UPSTREAM_IDS
++    }
++
++
++def run_summarize_artifact(root: Path, path: Path) -> JsonDict:
++    """Run the mandated disciplined reader before importing an upstream metric."""
++
++    command = [str(PYTHON_BIN), "scripts/summarize_artifact.py", str(path)]
++    completed = subprocess.run(
++        command,
++        cwd=root,
++        text=True,
++        capture_output=True,
++        check=False,
++    )
++    return {"returncode": completed.returncode, "stdout": completed.stdout, "stderr": completed.stderr}
++
++
++def summarize_existing_artifacts(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    supplied: Mapping[int, Mapping[str, Any]] | None,
++) -> dict[int, JsonDict]:
++    """Return summarize_artifact status for every upstream artifact that exists."""
++
++    statuses: dict[int, JsonDict] = {}
++    for experiment_id, path in paths.items():
++        if path is None:
++            continue
++        if supplied is not None and experiment_id in supplied:
++            statuses[experiment_id] = dict(supplied[experiment_id])
++        else:
++            statuses[experiment_id] = run_summarize_artifact(root, path)
++    return statuses
++
++
++def flagged(payload: Mapping[str, Any] | None) -> bool:
++    """Return whether an upstream carries the stamped adversarial flag."""
++
++    return isinstance(payload, Mapping) and payload.get("flagged_adversarial") is True
++
++
++def live_critical(summary: Mapping[str, Any] | None) -> bool:
++    """Return whether summarize_artifact.py observed a live critical concern."""
++
++    return isinstance(summary, Mapping) and summary.get("returncode") == 2
++
++
++def invoked(payload: Mapping[str, Any] | None) -> bool:
++    """Return false for missing, blocked, or pending upstream artifacts."""
++
++    verdict = str(payload.get("honest_verdict", "")) if isinstance(payload, Mapping) else ""
++    return bool(verdict) and not verdict.startswith(("blocked_", "blocked:")) and "pending_execution" not in verdict
++
++
++def bool_metric(payload: Mapping[str, Any] | None, field: str) -> bool:
++    """Extract a JSON boolean without truthifying numbers or strings."""
++
++    return isinstance(payload, Mapping) and payload.get(field) is True
++
++
++def int_metric(payload: Mapping[str, Any] | None, field: str) -> int:
++    """Extract an integer counter while rejecting booleans."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, int) and not isinstance(value, bool) else 0
++
++
++def float_metric(payload: Mapping[str, Any] | None, field: str) -> float:
++    """Extract a numeric metric while rejecting booleans and strings."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0.0
++
++
++def str_metric(payload: Mapping[str, Any] | None, field: str) -> str:
++    """Extract a string metric for audit fields."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    return value if isinstance(value, str) else ""
++
++
++def list_float_metric(payload: Mapping[str, Any] | None, field: str) -> list[float]:
++    """Extract a list of numeric CI endpoints while rejecting mixed content."""
++
++    value = payload.get(field) if isinstance(payload, Mapping) else None
++    if not isinstance(value, list):
++        return []
++    return [float(item) for item in value if isinstance(item, int | float) and not isinstance(item, bool)]
++
++
++def nested_int(payload: Mapping[str, Any] | None, path: tuple[str, ...]) -> int:
++    """Read a nested integer fallback without accepting booleans as counters."""
++
++    current: Any = payload
++    for key in path:
++        if not isinstance(current, Mapping):
++            return 0
++        current = current.get(key)
++    return current if isinstance(current, int) and not isinstance(current, bool) else 0
++
++
++def off_arc_transfer_report(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Build the G1 report from the clean exp4045 collect artifact."""
++
++    if was_skipped:
++        return {
++            "outcome": "skipped_flagged",
++            "n_tasks": 0,
++            "powered_task_floor": 0,
++            "full_power_reached": False,
++            "raw_artifact_present": False,
++            "partial_reason": "",
++            "demofit_delta_pp": 0.0,
++            "demofit_bootstrap_ci95": [],
++            "demofit_ci_excludes_zero": False,
++            "best_arm": "",
++            "best_arm_delta_pp": 0.0,
++            "best_arm_ci95": [],
++            "best_arm_ci_excludes_zero": False,
++            "oracle_passrate": 0.0,
++            "oracle_headroom": False,
++        }
++    if not invoked(payload):
++        report = off_arc_transfer_report({}, was_skipped=True)
++        report["outcome"] = "missing_or_blocked"
++        return report
++
++    n_tasks = int_metric(payload, "n_tasks")
++    powered_floor = int_metric(payload, "powered_task_floor")
++    full_power = powered_floor > 0 and n_tasks >= powered_floor
++    demofit_delta = float_metric(payload, "demofit_delta_pp")
++    demofit_excludes = bool_metric(payload, "demofit_ci_excludes_zero")
++    oracle_headroom = bool_metric(payload, "oracle_headroom")
++
++    if full_power and demofit_delta > 0.0 and demofit_excludes:
++        outcome = "significant_full_power"
++    elif not full_power:
++        outcome = "partial_or_incomplete"
++    elif not oracle_headroom:
++        outcome = "ceiling_saturated_no_headroom"
++    else:
++        outcome = "not_significant_full_power"
++
++    return {
++        "outcome": outcome,
++        "n_tasks": n_tasks,
++        "powered_task_floor": powered_floor,
++        "full_power_reached": full_power,
++        "raw_artifact_present": bool_metric(payload, "raw_artifact_present"),
++        "partial_reason": str_metric(payload, "partial_reason"),
++        "demofit_delta_pp": demofit_delta,
++        "demofit_bootstrap_ci95": list_float_metric(payload, "demofit_bootstrap_ci95"),
++        "demofit_ci_excludes_zero": demofit_excludes,
++        "best_arm": str_metric(payload, "best_arm"),
++        "best_arm_delta_pp": float_metric(payload, "best_arm_delta_pp"),
++        "best_arm_ci95": list_float_metric(payload, "best_arm_ci95"),
++        "best_arm_ci_excludes_zero": bool_metric(payload, "best_arm_ci_excludes_zero"),
++        "oracle_passrate": float_metric(payload, "oracle_passrate"),
++        "oracle_headroom": oracle_headroom,
++    }
++
++
++def closed_loop_grounding_report(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Build the G2 report from the clean exp4046 vc33 closed-loop artifact."""
++
++    if was_skipped:
++        clean = False
++        outcome = "skipped_flagged"
++    else:
++        clean = invoked(payload)
++        divergence = float_metric(payload, "per_step_wm_real_divergence_rate") if clean else 0.0
++        gate_count = int_metric(payload, "divergence_gate_fired_count") if clean else 0
++        if clean and bool_metric(payload, "closed_loop_broke_wall") and bool_metric(payload, "real_env_confirmed"):
++            outcome = "closed_loop_broke_wall"
++        elif clean and (divergence > 0.0 or gate_count > 0):
++            outcome = "closed_loop_ceiling_saturated_sim2real_divergence"
++        elif clean:
++            outcome = "closed_loop_no_break"
++        else:
++            outcome = "missing_or_blocked"
++
++    return {
++        "outcome": outcome,
++        "game": str_metric(payload, "game") if clean else "",
++        "closed_loop_broke_wall": clean and bool_metric(payload, "closed_loop_broke_wall"),
++        "per_step_wm_real_divergence_rate": float_metric(payload, "per_step_wm_real_divergence_rate") if clean else 0.0,
++        "divergence_gate_fired_count": int_metric(payload, "divergence_gate_fired_count") if clean else 0,
++        "real_env_confirmed": clean and bool_metric(payload, "real_env_confirmed"),
++        "new_levels_solved_this_task": int_metric(payload, "new_levels_solved_this_task") if clean else 0,
++        "levels_completed_after": int_metric(payload, "levels_completed_after") if clean else 0,
++        "degenerate_plan_refused": clean and bool_metric(payload, "degenerate_plan_refused"),
++        "bottleneck": str_metric(payload, "bottleneck") if clean else "",
++    }
++
++
++def decentralization_moe_report(payload: Mapping[str, Any] | None, *, was_skipped: bool) -> JsonDict:
++    """Build the G3 MoE-base decentralization report from exp4048."""
++
++    if was_skipped:
++        clean = False
++        diagnosis = "flagged_skipped"
++        outcome = "skipped_flagged"
++    else:
++        clean = invoked(payload)
++        if not clean:
++            diagnosis = "uninformative"
++            outcome = "missing_or_blocked"
++        else:
++            verdict = str_metric(payload, "honest_verdict")
++            n_tasks = int_metric(payload, "n_tasks_scored")
++            raw_complete = bool_metric(payload, "raw_complete")
++            observed = str_metric(payload, "local_support_diagnosis")
++            if "retire" in verdict or n_tasks < MOE_TASK_FLOOR:
++                diagnosis = "retired_non_measurement"
++                outcome = "retired_non_measurement"
++            elif observed == "uninformative":
++                diagnosis = "uninformative"
++                outcome = "uninformative_measurement"
++            elif observed in {"latent", "absent"}:
++                diagnosis = observed
++                outcome = "decision_grade_measurement"
++            else:
++                coverage = float_metric(payload, "moe_base_demo_perfect_coverage")
++                diagnosis = "latent" if raw_complete and coverage > BASELINE_12B_COVERAGE else "absent"
++                outcome = "decision_grade_measurement"
++
++    return {
++        "outcome": outcome,
++        "diagnosis": diagnosis,
++        "baseline_12b_coverage": BASELINE_12B_COVERAGE,
++        "moe_base_demo_perfect_coverage": float_metric(payload, "moe_base_demo_perfect_coverage") if clean else 0.0,
++        "coverage_delta_vs_12b": float_metric(payload, "coverage_delta_vs_12b") if clean else 0.0,
++        "bootstrap_ci95": list_float_metric(payload, "bootstrap_ci95") if clean else [],
++        "local_support_diagnosis": str_metric(payload, "local_support_diagnosis") if clean else "",
++        "n_tasks_scored": int_metric(payload, "n_tasks_scored") if clean else 0,
++        "measurement_task_floor": MOE_TASK_FLOOR,
++        "raw_complete": bool_metric(payload, "raw_complete") if clean else False,
++        "gated_pass_at_2": float_metric(payload, "gated_pass_at_2") if clean else 0.0,
++        "oracle_coverage": float_metric(payload, "oracle_coverage") if clean else 0.0,
++        "local_seconds_per_task": float_metric(payload, "local_seconds_per_task") if clean else 0.0,
++        "codex_seconds_per_task_reference": float_metric(payload, "codex_seconds_per_task_reference") if clean else 0.0,
++    }
++
++
++def accuracy_delta(
++    archive_payload: Mapping[str, Any] | None,
++    accuracy_payload: Mapping[str, Any] | None,
++) -> JsonDict:
++    """Build the ARC games-solved delta from exp4049 with archive fallback."""
++
++    prior = int_metric(accuracy_payload, "prior_total_games_solved") or nested_int(
++        archive_payload,
++        ("milestone_373_closestate", "accuracy", "total_games_solved"),
++    )
++    solved = invoked(accuracy_payload) and bool_metric(accuracy_payload, "game_solved") and bool_metric(
++        accuracy_payload,
++        "real_env_confirmed",
++    )
++    total = int_metric(accuracy_payload, "total_games_solved") if solved else prior
++    first_action = int_metric(accuracy_payload, "first_solve_at_action") if solved else 0
++    baseline_actions = int_metric(accuracy_payload, "candidate_baseline_actions") if solved else 0
++    return {
++        "prior_total_games_solved": prior,
++        "total_games_solved": total,
++        "games_solved_delta": max(0, total - prior) if solved else 0,
++        "game_solved": solved,
++        "target_game": str_metric(accuracy_payload, "target_game") if solved else "",
++        "real_env_confirmed": solved,
++        "candidate_baseline_actions": baseline_actions,
++        "first_solve_at_action": first_action,
++        "action_savings_vs_candidate_baseline": max(0, baseline_actions - first_action) if solved else 0,
++        "exploration_actions_used": int_metric(accuracy_payload, "exploration_actions_used") if solved else 0,
++    }
++
++
++def self_learning_delta(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Build the ArcMemo v7 cross-game transfer deltas from exp4050."""
++
++    clean = invoked(payload)
++    cold = int_metric(payload, "actions_cold") if clean else 0
++    within = int_metric(payload, "actions_within_game_v6") if clean else 0
++    cross = int_metric(payload, "actions_cross_game_v7") if clean else 0
++    cold_calls = int_metric(payload, "induction_calls_cold") if clean else 0
++    within_calls = int_metric(payload, "induction_calls_within_game_v6") if clean else 0
++    cross_calls = int_metric(payload, "induction_calls_cross_game_v7") if clean else 0
++    return {
++        "cross_game_transfer_win": clean and bool_metric(payload, "cross_game_transfer_win"),
++        "actions_cold": cold,
++        "actions_within_game_v6": within,
++        "actions_cross_game_v7": cross,
++        "action_savings_vs_cold": max(0, cold - cross) if clean and cross > 0 else 0,
++        "cross_game_extra_actions_vs_within_game_v6": cross - within if clean and cross > 0 and within > 0 else 0,
++        "induction_calls_cold": cold_calls,
++        "induction_calls_within_game_v6": within_calls,
++        "induction_calls_cross_game_v7": cross_calls,
++        "induction_call_savings_vs_cold": max(0, cold_calls - cross_calls) if clean else 0,
++        "n_prior_fragments": int_metric(payload, "n_prior_fragments") if clean else 0,
++        "n_named_abstractions": int_metric(payload, "n_named_abstractions") if clean else 0,
++        "n_reused_abstractions": int_metric(payload, "n_reused_abstractions") if clean else 0,
++        "transfer_assessment": str_metric(payload, "transfer_assessment") if clean else "",
++    }
++
++
++def hardware_delta(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Carry the exp4052 board-continuity state without making a speedup claim."""
++
++    reachability = payload.get("per_board_reachability") if isinstance(payload, Mapping) else None
++    terminal = payload.get("per_board_terminal_state") if isinstance(payload, Mapping) else None
++    clean = invoked(payload)
++    return {
++        "included": clean,
++        "kv260_overlay_loaded": clean and bool_metric(payload, "kv260_overlay_loaded"),
++        "kv260_latency_step_taken": clean and bool_metric(payload, "kv260_latency_step_taken"),
++        "kv260_latency_median_ms": float_metric(payload, "kv260_latency_median_ms") if clean else 0.0,
++        "kv260_latency_batch_ms": float_metric(payload, "kv260_latency_batch_ms") if clean else 0.0,
++        "speedup_claim_made": clean and bool_metric(payload, "speedup_claim_made"),
++        "fabric_acceleration_claimed": clean and bool_metric(payload, "fabric_acceleration_claimed"),
++        "per_board_reachability": dict(reachability) if isinstance(reachability, Mapping) and clean else {},
++        "per_board_terminal_state": dict(terminal) if isinstance(terminal, Mapping) and clean else {},
++    }
++
++
++def hygiene_report(payload: Mapping[str, Any] | None) -> JsonDict:
++    """Carry exp4051 registry and verifier-gap hygiene without changing gates."""
++
++    clean = invoked(payload)
++    return {
++        "included": clean,
++        "offline_reeval_bitexact": clean and bool_metric(payload, "offline_reeval_bitexact"),
++        "registry_updated": clean and bool_metric(payload, "registry_updated"),
++        "gaps_updated": clean and bool_metric(payload, "gaps_updated"),
++        "g1_off_arc_outcome_recorded": str_metric(payload, "g1_off_arc_outcome_recorded") if clean else "",
++        "g2_closed_loop_outcome_recorded": str_metric(payload, "g2_closed_loop_outcome_recorded") if clean else "",
++    }
++
++
++def flagged_artifacts_skipped(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    skipped_ids: set[int],
++) -> list[JsonDict]:
++    """Record upstreams excluded before any metric import."""
++
++    rows: list[JsonDict] = []
++    for experiment_id in sorted(skipped_ids):
++        path = paths[experiment_id]
++        reason = "flagged_adversarial:true" if flagged(upstreams[experiment_id]) else "summarize_artifact_live_critical"
++        rows.append(
++            {
++                "experiment_id": experiment_id,
++                "path": relative_to_root(root, path) if path is not None else "",
++                "reason": reason,
++            }
++        )
++        summaries.get(experiment_id)
++    return rows
++
++
++def cited_upstream_artifacts(paths: Mapping[int, Path | None], clean_ids: set[int]) -> list[JsonDict]:
++    """Build the required citation list of included upstream ids and sha256."""
++
++    return [
++        {"experiment_id": experiment_id, "sha256": sha256_file(path)}
++        for experiment_id in UPSTREAM_IDS
++        if experiment_id in clean_ids and (path := paths[experiment_id]) is not None
++    ]
++
++
++def missing_upstream_artifacts(paths: Mapping[int, Path | None]) -> list[JsonDict]:
++    """Record missing upstream artifacts without turning absence into a gate."""
++
++    return [{"experiment_id": experiment_id} for experiment_id in UPSTREAM_IDS if paths[experiment_id] is None]
++
++
++def upstream_artifact_state(
++    root: Path,
++    paths: Mapping[int, Path | None],
++    upstreams: Mapping[int, Mapping[str, Any] | None],
++    summaries: Mapping[int, Mapping[str, Any]],
++    skipped_ids: set[int],
++    clean_ids: set[int],
++) -> dict[str, JsonDict]:
++    """Expose inclusion state so skipped and missing inputs are auditable."""
++
++    state: dict[str, JsonDict] = {}
++    for experiment_id in UPSTREAM_IDS:
++        path = paths[experiment_id]
++        payload = upstreams[experiment_id]
++        state[str(experiment_id)] = {
++            "exists": path is not None,
++            "path": relative_to_root(root, path) if path is not None else "",
++            "honest_verdict": str(payload.get("honest_verdict")) if isinstance(payload, Mapping) else "missing",
++            "flagged_adversarial": flagged(payload),
++            "live_critical": live_critical(summaries.get(experiment_id)),
++            "included": experiment_id in clean_ids,
++            "skipped": experiment_id in skipped_ids,
++            "summarize_artifact_returncode": summaries.get(experiment_id, {}).get("returncode"),
++        }
++    return state
++
++
++def duration_from(started_s: float, now_s: float | None) -> float:
++    """Compute an honest aggregation duration with a small nonzero floor."""
++
++    end = time.perf_counter() if now_s is None else float(now_s)
++    return max(0.0001, end - started_s)
++
++
++def decision_grade_state(g1: Mapping[str, Any], g2: Mapping[str, Any], g3: Mapping[str, Any]) -> JsonDict:
++    """Separate measurement quality from whether the result was positive."""
++
++    g1_grade = bool(g1.get("full_power_reached"))
++    g2_grade = g2.get("outcome") in {
++        "closed_loop_broke_wall",
++        "closed_loop_ceiling_saturated_sim2real_divergence",
++        "closed_loop_no_break",
++    }
++    g3_grade = g3.get("outcome") in {"decision_grade_measurement", "uninformative_measurement"}
++    return {"G1": g1_grade, "G2": g2_grade, "G3": g3_grade, "all_three": g1_grade and g2_grade and g3_grade}
++
++
++def verdict(
++    *,
++    decisions: Mapping[str, Any],
++    g1_outcome: str,
++    g2_outcome: str,
++    g3_diagnosis: str,
++    transfer_positive: bool,
++    closed_loop_positive: bool,
++    total_games_solved: int,
++    memory_win: bool,
++    skipped_count: int,
++) -> str:
++    """Build the terminal-prefix .374 headline from measured outcomes."""
++
++    grade_text = "decision_grade_yes" if decisions.get("all_three") is True else "not_decision_grade"
++    g1_text = "significant" if transfer_positive else g1_outcome
++    g2_text = "salvaged" if closed_loop_positive else g2_outcome
++    memory_text = "arcmemo_v7_win" if memory_win else "arcmemo_v7_no_win"
++    return (
++        f"complete: capstone_v374_{grade_text}_"
++        f"G1_{g1_text}_G2_{g2_text}_G3_{g3_diagnosis}_"
++        f"games{total_games_solved}_{memory_text}_flagged_skipped{skipped_count}"
++    )
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a reproducibility checksum excluding the checksum field itself."""
++
++    stable = dict(payload)
++    stable.pop("reproducibility_checksum", None)
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the .374 capstone from landed upstream artifacts."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    paths = selected_upstream_paths(root_path)
++    summaries = summarize_existing_artifacts(root_path, paths, summary_statuses)
++    upstreams: dict[int, Mapping[str, Any] | None] = {
++        experiment_id: read_json_object(path) if path is not None else None
++        for experiment_id, path in paths.items()
++    }
++    skipped_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if flagged(payload) or live_critical(summaries.get(experiment_id))
++    }
++    clean_ids = {
++        experiment_id
++        for experiment_id, payload in upstreams.items()
++        if isinstance(payload, Mapping) and experiment_id not in skipped_ids
++    }
++    clean_upstreams = {experiment_id: upstreams[experiment_id] for experiment_id in clean_ids}
++
++    g1 = off_arc_transfer_report(clean_upstreams.get(4045), was_skipped=4045 in skipped_ids)
++    g2 = closed_loop_grounding_report(clean_upstreams.get(4046), was_skipped=4046 in skipped_ids)
++    g3 = decentralization_moe_report(clean_upstreams.get(4048), was_skipped=4048 in skipped_ids)
++    accuracy = accuracy_delta(clean_upstreams.get(4042), clean_upstreams.get(4049))
++    self_learning = self_learning_delta(clean_upstreams.get(4050))
++    hardware = hardware_delta(clean_upstreams.get(4052))
++    hygiene = hygiene_report(clean_upstreams.get(4051))
++    skipped = flagged_artifacts_skipped(root_path, paths, upstreams, summaries, skipped_ids)
++    decisions = decision_grade_state(g1, g2, g3)
++    transfer_positive = bool(g1["full_power_reached"]) and bool(g1["demofit_ci_excludes_zero"])
++    closed_loop_positive = bool(g2["closed_loop_broke_wall"]) and bool(g2["real_env_confirmed"])
++
++    artifact: JsonDict = {
++        "schema": "carnot.capstone_v374_4053.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "honest_verdict": verdict(
++            decisions=decisions,
++            g1_outcome=str(g1["outcome"]),
++            g2_outcome=str(g2["outcome"]),
++            g3_diagnosis=str(g3["diagnosis"]),
++            transfer_positive=transfer_positive,
++            closed_loop_positive=closed_loop_positive,
++            total_games_solved=int(accuracy["total_games_solved"]),
++            memory_win=bool(self_learning["cross_game_transfer_win"]),
++            skipped_count=len(skipped),
++        ),
++        "verifier_transferred_off_arc_significantly": transfer_positive,
++        "search_layer_salvageable_closed_loop": closed_loop_positive,
++        "decentralization_diagnosis": str(g3["diagnosis"]),
++        "total_games_solved": int(accuracy["total_games_solved"]),
++        "g1_off_arc_transfer": g1,
++        "g2_closed_loop_grounding": g2,
++        "g3_decentralization_moe_base": g3,
++        "decision_grade_measurements": decisions,
++        "accuracy_self_learning_hardware_deltas": {
++            "accuracy": accuracy,
++            "self_learning": self_learning,
++            "hardware": hardware,
++        },
++        "verifier_registry_and_gaps_hygiene": hygiene,
++        "flagged_artifacts_skipped": skipped,
++        "cited_upstream_artifacts": cited_upstream_artifacts(paths, clean_ids),
++        "missing_upstream_artifacts": missing_upstream_artifacts(paths),
++        "upstream_artifact_state": upstream_artifact_state(root_path, paths, upstreams, summaries, skipped_ids, clean_ids),
++        "summarize_artifact_status": {
++            str(experiment_id): {
++                "returncode": status.get("returncode"),
++                "stdout": status.get("stdout", ""),
++                "stderr": status.get("stderr", ""),
++            }
++            for experiment_id, status in summaries.items()
++        },
++        "duration_s": duration_from(start, now_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "random_seed": RANDOM_SEED,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the .374 fields that protect the honest headline."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")  # pragma: no cover - defensive guard.
++    verdict_text = str(artifact.get("honest_verdict", ""))
++    if not verdict_text.startswith(("complete:", "success:", "blocked_", "blocked:")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in ("verifier_transferred_off_arc_significantly", "search_layer_salvageable_closed_loop"):
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a bare bool")
++    allowed_diagnoses = {"latent", "absent", "uninformative", "retired_non_measurement", "flagged_skipped"}
++    if artifact.get("decentralization_diagnosis") not in allowed_diagnoses:
++        raise ValueError("decentralization_diagnosis must be latent, absent, uninformative, retired, or flagged_skipped")
++    if not isinstance(artifact.get("total_games_solved"), int) or isinstance(artifact.get("total_games_solved"), bool):
++        raise ValueError("total_games_solved must be a bare int")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    citations = artifact.get("cited_upstream_artifacts")
++    if not isinstance(citations, list):
++        raise ValueError("cited_upstream_artifacts must be a list")  # pragma: no cover - defensive guard.
++    for citation in citations:
++        if not isinstance(citation, Mapping):
++            raise ValueError("citation entries must be objects")  # pragma: no cover - defensive guard.
++        if set(citation) != {"experiment_id", "sha256"}:
++            raise ValueError("citation entries must contain experiment_id and sha256")  # pragma: no cover.
++        if not isinstance(citation.get("experiment_id"), int):
++            raise ValueError("citation entries need integer experiment_id")  # pragma: no cover - defensive guard.
++        if not is_sha256(citation.get("sha256")):
++            raise ValueError("citation entries need sha256")
++    if not isinstance(artifact.get("flagged_artifacts_skipped"), list):
++        raise ValueError("flagged_artifacts_skipped must be a list")
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")  # pragma: no cover - defensive guard.
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    summary_statuses: Mapping[int, Mapping[str, Any]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 4053 capstone artifact."""
++
++    root_path = Path(root)
++    artifact = build_artifact(
++        root_path,
++        summary_statuses=summary_statuses,
++        started_s=started_s,
++        now_s=now_s,
++    )
++    validate_artifact(artifact)
++    output = root_path / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index ba31c07c57..eb3bc6ac07 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T16:48:55.937481+00:00",
+-  "finished_at": "2026-06-11T16:48:55.960254+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-11T17:38:00.456633+00:00",
++  "finished_at": "2026-06-11T17:38:00.480476+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 2930b987f4..5330f2a612 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T16:48:56Z",
++  "run_date": "2026-06-11T17:38:00Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index a554def622..dafaa7b7ed 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T16:48:57Z",
+-  "finished_at": "2026-06-11T16:48:57Z",
++  "started_at": "2026-06-11T17:38:01Z",
++  "finished_at": "2026-06-11T17:38:01Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 6bcbf3cb8f..e23042d96b 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T16:48:57Z",
++  "run_date": "2026-06-11T17:38:01Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 35a7420376..6c4a3cf939 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-11T16:48:57Z",
++  "run_date": "2026-06-11T17:38:01Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 5d0603add7..44742b316b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T17:21:36.216076Z",
+-  "duration_s": 0.06611037254333496,
++  "run_date": "2026-06-11T17:36:36.199580Z",
++  "duration_s": 0.14904499053955078,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "76a2952b2cf80c8414059a73a53cfec6f203560b62b0b7631c8358a28a21c957",
++  "reproducibility_checksum": "84f397143540903ec1f818127386088d6c4e882a2c9caa9d8aec43743d53f23c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "66120523f154c4d6af3eb45793c8eb3732fb61aa"
++    "adversarial_verify_version": "033e224d2e2a901e3b57c0ead0c8c9bcaa7c1601"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 89c405608e..dab00568e6 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T17:21:36.287750Z",
+-  "duration_s": 0.05072283744812012,
++  "run_date": "2026-06-11T17:36:36.358990Z",
++  "duration_s": 0.10677027702331543,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "74b9909e2b80dc65f0eebcac004a5a1091fb0e60b3ca14eb6d574f8fdd2a5f44",
++  "reproducibility_checksum": "52d1e7dd5a37266f973d0dfcb226af7f01bf929c43105e866b29c5ef26d356fe",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "66120523f154c4d6af3eb45793c8eb3732fb61aa"
++    "adversarial_verify_version": "033e224d2e2a901e3b57c0ead0c8c9bcaa7c1601"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6b91c40e4b..ca826d70de 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1085739135742188,
++  "efficiency_gains_ms": 2.124309539794922,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 183cf3c97a..f4788dcb74 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.02745962142944336,
++  "duration_s": 0.02254509925842285,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 17086b73f7..889957202a 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-11T17:22:42Z",
++  "run_date": "2026-06-11T17:37:40Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 8bd90bf3c2..afe335e0fd 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000070810317993,
++  "duration_s": 5.0000855922698975,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index b8a1efe226..a7606398c2 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000094175338745,
++  "duration_s": 10.000096797943115,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 6770443fd8..7e70398229 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3459510803222656,
++  "duration_s": 0.2706489562988281,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 09f78ef8b5..05cc84d057 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.07644393004011363,
++  "duration_s": 0.05355095199774951,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index facfcb3157..c7dcf18c2e 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,11 +1,11 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_memory": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,20 +45,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 6bdee4ed0f..9a3b0ec713 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009396076202392578,
++  "duration_s": 0.0009398460388183594,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b2f3f59ab1..e3018f641d 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.656993456184864e-05,
++  "duration_s": 3.090791869908571e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 6c7fa84130..17b3e37765 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 1.2320233508944511e-06,
++  "duration_s": 6.209593266248703e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_4053_capstone_v374.json b/results/experiment_4053_capstone_v374.json
+new file mode 100644
+index 0000000000..94b3f5482f
+--- /dev/null
++++ b/results/experiment_4053_capstone_v374.json
+@@ -0,0 +1,360 @@
++{
++  "accuracy_self_learning_hardware_deltas": {
++    "accuracy": {
++      "action_savings_vs_candidate_baseline": 9,
++      "candidate_baseline_actions": 18,
++      "exploration_actions_used": 2,
++      "first_solve_at_action": 9,
++      "game_solved": true,
++      "games_solved_delta": 1,
++      "prior_total_games_solved": 7,
++      "real_env_confirmed": true,
++      "target_game": "sb26-7fbdac44",
++      "total_games_solved": 8
++    },
++    "hardware": {
++      "fabric_acceleration_claimed": false,
++      "included": true,
++      "kv260_latency_batch_ms": 0.239723,
++      "kv260_latency_median_ms": 0.002125,
++      "kv260_latency_step_taken": true,
++      "kv260_overlay_loaded": true,
++      "per_board_reachability": {
++        "gatemate": true,
++        "kv260": true,
++        "polarfire": true
++      },
++      "per_board_terminal_state": {
++        "gatemate": "reachable_detected_gatemate_idcode",
++        "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
++        "polarfire": "reachable_ssh_continuity_recorded"
++      },
++      "speedup_claim_made": false
++    },
++    "self_learning": {
++      "action_savings_vs_cold": 9,
++      "actions_cold": 18,
++      "actions_cross_game_v7": 9,
++      "actions_within_game_v6": 7,
++      "cross_game_extra_actions_vs_within_game_v6": 2,
++      "cross_game_transfer_win": false,
++      "induction_call_savings_vs_cold": 1,
++      "induction_calls_cold": 1,
++      "induction_calls_cross_game_v7": 0,
++      "induction_calls_within_game_v6": 0,
++      "n_named_abstractions": 1,
++      "n_prior_fragments": 7,
++      "n_reused_abstractions": 1,
++      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game_v6"
++    }
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 4042,
++      "sha256": "ba95b60694b72abb385475af360ed78e9d09d2c0689ae8e9f34c28934391f385"
++    },
++    {
++      "experiment_id": 4043,
++      "sha256": "3091f78462077fe79af3d654ac3c7b9fe38b56444ed422bb2009b41a68b998a1"
++    },
++    {
++      "experiment_id": 4045,
++      "sha256": "6cfe273057e29632d7ca032fe71917913f8e2e4ca260b0d92f09dcc9e665a3e7"
++    },
++    {
++      "experiment_id": 4046,
++      "sha256": "5102206c9b1cf502c1b53a0aebdb27a746b469666da9952ae29562893c3b6aed"
++    },
++    {
++      "experiment_id": 4048,
++      "sha256": "b8440f6916edba68d9477f13004b1a7da334ad0f7ddfc7ff7786770de0997ca7"
++    },
++    {
++      "experiment_id": 4049,
++      "sha256": "d258876f92b9e2516091d9eb2c4e95ecc2a5f183708de797cd0702d6c83e8607"
++    },
++    {
++      "experiment_id": 4050,
++      "sha256": "549b4881957663be6b39a7cf8473802fa5c8de9cb6679b276aba5101a2af589c"
++    },
++    {
++      "experiment_id": 4051,
++      "sha256": "0cb66f8cf2e78fa64c890fdb7a6fe7fdde427154eefbac26ed2db235ac383eac"
++    },
++    {
++      "experiment_id": 4052,
++      "sha256": "1ca97d74fad17a1dbb373d91c35828fdc28dd24d074bf01dc1c01df9f548d919"
++    }
++  ],
++  "decentralization_diagnosis": "retired_non_measurement",
++  "decision_grade_measurements": {
++    "G1": false,
++    "G2": true,
++    "G3": false,
++    "all_three": false
++  },
++  "duration_s": 0.3920414650347084,
++  "experiment_id": 4053,
++  "field_principles": {
++    "cited_upstream_artifacts": "Included upstream experiment ids and sha256 provenance only.",
++    "decentralization_diagnosis": "latent | absent | uninformative | retired_non_measurement | flagged_skipped - the G3 branch resolved.",
++    "flagged_artifacts_skipped": "Upstreams excluded before metric import because flagged_adversarial or live critical.",
++    "honest_verdict": "Terminal-prefix verdict naming positive, negative, ceiling, retired, and skipped outcomes.",
++    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
++    "search_layer_salvageable_closed_loop": "BARE BOOL - the G2 question: did closed-loop grounding break vc33's wall in the real env?",
++    "total_games_solved": "BARE INT - the monotonic ARC accuracy counter after clean exp4049 evidence.",
++    "verifier_transferred_off_arc_significantly": "BARE BOOL - the operator TOP-PRIORITY question: does the off-ARC transfer CI exclude zero at full N?"
++  },
++  "flagged_artifacts_skipped": [
++    {
++      "experiment_id": 4044,
++      "path": "results/experiment_4044_offarc_transfer_power_build.json",
++      "reason": "flagged_adversarial:true"
++    },
++    {
++      "experiment_id": 4047,
++      "path": "results/experiment_4047_decentralization_moe_base_build.json",
++      "reason": "flagged_adversarial:true"
++    }
++  ],
++  "g1_off_arc_transfer": {
++    "best_arm": "armC_symbolic",
++    "best_arm_ci95": [
++      0.0,
++      0.0
++    ],
++    "best_arm_ci_excludes_zero": false,
++    "best_arm_delta_pp": 0.0,
++    "demofit_bootstrap_ci95": [
++      0.0,
++      0.0
++    ],
++    "demofit_ci_excludes_zero": false,
++    "demofit_delta_pp": 0.0,
++    "full_power_reached": false,
++    "n_tasks": 22,
++    "oracle_headroom": false,
++    "oracle_passrate": 1.0,
++    "outcome": "partial_or_incomplete",
++    "partial_reason": "offarc_power_run_incomplete_partial_22_tasks",
++    "powered_task_floor": 160,
++    "raw_artifact_present": false
++  },
++  "g2_closed_loop_grounding": {
++    "bottleneck": "wm_real_divergence_gate_fired",
++    "closed_loop_broke_wall": false,
++    "degenerate_plan_refused": false,
++    "divergence_gate_fired_count": 1,
++    "game": "vc33",
++    "levels_completed_after": 0,
++    "new_levels_solved_this_task": 0,
++    "outcome": "closed_loop_ceiling_saturated_sim2real_divergence",
++    "per_step_wm_real_divergence_rate": 0.207031,
++    "real_env_confirmed": false
++  },
++  "g3_decentralization_moe_base": {
++    "baseline_12b_coverage": 0.2581,
++    "bootstrap_ci95": [
++      -0.0914,
++      0.5752
++    ],
++    "codex_seconds_per_task_reference": 46.24,
++    "coverage_delta_vs_12b": 0.2419,
++    "diagnosis": "retired_non_measurement",
++    "gated_pass_at_2": 0.0,
++    "local_seconds_per_task": 101.82,
++    "local_support_diagnosis": "uninformative",
++    "measurement_task_floor": 30,
++    "moe_base_demo_perfect_coverage": 0.5,
++    "n_tasks_scored": 6,
++    "oracle_coverage": 0.6129,
++    "outcome": "retired_non_measurement",
++    "raw_complete": false
++  },
++  "honest_verdict": "complete: capstone_v374_not_decision_grade_G1_partial_or_incomplete_G2_closed_loop_ceiling_saturated_sim2real_divergence_G3_retired_non_measurement_games8_arcmemo_v7_no_win_flagged_skipped2",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "missing_upstream_artifacts": [],
++  "random_seed": 4053,
++  "reproducibility_checksum": "70a1e8ca055b5bbb98b2336498736d54f8a4618fd7c0417d6ba471204353f781",
++  "schema": "carnot.capstone_v374_4053.v1",
++  "search_layer_salvageable_closed_loop": false,
++  "summarize_artifact_status": {
++    "4042": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4042_archive_v373_activate_v374.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v373_v374_active_G1_offarc_directional_underpowered_ci_touches_zero_G2_no_generalization_vc33_G3_absent_0tasks_games7_arcmemo_v6_win_exp4031_flagged_skipped_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 13.793552   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4043": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4043_sota_ingestion_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_offarc_power_and_closed_loop_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4044": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4044_offarc_transfer_power_build.json\n------------------------------------------------------------------------------\n  verdict          : success: offarc_power_runner_built_smoked_launched_humaneval_mbpp\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 18.68   substrate: live_llm_inference\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=18.68 but artifact references compute-bound markers (GGUF / CUDA / live model). Loadi\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
++    },
++    "4045": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4045_offarc_transfer_power.json\n------------------------------------------------------------------------------\n  verdict          : complete: offarc_power_run_incomplete_partial_22_tasks\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      armApp_delta_pp = 0.0  <-- flagged\n      armC_delta_pp = 0.0  <-- flagged\n      best_arm_delta_pp = 0.0  <-- flagged\n      demofit_delta_pp = 0.0  <-- flagged\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: armApp_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: armC_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: best_arm_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: demofit_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n==============================================================================\n"
++    },
++    "4046": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4046_closed_loop_replan_over_vc33_wm.json\n------------------------------------------------------------------------------\n  verdict          : complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_0.207\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.955   substrate: offline_arc_agi3_closed_loop_replanning_with_real_env_grounding\n  headline metrics :\n      goal_predicate_heldout_precision = 1.0\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4047": {
++      "returncode": 2,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4047_decentralization_moe_base_build.json\n------------------------------------------------------------------------------\n  verdict          : success: decentralization_moe_base_runner_launched_qwen35moe\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 10.37   substrate: live_llm_inference\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=10.37 but artifact references compute-bound markers (GGUF / CUDA / live model). Loadi\n==============================================================================\n"
++    },
++    "4048": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4048_decentralization_moe_base.json\n------------------------------------------------------------------------------\n  verdict          : complete: decentralization_moe_base_partial_6_tasks_retire\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 30.0   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      coverage_delta_vs_12b = 0.2419\n      n_tasks_scored = 6\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4049": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4049_eighth_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: eighth_game_solved_sb26-7fbdac44_at_action_9\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 5.046   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4050": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4050_arcmemo_cross_game_transfer_v7.json\n------------------------------------------------------------------------------\n  verdict          : complete: arcmemo_v7_no_cross_game_transfer_v7_not_cheaper_than_within_game_v6\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.001   substrate: offline_arc_agi3_arcmemo_cross_game_transfer\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4051": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4051_verifier_registry_and_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_g2_g2_sim2real_ceiling_gap_logged_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.028   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
++    },
++    "4052": {
++      "returncode": 0,
++      "stderr": "",
++      "stdout": "==============================================================================\nARTIFACT  experiment_4052_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 8.519552   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
++    }
++  },
++  "total_games_solved": 8,
++  "upstream_artifact_state": {
++    "4042": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: archived_v373_v374_active_G1_offarc_directional_underpowered_ci_touches_zero_G2_no_generalization_vc33_G3_absent_0tasks_games7_arcmemo_v6_win_exp4031_flagged_skipped_pretest_green",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4042_archive_v373_activate_v374.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4043": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: sota_ingestion_offarc_power_and_closed_loop_mapped",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4043_sota_ingestion_receipt.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4044": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4044_offarc_transfer_power_build.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4045": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: offarc_power_run_incomplete_partial_22_tasks",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4045_offarc_transfer_power.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4046": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_0.207",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4046_closed_loop_replan_over_vc33_wm.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4047": {
++      "exists": true,
++      "flagged_adversarial": true,
++      "honest_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
++      "included": false,
++      "live_critical": true,
++      "path": "results/experiment_4047_decentralization_moe_base_build.json",
++      "skipped": true,
++      "summarize_artifact_returncode": 2
++    },
++    "4048": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: decentralization_moe_base_partial_6_tasks_retire",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4048_decentralization_moe_base.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4049": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "success: eighth_game_solved_sb26-7fbdac44_at_action_9",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4049_eighth_game_explore_first.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4050": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: arcmemo_v7_no_cross_game_transfer_v7_not_cheaper_than_within_game_v6",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4050_arcmemo_cross_game_transfer_v7.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4051": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_g2_g2_sim2real_ceiling_gap_logged_recorded",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4051_verifier_registry_and_gaps_hygiene.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    },
++    "4052": {
++      "exists": true,
++      "flagged_adversarial": false,
++      "honest_verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded",
++      "included": true,
++      "live_critical": false,
++      "path": "results/experiment_4052_hardware_continuity.json",
++      "skipped": false,
++      "summarize_artifact_returncode": 0
++    }
++  },
++  "verifier_registry_and_gaps_hygiene": {
++    "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
++    "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
++    "gaps_updated": true,
++    "included": true,
++    "offline_reeval_bitexact": true,
++    "registry_updated": true
++  },
++  "verifier_transferred_off_arc_significantly": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 70be3bab6a..37bbc3f37b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T17:21:11Z",
+-  "finished_at": "2026-06-11T17:21:11Z",
++  "started_at": "2026-06-11T17:36:11Z",
++  "finished_at": "2026-06-11T17:36:11Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 734191c198..d77260b22d 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T17:21:11Z",
+-  "finished_at": "2026-06-11T17:21:11Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T17:36:11Z",
++  "finished_at": "2026-06-11T17:36:12Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1bee6d9eaf..5386cfbe5f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T17:21:11Z",
+-  "finished_at": "2026-06-11T17:21:11Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T17:36:12Z",
++  "finished_at": "2026-06-11T17:36:12Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/exp4053_capstone_v374.py b/scripts/experiments/exp4053_capstone_v374.py
+new file mode 100644
+index 0000000000..dd1b7168e3
+--- /dev/null
++++ b/scripts/experiments/exp4053_capstone_v374.py
+@@ -0,0 +1,19 @@
++#!/usr/bin/env python3
++"""Run Exp 4053 capstone v374 decision-grade aggregation."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.reporting.capstone_v374_4053 import write_artifact  # noqa: E402
++
++
++if __name__ == "__main__":  # pragma: no cover
++    print(write_artifact(REPO_ROOT))
+diff --git a/tests/python/test_experiment_4053_capstone_v374.py b/tests/python/test_experiment_4053_capstone_v374.py
+new file mode 100644
+index 0000000000..93dab7db24
+--- /dev/null
++++ b/tests/python/test_experiment_4053_capstone_v374.py
+@@ -0,0 +1,437 @@
++"""Tests for Exp 4053 .374 decision-grade capstone.
++
++Spec refs: REQ-CAPSTONE-4053, SCENARIO-CAPSTONE-4053.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import subprocess
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot.reporting import capstone_v374_4053 as mod
++
++
++JsonDict = dict[str, Any]
++
++
++def _write_json(path: Path, payload: JsonDict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _summary_statuses(
++    experiment_ids: tuple[int, ...] = mod.UPSTREAM_IDS,
++    *,
++    returncodes: dict[int, int] | None = None,
++) -> dict[int, JsonDict]:
++    overrides = returncodes or {}
++    return {
++        experiment_id: {
++            "returncode": overrides.get(experiment_id, 0),
++            "stdout": f"summarized {experiment_id}",
++            "stderr": "",
++        }
++        for experiment_id in experiment_ids
++    }
++
++
++def _fixture_payloads() -> dict[int, JsonDict]:
++    return {
++        4042: {
++            "honest_verdict": "success: archived_v373_v374_active",
++            "milestone_373_closestate": {"accuracy": {"total_games_solved": 7}},
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++        },
++        4043: {
++            "honest_verdict": "complete: sota_ingestion_offarc_power_and_closed_loop_mapped",
++            "inference_substrate": "aggregation_from_upstream_artifacts",
++        },
++        4044: {
++            "honest_verdict": "success: offarc_power_runner_built_smoked_launched",
++            "inference_substrate": "live_llm_inference",
++        },
++        4045: {
++            "honest_verdict": "complete: offarc_power_full_n_demofit_ci_excludes_zero",
++            "n_tasks": 160,
++            "powered_task_floor": 160,
++            "raw_artifact_present": True,
++            "partial_reason": None,
++            "demofit_delta_pp": 4.5,
++            "demofit_bootstrap_ci95": [1.1, 8.2],
++            "demofit_ci_excludes_zero": True,
++            "best_arm": "armB_demofit",
++            "best_arm_delta_pp": 4.5,
++            "best_arm_ci95": [1.1, 8.2],
++            "best_arm_ci_excludes_zero": True,
++            "oracle_passrate": 0.72,
++            "oracle_headroom": True,
++        },
++        4046: {
++            "honest_verdict": "complete: closed_loop_solved_vc33_L1_real_env_confirmed",
++            "game": "vc33",
++            "closed_loop_broke_wall": True,
++            "per_step_wm_real_divergence_rate": 0.0,
++            "divergence_gate_fired_count": 0,
++            "real_env_confirmed": True,
++            "new_levels_solved_this_task": 1,
++            "levels_completed_after": 1,
++            "bottleneck": "",
++        },
++        4047: {
++            "honest_verdict": "success: decentralization_moe_base_runner_launched",
++            "inference_substrate": "live_llm_inference",
++        },
++        4048: {
++            "honest_verdict": "complete: decentralization_moe_base_cov_1_latent_distill_viable",
++            "raw_complete": True,
++            "n_tasks_scored": 31,
++            "moe_base_demo_perfect_coverage": 1.0,
++            "coverage_delta_vs_12b": 0.7419,
++            "bootstrap_ci95": [0.7419, 0.7419],
++            "local_support_diagnosis": "latent",
++            "gated_pass_at_2": 0.7,
++            "oracle_coverage": 0.6129,
++        },
++        4049: {
++            "honest_verdict": "success: eighth_game_solved",
++            "game_solved": True,
++            "real_env_confirmed": True,
++            "prior_total_games_solved": 7,
++            "total_games_solved": 8,
++            "target_game": "fixture-game",
++            "candidate_baseline_actions": 18,
++            "first_solve_at_action": 9,
++            "exploration_actions_used": 2,
++        },
++        4050: {
++            "honest_verdict": "complete: arcmemo_v7_cross_game_transfer_win",
++            "cross_game_transfer_win": True,
++            "actions_cold": 18,
++            "actions_within_game_v6": 11,
++            "actions_cross_game_v7": 8,
++            "induction_calls_cold": 1,
++            "induction_calls_within_game_v6": 1,
++            "induction_calls_cross_game_v7": 0,
++            "n_prior_fragments": 7,
++            "n_named_abstractions": 1,
++            "n_reused_abstractions": 1,
++            "transfer_assessment": "fixture_win",
++        },
++        4051: {
++            "honest_verdict": "complete: hygiene_done",
++            "offline_reeval_bitexact": True,
++            "registry_updated": True,
++            "gaps_updated": True,
++        },
++        4052: {
++            "honest_verdict": "complete: hardware_continuity",
++            "kv260_overlay_loaded": True,
++            "kv260_latency_step_taken": True,
++            "kv260_latency_median_ms": 0.01,
++            "kv260_latency_batch_ms": 0.5,
++            "speedup_claim_made": False,
++            "fabric_acceleration_claimed": False,
++            "per_board_reachability": {"kv260": True, "gatemate": True, "polarfire": True},
++            "per_board_terminal_state": {
++                "kv260": "latency",
++                "gatemate": "reachable",
++                "polarfire": "reachable",
++            },
++        },
++    }
++
++
++def _write_default_artifacts(root: Path, payloads: dict[int, JsonDict]) -> None:
++    for experiment_id, payload in payloads.items():
++        _write_json(root / mod.DEFAULT_UPSTREAM_PATHS[experiment_id], payload)
++
++
++def test_req_capstone_4053_spec_anchor_exists() -> None:
++    """REQ-CAPSTONE-4053: OpenSpec declares the .374 capstone contract."""
++
++    spec = Path("openspec/capabilities/capstone/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-CAPSTONE-4053" in spec
++    assert "SCENARIO-CAPSTONE-4053" in spec
++    assert "verifier_transferred_off_arc_significantly" in spec
++    assert "search_layer_salvageable_closed_loop" in spec
++    assert "decentralization_diagnosis" in spec
++
++
++def test_scenario_capstone_4053_current_artifacts_emit_honest_headline() -> None:
++    """SCENARIO-CAPSTONE-4053: landed artifacts produce negative and retired outcomes."""
++
++    artifact = mod.build_artifact(
++        Path.cwd(),
++        summary_statuses=_summary_statuses(returncodes={4044: 2, 4047: 2}),
++        started_s=10.0,
++        now_s=12.0,
++    )
++
++    mod.validate_artifact(artifact)
++
++    assert artifact["honest_verdict"].startswith("complete:")
++    assert "not_decision_grade" in artifact["honest_verdict"]
++    assert artifact["verifier_transferred_off_arc_significantly"] is False
++    assert artifact["g1_off_arc_transfer"]["n_tasks"] == 22
++    assert artifact["g1_off_arc_transfer"]["powered_task_floor"] == 160
++    assert artifact["g1_off_arc_transfer"]["full_power_reached"] is False
++    assert artifact["g1_off_arc_transfer"]["demofit_delta_pp"] == 0.0
++    assert artifact["g1_off_arc_transfer"]["demofit_bootstrap_ci95"] == [0.0, 0.0]
++    assert artifact["g1_off_arc_transfer"]["demofit_ci_excludes_zero"] is False
++    assert artifact["g1_off_arc_transfer"]["best_arm"] == "armC_symbolic"
++
++    assert artifact["search_layer_salvageable_closed_loop"] is False
++    assert artifact["g2_closed_loop_grounding"]["closed_loop_broke_wall"] is False
++    assert artifact["g2_closed_loop_grounding"]["per_step_wm_real_divergence_rate"] == 0.207031
++    assert artifact["g2_closed_loop_grounding"]["real_env_confirmed"] is False
++    assert artifact["g2_closed_loop_grounding"]["bottleneck"] == "wm_real_divergence_gate_fired"
++
++    assert artifact["decentralization_diagnosis"] == "retired_non_measurement"
++    assert artifact["g3_decentralization_moe_base"]["baseline_12b_coverage"] == 0.2581
++    assert artifact["g3_decentralization_moe_base"]["moe_base_demo_perfect_coverage"] == 0.5
++    assert artifact["g3_decentralization_moe_base"]["coverage_delta_vs_12b"] == 0.2419
++    assert artifact["g3_decentralization_moe_base"]["n_tasks_scored"] == 6
++    assert artifact["g3_decentralization_moe_base"]["raw_complete"] is False
++
++    assert artifact["total_games_solved"] == 8
++    assert artifact["accuracy_self_learning_hardware_deltas"]["accuracy"]["games_solved_delta"] == 1
++    assert artifact["accuracy_self_learning_hardware_deltas"]["self_learning"]["cross_game_transfer_win"] is False
++    assert artifact["accuracy_self_learning_hardware_deltas"]["self_learning"]["action_savings_vs_cold"] == 9
++    assert artifact["accuracy_self_learning_hardware_deltas"]["self_learning"]["cross_game_extra_actions_vs_within_game_v6"] == 2
++    assert artifact["accuracy_self_learning_hardware_deltas"]["hardware"]["kv260_overlay_loaded"] is True
++    assert artifact["accuracy_self_learning_hardware_deltas"]["hardware"]["kv260_latency_step_taken"] is True
++
++    assert [row["experiment_id"] for row in artifact["flagged_artifacts_skipped"]] == [4044, 4047]
++    cited = {row["experiment_id"]: row for row in artifact["cited_upstream_artifacts"]}
++    assert {4044, 4047}.isdisjoint(cited)
++    assert set(cited) == {4042, 4043, 4045, 4046, 4048, 4049, 4050, 4051, 4052}
++    assert cited[4045] == {
++        "experiment_id": 4045,
++        "sha256": hashlib.sha256(Path("results/experiment_4045_offarc_transfer_power.json").read_bytes()).hexdigest(),
++    }
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["field_principles"]["verifier_transferred_off_arc_significantly"].startswith("BARE BOOL")
++
++
++def test_req_capstone_4053_clean_fixture_can_record_decision_grade_success(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4053: clean upstream metrics can satisfy all three capstone axes."""
++
++    payloads = _fixture_payloads()
++    _write_default_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(tmp_path, summary_statuses=_summary_statuses(), started_s=1.0, now_s=1.25)
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("complete: capstone_v374_decision_grade_yes")
++    assert artifact["verifier_transferred_off_arc_significantly"] is True
++    assert artifact["g1_off_arc_transfer"]["outcome"] == "significant_full_power"
++    assert artifact["search_layer_salvageable_closed_loop"] is True
++    assert artifact["g2_closed_loop_grounding"]["outcome"] == "closed_loop_broke_wall"
++    assert artifact["decentralization_diagnosis"] == "latent"
++    assert artifact["g3_decentralization_moe_base"]["outcome"] == "decision_grade_measurement"
++    assert artifact["total_games_solved"] == 8
++    assert artifact["accuracy_self_learning_hardware_deltas"]["self_learning"]["cross_game_extra_actions_vs_within_game_v6"] == -3
++    assert artifact["decision_grade_measurements"] == {
++        "G1": True,
++        "G2": True,
++        "G3": True,
++        "all_three": True,
++    }
++    assert artifact["flagged_artifacts_skipped"] == []
++    assert len(artifact["cited_upstream_artifacts"]) == len(mod.UPSTREAM_IDS)
++    assert artifact["duration_s"] == 0.25
++
++
++def test_req_capstone_4053_flagged_and_missing_inputs_cannot_satisfy_axes(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4053: skipped or missing upstreams do not leak headline metrics."""
++
++    payloads = _fixture_payloads()
++    payloads[4045]["flagged_adversarial"] = True
++    payloads[4046]["flagged_adversarial"] = True
++    payloads[4048]["flagged_adversarial"] = True
++    payloads.pop(4049)
++    _write_default_artifacts(tmp_path, payloads)
++
++    artifact = mod.build_artifact(
++        tmp_path,
++        summary_statuses=_summary_statuses(tuple(payloads), returncodes={4045: 2, 4046: 2, 4048: 2}),
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["verifier_transferred_off_arc_significantly"] is False
++    assert artifact["g1_off_arc_transfer"]["outcome"] == "skipped_flagged"
++    assert artifact["search_layer_salvageable_closed_loop"] is False
++    assert artifact["g2_closed_loop_grounding"]["outcome"] == "skipped_flagged"
++    assert artifact["decentralization_diagnosis"] == "flagged_skipped"
++    assert artifact["total_games_solved"] == 7
++    assert artifact["accuracy_self_learning_hardware_deltas"]["accuracy"]["game_solved"] is False
++    assert artifact["missing_upstream_artifacts"] == [{"experiment_id": 4049}]
++    assert [row["experiment_id"] for row in artifact["flagged_artifacts_skipped"]] == [4045, 4046, 4048]
++    assert {4045, 4046, 4048}.isdisjoint({row["experiment_id"] for row in artifact["cited_upstream_artifacts"]})
++
++
++def test_req_capstone_4053_write_artifact_and_validate_rejects_regressions(tmp_path: Path) -> None:
++    """REQ-CAPSTONE-4053: artifact writing validates required schema fields."""
++
++    _write_default_artifacts(tmp_path, _fixture_payloads())
++    output = mod.write_artifact(
++        tmp_path,
++        summary_statuses=_summary_statuses(),
++        started_s=2.0,
++        now_s=2.5,
++    )
++    written = json.loads(output.read_text(encoding="utf-8"))
++
++    assert output == tmp_path / mod.OUTPUT_REL_PATH
++    assert written["schema"] == "carnot.capstone_v374_4053.v1"
++    assert written["reproducibility_checksum"] == mod.payload_checksum(written)
++
++    bad = dict(written)
++    bad["honest_verdict"] = "maybe"
++    with pytest.raises(ValueError, match="terminal prefix"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["verifier_transferred_off_arc_significantly"] = "true"
++    with pytest.raises(ValueError, match="bare bool"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["search_layer_salvageable_closed_loop"] = 1
++    with pytest.raises(ValueError, match="bare bool"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["decentralization_diagnosis"] = "partial"
++    with pytest.raises(ValueError, match="decentralization_diagnosis"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["total_games_solved"] = True
++    with pytest.raises(ValueError, match="bare int"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["inference_substrate"] = "live_llm_inference"
++    with pytest.raises(ValueError, match="aggregation_from_upstream_artifacts"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["cited_upstream_artifacts"] = [{"experiment_id": 4045, "sha256": "not-sha"}]
++    with pytest.raises(ValueError, match="sha256"):
++        mod.validate_artifact(bad)
++
++    bad = dict(written)
++    bad["flagged_artifacts_skipped"] = {}
++    with pytest.raises(ValueError, match="list"):
++        mod.validate_artifact(bad)
++
++
++def test_req_capstone_4053_summary_runner_uses_mandated_script(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CAPSTONE-4053: upstream reading shells through summarize_artifact.py."""
++
++    path = tmp_path / mod.DEFAULT_UPSTREAM_PATHS[4045]
++    _write_json(path, _fixture_payloads()[4045])
++    calls: list[list[str]] = []
++
++    def fake_run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
++        calls.append(command)
++        assert kwargs["cwd"] == tmp_path
++        assert kwargs["text"] is True
++        assert kwargs["capture_output"] is True
++        assert kwargs["check"] is False
++        return subprocess.CompletedProcess(command, 0, stdout="summary", stderr="")
++
++    monkeypatch.setattr(mod.subprocess, "run", fake_run)
++
++    assert mod.run_summarize_artifact(tmp_path, path) == {
++        "returncode": 0,
++        "stdout": "summary",
++        "stderr": "",
++    }
++    assert calls == [[str(mod.PYTHON_BIN), "scripts/summarize_artifact.py", str(path)]]
++
++    statuses = mod.summarize_existing_artifacts(tmp_path, {4045: path, 4049: None}, supplied=None)
++    assert statuses == {4045: {"returncode": 0, "stdout": "summary", "stderr": ""}}
++    assert mod.summarize_existing_artifacts(tmp_path, {4045: path}, supplied={4045: {"returncode": 2}}) == {
++        4045: {"returncode": 2}
++    }
++    assert mod.list_float_metric({"ci": "not-a-list"}, "ci") == []
++    assert mod.list_float_metric({"ci": [1, True, 2.5, "bad"]}, "ci") == [1.0, 2.5]
++    assert mod.nested_int({"a": True}, ("a", "b")) == 0
++    assert mod.off_arc_transfer_report(None, was_skipped=False)["outcome"] == "missing_or_blocked"
++    assert (
++        mod.off_arc_transfer_report(
++            {
++                "honest_verdict": "complete: full_n_no_headroom",
++                "n_tasks": 160,
++                "powered_task_floor": 160,
++                "demofit_delta_pp": 0.0,
++                "demofit_ci_excludes_zero": False,
++                "oracle_headroom": False,
++            },
++            was_skipped=False,
++        )["outcome"]
++        == "ceiling_saturated_no_headroom"
++    )
++    assert (
++        mod.off_arc_transfer_report(
++            {
++                "honest_verdict": "complete: full_n_not_significant",
++                "n_tasks": 160,
++                "powered_task_floor": 160,
++                "demofit_delta_pp": 1.0,
++                "demofit_ci_excludes_zero": False,
++                "oracle_headroom": True,
++            },
++            was_skipped=False,
++        )["outcome"]
++        == "not_significant_full_power"
++    )
++    assert mod.closed_loop_grounding_report(None, was_skipped=False)["outcome"] == "missing_or_blocked"
++    assert (
++        mod.closed_loop_grounding_report(
++            {
++                "honest_verdict": "complete: closed_loop_no_break",
++                "closed_loop_broke_wall": False,
++                "real_env_confirmed": False,
++                "per_step_wm_real_divergence_rate": 0.0,
++                "divergence_gate_fired_count": 0,
++            },
++            was_skipped=False,
++        )["outcome"]
++        == "closed_loop_no_break"
++    )
++    assert mod.decentralization_moe_report(None, was_skipped=False)["outcome"] == "missing_or_blocked"
++    assert (
++        mod.decentralization_moe_report(
++            {
++                "honest_verdict": "complete: saturated_pool",
++                "raw_complete": True,
++                "n_tasks_scored": 31,
++                "local_support_diagnosis": "uninformative",
++            },
++            was_skipped=False,
++        )["outcome"]
++        == "uninformative_measurement"
++    )
++    fallback = mod.decentralization_moe_report(
++        {
++            "honest_verdict": "complete: missing_explicit_diagnosis",
++            "raw_complete": True,
++            "n_tasks_scored": 31,
++            "moe_base_demo_perfect_coverage": 0.9,
++        },
++        was_skipped=False,
++    )
++    assert fallback["outcome"] == "decision_grade_measurement"
++    assert fallback["diagnosis"] == "latent"
+-- 
+2.55.0
+

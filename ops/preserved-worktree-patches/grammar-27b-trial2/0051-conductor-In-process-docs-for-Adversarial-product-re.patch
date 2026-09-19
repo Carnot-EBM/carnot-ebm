@@ -1,0 +1,33 @@
+From af3f238497e525f28d13bc9f8d5c4838afb38205 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 20:36:42 -0400
+Subject: [PATCH 00051/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Adversarial=20product=20re-baseline=20vs=20self-certainty?=
+ =?UTF-8?q?=20(arXiv:2502.18581)=20=E2=80=94=20the=20second-pair-of-eyes?=
+ =?UTF-8?q?=20detector's=20'beats=20confidence'=20claim=20used=20PLAIN=20m?=
+ =?UTF-8?q?odel=20confidence;=20re-measure=20whether=20the=20ensemble=20ad?=
+ =?UTF-8?q?ds=20value=20OVER=20the=20stronger=20free=20self-certainty=20si?=
+ =?UTF-8?q?gnal,=20on=20math=20(FoVer)=20and=20the=20balanced=20code=20cor?=
+ =?UTF-8?q?pus=20=E2=80=94=20is=20the=20product=20value=20robust=20or=20an?=
+ =?UTF-8?q?=20artifact=20of=20a=20weak=20baseline=3F?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b3fd442689..a647711e2e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8124,3 +8124,4 @@ Wrote operational retro for 2026.06.331. Found no experiment commits; 0 experime
+ - 2026-06-01: Prepare the headline re-freeze PACKAGE for the operator (gated on exp3680 G1-rigor confirmed) — extend scripts/reproduce_fover_headline.py to also compute the dependency-aware AUROC + CI, draft the updated CI-workflow assertion bounds, and emit an operator checklist for the north-star sec-1 re-freeze — PREPARE-ONLY; the frozen 0.9131 stays frozen and the agent never edits north-star.md or triggers the CI run (✅ Complete) — honest_verdict=complete: refreeze_package_ready_for_operator_frozen_headline_unchanged; results/experiment_3681_g2_reproducer_prep_operator_refreeze_package.json
+ - 2026-06-02: Diagnose + try to CLOSE the discrimination-vs-selection gap (exp3672: ensemble AUROC 0.93 but selection < SC) — is the decoupling fixable for an energy verifier via per-question normalization / a within-question ranking calibration / a stronger self-certainty baseline (arXiv:2502.18581), or is it fundamental as arXiv:2512.23067 suggests? (✅ Complete) — honest_verdict=complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067; results/experiment_3682_discrimination_vs_selection_gap.json
+ - 2026-06-02: Harden the shipped detector's CODE operating point — exp3671 ships but code AUROC 0.5 (no signal) + ECE 0.37; on the balanced code corpus (exp3658) test whether the .336-validated dependency-aware weighting transfers to code discrimination and re-calibrate the code operating point, or honestly document code as math-only (✅ Complete) — honest_verdict=complete: code_remains_math_only_detector_scoped_honestly; results/experiment_3683_detector_code_operating_point.json
++- 2026-06-02: Adversarial product re-baseline vs self-certainty (arXiv:2502.18581) — the second-pair-of-eyes detector's 'beats confidence' claim used PLAIN model confidence; re-measure whether the ensemble adds value OVER the stronger free self-certainty signal, on math (FoVer) and the balanced code corpus — is the product value robust or an artifact of a weak baseline? (✅ Complete) — honest_verdict=complete: ensemble_adds_value_over_self_certainty_product_value_robust; results/experiment_3684_product_value_vs_self_certainty.json
+-- 
+2.55.0
+

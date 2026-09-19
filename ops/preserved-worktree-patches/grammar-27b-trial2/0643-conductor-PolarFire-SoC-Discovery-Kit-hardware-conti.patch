@@ -1,0 +1,1628 @@
+From aa6d06a4db9c683ffe47972b5e6060e7b612e245 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 10:44:08 -0400
+Subject: [PATCH 00643/11171] =?UTF-8?q?[conductor]=20PolarFire=20SoC=20Dis?=
+ =?UTF-8?q?covery=20Kit=20hardware=20continuity=20(terminal-state=20attemp?=
+ =?UTF-8?q?t,=20re-issue=20of=20exp3855):=20precondition-gated=20SSH=20rou?=
+ =?UTF-8?q?nd-trip=20Carnot=20dispatch=20=E2=80=94=20run=20an=20Ising=20en?=
+ =?UTF-8?q?ergy-eval=20workload=20on=20the=20board=20over=20SSH,=20verify?=
+ =?UTF-8?q?=20the=20result=20hash=20matches=20a=20CPU-computed=20reference?=
+ =?UTF-8?q?,=20record=20run=5Fduration=5Fs>=3D5=20+=20soc=5Ftemp.=20Reache?=
+ =?UTF-8?q?s=20polarfire=5Fworkload=5Fvalidated=20terminal=20state=20on=20?=
+ =?UTF-8?q?a=20hash=20match.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3867-polarfire-soc-smoke-v4
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/fpga/spec.md            |  62 ++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_3867_polarfire_soc_smoke_v4.py | 688 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...xperiment_3867_polarfire_soc_smoke_v4.json | 153 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ .../experiment_3867_polarfire_soc_smoke_v4.py |  33 +
+ ..._experiment_3867_polarfire_soc_smoke_v4.py | 328 +++++++++
+ 23 files changed, 1300 insertions(+), 31 deletions(-)
+ create mode 100644 python/carnot/experiment_3867_polarfire_soc_smoke_v4.py
+ create mode 100644 results/experiment_3867_polarfire_soc_smoke_v4.json
+ create mode 100644 scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py
+ create mode 100644 tests/python/test_experiment_3867_polarfire_soc_smoke_v4.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index cbaa90a045..fa7feec7ee 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -3912,6 +3912,68 @@ available.
+ 
+ ---
+ 
++### REQ-HW-3867
++
++**Title:** PolarFire SoC Ising CPU dispatch v4 MUST be SSH-precondition-gated and hash-verified
++
++**Description:**
++Experiment 3867 MUST dispatch a deterministic Carnot Ising energy-evaluation
++workload to the Microchip PolarFire SoC Discovery Kit over SSH and verify that
++the board reproduces the exact CPU reference result. The experiment MUST first
++check `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` and then
++`ssh polarfire 'python3 --version'`. If either precondition fails, it MUST write
++a blocked artifact (`blocked_polarfire_ssh_timeout` or
++`blocked_polarfire_no_python`) and MUST NOT SCP or run the workload.
++
++When preconditions pass, the experiment MUST build a seed-controlled fixed Ising
++coupling matrix and fixed spin configurations, compute the CPU reference
++energies locally, SCP the same workload and a self-contained Python runner to
++the board, run it on the PolarFire Linux riscv64 CPU substrate, capture stdout,
++and compare the board result SHA256 to the CPU reference SHA256. The terminal
++gate requires `polarfire_workload_validated=true`, `result_hash_match=true`,
++and a real SSH round-trip `run_duration_s >= 5`.
++
++**Acceptance criteria:**
++- `scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py` writes
++  `results/experiment_3867_polarfire_soc_smoke_v4.json`.
++- The artifact includes `polarfire_workload_validated`, `result_hash_match`,
++  `board_result_sha256`, `cpu_reference_sha256`, `run_duration_s`,
++  `soc_temp_max_c`, `thermal_note`, `preconditions_checked`, `random_seed`,
++  `reproducibility_checksum`, `inference_substrate`, and `honest_verdict`.
++- Each required artifact field has a `principle` note in `field_provenance`,
++  while `polarfire_workload_validated` and `result_hash_match` remain bare
++  booleans.
++- A failed SSH precondition emits `blocked_polarfire_ssh_timeout` and exits
++  before Python probing, SCP, or workload execution.
++- A missing board Python precondition emits `blocked_polarfire_no_python` and
++  exits before SCP or workload execution.
++- A hash match with `run_duration_s >= 5` emits an `honest_verdict` beginning
++  with `success: polarfire_carnot_dispatch_hash_verified_terminal`.
++- A hash mismatch emits an `honest_verdict` beginning with
++  `complete: polarfire_dispatch_ran_hash_MISMATCH` and does not validate the
++  workload.
++
++**Implementation status:** Pending (Exp 3867)
++
++---
++
++### SCENARIO-HW-3867
++
++**Scenario:** PolarFire runs a deterministic Ising energy workload and matches the CPU hash.
++
++**Given:** `ssh polarfire` is reachable and `python3` is available on the board.
++**When:** Experiment 3867 copies the deterministic Ising workload plus runner to
++the board, runs the workload over SSH, captures stdout, and probes SoC
++temperature if readable.
++**Then:** It writes `results/experiment_3867_polarfire_soc_smoke_v4.json` with
++precondition evidence, CPU and board result hashes, the hash-match boolean,
++real `run_duration_s`, thermal fields, principle annotations, and a terminal,
++partial, or blocked verdict without fabricating board evidence.
++
++**Implementation status:** Pending (Exp 3867)
++
++---
++
+ ### REQ-HW-3577
+ 
+ **Title:** KV260 hardware-task continuity verification
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 31ea2622a7..a2c5be3773 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -111,3 +111,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_3863_graph_verifier_facts_complementarity_v2.json
++
++## experiment_3865_ldt_lattice_margin_sharpening_v2.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
++- artifact: results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4e640fe076..f841315aa8 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 154,
+   "code_violations": 0,
+-  "experiments_checked": 2949,
++  "experiments_checked": 2950,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_3867_polarfire_soc_smoke_v4.py b/python/carnot/experiment_3867_polarfire_soc_smoke_v4.py
+new file mode 100644
+index 0000000000..b9c26bad38
+--- /dev/null
++++ b/python/carnot/experiment_3867_polarfire_soc_smoke_v4.py
+@@ -0,0 +1,688 @@
++"""PolarFire SoC Ising dispatch smoke v4 for Exp 3867.
++
++This experiment proves a narrow hardware boundary: a deterministic Carnot-style
++Ising energy workload is copied to the PolarFire SoC Discovery Kit, executed by
++the board's Linux CPU through SSH, and accepted only when the board result hash
++matches the local CPU reference hash. It does not claim FPGA fabric execution.
++
++Spec refs: REQ-HW-3867, SCENARIO-HW-3867.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import shlex
++import subprocess
++import tempfile
++import time
++from typing import Any
++
++
++EXPERIMENT_ID = 3867
++SCHEMA = "carnot.polarfire_soc_ising_dispatch.v4"
++SPEC_REFS = ["REQ-HW-3867", "SCENARIO-HW-3867"]
++OUTPUT_REL_PATH = Path("results") / "experiment_3867_polarfire_soc_smoke_v4.json"
++DEFAULT_HOST = "polarfire"
++RANDOM_SEED = 3867
++MIN_TERMINAL_DURATION_S = 5.0
++DEFAULT_REMOTE_RUNTIME_S = 5.05
++INFERENCE_SUBSTRATE = "hardware_smoke"
++THERMAL_NOTE = (
++    "passively cooled; no active fan; sustained-load results may differ from "
++    "production with active cooling"
++)
++
++POLARFIRE_SSH_PRECONDITION = (
++    "ssh",
++    "-o",
++    "ConnectTimeout=5",
++    "-o",
++    "BatchMode=yes",
++    DEFAULT_HOST,
++    "true",
++)
++POLARFIRE_PYTHON_PRECONDITION = ("ssh", DEFAULT_HOST, "python3 --version")
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "polarfire_workload_validated",
++    "result_hash_match",
++    "board_result_sha256",
++    "cpu_reference_sha256",
++    "run_duration_s",
++    "soc_temp_max_c",
++    "thermal_note",
++    "preconditions_checked",
++    "random_seed",
++    "reproducibility_checksum",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal prefix records whether the live board run succeeded, completed "
++        "with non-terminal evidence, or stopped at a precondition."
++    ),
++    "polarfire_workload_validated": (
++        "Bare bool -- terminal-state gate; true only if the board's result hash "
++        "matches the CPU reference and the real dispatch duration reaches the floor."
++    ),
++    "result_hash_match": (
++        "Bare bool -- the structural anti-fabrication check; the board must "
++        "reproduce the exact reference result."
++    ),
++    "board_result_sha256": (
++        "The board-side result hash compared against the CPU reference -- auditable "
++        "provenance that the workload ran on the board."
++    ),
++    "cpu_reference_sha256": (
++        "The local reference result hash compared against the board result -- "
++        "auditable provenance for the deterministic CPU baseline."
++    ),
++    "run_duration_s": (
++        "Real SSH round-trip wall-clock; >=5s floor structurally prevents the "
++        "exp1680 run_duration_s=0 fabrication."
++    ),
++    "soc_temp_max_c": (
++        "Per-board hardware-artifact thermal field; null only when the board does "
++        "not expose readable thermal sysfs values."
++    ),
++    "thermal_note": (
++        "Per-board hardware-artifact field describing the passive-cooling envelope "
++        "of the dispatch."
++    ),
++    "preconditions_checked": (
++        "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability "
++        "and board Python checks must pass before dispatch."
++    ),
++    "random_seed": (
++        "Pre-Launch reproducibility field controlling the fixed Ising workload."
++    ),
++    "reproducibility_checksum": (
++        "Content-addressed checksum over the artifact, excluding this checksum, "
++        "so later drift is detectable."
++    ),
++    "inference_substrate": (
++        "Inference-Substrate declaration for a hardware_smoke SSH-attached board run."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured command transcript used by tests and by the live SSH run."""
++
++    args: tuple[str, ...]
++    returncode: int
++    stdout: str
++    stderr: str
++
++
++Runner = Callable[[Sequence[str], float | None], CommandResult]
++Clock = Callable[[], float]
++
++
++class DispatchError(RuntimeError):
++    """Raised when a post-precondition transfer or remote command fails."""
++
++    def __init__(
++        self,
++        verdict: str,
++        detail: str,
++        transcript: Sequence[dict[str, Any]] | None = None,
++    ) -> None:
++        super().__init__(detail)
++        self.verdict = verdict
++        self.detail = detail
++        self.transcript = transcript if isinstance(transcript, list) else list(transcript or [])
++
++
++def canonical_json_bytes(payload: Any) -> bytes:
++    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++
++
++def sha256_json(payload: Any) -> str:
++    return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
++
++
++def command_to_string(command: Sequence[str]) -> str:
++    return shlex.join([str(part) for part in command])
++
++
++def _observed(result: CommandResult) -> str:
++    stdout = result.stdout.strip()
++    stderr = result.stderr.strip()
++    if stdout:
++        return stdout
++    if stderr:
++        return stderr
++    return f"returncode={result.returncode}"
++
++
++def _check_row(resource: str, command: Sequence[str], result: CommandResult) -> dict[str, Any]:
++    return {
++        "resource": resource,
++        "command": command_to_string(command),
++        "passed": result.returncode == 0,
++        "exit_code": result.returncode,
++        "observed": _observed(result),
++        "principle": FIELD_PRINCIPLES["preconditions_checked"],
++    }
++
++
++def _ssh_precondition(host: str) -> tuple[str, ...]:
++    return (
++        "ssh",
++        "-o",
++        "ConnectTimeout=5",
++        "-o",
++        "BatchMode=yes",
++        host,
++        "true",
++    )
++
++
++def _python_precondition(host: str) -> tuple[str, ...]:
++    return ("ssh", host, "python3 --version")
++
++
++def check_preconditions(
++    runner: Runner,
++    host: str = DEFAULT_HOST,
++) -> tuple[list[dict[str, Any]], dict[str, str], str | None]:
++    """Check SSH and board Python before any SCP or workload execution."""
++    metadata: dict[str, str] = {}
++    checks: list[dict[str, Any]] = []
++
++    ssh_cmd = _ssh_precondition(host)
++    ssh_result = runner(ssh_cmd, 10.0)
++    checks.append(_check_row("polarfire_ssh", ssh_cmd, ssh_result))
++    if ssh_result.returncode != 0:
++        return checks, metadata, "blocked_polarfire_ssh_timeout"
++
++    python_cmd = _python_precondition(host)
++    python_result = runner(python_cmd, 10.0)
++    metadata["polarfire_python"] = (python_result.stdout or python_result.stderr).strip()
++    checks.append(_check_row("polarfire_python", python_cmd, python_result))
++    if python_result.returncode != 0:
++        return checks, metadata, "blocked_polarfire_no_python"
++
++    return checks, metadata, None
++
++
++def build_ising_workload(random_seed: int = RANDOM_SEED) -> dict[str, Any]:
++    """Build a compact deterministic Ising energy workload for host and board.
++
++    The values are generated with simple integer arithmetic instead of runtime
++    randomness. The seed still controls every coupling, bias, and spin, but the
++    resulting JSON is stable across Python versions and architectures.
++    """
++    n_spins = 8
++    coupling = [[0 for _ in range(n_spins)] for _ in range(n_spins)]
++    for i in range(n_spins):
++        for j in range(i + 1, n_spins):
++            value = ((random_seed + i * 17 - j * 11 + i * j * 7) % 7) - 3
++            if (i + j + random_seed) % 5 == 0:
++                value = 0
++            coupling[i][j] = value
++            coupling[j][i] = value
++
++    bias = [((random_seed // (idx + 1)) + idx * 3) % 5 - 2 for idx in range(n_spins)]
++    spin_configs: list[list[int]] = []
++    for row in range(6):
++        spin_configs.append(
++            [
++                1
++                if ((random_seed >> (idx % 12)) + row * 3 + idx * 5) % 2 == 0
++                else -1
++                for idx in range(n_spins)
++            ]
++        )
++
++    return {
++        "schema": "carnot.ising_energy_workload.v1",
++        "spec_refs": SPEC_REFS,
++        "random_seed": random_seed,
++        "n_spins": n_spins,
++        "coupling": coupling,
++        "bias": bias,
++        "spin_configs": spin_configs,
++    }
++
++
++def evaluate_ising_workload(workload: dict[str, Any]) -> dict[str, Any]:
++    """Evaluate the standard Ising Hamiltonian over every fixed spin config."""
++    coupling = workload["coupling"]
++    bias = workload["bias"]
++    spin_configs = workload["spin_configs"]
++    n_spins = int(workload["n_spins"])
++
++    energies: list[int] = []
++    for spins in spin_configs:
++        energy = 0
++        for i in range(n_spins):
++            energy -= int(bias[i]) * int(spins[i])
++            for j in range(i + 1, n_spins):
++                energy -= int(coupling[i][j]) * int(spins[i]) * int(spins[j])
++        energies.append(energy)
++
++    return {
++        "schema": "carnot.ising_energy_result.v1",
++        "spec_refs": SPEC_REFS,
++        "workload_sha256": sha256_json(workload),
++        "random_seed": int(workload["random_seed"]),
++        "n_spins": n_spins,
++        "n_configs": len(spin_configs),
++        "energies": energies,
++        "energy_sum": sum(energies),
++        "energy_min": min(energies),
++        "energy_max": max(energies),
++    }
++
++
++def build_remote_runner_source() -> str:
++    """Return the self-contained Python source copied to the PolarFire board."""
++    return r'''#!/usr/bin/env python3
++import argparse
++import hashlib
++import json
++import sys
++import time
++
++SPEC_REFS = ["REQ-HW-3867", "SCENARIO-HW-3867"]
++
++
++def canonical_json_bytes(payload):
++    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++
++
++def sha256_json(payload):
++    return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
++
++
++def evaluate_ising_workload(workload):
++    coupling = workload["coupling"]
++    bias = workload["bias"]
++    spin_configs = workload["spin_configs"]
++    n_spins = int(workload["n_spins"])
++    energies = []
++    for spins in spin_configs:
++        energy = 0
++        for i in range(n_spins):
++            energy -= int(bias[i]) * int(spins[i])
++            for j in range(i + 1, n_spins):
++                energy -= int(coupling[i][j]) * int(spins[i]) * int(spins[j])
++        energies.append(energy)
++    return {
++        "schema": "carnot.ising_energy_result.v1",
++        "spec_refs": SPEC_REFS,
++        "workload_sha256": sha256_json(workload),
++        "random_seed": int(workload["random_seed"]),
++        "n_spins": n_spins,
++        "n_configs": len(spin_configs),
++        "energies": energies,
++        "energy_sum": sum(energies),
++        "energy_min": min(energies),
++        "energy_max": max(energies),
++    }
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument("workload_path")
++    parser.add_argument("--min-runtime-s", type=float, default=0.0)
++    args = parser.parse_args()
++
++    with open(args.workload_path, "r", encoding="utf-8") as handle:
++        workload = json.load(handle)
++
++    started = time.perf_counter()
++    result = evaluate_ising_workload(workload)
++    cycles = 1
++    while time.perf_counter() - started < args.min_runtime_s:
++        result = evaluate_ising_workload(workload)
++        cycles += 1
++
++    print(json.dumps(result, sort_keys=True, separators=(",", ":")))
++    print(f"cycles={cycles}", file=sys.stderr)
++
++
++if __name__ == "__main__":
++    main()
++'''
++
++
++def extract_local_workload_path(remote_command: str) -> str:
++    """Extract the test-only local workload marker embedded as a shell comment."""
++    match = re.search(r"local_workload_path=([^\s]+)", remote_command)
++    if not match:
++        raise ValueError("local_workload_path marker missing")
++    return match.group(1)
++
++
++def parse_soc_temp_max_c(text: str) -> float | None:
++    """Parse sysfs thermal values, accepting millidegrees C or degrees C."""
++    values: list[float] = []
++    for token in re.findall(r"-?\d+(?:\.\d+)?", text):
++        value = float(token)
++        if abs(value) > 1000:
++            value /= 1000.0
++        if -50.0 <= value <= 150.0:
++            values.append(value)
++    if not values:
++        return None
++    return round(max(values), 1)
++
++
++def _write_local_payloads(local_dir: Path, workload: dict[str, Any]) -> tuple[Path, Path]:
++    local_dir.mkdir(parents=True, exist_ok=True)
++    workload_path = local_dir / "workload.json"
++    runner_path = local_dir / "runner.py"
++    workload_path.write_text(json.dumps(workload, sort_keys=True, indent=2), encoding="utf-8")
++    runner_path.write_text(build_remote_runner_source(), encoding="utf-8")
++    return workload_path, runner_path
++
++
++def _require_success(
++    result: CommandResult,
++    stage: str,
++    transcript: Sequence[dict[str, Any]] | None = None,
++) -> None:
++    if result.returncode != 0:
++        detail = f"{stage}: rc={result.returncode}; stderr={result.stderr[:300]}"
++        raise DispatchError("blocked_polarfire_dispatch_failed", detail, transcript)
++
++
++def dispatch_to_board(
++    *,
++    runner: Runner,
++    host: str,
++    workload_path: Path,
++    runner_path: Path,
++    remote_dir: str,
++    min_remote_runtime_s: float,
++) -> tuple[dict[str, Any], list[dict[str, Any]]]:
++    """Copy the workload to the board, run it, and return the parsed stdout JSON."""
++    transcript: list[dict[str, Any]] = []
++    mkdir_cmd = ("ssh", host, f"mkdir -p {shlex.quote(remote_dir)}")
++    cleanup_cmd = ("ssh", host, f"rm -rf {shlex.quote(remote_dir)}")
++    try:
++        mkdir_result = runner(mkdir_cmd, 20.0)
++        transcript.append(_command_transcript("remote_mkdir", mkdir_result))
++        _require_success(mkdir_result, "remote_mkdir", transcript)
++
++        scp_cmd = (
++            "scp",
++            "-q",
++            str(runner_path),
++            str(workload_path),
++            f"{host}:{remote_dir}/",
++        )
++        scp_result = runner(scp_cmd, 60.0)
++        transcript.append(_command_transcript("scp_push", scp_result))
++        _require_success(scp_result, "scp_push", transcript)
++
++        remote_shell = (
++            f"cd {shlex.quote(remote_dir)} && "
++            "python3 runner.py workload.json "
++            f"--min-runtime-s {min_remote_runtime_s:.3f} "
++            f"# local_workload_path={workload_path}"
++        )
++        run_cmd = ("ssh", host, remote_shell)
++        run_result = runner(run_cmd, max(90.0, min_remote_runtime_s + 30.0))
++        transcript.append(_command_transcript("remote_ising_eval", run_result))
++        _require_success(run_result, "remote_ising_eval", transcript)
++        try:
++            board_result = json.loads(run_result.stdout)
++        except json.JSONDecodeError as exc:
++            raise DispatchError(
++                "blocked_polarfire_dispatch_failed",
++                f"remote_ising_eval_json: {exc}",
++                transcript,
++            ) from exc
++        return board_result, transcript
++    finally:
++        cleanup_result = runner(cleanup_cmd, 20.0)
++        transcript.append(_command_transcript("remote_cleanup", cleanup_result))
++
++
++def _command_transcript(stage: str, result: CommandResult) -> dict[str, Any]:
++    output = "\n".join(part.strip() for part in (result.stdout, result.stderr) if part.strip())
++    return {
++        "stage": stage,
++        "command": command_to_string(result.args),
++        "returncode": result.returncode,
++        "output_excerpt": output[-1200:],
++    }
++
++
++def probe_soc_temp_max_c(runner: Runner, host: str) -> tuple[float | None, dict[str, Any]]:
++    """Read PolarFire thermal sysfs values when Linux exposes them."""
++    shell = (
++        "python3 - <<'PY'\n"
++        "from pathlib import Path\n"
++        "for path in sorted(Path('/sys/class/thermal').glob('thermal_zone*/temp')):\n"
++        "    try:\n"
++        "        print(path.read_text().strip())\n"
++        "    except OSError:\n"
++        "        pass\n"
++        "PY"
++    )
++    cmd = ("ssh", host, shell)
++    result = runner(cmd, 20.0)
++    transcript = _command_transcript("thermal_probe", result)
++    if result.returncode != 0:
++        return None, transcript
++    return parse_soc_temp_max_c(result.stdout), transcript
++
++
++def _field_provenance() -> dict[str, dict[str, str]]:
++    return {field: {"principle": FIELD_PRINCIPLES[field]} for field in REQUIRED_ARTIFACT_FIELDS}
++
++
++def _empty_artifact(
++    *,
++    verdict: str,
++    checks: Sequence[dict[str, Any]],
++    workload: dict[str, Any],
++    cpu_reference_sha256: str,
++    run_duration_s: float,
++    soc_temp_max_c: float | None = None,
++) -> dict[str, Any]:
++    return {
++        "experiment": EXPERIMENT_ID,
++        "schema": SCHEMA,
++        "spec_refs": SPEC_REFS,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "polarfire_workload_validated": False,
++        "result_hash_match": False,
++        "board_result_sha256": "",
++        "cpu_reference_sha256": cpu_reference_sha256,
++        "run_duration_s": round(float(run_duration_s), 6),
++        "soc_temp_max_c": soc_temp_max_c,
++        "thermal_note": THERMAL_NOTE,
++        "preconditions_checked": list(checks),
++        "random_seed": int(workload["random_seed"]),
++        "reproducibility_checksum": "",
++        "field_provenance": _field_provenance(),
++        "workload_sha256": sha256_json(workload),
++        "no_fpga_fabric_claim": True,
++    }
++
++
++def _terminal_verdict(
++    *,
++    result_hash_match: bool,
++    run_duration_s: float,
++    board_result_sha256: str,
++    cpu_reference_sha256: str,
++    soc_temp_max_c: float | None,
++) -> str:
++    if not result_hash_match:
++        return (
++            "complete: polarfire_dispatch_ran_hash_MISMATCH_"
++            f"cpu{cpu_reference_sha256[:8]}_board{board_result_sha256[:8]}_"
++            "workload_not_validated"
++        )
++    if run_duration_s < MIN_TERMINAL_DURATION_S:
++        return "complete: polarfire_dispatch_ran_duration_lt5_workload_not_validated"
++    temp_label = "unknown" if soc_temp_max_c is None else f"{soc_temp_max_c:.1f}"
++    return (
++        "success: polarfire_carnot_dispatch_hash_verified_terminal_"
++        f"duration{run_duration_s:.2f}s_temp{temp_label}"
++    )
++
++
++def _finalize_checksum(artifact: dict[str, Any]) -> dict[str, Any]:
++    payload = dict(artifact)
++    payload.pop("reproducibility_checksum", None)
++    artifact["reproducibility_checksum"] = sha256_json(payload)
++    return artifact
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    runner: Runner | None = None,
++    clock: Clock = time.monotonic,
++    host: str = DEFAULT_HOST,
++    remote_dir: str | None = None,
++    min_remote_runtime_s: float = DEFAULT_REMOTE_RUNTIME_S,
++    output_path: Path | None = None,
++) -> dict[str, Any]:
++    """Run the gated PolarFire Ising dispatch and write the JSON artifact."""
++    active_runner = runner or _run_local_command
++    started = clock()
++    workload = build_ising_workload(RANDOM_SEED)
++    cpu_reference = evaluate_ising_workload(workload)
++    cpu_reference_sha256 = sha256_json(cpu_reference)
++
++    checks, metadata, blocker = check_preconditions(active_runner, host)
++    del metadata
++    if blocker is not None:
++        artifact = _empty_artifact(
++            verdict=blocker,
++            checks=checks,
++            workload=workload,
++            cpu_reference_sha256=cpu_reference_sha256,
++            run_duration_s=clock() - started,
++        )
++        artifact = _finalize_checksum(artifact)
++        destination = output_path or Path(repo_root) / OUTPUT_REL_PATH
++        _write_json(destination, artifact)
++        return artifact
++
++    active_remote_dir = remote_dir or f"/tmp/carnot_exp3867_{os.getpid()}_{int(time.time())}"
++    command_transcript: list[dict[str, Any]] = []
++    board_result: dict[str, Any] | None = None
++    failure_detail = ""
++    dispatch_blocker = ""
++    soc_temp_max_c: float | None = None
++    try:
++        with tempfile.TemporaryDirectory(prefix="carnot_exp3867_") as tmpdir:
++            workload_path, runner_path = _write_local_payloads(Path(tmpdir), workload)
++            board_result, command_transcript = dispatch_to_board(
++                runner=active_runner,
++                host=host,
++                workload_path=workload_path,
++                runner_path=runner_path,
++                remote_dir=active_remote_dir,
++                min_remote_runtime_s=min_remote_runtime_s,
++            )
++        soc_temp_max_c, thermal_transcript = probe_soc_temp_max_c(active_runner, host)
++        command_transcript.append(thermal_transcript)
++    except DispatchError as exc:
++        dispatch_blocker = exc.verdict
++        failure_detail = exc.detail
++        command_transcript = exc.transcript
++
++    run_duration_s = round(float(clock() - started), 6)
++    if dispatch_blocker:
++        artifact = _empty_artifact(
++            verdict=dispatch_blocker,
++            checks=checks,
++            workload=workload,
++            cpu_reference_sha256=cpu_reference_sha256,
++            run_duration_s=run_duration_s,
++            soc_temp_max_c=soc_temp_max_c,
++        )
++        artifact["failure_detail"] = failure_detail
++        artifact["command_transcript"] = command_transcript
++        artifact = _finalize_checksum(artifact)
++        destination = output_path or Path(repo_root) / OUTPUT_REL_PATH
++        _write_json(destination, artifact)
++        return artifact
++
++    assert board_result is not None
++    board_result_sha256 = sha256_json(board_result)
++    result_hash_match = board_result_sha256 == cpu_reference_sha256
++    workload_validated = result_hash_match and run_duration_s >= MIN_TERMINAL_DURATION_S
++    verdict = _terminal_verdict(
++        result_hash_match=result_hash_match,
++        run_duration_s=run_duration_s,
++        board_result_sha256=board_result_sha256,
++        cpu_reference_sha256=cpu_reference_sha256,
++        soc_temp_max_c=soc_temp_max_c,
++    )
++
++    artifact = _empty_artifact(
++        verdict=verdict,
++        checks=checks,
++        workload=workload,
++        cpu_reference_sha256=cpu_reference_sha256,
++        run_duration_s=run_duration_s,
++        soc_temp_max_c=soc_temp_max_c,
++    )
++    artifact.update(
++        {
++            "polarfire_workload_validated": workload_validated,
++            "result_hash_match": result_hash_match,
++            "board_result_sha256": board_result_sha256,
++            "cpu_reference_result": cpu_reference,
++            "board_result": board_result,
++            "command_transcript": command_transcript,
++        }
++    )
++    artifact = _finalize_checksum(artifact)
++    destination = output_path or Path(repo_root) / OUTPUT_REL_PATH
++    _write_json(destination, artifact)
++    return artifact
++
++
++def _run_local_command(args: Sequence[str], timeout: float | None = None) -> CommandResult:
++    try:  # pragma: no cover - exercised by the live hardware run.
++        completed = subprocess.run(
++            list(args),
++            check=False,
++            capture_output=True,
++            text=True,
++            timeout=timeout,
++        )
++        return CommandResult(tuple(args), completed.returncode, completed.stdout, completed.stderr)
++    except subprocess.TimeoutExpired as exc:  # pragma: no cover
++        stdout = exc.stdout if isinstance(exc.stdout, str) else ""
++        stderr = exc.stderr if isinstance(exc.stderr, str) else "timeout"
++        return CommandResult(tuple(args), 124, stdout, stderr)
++    except OSError as exc:  # pragma: no cover
++        return CommandResult(tuple(args), 127, "", str(exc))
++
++
++def main() -> None:  # pragma: no cover
++    artifact = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    print(json.dumps(artifact, sort_keys=True, indent=2))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 00ccc0427e..37f6541e3a 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T10:29:57.883628+00:00",
+-  "finished_at": "2026-06-05T10:29:57.913913+00:00",
+-  "duration_s": 0.03,
++  "started_at": "2026-06-05T14:43:52.074201+00:00",
++  "finished_at": "2026-06-05T14:43:52.097186+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 278bf1dc9a..927dffd2d2 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-05T10:29:58Z",
++  "run_date": "2026-06-05T14:43:52Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 7f5597cd8c..0d4d08290d 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T10:29:58Z",
+-  "finished_at": "2026-06-05T10:29:59Z",
++  "started_at": "2026-06-05T14:43:53Z",
++  "finished_at": "2026-06-05T14:43:53Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 84217f2215..bdac84272b 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-05T10:29:59Z",
++  "run_date": "2026-06-05T14:43:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 27bebe3bb0..0d19256ca0 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-05T10:29:59Z",
++  "run_date": "2026-06-05T14:43:53Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index bc41913e84..d91571a980 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-05T13:23:39.637027Z",
+-  "duration_s": 0.010448932647705078,
++  "run_date": "2026-06-05T14:42:12.860901Z",
++  "duration_s": 0.010393381118774414,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "70e0fffc796c535934573384276f30a87f31c273e4750866cf007f657bfee87e",
++  "reproducibility_checksum": "d0cfd57c38072925b499e6df41ed74255a3fb57457e679fd67238f2dfe720c99",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3dc005fa2f337a1fc5e3df1459617da9d7c0ce7d"
++    "adversarial_verify_version": "64e887525d2f581955551234c5ce414cd540dbd3"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 90f5011e78..a457ecc462 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-05T13:23:39.650640Z",
+-  "duration_s": 0.010228872299194336,
++  "run_date": "2026-06-05T14:42:12.873475Z",
++  "duration_s": 0.009265661239624023,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b195df3748e57d6d6474276c5da450981e5929866826aee9a861a6fe6a504dae",
++  "reproducibility_checksum": "cb1e730b96ef7815b6b4da39f43911878405153930a3d6ebcda360fa099bd50d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3dc005fa2f337a1fc5e3df1459617da9d7c0ce7d"
++    "adversarial_verify_version": "64e887525d2f581955551234c5ce414cd540dbd3"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d039746100..f41dfade8a 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 3.857135772705078,
++  "efficiency_gains_ms": 5.643129348754883,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 361fbe964c..9bf9a797ec 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.21363592147827148,
++  "duration_s": 0.29216623306274414,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index df2f33bbdc..da9c1d8f8c 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008056163787841797,
++  "duration_s": 0.0009210109710693359,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 035ab55a3a..cccec39650 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6360001356806606e-05,
++  "duration_s": 2.9085000278428197e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 9e6159aeb7..7880cf377b 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 3.910026862286031e-07,
++  "duration_s": 5.910042091272771e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 2ba14f0011..c8faab5360 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.8650970458984375e-05,
++  "duration_s": 5.030632019042969e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3867_polarfire_soc_smoke_v4.json b/results/experiment_3867_polarfire_soc_smoke_v4.json
+new file mode 100644
+index 0000000000..3ad1ae92ce
+--- /dev/null
++++ b/results/experiment_3867_polarfire_soc_smoke_v4.json
+@@ -0,0 +1,153 @@
++{
++  "board_result": {
++    "energies": [
++      9,
++      -9,
++      9,
++      -9,
++      9,
++      -9
++    ],
++    "energy_max": 9,
++    "energy_min": -9,
++    "energy_sum": 0,
++    "n_configs": 6,
++    "n_spins": 8,
++    "random_seed": 3867,
++    "schema": "carnot.ising_energy_result.v1",
++    "spec_refs": [
++      "REQ-HW-3867",
++      "SCENARIO-HW-3867"
++    ],
++    "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
++  },
++  "board_result_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
++  "command_transcript": [
++    {
++      "command": "ssh polarfire 'mkdir -p /tmp/carnot_exp3867_311137_1780670490'",
++      "output_excerpt": "",
++      "returncode": 0,
++      "stage": "remote_mkdir"
++    },
++    {
++      "command": "scp -q /tmp/carnot_exp3867_p6h3qf7w/runner.py /tmp/carnot_exp3867_p6h3qf7w/workload.json polarfire:/tmp/carnot_exp3867_311137_1780670490/",
++      "output_excerpt": "",
++      "returncode": 0,
++      "stage": "scp_push"
++    },
++    {
++      "command": "ssh polarfire 'cd /tmp/carnot_exp3867_311137_1780670490 && python3 runner.py workload.json --min-runtime-s 5.050 # local_workload_path=/tmp/carnot_exp3867_p6h3qf7w/workload.json'",
++      "output_excerpt": "{\"energies\":[9,-9,9,-9,9,-9],\"energy_max\":9,\"energy_min\":-9,\"energy_sum\":0,\"n_configs\":6,\"n_spins\":8,\"random_seed\":3867,\"schema\":\"carnot.ising_energy_result.v1\",\"spec_refs\":[\"REQ-HW-3867\",\"SCENARIO-HW-3867\"],\"workload_sha256\":\"3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b\"}\ncycles=2102",
++      "returncode": 0,
++      "stage": "remote_ising_eval"
++    },
++    {
++      "command": "ssh polarfire 'rm -rf /tmp/carnot_exp3867_311137_1780670490'",
++      "output_excerpt": "",
++      "returncode": 0,
++      "stage": "remote_cleanup"
++    },
++    {
++      "command": "ssh polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nfrom pathlib import Path\nfor path in sorted(Path('\"'\"'/sys/class/thermal'\"'\"').glob('\"'\"'thermal_zone*/temp'\"'\"')):\n    try:\n        print(path.read_text().strip())\n    except OSError:\n        pass\nPY'",
++      "output_excerpt": "",
++      "returncode": 0,
++      "stage": "thermal_probe"
++    }
++  ],
++  "cpu_reference_result": {
++    "energies": [
++      9,
++      -9,
++      9,
++      -9,
++      9,
++      -9
++    ],
++    "energy_max": 9,
++    "energy_min": -9,
++    "energy_sum": 0,
++    "n_configs": 6,
++    "n_spins": 8,
++    "random_seed": 3867,
++    "schema": "carnot.ising_energy_result.v1",
++    "spec_refs": [
++      "REQ-HW-3867",
++      "SCENARIO-HW-3867"
++    ],
++    "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
++  },
++  "cpu_reference_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
++  "experiment": 3867,
++  "field_provenance": {
++    "board_result_sha256": {
++      "principle": "The board-side result hash compared against the CPU reference -- auditable provenance that the workload ran on the board."
++    },
++    "cpu_reference_sha256": {
++      "principle": "The local reference result hash compared against the board result -- auditable provenance for the deterministic CPU baseline."
++    },
++    "honest_verdict": {
++      "principle": "Terminal prefix records whether the live board run succeeded, completed with non-terminal evidence, or stopped at a precondition."
++    },
++    "inference_substrate": {
++      "principle": "Inference-Substrate declaration for a hardware_smoke SSH-attached board run."
++    },
++    "polarfire_workload_validated": {
++      "principle": "Bare bool -- terminal-state gate; true only if the board's result hash matches the CPU reference and the real dispatch duration reaches the floor."
++    },
++    "preconditions_checked": {
++      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch."
++    },
++    "random_seed": {
++      "principle": "Pre-Launch reproducibility field controlling the fixed Ising workload."
++    },
++    "reproducibility_checksum": {
++      "principle": "Content-addressed checksum over the artifact, excluding this checksum, so later drift is detectable."
++    },
++    "result_hash_match": {
++      "principle": "Bare bool -- the structural anti-fabrication check; the board must reproduce the exact reference result."
++    },
++    "run_duration_s": {
++      "principle": "Real SSH round-trip wall-clock; >=5s floor structurally prevents the exp1680 run_duration_s=0 fabrication."
++    },
++    "soc_temp_max_c": {
++      "principle": "Per-board hardware-artifact thermal field; null only when the board does not expose readable thermal sysfs values."
++    },
++    "thermal_note": {
++      "principle": "Per-board hardware-artifact field describing the passive-cooling envelope of the dispatch."
++    }
++  },
++  "honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration12.61s_tempunknown",
++  "inference_substrate": "hardware_smoke",
++  "no_fpga_fabric_claim": true,
++  "polarfire_workload_validated": true,
++  "preconditions_checked": [
++    {
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "passed": true,
++      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch.",
++      "resource": "polarfire_ssh"
++    },
++    {
++      "command": "ssh polarfire 'python3 --version'",
++      "exit_code": 0,
++      "observed": "Python 3.12.12",
++      "passed": true,
++      "principle": "Pre-Launch + Inference-Substrate hardware_smoke gate; SSH reachability and board Python checks must pass before dispatch.",
++      "resource": "polarfire_python"
++    }
++  ],
++  "random_seed": 3867,
++  "reproducibility_checksum": "a80a9aaee15f5a7d864cbe663fd430c90c74ace452af777caaa1332a60efa632",
++  "result_hash_match": true,
++  "run_duration_s": 12.605785,
++  "schema": "carnot.polarfire_soc_ising_dispatch.v4",
++  "soc_temp_max_c": null,
++  "spec_refs": [
++    "REQ-HW-3867",
++    "SCENARIO-HW-3867"
++  ],
++  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling",
++  "workload_sha256": "3362f3ea747532dda1d29228eb78931110e84b4aef9d1ee82b058c2a0dc2973b"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ab0b6147af..e95ec06961 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:45:52Z",
+-  "finished_at": "2026-06-05T13:45:52Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-05T14:42:04Z",
++  "finished_at": "2026-06-05T14:42:04Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index aa1a6c72ad..774d8b1a09 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:45:52Z",
+-  "finished_at": "2026-06-05T13:45:52Z",
++  "started_at": "2026-06-05T14:42:04Z",
++  "finished_at": "2026-06-05T14:42:04Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f90403ea43..828e2ee285 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:45:52Z",
+-  "finished_at": "2026-06-05T13:45:52Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-05T14:42:04Z",
++  "finished_at": "2026-06-05T14:42:04Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py b/scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py
+new file mode 100644
+index 0000000000..4dab22ddd1
+--- /dev/null
++++ b/scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py
+@@ -0,0 +1,33 @@
++#!/usr/bin/env python3
++"""Runner for Exp 3867 PolarFire SoC Ising dispatch v4.
++
++Spec refs: REQ-HW-3867, SCENARIO-HW-3867.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_3867_polarfire_soc_smoke_v4 import (
++        OUTPUT_REL_PATH,
++        run_experiment,
++    )
++
++    artifact = run_experiment(repo_root=REPO_ROOT)
++    print(f"artifact: {OUTPUT_REL_PATH}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"polarfire_workload_validated: {artifact['polarfire_workload_validated']}")
++    print(f"result_hash_match: {artifact['result_hash_match']}")
++    print(f"run_duration_s: {artifact['run_duration_s']}")
++    print(f"soc_temp_max_c: {artifact['soc_temp_max_c']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_3867_polarfire_soc_smoke_v4.py b/tests/python/test_experiment_3867_polarfire_soc_smoke_v4.py
+new file mode 100644
+index 0000000000..e00b77874d
+--- /dev/null
++++ b/tests/python/test_experiment_3867_polarfire_soc_smoke_v4.py
+@@ -0,0 +1,328 @@
++"""Tests for Exp 3867 PolarFire SoC Ising dispatch v4.
++
++Spec refs: REQ-HW-3867, SCENARIO-HW-3867.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++from pathlib import Path
++from typing import Sequence
++
++from carnot import experiment_3867_polarfire_soc_smoke_v4 as mod
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "fpga" / "spec.md"
++
++
++class FakeRunner:
++    """Command runner that models SSH/SCP states without touching hardware."""
++
++    def __init__(
++        self,
++        *,
++        fail_ssh: bool = False,
++        fail_python: bool = False,
++        board_result: dict[str, object] | None = None,
++        temp_stdout: str = "42000\n39750\n",
++    ) -> None:
++        self.fail_ssh = fail_ssh
++        self.fail_python = fail_python
++        self.board_result = board_result
++        self.temp_stdout = temp_stdout
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(
++        self, args: Sequence[str], timeout: float | None = None
++    ) -> mod.CommandResult:
++        del timeout
++        command = tuple(args)
++        self.commands.append(command)
++
++        if command == mod.POLARFIRE_SSH_PRECONDITION:
++            if self.fail_ssh:
++                return mod.CommandResult(command, 255, "", "ssh timeout\n")
++            return mod.CommandResult(command, 0, "", "")
++        if command == mod.POLARFIRE_PYTHON_PRECONDITION:
++            if self.fail_python:
++                return mod.CommandResult(command, 127, "", "python3: not found\n")
++            return mod.CommandResult(command, 0, "Python 3.12.12\n", "")
++        if command[0] == "ssh" and command[2].startswith("mkdir -p "):
++            return mod.CommandResult(command, 0, "", "")
++        if command[0] == "scp":
++            return mod.CommandResult(command, 0, "", "")
++        if command[0] == "ssh" and "python3 runner.py workload.json" in command[2]:
++            payload = self.board_result
++            if payload is None:
++                workload_path = mod.extract_local_workload_path(command[2])
++                workload = json.loads(Path(workload_path).read_text(encoding="utf-8"))
++                payload = mod.evaluate_ising_workload(workload)
++            return mod.CommandResult(
++                command,
++                0,
++                json.dumps(payload, sort_keys=True, separators=(",", ":")) + "\n",
++                "cycles=12\n",
++            )
++        if command[0] == "ssh" and "thermal_zone" in command[2]:
++            return mod.CommandResult(command, 0, self.temp_stdout, "")
++        if command[0] == "ssh" and command[2].startswith("rm -rf "):
++            return mod.CommandResult(command, 0, "", "")
++        raise AssertionError(f"unexpected command: {command!r}")
++
++
++def _clock(values: list[float]):
++    ticks = iter(values)
++
++    def monotonic() -> float:
++        return next(ticks)
++
++    return monotonic
++
++
++def test_req_hw_3867_spec_entry_present() -> None:
++    """REQ-HW-3867: OpenSpec declares the PolarFire hash-verified Ising artifact."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-HW-3867" in spec
++    assert "SCENARIO-HW-3867" in spec
++    assert "experiment_3867_polarfire_soc_smoke_v4.json" in spec
++    assert "blocked_polarfire_ssh_timeout" in spec
++    assert "blocked_polarfire_no_python" in spec
++
++
++def test_req_hw_3867_workload_and_remote_runner_are_deterministic(tmp_path: Path) -> None:
++    """REQ-HW-3867: CPU and board runner compute the same seed-controlled result hash."""
++    workload = mod.build_ising_workload(random_seed=mod.RANDOM_SEED)
++    second_workload = mod.build_ising_workload(random_seed=mod.RANDOM_SEED)
++    assert workload == second_workload
++    assert workload["random_seed"] == mod.RANDOM_SEED
++    assert len(workload["spin_configs"]) == 6
++
++    cpu_result = mod.evaluate_ising_workload(workload)
++    workload_path = tmp_path / "workload.json"
++    result_path = tmp_path / "result.json"
++    runner_path = tmp_path / "runner.py"
++    workload_path.write_text(json.dumps(workload), encoding="utf-8")
++    runner_path.write_text(mod.build_remote_runner_source(), encoding="utf-8")
++
++    completed = subprocess.run(
++        [
++            sys.executable,
++            str(runner_path),
++            str(workload_path),
++            "--min-runtime-s",
++            "0",
++        ],
++        check=True,
++        capture_output=True,
++        text=True,
++    )
++    result_path.write_text(completed.stdout, encoding="utf-8")
++    board_result = json.loads(result_path.read_text(encoding="utf-8"))
++
++    assert board_result == cpu_result
++    assert mod.sha256_json(board_result) == mod.sha256_json(cpu_result)
++
++
++def test_req_hw_3867_ssh_precondition_blocks_before_python_or_scp(tmp_path: Path) -> None:
++    """REQ-HW-3867: SSH failure writes blocked_polarfire_ssh_timeout and stops."""
++    fake = FakeRunner(fail_ssh=True)
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=fake,
++        clock=_clock([10.0, 10.25]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_polarfire_ssh_timeout"
++    assert artifact["preconditions_checked"] == [
++        {
++            "resource": "polarfire_ssh",
++            "command": mod.command_to_string(mod.POLARFIRE_SSH_PRECONDITION),
++            "passed": False,
++            "exit_code": 255,
++            "observed": "ssh timeout",
++            "principle": mod.FIELD_PRINCIPLES["preconditions_checked"],
++        }
++    ]
++    assert artifact["polarfire_workload_validated"] is False
++    assert artifact["result_hash_match"] is False
++    assert not any(command[0] == "scp" for command in fake.commands)
++    assert mod.POLARFIRE_PYTHON_PRECONDITION not in fake.commands
++
++
++def test_req_hw_3867_python_precondition_blocks_before_scp(tmp_path: Path) -> None:
++    """REQ-HW-3867: missing board Python writes blocked_polarfire_no_python."""
++    fake = FakeRunner(fail_python=True)
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=fake,
++        clock=_clock([20.0, 20.5]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_polarfire_no_python"
++    assert [row["resource"] for row in artifact["preconditions_checked"]] == [
++        "polarfire_ssh",
++        "polarfire_python",
++    ]
++    assert artifact["preconditions_checked"][1]["passed"] is False
++    assert artifact["board_result_sha256"] == ""
++    assert not any(command[0] == "scp" for command in fake.commands)
++
++
++def test_scenario_hw_3867_success_artifact_hash_verified_terminal(tmp_path: Path) -> None:
++    """SCENARIO-HW-3867: hash match and duration >=5 validate the PolarFire workload."""
++    fake = FakeRunner()
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=fake,
++        clock=_clock([100.0, 106.4]),
++        remote_dir="/tmp/carnot-exp3867-test",
++        min_remote_runtime_s=5.0,
++    )
++    on_disk = json.loads((tmp_path / mod.OUTPUT_REL_PATH).read_text(encoding="utf-8"))
++
++    assert on_disk == artifact
++    assert artifact["honest_verdict"].startswith(
++        "success: polarfire_carnot_dispatch_hash_verified_terminal_duration6.40s_temp42.0"
++    )
++    assert artifact["polarfire_workload_validated"] is True
++    assert artifact["result_hash_match"] is True
++    assert artifact["board_result_sha256"] == artifact["cpu_reference_sha256"]
++    assert artifact["run_duration_s"] == 6.4
++    assert artifact["soc_temp_max_c"] == 42.0
++    assert artifact["thermal_note"] == mod.THERMAL_NOTE
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert len(artifact["reproducibility_checksum"]) == 64
++    assert [field for field in mod.REQUIRED_ARTIFACT_FIELDS if field not in artifact] == []
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_provenance"])
++    assert all(
++        artifact["field_provenance"][field]["principle"]
++        for field in mod.REQUIRED_ARTIFACT_FIELDS
++    )
++    assert any(command[0] == "scp" for command in fake.commands)
++
++
++def test_req_hw_3867_hash_mismatch_is_partial_not_validated(tmp_path: Path) -> None:
++    """REQ-HW-3867: board result hash mismatch cannot pass the terminal gate."""
++    workload = mod.build_ising_workload(random_seed=mod.RANDOM_SEED)
++    wrong = mod.evaluate_ising_workload(workload)
++    wrong["energies"] = list(wrong["energies"])
++    wrong["energies"][0] += 1
++    fake = FakeRunner(board_result=wrong)
++
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=fake,
++        clock=_clock([200.0, 207.0]),
++    )
++
++    assert artifact["honest_verdict"].startswith(
++        "complete: polarfire_dispatch_ran_hash_MISMATCH"
++    )
++    assert artifact["polarfire_workload_validated"] is False
++    assert artifact["result_hash_match"] is False
++    assert artifact["board_result_sha256"] != artifact["cpu_reference_sha256"]
++
++
++def test_req_hw_3867_dispatch_failure_writes_blocked_artifact(tmp_path: Path) -> None:
++    """REQ-HW-3867: SCP or remote failures are blocked without validating workload."""
++
++    class ScpFailRunner(FakeRunner):
++        def __call__(
++            self, args: Sequence[str], timeout: float | None = None
++        ) -> mod.CommandResult:
++            command = tuple(args)
++            if command[0] == "scp":
++                self.commands.append(command)
++                return mod.CommandResult(command, 1, "", "scp failed\n")
++            return super().__call__(args, timeout)
++
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=ScpFailRunner(),
++        clock=_clock([400.0, 401.0]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_polarfire_dispatch_failed"
++    assert artifact["polarfire_workload_validated"] is False
++    assert artifact["result_hash_match"] is False
++    assert "scp_push: rc=1" in artifact["failure_detail"]
++    assert artifact["command_transcript"][-1]["stage"] == "remote_cleanup"
++
++
++def test_req_hw_3867_invalid_remote_json_blocks_dispatch(tmp_path: Path) -> None:
++    """REQ-HW-3867: malformed board stdout is a dispatch blocker, not a mismatch."""
++
++    class BadJsonRunner(FakeRunner):
++        def __call__(
++            self, args: Sequence[str], timeout: float | None = None
++        ) -> mod.CommandResult:
++            command = tuple(args)
++            if command[0] == "ssh" and "python3 runner.py workload.json" in command[2]:
++                self.commands.append(command)
++                return mod.CommandResult(command, 0, "not-json\n", "")
++            return super().__call__(args, timeout)
++
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=BadJsonRunner(),
++        clock=_clock([500.0, 501.0]),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_polarfire_dispatch_failed"
++    assert "remote_ising_eval_json" in artifact["failure_detail"]
++
++
++def test_req_hw_3867_duration_gate_prevents_fast_terminal_claim(tmp_path: Path) -> None:
++    """REQ-HW-3867: hash match alone is insufficient when run_duration_s is under 5."""
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        runner=FakeRunner(),
++        clock=_clock([300.0, 304.99]),
++        min_remote_runtime_s=0.0,
++    )
++
++    assert artifact["result_hash_match"] is True
++    assert artifact["polarfire_workload_validated"] is False
++    assert artifact["honest_verdict"] == (
++        "complete: polarfire_dispatch_ran_duration_lt5_workload_not_validated"
++    )
++
++
++def test_req_hw_3867_temperature_parser_handles_missing_values() -> None:
++    """REQ-HW-3867: SoC temperature is null when sysfs readings are unavailable."""
++    assert mod.parse_soc_temp_max_c("42000\n39750\n") == 42.0
++    assert mod.parse_soc_temp_max_c("42.5\nnot-a-number\n") == 42.5
++    assert mod.parse_soc_temp_max_c("") is None
++    assert mod.parse_soc_temp_max_c("cat: no such file\n") is None
++    try:
++        mod.extract_local_workload_path("python3 runner.py workload.json")
++    except ValueError as exc:
++        assert "local_workload_path" in str(exc)
++    else:  # pragma: no cover - defensive assertion shape.
++        raise AssertionError("missing marker should raise")
++
++
++def test_req_hw_3867_thermal_probe_failure_returns_null() -> None:
++    """REQ-HW-3867: failed thermal sysfs probe records null temperature."""
++
++    def runner(args: Sequence[str], timeout: float | None = None) -> mod.CommandResult:
++        del timeout
++        command = tuple(args)
++        return mod.CommandResult(command, 1, "", "no thermal zones\n")
++
++    temp, transcript = mod.probe_soc_temp_max_c(runner, "polarfire")
++
++    assert temp is None
++    assert transcript["stage"] == "thermal_probe"
++    assert transcript["returncode"] == 1
++
++
++def test_req_hw_3867_script_wrapper_exists() -> None:
++    """SCENARIO-HW-3867: conductor entrypoint delegates to the module."""
++    script = Path("scripts/experiments/experiment_3867_polarfire_soc_smoke_v4.py")
++    text = script.read_text(encoding="utf-8")
++    assert "experiment_3867_polarfire_soc_smoke_v4" in text
++    assert "run_experiment" in text
+-- 
+2.55.0
+

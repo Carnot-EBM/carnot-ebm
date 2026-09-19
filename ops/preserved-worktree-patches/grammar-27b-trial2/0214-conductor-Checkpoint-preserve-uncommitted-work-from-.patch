@@ -1,0 +1,43 @@
+From 8fa08de169229388098b12a8a15b4b02b7286d20 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 16:58:02 -0400
+Subject: [PATCH 00214/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b3e425aa7e..ad99715bb8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 244, "phase": "iteration_start", "last_beat": "2026-06-02T20:43:29Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 245, "phase": "iteration_start", "last_beat": "2026-06-02T20:58:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e99e9c4247..bc5dfc15c1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7618,3 +7618,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 20:01 UTC | Capstone .341 — aggregate the Thesis-A EBT bring-u | OK | 87 passed in 5.06s |
+ | 2026-06-02 20:39 UTC | Plan milestone 2026.06.342 | OK | 11 tasks proposed |
+ | 2026-06-02 20:41 UTC | Milestone 2026.06.342 activated | OK | 11 tasks queued |
++| 2026-06-02 20:56 UTC | Archive milestone .341 HONESTLY (Thesis-A EBT brin | OK | 105 passed in 5.76s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5c98515714..abaa7af829 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 244, "phase": "iteration_start", "started_at": "2026-06-02T20:43:29Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 245, "phase": "iteration_start", "started_at": "2026-06-02T20:58:01Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

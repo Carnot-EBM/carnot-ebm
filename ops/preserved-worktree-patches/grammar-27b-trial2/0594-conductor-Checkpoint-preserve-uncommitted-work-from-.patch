@@ -1,0 +1,44 @@
+From aea632b6d9e7100d837efb52052d101a47b27402 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 04:18:38 -0400
+Subject: [PATCH 00594/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 189ab5dc86..fab58df350 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-06-05T08:16:23Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-06-05T08:18:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a6220393cb..d02c803129 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7849,3 +7849,5 @@ ERROR: {
+ | 2026-06-05 08:14 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
+ | 2026-06-05 08:14 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.45s |
+ | 2026-06-05 08:16 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
++| 2026-06-05 08:16 UTC | FR-11 continuous self-learning v22 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.03s |
++| 2026-06-05 08:18 UTC | Facts-domain COMPLEMENTARITY (gated on exp3850 fac | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3850-graph-grounding-fact-verifier-protot |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c420c72c3a..662b2be5ed 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 25, "phase": "iteration_start", "started_at": "2026-06-05T08:16:23Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 26, "phase": "iteration_start", "started_at": "2026-06-05T08:18:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

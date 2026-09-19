@@ -1,0 +1,119 @@
+From bab17d59f4faf60b1d3922dbdcf3caefa78b6ee3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 19:35:50 -0400
+Subject: [PATCH 00680/11171] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                 |  2 +-
+ ops/conductor-state.json                     |  2 +-
+ results/experiment_625_tier1_fr11_relay.json |  4 ++--
+ results/experiment_638_tier1_fr11_relay.json |  6 +++---
+ results/experiment_645_tier1_fr11_relay.json |  4 ++--
+ results/operational_retro_2026_06_358.json   | 14 +++++---------
+ 6 files changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1d84f9d674..dc61b33d7f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 385647, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-05T23:16:06Z"}
+\ No newline at end of file
++{"pid": 387785, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-05T23:32:57Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b00fe2e152..3888e50e9f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 385647, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-05T23:16:06Z"}
+\ No newline at end of file
++{"pid": 387785, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-05T23:32:57Z"}
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 12b1307bed..00041b3561 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T23:16:20Z",
+-  "finished_at": "2026-06-05T23:16:20Z",
++  "started_at": "2026-06-05T23:33:10Z",
++  "finished_at": "2026-06-05T23:33:10Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ac0f12dff7..7ef9be0a0b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T23:16:20Z",
+-  "finished_at": "2026-06-05T23:16:20Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-05T23:33:10Z",
++  "finished_at": "2026-06-05T23:33:10Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index b90df10dda..1812961045 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T23:16:20Z",
+-  "finished_at": "2026-06-05T23:16:20Z",
++  "started_at": "2026-06-05T23:33:11Z",
++  "finished_at": "2026-06-05T23:33:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/operational_retro_2026_06_358.json b/results/operational_retro_2026_06_358.json
+index 4decb39f3d..72975836a4 100644
+--- a/results/operational_retro_2026_06_358.json
++++ b/results/operational_retro_2026_06_358.json
+@@ -1,21 +1,17 @@
+ {
+   "schema": "carnot.operational_retro.v64",
+   "milestone": "2026.06.358",
+-  "generated_at": "2026-06-05T20:24:54Z",
++  "generated_at": "2026-06-05T23:18:20Z",
+   "retro_type": "operational_full",
+   "total_wall_time_minutes": 0,
+   "experiments_completed": 0,
+   "compute_bound_experiments_count": 0,
+   "slowest_experiments": [],
+   "gpu_idle_on_compute_bound_tasks": null,
+-  "summary": "The authoritative timing source reports no experiment commits since activation, leaving 0 total wall-time minutes and 0 completed experiments. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks.",
++  "summary": "",
+   "bottlenecks_identified": [],
+-  "improvements_suggested": [
+-    "investigate why no experiments were dispatched to completion since milestone activation"
+-  ],
+-  "top_3_highest_leverage_actions": [
+-    "Investigate why no experiments were dispatched to completion since milestone activation"
+-  ],
++  "improvements_suggested": [],
++  "top_3_highest_leverage_actions": [],
+   "estimated_time_savings_pct": 0,
+-  "meta_reflection": "Zero experiments completed is an early-warning signal that warrants investigation into the activation pipeline rather than being treated as routine."
++  "meta_reflection": ""
+ }
+\ No newline at end of file
+-- 
+2.55.0
+

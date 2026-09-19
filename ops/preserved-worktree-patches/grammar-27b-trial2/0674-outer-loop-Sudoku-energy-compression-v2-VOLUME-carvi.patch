@@ -1,0 +1,64 @@
+From 4fe1eea4cdac5572b0ff03146a16a98ca1e25a69 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 19:15:39 -0400
+Subject: [PATCH 00674/11171] =?UTF-8?q?[outer-loop]=20Sudoku=20energy-comp?=
+ =?UTF-8?q?ression=20v2:=20VOLUME=20carving=20works=20(flatland=20FLIPPED?=
+ =?UTF-8?q?=20to=20CARVED,=20violations=20132->79)=20but=20NOT=20sufficien?=
+ =?UTF-8?q?t=20(solve=20still=200)=20=E2=80=94=20basin/latent=20(DBAE)=20c?=
+ =?UTF-8?q?ompression=20is=20the=20remaining=20wall.=20Two=20compressions,?=
+ =?UTF-8?q?=20two=20failure=20modes=20now=20isolated.=20Co-Authored-By:=20?=
+ =?UTF-8?q?Claude=20Opus=204.8=20(1M=20context)=20<noreply@anthropic.com>?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ results/sudoku_ebt_compression_v2.json | 35 ++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 results/sudoku_ebt_compression_v2.json
+
+diff --git a/results/sudoku_ebt_compression_v2.json b/results/sudoku_ebt_compression_v2.json
+new file mode 100644
+index 0000000000..be51ba1403
+--- /dev/null
++++ b/results/sudoku_ebt_compression_v2.json
+@@ -0,0 +1,35 @@
++{
++  "ebt_cd_solve_rate": 0.0,
++  "ebt_cd_blank_cell_acc": 0.11033099297893681,
++  "ebt_cd_mean_violations": 79.408,
++  "decoded_grid_mean_energy": 0.1642898235321045,
++  "gold_grid_mean_energy": -4.9995706787109375,
++  "flatland_diagnostic": "CARVED: decoded energy ABOVE gold (compression worked)",
++  "n_eval": 500,
++  "n_params": 3206913,
++  "train_seconds": 3351.286943435669,
++  "model": "ebt_compression_cd",
++  "args": {
++    "steps": 8000,
++    "batch": 64,
++    "hidden": 256,
++    "layers": 4,
++    "heads": 4,
++    "lr": 0.0002,
++    "train_n": 400000,
++    "eval_n": 500,
++    "seed": 0,
++    "log_every": 500,
++    "k_langevin": 20,
++    "lang_step": 1.0,
++    "lang_noise": 0.1,
++    "buffer": 10000,
++    "reinit_frac": 0.05,
++    "alpha": 0.1,
++    "decode_steps": 300,
++    "decode_step": 1.0,
++    "decode_noise0": 0.3,
++    "out": "results/sudoku_ebt_compression_v2.json"
++  },
++  "gpu": "NVIDIA GeForce RTX 3090"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

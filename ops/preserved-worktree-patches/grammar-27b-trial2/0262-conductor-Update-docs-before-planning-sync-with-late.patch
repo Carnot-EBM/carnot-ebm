@@ -1,0 +1,255 @@
+From 0c385200f73f5222185959db5603c78a88732c3b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 23:50:45 -0400
+Subject: [PATCH 00262/11171] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-state.json                      |  2 +-
+ ops/docs_audit_report.md                      | 57 +++++++++----------
+ results/experiment_1717_findings_audit.json   |  8 +--
+ ...xperiment_1796_findings_audit_186_187.json |  8 +--
+ results/experiment_1869_hiled.json            |  2 +-
+ ...periment_3350_kv260_latency_benchmark.json |  2 +-
+ results/experiment_625_tier1_fr11_relay.json  |  6 +-
+ results/experiment_638_tier1_fr11_relay.json  |  4 +-
+ results/experiment_645_tier1_fr11_relay.json  |  4 +-
+ 10 files changed, 47 insertions(+), 48 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 548e0e2818..f40df13076 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 30775, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-06-03T03:25:18Z"}
+\ No newline at end of file
++{"pid": 50773, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-03T03:49:35Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d447d355a2..007875185a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 30775, "iteration": 18, "phase": "iteration_start", "started_at": "2026-06-03T03:25:18Z"}
+\ No newline at end of file
++{"pid": 50773, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-03T03:49:35Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 3194a183ec..70e756abf0 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,51 +4,50 @@
+ # docs_audit_report — 2026-06-02
+ 
+ ## TL;DR (stranger's 30-second take)
+-A stranger would close the tab within 15 seconds. The page mixes incredibly dense internal jargon and literal leaked `pytest` file paths with impossibly perfect benchmark numbers, making it look like a generated internal dev dashboard rather than a serious, trustworthy open-source tool.
++I would close the tab in 15 seconds. The hero section hooks you with a clear value proposition, but the page immediately devolves into a wall of unexplained acronyms, leaked internal file paths, and suspiciously perfect "100%" benchmark numbers that make it look like an unreviewed, synthetic research draft rather than a production-ready tool.
+ 
+ ## TOP 3 PROBLEMS
+-1. Literal filepath leak in Results card (`@.tmp-pytest/pytest-of-ianblenke/...`)
+-2. Fabrication signals with impossibly perfect numbers (1.0 TP rate, 60/60 attacks caught, "Zero false positives")
+-3. Impenetrable acronyms and internal jargon ("FoVer", "PREM variance", "v2 0.9857")
++1. LEAKED INTERNAL PATHS — The "Live benchmark" result card contains a massive, broken local test filepath (`@.tmp-pytest/...`) instead of a valid label.
++2. ALPHABET SOUP JARGON — The page is riddled with undefined acronyms (FoVer, CCTU, SVAMP, PREM) that alienate anyone outside the core team.
++3. FABRICATED-LOOKING NUMBERS — Claims of exactly "2.0x speedup," perfect "1.0 TP rate," and "60/60 attacks" caught scream overfitting or synthetic data to a skeptical engineer.
+ 
+ ## DETAILED FINDINGS
+ ### Bloat
+-- `Recent progress` card in Hero — 65 words — Suggested cap: 30 words. It is overloaded with internal audit history and multi-seed methodology details.
+-- `Results` intro paragraph — 41 words — Suggested cap: 20 words. Over-explains the provenance labeling ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows").
+-- `Why "Energy-Based"?` card — 70 words — Suggested cap: 40 words. Dives too deeply into physics, thermodynamic samplers, and FPGA Ising machines for a high-level intro.
++- Blog Section — 7 cards — Cap at 3. A stranger does not need to scroll through your entire May 2026 diary on a landing page.
++- Results Section — 12 cards — Cap at 6. A 12-card wall of metrics is exhausting to read, and most visitors will skim past all of them.
++- Recent Progress Card (in Stats) — 51 words — Cap at 30. It's crammed into a stats bar meant for quick scanning and is bogged down by defensive caveats.
+ 
+ ### Internal jargon
+-- `Hero Stats & Recent Progress` — "FoVer", "5-seed dual-condition", "v2 0.9857" — Alienating; a stranger does not know your internal benchmark suites or version history.
+-- `Features / TTC & PREM` — "Test-Time Compute (TTC) & PREM... Process-Reward Energy Model (PREM) variance" — Thick acronym soup with zero plain-English explanation.
+-- `Features / Tool use` — "CCTU constrained micro-benchmark" — Unexplained external/internal benchmark.
+-- `Results` — "HalluGuard v3", "PRM-BiasBench-style attacks" — Deep-cut references without context.
+-- `Preprint` — "paper-v6" — Internal draft versioning exposed to the public.
++- Recent progress card — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — No one outside the project knows what FoVer or a "5-seed dual-condition" means.
++- Capabilities / TTC & PREM card — "Test-Time Compute (TTC) & PREM" and "Process-Reward Energy Model" — Niche architectural acronyms that act as a barrier to entry.
++- Results / Math reasoning card — "EstimationVerifier SVAMP AUC" — Meaningless to a general audience.
++- Results / Tool use card — "CCTU constrained micro-benchmark" — CCTU is entirely undefined.
++- Results / Live benchmark card — `@.tmp-pytest/pytest-of-ianblenke/pytest-4/...spilled-energy...` — Literal internal pytest/file path leaked into the HTML.
+ 
+ ### Per-milestone narrative
+-- `Hero Stats` — "382 Completed milestones" is an internal Jira/project-management brag, not a user-facing value proposition.
+-- `Hero / Recent progress` — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now" reads exactly like a copy-pasted pull request summary.
++- Recent Progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads like a defensive Jira ticket update or changelog, not marketing copy.
++- Preprint Section — "The arXiv submission is prepared but pending operator-initiated upload." — The user does not care about your internal task checklist. Just link the paper or remove the section.
+ 
+ ### Inconsistencies
+-- Claiming "No model fine-tuning required" in the *How it works* section vs. reporting "Two-GPU parallel retrain... 2.0x speedup, identical losses" in the *Results* section. A stranger will wonder: "Wait, do I have to train this or not?"
+-- The AUROC numbers are scattered and confusing: The Hero boasts `0.9131` (and `0.8947` architecture-only), while the Results section lists `0.91 AUROC (publication gate)` for safety, and `0.90 AUC` for math reasoning. It's unclear what the actual headline capability of the tool is.
++- Stats bar vs Results grid — The hero stats claim "0.9131 Verifier AUROC — FoVer math step-errors", but the Results grid for Math reasoning claims "0.90 AUC (vs 0.125 FoVer baseline)". It is unclear if these are the same metric, different models, or just conflicting numbers.
+ 
+ ### Missing essentials
+-- **Who maintains it?** The footer mentions "Ian Blenke" and "Carnot Project", but there's no institutional, startup, or lab backing established up top to justify these massive claims.
+-- **Why should I trust the numbers?** The page says "backed by a checked-in experiment artifact", but provides no direct links to reproducible runs for these specific (and wild) claims. 
++- Audience definition — While it explains what it does, it lacks a clear "Who is this for?" (e.g., enterprise engineers, ML researchers, or hobbyists). 
++- Dual-language context — The quickstart shows both Python and Rust, but it never explains *why* a user would choose one over the other or what the Rust bindings actually do for a typical pipeline.
+ 
+ ### Fabrication signals
+-- `Results / Math extraction` — "GSM8K extraction TP rate: 0.5 → 1.0" — 100% extraction True Positive rate on wild LLM text is virtually impossible and sets off immediate BS detectors.
+-- `Results / Adversarial audit` — "k=5 ensemble catches 60/60 attacks" — A perfect 60/60 score signals a toy dataset or overfitted test, not robust security.
+-- `Blog / Dogfooding` — "Zero false positives" — Claiming 0 FPR on heuristic code/constraint analysis in the real world destroys credibility.
+-- `Results / Code` — "164-problem HumanEval benchmark: 99.3% of wrong code flagged" — Suspiciously high for static/dynamic analysis of generated code.
++- Results / Training card: "2.0x speedup, identical losses" — Exactly 2.0x speedup in distributed training is suspiciously perfect.
++- Results / Math extraction card: "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate sets off immediate bullshit detectors without further context.
++- Results / Adversarial audit card: "k=5 ensemble catches 60/60 attacks" — 100% success on exactly 60 attacks looks cherry-picked or highly overfit.
+ 
+ ## WHAT'S WORKING
+-- The `Quick Start` tabbed code block is excellent. It immediately grounds the abstract "energy-based verification" into three lines of highly readable Python code.
+-- The core problem statement ("LLMs predict. They don't check.") is punchy, relatable, and instantly understandable.
++- The hero section's one-sentence summary ("Catch the reasoning errors your LLM states with total confidence.") is excellent and instantly understandable.
++- The "Extract -> Check -> Repair" bento layout clearly explains the operational loop without getting bogged down in complex mathematics.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Immediately delete the raw `@.tmp-pytest/...` filepath string from the `Live benchmark` Results card.
+-2. Purge the `Recent progress` card in the hero section of all internal versioning ("v2 0.9857") and statistical minutiae ("5-seed dual-condition"). 
+-3. Remove or heavily caveat the perfect numbers (1.0 TP rate, 60/60, "Zero false positives")—replace them with more realistic bounds or explain the narrow scope of those tests.
+-4. Delete the `TTC & PREM` bento card entirely, or rewrite it to explain what the feature *does* for the user rather than what acronyms it uses.
+-5. Remove the "Completed milestones" stat from the hero and replace it with a user-centric metric (e.g., active users, supported models, or check types).
+\ No newline at end of file
++1. Delete the leaked `@.tmp-pytest/...` filepath in the "Live benchmark" card immediately.
++2. Scrub all undefined acronyms (FoVer, CCTU, SVAMP, PREM) or replace them with descriptive, plain-English terms.
++3. Cull the Results grid from 12 cards to the 6 most impressive, believable metrics.
++4. Add credibility anchors or explicit context to the perfect "1.0", "2.0x", and "60/60" numbers to prove they aren't fabricated.
++5. Trim the Blog section to a maximum of 3 posts.
++6. Rewrite the "Recent Progress" and "Preprint" sections to remove internal status updates and milestone narrative.
+\ No newline at end of file
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index adb9d44201..70f3a4ceb8 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-03T03:25:35.086731Z",
+-  "duration_s": 0.010119199752807617,
++  "run_date": "2026-06-03T03:30:18.309022Z",
++  "duration_s": 0.0074274539947509766,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "06a9f66c75525dcd28ef6413f4852b1746f2e856680a6982c74a38b8574eb836",
++  "reproducibility_checksum": "5c71e414b39b8ee5da7d5b4f1b9dc93eb957abde81390fda1177b0cef535d190",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "7aad6950a86e349a3194a955820e223e7474aed3"
++    "adversarial_verify_version": "ae517e972c38bbbae136d7b03852684d87619a4c"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 4503143cee..deb0db7e7c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-03T03:25:35.098877Z",
+-  "duration_s": 0.009586811065673828,
++  "run_date": "2026-06-03T03:30:18.317035Z",
++  "duration_s": 0.006642580032348633,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "5dc7d269adc33e3a73247f12260f8dfbf9c956b17f164edd432e4c8f2c26ddbd",
++  "reproducibility_checksum": "1f7e863691eb9ce3e6bdb6cd42a5a582ffec61eb665c7cc85675c9c0fe7e5fad",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "7aad6950a86e349a3194a955820e223e7474aed3"
++    "adversarial_verify_version": "ae517e972c38bbbae136d7b03852684d87619a4c"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0af32c83f4..55dfa7598f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1071434020996094,
++  "efficiency_gains_ms": 2.107381820678711,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 8cea271c89..4616e88525 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.48149997080327e-05,
++  "duration_s": 2.281300021422794e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 54ed903782..bbb7ee0152 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T03:25:31Z",
+-  "finished_at": "2026-06-03T03:25:31Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-03T03:49:49Z",
++  "finished_at": "2026-06-03T03:49:49Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 9e6e319f9f..12127685e6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T03:25:31Z",
+-  "finished_at": "2026-06-03T03:25:32Z",
++  "started_at": "2026-06-03T03:49:49Z",
++  "finished_at": "2026-06-03T03:49:49Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index e7857a0172..20222d9e3d 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T03:25:32Z",
+-  "finished_at": "2026-06-03T03:25:32Z",
++  "started_at": "2026-06-03T03:49:49Z",
++  "finished_at": "2026-06-03T03:49:49Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+-- 
+2.55.0
+

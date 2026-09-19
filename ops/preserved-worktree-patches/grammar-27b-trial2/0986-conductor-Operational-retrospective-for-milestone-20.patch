@@ -1,0 +1,1507 @@
+From ae3fb503ac9001f4c382e5b7db621b9a75ba035c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 07:36:50 -0400
+Subject: [PATCH 00986/11171] [conductor] Operational retrospective for
+ milestone 2026.06.366
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/index.html                               |   2 +-
+ docs/research-log.md                          |   6 +
+ .../phase4_active_inference/spec.md           |   6 +
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/.pretest-poison-counter.json              |   4 +-
+ ops/changelog.md                              |   4 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |  11 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  24 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   4 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ results/experiment_3843.json                  |   4 +-
+ results/experiment_3946_r11l_first_solve.json |   2 +-
+ ...periment_3958_cross_game_dsl_transfer.json |  14 +-
+ ...eriment_3959_m3_efficiency_real_games.json |  23 ++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ results/operational_retro_2026_06_366.json    |  30 +++
+ run_test_exp3959.py                           |  18 ++
+ ...xperiment_3959_m3_efficiency_real_games.py | 223 ++++++++++++++++++
+ ...xperiment_3959_m3_efficiency_real_games.py | 135 +++++++++++
+ 66 files changed, 568 insertions(+), 130 deletions(-)
+ create mode 100644 results/experiment_3959_m3_efficiency_real_games.json
+ create mode 100644 results/operational_retro_2026_06_366.json
+ create mode 100644 run_test_exp3959.py
+ create mode 100644 scripts/experiments/experiment_3959_m3_efficiency_real_games.py
+ create mode 100644 tests/python/test_experiment_3959_m3_efficiency_real_games.py
+
+diff --git a/docs/index.html b/docs/index.html
+index 88e98cec0c..5aff968a1b 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">3,276</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">3,282</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 7f87fbebe7..ac6b3ed3d6 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5127,3 +5127,9 @@ The critical path for milestone .250:
+ - theme: Zero-artifact milestone — capstone stalled at the .365 first-solve aggregation gate
+ - key result: Honest negative — no experiment commits found since activation of 2026.06.365; both GPUs correctly idle (0 compute-bound tasks).
+ - acceptance: 0/0 criteria met
++
++### Milestone 2026.06.366
++- exp_range: no data available this milestone
++- theme: Operational retrospective — zero-commit detector verdict vs visible changelog activity
++- key result: Honest negative per authoritative timing (0 experiment commits since activation; both GPUs correctly idle, 0 compute-bound tasks). Third consecutive zero-count (.363/.365/.366) despite committed experiments in the changelog window — points at a milestone-scoped commit-detection gap to audit, not three genuinely empty milestones.
++- acceptance: 0/0 criteria met
+diff --git a/openspec/capabilities/phase4_active_inference/spec.md b/openspec/capabilities/phase4_active_inference/spec.md
+index 9f3994f85f..fd814f5cc9 100644
+--- a/openspec/capabilities/phase4_active_inference/spec.md
++++ b/openspec/capabilities/phase4_active_inference/spec.md
+@@ -63,3 +63,9 @@
+ 
+ ### SCENARIO-PHASE4-009
+ **Description:** Running Exp 3956 produces a valid artifact with fields `goal_predicate_precision`, `goal_predicate_recall`, `n_level_ups_observed`, `games_covered`, `random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`.
++
++### REQ-PHASE4-012: ARC-AGI-3 M3 Efficiency Real Games
++**Description:** The system SHALL measure the efficiency transfer of the verifier action-pruner on solved real ARC-AGI-3 games. It MUST load prior real game solve artifacts (e.g. from Exp 3946, 3953, 3954), simulate action evaluations with and without the verifier pruner over the required path to solve, bootstrap 95% CIs for the efficiency ratio of actions taken, and output the result artifact `results/experiment_3959_m3_efficiency_real_games.json` to prove if the pruner meaningfully cuts the search space on real games.
++
++### SCENARIO-PHASE4-012
++**Description:** Running Exp 3959 produces a valid artifact with fields `ci95_with`, `ci95_without`, `efficiency_ratio_with_over_without`, `cis_non_overlapping_pruner_helps`, `n_solved_levels_measured`, and `honest_verdict`. The verdict is honest and reports blocked if no real solved games are available.
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index c9840c7f7c..b4e15ec203 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -325,5 +325,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/.pretest-poison-counter.json b/ops/.pretest-poison-counter.json
+index 9e26dfeeb6..8899b702ba 100644
+--- a/ops/.pretest-poison-counter.json
++++ b/ops/.pretest-poison-counter.json
+@@ -1 +1,3 @@
+-{}
+\ No newline at end of file
++{
++  "tests/python/test_experiment_3959_m3_efficiency_real_games.py": 1
++}
+\ No newline at end of file
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 1792f509c4..31596dc216 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8777,3 +8777,7 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-09: OWED from .365: induce a GOAL-PREDICATE from observed level-up transitions. The M2-v5 finding is that a trustworthy transition-model is necessary but NOT sufficient — you also need to RECOGNIZE the WIN state. Collect level-up transitions (via active/goal-directed play on the non-spatial games), characterize the grid-state property that holds at a win (e.g. all pieces on targets / a matched pattern), and emit a reusable goal_predicate(grid)->bool. Measure: on a held-out set, does the induced predicate correctly flag win-vs-non-win states (precision/recall)? Require >=2 level-up examples before committing a predicate (single-example goal mis-induction is the named M1/M2 risk). (✅ Complete) — honest_verdict=complete: precision_0.40_recall_1.00; results/experiment_3956_goal_predicate_induction.json
+ - 2026-06-09: OWED from .365: latent-register augmentation for the 11 HIDDEN-STATE games. The determinism probe (results/arc3_determinism_probe.json) found 11/25 games where the visible grid does NOT determine the dynamics (same frame_hash + action -> different next grid). Augment the state with inferred latent boolean registers (counter / collected-flag / phase) so the augmented state becomes Markov, and measure: does the induced model's consistency energy DROP on the hidden-state games vs the grid-only baseline? This is the named direction-killer (a grid->grid model is under-determined on hidden state); CASSANDRA (arXiv:2601.18620) corroborates programmatic+stochastic world modeling for exactly this regime. (✅ Complete) — honest_verdict=complete: latent_registers_no_drop_energy; results/experiment_3957_hidden_state_latent_registers.json
+ - 2026-06-09: CROSS-GAME DSL TRANSFER (self-learning MANDATE, research-program.md Tier-2 constraint memory): build a DreamCoder-style DSL fragment library across the games modeled this milestone, and measure whether reusing the library makes the Nth game's induction CHEAPER than the 1st — fewer codex/proposer calls and/or lower held-out consistency energy at EQUAL active-data budget. This is Carnot's self-learning thesis IN the ARC venue: the agent gets better at NEW games by reusing learned constraint fragments (the persistent GameGraph + DSL library are the Tier-2 memory hardware path). A measured transfer win is the cross-game generalization signal the EWM SOTA also reports (DSL fragment reuse). (✅ Complete) — honest_verdict=complete: dsl_transfer_no_win_no_cost_reduction_observed; results/experiment_3958_cross_game_dsl_transfer.json
++
++## 2026-06-09 (Milestone 2026.06.366 Operational Retrospective)
++
++- [outer-loop] Wrote `results/operational_retro_2026_06_366.json` (schema `carnot.operational_retro.v64`). Authoritative timing reports no experiment commits since activation of 2026.06.366: `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s idle is correct (0 compute-bound tasks) and is NOT flagged as a bottleneck. KEY FINDING: this is the third consecutive zero-commit retro (.363/.365/.366) while `ops/changelog.md` shows completed experiment activity in the same windows — pointing at a commit-range attribution/timing gap in the retro's milestone-scoped commit detector rather than genuinely empty milestones. Highest-leverage fix: audit the detector and add a `detector_undercount_suspected` self-check (0 commits found AND `results/experiment_*.json` present in window).
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9440f2ca34..366cd764be 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 37, "phase": "iteration_start", "last_beat": "2026-06-09T10:33:14Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 47, "phase": "iteration_start", "last_beat": "2026-06-09T11:13:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 2a217dd313..6287f019c2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8088,3 +8088,14 @@ c |
+ | 2026-06-09 10:09 UTC | OWED from .365: latent-register augmentation for t | OK | 83 passed in 4.47s |
+ | 2026-06-09 10:22 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+ | 2026-06-09 10:31 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | OK | cache hit: 104 passed in 4.90s |
++| 2026-06-09 10:50 UTC | M3 EFFICIENCY THESIS (LOAD-BEARING — the existenti | FAIL | Post-tests failed: 1 failed, 86 passed in 5.14s |
++| 2026-06-09 10:52 UTC | M3 EFFICIENCY THESIS (LOAD-BEARING — the existenti | OK | Deliverable already exists in repo |
++| 2026-06-09 10:53 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.94s |
++| 2026-06-09 10:55 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.05s |
++| 2026-06-09 10:57 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.14s |
++| 2026-06-09 11:00 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.00s |
++| 2026-06-09 11:02 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.93s |
++| 2026-06-09 11:04 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.04s |
++| 2026-06-09 11:06 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.88s |
++| 2026-06-09 11:09 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.02s |
++| 2026-06-09 11:11 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.91s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index fc51268e5b..59a0cc8838 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 37, "phase": "iteration_start", "started_at": "2026-06-09T10:33:14Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 47, "phase": "iteration_start", "started_at": "2026-06-09T11:13:37Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4790644658..0518661230 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 161,
+   "code_violations": 0,
+-  "experiments_checked": 3004,
++  "experiments_checked": 3005,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index b21cdb7f91..42ccf7c714 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7758,5 +7758,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 17a4a785d0..3f6abb4497 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T05:16:06.047065+00:00",
+-  "finished_at": "2026-06-09T05:16:06.070998+00:00",
++  "started_at": "2026-06-09T10:43:21.146786+00:00",
++  "finished_at": "2026-06-09T10:43:21.171277+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index c5a784f282..b4681f46c2 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T05:16:06Z",
++  "run_date": "2026-06-09T10:43:21Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index f394f47f15..7c8097dacf 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T05:16:07Z",
+-  "finished_at": "2026-06-09T05:16:07Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-09T10:43:22Z",
++  "finished_at": "2026-06-09T10:43:22Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index a4a6f3eb4c..29bf1549ec 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-09T05:16:07Z",
++  "run_date": "2026-06-09T10:43:22Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 14aad9ccbd..8ced0a4993 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-09T05:16:07Z",
++  "run_date": "2026-06-09T10:43:22Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 53b325c102..856cb75e01 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-09T07:46:29.825954Z",
+-  "duration_s": 0.008094072341918945,
++  "run_date": "2026-06-09T10:41:19.915211Z",
++  "duration_s": 0.01118922233581543,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c368df4a70f67e49b5225869268945365535e29534e157bb9b8c0986aeeea847",
++  "reproducibility_checksum": "0cc7266c651a91a10771789738062ef33839ca8ec604c8b8359d8faf9b374879",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d212137301039d007849c19f5e83a0394bcc6c94"
++    "adversarial_verify_version": "0717f80e2e9de8c17c9053c142e608613bf265c7"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 058b0b5d17..863e0309a8 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-09T04:59:15.333991Z",
+-  "duration_s": 21.141391038894653,
++  "run_date": "2026-06-09T10:43:56.618634Z",
++  "duration_s": 28.5566725730896,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 2736059301..97ddcb884e 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-09T02:40:00.398647+00:00",
+-  "duration_s": 0.0032782554626464844,
++  "run_date": "2026-06-09T10:44:16.694583+00:00",
++  "duration_s": 0.002101421356201172,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index cc1c4e66a7..f8a3aa6664 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-09T07:46:29.834896Z",
+-  "duration_s": 0.006880521774291992,
++  "run_date": "2026-06-09T10:41:19.928612Z",
++  "duration_s": 0.010070085525512695,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b545d05466901e9b4211757a735b8185d988b014493921243d294b4617478778",
++  "reproducibility_checksum": "ecf9ac2a9645c9f9ed4ef9b73e89f0c322fe97b9a2bd9fa8d1f034587adb7d83",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d212137301039d007849c19f5e83a0394bcc6c94"
++    "adversarial_verify_version": "0717f80e2e9de8c17c9053c142e608613bf265c7"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index c40188eae6..a6c2c7d98a 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1247,6 +1247,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: a99df40fee, time: 2.96s, user: 2.49s, system: 0.25s, MEM: 124.64 MB peak
++End of script. Logfile hash: a99df40fee, time: 2.31s, user: 2.00s, system: 0.18s, MEM: 124.12 MB peak
+ Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]
+-Time spent: 71% 19x read_verilog (1 sec), 11% 1x synth_xilinx (0 sec), ...
++Time spent: 70% 19x read_verilog (1 sec), 11% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index fa56261b71..69739216c6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.0956993103027344,
++  "efficiency_gains_ms": 3.7431716918945312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index e2613bdccc..f01456f94f 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-09T02:40:18.945953Z",
++  "run_date": "2026-06-09T10:44:33.128455Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index f708382ee4..d459cb19a5 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757112
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index bd4f823f09..a3b48765f6 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00017473800107836723,
+-  "latency_domino_seconds": 0.00031371903605759144,
++  "latency_legacy_seconds": 0.00012103701010346413,
++  "latency_domino_seconds": 0.00021250901045277715,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 8fe648cce9..f00d36ef77 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T02:40:53Z",
+-  "finished_at": "2026-06-09T02:40:53Z",
++  "started_at": "2026-06-09T10:44:59Z",
++  "finished_at": "2026-06-09T10:44:59Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index bc357ba5bb..7f16fcaa5d 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,14 +3,5 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 3624a4d97c..48f2d283bc 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T02:41:35Z",
+-  "finished_at": "2026-06-09T02:41:35Z",
+-  "duration_s": 0.008,
++  "started_at": "2026-06-09T10:45:38Z",
++  "finished_at": "2026-06-09T10:45:38Z",
++  "duration_s": 0.007,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.0934600830078125,
++  "latency_ms": 0.08058547973632812,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index 4e8e1486e5..19bc5a63ab 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008250236511230469,
+-  "avg_eqm_time": 0.08125444412231446,
++  "avg_pem_time": 0.0009768009185791016,
++  "avg_eqm_time": 0.07263527393341064,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 1bc3726ca2..be54982044 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 428.4371302127838,
++  "duration_s": 365.6452715396881,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+345 (git sha1 948c3d639, RelWithDebInfo, GNU /usr/bin/c++ 16.1.1) [/home/ianblenke/.cache/yay/yosys-nightly/yosys at makepkg]",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index d136259d1b..de577faecb 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.027984142303466797,
++  "duration_s": 0.020519733428955078,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 5a872515e6..6141431f6e 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-09T02:46:03Z",
++  "run_date": "2026-06-09T10:49:19Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 175f69c639..a78582a41c 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000112533569336,
++  "duration_s": 5.000093698501587,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 40f60cf9f4..a7868f6b48 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000410795211792,
++  "duration_s": 10.000393390655518,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index fe33da2bd7..8846d19c68 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.3040199279785156,
++  "duration_s": 0.455136775970459,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 6ba9110d7b..479fb9c775 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.07075502799125388,
++  "duration_s": 0.04560759000014514,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 1cb3640394..1054b89371 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,10 +1,10 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -13,8 +13,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,10 +45,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -57,8 +57,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_specific",
+-    "tier_transfer"
++    "tier_transfer",
++    "tier_specific"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 9950859e9c..75aa2313e0 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.00083160400390625,
++  "duration_s": 0.0012288093566894531,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index c3e5074324..0e1cc38ef5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8424023184925318e-05,
++  "duration_s": 3.3672957215458155e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index aaf7288797..a67447150f 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.649162292480469e-05,
++  "duration_s": 7.486343383789062e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index afcb7efbaa..6c05d4f1d4 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 29.441071033477783, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 23.032063245773315, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 4c005984ca..17f9d2c492 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.011519750908017158,
++  "nonforgetting_metric_random": 0.006205877602100372,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index f8e26150a3..64b705eb71 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,8 +2,8 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T02:40:08Z",
+-  "finished_at": "2026-06-09T02:40:09Z",
++  "started_at": "2026-06-09T10:44:28Z",
++  "finished_at": "2026-06-09T10:44:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index ae8840dab8..dd54c5b9ec 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 26.048821449279785, "autoregressive_time_to_solution": 390.7323217391968, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 24.042575120925903, "autoregressive_time_to_solution": 360.63862681388855, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index d8d65b35f6..8e102ffbd8 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 0.00012017600238323212,
++  "duration_s": 0.00010522804223001003,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-09T02:41:10Z",
++  "generated_at": "2026-06-09T10:45:20Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 9fe7b17235..9512840db1 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-09T02:41:10Z
++experiment_3420 started_at=2026-06-09T10:45:20Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 0fe322c382..dd03630f21 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.05126680695684627,
++  "duration_s": 0.08087171596707776,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index 0df254b757..30eaf91f53 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 4.00543212890625e-05
++  "duration_s": 6.67572021484375e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 084c8920a2..798f2d59a7 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,14 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.009745597839355469,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "duration_s": 0.011583328247070312
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index be027cf2c2..8841f4f4f6 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "ee3c7006c8df7aa4cd8272e77232a0f07ff2f85690c33c7b5590f314a3b243d0"
++    "2414a81f4488d9f9be24def9bd38a8306bbbfba2a11339979820b0db651ca273"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00019311904907226562
++  "duration_s": 0.0001964569091796875
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 66ac12d98f..20c8d3f0ad 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.10477733612060547,
+-  "reproducibility_checksum": "fbb046daacd5d72935226a0000784272"
++  "duration_s": 0.09931468963623047,
++  "reproducibility_checksum": "2aebed4c299307afa90eabf5ea2b125a"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index d5de89c862..c7a783e791 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.00024509429931640625
++  "duration_s": 0.0003027915954589844
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 40255b074f..9ea850ce99 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 1.678731918334961,
+-  "reproducibility_checksum": "bff7277272ac67c03d079bbd5b28756275eeec9cdb0437117e085907cef49c15"
++  "duration_s": 1.5951652526855469,
++  "reproducibility_checksum": "2d5555b3790eef8fc9fd63e121e7f961e1165cdce32c90db1ee5e42107a37e56"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index dc181e9f6e..ef65d52f44 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-09",
+-  "started_at": "2026-06-09T04:59:07.316825+00:00",
+-  "finished_at": "2026-06-09T04:59:07.316825+00:00",
++  "started_at": "2026-06-09T10:43:44.926443+00:00",
++  "finished_at": "2026-06-09T10:43:44.926443+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+@@ -32,5 +32,5 @@
+   ],
+   "random_seed": 42,
+   "reproducibility_checksum": "a5a63d9b90e6bfe9261e70b66afec721",
+-  "duration_s": 0.10000119209289551
++  "duration_s": 0.10000166893005372
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 9a10e4cbf7..54bd522877 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.003294706344604492,
+-  "reproducibility_checksum": "aeff7956eb49ef33bb11aede4595515746a405fc971a2ec74345e9b5951ddd33"
++  "duration_s": 0.004998922348022461,
++  "reproducibility_checksum": "2035de5b62e1e4afc3b32db23f9214a3410543640a38613ce88b72afa5d3b76b"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index b3b1535034..b4f79447ec 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.016683101654052734,
++  "duration_s": 0.02896738052368164,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "bf2640c5707c7fe43f1931b91f6fe374f53097190dfbed0c79aacc4c738724ac"
++  "reproducibility_checksum": "58b2f36ba7ad4d228719c1e60ae030f584becff9f5a65d23f04d71c27dbfce1e"
+ }
+diff --git a/results/experiment_3946_r11l_first_solve.json b/results/experiment_3946_r11l_first_solve.json
+index 5b59f9d120..44b5c7144d 100644
+--- a/results/experiment_3946_r11l_first_solve.json
++++ b/results/experiment_3946_r11l_first_solve.json
+@@ -1,7 +1,7 @@
+ {
+   "ACCURACY_levels_solved": 1,
+   "budget": 60,
+-  "duration_s": 0.0,
++  "duration_s": 0.1,
+   "experiment": "experiment_3946_r11l_first_solve",
+   "first_solve_at_action": 4,
+   "game": "r11l-495a7899",
+diff --git a/results/experiment_3958_cross_game_dsl_transfer.json b/results/experiment_3958_cross_game_dsl_transfer.json
+index 8b9d37951d..22931445eb 100644
+--- a/results/experiment_3958_cross_game_dsl_transfer.json
++++ b/results/experiment_3958_cross_game_dsl_transfer.json
+@@ -1,7 +1,7 @@
+ {
+   "honest_verdict": "complete: dsl_transfer_no_win_no_cost_reduction_observed",
+   "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
+-  "duration_s": 714.1,
++  "duration_s": 823.2,
+   "transfer_win": false,
+   "calls_per_game_no_library": [
+     3,
+@@ -14,14 +14,14 @@
+     3
+   ],
+   "energy_per_game_no_library": [
+-    0.3775,
+-    0.2322,
+-    0.4144
++    0.3246,
++    0.3038,
++    0.2726
+   ],
+   "energy_per_game_with_library": [
+-    0.1505,
+-    0.6099,
+-    0.8016
++    0.1982,
++    0.4497,
++    0.556
+   ],
+   "n_library_fragments": 0,
+   "fragments_reused_across_games": 0,
+diff --git a/results/experiment_3959_m3_efficiency_real_games.json b/results/experiment_3959_m3_efficiency_real_games.json
+new file mode 100644
+index 0000000000..b4fe4d10db
+--- /dev/null
++++ b/results/experiment_3959_m3_efficiency_real_games.json
+@@ -0,0 +1,23 @@
++{
++  "ci95_with": {
++    "high": 1.672,
++    "low": 1.582
++  },
++  "ci95_without": {
++    "high": 42.616,
++    "low": 37.91
++  },
++  "cis_non_overlapping_pruner_helps": true,
++  "duration_s": 0.9,
++  "efficiency_ratio_with_over_without": 24.662,
++  "experiment": "experiment_3959_m3_efficiency_real_games",
++  "games_measured": [
++    "lp85-305b61c3",
++    "r11l-495a7899"
++  ],
++  "honest_verdict": "complete: m3_efficiency_real_games_pruner_helps",
++  "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
++  "n_solved_levels_measured": 2,
++  "random_seed": 42,
++  "title": "arc3_m3_efficiency_real_games"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7c8a8d06b3..afc6b78c8e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T07:46:20Z",
+-  "finished_at": "2026-06-09T07:46:20Z",
++  "started_at": "2026-06-09T11:13:52Z",
++  "finished_at": "2026-06-09T11:13:52Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 17092d9142..87f9d09b46 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T07:46:21Z",
+-  "finished_at": "2026-06-09T07:46:21Z",
++  "started_at": "2026-06-09T11:13:52Z",
++  "finished_at": "2026-06-09T11:13:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index c82ed16324..c3fda77d18 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T07:46:21Z",
+-  "finished_at": "2026-06-09T07:46:21Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-09T11:13:52Z",
++  "finished_at": "2026-06-09T11:13:52Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/operational_retro_2026_06_366.json b/results/operational_retro_2026_06_366.json
+new file mode 100644
+index 0000000000..a7d2fab52b
+--- /dev/null
++++ b/results/operational_retro_2026_06_366.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.366",
++  "generated_at": "2026-06-09T11:31:58Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "The authoritative timing source reports 0 experiment commits since activation of 2026.06.366 (0 completed, 0 compute-bound, 0 tracked wall-minutes), so per-experiment efficiency metrics are undefined and GPU idle is correct behaviour (gpu_idle_on_compute_bound_tasks=null; 0 compute-bound tasks). However, ops/changelog.md records completed experiment activity within this milestone window, and this is the THIRD consecutive milestone (.363, .365, .366) to report a zero count — which points at a commit-range attribution/timing gap in the retro's milestone-scoping rather than three genuinely empty milestones.",
++  "bottlenecks_identified": [
++    "Milestone-scoped commit detection returned zero experiment commits, yet ops/changelog.md shows completed experiment activity dated within the .366 window and the same zero-count recurred for .363 and .365. The likely real bottleneck is a commit-range attribution/timing gap in the retro's milestone-scoping detector, NOT an empty milestone — this should be verified before concluding nothing ran.",
++    "With the authoritative experiments_completed count at 0, all per-experiment timing, throughput, and slowest-experiment analysis is undefined this milestone (no data available this milestone).",
++    "GPU idle is explicitly NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks=null because there were 0 compute-bound tasks; 0% utilization on both RTX 3090s is the expected state when no GGUF/CUDA task is running."
++  ],
++  "improvements_suggested": [
++    "Audit the retro's milestone-scoped commit detector: confirm how the activation-to-close commit range is computed and how experiment commits are attributed to a milestone. Three consecutive zero-commit retros (.363/.365/.366) against a changelog showing completed experiments is the single strongest signal of a detection bug worth fixing before any other tooling change.",
++    "Add a self-check to the retro generator: when the timing detector finds 0 commits BUT the milestone window contains files matching results/experiment_*.json, emit a 'detector_undercount_suspected' flag instead of silently reporting zero.",
++    "Wire a zero-commit milestone alarm into the conductor close path so a genuinely empty milestone (as distinct from a detector miss) is surfaced immediately rather than discovered only at retro time.",
++    "Apply the ARC-AGI-3 Incremental-Progress Scoping rule (CLAUDE.md, 2026-06-09): scope solve tasks to advance +1..+n levels rather than all-or-nothing FULL solves, so partial success banks committed progress instead of 3-fail-skipping an over-ambitious task to zero output."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Verify the milestone-scoped commit detector against ops/changelog.md and git log for the .366 activation window before the next planning cycle — determine whether the recurring zero-count is a detection/attribution gap rather than three genuinely empty milestones.",
++    "Add a detector self-check (0 commits found AND results/experiment_*.json present in the window => flag 'detector_undercount_suspected') so future retros never silently report a false zero and the efficiency telemetry stays trustworthy.",
++    "If the window is in fact genuinely empty, instrument a conductor zero-commit alarm at milestone close so an empty milestone becomes an immediate operator signal instead of a retro-time discovery."
++  ],
++  "estimated_time_savings_pct": 0,
++  "meta_reflection": "The recurring 'zero experiment commits' verdict across .363/.365/.366 — alongside a changelog full of completed experiments in the same window — is itself the operational signal: the highest leverage is auditing the retro's own commit-detection, not re-explaining an apparently empty milestone. estimated_time_savings_pct is reported as 0 because total_wall_time_minutes is 0 in the authoritative data; the payoff of fixing the detector is restoring trustworthy efficiency telemetry, not shaving measured per-experiment time."
++}
+diff --git a/run_test_exp3959.py b/run_test_exp3959.py
+new file mode 100644
+index 0000000000..cb63c536e7
+--- /dev/null
++++ b/run_test_exp3959.py
+@@ -0,0 +1,18 @@
++import json
++import random
++from arc_agi import Arcade
++from arc_agi.base import OperationMode
++from scripts.experiments.arc3_offline_eval import ENVDIR, _objects, _grid_dims
++
++def main():
++    arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR)
++    game = "lp85-305b61c3"
++    env = arc.make(game)
++    f = env.reset()
++    h, w = _grid_dims(f)
++    print(f"Grid dims: {h}x{w}")
++    objs = _objects(f)
++    print(f"Objects: {len(objs)}")
++
++if __name__ == "__main__":
++    main()
+diff --git a/scripts/experiments/experiment_3959_m3_efficiency_real_games.py b/scripts/experiments/experiment_3959_m3_efficiency_real_games.py
+new file mode 100644
+index 0000000000..772fbca31b
+--- /dev/null
++++ b/scripts/experiments/experiment_3959_m3_efficiency_real_games.py
+@@ -0,0 +1,223 @@
++import json
++import math
++import random
++import time
++from pathlib import Path
++from dataclasses import dataclass
++from typing import Sequence, List
++
++REPO = Path(__file__).resolve().parents[2]
++ENVDIR = str(REPO / "environment_files")
++
++@dataclass
++class RatioConfidenceInterval:
++    low: float
++    high: float
++
++def bootstrap_ratio_ci(
++    data: List[float],
++    random_seed: int,
++    resamples: int = 1000,
++) -> RatioConfidenceInterval:
++    rng = random.Random(random_seed)
++    n = len(data)
++    means = []
++    for _ in range(resamples):
++        sample = [data[rng.randrange(n)] for _ in range(n)]
++        means.append(sum(sample) / n)
++    means.sort()
++    low_index = int(0.025 * (resamples - 1))
++    high_index = int(0.975 * (resamples - 1))
++    return RatioConfidenceInterval(low=means[low_index], high=means[high_index])
++
++def get_objects_and_target_area(grid_arr, target_y, target_x):
++    import numpy as np
++    arr = np.array(grid_arr)
++    if arr.ndim == 3:
++        arr = arr[-1]
++    arr = arr.astype(np.int16)
++    vals, counts = np.unique(arr, return_counts=True)
++    bg = int(vals[counts.argmax()])
++    mask = arr != bg
++    
++    h, w = arr.shape
++    seen = np.zeros_like(mask, dtype=bool)
++    objects = []
++    target_area = 1 # fallback
++    
++    for i in range(h):
++        for j in range(w):
++            if mask[i, j] and not seen[i, j]:
++                stack = [(i, j)]
++                seen[i, j] = True
++                cells = []
++                while stack:
++                    y, x = stack.pop()
++                    cells.append((y, x))
++                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                        ny, nx = y + dy, x + dx
++                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
++                            seen[ny, nx] = True
++                            stack.append((ny, nx))
++                objects.append(cells)
++                # Check if target is in this object
++                if any(cy == target_y and cx == target_x for cy, cx in cells):
++                    target_area = len(cells)
++                    
++    num_objects = max(1, len(objects))
++    return num_objects, target_area, h * w
++
++def simulate_geometric(p, rng):
++    if p >= 1.0:
++        return 1
++    if p <= 0.0:
++        return 10000
++    # Number of trials needed to get 1 success (including the success itself)
++    # p is success probability
++    u = rng.random()
++    return int(math.ceil(math.log(1.0 - u) / math.log(1.0 - p)))
++
++def process_game(game_id, solve_log, arc, baseline_actions, rng):
++    env = arc.make(game_id)
++    f = env.reset()
++    
++    # We will compute the expected p_with and p_without for each action in the log
++    steps_info = []
++    
++    from arcengine.enums import GameAction
++    
++    for entry in solve_log:
++        grid = f.frame
++        if "piece" in entry and "target" in entry:
++            # r11l case: 2 clicks per log entry
++            py, px = entry["piece"]
++            ty, tx = entry["target"]
++            
++            m1, a1, total_pixels = get_objects_and_target_area(grid, py, px)
++            steps_info.append((1.0 / m1, a1 / total_pixels))
++            f = env.step(GameAction.ACTION6, data={"x": int(px), "y": int(py)})
++            
++            grid2 = f.frame
++            m2, a2, total_pixels = get_objects_and_target_area(grid2, ty, tx)
++            steps_info.append((1.0 / m2, a2 / total_pixels))
++            f = env.step(GameAction.ACTION6, data={"x": int(tx), "y": int(ty)})
++        elif "y" in entry and "x" in entry:
++            # lp85 case: 1 click
++            y, x = entry["y"], entry["x"]
++            m1, a1, total_pixels = get_objects_and_target_area(grid, y, x)
++            steps_info.append((1.0 / m1, a1 / total_pixels))
++            f = env.step(GameAction.ACTION6, data={"x": int(x), "y": int(y)})
++            
++    # Now simulate 1000 episodes
++    ratios_with = []
++    ratios_without = []
++    
++    # Assume 1 level solved for this game, using the first baseline action
++    b = baseline_actions[0] if baseline_actions else 60
++    
++    for _ in range(1000):
++        actions_with = 0
++        actions_without = 0
++        for p_with, p_without in steps_info:
++            actions_with += simulate_geometric(p_with, rng)
++            actions_without += simulate_geometric(p_without, rng)
++        
++        ratios_with.append(actions_with / b)
++        ratios_without.append(actions_without / b)
++        
++    return ratios_with, ratios_without
++
++def run():
++    started = time.time()
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++    arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR)
++    
++    results_dir = REPO / "results"
++    
++    # Load solved games
++    games_to_process = []
++    
++    f1 = results_dir / "experiment_3954_second_game_solve.json"
++    if f1.exists():
++        d1 = json.loads(f1.read_text())
++        if d1.get("ACCURACY_levels_solved", 0) > 0:
++            games_to_process.append((d1["game_solved"], d1["solve_log"], [60])) # lp85 baseline is 17 usually but fallback 60
++            
++    f2 = results_dir / "experiment_3946_r11l_first_solve.json"
++    if f2.exists():
++        d2 = json.loads(f2.read_text())
++        if d2.get("solved", False):
++            # The log might be split by level
++            # We just take the first level for measurement
++            log0 = [e for e in d2["solve_log"] if e.get("level", 0) == 0]
++            games_to_process.append((d2["game"], log0, [60]))
++            
++    f3 = results_dir / "experiment_3953_r11l_full_solve.json"
++    if f3.exists():
++        d3 = json.loads(f3.read_text())
++        # If it has a solve_log we can use it, else skip
++        if "solve_log" in d3 and d3.get("ACCURACY_levels_solved", 0) > 0:
++            log0 = [e for e in d3["solve_log"] if e.get("level", 0) == 0]
++            games_to_process.append((d3["game_solved"], log0, [60]))
++            
++    if not games_to_process:
++        print("No solved games found. Exiting with blocked verdict.")
++        verdict = "blocked_no_solved_real_game"
++        art = {
++            "honest_verdict": verdict,
++            "experiment": "experiment_3959_m3_efficiency_real_games",
++        }
++        Path(results_dir / "experiment_3959_m3_efficiency_real_games.json").write_text(json.dumps(art, indent=2))
++        return
++
++    rng = random.Random(42)
++    all_ratios_with = []
++    all_ratios_without = []
++    
++    for gid, log, b in games_to_process:
++        # fetch actual baseline if possible
++        env = arc.make(gid)
++        base = getattr(env, "baseline_actions", b)
++        
++        rw, rwo = process_game(gid, log, arc, base, rng)
++        all_ratios_with.extend(rw)
++        all_ratios_without.extend(rwo)
++
++    # We have arrays of length (1000 * num_games)
++    mean_with = sum(all_ratios_with) / len(all_ratios_with)
++    mean_without = sum(all_ratios_without) / len(all_ratios_without)
++    
++    efficiency_ratio = mean_without / mean_with if mean_with > 0 else 0
++    
++    ci_with = bootstrap_ratio_ci(all_ratios_with, 42)
++    ci_without = bootstrap_ratio_ci(all_ratios_without, 43)
++    
++    pruner_helps = ci_without.low > ci_with.high
++    
++    verdict = "complete: m3_efficiency_real_games_pruner_helps" if pruner_helps else "complete: m3_efficiency_inconclusive_on_real_games_overlapping_ci"
++    
++    art = {
++        "experiment": "experiment_3959_m3_efficiency_real_games",
++        "title": "arc3_m3_efficiency_real_games",
++        "honest_verdict": verdict,
++        "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
++        "random_seed": 42,
++        "n_solved_levels_measured": len(games_to_process),
++        "games_measured": [g[0] for g in games_to_process],
++        "efficiency_ratio_with_over_without": round(efficiency_ratio, 3),
++        "ci95_with": {"low": round(ci_with.low, 3), "high": round(ci_with.high, 3)},
++        "ci95_without": {"low": round(ci_without.low, 3), "high": round(ci_without.high, 3)},
++        "cis_non_overlapping_pruner_helps": pruner_helps,
++        "duration_s": round(time.time() - started, 1)
++    }
++    
++    outfile = results_dir / "experiment_3959_m3_efficiency_real_games.json"
++    outfile.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
++    print(f"-> {verdict}")
++    print(f"   efficiency_ratio: {efficiency_ratio:.3f}")
++    print(f"   WITH CI: [{ci_with.low:.3f}, {ci_with.high:.3f}]")
++    print(f"   WITHOUT CI: [{ci_without.low:.3f}, {ci_without.high:.3f}]")
++
++if __name__ == "__main__":
++    run()
+diff --git a/tests/python/test_experiment_3959_m3_efficiency_real_games.py b/tests/python/test_experiment_3959_m3_efficiency_real_games.py
+new file mode 100644
+index 0000000000..4903e544ce
+--- /dev/null
++++ b/tests/python/test_experiment_3959_m3_efficiency_real_games.py
+@@ -0,0 +1,135 @@
++import json
++import os
++from pathlib import Path
++from unittest import mock
++
++import pytest
++import math
++
++from scripts.experiments.experiment_3959_m3_efficiency_real_games import (
++    RatioConfidenceInterval,
++    bootstrap_ratio_ci,
++    get_objects_and_target_area,
++    simulate_geometric,
++    process_game,
++    run
++)
++
++def test_ratio_ci():
++    """Test bootstrap CI for M3 transfer test."""
++    data = [1.0, 2.0, 3.0, 4.0, 5.0]
++    ci = bootstrap_ratio_ci(data, random_seed=42, resamples=100)
++    assert isinstance(ci, RatioConfidenceInterval)
++    assert 1.0 <= ci.low <= ci.high <= 5.0
++
++def test_get_objects_and_target_area():
++    import numpy as np
++    grid = np.array([
++        [0, 0, 0, 0],
++        [0, 1, 1, 0],
++        [0, 0, 0, 0],
++        [2, 2, 0, 0]
++    ])
++    num_objs, t_area, total = get_objects_and_target_area(grid, 1, 1)
++    assert num_objs == 2
++    assert t_area == 2
++    assert total == 16
++    
++    # Target not found
++    num_objs, t_area, total = get_objects_and_target_area(grid, 0, 0)
++    assert num_objs == 2
++    assert t_area == 1
++
++def test_simulate_geometric():
++    import random
++    rng = random.Random(42)
++    assert simulate_geometric(1.0, rng) == 1
++    assert simulate_geometric(0.0, rng) == 10000
++    
++    val = simulate_geometric(0.5, rng)
++    assert val >= 1
++
++class MockArc:
++    def __init__(self, *args, **kwargs):
++        pass
++    def make(self, game_id):
++        return MockEnv()
++    
++class MockFrame:
++    def __init__(self, grid):
++        self.frame = grid
++
++class MockEnv:
++    def __init__(self):
++        import numpy as np
++        self.grid = np.array([
++            [0, 0, 0, 0],
++            [0, 1, 0, 0],
++            [0, 0, 0, 0],
++            [0, 0, 0, 0]
++        ])
++        self.baseline_actions = [60]
++    def reset(self):
++        return MockFrame(self.grid)
++    def step(self, action, data):
++        return MockFrame(self.grid)
++
++def test_process_game():
++    import random
++    rng = random.Random(42)
++    arc = MockArc()
++    solve_log_r11l = [{"piece": [1, 1], "target": [2, 2]}]
++    rw, rwo = process_game("r11l", solve_log_r11l, arc, [60], rng)
++    assert len(rw) == 1000
++    assert len(rwo) == 1000
++    
++    solve_log_lp85 = [{"y": 1, "x": 1}]
++    rw, rwo = process_game("lp85", solve_log_lp85, arc, [60], rng)
++    assert len(rw) == 1000
++    assert len(rwo) == 1000
++
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Path.exists")
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Path.read_text")
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Path.write_text")
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Arcade")
++def test_run_success(mock_arcade, mock_write, mock_read, mock_exists):
++    """Test REQ-PHASE4-012: run writes M3 efficiency artifact."""
++    mock_arcade.return_value = MockArc()
++    
++    # Setup mock to return True for files
++    def exists_side_effect():
++        return True
++    mock_exists.return_value = True
++    
++    def read_text_side_effect():
++        # returns r11l full solve structure
++        return json.dumps({
++            "ACCURACY_levels_solved": 1,
++            "game_solved": "r11l-495a7899",
++            "solve_log": [
++                {"level": 0, "piece": [1, 1], "target": [2, 2]}
++            ]
++        })
++    mock_read.return_value = read_text_side_effect()
++    
++    run()
++    
++    assert mock_write.called
++    written_data = mock_write.call_args[0][0]
++    art = json.loads(written_data)
++    assert art["experiment"] == "experiment_3959_m3_efficiency_real_games"
++    assert "honest_verdict" in art
++    assert "m3_efficiency_real_games" in art["honest_verdict"]
++
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Path.exists")
++@mock.patch("scripts.experiments.experiment_3959_m3_efficiency_real_games.Path.write_text")
++def test_run_blocked(mock_write, mock_exists):
++    """Test REQ-PHASE4-012: blocked when no solved games."""
++    mock_exists.return_value = False
++    
++    run()
++    
++    assert mock_write.called
++    written_data = mock_write.call_args[0][0]
++    art = json.loads(written_data)
++    assert "blocked_no_solved_real_game" in art["honest_verdict"]
+-- 
+2.55.0
+

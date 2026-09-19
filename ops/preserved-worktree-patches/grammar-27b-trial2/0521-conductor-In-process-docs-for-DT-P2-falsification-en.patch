@@ -1,0 +1,30 @@
+From 01053f584560abfbce135480479cee02569e152f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 16:53:28 -0400
+Subject: [PATCH 00521/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20DT-P2=20falsification:=20energy-fit=20to=20a=20trained=20T?=
+ =?UTF-8?q?RM's=20latent=20updates=20=CE=94h=20under=20the=20curl-free=20c?=
+ =?UTF-8?q?onstraint=20(=CE=94h=20=E2=89=88=20=E2=88=92=E2=88=87E(h))=20?=
+ =?UTF-8?q?=E2=80=94=20confirm=20TRM=20=E2=89=A0=20EBT=20(asymmetric=20vec?=
+ =?UTF-8?q?tor=20field,=20not=20energy=20descent).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f3905d154e..e99844508f 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8614,3 +8614,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-04: FoVer moat ablation: how much of 0.9131 is the contamination-free FORMAL core (SAT/Z3/AST) vs the learned probes? (DT-Q4 deterministic ablation; informs the exp3680 re-freeze) (✅ Complete) — honest_verdict=complete: INCONCLUSIVE_ablation_harness_unfaithful_full0.8929_expected_0.9131; results/experiment_3820_fover_formal_vs_learned_ablation.json
+ - 2026-06-04: Latent-Symbol Bridge Task 0 RE-RUN (UNBLOCKED): can an external discrete verifier read a recursive refiner's intermediate latents in-loop, or is offline distillation the only path? (⚠️ Blocked) — honest_verdict=blocked_trm_nano_trm_import_failed_ModuleNotFoundError; results/experiment_3821_latent_symbol_bridge_unblocked.json
+ - 2026-06-04: DT-P1 falsification: vanilla TRM vs matched-COMPUTE AR on a strictly-1D variable-length headroom task (algorithmic sequence correction / multi-step parity) — does the paradigm escape grids? (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_3822_trm_escapes_grids_p1.json
++- 2026-06-04: DT-P2 falsification: energy-fit to a trained TRM's latent updates Δh under the curl-free constraint (Δh ≈ −∇E(h)) — confirm TRM ≠ EBT (asymmetric vector field, not energy descent). (⚠️ Blocked) — honest_verdict=blocked_trm_checkpoint_not_available; results/experiment_3823_trm_not_ebt_curlfree.json
+-- 
+2.55.0
+

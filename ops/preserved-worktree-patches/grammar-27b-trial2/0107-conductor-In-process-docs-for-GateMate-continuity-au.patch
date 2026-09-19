@@ -1,0 +1,28 @@
+From 249f97596808b25a98aa8af9a7ebce9d2c144a90 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 02:56:31 -0400
+Subject: [PATCH 00107/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20GateMate=20continuity=20audit=20(documentation-only=20?=
+ =?UTF-8?q?=E2=80=94=20openFPGALoader=20missing=20in=20.331-.337,=20per=20?=
+ =?UTF-8?q?known-issues)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b724c0a556..469fa26382 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8191,3 +8191,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: FR-11 continuous self-learning v12 — drift-RESET policy: when detected drift does not recover within a window, reset to the last-known-good dependency structure (forward diff from v11's continuous re-estimation) and persist it across a session boundary (Tier-2 constraint memory), still collapse-guarded (✅ Complete) — honest_verdict=complete: fr11_v12_drift_reset_and_cross_session_persistence_no_collapse_quality_maintained; results/experiment_3697_fr11_continuous_self_learning_v12.json
+ - 2026-06-02: KV260 SSH-reachability continuity (UNREACHABLE .331-.337 — re-check + record honest state; flag the 8-milestone outage as an operator-action item) (✅ Complete) — honest_verdict=complete: kv260_continuity_confirmed_reachable; results/experiment_3698_kv260_continuity_v25.json
+ - 2026-06-02: PolarFire opportunistic reachability + continuity audit (per Hardware-Task Continuity) (✅ Complete) — honest_verdict=complete: polarfire_continuity_confirmed_reachable; results/experiment_3699_polarfire_continuity_v25.json
++- 2026-06-02: GateMate continuity audit (documentation-only — openFPGALoader missing in .331-.337, per known-issues) (✅ Complete) — honest_verdict=complete: gatemate_continuity_audit_recorded_openfpgaloader_state_flash_smoke_host_io_hang_known_blocker; results/experiment_3700_gatemate_continuity_audit_v25.json
+-- 
+2.55.0
+

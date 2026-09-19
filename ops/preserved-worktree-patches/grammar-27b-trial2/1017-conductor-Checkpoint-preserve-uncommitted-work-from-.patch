@@ -1,0 +1,43 @@
+From ede11ab72c6bf9a0f7ca976d15ec241362e9f537 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 13:59:20 -0400
+Subject: [PATCH 01017/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5e8a897419..f6f1e5eb35 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1727843, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-09T16:59:54Z"}
+\ No newline at end of file
++{"pid": 1727843, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-09T17:59:19Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8f1660e8a7..3775f7972d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8108,3 +8108,4 @@ c |
+ | 2026-06-09 13:28 UTC | THIRD ARC-AGI-3 game first-solve: solve level-1 of | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: /v1internal:streamG |
+ | 2026-06-09 13:33 UTC | THIRD ARC-AGI-3 game first-solve: solve level-1 of | OK | cache hit: 81 passed in 4.41s |
+ | 2026-06-09 13:40 UTC | M3 HONEST EFFICIENCY (LOAD-BEARING — the existenti | OK | 82 passed in 4.37s |
++| 2026-06-09 17:57 UTC | OWED (twice) from .365/.366: generalize the active | OK | 81 passed in 3.87s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bffff400e2..19ca0e6bf8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1727843, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-09T16:59:54Z"}
+\ No newline at end of file
++{"pid": 1727843, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-09T17:59:19Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

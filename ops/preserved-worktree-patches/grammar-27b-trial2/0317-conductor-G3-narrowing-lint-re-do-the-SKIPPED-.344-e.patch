@@ -1,0 +1,721 @@
+From 2a508b93be07bb6bb037531f309cc1ac239739e1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 12:41:29 -0400
+Subject: [PATCH 00317/11171] [conductor] G3 narrowing lint (re-do the SKIPPED
+ .344 exp3757): EXTEND + WIRE the EXISTING scripts/paper_v6_narrowing_lint.py
+ (it exists but is NOT pre-commit-wired and lacks the 12th retraction) -- ADD
+ the 12th retracted phrasing ('energy-as-generator works/scales' -- now that
+ Thesis A is bounded), extend the scan to results/paper_v6_* artifacts, and
+ add the missing .pre-commit-config.yaml stanza. Mechanizes G3 from
+ honor-discipline to an ENFORCED lint. Do NOT regenerate the file from
+ scratch.
+
+Automated research step by research conductor.
+Task ID: exp3768-g3-narrowing-lint
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .pre-commit-config.yaml                       |  11 +
+ openspec/capabilities/publication/spec.md     |  28 +++
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ .../experiment_3768_g3_narrowing_lint.json    |  38 +++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ scripts/experiment_3768_g3_narrowing_lint.py  | 225 ++++++++++++++++++
+ scripts/paper_v6_narrowing_lint.py            |   8 +
+ tests/python/test_paper_v6_narrowing_lint.py  |  11 +-
+ 24 files changed, 351 insertions(+), 34 deletions(-)
+ create mode 100644 results/experiment_3768_g3_narrowing_lint.json
+ create mode 100644 scripts/experiment_3768_g3_narrowing_lint.py
+
+diff --git a/.pre-commit-config.yaml b/.pre-commit-config.yaml
+index 5bbec57f44..eaa88fbbea 100644
+--- a/.pre-commit-config.yaml
++++ b/.pre-commit-config.yaml
+@@ -165,6 +165,17 @@ repos:
+         pass_filenames: false
+         always_run: true
+ 
++      # Paper-v6 narrowing lint: mechanically enforces the G3 narrowing
++      # discipline over operator paper targets and tracked paper-v6 JSON
++      # artifacts. Additive guard for retracted Paper-v6 prose; the lint
++      # reports violations but never edits operator-curated docs.
++      - id: paper-v6-narrowing-lint
++        name: Paper-v6 narrowing lint
++        entry: python3 scripts/paper_v6_narrowing_lint.py
++        language: system
++        files: '^(docs/arxiv-paper/main\.tex|docs/technical-report\.md|results/paper_v6_.*\.json)$'
++        pass_filenames: false
++
+       # Operator-curated docs lint: refuses [conductor]-marked commits
+       # that touch README.md, docs/index.html, docs/tutorial.md, etc.
+       # per CLAUDE.md "Public Documentation Discipline". Layer 1
+diff --git a/openspec/capabilities/publication/spec.md b/openspec/capabilities/publication/spec.md
+index 87d0c6635c..3877acd9d8 100644
+--- a/openspec/capabilities/publication/spec.md
++++ b/openspec/capabilities/publication/spec.md
+@@ -1921,6 +1921,34 @@ numerical value
+ retracted-number document fails, and the Exp 3716 artifact records that the
+ current paper targets are clean and G3 is now mechanically enforced.
+ 
++### REQ-PUBLISH-3768: Paper-v6 Narrowing Lint 12th Retraction Wiring
++
++The existing `scripts/paper_v6_narrowing_lint.py` MUST be extended, not
++regenerated, to reject the 12th Paper-v6 retraction: any live claim that
++energy-as-generator works or scales, that an EBT generates tokens or text, or
++that energy-as-generator is viable as a generator at the tested scale. The lint
++MUST continue to scan `docs/arxiv-paper/main.tex`, `docs/technical-report.md`,
++and tracked `results/paper_v6_*.json` artifacts when present, MUST preserve
++allow-list behavior for rule-defining files and the Exp 3768 artifact, and MUST
++remain non-mutating for operator-curated paper docs.
++
++`.pre-commit-config.yaml` MUST include an additive local
++`paper-v6-narrowing-lint` hook that runs the existing lint over the paper-v6
++targets. Exp 3768 MUST write
++`results/experiment_3768_g3_narrowing_lint.json` with bare fields for the G3
++mechanization verdict, inference substrate, 12th-retraction coverage,
++violations found in the current tree, hook wiring, real-behavior test evidence,
++random seed, reproducibility checksum, and duration.
++
++### SCENARIO-PUBLISH-3768: Energy-as-Generator Retraction Is Guarded
++
++**Given** clean Paper-v6 prose and prose that says energy-as-generator works at
++scale
++**When** the Paper-v6 narrowing lint scans each document
++**Then** the clean prose passes, the energy-as-generator prose fails, the
++pre-commit hook is wired additively, and the Exp 3768 artifact reports the
++number of current target files and violations without editing paper docs.
++
+ ### REQ-PUBLISH-3717: G4 Full Headline Provenance Audit
+ 
+ The Exp 3717 G4 audit runner MUST enumerate every headline and north-star
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3977fa72e6..d4fd4ba575 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2872,
++  "experiments_checked": 2873,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 21ba159257..4be56d22ce 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:30:35.327576+00:00",
+-  "finished_at": "2026-06-03T16:30:35.351894+00:00",
++  "started_at": "2026-06-03T16:40:59.839434+00:00",
++  "finished_at": "2026-06-03T16:40:59.863486+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index cffaf30244..40947193ed 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T16:30:35Z",
++  "run_date": "2026-06-03T16:41:00Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index ca7dc648ba..2bb0fd05b3 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:30:36Z",
+-  "finished_at": "2026-06-03T16:30:36Z",
++  "started_at": "2026-06-03T16:41:01Z",
++  "finished_at": "2026-06-03T16:41:01Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index c5627d6afa..ff877c4e38 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-03T16:30:36Z",
++  "run_date": "2026-06-03T16:41:01Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 988df42d0b..86d296e83e 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-03T16:30:36Z",
++  "run_date": "2026-06-03T16:41:01Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index d9abad3507..de52766371 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-03T16:28:55.645443Z",
+-  "duration_s": 0.010463237762451172,
++  "run_date": "2026-06-03T16:39:20.071721Z",
++  "duration_s": 0.009780645370483398,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "2f4d9a8ed9067370d537de37979412fc7791fe4ea0fe2fb220c3e73567d86c0b",
++  "reproducibility_checksum": "f6558f2b56709becc185bc6ef06661b0c7db74c4fe5616ecedd2d833f9968d8e",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "1bf0e1afa01d3bb40fc519ea4baea07c7801a972"
++    "adversarial_verify_version": "dbd3e5d3e0480e53d3cb459cf4feed1fa4987d1e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 7004d7834c..c2ab2c7aa4 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-03T16:30:57.048175Z",
+-  "duration_s": 21.083613872528076,
++  "run_date": "2026-06-03T16:41:22.309996Z",
++  "duration_s": 21.13907814025879,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index ea95909d33..09204d2fe5 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-03T16:28:55.658177Z",
+-  "duration_s": 0.009413719177246094,
++  "run_date": "2026-06-03T16:39:20.083482Z",
++  "duration_s": 0.008567571640014648,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "1664cbe94f7224269f2156c5fa20c7c2c3217c79648fc4dc68e19a1281e880f7",
++  "reproducibility_checksum": "9a4e26843bd357d19934abc80d7bf746c29941100b94614a36b92604fd465f9a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "1bf0e1afa01d3bb40fc519ea4baea07c7801a972"
++    "adversarial_verify_version": "dbd3e5d3e0480e53d3cb459cf4feed1fa4987d1e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1fb4135d07..f60c0a0fac 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.110719680786133,
++  "efficiency_gains_ms": 2.1064281463623047,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index bf6f8b4465..557e019ca7 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2694988250732422,
++  "duration_s": 0.2684957981109619,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 5a0feaf719..0433138648 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008113384246826172,
++  "duration_s": 0.0008857250213623047,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 915903117e..d9f53a6023 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6589001208776608e-05,
++  "duration_s": 2.559799759183079e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index b45fb8c3f9..14b3496f88 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.609996828250587e-07,
++  "duration_s": 5.90996933169663e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 33a6064644..f0e4e19b66 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.0558319091796875e-05,
++  "duration_s": 5.2928924560546875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3768_g3_narrowing_lint.json b/results/experiment_3768_g3_narrowing_lint.json
+new file mode 100644
+index 0000000000..53ec83c1ec
+--- /dev/null
++++ b/results/experiment_3768_g3_narrowing_lint.json
+@@ -0,0 +1,38 @@
++{
++  "duration_s": 0.05747634100043797,
++  "energy_retraction_pattern_name": "ENERGY_AS_GENERATOR_GENERATIVE_SUCCESS",
++  "experiment": 3768,
++  "experiment_artifact_allowlisted": true,
++  "experiment_id": 3768,
++  "field_principles": {
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the G3-mechanization outcome.",
++    "inference_substrate": "aggregation_from_upstream_artifacts (principle: a lint over tracked docs, no live model).",
++    "lint_extended_and_wired": "True iff the EXISTING scripts/paper_v6_narrowing_lint.py was extended (12th retraction + paper_v6_* scan) AND the pre-commit stanza was added -- the G3 mechanization deliverable (extend+wire, not regenerate).",
++    "n_retracted_phrasings_covered": "Count of forbidden phrasings encoded (>=12 incl. the new energy-as-generator one) -- coverage of the discipline.",
++    "precommit_hook_wired": "True iff the .pre-commit-config.yaml stanza was added (additively) -- enforcement, not honor-discipline.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "test_asserts_real_behavior": "True iff the shipped test asserts the lint fires on retracted prose and passes on clean prose (anti-poison-test).",
++    "twelfth_retraction_added": "True iff the 'energy-as-generator works/scales' phrasing is in the lint -- keeps the narrowing current with the Thesis-A bound.",
++    "violations_found": "BARE int. Violations in the current tree (0 = docs clean; >0 = operator-action signal, never an auto-edit)."
++  },
++  "honest_verdict": "complete: g3_narrowing_lint_shipped_19_phrasings_12th_added_violations_0_precommit_wired",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a lint over tracked docs, no live model).",
++  "lint_extended_and_wired": true,
++  "n_retracted_phrasings_covered": 19,
++  "paper_v6_json_scan_extended": true,
++  "precommit_hook_wired": true,
++  "random_seed": 3768,
++  "reproducibility_checksum": "37aa9150244c60ef47c484c1e86bad91c1d33da11d718207ea255ee2e4083387",
++  "schema": "carnot.g3_narrowing_lint.v1",
++  "target_files_existing": 2,
++  "target_paths": [
++    "docs/arxiv-paper/main.tex",
++    "docs/technical-report.md"
++  ],
++  "test_asserts_real_behavior": true,
++  "twelfth_retraction_added": true,
++  "violating_files": [],
++  "violations_found": 0
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8763eaa6eb..843dc30d8c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:30:55Z",
+-  "finished_at": "2026-06-03T16:30:55Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-03T16:41:18Z",
++  "finished_at": "2026-06-03T16:41:18Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index d107e738f1..b414d12ad6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:30:56Z",
+-  "finished_at": "2026-06-03T16:30:56Z",
++  "started_at": "2026-06-03T16:41:18Z",
++  "finished_at": "2026-06-03T16:41:18Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 46df22d151..53fd439884 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T16:30:56Z",
+-  "finished_at": "2026-06-03T16:30:56Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-03T16:41:18Z",
++  "finished_at": "2026-06-03T16:41:18Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3768_g3_narrowing_lint.py b/scripts/experiment_3768_g3_narrowing_lint.py
+new file mode 100644
+index 0000000000..3ac4f31007
+--- /dev/null
++++ b/scripts/experiment_3768_g3_narrowing_lint.py
+@@ -0,0 +1,225 @@
++#!/usr/bin/env python3
++"""Exp 3768: extend and wire the Paper-v6 G3 narrowing lint."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import tempfile
++import time
++from pathlib import Path
++from typing import Any
++
++REPO_ROOT = Path(__file__).resolve().parent.parent
++if str(REPO_ROOT) not in sys.path:
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import paper_v6_narrowing_lint as narrowing_lint
++
++
++RESULT_PATH = REPO_ROOT / "results" / "experiment_3768_g3_narrowing_lint.json"
++PRECOMMIT_PATH = REPO_ROOT / ".pre-commit-config.yaml"
++TEST_PATH = REPO_ROOT / "tests" / "python" / "test_paper_v6_narrowing_lint.py"
++LINT_PATH = REPO_ROOT / "scripts" / "paper_v6_narrowing_lint.py"
++SPEC_PATH = REPO_ROOT / "openspec" / "capabilities" / "publication" / "spec.md"
++RANDOM_SEED = 3768
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a lint over tracked docs, no live model)."
++)
++ENERGY_PATTERN_NAME = "ENERGY_AS_GENERATOR_GENERATIVE_SUCCESS"
++ENERGY_RETRACTION_CONTROLS = (
++    "energy-as-generator works at scale",
++    "energy-as-generator scales",
++    "EBT generates tokens",
++    "EBT generates text",
++    "energy-as-generator viable as a generator",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the G3-mechanization outcome.",
++    "inference_substrate": INFERENCE_SUBSTRATE,
++    "lint_extended_and_wired": (
++        "True iff the EXISTING scripts/paper_v6_narrowing_lint.py was extended "
++        "(12th retraction + paper_v6_* scan) AND the pre-commit stanza was added "
++        "-- the G3 mechanization deliverable (extend+wire, not regenerate)."
++    ),
++    "n_retracted_phrasings_covered": (
++        "Count of forbidden phrasings encoded (>=12 incl. the new "
++        "energy-as-generator one) -- coverage of the discipline."
++    ),
++    "twelfth_retraction_added": (
++        "True iff the 'energy-as-generator works/scales' phrasing is in the lint "
++        "-- keeps the narrowing current with the Thesis-A bound."
++    ),
++    "violations_found": (
++        "BARE int. Violations in the current tree (0 = docs clean; >0 = "
++        "operator-action signal, never an auto-edit)."
++    ),
++    "precommit_hook_wired": (
++        "True iff the .pre-commit-config.yaml stanza was added (additively) -- "
++        "enforcement, not honor-discipline."
++    ),
++    "test_asserts_real_behavior": (
++        "True iff the shipped test asserts the lint fires on retracted prose and "
++        "passes on clean prose (anti-poison-test)."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++def _sha256(path: Path) -> str:
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def _scan_text(text: str) -> list[narrowing_lint.LintHit]:
++    with tempfile.TemporaryDirectory() as tmp:
++        root = Path(tmp)
++        doc = root / "paper.md"
++        doc.write_text(text, encoding="utf-8")
++        return narrowing_lint.scan_paths([doc], root=root)
++
++
++def _twelfth_retraction_added() -> bool:
++    pattern_names = {spec.name for spec in narrowing_lint.FORBIDDEN_PATTERNS}
++    if ENERGY_PATTERN_NAME not in pattern_names:
++        return False
++    for control in ENERGY_RETRACTION_CONTROLS:
++        hits = _scan_text(f"The draft claims {control}.")
++        if not any(hit.pattern_name == ENERGY_PATTERN_NAME for hit in hits):
++            return False
++    clean_hits = _scan_text(
++        "The EBT is discriminative-not-generative at tested scale."
++    )
++    return clean_hits == []
++
++
++def _precommit_hook_wired() -> bool:
++    text = PRECOMMIT_PATH.read_text(encoding="utf-8")
++    required = (
++        "id: paper-v6-narrowing-lint",
++        "entry: python3 scripts/paper_v6_narrowing_lint.py",
++        "docs/arxiv-paper/main\\.tex",
++        "docs/technical-report\\.md",
++        "results/paper_v6_.*\\.json",
++        "pass_filenames: false",
++    )
++    return all(fragment in text for fragment in required)
++
++
++def _test_asserts_real_behavior() -> bool:
++    text = TEST_PATH.read_text(encoding="utf-8")
++    return all(
++        fragment in text
++        for fragment in (
++            "SCENARIO-PUBLISH-3768",
++            "clean_doc_passes",
++            "energy_as_generator_retraction_fails",
++            "energy-as-generator works at scale",
++            "assert (not hits) is should_pass",
++        )
++    )
++
++
++def _paper_v6_json_scan_extended() -> bool:
++    return bool(
++        narrowing_lint.RESULTS_ARTIFACT_RE.match("results/paper_v6_fixture.json")
++    )
++
++
++def _artifact_allowlisted() -> bool:
++    return narrowing_lint.should_skip(RESULT_PATH, root=REPO_ROOT)
++
++
++def _checksum(payload: dict[str, Any]) -> str:
++    stable = {
++        "artifact": {
++            k: payload[k]
++            for k in sorted(payload)
++            if k not in {"duration_s", "reproducibility_checksum"}
++        },
++        "lint_sha256": _sha256(LINT_PATH),
++        "test_sha256": _sha256(TEST_PATH),
++        "precommit_sha256": _sha256(PRECOMMIT_PATH),
++        "spec_sha256": _sha256(SPEC_PATH),
++    }
++    encoded = json.dumps(stable, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact() -> dict[str, Any]:
++    started = time.perf_counter()
++    target_paths = narrowing_lint.discover_targets(REPO_ROOT)
++    hits = narrowing_lint.scan_paths(target_paths, root=REPO_ROOT)
++    twelfth_added = _twelfth_retraction_added()
++    precommit_wired = _precommit_hook_wired()
++    test_real = _test_asserts_real_behavior()
++    paper_v6_scan = _paper_v6_json_scan_extended()
++    artifact_allowlisted = _artifact_allowlisted()
++    n_phrasings = len(narrowing_lint.FORBIDDEN_PATTERNS)
++    lint_extended_and_wired = bool(
++        twelfth_added
++        and precommit_wired
++        and paper_v6_scan
++        and artifact_allowlisted
++        and n_phrasings >= 12
++    )
++    violations_found = len(hits)
++    honest_verdict = (
++        "complete: "
++        f"g3_narrowing_lint_shipped_{n_phrasings}_phrasings_"
++        f"12th_added_violations_{violations_found}_precommit_wired"
++        if lint_extended_and_wired and test_real
++        else "complete: g3_narrowing_lint_incomplete_acceptance_gate_unmet"
++    )
++
++    artifact: dict[str, Any] = {
++        "schema": "carnot.g3_narrowing_lint.v1",
++        "experiment": 3768,
++        "experiment_id": 3768,
++        "honest_verdict": honest_verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "lint_extended_and_wired": lint_extended_and_wired,
++        "n_retracted_phrasings_covered": n_phrasings,
++        "twelfth_retraction_added": twelfth_added,
++        "violations_found": violations_found,
++        "precommit_hook_wired": precommit_wired,
++        "test_asserts_real_behavior": test_real,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": max(time.perf_counter() - started, 0.0001),
++        "target_files_existing": len(target_paths),
++        "target_paths": [
++            narrowing_lint._rel_string(path, REPO_ROOT) for path in target_paths
++        ],
++        "violating_files": sorted(
++            {narrowing_lint._rel_string(hit.path, REPO_ROOT) for hit in hits}
++        ),
++        "paper_v6_json_scan_extended": paper_v6_scan,
++        "experiment_artifact_allowlisted": artifact_allowlisted,
++        "energy_retraction_pattern_name": ENERGY_PATTERN_NAME,
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    return artifact
++
++
++def write_artifact(artifact: dict[str, Any]) -> None:
++    RESULT_PATH.parent.mkdir(parents=True, exist_ok=True)
++    RESULT_PATH.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++
++def main() -> int:
++    artifact = build_artifact()
++    write_artifact(artifact)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    print(artifact["honest_verdict"])
++    return 0 if artifact["lint_extended_and_wired"] else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/scripts/paper_v6_narrowing_lint.py b/scripts/paper_v6_narrowing_lint.py
+index 7fa0eff39a..ef79d3e511 100644
+--- a/scripts/paper_v6_narrowing_lint.py
++++ b/scripts/paper_v6_narrowing_lint.py
+@@ -40,6 +40,7 @@ RESULTS_ARTIFACT_RE = re.compile(r"^results/paper_v6_[^/]*\.json$")
+ 
+ ALLOWLIST_FILES = {
+     "CLAUDE.md",
++    "results/experiment_3768_g3_narrowing_lint.json",
+     "scripts/publication_gate.py",
+     "scripts/paper_v6_narrowing_lint.py",
+ }
+@@ -140,6 +141,13 @@ FORBIDDEN_PATTERNS = [
+         r"(?:five[- ]paper_ready streak|\.271/\.272/\.273/\.274/\.275\s+paper_ready=true)",
+         "paper_ready streak is not scientific maturity evidence",
+     ),
++    PatternSpec(
++        "ENERGY_AS_GENERATOR_GENERATIVE_SUCCESS",
++        r"(?:\benergy[- ]as[- ]generator\b.{0,80}\b"
++        r"(?:works?(?:\s+at\s+scale)?|scales?|viable\b.{0,40}\bas\s+a\s+generator)\b|"
++        r"\bEBT\b.{0,40}\bgenerat(?:es|ed|ing)\b.{0,40}\b(?:tokens?|text)\b)",
++        "EBT is discriminative-not-generative at tested scale",
++    ),
+ ]
+ 
+ COMPILED_PATTERNS = [(spec, spec.compile()) for spec in FORBIDDEN_PATTERNS]
+diff --git a/tests/python/test_paper_v6_narrowing_lint.py b/tests/python/test_paper_v6_narrowing_lint.py
+index d48da66f19..492fc36391 100644
+--- a/tests/python/test_paper_v6_narrowing_lint.py
++++ b/tests/python/test_paper_v6_narrowing_lint.py
+@@ -1,6 +1,7 @@
+ """Tests for scripts/paper_v6_narrowing_lint.py.
+ 
+-Spec traces: REQ-PUBLISH-3716, SCENARIO-PUBLISH-3716.
++Spec traces: REQ-PUBLISH-3716, SCENARIO-PUBLISH-3716,
++REQ-PUBLISH-3768, SCENARIO-PUBLISH-3768.
+ """
+ 
+ from __future__ import annotations
+@@ -34,6 +35,12 @@ from scripts import paper_v6_narrowing_lint as lint
+             False,
+             "0.9857",
+         ),
++        (
++            "energy_as_generator_retraction_fails",
++            "The paper now claims energy-as-generator works at scale.",
++            False,
++            "energy-as-generator works at scale",
++        ),
+     ],
+ )
+ def test_synthetic_doc_narrowing_lint_cases(
+@@ -43,7 +50,7 @@ def test_synthetic_doc_narrowing_lint_cases(
+     should_pass: bool,
+     expected_fragment: str | None,
+ ) -> None:
+-    """SCENARIO-PUBLISH-3716: clean prose passes; forbidden prose and numbers fail."""
++    """SCENARIO-PUBLISH-3716/3768: clean prose passes; retracted prose fails."""
+     doc = tmp_path / f"{case_name}.md"
+     doc.write_text(text, encoding="utf-8")
+ 
+-- 
+2.55.0
+

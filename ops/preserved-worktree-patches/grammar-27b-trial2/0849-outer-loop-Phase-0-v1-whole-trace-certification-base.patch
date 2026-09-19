@@ -1,0 +1,329 @@
+From 39f788da2dfefc008c58b9beb74f54c94a8e6c8f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 19:45:04 -0400
+Subject: [PATCH 00849/11171] [outer-loop] Phase 0 v1: whole-trace
+ certification = base-rate (FORMAT MISMATCH, not verifier ability)
+
+Verifier-as-self-improvement-reward de-risk. Whole-trace certification via the
+production ensemble on 558 p01 traces (34% gold-correct): certified-correct set is
+only 34-38% precise = ~base rate -> Phase-1 gate FAILS. BUT this is almost certainly
+a FORMAT MISMATCH: Carnot's ensemble is a per-STEP process verifier (FoVer 0.91 AUROC
+judges individual steps WITH problem context); fed whole-trace blobs with minimal rows
+and no problem context it degenerates to base-rate -- exactly what we see. So this is
+INCONCLUSIVE (likely mismatch), NOT a clean negative -- same v1->v2 pattern as #4.
+Phase 0 v2 = per-step certification with problem context (score each reasoning_step in
+context, certify trace iff no step flagged), needs proper FoVer-row data prep. Gate
+the verifier-as-self-improvement-reward program on v2, not v1.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ...rifier_certification_precision_phase0.json | 148 ++++++++++++++++++
+ ...er_certification_precision_phase0_draft.py | 141 +++++++++++++++++
+ 2 files changed, 289 insertions(+)
+ create mode 100644 results/verifier_certification_precision_phase0.json
+ create mode 100644 scripts/experiments/verifier_certification_precision_phase0_draft.py
+
+diff --git a/results/verifier_certification_precision_phase0.json b/results/verifier_certification_precision_phase0.json
+new file mode 100644
+index 0000000000..95590e9552
+--- /dev/null
++++ b/results/verifier_certification_precision_phase0.json
+@@ -0,0 +1,148 @@
++{
++  "caveat": "DRAFT. Whole-trace certification via the production text-verifier ensemble. Precision is the load-bearing metric for RFT (poisons training if low). A step-level certification + a harder corpus (gsm8k/hardmath) are follow-ups. If precision is high only at very low recall, RFT has few traces to learn from.",
++  "default_threshold_precision": 0.3786,
++  "default_threshold_recall": 0.8211,
++  "experiment": "verifier_certification_precision_phase0_draft",
++  "gold_correct_base_rate": 0.3405,
++  "honest_verdict": "complete: certification_INSUFFICIENT_baserate0.341_defaultprec0.379_rftprec0.3405",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "n_traces": 558,
++  "phase1_gate": "certification precision >= 0.85 at recall >= 0.20",
++  "phase1_gate_pass": false,
++  "precision_recall_sweep": [
++    {
++      "n_certified": 1,
++      "precision": 1.0,
++      "recall_of_correct": 0.0053,
++      "threshold": 0.6228
++    },
++    {
++      "n_certified": 1,
++      "precision": 1.0,
++      "recall_of_correct": 0.0053,
++      "threshold": 0.6373
++    },
++    {
++      "n_certified": 1,
++      "precision": 1.0,
++      "recall_of_correct": 0.0053,
++      "threshold": 0.6519
++    },
++    {
++      "n_certified": 2,
++      "precision": 1.0,
++      "recall_of_correct": 0.0105,
++      "threshold": 0.6664
++    },
++    {
++      "n_certified": 2,
++      "precision": 1.0,
++      "recall_of_correct": 0.0105,
++      "threshold": 0.6809
++    },
++    {
++      "n_certified": 2,
++      "precision": 1.0,
++      "recall_of_correct": 0.0105,
++      "threshold": 0.6954
++    },
++    {
++      "n_certified": 4,
++      "precision": 1.0,
++      "recall_of_correct": 0.0211,
++      "threshold": 0.71
++    },
++    {
++      "n_certified": 6,
++      "precision": 1.0,
++      "recall_of_correct": 0.0316,
++      "threshold": 0.7245
++    },
++    {
++      "n_certified": 6,
++      "precision": 1.0,
++      "recall_of_correct": 0.0316,
++      "threshold": 0.739
++    },
++    {
++      "n_certified": 6,
++      "precision": 1.0,
++      "recall_of_correct": 0.0316,
++      "threshold": 0.7535
++    },
++    {
++      "n_certified": 7,
++      "precision": 1.0,
++      "recall_of_correct": 0.0368,
++      "threshold": 0.7681
++    },
++    {
++      "n_certified": 8,
++      "precision": 1.0,
++      "recall_of_correct": 0.0421,
++      "threshold": 0.7826
++    },
++    {
++      "n_certified": 9,
++      "precision": 1.0,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.7971
++    },
++    {
++      "n_certified": 9,
++      "precision": 1.0,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8116
++    },
++    {
++      "n_certified": 10,
++      "precision": 0.9,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8262
++    },
++    {
++      "n_certified": 12,
++      "precision": 0.75,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8407
++    },
++    {
++      "n_certified": 12,
++      "precision": 0.75,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8552
++    },
++    {
++      "n_certified": 13,
++      "precision": 0.6923,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8698
++    },
++    {
++      "n_certified": 14,
++      "precision": 0.6429,
++      "recall_of_correct": 0.0474,
++      "threshold": 0.8843
++    },
++    {
++      "n_certified": 16,
++      "precision": 0.625,
++      "recall_of_correct": 0.0526,
++      "threshold": 0.8988
++    },
++    {
++      "n_certified": 558,
++      "precision": 0.3405,
++      "recall_of_correct": 1.0,
++      "threshold": 0.9133
++    }
++  ],
++  "rft_operating_point": {
++    "n_certified": 558,
++    "precision": 0.3405,
++    "recall_of_correct": 1.0,
++    "threshold": 0.9133
++  },
++  "title": "verifier_certification_precision",
++  "trace_source": "data/p01_difficulty_matched_generations_flattened_v2.jsonl"
++}
+diff --git a/scripts/experiments/verifier_certification_precision_phase0_draft.py b/scripts/experiments/verifier_certification_precision_phase0_draft.py
+new file mode 100644
+index 0000000000..89707fb501
+--- /dev/null
++++ b/scripts/experiments/verifier_certification_precision_phase0_draft.py
+@@ -0,0 +1,141 @@
++"""DRAFT (Phase 0, operator-facing): can Carnot's IMPERFECT verifier CERTIFY?
++
++The #4 v4 Sudoku result (verifier teaches a generator via RFT) used a PERFECT
++verifier. Scaling to reasoning, Carnot's verifier ensemble is 0.91 AUROC -- imperfect.
++RFT cares about CERTIFICATION PRECISION, not AUROC: of the traces the verifier
++certifies as correct, what fraction actually are? High precision -> RFT trains on
++mostly-correct data and self-improves; low precision -> false-positive traces poison
++training and it collapses (the Sudoku soft-argmin failure, at scale).
++
++This measures it directly on EXISTING data + the EXISTING ensemble -- no fine-tuning,
++no generation. Reuses real p01 generated traces (with gold is_correct) and the
++production score_carnot_ensemble (text verifiers, CPU). Gate Phase 1 (RFT) on the
++result: precision >= ~85% at a recall that yields enough certified traces to train on.
++
++  .venv/bin/python scripts/experiments/verifier_certification_precision_phase0_draft.py
++"""
++
++from __future__ import annotations
++
++import hashlib
++import json
++from pathlib import Path
++
++from carnot.eval.verifier_error_independence_scissor_at_scale import (
++    FoVerPanel,
++    score_carnot_ensemble,
++)
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++TRACES = REPO_ROOT / "data" / "p01_difficulty_matched_generations_flattened_v2.jsonl"
++OUT = REPO_ROOT / "results" / "verifier_certification_precision_phase0.json"
++
++
++def _load_traces(path: Path, limit: int | None = None) -> tuple[list[str], list[int]]:
++    texts: list[str] = []
++    labels: list[int] = []  # error label: 1 = incorrect, 0 = correct (FoVer convention)
++    with path.open(encoding="utf-8") as f:
++        for line in f:
++            r = json.loads(line)
++            t = str(r.get("text") or "")
++            ic = r.get("is_correct")
++            if ic is None or not t.strip():
++                continue
++            texts.append(t)
++            labels.append(0 if bool(ic) else 1)
++            if limit and len(texts) >= limit:
++                break
++    return texts, labels
++
++
++def _precision_recall_at(scores: list[float], gold_correct: list[int], thr: float) -> dict:
++    """Certify-correct iff error-score <= thr. Precision/recall of the certified set."""
++
++    certified = [i for i, s in enumerate(scores) if s <= thr]
++    if not certified:
++        return {"threshold": thr, "n_certified": 0, "precision": None, "recall": None}
++    tp = sum(gold_correct[i] for i in certified)
++    n_correct_total = sum(gold_correct) or 1
++    return {
++        "threshold": round(thr, 4),
++        "n_certified": len(certified),
++        "precision": round(tp / len(certified), 4),
++        "recall_of_correct": round(tp / n_correct_total, 4),
++    }
++
++
++def run(limit: int | None = None, write: bool = True) -> dict:
++    texts, labels = _load_traces(TRACES, limit=limit)
++    n = len(texts)
++    gold_correct = [1 - e for e in labels]  # 1 if the trace is actually correct
++    base_rate = sum(gold_correct) / n if n else 0.0
++
++    panel = FoVerPanel(
++        rows=tuple({"idx": i} for i in range(n)),
++        labels=tuple(labels),
++        texts=tuple(texts),
++        panel_sha256=hashlib.sha256("".join(texts).encode("utf-8")).hexdigest(),
++    )
++    scoring = score_carnot_ensemble(panel, REPO_ROOT)
++    scores = [float(s) for s in scoring.scores]  # error scores: higher = more error
++
++    # Default operating point (the ensemble's own threshold): certify = error_pred 0.
++    certified_default = [i for i, p in enumerate(scoring.error_preds) if int(p) == 0]
++    def_prec = (
++        sum(gold_correct[i] for i in certified_default) / len(certified_default)
++        if certified_default else None
++    )
++    def_recall = (
++        sum(gold_correct[i] for i in certified_default) / (sum(gold_correct) or 1)
++        if certified_default else None
++    )
++
++    # Sweep the error-score threshold (lower = stricter certification = higher precision).
++    lo, hi = min(scores), max(scores)
++    grid = [lo + (hi - lo) * k / 20 for k in range(21)]
++    sweep = [_precision_recall_at(scores, gold_correct, t) for t in grid]
++
++    # The RFT operating point: strictest threshold that still certifies >= 20% of correct.
++    usable = [p for p in sweep if p["recall_of_correct"] and p["recall_of_correct"] >= 0.20]
++    rft_point = min(usable, key=lambda p: p["threshold"]) if usable else None
++
++    gate_pass = bool(rft_point and rft_point["precision"] and rft_point["precision"] >= 0.85)
++    verdict = (
++        f"complete: certification_{'VIABLE' if gate_pass else 'INSUFFICIENT'}"
++        f"_baserate{base_rate:.3f}_defaultprec{def_prec if def_prec is None else round(def_prec,3)}"
++        f"_rftprec{rft_point['precision'] if rft_point else 'na'}"
++    )
++    artifact = {
++        "experiment": "verifier_certification_precision_phase0_draft",
++        "title": "verifier_certification_precision",
++        "honest_verdict": verdict,
++        "inference_substrate": "verifier_ensemble_against_cached_candidates",
++        "n_traces": n,
++        "gold_correct_base_rate": round(base_rate, 4),
++        "default_threshold_precision": None if def_prec is None else round(def_prec, 4),
++        "default_threshold_recall": None if def_recall is None else round(def_recall, 4),
++        "rft_operating_point": rft_point,
++        "precision_recall_sweep": sweep,
++        "phase1_gate": "certification precision >= 0.85 at recall >= 0.20",
++        "phase1_gate_pass": gate_pass,
++        "trace_source": str(TRACES.relative_to(REPO_ROOT)),
++        "caveat": (
++            "DRAFT. Whole-trace certification via the production text-verifier ensemble. "
++            "Precision is the load-bearing metric for RFT (poisons training if low). A "
++            "step-level certification + a harder corpus (gsm8k/hardmath) are follow-ups. "
++            "If precision is high only at very low recall, RFT has few traces to learn from."
++        ),
++    }
++    if write:
++        OUT.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", "utf-8")
++    return artifact
++
++
++if __name__ == "__main__":
++    art = run()
++    print(f"-> {art['honest_verdict']}")
++    print(f"   n={art['n_traces']} gold_correct_base_rate={art['gold_correct_base_rate']}")
++    print(f"   default-threshold precision={art['default_threshold_precision']} "
++          f"recall={art['default_threshold_recall']}")
++    print(f"   RFT operating point: {art['rft_operating_point']}")
++    print(f"   Phase-1 gate (prec>=0.85 @ recall>=0.20): {'PASS' if art['phase1_gate_pass'] else 'FAIL'}")
+-- 
+2.55.0
+

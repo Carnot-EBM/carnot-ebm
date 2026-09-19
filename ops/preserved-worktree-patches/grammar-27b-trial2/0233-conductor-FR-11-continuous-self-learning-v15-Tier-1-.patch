@@ -1,0 +1,1546 @@
+From c4d2dc6a986e55ebf9be97546c517cd382c541e7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 18:27:13 -0400
+Subject: [PATCH 00233/11171] =?UTF-8?q?[conductor]=20FR-11=20continuous=20?=
+ =?UTF-8?q?self-learning=20v15=20=E2=80=94=20Tier-1=20ONLINE=20stabilizer-?=
+ =?UTF-8?q?efficacy=20tracker=20for=20EBT=20training:=20from=20the=20exp37?=
+ =?UTF-8?q?34/3735=20stability=20diagnostics,=20track=20which=20stabilizer?=
+ =?UTF-8?q?s=20(random-alpha,=20replay=20buffer,=20Langevin=20noise,=20gra?=
+ =?UTF-8?q?d-clip,=20KL-term=20CD)=20correlate=20with=20NO-divergence=20ac?=
+ =?UTF-8?q?ross=20chunks,=20upweight=20the=20effective=20ones,=20and=20rec?=
+ =?UTF-8?q?ommend=20a=20recipe=20for=20the=20next=20bounded=20run.=20CPU?=
+ =?UTF-8?q?=20counter-updates=20only=20(the=20Tier-1=20hardware=20path).?=
+ =?UTF-8?q?=20The=20self-learning=20experiment=20mandated=20by=20research-?=
+ =?UTF-8?q?program.md.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3740-fr11-self-learning-v15-stabilizer-tracker
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  59 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../fr11/continuous_self_learning_v15.py      | 574 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ..._self_learning_v15_stabilizer_tracker.json | 149 +++++
+ ...740_fr11_v15_stabilizer_tracker_state.json |  54 ++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...11_self_learning_v15_stabilizer_tracker.py |  27 +
+ .../test_experiment_3740_fr11_csl_v15.py      | 312 ++++++++++
+ 24 files changed, 1207 insertions(+), 32 deletions(-)
+ create mode 100644 python/carnot/fr11/continuous_self_learning_v15.py
+ create mode 100644 results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json
+ create mode 100644 results/experiment_3740_fr11_v15_stabilizer_tracker_state.json
+ create mode 100644 scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py
+ create mode 100644 tests/python/test_experiment_3740_fr11_csl_v15.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index c6ab65e22b..72b710ecc3 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -10668,3 +10668,62 @@ and pass-rate and true-accuracy trajectories are not element-wise identical.
+ | Requirement  | Python | Tests |
+ |-------------|--------|-------|
+ | REQ-LEARN-3720 | Implemented (python/carnot/fr11/continuous_self_learning_v14.py; scripts/experiment_3720_fr11_continuous_self_learning_v14.py) | Implemented (tests/python/test_experiment_3720_fr11_csl_v14.py) |
++
++---
++
++## REQ-LEARN-3740: FR-11 Continuous Self Learning v15 Tier-1 EBT Stabilizer Counter Tracker
++
++**Given** checked-in EBT training diagnostics that report per-chunk
++`stabilizers_applied`, `nan_or_divergence_events`, and `ebt_converged` tuples
++**When** Exp 3740 runs the FR-11 v15 self-learning tracker
++**Then** the deploy arm SHALL parse Exp 3734, Exp 3735, and any earlier EBT
++training artifacts that expose those fields
++**And** for each observed stabilizer it SHALL update raw CPU counters for
++`P(no-divergence | stabilizer enabled)` and
++`P(no-divergence | stabilizer disabled)`
++**And** it SHALL persist the raw tracker state so a future EBT-training
++milestone resumes from the accumulated counters
++**And** it SHALL emit the stabilizer set with the best observed no-divergence
++correlation as a preliminary recipe for the next bounded run.
++
++### REQ-LEARN-3740 Sub-requirements
++
++- REQ-LEARN-3740-1: Runnable artifacts SHALL use upstream checked-in training
++  diagnostics only, with `inference_substrate` equal to
++  `aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model).`.
++- REQ-LEARN-3740-2: If no Exp 3734/3735 or earlier EBT training diagnostics
++  expose the required tuple fields, the workflow SHALL persist an empty tracker
++  state and write an `honest_verdict` that includes
++  `no training diagnostics to learn from -- tracker initialized empty`.
++- REQ-LEARN-3740-3: For every observed stabilizer, the tracker state SHALL store
++  raw enabled/disabled totals and enabled/disabled no-divergence counts; rates
++  and deltas SHALL be derived from those counters at artifact-build time.
++- REQ-LEARN-3740-4: The recommended recipe SHALL contain every stabilizer tied
++  for the maximum enabled-minus-disabled no-divergence rate delta, with ties
++  retained rather than fabricated into a strict ranking.
++- REQ-LEARN-3740-5: Runnable artifacts SHALL include bare values for
++  `honest_verdict`, `inference_substrate`, `stabilizer_efficacy_table`,
++  `recommended_recipe`, `n_chunks_observed`, `tier1_counter_update`,
++  `tracker_state_persisted`, `is_preliminary_heuristic`, `random_seed`,
++  `reproducibility_checksum`, and `duration_s`, plus separate field-principle
++  annotations for those fields.
++- REQ-LEARN-3740-6: The artifact SHALL avoid live-model, CUDA, and GGUF
++  substrate markers and SHALL label the table as a small-sample preliminary
++  heuristic rather than a statistical efficacy claim.
++
++### SCENARIO-LEARN-3740: Stabilizer Counters Recommend a Preliminary Recipe
++
++**Given** one EBT chunk that enables `grad_clip` and `kl_cd_fix` without
++divergence, one chunk that disables them and diverges, and one chunk that
++enables only `grad_clip` without divergence
++**When** the v15 tracker updates counters from those chunks
++**Then** `grad_clip` has two enabled no-divergence observations, `kl_cd_fix`
++has one enabled no-divergence observation, both have disabled observations,
++and the recommended recipe contains the stabilizer or stabilizers tied for the
++largest enabled-minus-disabled no-divergence rate delta.
++
++## Implementation Status (REQ-LEARN-3740)
++
++| Requirement  | Python | Tests |
++|-------------|--------|-------|
++| REQ-LEARN-3740 | Implemented (python/carnot/fr11/continuous_self_learning_v15.py; scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py) | Implemented (tests/python/test_experiment_3740_fr11_csl_v15.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 4afccbbbdc..568d026cd3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2863,
++  "experiments_checked": 2864,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/fr11/continuous_self_learning_v15.py b/python/carnot/fr11/continuous_self_learning_v15.py
+new file mode 100644
+index 0000000000..e991fdd004
+--- /dev/null
++++ b/python/carnot/fr11/continuous_self_learning_v15.py
+@@ -0,0 +1,574 @@
++"""FR-11 continuous self-learning v15 for EBT stabilizer efficacy counters.
++
++Spec: REQ-LEARN-3740, SCENARIO-LEARN-3740.
++
++The v15 forward difference is Tier-1 online learning applied to EBT training
++bring-up diagnostics.  It reads checked-in per-chunk training artifacts,
++updates CPU-only counters for stabilizer/no-divergence observations, persists
++the raw counters, and emits a preliminary recipe for the next bounded run.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import re
++import time
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++OUTPUT_REL_PATH = Path("results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json")
++TRACKER_STATE_REL_PATH = Path("results/experiment_3740_fr11_v15_stabilizer_tracker_state.json")
++DEFAULT_RANDOM_SEED = 3740
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model)."
++)
++SUCCESS_VERDICT_PREFIX = (
++    "complete: "
++    "fr11_v15_tier1_stabilizer_efficacy_tracker_recipe_recommended_state_persisted_"
++    "preliminary_over_"
++)
++EMPTY_VERDICT = "complete: no training diagnostics to learn from -- tracker initialized empty"
++TIER1_COUNTER_UPDATE = "cpu_counter_update_only_lt_1us_no_model_retrain"
++EXPERIMENT_ID_LIMIT = 3735
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "stabilizer_efficacy_table",
++    "recommended_recipe",
++    "n_chunks_observed",
++    "tier1_counter_update",
++    "tracker_state_persisted",
++    "is_preliminary_heuristic",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the self-learning outcome.",
++    "inference_substrate": "Reads training diagnostics, no live model.",
++    "stabilizer_efficacy_table": (
++        "Per-stabilizer no-divergence correlation -- the learned knowledge; "
++        "the core deliverable."
++    ),
++    "recommended_recipe": (
++        "The upweighted stabilizer set for the next bounded run -- the actionable "
++        "self-learning output that feeds back into the loop."
++    ),
++    "n_chunks_observed": (
++        "Sample-size hygiene -- how many training chunks the tracker learned from "
++        "(small-sample heuristic, labeled preliminary)."
++    ),
++    "tier1_counter_update": (
++        "Confirms the mechanic is a CPU counter update (<1us, the Tier-1 hardware "
++        "path), not a model retrain -- aligns with the hardware-acceleration principle."
++    ),
++    "tracker_state_persisted": (
++        "True iff the tracker state was saved so a future EBT-training milestone "
++        "resumes it (continuous, not one-shot)."
++    ),
++    "is_preliminary_heuristic": (
++        "Honest label: over a handful of chunks this is a heuristic, not a "
++        "statistical claim -- pre-empts SAMPLE_SIZE_BELOW_CLAIM."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class TrainingChunk:
++    """One upstream EBT training diagnostic chunk."""
++
++    source_path: str
++    experiment_id: int | None
++    stabilizers: tuple[str, ...]
++    nan_or_divergence_events: bool
++    ebt_converged: bool | None
++    cumulative_steps_trained: int | None
++
++    @property
++    def no_divergence(self) -> bool:
++        return not self.nan_or_divergence_events
++
++    def to_json(self) -> JsonDict:
++        return {
++            "source_path": self.source_path,
++            "experiment_id": self.experiment_id,
++            "stabilizers_applied": list(self.stabilizers),
++            "nan_or_divergence_events": self.nan_or_divergence_events,
++            "ebt_converged": self.ebt_converged,
++            "cumulative_steps_trained": self.cumulative_steps_trained,
++        }
++
++
++@dataclass
++class StabilizerStats:
++    """Raw enabled/disabled no-divergence counters for one stabilizer."""
++
++    enabled_total: int = 0
++    enabled_no_divergence: int = 0
++    disabled_total: int = 0
++    disabled_no_divergence: int = 0
++
++    def record(self, *, enabled: bool, no_divergence: bool) -> None:
++        if enabled:
++            self.enabled_total += 1
++            if no_divergence:
++                self.enabled_no_divergence += 1
++            return
++        self.disabled_total += 1
++        if no_divergence:
++            self.disabled_no_divergence += 1
++
++    @property
++    def enabled_rate(self) -> float:
++        return _rate(self.enabled_no_divergence, self.enabled_total)
++
++    @property
++    def disabled_rate(self) -> float:
++        return _rate(self.disabled_no_divergence, self.disabled_total)
++
++    @property
++    def delta(self) -> float:
++        return self.enabled_rate - self.disabled_rate
++
++    def to_json(self) -> JsonDict:
++        return {
++            "enabled_total": self.enabled_total,
++            "enabled_no_divergence": self.enabled_no_divergence,
++            "disabled_total": self.disabled_total,
++            "disabled_no_divergence": self.disabled_no_divergence,
++        }
++
++    @classmethod
++    def from_json(cls, payload: Mapping[str, Any]) -> StabilizerStats:
++        return cls(
++            enabled_total=int(payload.get("enabled_total", 0)),
++            enabled_no_divergence=int(payload.get("enabled_no_divergence", 0)),
++            disabled_total=int(payload.get("disabled_total", 0)),
++            disabled_no_divergence=int(payload.get("disabled_no_divergence", 0)),
++        )
++
++
++class StabilizerEfficacyTracker:
++    """Tier-1 raw counter tracker for EBT stabilizer/no-divergence observations."""
++
++    def __init__(self) -> None:
++        self._stats: dict[str, StabilizerStats] = {}
++
++    def record_chunk(
++        self,
++        enabled_stabilizers: Sequence[str],
++        *,
++        no_divergence: bool,
++        observed_stabilizers: Sequence[str],
++    ) -> None:
++        enabled = set(enabled_stabilizers)
++        for stabilizer in observed_stabilizers:
++            stats = self._stats.setdefault(stabilizer, StabilizerStats())
++            stats.record(enabled=stabilizer in enabled, no_divergence=no_divergence)
++
++    def stats(self) -> dict[str, StabilizerStats]:
++        return dict(self._stats)
++
++    def to_json(self) -> JsonDict:
++        return {
++            "schema": "carnot.fr11_v15_stabilizer_efficacy_tracker_state",
++            "version": 1,
++            "stats": {name: self._stats[name].to_json() for name in sorted(self._stats)},
++        }
++
++    @classmethod
++    def from_json(cls, payload: Mapping[str, Any]) -> StabilizerEfficacyTracker:
++        if payload.get("version") != 1:
++            raise ValueError("unsupported stabilizer tracker state version")
++        tracker = cls()
++        raw_stats = payload.get("stats", {})
++        if not isinstance(raw_stats, Mapping):
++            raise ValueError("stabilizer tracker stats must be a mapping")
++        for name, raw in raw_stats.items():
++            if not isinstance(raw, Mapping):
++                raise ValueError("stabilizer tracker stat entry must be a mapping")
++            tracker._stats[str(name)] = StabilizerStats.from_json(raw)
++        return tracker
++
++
++def parse_stabilizers(value: Any) -> tuple[str, ...]:
++    """Parse a checked-in stabilizer field into a stable de-duplicated tuple."""
++
++    if value is None:
++        return ()
++    if isinstance(value, str):
++        candidates = value.split(",")
++    elif isinstance(value, Sequence) and not isinstance(value, bytes):
++        candidates = [str(item) for item in value]
++    else:
++        candidates = []
++    cleaned = {
++        item.strip()
++        for item in candidates
++        if item.strip() and item.strip().lower() != "none"
++    }
++    return tuple(sorted(cleaned))
++
++
++def load_training_chunks(results_dir: Path | str) -> list[TrainingChunk]:
++    """Load EBT training diagnostics through Exp 3735 from checked-in JSON."""
++
++    root = Path(results_dir)
++    if not root.is_dir():
++        return []
++    chunks: list[TrainingChunk] = []
++    for path in sorted(root.glob("experiment_*.json")):
++        experiment_id = _experiment_id(path.name)
++        if experiment_id is None or experiment_id > EXPERIMENT_ID_LIMIT:
++            continue
++        try:
++            payload = json.loads(path.read_text(encoding="utf-8"))
++        except json.JSONDecodeError:
++            continue
++        if not _looks_like_ebt_training_diagnostic(path.name, payload):
++            continue
++        chunks.append(_chunk_from_payload(path, payload, experiment_id))
++    return chunks
++
++
++def build_tracker_from_chunks(
++    chunks: Sequence[TrainingChunk],
++) -> tuple[StabilizerEfficacyTracker, tuple[str, ...]]:
++    """Build raw enabled/disabled counters from upstream chunks."""
++
++    observed = tuple(sorted({item for chunk in chunks for item in chunk.stabilizers}))
++    tracker = StabilizerEfficacyTracker()
++    for chunk in chunks:
++        tracker.record_chunk(
++            chunk.stabilizers,
++            no_divergence=chunk.no_divergence,
++            observed_stabilizers=observed,
++        )
++    return tracker, observed
++
++
++def efficacy_table(
++    tracker: StabilizerEfficacyTracker,
++    observed_stabilizers: Sequence[str],
++) -> list[JsonDict]:
++    """Return derived no-divergence rates from raw tracker counters."""
++
++    rows: list[JsonDict] = []
++    stats_by_name = tracker.stats()
++    for stabilizer in observed_stabilizers:
++        stats = stats_by_name.get(stabilizer, StabilizerStats())
++        rows.append(
++            {
++                "stabilizer": stabilizer,
++                "enabled_total": stats.enabled_total,
++                "enabled_no_divergence": stats.enabled_no_divergence,
++                "enabled_no_divergence_rate": _round(stats.enabled_rate),
++                "disabled_total": stats.disabled_total,
++                "disabled_no_divergence": stats.disabled_no_divergence,
++                "disabled_no_divergence_rate": _round(stats.disabled_rate),
++                "no_divergence_rate_delta_enabled_minus_disabled": _round(stats.delta),
++                "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++            }
++        )
++    return sorted(
++        rows,
++        key=lambda row: (
++            -float(row["no_divergence_rate_delta_enabled_minus_disabled"]),
++            -float(row["enabled_no_divergence_rate"]),
++            str(row["stabilizer"]),
++        ),
++    )
++
++
++def recommended_recipe(table: Sequence[Mapping[str, Any]], *, n_chunks_observed: int) -> JsonDict:
++    """Select every stabilizer tied for the best preliminary counter delta."""
++
++    if not table:
++        return {
++            "stabilizers": [],
++            "selection_basis": "no_observed_training_diagnostics",
++            "max_delta": None,
++            "is_preliminary_heuristic": True,
++            "n_chunks_observed": int(n_chunks_observed),
++        }
++    max_delta = max(
++        float(row["no_divergence_rate_delta_enabled_minus_disabled"]) for row in table
++    )
++    winners = [
++        str(row["stabilizer"])
++        for row in table
++        if float(row["no_divergence_rate_delta_enabled_minus_disabled"]) == max_delta
++    ]
++    return {
++        "stabilizers": sorted(winners),
++        "selection_basis": (
++            "max_enabled_minus_disabled_no_divergence_delta_with_ties_retained"
++        ),
++        "max_delta": _round(max_delta),
++        "is_preliminary_heuristic": True,
++        "n_chunks_observed": int(n_chunks_observed),
++    }
++
++
++def build_artifact(
++    repo_root: Path | str,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    state_path: Path | str = TRACKER_STATE_REL_PATH,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++) -> JsonDict:
++    """Build the Exp 3740 artifact and persist tracker state."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    chunks = load_training_chunks(root / "results")
++    tracker, observed = build_tracker_from_chunks(chunks)
++    table = efficacy_table(tracker, observed)
++    recipe = recommended_recipe(table, n_chunks_observed=len(chunks))
++    state_output = _resolve_under_root(root, state_path)
++    state_sha = persist_tracker_state(
++        tracker,
++        state_output,
++        n_chunks_observed=len(chunks),
++        observed_stabilizers=observed,
++        random_seed=random_seed,
++    )
++    persisted = state_output.is_file()
++    verdict = (
++        f"{SUCCESS_VERDICT_PREFIX}{len(chunks)}_chunks" if chunks else EMPTY_VERDICT
++    )
++    checksum = reproducibility_checksum(
++        chunks=chunks,
++        table=table,
++        recipe=recipe,
++        tracker_state_sha256=state_sha,
++        random_seed=random_seed,
++    )
++    artifact: JsonDict = {
++        "artifact": "experiment_3740_fr11_self_learning_v15_stabilizer_tracker",
++        "schema": "carnot.fr11_continuous_self_learning_v15",
++        "continuous_self_learning_task": True,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "stabilizer_efficacy_table": table,
++        "recommended_recipe": recipe,
++        "n_chunks_observed": int(len(chunks)),
++        "tier1_counter_update": TIER1_COUNTER_UPDATE,
++        "tracker_state_persisted": bool(persisted),
++        "is_preliminary_heuristic": True,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": checksum,
++        "duration_s": _round(_duration(start, now_s)),
++        "tracker_state_path": _relative_path(state_output, root),
++        "tracker_state_sha256": state_sha,
++        "source_training_chunks": [chunk.to_json() for chunk in chunks],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "acceptance_gate": {
++            "passed": bool(persisted),
++            "condition": "tracker_state_persisted == true",
++            "principle": "Continuous self-learning requires resumable counter state.",
++        },
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def persist_tracker_state(
++    tracker: StabilizerEfficacyTracker,
++    path: Path | str,
++    *,
++    n_chunks_observed: int,
++    observed_stabilizers: Sequence[str],
++    random_seed: int,
++) -> str:
++    """Persist raw counters and return a checksum over the stored payload."""
++
++    output = Path(path)
++    payload = {
++        **tracker.to_json(),
++        "n_chunks_observed": int(n_chunks_observed),
++        "observed_stabilizers": list(observed_stabilizers),
++        "tier1_counter_update": TIER1_COUNTER_UPDATE,
++        "random_seed": int(random_seed),
++    }
++    checksum = _json_sha256(payload)
++    stored = {**payload, "sha256": checksum}
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(stored, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return checksum
++
++
++def write_artifact(
++    repo_root: Path | str,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    state_path: Path | str = TRACKER_STATE_REL_PATH,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and write the Exp 3740 JSON artifact."""
++
++    root = Path(repo_root)
++    artifact = build_artifact(
++        root,
++        started_s=started_s,
++        now_s=now_s,
++        state_path=state_path,
++    )
++    output = _resolve_under_root(root, output_path)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def reproducibility_checksum(
++    *,
++    chunks: Sequence[TrainingChunk],
++    table: Sequence[Mapping[str, Any]],
++    recipe: Mapping[str, Any],
++    tracker_state_sha256: str,
++    random_seed: int,
++) -> str:
++    """Hash the deterministic inputs and derived counter outputs."""
++
++    payload = {
++        "chunks": [chunk.to_json() for chunk in chunks],
++        "stabilizer_efficacy_table": list(table),
++        "recommended_recipe": dict(recipe),
++        "tracker_state_sha256": tracker_state_sha256,
++        "random_seed": int(random_seed),
++    }
++    return _json_sha256(payload)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3740 artifact schema before writing."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must declare aggregation-only diagnostics")
++    serialized = json.dumps(artifact, sort_keys=True)
++    for marker in ("GGUF", "CUDA", "cuda", "live_llm_inference", "torch.cuda"):
++        if marker in serialized:
++            raise ValueError("forbidden inference marker present")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be present")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    if artifact.get("tier1_counter_update") != TIER1_COUNTER_UPDATE:
++        raise ValueError("tier1_counter_update must declare CPU counter update only")
++    if not isinstance(artifact.get("tracker_state_persisted"), bool):
++        raise ValueError("tracker_state_persisted must be boolean")
++    if artifact.get("is_preliminary_heuristic") is not True:
++        raise ValueError("is_preliminary_heuristic must be true")
++    if not isinstance(artifact.get("duration_s"), int | float):
++        raise ValueError("duration_s must be numeric")
++    n_chunks = int(artifact.get("n_chunks_observed", -1))
++    table = artifact.get("stabilizer_efficacy_table")
++    recipe = artifact.get("recommended_recipe")
++    if not isinstance(table, list):
++        raise ValueError("stabilizer_efficacy_table must be a list")
++    if not isinstance(recipe, Mapping) or not isinstance(recipe.get("stabilizers"), list):
++        raise ValueError("recommended_recipe.stabilizers must be a list")
++    verdict = artifact.get("honest_verdict")
++    if n_chunks == 0:
++        if verdict != EMPTY_VERDICT:
++            raise ValueError("empty tracker verdict must note missing training diagnostics")
++        if table or recipe.get("stabilizers"):
++            raise ValueError("empty tracker artifact must not recommend stabilizers")
++    elif not isinstance(verdict, str) or not verdict.startswith(SUCCESS_VERDICT_PREFIX):
++        raise ValueError("non-empty tracker verdict must use the v15 success prefix")
++
++
++def _chunk_from_payload(path: Path, payload: Mapping[str, Any], experiment_id: int) -> TrainingChunk:
++    return TrainingChunk(
++        source_path=path.name,
++        experiment_id=experiment_id,
++        stabilizers=parse_stabilizers(payload.get("stabilizers_applied")),
++        nan_or_divergence_events=_parse_bool(payload.get("nan_or_divergence_events")),
++        ebt_converged=_parse_optional_bool(payload.get("ebt_converged")),
++        cumulative_steps_trained=_parse_optional_int(payload.get("cumulative_steps_trained")),
++    )
++
++
++def _looks_like_ebt_training_diagnostic(name: str, payload: Mapping[str, Any]) -> bool:
++    if "stabilizers_applied" not in payload or "nan_or_divergence_events" not in payload:
++        return False
++    lowered = name.lower()
++    if "ebt" in lowered or ("bounded" in lowered and "train" in lowered):
++        return True
++    specs = payload.get("model_specs")
++    return isinstance(specs, Mapping) and "ebt_model" in specs
++
++
++def _experiment_id(name: str) -> int | None:
++    match = re.match(r"experiment_(\d+)_", name)
++    return int(match.group(1)) if match else None
++
++
++def _parse_bool(value: Any) -> bool:
++    if isinstance(value, bool):
++        return value
++    if isinstance(value, str) and value.lower() in {"true", "false"}:
++        return value.lower() == "true"
++    raise ValueError(f"expected boolean diagnostic value, got {value!r}")
++
++
++def _parse_optional_bool(value: Any) -> bool | None:
++    if value is None:
++        return None
++    return _parse_bool(value)
++
++
++def _parse_optional_int(value: Any) -> int | None:
++    if value is None:
++        return None
++    return int(value)
++
++
++def _rate(numerator: int, denominator: int) -> float:
++    if denominator <= 0:
++        return 0.0
++    return float(numerator) / float(denominator)
++
++
++def _duration(started_s: float, now_s: float | None) -> float:
++    end = time.time() if now_s is None else float(now_s)
++    return max(0.0001, end - float(started_s))
++
++
++def _round(value: float) -> float:
++    return round(float(value), 9)
++
++
++def _json_sha256(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _resolve_under_root(root: Path, path: Path | str) -> Path:
++    candidate = Path(path)
++    return candidate if candidate.is_absolute() else root / candidate
++
++
++def _relative_path(path: Path, root: Path) -> str:
++    try:
++        return path.resolve().relative_to(root.resolve()).as_posix()
++    except ValueError:
++        return path.as_posix()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index a6d86ce598..13c8b02d95 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T21:45:33.414120+00:00",
+-  "finished_at": "2026-06-02T21:45:33.439641+00:00",
+-  "duration_s": 0.026,
++  "started_at": "2026-06-02T22:26:44.882282+00:00",
++  "finished_at": "2026-06-02T22:26:44.906607+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index d9234c6566..66bad59c83 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T21:45:33Z",
++  "run_date": "2026-06-02T22:26:45Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 62d907f81d..89c1ae655d 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T21:45:34Z",
+-  "finished_at": "2026-06-02T21:45:34Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T22:26:46Z",
++  "finished_at": "2026-06-02T22:26:46Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 431da8d79c..6c9cb422aa 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T21:45:34Z",
++  "run_date": "2026-06-02T22:26:46Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index ec9fb5602d..c05c52da1f 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-02T21:45:35Z",
++  "run_date": "2026-06-02T22:26:46Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index eac9bfa8d0..144644a598 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T22:09:30.269782Z",
+-  "duration_s": 0.007745027542114258,
++  "run_date": "2026-06-02T22:25:00.722918Z",
++  "duration_s": 0.016446828842163086,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "8a603eb41fcb56460f044100fbfea0e27cfeb4bb57af25ac647f2cb8cb26e049",
++  "reproducibility_checksum": "5755429b1feb640ab778b5da568e8d5df7a9afe26d4246d1a871dcfc3cebbbf1",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "a53f33bea360170ab4ab8bddba3639e22ee97031"
++    "adversarial_verify_version": "5aec2ef9978ff31f6dc58692aca0ea96bdda9af5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 6038039781..ca225a8626 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-02T20:55:40.171771Z",
+-  "duration_s": 21.431402921676636,
++  "run_date": "2026-06-02T22:27:09.191227Z",
++  "duration_s": 22.754598140716553,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index dfa1b82a32..c89d2639ea 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T22:09:30.278811Z",
+-  "duration_s": 0.006761789321899414,
++  "run_date": "2026-06-02T22:25:00.736576Z",
++  "duration_s": 0.009995222091674805,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "198fe6f97f2fb352f11ca5ffac85b76daca98e384df5aaf0fecfec808dc5cdc8",
++  "reproducibility_checksum": "526c61a82a16558ae7301ae093f6e9b1d9534d0f09becbf07b34a141e82d116c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "a53f33bea360170ab4ab8bddba3639e22ee97031"
++    "adversarial_verify_version": "5aec2ef9978ff31f6dc58692aca0ea96bdda9af5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index d227d3213a..a0e3ecd974 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1114349365234375,
++  "efficiency_gains_ms": 2.1126270294189453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index e8327859cf..2c00bb3eb7 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.32835984230041504,
++  "duration_s": 0.31263256072998047,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index d094e9db2e..53cde1b26d 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008428096771240234,
++  "duration_s": 0.0008847713470458984,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index d609eb2f70..cfd89e4495 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.297196235507727e-05,
++  "duration_s": 3.406399628147483e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 2fe8daedf8..40bd45645c 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 8.809729479253292e-07,
++  "duration_s": 4.2101601138710976e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 2ba14f0011..b45b0fccc3 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.8650970458984375e-05,
++  "duration_s": 5.245208740234375e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json b/results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json
+new file mode 100644
+index 0000000000..cc878ea812
+--- /dev/null
++++ b/results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json
+@@ -0,0 +1,149 @@
++{
++  "acceptance_gate": {
++    "condition": "tracker_state_persisted == true",
++    "passed": true,
++    "principle": "Continuous self-learning requires resumable counter state."
++  },
++  "artifact": "experiment_3740_fr11_self_learning_v15_stabilizer_tracker",
++  "continuous_self_learning_task": true,
++  "duration_s": 0.852061272,
++  "field_principles": {
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the self-learning outcome.",
++    "inference_substrate": "Reads training diagnostics, no live model.",
++    "is_preliminary_heuristic": "Honest label: over a handful of chunks this is a heuristic, not a statistical claim -- pre-empts SAMPLE_SIZE_BELOW_CLAIM.",
++    "n_chunks_observed": "Sample-size hygiene -- how many training chunks the tracker learned from (small-sample heuristic, labeled preliminary).",
++    "random_seed": "Determinism precondition.",
++    "recommended_recipe": "The upweighted stabilizer set for the next bounded run -- the actionable self-learning output that feeds back into the loop.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "stabilizer_efficacy_table": "Per-stabilizer no-divergence correlation -- the learned knowledge; the core deliverable.",
++    "tier1_counter_update": "Confirms the mechanic is a CPU counter update (<1us, the Tier-1 hardware path), not a model retrain -- aligns with the hardware-acceleration principle.",
++    "tracker_state_persisted": "True iff the tracker state was saved so a future EBT-training milestone resumes it (continuous, not one-shot)."
++  },
++  "honest_verdict": "complete: fr11_v15_tier1_stabilizer_efficacy_tracker_recipe_recommended_state_persisted_preliminary_over_3_chunks",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model).",
++  "is_preliminary_heuristic": true,
++  "n_chunks_observed": 3,
++  "random_seed": 3740,
++  "recommended_recipe": {
++    "is_preliminary_heuristic": true,
++    "max_delta": 0.0,
++    "n_chunks_observed": 3,
++    "selection_basis": "max_enabled_minus_disabled_no_divergence_delta_with_ties_retained",
++    "stabilizers": [
++      "grad_clip",
++      "kl_cd_fix",
++      "langevin_noise",
++      "random_alpha",
++      "random_descent_steps",
++      "replay_buffer"
++    ]
++  },
++  "reproducibility_checksum": "c111843679ae7150d0e757578e54cad6b6a2e60efdd6ececf577cdc18c99f42c",
++  "schema": "carnot.fr11_continuous_self_learning_v15",
++  "source_training_chunks": [
++    {
++      "cumulative_steps_trained": 0,
++      "ebt_converged": false,
++      "experiment_id": 3728,
++      "nan_or_divergence_events": false,
++      "source_path": "experiment_3728_bounded_checkpointed_train_ebt_and_ar.json",
++      "stabilizers_applied": []
++    },
++    {
++      "cumulative_steps_trained": 2,
++      "ebt_converged": null,
++      "experiment_id": 3734,
++      "nan_or_divergence_events": false,
++      "source_path": "experiment_3734_fix_harness_and_bounded_train_chunk1.json",
++      "stabilizers_applied": [
++        "grad_clip",
++        "kl_cd_fix",
++        "langevin_noise",
++        "random_alpha",
++        "random_descent_steps",
++        "replay_buffer"
++      ]
++    },
++    {
++      "cumulative_steps_trained": 0,
++      "ebt_converged": false,
++      "experiment_id": 3735,
++      "nan_or_divergence_events": false,
++      "source_path": "experiment_3735_bounded_train_chunk2_resume.json",
++      "stabilizers_applied": []
++    }
++  ],
++  "stabilizer_efficacy_table": [
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "grad_clip"
++    },
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "kl_cd_fix"
++    },
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "langevin_noise"
++    },
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "random_alpha"
++    },
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "random_descent_steps"
++    },
++    {
++      "disabled_no_divergence": 2,
++      "disabled_no_divergence_rate": 1.0,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_no_divergence_rate": 1.0,
++      "enabled_total": 1,
++      "no_divergence_rate_delta_enabled_minus_disabled": 0.0,
++      "sample_note": "preliminary_counter_heuristic_not_statistical_claim",
++      "stabilizer": "replay_buffer"
++    }
++  ],
++  "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
++  "tracker_state_path": "results/experiment_3740_fr11_v15_stabilizer_tracker_state.json",
++  "tracker_state_persisted": true,
++  "tracker_state_sha256": "ec1d5db08396329f25d36b4f883dbee1ea9b36472bba23e91b3f89aad86790cf"
++}
+diff --git a/results/experiment_3740_fr11_v15_stabilizer_tracker_state.json b/results/experiment_3740_fr11_v15_stabilizer_tracker_state.json
+new file mode 100644
+index 0000000000..e2ca167760
+--- /dev/null
++++ b/results/experiment_3740_fr11_v15_stabilizer_tracker_state.json
+@@ -0,0 +1,54 @@
++{
++  "n_chunks_observed": 3,
++  "observed_stabilizers": [
++    "grad_clip",
++    "kl_cd_fix",
++    "langevin_noise",
++    "random_alpha",
++    "random_descent_steps",
++    "replay_buffer"
++  ],
++  "random_seed": 3740,
++  "schema": "carnot.fr11_v15_stabilizer_efficacy_tracker_state",
++  "sha256": "ec1d5db08396329f25d36b4f883dbee1ea9b36472bba23e91b3f89aad86790cf",
++  "stats": {
++    "grad_clip": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    },
++    "kl_cd_fix": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    },
++    "langevin_noise": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    },
++    "random_alpha": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    },
++    "random_descent_steps": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    },
++    "replay_buffer": {
++      "disabled_no_divergence": 2,
++      "disabled_total": 2,
++      "enabled_no_divergence": 1,
++      "enabled_total": 1
++    }
++  },
++  "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
++  "version": 1
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 56c8b7e110..19c9db5229 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T22:09:22Z",
+-  "finished_at": "2026-06-02T22:09:22Z",
++  "started_at": "2026-06-02T22:26:59Z",
++  "finished_at": "2026-06-02T22:26:59Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 454ac2ca6b..942dc3c14f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T22:09:22Z",
+-  "finished_at": "2026-06-02T22:09:22Z",
++  "started_at": "2026-06-02T22:26:59Z",
++  "finished_at": "2026-06-02T22:26:59Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 433d81d94c..be6df105f0 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T22:09:22Z",
+-  "finished_at": "2026-06-02T22:09:22Z",
++  "started_at": "2026-06-02T22:26:59Z",
++  "finished_at": "2026-06-02T22:26:59Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py b/scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py
+new file mode 100644
+index 0000000000..545fce7bb5
+--- /dev/null
++++ b/scripts/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3740 FR-11 self-learning v15 stabilizer tracker."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.fr11.continuous_self_learning_v15 import write_artifact  # noqa: E402
++
++
++def main() -> int:
++    output_path = write_artifact(REPO_ROOT)
++    artifact = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3740_fr11_csl_v15.py b/tests/python/test_experiment_3740_fr11_csl_v15.py
+new file mode 100644
+index 0000000000..ceaf323f97
+--- /dev/null
++++ b/tests/python/test_experiment_3740_fr11_csl_v15.py
+@@ -0,0 +1,312 @@
++"""Tests for Exp 3740 FR-11 continuous self-learning v15.
++
++Spec: REQ-LEARN-3740, SCENARIO-LEARN-3740.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.fr11 import continuous_self_learning_v15 as exp3740
++from carnot.fr11.continuous_self_learning_v15 import (
++    EMPTY_VERDICT,
++    INFERENCE_SUBSTRATE,
++    REQUIRED_ARTIFACT_FIELDS,
++    SUCCESS_VERDICT_PREFIX,
++    StabilizerEfficacyTracker,
++    TrainingChunk,
++    build_artifact,
++    build_tracker_from_chunks,
++    efficacy_table,
++    load_training_chunks,
++    recommended_recipe,
++    validate_artifact,
++    write_artifact,
++)
++
++
++SPEC_PATH = Path("openspec/capabilities/self-learning/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
++
++
++def _fixture_root(tmp_path: Path) -> Path:
++    results = tmp_path / "results"
++    _write_json(
++        results / "experiment_3734_fix_harness_and_bounded_train_chunk1.json",
++        {
++            "stabilizers_applied": (
++                "replay_buffer, langevin_noise, random_alpha, "
++                "random_descent_steps, grad_clip, kl_cd_fix"
++            ),
++            "nan_or_divergence_events": False,
++            "ebt_loss_curve": [0.99, 1.14],
++            "cumulative_steps_trained": 2,
++        },
++    )
++    _write_json(
++        results / "experiment_3735_bounded_train_chunk2_resume.json",
++        {
++            "stabilizers_applied": "none",
++            "nan_or_divergence_events": False,
++            "ebt_converged": False,
++            "ebt_loss_curve": [],
++            "cumulative_steps_trained": 0,
++        },
++    )
++    _write_json(
++        results / "experiment_3728_bounded_checkpointed_train_ebt_and_ar.json",
++        {
++            "stabilizers_applied": "none",
++            "nan_or_divergence_events": False,
++            "ebt_converged": False,
++            "ebt_loss_curve": [],
++            "cumulative_steps_trained": 0,
++        },
++    )
++    _write_json(
++        results / "experiment_3737_ebt_generation_smoke.json",
++        {"stabilizers_applied": "grad_clip", "nan_or_divergence_events": True},
++    )
++    return tmp_path
++
++
++def test_req_learn_3740_spec_declares_contract() -> None:
++    """REQ-LEARN-3740: OpenSpec declares the v15 counter-tracker contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-3740" in spec
++    assert "SCENARIO-LEARN-3740" in spec
++    assert "stabilizer_efficacy_table" in spec
++    assert INFERENCE_SUBSTRATE in spec
++
++
++def test_scenario_learn_3740_counter_updates_and_recipe_are_observation_driven() -> None:
++    """SCENARIO-LEARN-3740: recipe follows real enabled/disabled counters."""
++
++    chunks = [
++        TrainingChunk(
++            source_path="a.json",
++            experiment_id=1,
++            stabilizers=("grad_clip", "kl_cd_fix"),
++            nan_or_divergence_events=False,
++            ebt_converged=True,
++            cumulative_steps_trained=2,
++        ),
++        TrainingChunk(
++            source_path="b.json",
++            experiment_id=2,
++            stabilizers=(),
++            nan_or_divergence_events=True,
++            ebt_converged=False,
++            cumulative_steps_trained=2,
++        ),
++        TrainingChunk(
++            source_path="c.json",
++            experiment_id=3,
++            stabilizers=("grad_clip",),
++            nan_or_divergence_events=False,
++            ebt_converged=True,
++            cumulative_steps_trained=2,
++        ),
++    ]
++
++    tracker, observed = build_tracker_from_chunks(chunks)
++    table_rows = efficacy_table(tracker, observed)
++    table = {row["stabilizer"]: row for row in table_rows}
++    recipe = recommended_recipe(table_rows, n_chunks_observed=len(chunks))
++
++    assert observed == ("grad_clip", "kl_cd_fix")
++    assert table["grad_clip"]["enabled_total"] == 2
++    assert table["grad_clip"]["enabled_no_divergence"] == 2
++    assert table["grad_clip"]["disabled_total"] == 1
++    assert table["grad_clip"]["disabled_no_divergence"] == 0
++    assert table["grad_clip"]["no_divergence_rate_delta_enabled_minus_disabled"] == 1.0
++    assert table["kl_cd_fix"]["enabled_total"] == 1
++    assert table["kl_cd_fix"]["disabled_total"] == 2
++    assert table["kl_cd_fix"]["disabled_no_divergence"] == 1
++    assert table["kl_cd_fix"]["no_divergence_rate_delta_enabled_minus_disabled"] == 0.5
++    assert recipe["stabilizers"] == ["grad_clip"]
++    assert recipe["is_preliminary_heuristic"] is True
++
++
++def test_req_learn_3740_discovers_real_shaped_chunks_and_persists_state(tmp_path: Path) -> None:
++    """REQ-LEARN-3740-1/3/4/5: artifact writes counters, recipe, and state."""
++
++    root = _fixture_root(tmp_path)
++    chunks = load_training_chunks(root / "results")
++
++    assert [chunk.experiment_id for chunk in chunks] == [3728, 3734, 3735]
++    assert chunks[1].stabilizers == (
++        "grad_clip",
++        "kl_cd_fix",
++        "langevin_noise",
++        "random_alpha",
++        "random_descent_steps",
++        "replay_buffer",
++    )
++
++    output = write_artifact(
++        root,
++        output_path=Path("results/out.json"),
++        state_path=Path("results/state.json"),
++        started_s=10.0,
++        now_s=10.5,
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    state = json.loads((root / "results/state.json").read_text(encoding="utf-8"))
++
++    validate_artifact(artifact)
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"].startswith(SUCCESS_VERDICT_PREFIX)
++    assert artifact["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert artifact["n_chunks_observed"] == 3
++    assert artifact["tracker_state_persisted"] is True
++    assert artifact["recommended_recipe"]["stabilizers"] == [
++        "grad_clip",
++        "kl_cd_fix",
++        "langevin_noise",
++        "random_alpha",
++        "random_descent_steps",
++        "replay_buffer",
++    ]
++    assert state["n_chunks_observed"] == 3
++    assert state["stats"]["grad_clip"]["enabled_total"] == 1
++    assert state["stats"]["grad_clip"]["disabled_total"] == 2
++    assert "GGUF" not in json.dumps(artifact)
++    assert "CUDA" not in json.dumps(artifact)
++    assert "cuda" not in json.dumps(artifact)
++
++
++def test_req_learn_3740_empty_fallback_persists_empty_tracker(tmp_path: Path) -> None:
++    """REQ-LEARN-3740-2: absent diagnostics initialize an empty tracker."""
++
++    output = write_artifact(
++        tmp_path,
++        output_path=Path("results/empty.json"),
++        state_path=Path("results/empty_state.json"),
++        started_s=1.0,
++        now_s=1.0,
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    state = json.loads((tmp_path / "results/empty_state.json").read_text(encoding="utf-8"))
++
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] == EMPTY_VERDICT
++    assert artifact["n_chunks_observed"] == 0
++    assert artifact["stabilizer_efficacy_table"] == []
++    assert artifact["recommended_recipe"]["stabilizers"] == []
++    assert artifact["tracker_state_persisted"] is True
++    assert state["stats"] == {}
++
++
++def test_req_learn_3740_validation_and_parser_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-3740-3/6: parsing and schema guards reject poisoned output."""
++
++    assert exp3740.parse_stabilizers("none") == ()
++    assert exp3740.parse_stabilizers([" grad_clip ", "none", "grad_clip"]) == (
++        "grad_clip",
++    )
++    assert exp3740.parse_stabilizers(None) == ()
++
++    tracker = StabilizerEfficacyTracker()
++    tracker.record_chunk(("grad_clip",), no_divergence=True, observed_stabilizers=("grad_clip",))
++    tracker.record_chunk((), no_divergence=False, observed_stabilizers=("grad_clip",))
++    payload = tracker.to_json()
++    restored = StabilizerEfficacyTracker.from_json(payload)
++    assert restored.to_json() == payload
++
++    artifact = build_artifact(tmp_path / "empty-root", started_s=0.0, now_s=0.1)
++    validate_artifact(artifact)
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        bad = dict(artifact)
++        bad.pop("honest_verdict")
++        validate_artifact(bad)
++    with pytest.raises(ValueError, match="inference_substrate"):
++        validate_artifact(dict(artifact, inference_substrate="live_llm_inference"))
++    with pytest.raises(ValueError, match="forbidden inference marker"):
++        validate_artifact(dict(artifact, source_training_chunks=["CUDA"]))
++
++
++def test_req_learn_3740_guard_edges_for_state_loading_and_schema(tmp_path: Path) -> None:
++    """REQ-LEARN-3740-2/3/6: guard branches stay explicit and deterministic."""
++
++    with pytest.raises(ValueError, match="unsupported stabilizer tracker state version"):
++        StabilizerEfficacyTracker.from_json({"version": 2, "stats": {}})
++    with pytest.raises(ValueError, match="stats must be a mapping"):
++        StabilizerEfficacyTracker.from_json({"version": 1, "stats": []})
++    with pytest.raises(ValueError, match="stat entry must be a mapping"):
++        StabilizerEfficacyTracker.from_json({"version": 1, "stats": {"grad_clip": []}})
++    assert exp3740.parse_stabilizers(7) == ()
++    assert exp3740.StabilizerStats().enabled_rate == 0.0
++
++    results = tmp_path / "results"
++    (results / "experiment_3699_malformed.json").parent.mkdir(parents=True, exist_ok=True)
++    (results / "experiment_3699_malformed.json").write_text("{}\n{}\n", encoding="utf-8")
++    _write_json(results / "experiment_3700_missing_tuple.json", {"model_specs": {"ebt_model": "x"}})
++    _write_json(
++        results / "experiment_3701_custom_name.json",
++        {
++            "model_specs": {"ebt_model": "tiny"},
++            "stabilizers_applied": ["grad_clip"],
++            "nan_or_divergence_events": "false",
++            "ebt_converged": "true",
++        },
++    )
++    loaded = load_training_chunks(results)
++    assert [chunk.experiment_id for chunk in loaded] == [3701]
++    assert loaded[0].cumulative_steps_trained is None
++    assert loaded[0].ebt_converged is True
++
++    bad_results = tmp_path / "bad-results"
++    _write_json(
++        bad_results / "experiment_3702_custom_name.json",
++        {
++            "model_specs": {"ebt_model": "tiny"},
++            "stabilizers_applied": "grad_clip",
++            "nan_or_divergence_events": "maybe",
++        },
++    )
++    with pytest.raises(ValueError, match="expected boolean diagnostic value"):
++        load_training_chunks(bad_results)
++
++    artifact = build_artifact(tmp_path / "empty-root", started_s=0.0, now_s=0.1)
++    with pytest.raises(ValueError, match="field_principles"):
++        validate_artifact(dict(artifact, field_principles=None))
++    with pytest.raises(ValueError, match="missing field principles"):
++        validate_artifact(dict(artifact, field_principles={}))
++    with pytest.raises(ValueError, match="tier1_counter_update"):
++        validate_artifact(dict(artifact, tier1_counter_update="model_retrain"))
++    with pytest.raises(ValueError, match="tracker_state_persisted"):
++        validate_artifact(dict(artifact, tracker_state_persisted="true"))
++    with pytest.raises(ValueError, match="is_preliminary_heuristic"):
++        validate_artifact(dict(artifact, is_preliminary_heuristic=False))
++    with pytest.raises(ValueError, match="duration_s"):
++        validate_artifact(dict(artifact, duration_s="fast"))
++    with pytest.raises(ValueError, match="stabilizer_efficacy_table"):
++        validate_artifact(dict(artifact, stabilizer_efficacy_table={}))
++    with pytest.raises(ValueError, match="recommended_recipe"):
++        validate_artifact(dict(artifact, recommended_recipe={}))
++    with pytest.raises(ValueError, match="empty tracker verdict"):
++        validate_artifact(dict(artifact, honest_verdict="complete: wrong_empty"))
++    poisoned_empty = dict(
++        artifact,
++        recommended_recipe=dict(artifact["recommended_recipe"], stabilizers=["grad_clip"]),
++    )
++    with pytest.raises(ValueError, match="must not recommend"):
++        validate_artifact(poisoned_empty)
++
++    non_empty = build_artifact(_fixture_root(tmp_path / "non-empty"), started_s=0.0, now_s=0.1)
++    with pytest.raises(ValueError, match="v15 success prefix"):
++        validate_artifact(dict(non_empty, honest_verdict="complete: wrong_non_empty"))
++    assert exp3740._relative_path(Path("/outside-carnot-v15-state.json"), tmp_path) == (  # noqa: SLF001
++        "/outside-carnot-v15-state.json"
++    )
+-- 
+2.55.0
+

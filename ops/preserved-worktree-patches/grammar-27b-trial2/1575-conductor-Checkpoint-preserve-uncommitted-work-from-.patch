@@ -1,0 +1,70 @@
+From 1ef7dcd7246e18ef137ff0f22173c5da709df5ed Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 05:21:47 -0400
+Subject: [PATCH 01575/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...t_4137_sudoku_accumulate_pass3_fixed_lr.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c2c63fbb73..b6bafa5142 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 13, "phase": "iteration_start", "last_beat": "2026-06-13T09:07:11Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 14, "phase": "iteration_start", "last_beat": "2026-06-13T09:21:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 94e264070a..602ac60fc5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8409,3 +8409,4 @@ c |
+ | 2026-06-13 07:53 UTC | Archive .382 -> activate .383; KEEP the hardened g | OK | 91 passed, 1 warning in 5.36s |
+ | 2026-06-13 08:47 UTC | ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-13 09:05 UTC | ACCUMULATE pass 2 of 4 toward 0.87 (DEFENSIVE read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
++| 2026-06-13 09:19 UTC | ACCUMULATE pass 3 of 4 toward 0.87 (DEFENSIVE read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7f75742add..29d0049d85 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 13, "phase": "iteration_start", "started_at": "2026-06-13T09:07:11Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 14, "phase": "iteration_start", "started_at": "2026-06-13T09:21:46Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json b/results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+index c697781ae7..34316f35e2 100644
+--- a/results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
++++ b/results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+@@ -1793,5 +1793,18 @@
+   ],
+   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+   "suspected_cause": "pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+-  "val_exact_accuracy": null
+-}
++  "val_exact_accuracy": null,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.002 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "GATE_PASSED_WITHOUT_DATA",
++      "severity": "critical",
++      "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_vs_previous=null"
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

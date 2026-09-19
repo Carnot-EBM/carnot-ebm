@@ -1,0 +1,43 @@
+From 562ac3b0c5327f64b3a3181a3160143c6ac29642 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 09:18:55 -0400
+Subject: [PATCH 00284/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6468a402a3..d7fa00c55a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 17, "phase": "iteration_start", "last_beat": "2026-06-03T13:16:40Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 18, "phase": "iteration_start", "last_beat": "2026-06-03T13:18:53Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 696b0c9755..0322223a01 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7695,3 +7695,4 @@ ERROR: {
+ | 2026-06-03 13:10 UTC | G3 narrowing lint: EXTEND + WIRE the EXISTING scri | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.16s |
+ | 2026-06-03 13:12 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.23s |
+ | 2026-06-03 13:14 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.09s |
++| 2026-06-03 13:16 UTC | Phase-1 SHIP gate: package + CLI + MCP E2E smoke.  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.56s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index baa6399692..d3a1e0d8c2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 17, "phase": "iteration_start", "started_at": "2026-06-03T13:16:40Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 18, "phase": "iteration_start", "started_at": "2026-06-03T13:18:53Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

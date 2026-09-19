@@ -1,0 +1,72 @@
+From 15608dcc2a558b19733a9e13e974fe869704b7d8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 12:38:01 -0400
+Subject: [PATCH 00664/11171] =?UTF-8?q?[conductor]=20Pre-gate=20block:=20E?=
+ =?UTF-8?q?BT=20System-2=20diagnostic=20(gated=20on=20exp3871=20positive?=
+ =?UTF-8?q?=5Fcontrol=5Fpassed):=20on=20the=20SAME=20confirmed-headroom=20?=
+ =?UTF-8?q?checkpoint,=20does=20held-out=20generation=20accuracy=20improve?=
+ =?UTF-8?q?=20MONOTONICALLY=20as=20the=20energy-descent=20budget=20K=20gro?=
+ =?UTF-8?q?ws=20(1,2,4,8,16=20steps)=3F=20Tests=20the=20core=20EBT=20'thin?=
+ =?UTF-8?q?king=20=3D=20optimization'=20claim=20=E2=80=94=20monotone=20gai?=
+ =?UTF-8?q?n=20=3D>=20thinking=20helps;=20flat/degrading=20=3D>=20the=20la?=
+ =?UTF-8?q?ndscape=20gives=20no=20usable=20descent=20signal=20at=20this=20?=
+ =?UTF-8?q?scale.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed.positive_control_passed (actual=False == expected=True)
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                                  | 2 +-
+ ops/conductor-log.md                                          | 1 +
+ ops/conductor-state.json                                      | 2 +-
+ ...experiment_3872_ebt_energy_descent_system2_diagnostic.json | 4 ++--
+ 4 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f273c3cd6c..f743311126 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 62, "phase": "iteration_start", "last_beat": "2026-06-05T16:35:58Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 63, "phase": "iteration_start", "last_beat": "2026-06-05T16:38:01Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 92ed15f008..284fffbd08 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7893,3 +7893,4 @@ ERROR: {
+ | 2026-06-05 16:17 UTC | Archive .357 -> activate .358; backend routing dia | OK | 104 passed in 5.30s |
+ | 2026-06-05 16:31 UTC | THESIS-A PART-(b) DT-P1 ADJUDICATION on a CONFIRME | OK | 87 passed in 6.06s |
+ | 2026-06-05 16:33 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
++| 2026-06-05 16:36 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 79f5736f4d..e7c70f8cd8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 62, "phase": "iteration_start", "started_at": "2026-06-05T16:35:58Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 63, "phase": "iteration_start", "started_at": "2026-06-05T16:38:01Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json b/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+index b65d01a6a4..16772a3ca8 100644
+--- a/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
++++ b/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+@@ -2,8 +2,8 @@
+   "experiment": 3872,
+   "schema": "blocked_gate_check_v1",
+   "run_date": "2026-06-05",
+-  "started_at": "2026-06-05T16:35:58.949929+00:00",
+-  "finished_at": "2026-06-05T16:35:58.949929+00:00",
++  "started_at": "2026-06-05T16:38:01.229989+00:00",
++  "finished_at": "2026-06-05T16:38:01.229989+00:00",
+   "duration_s": 0.0,
+   "status": "blocked",
+   "title": "EBT System-2 diagnostic (gated on exp3871 positive_control_passed): on the SAME confirmed-headroom checkpoint, does held-out generation accuracy improve MONOTONICALLY as the energy-descent budget K grows (1,2,4,8,16 steps)? Tests the core EBT 'thinking = optimization' claim \u2014 monotone gain => thinking helps; flat/degrading => the landscape gives no usable descent signal at this scale.",
+-- 
+2.55.0
+

@@ -1,0 +1,41 @@
+From 64f792ac5c36c2aa38d4affcc8e76c97b83b9045 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 08:46:19 -0400
+Subject: [PATCH 00994/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20r11l=20INCREMENTAL=20solve=20(+1..+2=20levels,=20per=20the?=
+ =?UTF-8?q?=20MANDATORY=20Incremental-Progress=20rule):=20advance=20r11l?=
+ =?UTF-8?q?=20from=20L1=20(banked,=20exp3946)=20to=20LEVEL=202,=20and=20LE?=
+ =?UTF-8?q?VEL=203=20if=20the=20induced=20select/place=20mechanic=20+=20re?=
+ =?UTF-8?q?-perception=20reach.=20Reuse=20the=20exp3946=20mechanic=20(a=20?=
+ =?UTF-8?q?click=20selects=20a=20color-3=20piece,=20a=202nd=20click=20plac?=
+ =?UTF-8?q?es=20it=20so=20the=20pieces'=20average=20aligns=20on=20the=20fl?=
+ =?UTF-8?q?kdtg=20target=20centroid)=20+=20perception.=20Re-perceive=20eac?=
+ =?UTF-8?q?h=20new=20level=20(piece/target=20counts=20+=20layout=20change?=
+ =?UTF-8?q?=20per=20level).=20Report=20ACCURACY=5Flevels=5Fsolved=20(>=3D1?=
+ =?UTF-8?q?;=20goal=20is=20to=20RAISE=20it=20past=201)=20+=20per=5Flevel?=
+ =?UTF-8?q?=5Factions=20vs=20baseline=5Factions.=20RHAE=20weights=20later?=
+ =?UTF-8?q?=20levels=20more,=20so=20L2/L3=20are=20worth=20more=20than=20L1?=
+ =?UTF-8?q?.=20Solving=20only=20L1=20again=20is=20an=20HONEST=20complete:?=
+ =?UTF-8?q?=20r11l=5Flevels1=5Fof6=20(no=20regression)=20=E2=80=94=20do=20?=
+ =?UTF-8?q?NOT=20fabricate=20higher=20levels.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 22d3966162..072b588bd5 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8782,3 +8782,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ 
+ - [outer-loop] Wrote `results/operational_retro_2026_06_366.json` (schema `carnot.operational_retro.v64`). Authoritative timing reports no experiment commits since activation of 2026.06.366: `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s idle is correct (0 compute-bound tasks) and is NOT flagged as a bottleneck. KEY FINDING: this is the third consecutive zero-commit retro (.363/.365/.366) while `ops/changelog.md` shows completed experiment activity in the same windows — pointing at a commit-range attribution/timing gap in the retro's milestone-scoped commit detector rather than genuinely empty milestones. Highest-leverage fix: audit the detector and add a `detector_undercount_suspected` self-check (0 commits found AND `results/experiment_*.json` present in window).
+ - 2026-06-09: Archive .366 -> activate .367; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth, arc_world_model_dsl, arc_agi3_action_efficiency), so .367 can EXECUTE the ARC accuracy + honest-M3 tasks. RECORD the .366 truth: exp3954 SOLVED lp85 L1 (SECOND game, real-env-confirmed); exp3959 M3 was FABRICATED (flagged_adversarial, VERIFIER_NOT_IN_LOOP); exp3953/3955/3960/3961/3962 produced NO artifact. (✅ Complete) — honest_verdict=complete: archived_v366_v367_active_second_solve_m3_fabrication_recorded_arc_substrate_green; results/experiment_3963_archive_v366_activate_v367.json
++- 2026-06-09: r11l INCREMENTAL solve (+1..+2 levels, per the MANDATORY Incremental-Progress rule): advance r11l from L1 (banked, exp3946) to LEVEL 2, and LEVEL 3 if the induced select/place mechanic + re-perception reach. Reuse the exp3946 mechanic (a click selects a color-3 piece, a 2nd click places it so the pieces' average aligns on the flkdtg target centroid) + perception. Re-perceive each new level (piece/target counts + layout change per level). Report ACCURACY_levels_solved (>=1; goal is to RAISE it past 1) + per_level_actions vs baseline_actions. RHAE weights later levels more, so L2/L3 are worth more than L1. Solving only L1 again is an HONEST complete: r11l_levels1_of6 (no regression) — do NOT fabricate higher levels. (✅ Complete) — honest_verdict=complete: r11l_levels1_of6_first_fail2; results/experiment_3964_r11l_incremental_l2.json
+-- 
+2.55.0
+

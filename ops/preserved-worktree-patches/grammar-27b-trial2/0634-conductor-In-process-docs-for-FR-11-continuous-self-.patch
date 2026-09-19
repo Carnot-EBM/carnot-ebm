@@ -1,0 +1,34 @@
+From fc1f5afb7058113f9f0981a3fc4ed8599ac20ca6 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 09:25:23 -0400
+Subject: [PATCH 00634/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20FR-11=20continuous=20self-learning=20v23=20(research-progr?=
+ =?UTF-8?q?am.md=20MANDATE,=20re-issue=20of=20exp3852)=20=E2=80=94=20Tier-?=
+ =?UTF-8?q?1=20ONLINE=20independence-reweighting=20of=20the=20verifier=20e?=
+ =?UTF-8?q?nsemble=20(arXiv:2604.07650=20method):=20upweight=20verifiers?=
+ =?UTF-8?q?=20that=20catch=20the=20residual=20OTHER=20verifiers=20(and=20t?=
+ =?UTF-8?q?he=20reasoner)=20miss;=20confirm=20the=20learned=20weighting=20?=
+ =?UTF-8?q?holds=20the=20+0.0185=20memory-ablation=20contribution=20+=20fr?=
+ =?UTF-8?q?ozen=200.9131.=20CPU=20counter=20updates=20(<1us/update,=20the?=
+ =?UTF-8?q?=20Tier-1=20hardware=20path).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index e97cdd8b54..f93bda9dbc 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8636,3 +8636,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-05: Facts-domain COMPLEMENTARITY (gated on exp3862 facts_catch_delta>0, re-issue of exp3851): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble misses, and would {{math verifiers + graph verifier}} be a broader fact-aware system? Quantify the independent contribution + error-mask correlation. (⚠️ Blocked) — honest_verdict=blocked_graph_prototype_unavailable; results/experiment_3863_graph_verifier_facts_complementarity_v2.json
+ - 2026-06-05: Facts-domain COMPLEMENTARITY (gated on exp3862 facts_catch_delta>0, re-issue of exp3851): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble misses, and would {{math verifiers + graph verifier}} be a broader fact-aware system? Quantify the independent contribution + error-mask correlation. (⚠️ Blocked) — honest_verdict=blocked_graph_prototype_unavailable; results/experiment_3863_graph_verifier_facts_complementarity_v2.json
+ - 2026-06-05: Facts-domain COMPLEMENTARITY (gated on exp3862 facts_catch_delta>0, re-issue of exp3851): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble misses, and would {{math verifiers + graph verifier}} be a broader fact-aware system? Quantify the independent contribution + error-mask correlation. (⚠️ Blocked) — honest_verdict=blocked_graph_prototype_unavailable; results/experiment_3863_graph_verifier_facts_complementarity_v2.json
++- 2026-06-05: FR-11 continuous self-learning v23 (research-program.md MANDATE, re-issue of exp3852) — Tier-1 ONLINE independence-reweighting of the verifier ensemble (arXiv:2604.07650 method): upweight verifiers that catch the residual OTHER verifiers (and the reasoner) miss; confirm the learned weighting holds the +0.0185 memory-ablation contribution + frozen 0.9131. CPU counter updates (<1us/update, the Tier-1 hardware path). (✅ Complete) — honest_verdict=complete: fr11_v23_independence_reweighting_learned_auroc0.9059_in_frozen_ci_memory_contribution_preserved_state_persisted; results/experiment_3864_fr11_self_learning_v23_independence_reweighting.json
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From 84bada8ee221aee154b2059ffa693d1f7808f33f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 15:49:23 -0400
+Subject: [PATCH 00204/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index c135602209..2b8d968bcf 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 240, "phase": "iteration_start", "last_beat": "2026-06-02T19:38:06Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 241, "phase": "iteration_start", "last_beat": "2026-06-02T19:49:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 19b111787d..dca4548d8e 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7614,3 +7614,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 19:18 UTC | Build + UNIT-TEST the matched-COMPUTE evaluation h | OK | Deliverable already exists in repo |
+ | 2026-06-02 19:23 UTC | Bounded CHECKPOINTED training of the tiny EBT + a  | OK | 88 passed in 5.12s |
+ | 2026-06-02 19:36 UTC | Thesis-A kill-gate part-(a) VERDICT: did the tiny  | OK | 93 passed in 4.77s |
++| 2026-06-02 19:47 UTC | KV260 opportunistic continuity audit — confirm ter | OK | 90 passed in 3.88s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a0a2982a44..6132b9a87a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 240, "phase": "iteration_start", "started_at": "2026-06-02T19:38:06Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 241, "phase": "iteration_start", "started_at": "2026-06-02T19:49:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

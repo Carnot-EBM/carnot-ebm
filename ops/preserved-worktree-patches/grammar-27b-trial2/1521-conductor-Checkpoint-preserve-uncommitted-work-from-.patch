@@ -1,0 +1,57 @@
+From fa2fb71aee93cf88043d12358fd934f490297e40 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 21:36:45 -0400
+Subject: [PATCH 01521/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 14eb9e1827..f354b80b91 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -256,3 +256,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+ - artifact: results/experiment_4119_carnot_verifier_graft_sudoku.json
++
++## experiment_4120_thirteenth_game_explore_first.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
++- artifact: results/experiment_4120_thirteenth_game_explore_first.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 84157ab85b..cd76198a61 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-13T01:22:19Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-13T01:36:44Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index f00a84a511..e28c3b9257 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8390,3 +8390,4 @@ c |
+ | 2026-06-13 00:08 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 3 (targe | OK | 88 passed, 2 warnings in 8.83s |
+ | 2026-06-13 01:00 UTC | GRAFT the Carnot Sudoku verifier on the reproducin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
+ | 2026-06-13 01:17 UTC | THIRTEENTH ARC-AGI-3 game first-solve via the PROV | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
++| 2026-06-13 01:31 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 100 passed in 4.79s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a3a71db505..1efad09250 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-13T01:22:19Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-13T01:36:44Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

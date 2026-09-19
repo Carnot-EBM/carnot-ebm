@@ -1,0 +1,43 @@
+From 74d273c11409da574bc8cd5f97271c73cc7ec218 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 12:40:05 -0400
+Subject: [PATCH 00665/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index f743311126..e32756f5b2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 63, "phase": "iteration_start", "last_beat": "2026-06-05T16:38:01Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 64, "phase": "iteration_start", "last_beat": "2026-06-05T16:40:03Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 284fffbd08..6396c94764 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7894,3 +7894,4 @@ ERROR: {
+ | 2026-06-05 16:31 UTC | THESIS-A PART-(b) DT-P1 ADJUDICATION on a CONFIRME | OK | 87 passed in 6.06s |
+ | 2026-06-05 16:33 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
+ | 2026-06-05 16:36 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
++| 2026-06-05 16:38 UTC | EBT System-2 diagnostic (gated on exp3871 positive | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-h |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index e7c70f8cd8..f90c64d45c 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 63, "phase": "iteration_start", "started_at": "2026-06-05T16:38:01Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 64, "phase": "iteration_start", "started_at": "2026-06-05T16:40:03Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

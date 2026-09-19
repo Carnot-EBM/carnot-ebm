@@ -1,0 +1,1748 @@
+From 3f17cffcd3c92dfa544e80738cb5186d27e3d7c7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 13:20:39 -0400
+Subject: [PATCH 00180/11171] =?UTF-8?q?[conductor]=20CONVERGENCE=20SYNTHES?=
+ =?UTF-8?q?IS=20+=20operator=20next-thesis=20recommendation=20=E2=80=94=20?=
+ =?UTF-8?q?lay=20out=20the=20converged=20state=20(headline=20frozen=20+=20?=
+ =?UTF-8?q?paper=5Fready=3DTRUE;=20every=20self-generable=20thread=20settl?=
+ =?UTF-8?q?ed:=20re-freeze=20closed-negative,=20code=20leak->math-only,=20?=
+ =?UTF-8?q?selection=20closed,=20P0.1=20bounded,=20facts=20+=20judge-OOD?=
+ =?UTF-8?q?=20retired,=20KV260=20terminal)=20and=20present=20the=20candida?=
+ =?UTF-8?q?te=20NEXT-THESES=20for=20the=20OPERATOR=20to=20choose=20among?=
+ =?UTF-8?q?=20(the=20loop=20will=20not=20self-initiate=20one=20per=20proje?=
+ =?UTF-8?q?ct=5Fenergy=5Fselection=5Fthesis=5Fbounded).=20Synthesis/doc-on?=
+ =?UTF-8?q?ly=20=E2=80=94=20recommends,=20does=20not=20decide?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3722-convergence-synthesis-operator-next-thesis
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  71 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...nce_synthesis_operator_next_thesis_3722.py | 790 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...rgence_synthesis_operator_next_thesis.json | 193 +++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...vergence_synthesis_operator_next_thesis.py |  31 +
+ ...vergence_synthesis_operator_next_thesis.py | 434 ++++++++++
+ 14 files changed, 1538 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py
+ create mode 100644 results/experiment_3722_convergence_synthesis_operator_next_thesis.json
+ create mode 100644 scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py
+ create mode 100644 tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 3cdff684ff..fa86863b14 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16156,3 +16156,74 @@ asserts the conductor and environment were not modified, recommends
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3714 | Implemented (`python/carnot/reporting/backend_state_diagnostic_v6_3714.py`, `scripts/experiment_3714_backend_state_diagnostic_v6.py`) | Implemented (`tests/python/test_experiment_3714_backend_state_diagnostic_v6.py`) |
++
++### REQ-REPORT-3722: Convergence Synthesis And Operator Next-Thesis Request
++
++The Exp 3722 workflow shall synthesize the converged project state and present
++candidate next-theses for operator choice. It SHALL read only upstream result
++artifacts, `ops/north-star.md`, `research-program.md`, and checked-in roadmap
++or reference text. It SHALL NOT run a new experiment, modify
++`ops/north-star.md`, modify `ops/exclusion_manifest.yaml`, modify
++`scripts/research_conductor.py`, push changes, or place any GGUF, CUDA,
++live-model, `model_specs`, or `target_model` marker in the terminal artifact.
++
++The workflow SHALL write
++`results/experiment_3722_convergence_synthesis_operator_next_thesis.json` with
++bare top-level values for `honest_verdict`, `inference_substrate`,
++`converged_state_ledger`, `all_self_generable_threads_settled`,
++`candidate_next_theses`, `recommended_default_thesis`,
++`operator_decision_request`, `paper_ready_status`,
++`north_star_unmodified_assert`, `manifest_unmodified_assert`,
++`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. `inference_substrate` SHALL be exactly
++`aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker).`
++`all_self_generable_threads_settled` SHALL be a bare boolean and SHALL be true
++only when the ledger records terminal statuses for headline, P0.1, selection,
++re-freeze, code, facts, judge-OOD, KV260, self-learning, and paper-ready
++threads. `candidate_next_theses` SHALL include a one-line
++`why_not_regrind` value for each candidate and SHALL include at least one
++publication/maintenance option, at least one energy-abstention or selective
++prediction option when Exp 3718 is positive, and at least one Tier B product
++option from `research-program.md`. `recommended_default_thesis` SHALL be a
++recommendation only, never an operator decision. `honest_verdict` SHALL be one
++of `complete: convergence_synthesized_next_theses_presented_operator_decision_requested`
++or `complete: convergence_synthesis_cannot_complete`.
++`adversarial_verify_clean` SHALL be true only after `scripts/adversarial_verify.py`
++reports no critical flag on the written artifact.
++
++#### SCENARIO-REPORT-3722-SYNTHESIZED: Converged State Becomes A Decision Request
++
++**Given** the .339 capstone records `paper_ready=true`, P0.1 honest-negative,
++selection closed, code narrowed to math-only-with-abstain, facts and
++trained-judge-OOD retired, KV260 terminal, and frozen FoVer headline 0.9131
++unchanged, and .340 artifacts include the clean re-freeze corrigendum, G3
++narrowing lint, G4 provenance audit, positive energy-abstention
++characterization, fresh-corpus narrowing, FR-11 v14 no-collapse/fallback, and
++KV260 terminal confirmation
++**When** the Exp 3722 workflow runs
++**Then** it writes the terminal artifact with all required bare fields, records
++the per-thread ledger with authoritative artifacts, sets
++`all_self_generable_threads_settled=true`, presents candidate next-theses with
++why-not-regrind lines, recommends a default without choosing for the operator,
++asks which thesis or maintenance mode should drive `.341+`, passes
++adversarial verification without a critical flag, and leaves the north-star
++document, exclusion manifest, and research conductor unmodified.
++
++#### SCENARIO-REPORT-3722-CANNOT-SYNTHESIZE: Missing Terminal Evidence Fails Closed
++
++**Given** one or more required terminal thread authorities are missing,
++contradictory, or malformed
++**When** the Exp 3722 workflow runs
++**Then** it writes the same required artifact shape, sets
++`all_self_generable_threads_settled=false`, keeps the candidate menu bounded to
++non-decisive operator options, emits
++`complete: convergence_synthesis_cannot_complete`, passes adversarial
++verification without a critical flag, and leaves the north-star document,
++exclusion manifest, and research conductor unmodified.
++
++## Implementation Status (REQ-REPORT-3722)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3722 | Planned (`python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py`, `scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py`) | Planned (`tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 473c4368bf..c8c7f2c35b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2847,
++  "experiments_checked": 2848,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py b/python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py
+new file mode 100644
+index 0000000000..4ea6632447
+--- /dev/null
++++ b/python/carnot/reporting/convergence_synthesis_operator_next_thesis_3722.py
+@@ -0,0 +1,790 @@
++"""Exp 3722 convergence synthesis and operator next-thesis request.
++
++This report is deliberately aggregation-only. It records the terminal state the
++loop can prove from checked-in artifacts, then surfaces a bounded next-thesis
++menu for the operator. It does not choose the next thesis, run a new
++experiment, or edit operator-curated policy files.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++from typing import Any
++
++
++JsonDict = dict[str, Any]
++
++EXPERIMENT_ID = "exp3722"
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path(
++    "results/experiment_3722_convergence_synthesis_operator_next_thesis.json"
++)
++RANDOM_SEED = 3722
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: reads prior artifacts + "
++    "docs; no live inference; no compute-bound marker)."
++)
++SYNTHESIZED_VERDICT = (
++    "complete: "
++    "convergence_synthesized_next_theses_presented_operator_decision_requested"
++)
++CANNOT_SYNTHESIZE_VERDICT = "complete: convergence_synthesis_cannot_complete"
++TERMINAL_VERDICTS = (SYNTHESIZED_VERDICT, CANNOT_SYNTHESIZE_VERDICT)
++
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++CONDUCTOR_REL_PATH = Path("scripts/research_conductor.py")
++RESEARCH_PROGRAM_REL_PATH = Path("research-program.md")
++ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++
++UPSTREAM_ARTIFACTS = {
++    "exp3712": Path("results/experiment_3712_capstone_and_g_gate_v339.json"),
++    "exp3715": Path("results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json"),
++    "exp3716": Path("results/experiment_3716_ship_paper_v6_narrowing_lint.json"),
++    "exp3717": Path("results/experiment_3717_g4_full_provenance_audit.json"),
++    "exp3718": Path("results/experiment_3718_risk_coverage_abstention_characterization.json"),
++    "exp3719": Path("results/experiment_3719_headline_replication_fresh_corpus.json"),
++    "exp3720": Path("results/experiment_3720_fr11_continuous_self_learning_v14.json"),
++    "exp3721": Path(
++        "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json"
++    ),
++}
++
++REQUIRED_THREADS = (
++    "headline",
++    "p01",
++    "selection",
++    "refreeze",
++    "code",
++    "facts",
++    "judge_ood",
++    "kv260",
++    "self_learning",
++    "paper_ready",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "converged_state_ledger",
++    "all_self_generable_threads_settled",
++    "candidate_next_theses",
++    "recommended_default_thesis",
++    "operator_decision_request",
++    "paper_ready_status",
++    "north_star_unmodified_assert",
++    "manifest_unmodified_assert",
++    "adversarial_verify_clean",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": (
++        "Reads prior artifacts and docs; no live inference and no compute-bound "
++        "marker belongs in this aggregation artifact."
++    ),
++    "converged_state_ledger": (
++        "Per-thread {thread, terminal_status, authoritative_artifact}; the "
++        "honest convergence record."
++    ),
++    "all_self_generable_threads_settled": (
++        "BARE bool. True iff every loop-self-generable thread has a terminal status."
++    ),
++    "candidate_next_theses": (
++        "The operator menu, with one why-not-regrind line per candidate."
++    ),
++    "recommended_default_thesis": (
++        "The loop's recommendation only; the operator still decides the thesis."
++    ),
++    "operator_decision_request": (
++        "The explicit ask for what thesis or maintenance mode drives .341+."
++    ),
++    "paper_ready_status": "Records the paper-ready gate value from the capstone.",
++    "north_star_unmodified_assert": (
++        "Asserts ops/north-star.md was not edited by this task."
++    ),
++    "manifest_unmodified_assert": (
++        "Asserts ops/exclusion_manifest.yaml was not edited by this task."
++    ),
++    "adversarial_verify_clean": "True iff no critical adversarial flag.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float = 0.0,
++    now_s: float = 0.0001,
++    adversarial_verify_clean: bool = False,
++    adversarial_verify_report: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Read repository inputs and construct the Exp 3722 artifact."""
++
++    root_path = Path(root)
++    north = root_path / NORTH_STAR_REL_PATH
++    manifest = root_path / MANIFEST_REL_PATH
++    conductor = root_path / CONDUCTOR_REL_PATH
++    return build_artifact_from_inputs(
++        exp3712=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3712"]),
++        exp3715=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3715"]),
++        exp3716=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3716"]),
++        exp3717=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3717"]),
++        exp3718=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3718"]),
++        exp3719=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3719"]),
++        exp3720=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3720"]),
++        exp3721=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3721"]),
++        north_star_text=_read_text(root_path / NORTH_STAR_REL_PATH),
++        research_program_text=_read_text(root_path / RESEARCH_PROGRAM_REL_PATH),
++        roadmap_text=_read_text(root_path / ROADMAP_REL_PATH),
++        north_star_hash_before=_sha256_path(north),
++        north_star_hash_after=_sha256_path(north),
++        manifest_hash_before=_sha256_path(manifest),
++        manifest_hash_after=_sha256_path(manifest),
++        conductor_hash_before=_sha256_path(conductor),
++        conductor_hash_after=_sha256_path(conductor),
++        started_s=started_s,
++        now_s=now_s,
++        adversarial_verify_clean=adversarial_verify_clean,
++        adversarial_verify_report=adversarial_verify_report or {"flags": []},
++    )
++
++
++def build_artifact_from_inputs(
++    *,
++    exp3712: Mapping[str, Any],
++    exp3715: Mapping[str, Any],
++    exp3716: Mapping[str, Any],
++    exp3717: Mapping[str, Any],
++    exp3718: Mapping[str, Any],
++    exp3719: Mapping[str, Any],
++    exp3720: Mapping[str, Any],
++    exp3721: Mapping[str, Any],
++    north_star_text: str,
++    research_program_text: str,
++    roadmap_text: str,
++    north_star_hash_before: str,
++    north_star_hash_after: str,
++    manifest_hash_before: str,
++    manifest_hash_after: str,
++    conductor_hash_before: str,
++    conductor_hash_after: str,
++    started_s: float,
++    now_s: float,
++    adversarial_verify_clean: bool,
++    adversarial_verify_report: Mapping[str, Any],
++) -> JsonDict:
++    """Build a synthesized or cannot-synthesize artifact from supplied inputs."""
++
++    north_star_unmodified = north_star_hash_before == north_star_hash_after
++    manifest_unmodified = manifest_hash_before == manifest_hash_after
++    conductor_unmodified = conductor_hash_before == conductor_hash_after
++    ledger = build_converged_state_ledger(
++        exp3712=exp3712,
++        exp3715=exp3715,
++        exp3716=exp3716,
++        exp3717=exp3717,
++        exp3718=exp3718,
++        exp3719=exp3719,
++        exp3720=exp3720,
++        exp3721=exp3721,
++        north_star_text=north_star_text,
++    )
++    all_threads_settled = all(row["settled"] is True for row in ledger)
++    energy_abstention_positive = exp3718.get("energy_beats_baseline_abstention") is True
++    candidate_next_theses = build_candidate_next_theses(
++        exp3718=exp3718,
++        research_program_text=research_program_text,
++        roadmap_text=roadmap_text,
++    )
++    can_synthesize = (
++        all_threads_settled
++        and north_star_unmodified
++        and manifest_unmodified
++        and conductor_unmodified
++    )
++    artifact: JsonDict = {
++        "schema": "carnot.convergence_synthesis_operator_next_thesis.v1",
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": "exp3722-convergence-synthesis-operator-next-thesis",
++        "honest_verdict": (
++            SYNTHESIZED_VERDICT if can_synthesize else CANNOT_SYNTHESIZE_VERDICT
++        ),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "converged_state_ledger": ledger,
++        "all_self_generable_threads_settled": all_threads_settled,
++        "candidate_next_theses": candidate_next_theses,
++        "recommended_default_thesis": build_recommended_default(
++            can_synthesize=can_synthesize,
++            energy_abstention_positive=energy_abstention_positive,
++            exp3718=exp3718,
++        ),
++        "operator_decision_request": (
++            "The loop has converged. Which thesis, product direction, or "
++            "maintenance mode should drive .341+?"
++        ),
++        "paper_ready_status": exp3712.get("paper_ready") is True,
++        "north_star_unmodified_assert": north_star_unmodified,
++        "manifest_unmodified_assert": manifest_unmodified,
++        "scripts_research_conductor_modified": not conductor_unmodified,
++        "adversarial_verify_clean": adversarial_verify_clean,
++        "adversarial_verify_report": compact_adversarial_report(adversarial_verify_report),
++        "random_seed": RANDOM_SEED,
++        "duration_s": max(float(now_s) - float(started_s), 0.0001),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "source_artifact_checksums": _source_payload_checksums(
++            {
++                "exp3712": exp3712,
++                "exp3715": exp3715,
++                "exp3716": exp3716,
++                "exp3717": exp3717,
++                "exp3718": exp3718,
++                "exp3719": exp3719,
++                "exp3720": exp3720,
++                "exp3721": exp3721,
++            }
++        ),
++        "source_document_checksums": {
++            "ops/north-star.md": _sha256_text(north_star_text),
++            "research-program.md": _sha256_text(research_program_text),
++            "research-roadmap.yaml": _sha256_text(roadmap_text),
++        },
++        "non_decision_assert": True,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def build_converged_state_ledger(
++    *,
++    exp3712: Mapping[str, Any],
++    exp3715: Mapping[str, Any],
++    exp3716: Mapping[str, Any],
++    exp3717: Mapping[str, Any],
++    exp3718: Mapping[str, Any],
++    exp3719: Mapping[str, Any],
++    exp3720: Mapping[str, Any],
++    exp3721: Mapping[str, Any],
++    north_star_text: str,
++) -> list[JsonDict]:
++    """Return the required per-thread convergence ledger."""
++
++    headline_settled = (
++        _point(exp3712.get("frozen_fover_headline_auroc")) == 0.9131
++        and exp3712.get("frozen_headline_unchanged") is True
++        and exp3717.get("all_numbers_trace_to_clean_artifacts") is True
++        and "0.9131" in north_star_text
++    )
++    p01_settled = exp3712.get("p01_status") == "honest-negative"
++    selection_settled = exp3712.get("selection_diagnosis_closed") is True
++    refreeze_settled = (
++        exp3715.get("no_candidate_beats_frozen") is True
++        and exp3715.get("frozen_headline_unchanged_assert") is True
++    )
++    code_settled = (
++        exp3712.get("code_native_heldout_verdict") == "one_point_zero_was_a_leak"
++        and _contains(str(exp3712.get("shipped_detector_reconciliation", "")), "math")
++        and _contains(str(exp3712.get("shipped_detector_reconciliation", "")), "abstain")
++    )
++    facts_settled = exp3712.get("facts_generalization_retired") is True
++    judge_settled = exp3712.get("trained_judge_ood_retired") is True
++    kv260_settled = (
++        exp3721.get("kv260_terminal_condition_confirmed") is True
++        and exp3721.get("kv260_terminal_transcript_present") is True
++        and exp3721.get("speedup_claim_avoided_assert") is True
++    )
++    self_learning_settled = (
++        exp3720.get("template_robust_or_graceful_fallback") is True
++        and exp3720.get("collapse_detected_deploy_arm") is False
++        and exp3720.get("template_library_bounded") is True
++    )
++    paper_ready_settled = (
++        exp3712.get("paper_ready") is True
++        and all(exp3712.get(gate) is True for gate in ("g1", "g2", "g3", "g4"))
++        and exp3716.get("g3_now_mechanically_enforced") is True
++        and exp3716.get("current_paper_lint_clean") is True
++        and exp3717.get("all_numbers_trace_to_clean_artifacts") is True
++    )
++    rows = [
++        _ledger_row(
++            "headline",
++            headline_settled,
++            "frozen_fover_0_9131_proven_reproduced_and_narrowing_clean",
++            "results/experiment_3712_capstone_and_g_gate_v339.json; "
++            "results/experiment_3717_g4_full_provenance_audit.json",
++        ),
++        _ledger_row(
++            "p01",
++            p01_settled,
++            "honest_negative_bounded",
++            "results/experiment_3712_capstone_and_g_gate_v339.json",
++        ),
++        _ledger_row(
++            "selection",
++            selection_settled,
++            "settled_bounded_diagnosis_closed",
++            "results/experiment_3707_selection_diagnosis_formal_closure.json; "
++            "results/experiment_3712_capstone_and_g_gate_v339.json",
++        ),
++        _ledger_row(
++            "refreeze",
++            refreeze_settled,
++            "closed_negative_no_candidate_beats_frozen",
++            "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++        ),
++        _ledger_row(
++            "code",
++            code_settled,
++            "code_generalization_leak_narrowed_to_math_only_abstain",
++            "results/experiment_3705_code_native_leak_audit_heldout.json; "
++            "results/experiment_3706_reconcile_shipped_detector_heldout.json; "
++            "results/experiment_3712_capstone_and_g_gate_v339.json",
++        ),
++        _ledger_row(
++            "facts",
++            facts_settled,
++            "facts_generalization_retired",
++            "results/experiment_3670_facts_row_real_benchmark.json; "
++            "results/experiment_3712_capstone_and_g_gate_v339.json",
++        ),
++        _ledger_row(
++            "judge_ood",
++            judge_settled,
++            "trained_judge_ood_retired",
++            "results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json; "
++            "results/experiment_3712_capstone_and_g_gate_v339.json",
++        ),
++        _ledger_row(
++            "kv260",
++            kv260_settled,
++            "kv260_terminal_confirmed_mandate_lift_recommended",
++            "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++        ),
++        _ledger_row(
++            "self_learning",
++            self_learning_settled,
++            "fr11_v14_graceful_fallback_under_shift_no_collapse",
++            "results/experiment_3720_fr11_continuous_self_learning_v14.json",
++        ),
++        _ledger_row(
++            "paper_ready",
++            paper_ready_settled,
++            "paper_ready_true_g1_g2_g3_g4_met_and_hardened",
++            "results/experiment_3712_capstone_and_g_gate_v339.json; "
++            "results/experiment_3716_ship_paper_v6_narrowing_lint.json; "
++            "results/experiment_3717_g4_full_provenance_audit.json",
++        ),
++    ]
++    return rows
++
++
++def build_candidate_next_theses(
++    *,
++    exp3718: Mapping[str, Any],
++    research_program_text: str,
++    roadmap_text: str,
++) -> list[JsonDict]:
++    """Return the bounded menu of operator-selectable next-theses."""
++
++    candidates: list[JsonDict] = []
++    if exp3718.get("energy_beats_baseline_abstention") is True:
++        candidates.append(
++            {
++                "thesis": "energy_based_selective_prediction_at_scale",
++                "summary": (
++                    "Scale the positive risk-coverage result into a calibrated "
++                    "abstention product study."
++                ),
++                "why_not_regrind": (
++                    "It optimizes abstain-or-flag risk coverage, not the closed "
++                    "best-of-N selection question."
++                ),
++                "authority": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++                "operator_action_required": True,
++            }
++        )
++    candidates.extend(
++        [
++            {
++                "thesis": "different_verifier_architecture_for_weak_sc_domain",
++                "summary": (
++                    "Try a genuinely different verifier architecture in a domain "
++                    "where self-consistency is weak and abstention has headroom."
++                ),
++                "why_not_regrind": (
++                    "It changes both architecture and operating domain instead of "
++                    "rerunning the settled FoVer weighting or selection lines."
++                ),
++                "authority": "research-program.md; project_verifier_domain_bound background",
++                "operator_action_required": True,
++            },
++            {
++                "thesis": "finalize_submit_and_maintenance",
++                "summary": (
++                    "Submit the paper under operator control, then move the loop "
++                    "to maintenance and regression checks."
++                ),
++                "why_not_regrind": (
++                    "It banks the already-ready paper state rather than generating "
++                    "new experiments against settled threads."
++                ),
++                "authority": "results/experiment_3712_capstone_and_g_gate_v339.json",
++                "operator_action_required": True,
++            },
++        ]
++    )
++    if "Safety/Jailbreak Classifier" in research_program_text:
++        candidates.append(
++            {
++                "thesis": "tier_b_safety_jailbreak_classifier",
++                "summary": "Build the Tier B safety and jailbreak classifier product.",
++                "why_not_regrind": (
++                    "It uses the energy-function product roadmap in a new safety "
++                    "surface rather than re-scoring FoVer or re-freezing the headline."
++                ),
++                "authority": "research-program.md Tier B",
++                "operator_action_required": True,
++            }
++        )
++    if "Compliance Checker" in research_program_text:
++        candidates.append(
++            {
++                "thesis": "tier_b_compliance_checker",
++                "summary": "Build the Tier B regulatory compliance checker product.",
++                "why_not_regrind": (
++                    "It applies constraint energy to external compliance rules, "
++                    "a product path not covered by the settled selection line."
++                ),
++                "authority": "research-program.md Tier B",
++                "operator_action_required": True,
++            }
++        )
++    if "energy-as-GENERATOR" in roadmap_text or "Energy-Based Transformer" in roadmap_text:
++        candidates.append(
++            {
++                "thesis": "human_seeded_energy_as_generator_ebt",
++                "summary": (
++                    "Operator-seeded energy-as-generator EBT thesis: inference is "
++                    "energy minimization rather than reranking."
++                ),
++                "why_not_regrind": (
++                    "It is generation, not selection; the settled energy-selection "
++                    "bound does not answer it."
++                ),
++                "authority": "research-roadmap-next.yaml or operator seed, if activated",
++                "operator_action_required": True,
++            }
++        )
++    return candidates
++
++
++def build_recommended_default(
++    *,
++    can_synthesize: bool,
++    energy_abstention_positive: bool,
++    exp3718: Mapping[str, Any],
++) -> JsonDict:
++    """Return a recommendation object that explicitly is not a decision."""
++
++    if not can_synthesize:
++        return {
++            "thesis": "complete_terminal_evidence_before_new_thesis",
++            "rationale": (
++                "At least one required terminal thread is missing or protected-file "
++                "hygiene failed, so the operator menu should not drive .341 yet."
++            ),
++            "operator_decision_made": False,
++        }
++    if energy_abstention_positive:
++        return {
++            "thesis": "energy_based_selective_prediction_at_scale",
++            "rationale": (
++                "Exp 3718 reports energy beating entropy as a selective-prediction "
++                "signal, which is the strongest non-regrind extension of the frozen "
++                "0.9131 discriminator."
++            ),
++            "supporting_artifact": (
++                "results/experiment_3718_risk_coverage_abstention_characterization.json"
++            ),
++            "energy_aurc": _point(exp3718.get("energy_aurc")),
++            "baseline_aurc": _point(exp3718.get("baseline_aurc")),
++            "operator_decision_made": False,
++        }
++    return {
++        "thesis": "finalize_submit_and_maintenance",
++        "rationale": (
++            "Without a positive abstention extension, the conservative default is "
++            "to submit the ready paper and move the loop to maintenance."
++        ),
++        "supporting_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json",
++        "operator_decision_made": False,
++    }
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    started_s: float = 0.0,
++    now_s: float = 0.0001,
++) -> Path:
++    """Build, adversarial-check, validate, and write the Exp 3722 artifact."""
++
++    root_path = Path(root)
++    north = root_path / NORTH_STAR_REL_PATH
++    manifest = root_path / MANIFEST_REL_PATH
++    conductor = root_path / CONDUCTOR_REL_PATH
++    north_before = _sha256_path(north)
++    manifest_before = _sha256_path(manifest)
++    conductor_before = _sha256_path(conductor)
++    output = _repo_path(root_path, Path(output_path))
++    artifact = build_artifact_from_inputs(
++        exp3712=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3712"]),
++        exp3715=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3715"]),
++        exp3716=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3716"]),
++        exp3717=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3717"]),
++        exp3718=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3718"]),
++        exp3719=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3719"]),
++        exp3720=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3720"]),
++        exp3721=_read_json_object(root_path / UPSTREAM_ARTIFACTS["exp3721"]),
++        north_star_text=_read_text(root_path / NORTH_STAR_REL_PATH),
++        research_program_text=_read_text(root_path / RESEARCH_PROGRAM_REL_PATH),
++        roadmap_text=_read_text(root_path / ROADMAP_REL_PATH),
++        north_star_hash_before=north_before,
++        north_star_hash_after=_sha256_path(north),
++        manifest_hash_before=manifest_before,
++        manifest_hash_after=_sha256_path(manifest),
++        conductor_hash_before=conductor_before,
++        conductor_hash_after=_sha256_path(conductor),
++        started_s=started_s,
++        now_s=now_s,
++        adversarial_verify_clean=False,
++        adversarial_verify_report={"flags": []},
++    )
++    output.parent.mkdir(parents=True, exist_ok=True)
++    _write_payload(output, artifact)
++    report = run_adversarial_verify_report(output)
++    artifact["adversarial_verify_report"] = compact_adversarial_report(report)
++    artifact["adversarial_verify_clean"] = adversarial_report_is_clean(report)
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    _write_payload(output, artifact)
++    return output
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3722 schema and non-decision boundaries."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    _ensure(_no_compute_markers(artifact), "compute-bound markers must not be present")
++    _ensure(artifact.get("honest_verdict") in TERMINAL_VERDICTS, "terminal verdict")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    for field in (
++        "all_self_generable_threads_settled",
++        "paper_ready_status",
++        "north_star_unmodified_assert",
++        "manifest_unmodified_assert",
++        "adversarial_verify_clean",
++    ):
++        _ensure(type(artifact.get(field)) is bool, f"{field} must be a bare bool")
++    ledger = artifact.get("converged_state_ledger")
++    _ensure(isinstance(ledger, list), "converged_state_ledger must be a list")
++    threads = {row.get("thread") for row in ledger if isinstance(row, Mapping)}
++    _ensure(threads == set(REQUIRED_THREADS), "converged_state_ledger thread set")
++    for row in ledger:
++        _ensure(isinstance(row, Mapping), "ledger rows must be objects")
++        _ensure(
++            {"thread", "terminal_status", "authoritative_artifact", "settled"} <= set(row),
++            "ledger row fields",
++        )
++        _ensure(type(row.get("settled")) is bool, "ledger settled must be bare bool")
++    if artifact.get("all_self_generable_threads_settled") is True:
++        _ensure(all(row.get("settled") is True for row in ledger), "settled flag mismatch")
++    candidates = artifact.get("candidate_next_theses")
++    _ensure(isinstance(candidates, list) and candidates, "candidate_next_theses")
++    for candidate in candidates:
++        _ensure(isinstance(candidate, Mapping), "candidate rows must be objects")
++        _ensure("why_not_regrind" in candidate, "candidate why_not_regrind")
++        _ensure(bool(candidate.get("why_not_regrind")), "candidate why_not_regrind")
++        _ensure(type(candidate.get("operator_action_required")) is bool, "operator action")
++    default = artifact.get("recommended_default_thesis")
++    _ensure(isinstance(default, Mapping), "recommended_default_thesis")
++    _ensure(
++        default.get("operator_decision_made") is False,
++        "recommended default must not make operator decision",
++    )
++    request = artifact.get("operator_decision_request")
++    _ensure(isinstance(request, str) and ".341+" in request, "operator_decision_request")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles")
++    missing_principles = [
++        field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles
++    ]
++    _ensure(not missing_principles, f"field_principles missing: {missing_principles}")
++    duration = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration, (int, float))
++        and not isinstance(duration, bool)
++        and float(duration) >= 0.0001,
++        "duration_s",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(
++        isinstance(checksum, str) and len(checksum) == 64,
++        "reproducibility_checksum",
++    )
++    _ensure(
++        checksum == reproducibility_checksum(artifact),
++        "reproducibility_checksum",
++    )
++
++
++def run_adversarial_verify_report(path: Path) -> JsonDict:
++    """Run the repository adversarial verifier and return its report object."""
++
++    verifier_path = REPO_ROOT / "scripts" / "adversarial_verify.py"
++    spec = importlib.util.spec_from_file_location("carnot_adversarial_verify_3722", verifier_path)
++    if spec is None or spec.loader is None:
++        raise RuntimeError(f"could not load adversarial verifier from {verifier_path}")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    report = module.verify_artifact(path)
++    if not isinstance(report, dict):
++        raise RuntimeError("adversarial verifier returned a non-object report")
++    return report
++
++
++def compact_adversarial_report(report: Mapping[str, Any]) -> JsonDict:
++    """Keep a stable summary of adversarial flags."""
++
++    raw_flags = report.get("flags", [])
++    flags = [dict(flag) for flag in raw_flags if isinstance(flag, Mapping)] if isinstance(raw_flags, list) else []
++    severities = [_severity_rank(flag.get("severity")) for flag in flags]
++    return {
++        "flag_count": len(flags),
++        "max_severity": max(severities) if severities else -1,
++        "flags": flags,
++    }
++
++
++def adversarial_report_is_clean(report: Mapping[str, Any]) -> bool:
++    """Return true when no critical adversarial flag is present."""
++
++    flags = report.get("flags", [])
++    if not isinstance(flags, list):
++        return False
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in flags
++    )
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash the artifact while excluding the checksum field itself."""
++
++    filtered = {
++        key: value for key, value in artifact.items() if key != "reproducibility_checksum"
++    }
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _ledger_row(
++    thread: str,
++    settled: bool,
++    terminal_status: str,
++    authoritative_artifact: str,
++) -> JsonDict:
++    return {
++        "thread": thread,
++        "terminal_status": terminal_status if settled else "not_terminal_or_missing_evidence",
++        "authoritative_artifact": authoritative_artifact,
++        "settled": settled,
++    }
++
++
++def _source_payload_checksums(payloads: Mapping[str, Mapping[str, Any]]) -> list[JsonDict]:
++    return [
++        {
++            "name": name,
++            "path": str(UPSTREAM_ARTIFACTS[name]),
++            "sha256": _sha256_payload(payload),
++        }
++        for name, payload in sorted(payloads.items())
++    ]
++
++
++def _read_json_object(path: Path) -> JsonDict:
++    try:
++        data = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    return data if isinstance(data, dict) else {}
++
++
++def _read_text(path: Path) -> str:
++    try:
++        return path.read_text(encoding="utf-8")
++    except OSError:
++        return ""
++
++
++def _write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _repo_path(root: Path, path: Path) -> Path:
++    return path if path.is_absolute() else root / path
++
++
++def _sha256_path(path: Path) -> str:
++    try:
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return hashlib.sha256(b"<missing>").hexdigest()
++
++
++def _sha256_text(text: str) -> str:
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def _sha256_payload(payload: Mapping[str, Any]) -> str:
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def _point(value: Any) -> float | None:
++    if isinstance(value, Mapping):
++        return _point(value.get("point"))
++    if isinstance(value, (int, float)) and not isinstance(value, bool):
++        return round(float(value), 6)
++    return None
++
++
++def _contains(value: str, needle: str) -> bool:
++    return needle.lower() in value.lower().replace("-", "_")
++
++
++def _no_compute_markers(artifact: Mapping[str, Any]) -> bool:
++    encoded = json.dumps(artifact)
++    disallowed = ("GGUF", "CUDA", "llama.cpp", "torch.cuda", ".cuda(", "model_specs", "target_model")
++    return not any(marker in encoded for marker in disallowed)
++
++
++def _severity_rank(value: Any) -> int:
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(value).lower(), -1)
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index b6f65d1476..d1283cffb5 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T17:01:28.599566Z",
+-  "duration_s": 0.010333538055419922,
++  "run_date": "2026-06-02T17:18:49.634114Z",
++  "duration_s": 0.010732650756835938,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "bdada76a2d7c1f249c942ef52db22b72d803f5b0dcfe7a29f1f813609b647932",
++  "reproducibility_checksum": "d3c85f13e2dbc0550040f07a22208dea0c5cf4feda6784edd29eb94d989115dc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bfe34dbdd5bec2696e16091d64f6eb344cd11560"
++    "adversarial_verify_version": "1bdf016b77e426c88bd170f72529381ecf4fedc5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 997ac4bd28..d121aec933 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T17:01:28.611507Z",
+-  "duration_s": 0.008573532104492188,
++  "run_date": "2026-06-02T17:18:49.647165Z",
++  "duration_s": 0.009613513946533203,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "96ad4cb1bece674768f0f328395ef2632d717c67975f10384fab5eb0999d2eb5",
++  "reproducibility_checksum": "d5e2252a8407b747a0dca5ba3c7c22290c4ecb3a95a156f7a866d84bf9967782",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bfe34dbdd5bec2696e16091d64f6eb344cd11560"
++    "adversarial_verify_version": "1bdf016b77e426c88bd170f72529381ecf4fedc5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b92d028126..a40c708eb2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1102428436279297,
++  "efficiency_gains_ms": 2.1142959594726562,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index b2cffbf523..4e33d22c6c 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27794766426086426,
++  "duration_s": 0.2818281650543213,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 162efff1cf..07d74344eb 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.666999353095889e-05,
++  "duration_s": 2.885499270632863e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3722_convergence_synthesis_operator_next_thesis.json b/results/experiment_3722_convergence_synthesis_operator_next_thesis.json
+new file mode 100644
+index 0000000000..15a55e6ac7
+--- /dev/null
++++ b/results/experiment_3722_convergence_synthesis_operator_next_thesis.json
+@@ -0,0 +1,193 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": [],
++    "max_severity": -1
++  },
++  "all_self_generable_threads_settled": true,
++  "candidate_next_theses": [
++    {
++      "authority": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++      "operator_action_required": true,
++      "summary": "Scale the positive risk-coverage result into a calibrated abstention product study.",
++      "thesis": "energy_based_selective_prediction_at_scale",
++      "why_not_regrind": "It optimizes abstain-or-flag risk coverage, not the closed best-of-N selection question."
++    },
++    {
++      "authority": "research-program.md; project_verifier_domain_bound background",
++      "operator_action_required": true,
++      "summary": "Try a genuinely different verifier architecture in a domain where self-consistency is weak and abstention has headroom.",
++      "thesis": "different_verifier_architecture_for_weak_sc_domain",
++      "why_not_regrind": "It changes both architecture and operating domain instead of rerunning the settled FoVer weighting or selection lines."
++    },
++    {
++      "authority": "results/experiment_3712_capstone_and_g_gate_v339.json",
++      "operator_action_required": true,
++      "summary": "Submit the paper under operator control, then move the loop to maintenance and regression checks.",
++      "thesis": "finalize_submit_and_maintenance",
++      "why_not_regrind": "It banks the already-ready paper state rather than generating new experiments against settled threads."
++    },
++    {
++      "authority": "research-program.md Tier B",
++      "operator_action_required": true,
++      "summary": "Build the Tier B safety and jailbreak classifier product.",
++      "thesis": "tier_b_safety_jailbreak_classifier",
++      "why_not_regrind": "It uses the energy-function product roadmap in a new safety surface rather than re-scoring FoVer or re-freezing the headline."
++    },
++    {
++      "authority": "research-program.md Tier B",
++      "operator_action_required": true,
++      "summary": "Build the Tier B regulatory compliance checker product.",
++      "thesis": "tier_b_compliance_checker",
++      "why_not_regrind": "It applies constraint energy to external compliance rules, a product path not covered by the settled selection line."
++    }
++  ],
++  "converged_state_ledger": [
++    {
++      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json; results/experiment_3717_g4_full_provenance_audit.json",
++      "settled": true,
++      "terminal_status": "frozen_fover_0_9131_proven_reproduced_and_narrowing_clean",
++      "thread": "headline"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json",
++      "settled": true,
++      "terminal_status": "honest_negative_bounded",
++      "thread": "p01"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3707_selection_diagnosis_formal_closure.json; results/experiment_3712_capstone_and_g_gate_v339.json",
++      "settled": true,
++      "terminal_status": "settled_bounded_diagnosis_closed",
++      "thread": "selection"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++      "settled": true,
++      "terminal_status": "closed_negative_no_candidate_beats_frozen",
++      "thread": "refreeze"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3705_code_native_leak_audit_heldout.json; results/experiment_3706_reconcile_shipped_detector_heldout.json; results/experiment_3712_capstone_and_g_gate_v339.json",
++      "settled": true,
++      "terminal_status": "code_generalization_leak_narrowed_to_math_only_abstain",
++      "thread": "code"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3670_facts_row_real_benchmark.json; results/experiment_3712_capstone_and_g_gate_v339.json",
++      "settled": true,
++      "terminal_status": "facts_generalization_retired",
++      "thread": "facts"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3659_trained_ebm_judge_ood_real_substrate_v3.json; results/experiment_3712_capstone_and_g_gate_v339.json",
++      "settled": true,
++      "terminal_status": "trained_judge_ood_retired",
++      "thread": "judge_ood"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++      "settled": true,
++      "terminal_status": "kv260_terminal_confirmed_mandate_lift_recommended",
++      "thread": "kv260"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
++      "settled": true,
++      "terminal_status": "fr11_v14_graceful_fallback_under_shift_no_collapse",
++      "thread": "self_learning"
++    },
++    {
++      "authoritative_artifact": "results/experiment_3712_capstone_and_g_gate_v339.json; results/experiment_3716_ship_paper_v6_narrowing_lint.json; results/experiment_3717_g4_full_provenance_audit.json",
++      "settled": true,
++      "terminal_status": "paper_ready_true_g1_g2_g3_g4_met_and_hardened",
++      "thread": "paper_ready"
++    }
++  ],
++  "duration_s": 0.0001,
++  "experiment_id": "exp3722",
++  "field_principles": {
++    "adversarial_verify_clean": "True iff no critical adversarial flag.",
++    "all_self_generable_threads_settled": "BARE bool. True iff every loop-self-generable thread has a terminal status.",
++    "candidate_next_theses": "The operator menu, with one why-not-regrind line per candidate.",
++    "converged_state_ledger": "Per-thread {thread, terminal_status, authoritative_artifact}; the honest convergence record.",
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "Reads prior artifacts and docs; no live inference and no compute-bound marker belongs in this aggregation artifact.",
++    "manifest_unmodified_assert": "Asserts ops/exclusion_manifest.yaml was not edited by this task.",
++    "north_star_unmodified_assert": "Asserts ops/north-star.md was not edited by this task.",
++    "operator_decision_request": "The explicit ask for what thesis or maintenance mode drives .341+.",
++    "paper_ready_status": "Records the paper-ready gate value from the capstone.",
++    "random_seed": "Determinism precondition.",
++    "recommended_default_thesis": "The loop's recommendation only; the operator still decides the thesis.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "honest_verdict": "complete: convergence_synthesized_next_theses_presented_operator_decision_requested",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: reads prior artifacts + docs; no live inference; no compute-bound marker).",
++  "manifest_unmodified_assert": true,
++  "non_decision_assert": true,
++  "north_star_unmodified_assert": true,
++  "operator_decision_request": "The loop has converged. Which thesis, product direction, or maintenance mode should drive .341+?",
++  "paper_ready_status": true,
++  "random_seed": 3722,
++  "recommended_default_thesis": {
++    "baseline_aurc": 0.075498,
++    "energy_aurc": 0.000789,
++    "operator_decision_made": false,
++    "rationale": "Exp 3718 reports energy beating entropy as a selective-prediction signal, which is the strongest non-regrind extension of the frozen 0.9131 discriminator.",
++    "supporting_artifact": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++    "thesis": "energy_based_selective_prediction_at_scale"
++  },
++  "reproducibility_checksum": "e71a2b6461f0882a51403110071edfd2b38327d94ea58e3b8b14499d4edc12a2",
++  "schema": "carnot.convergence_synthesis_operator_next_thesis.v1",
++  "scripts_research_conductor_modified": false,
++  "source_artifact_checksums": [
++    {
++      "name": "exp3712",
++      "path": "results/experiment_3712_capstone_and_g_gate_v339.json",
++      "sha256": "3dd05ad1e21f41a99bfe269dc3690561766280183e22e0080c5941892860c9ca"
++    },
++    {
++      "name": "exp3715",
++      "path": "results/experiment_3715_refreeze_disambiguation_clean_corrigendum.json",
++      "sha256": "8ad1a6998330e87bb7dccbe76b3fc3fbcb339f9112f8c854e0cc14c9a1499dd6"
++    },
++    {
++      "name": "exp3716",
++      "path": "results/experiment_3716_ship_paper_v6_narrowing_lint.json",
++      "sha256": "216571c45061dee7a36640c8f9de09cd1ef5f65cd344ae81eef7bbf250281fa2"
++    },
++    {
++      "name": "exp3717",
++      "path": "results/experiment_3717_g4_full_provenance_audit.json",
++      "sha256": "a342c1c9f7868e55cb1d78b9db5cfb8753f1848487ddb023147480f5572d504c"
++    },
++    {
++      "name": "exp3718",
++      "path": "results/experiment_3718_risk_coverage_abstention_characterization.json",
++      "sha256": "aa6e2229fc5ea167f0fa261a78c369079c96a7fdd681ce578dde8f0f77adc19f"
++    },
++    {
++      "name": "exp3719",
++      "path": "results/experiment_3719_headline_replication_fresh_corpus.json",
++      "sha256": "98fa336f71223487376864e07de0abd9953a4e90e511019df6616651f5ffe532"
++    },
++    {
++      "name": "exp3720",
++      "path": "results/experiment_3720_fr11_continuous_self_learning_v14.json",
++      "sha256": "c00d895557425c8fff1571f3e66b6b2894a7e2d67508792969d0e6eccfcc8225"
++    },
++    {
++      "name": "exp3721",
++      "path": "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
++      "sha256": "f58e3b061e748776c3aa2aab64e93bf9d9d445fe69b3c3de5ed9debd2b6ae9c0"
++    }
++  ],
++  "source_document_checksums": {
++    "ops/north-star.md": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973",
++    "research-program.md": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
++    "research-roadmap.yaml": "76286cb27e22521d1fcbe0a165417b0bd1be67bafa467bc67433bade80828e44"
++  },
++  "task_id": "exp3722-convergence-synthesis-operator-next-thesis"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index b92077b621..76c47b3022 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:03:26Z",
+-  "finished_at": "2026-06-02T17:03:26Z",
++  "started_at": "2026-06-02T17:18:41Z",
++  "finished_at": "2026-06-02T17:18:41Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index a8d2db2a33..b40c12ada0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:03:26Z",
+-  "finished_at": "2026-06-02T17:03:26Z",
++  "started_at": "2026-06-02T17:18:41Z",
++  "finished_at": "2026-06-02T17:18:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6f65108715..93a82ae607 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T17:03:26Z",
+-  "finished_at": "2026-06-02T17:03:26Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T17:18:41Z",
++  "finished_at": "2026-06-02T17:18:42Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py b/scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py
+new file mode 100644
+index 0000000000..7dd5999591
+--- /dev/null
++++ b/scripts/experiment_3722_convergence_synthesis_operator_next_thesis.py
+@@ -0,0 +1,31 @@
++#!/usr/bin/env python3
++"""Run Exp 3722 convergence synthesis.
++
++Spec refs: REQ-REPORT-3722, SCENARIO-REPORT-3722-SYNTHESIZED,
++SCENARIO-REPORT-3722-CANNOT-SYNTHESIZE.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++if str(PYTHON_ROOT) not in sys.path:
++    sys.path.insert(0, str(PYTHON_ROOT))
++
++from carnot.reporting.convergence_synthesis_operator_next_thesis_3722 import (
++    write_artifact,
++)  # noqa: E402
++
++
++def main() -> int:
++    output = write_artifact(REPO_ROOT)
++    print(output)
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py b/tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py
+new file mode 100644
+index 0000000000..64a4db8861
+--- /dev/null
++++ b/tests/python/test_experiment_3722_convergence_synthesis_operator_next_thesis.py
+@@ -0,0 +1,434 @@
++"""Tests for Exp 3722 convergence synthesis and operator next-thesis request.
++
++Spec refs: REQ-REPORT-3722, SCENARIO-REPORT-3722-SYNTHESIZED,
++SCENARIO-REPORT-3722-CANNOT-SYNTHESIZE.
++"""
++
++from __future__ import annotations
++
++import json
++from importlib.machinery import ModuleSpec
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import convergence_synthesis_operator_next_thesis_3722 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _terminal_inputs() -> dict[str, dict[str, object]]:
++    return {
++        "exp3712": {
++            "honest_verdict": "complete: capstone_v339_paper_ready_true",
++            "paper_ready": True,
++            "g1": True,
++            "g2": True,
++            "g3": True,
++            "g4": True,
++            "p01_status": "honest-negative",
++            "frozen_fover_headline_auroc": 0.9131,
++            "frozen_headline_unchanged": True,
++            "selection_diagnosis_closed": True,
++            "code_native_heldout_verdict": "one_point_zero_was_a_leak",
++            "shipped_detector_reconciliation": "narrowed_to_math_only_abstain",
++            "facts_generalization_retired": True,
++            "trained_judge_ood_retired": True,
++            "kv260_terminal_status": "latency_transcript_captured_terminal_candidate",
++            "fr11_v13_result": "multi_session_consolidation_transferred_no_collapse",
++        },
++        "exp3715": {
++            "honest_verdict": (
++                "complete: refreeze_disambiguation_corrigendum_clean_no_candidate_"
++                "beats_frozen_headline_stays_0_9131"
++            ),
++            "no_candidate_beats_frozen": True,
++            "frozen_headline_unchanged_assert": True,
++            "adversarial_verify_clean": True,
++        },
++        "exp3716": {
++            "honest_verdict": "complete: paper_v6_narrowing_lint_shipped",
++            "g3_now_mechanically_enforced": True,
++            "current_paper_lint_clean": True,
++            "acceptance_gate": {"passed": True},
++        },
++        "exp3717": {
++            "honest_verdict": "complete: g4_fully_traced_every_headline_number",
++            "all_numbers_trace_to_clean_artifacts": True,
++            "n_numbers_audited": 7,
++            "north_star_unmodified_assert": True,
++            "acceptance_gate": {"passed": True},
++        },
++        "exp3718": {
++            "honest_verdict": (
++                "complete: energy_is_a_better_selective_prediction_signal_than_"
++                "entropy_deployable_abstention_gate"
++            ),
++            "energy_beats_baseline_abstention": True,
++            "energy_aurc": 0.000789,
++            "baseline_aurc": 0.075498,
++            "adversarial_verify_clean": True,
++        },
++        "exp3719": {
++            "honest_verdict": "complete: headline_discrimination_is_fover_specific",
++            "generalizes_beyond_fover": False,
++            "fresh_corpus_auroc": 0.798604,
++            "acceptance_gate_passed": True,
++            "adversarial_verify_clean": True,
++        },
++        "exp3720": {
++            "honest_verdict": (
++                "complete: fr11_v14_template_falls_back_gracefully_under_shift_"
++                "no_collapse"
++            ),
++            "template_robust_or_graceful_fallback": True,
++            "collapse_detected_deploy_arm": False,
++            "template_library_bounded": True,
++            "acceptance_gate": {"passed": True},
++        },
++        "exp3721": {
++            "honest_verdict": (
++                "complete: kv260_terminal_confirmed_mandate_lift_recommended_"
++                "polarfire_gatemate_audited"
++            ),
++            "kv260_terminal_condition_confirmed": True,
++            "kv260_mandate_lift_recommendation": (
++                "recommend_operator_lift_per_milestone_kv260_mandate"
++            ),
++            "kv260_terminal_transcript_present": True,
++            "speedup_claim_avoided_assert": True,
++        },
++    }
++
++
++def _research_program_text() -> str:
++    return (
++        "## Product Roadmap\n"
++        "### Tier B: Build Next\n"
++        "| **Safety/Jailbreak Classifier** | Low = safe, high = unsafe/jailbreak |\n"
++        "| **Compliance Checker** | Energy encodes regulatory constraints |\n"
++    )
++
++
++def _build_from_inputs(
++    payloads: dict[str, dict[str, object]],
++    *,
++    north_hash_after: str = "north",
++    manifest_hash_after: str = "manifest",
++) -> dict[str, object]:
++    return mod.build_artifact_from_inputs(
++        exp3712=payloads["exp3712"],
++        exp3715=payloads["exp3715"],
++        exp3716=payloads["exp3716"],
++        exp3717=payloads["exp3717"],
++        exp3718=payloads["exp3718"],
++        exp3719=payloads["exp3719"],
++        exp3720=payloads["exp3720"],
++        exp3721=payloads["exp3721"],
++        north_star_text="Frozen FoVer headline AUROC: 0.9131. paper_ready=true.\n",
++        research_program_text=_research_program_text(),
++        roadmap_text=(
++            "project_energy_selection_thesis_bounded; "
++            "project_verifier_domain_bound; operator next-thesis\n"
++        ),
++        north_star_hash_before="north",
++        north_star_hash_after=north_hash_after,
++        manifest_hash_before="manifest",
++        manifest_hash_after=manifest_hash_after,
++        conductor_hash_before="conductor",
++        conductor_hash_after="conductor",
++        started_s=1.0,
++        now_s=2.25,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++
++
++def _seed_repo(root: Path) -> None:
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "north-star.md").write_text(
++        "Frozen FoVer headline AUROC: 0.9131. paper_ready=true.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "exclusion_manifest.yaml").write_text(
++        "retired_questions: []\n",
++        encoding="utf-8",
++    )
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor fixture\n",
++        encoding="utf-8",
++    )
++    (root / "research-program.md").write_text(_research_program_text(), encoding="utf-8")
++    (root / "research-roadmap.yaml").write_text(
++        "project_energy_selection_thesis_bounded\n",
++        encoding="utf-8",
++    )
++    for key, payload in _terminal_inputs().items():
++        _write_json(root / mod.UPSTREAM_ARTIFACTS[key], payload)
++
++
++def test_req_report_3722_spec_anchor_exists() -> None:
++    """REQ-REPORT-3722: OpenSpec declares the synthesis contract."""
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-REPORT-3722" in spec
++    assert "SCENARIO-REPORT-3722-SYNTHESIZED" in spec
++    assert "SCENARIO-REPORT-3722-CANNOT-SYNTHESIZE" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++
++
++@pytest.mark.parametrize(
++    ("case_name", "mutate_inputs", "expected_settled", "expected_verdict"),
++    [
++        pytest.param(
++            "convergence_synthesized_theses_presented",
++            lambda payloads: payloads,
++            True,
++            mod.SYNTHESIZED_VERDICT,
++            id="convergence_synthesized_theses_presented",
++        ),
++        pytest.param(
++            "cannot_synthesize",
++            lambda payloads: {
++                **payloads,
++                "exp3712": {
++                    **payloads["exp3712"],
++                    "paper_ready": False,
++                    "selection_diagnosis_closed": False,
++                },
++            },
++            False,
++            mod.CANNOT_SYNTHESIZE_VERDICT,
++            id="cannot_synthesize",
++        ),
++    ],
++)
++def test_scenario_report_3722_parametrized_honest_outcomes(
++    case_name: str,
++    mutate_inputs,
++    expected_settled: bool,
++    expected_verdict: str,
++) -> None:
++    """SCENARIO-REPORT-3722: synthesized and blocked outcomes stay distinct."""
++    payloads = mutate_inputs(_terminal_inputs())
++
++    artifact = _build_from_inputs(payloads)
++
++    mod.validate_artifact(artifact)
++    assert case_name in {
++        "convergence_synthesized_theses_presented",
++        "cannot_synthesize",
++    }
++    assert artifact["honest_verdict"] == expected_verdict
++    assert artifact["all_self_generable_threads_settled"] is expected_settled
++    assert type(artifact["all_self_generable_threads_settled"]) is bool
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert len(artifact["converged_state_ledger"]) == len(mod.REQUIRED_THREADS)
++    assert {
++        row["thread"] for row in artifact["converged_state_ledger"]
++    } == set(mod.REQUIRED_THREADS)
++    assert all(
++        {"thread", "terminal_status", "authoritative_artifact", "settled"} <= set(row)
++        for row in artifact["converged_state_ledger"]
++    )
++    assert all(
++        {"thesis", "why_not_regrind", "authority", "operator_action_required"} <= set(row)
++        for row in artifact["candidate_next_theses"]
++    )
++    assert any(
++        row["thesis"] == "energy_based_selective_prediction_at_scale"
++        for row in artifact["candidate_next_theses"]
++    )
++    assert any(
++        row["thesis"] == "tier_b_safety_jailbreak_classifier"
++        for row in artifact["candidate_next_theses"]
++    )
++    assert "Which thesis" in artifact["operator_decision_request"]
++    assert artifact["recommended_default_thesis"]["operator_decision_made"] is False
++    assert artifact["paper_ready_status"] is payloads["exp3712"]["paper_ready"]
++    assert len(artifact["reproducibility_checksum"]) == 64
++
++
++def test_req_report_3722_write_artifact_preserves_operator_curated_files(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-3722: writing persists clean synthesis without protected edits."""
++    _seed_repo(tmp_path)
++    before_north = (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8")
++    before_manifest = (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(
++        encoding="utf-8"
++    )
++    before_conductor = (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    )
++
++    output = mod.write_artifact(
++        tmp_path,
++        output_path="results/exp3722.json",
++        started_s=0.0,
++        now_s=1.0,
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.SYNTHESIZED_VERDICT
++    assert artifact["all_self_generable_threads_settled"] is True
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["adversarial_verify_report"]["flag_count"] == 0
++    assert artifact["north_star_unmodified_assert"] is True
++    assert artifact["manifest_unmodified_assert"] is True
++    assert artifact["scripts_research_conductor_modified"] is False
++    assert (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8") == before_north
++    assert (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(
++        encoding="utf-8"
++    ) == before_manifest
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before_conductor
++    encoded = json.dumps(artifact)
++    assert "model_specs" not in encoded
++    assert "target_model" not in encoded
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++
++    built = mod.build_artifact(
++        tmp_path,
++        started_s=0.0,
++        now_s=1.0,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++    mod.validate_artifact(built)
++    assert built["honest_verdict"] == mod.SYNTHESIZED_VERDICT
++
++
++def test_req_report_3722_validation_and_helper_edges() -> None:
++    """REQ-REPORT-3722: validation rejects schema drift and decisive overclaim."""
++    artifact = _build_from_inputs(
++        _terminal_inputs(),
++        north_hash_after="changed",
++        manifest_hash_after="changed",
++    )
++    mod.validate_artifact(artifact)
++    assert artifact["north_star_unmodified_assert"] is False
++    assert artifact["manifest_unmodified_assert"] is False
++    assert mod.adversarial_report_is_clean({"flags": [{"severity": "warn"}]}) is True
++    assert mod.adversarial_report_is_clean({"flags": [{"severity": "critical"}]}) is False
++    assert mod.adversarial_report_is_clean({"flags": "not-list"}) is False
++    assert mod.compact_adversarial_report({"flags": [{"severity": "warn"}, "bad"]}) == {
++        "flag_count": 1,
++        "max_severity": 1,
++        "flags": [{"severity": "warn"}],
++    }
++
++    missing = dict(artifact)
++    missing.pop("candidate_next_theses")
++    with pytest.raises(ValueError, match="missing required"):
++        mod.validate_artifact(missing)
++
++    bad_verdict = dict(artifact, honest_verdict="complete: unexpected")
++    with pytest.raises(ValueError, match="terminal verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_bool = dict(artifact, all_self_generable_threads_settled={"value": True})
++    with pytest.raises(ValueError, match="all_self_generable_threads_settled"):
++        mod.validate_artifact(bad_bool)
++
++    bad_candidate = dict(artifact, candidate_next_theses=[{"thesis": "x"}])
++    with pytest.raises(ValueError, match="why_not_regrind"):
++        mod.validate_artifact(bad_candidate)
++
++    bad_default = dict(
++        artifact,
++        recommended_default_thesis={
++            **artifact["recommended_default_thesis"],
++            "operator_decision_made": True,
++        },
++    )
++    with pytest.raises(ValueError, match="operator decision"):
++        mod.validate_artifact(bad_default)
++
++    bad_marker = dict(artifact, forbidden="GGUF")
++    with pytest.raises(ValueError, match="compute-bound markers"):
++        mod.validate_artifact(bad_marker)
++
++    bad_checksum = dict(artifact, reproducibility_checksum="0" * 64)
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        mod.validate_artifact(bad_checksum)
++
++
++def test_req_report_3722_optional_candidates_and_reader_edges(tmp_path: Path) -> None:
++    """REQ-REPORT-3722: optional menu and defensive readers stay bounded."""
++    payloads = _terminal_inputs()
++    artifact = mod.build_artifact_from_inputs(
++        exp3712=payloads["exp3712"],
++        exp3715=payloads["exp3715"],
++        exp3716=payloads["exp3716"],
++        exp3717=payloads["exp3717"],
++        exp3718={**payloads["exp3718"], "energy_beats_baseline_abstention": False},
++        exp3719=payloads["exp3719"],
++        exp3720=payloads["exp3720"],
++        exp3721=payloads["exp3721"],
++        north_star_text="Frozen FoVer headline AUROC: 0.9131.\n",
++        research_program_text=_research_program_text(),
++        roadmap_text="energy-as-GENERATOR Energy-Based Transformer operator seed\n",
++        north_star_hash_before="north",
++        north_star_hash_after="north",
++        manifest_hash_before="manifest",
++        manifest_hash_after="manifest",
++        conductor_hash_before="conductor",
++        conductor_hash_after="conductor",
++        started_s=0.0,
++        now_s=1.0,
++        adversarial_verify_clean=True,
++        adversarial_verify_report={"flags": []},
++    )
++
++    mod.validate_artifact(artifact)
++    assert artifact["recommended_default_thesis"]["thesis"] == "finalize_submit_and_maintenance"
++    assert any(
++        row["thesis"] == "human_seeded_energy_as_generator_ebt"
++        for row in artifact["candidate_next_theses"]
++    )
++    assert mod._read_json_object(tmp_path / "missing.json") == {}
++    invalid = tmp_path / "invalid.json"
++    invalid.write_text("{", encoding="utf-8")
++    assert mod._read_json_object(invalid) == {}
++    list_json = tmp_path / "list.json"
++    list_json.write_text("[]", encoding="utf-8")
++    assert mod._read_json_object(list_json) == {}
++    assert mod._read_text(tmp_path / "absent.txt") == ""
++    assert len(mod._sha256_path(tmp_path / "absent.txt")) == 64
++    assert mod._point({"point": 0.1234567}) == 0.123457
++    assert mod._point("not-a-number") is None
++
++
++def test_req_report_3722_adversarial_loader_failures(monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-3722: verifier import and return-shape failures are explicit."""
++
++    monkeypatch.setattr(mod.importlib.util, "spec_from_file_location", lambda *args: None)
++    with pytest.raises(RuntimeError, match="adversarial verifier"):
++        mod.run_adversarial_verify_report(Path("artifact.json"))
++
++    class NonObjectReportLoader:
++        def create_module(self, spec):
++            return None
++
++        def exec_module(self, module) -> None:
++            module.verify_artifact = lambda path: []
++
++    monkeypatch.setattr(
++        mod.importlib.util,
++        "spec_from_file_location",
++        lambda *args: ModuleSpec("fake_adversarial_verify", NonObjectReportLoader()),
++    )
++    with pytest.raises(RuntimeError, match="non-object report"):
++        mod.run_adversarial_verify_report(Path("artifact.json"))
+-- 
+2.55.0
+

@@ -1,0 +1,1288 @@
+From 51ef011055757d63590f07edb7845c2c8eeddee7 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 16:01:14 -0400
+Subject: [PATCH 00205/11171] =?UTF-8?q?[conductor]=20Capstone=20.341=20?=
+ =?UTF-8?q?=E2=80=94=20aggregate=20the=20Thesis-A=20EBT=20bring-up=20outco?=
+ =?UTF-8?q?me=20(vendored=20+=20audited,=20tiny-EBT=20fits=203090,=20match?=
+ =?UTF-8?q?ed-compute=20harness=20built+tested,=20bounded=20train=20stabil?=
+ =?UTF-8?q?ity,=20kill-gate=20verdict).=20State=20HONESTLY=20whether=20par?=
+ =?UTF-8?q?t-(a)=20of=20the=20kill-gate=20passed=20(green-light=20.342)=20?=
+ =?UTF-8?q?or=20the=20route=20is=20bounded=20at=20small=20scale.=20paper?=
+ =?UTF-8?q?=5Fready=20MUST=20stay=20TRUE;=20frozen=200.9131=20unchanged.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3731-capstone-v341
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/ebt-nrgpt/spec.md       |   9 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3731_capstone_v341.json    | 194 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ scripts/experiment_3731_capstone_v341.py      | 444 ++++++++++++++++++
+ .../test_experiment_3731_capstone_v341.py     | 299 ++++++++++++
+ 21 files changed, 979 insertions(+), 33 deletions(-)
+ create mode 100644 results/experiment_3731_capstone_v341.json
+ create mode 100644 scripts/experiment_3731_capstone_v341.py
+ create mode 100644 tests/python/test_experiment_3731_capstone_v341.py
+
+diff --git a/openspec/capabilities/ebt-nrgpt/spec.md b/openspec/capabilities/ebt-nrgpt/spec.md
+index 7b4682505d..c2d1822d48 100644
+--- a/openspec/capabilities/ebt-nrgpt/spec.md
++++ b/openspec/capabilities/ebt-nrgpt/spec.md
+@@ -104,3 +104,12 @@ Given Exp 3728 reports no stable bounded EBT convergence evidence, the kill-gate
+ 
+ ## SCENARIO-EBT-3729-PASS: Stable Diagnostics Green-Light Matched Compute
+ Given Exp 3728 reports converged finite losses with no NaN or divergence, the kill-gate script writes `ebt_trained_stably=true`, `green_light_342=true`, and a one-line recommended `.342` setup that names the Exp 3728 checkpoint evidence and the Exp 3727 matched FLOP budget.
++
++## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
++The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
++
++## SCENARIO-EBT-3731: Bounded Kill-Gate Produces Honest Capstone
++Given Exp 3729 reports `green_light_342=false`, the capstone writes a terminal `complete:` verdict ending in `bounded_paper_ready_true_frozen_headline_unchanged`, records `kill_gate_part_a_passed=false`, `green_light_342=false`, `thesis_a_bringup_outcome` as bounded at small scale, preserves paper readiness and the frozen FoVer 0.9131 headline, and keeps P0.1 / energy-selection as honest-negative-bounded.
++
++## SCENARIO-EBT-3731-FLAGGED: Flagged Upstream Artifacts Are Excluded
++Given any Exp 3724 through Exp 3730 source artifact carries `flagged_adversarial=true`, the capstone records that experiment in `flagged_artifacts_excluded` and excludes it from headline aggregation and unflagged citation fields rather than laundering it into the milestone outcome.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5cca366fe4..88e0c202eb 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2856,
++  "experiments_checked": 2857,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 53926352ab..e0d5cc06cf 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T19:07:04.330980+00:00",
+-  "finished_at": "2026-06-02T19:07:04.354452+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-02T20:00:48.688978+00:00",
++  "finished_at": "2026-06-02T20:00:48.713130+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index f0b58aff4f..4ac504194b 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T19:07:04Z",
++  "run_date": "2026-06-02T20:00:48Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index e0f01d400f..6d48ef85cd 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T19:07:05Z",
+-  "finished_at": "2026-06-02T19:07:05Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-02T20:00:50Z",
++  "finished_at": "2026-06-02T20:00:50Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index d60e6871bb..6f8f1b8170 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T19:07:05Z",
++  "run_date": "2026-06-02T20:00:50Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 662074b773..ef2e23a8a0 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-02T19:07:05Z",
++  "run_date": "2026-06-02T20:00:50Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index c72bbfc240..3eb7d10e08 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T19:34:20.362962Z",
+-  "duration_s": 0.010333538055419922,
++  "run_date": "2026-06-02T19:59:07.439016Z",
++  "duration_s": 0.009752035140991211,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "1ed81138622ad1f17e38cc2a94c497709ee4d7bd1d8f00ecb5ae36b6f0190302",
++  "reproducibility_checksum": "4eb6ba091bb2a0d7fd99b0422f315817e5585f720b854ae2cfda045484d44251",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "193b0d2650b2abf4f62a497b05a121ce67aa2f34"
++    "adversarial_verify_version": "20a6b936301ec32493f61de77e7961ede175659d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a401d543d4..cc8d530c85 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T19:34:20.373900Z",
+-  "duration_s": 0.007483005523681641,
++  "run_date": "2026-06-02T19:59:07.450157Z",
++  "duration_s": 0.008539438247680664,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "bc40417945921af4a82a5a590c611e0227aac5744ade96ef3c06591bf6dbf8d1",
++  "reproducibility_checksum": "92dc32315ead6cd174158171424ab49c5961e19ae0d46fcb591f3b6097784d61",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "193b0d2650b2abf4f62a497b05a121ce67aa2f34"
++    "adversarial_verify_version": "20a6b936301ec32493f61de77e7961ede175659d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 0af32c83f4..b92d028126 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1071434020996094,
++  "efficiency_gains_ms": 2.1102428436279297,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index b7aa8d366a..6f5c94f6ce 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2646968364715576,
++  "duration_s": 0.26959943771362305,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 59937cce82..851472acdb 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0011992454528808594,
++  "duration_s": 0.0010519027709960938,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index c379b84faa..b7f61f8674 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.347295569255948e-05,
++  "duration_s": 3.3051997888833284e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 0eed5ea67a..8fc107df41 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 8.619972504675388e-07,
++  "duration_s": 5.709589459002018e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 041ca21910..0ffc1470d2 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.699562072753906e-05,
++  "duration_s": 4.172325134277344e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3731_capstone_v341.json b/results/experiment_3731_capstone_v341.json
+new file mode 100644
+index 0000000000..cc3a6b62f9
+--- /dev/null
++++ b/results/experiment_3731_capstone_v341.json
+@@ -0,0 +1,194 @@
++{
++  "bringup_evidence": {
++    "bounded_checkpointed_training_stability": {
++      "cumulative_steps_trained": 0,
++      "ebt_converged": false,
++      "honest_verdict": "blocked_ebt",
++      "nan_or_divergence_events": false,
++      "stabilizers_applied": "none"
++    },
++    "ebt_vendored_energy_path_audited": {
++      "energy_path_audited": true,
++      "importable": true,
++      "license_confirmed": true,
++      "smoke_energy_value": 0.5541654229164124,
++      "upstream_commit_sha": "19420cbeae655bbf11930219a675ade6897019e8"
++    },
++    "kill_gate_part_a_verdict": {
++      "ebt_trained_stably": false,
++      "green_light_342": false,
++      "honest_verdict": "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop"
++    },
++    "kv260_opportunistic_continuity": {
++      "kv260_overlay_loadable": true,
++      "kv260_ssh_reachable": true,
++      "speedup_claim_made": false,
++      "terminal_state_holds": true
++    },
++    "matched_compute_eval_harness": {
++      "ar_best_of_m": 5,
++      "ar_total_flops": 10000,
++      "ebt_total_flops": 10000,
++      "unit_tests_passed": "5_of_5_pass",
++      "within_tolerance": true
++    },
++    "tiny_ebt_3090_smoke": {
++      "ebt_param_count": 37954560,
++      "loss_decreased": true,
++      "loss_finite": true,
++      "n_train": 2048,
++      "peak_vram_mb": 1283
++    }
++  },
++  "cited_upstream_artifacts": [
++    {
++      "experiment_id": 3724,
++      "fields_imported": [
++        "honest_verdict",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "g_gates_preserved",
++        "frozen_headline_auroc_preserved",
++        "p01_status_preserved",
++        "thesis_a_evidence.mechanism",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3724_archive_v340_activate_v341.json",
++      "sha256": "d833ae126d5d42b8b907413ab8b4a8cf2d8e7b219ae599b02af59b792f2a45d0"
++    },
++    {
++      "experiment_id": 3725,
++      "fields_imported": [
++        "honest_verdict",
++        "importable",
++        "license_confirmed",
++        "upstream_commit_sha",
++        "smoke_energy_value",
++        "energy_path_audit",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3725_ebt_fork_vendor_importable.json",
++      "sha256": "668f59990b9a716bc4223206c61d948b9852bce97677937b369256975ae07dca"
++    },
++    {
++      "experiment_id": 3726,
++      "fields_imported": [
++        "honest_verdict",
++        "ebt_param_count",
++        "peak_vram_mb",
++        "n_train",
++        "loss_finite",
++        "loss_decreased",
++        "first_step_losses",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json",
++      "sha256": "457f07c8772bfc334f2e54da8aef342a98b36311258da44358c2e6d524b2af84"
++    },
++    {
++      "experiment_id": 3727,
++      "fields_imported": [
++        "honest_verdict",
++        "unit_tests_added",
++        "unit_tests_passed",
++        "flop_model_description",
++        "matched_compute_report.ebt_total_flops",
++        "matched_compute_report.ar_total_flops",
++        "matched_compute_report.budget_match.ar_best_of_m",
++        "matched_compute_report.budget_match.within_tolerance",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3727_matched_compute_eval_harness.json",
++      "sha256": "48c65681d7fc3ad52f6d86603e1bb6067d56bb3562e4f2a10158e80bf60972cc"
++    },
++    {
++      "experiment_id": 3728,
++      "fields_imported": [
++        "honest_verdict",
++        "cumulative_steps_trained",
++        "ebt_loss_curve",
++        "ar_loss_curve",
++        "ebt_converged",
++        "nan_or_divergence_events",
++        "stabilizers_applied",
++        "peak_vram_mb",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json",
++      "sha256": "2df80a1ded8ea93ad18eadb338c384cf2b02fb1876dead0f77e3fdd11fc0bbb9"
++    },
++    {
++      "experiment_id": 3729,
++      "fields_imported": [
++        "honest_verdict",
++        "ebt_trained_stably",
++        "green_light_342",
++        "kill_gate_conclusion",
++        "stability_diagnostics.ebt_trained_stably",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3729_stability_kill_gate_verdict.json",
++      "sha256": "80964239741cb3b74580c4be923c4e3d2ef93ffd6e0bfa66f004351841f79112"
++    },
++    {
++      "experiment_id": 3730,
++      "fields_imported": [
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made",
++        "reproducibility_checksum"
++      ],
++      "path": "results/experiment_3730_kv260_opportunistic_continuity_audit.json",
++      "sha256": "5808b8564c254e3b94404e2c343f10d94c8f48ec1d158d0b0094701c3e817d11"
++    }
++  ],
++  "duration_s": 0.013144,
++  "experiment": 3731,
++  "field_principles": {
++    "cited_upstream_artifacts": "Provenance trail from capstone numbers to the real artifacts.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "flagged_artifacts_excluded": "Lists any flagged_adversarial artifact excluded from aggregation by the fabrication gate.",
++    "frozen_headline_unchanged": "Frozen FoVer 0.9131 stays frozen; .341 never touches the headline.",
++    "green_light_342": "Whether the matched-compute comparison is sanctioned next; false means route bounded.",
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": "A capstone reads upstream JSON, runs no live model, and must not claim a live inference substrate.",
++    "kill_gate_part_a_passed": "Boolean carried up from Exp 3729, the milestone's load-bearing result.",
++    "paper_ready_preserved": "G1-G4 stay met; the venture bet must not regress the banked verifier product.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "thesis_a_bringup_outcome": "The honest .341 outcome: kill-gate part-a pass means green-light .342 only; otherwise bounded at small scale."
++  },
++  "flagged_artifacts_excluded": [],
++  "frozen_fover_auroc": 0.9131,
++  "frozen_headline_unchanged": true,
++  "g_gates_preserved": {
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true
++  },
++  "generation_mechanism_under_test": "energy_as_generator_not_selector",
++  "green_light_342": false,
++  "headline_aggregation_experiment_ids": [
++    3724,
++    3725,
++    3726,
++    3727,
++    3728,
++    3729,
++    3730
++  ],
++  "honest_verdict": "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model).",
++  "kill_gate_part_a_passed": false,
++  "p01_energy_selection_status": "honest-negative-bounded",
++  "paper_ready_preserved": true,
++  "random_seed": 3731,
++  "reproducibility_checksum": "ff3fdf1e0cca7a84be5d8f7d3a99c8e3b613a34f57c50d7d1a411f5f6405582c",
++  "schema": "carnot.experiment_3731_capstone_v341.v1",
++  "thesis_a_bringup_outcome": "bounded_at_small_scale_do_not_auto_propose_342",
++  "thesis_a_bringup_summary": ".341 outcome: bounded at small scale. Exp 3725 vendored and audited EBT, Exp 3726 fit a tiny EBT on the 3090 for one smoke step, and Exp 3727 built the matched-compute harness, but Exp 3728 did not provide stable bounded checkpointed training and Exp 3729 stopped the route. The actual thesis test is .342, and this record does not sanction it."
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7db36a423c..7ba02343fc 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T19:34:12Z",
+-  "finished_at": "2026-06-02T19:34:12Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-02T20:01:02Z",
++  "finished_at": "2026-06-02T20:01:02Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e930510a17..3ef4fd0a2b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T19:34:12Z",
+-  "finished_at": "2026-06-02T19:34:12Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T20:01:02Z",
++  "finished_at": "2026-06-02T20:01:02Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 47a22b0e28..170602125f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T19:34:12Z",
+-  "finished_at": "2026-06-02T19:34:12Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T20:01:02Z",
++  "finished_at": "2026-06-02T20:01:02Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3731_capstone_v341.py b/scripts/experiment_3731_capstone_v341.py
+new file mode 100644
+index 0000000000..c79f5702f2
+--- /dev/null
++++ b/scripts/experiment_3731_capstone_v341.py
+@@ -0,0 +1,444 @@
++#!/usr/bin/env python3
++"""Aggregate Exp 3724-3730 into the v341 Thesis-A EBT bring-up capstone.
++
++Spec: REQ-EBT-3731, SCENARIO-EBT-3731, SCENARIO-EBT-3731-FLAGGED.
++
++The capstone is a provenance document, not a model run. It reads checked-in
++upstream JSON artifacts, preserves the banked paper-ready invariants, and
++states the kill-gate part-(a) outcome without converting a bring-up milestone
++into a thesis-success claim.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import math
++import time
++from pathlib import Path
++from typing import Any, Mapping
++
++
++EXPERIMENT_ID = 3731
++RANDOM_SEED = 3731
++UPSTREAM_IDS = (3724, 3725, 3726, 3727, 3728, 3729, 3730)
++RESULT_PATH = Path("results/experiment_3731_capstone_v341.json")
++DEFAULT_UPSTREAM_PATHS = {
++    3724: Path("results/experiment_3724_archive_v340_activate_v341.json"),
++    3725: Path("results/experiment_3725_ebt_fork_vendor_importable.json"),
++    3726: Path("results/experiment_3726_tiny_ebt_corpus_and_train_step_smoke.json"),
++    3727: Path("results/experiment_3727_matched_compute_eval_harness.json"),
++    3728: Path("results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json"),
++    3729: Path("results/experiment_3729_stability_kill_gate_verdict.json"),
++    3730: Path("results/experiment_3730_kv260_opportunistic_continuity_audit.json"),
++}
++
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, "
++    "runs no live model)."
++)
++PASS_VERDICT = (
++    "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_pass_"
++    "paper_ready_true_frozen_headline_unchanged"
++)
++BOUNDED_VERDICT = (
++    "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_"
++    "paper_ready_true_frozen_headline_unchanged"
++)
++PASS_OUTCOME = (
++    "green_light_342_stable_enough_for_matched_compute_comparison_"
++    "not_energy_as_generator_success"
++)
++BOUNDED_OUTCOME = "bounded_at_small_scale_do_not_auto_propose_342"
++FROZEN_FOVER_AUROC = 0.9131
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "thesis_a_bringup_outcome",
++    "kill_gate_part_a_passed",
++    "green_light_342",
++    "paper_ready_preserved",
++    "frozen_headline_unchanged",
++    "flagged_artifacts_excluded",
++    "cited_upstream_artifacts",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the milestone's one-line outcome.",
++    "inference_substrate": (
++        "A capstone reads upstream JSON, runs no live model, and must not claim a live inference substrate."
++    ),
++    "thesis_a_bringup_outcome": (
++        "The honest .341 outcome: kill-gate part-a pass means green-light .342 only; otherwise bounded at small scale."
++    ),
++    "kill_gate_part_a_passed": "Boolean carried up from Exp 3729, the milestone's load-bearing result.",
++    "green_light_342": (
++        "Whether the matched-compute comparison is sanctioned next; false means route bounded."
++    ),
++    "paper_ready_preserved": "G1-G4 stay met; the venture bet must not regress the banked verifier product.",
++    "frozen_headline_unchanged": "Frozen FoVer 0.9131 stays frozen; .341 never touches the headline.",
++    "flagged_artifacts_excluded": (
++        "Lists any flagged_adversarial artifact excluded from aggregation by the fabrication gate."
++    ),
++    "cited_upstream_artifacts": "Provenance trail from capstone numbers to the real artifacts.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++UPSTREAM_FIELDS = {
++    3724: (
++        "honest_verdict",
++        "paper_ready_preserved",
++        "paper_ready_evidence.paper_ready",
++        "paper_ready_evidence.frozen_headline_unchanged",
++        "g_gates_preserved",
++        "frozen_headline_auroc_preserved",
++        "p01_status_preserved",
++        "thesis_a_evidence.mechanism",
++        "reproducibility_checksum",
++    ),
++    3725: (
++        "honest_verdict",
++        "importable",
++        "license_confirmed",
++        "upstream_commit_sha",
++        "smoke_energy_value",
++        "energy_path_audit",
++        "reproducibility_checksum",
++    ),
++    3726: (
++        "honest_verdict",
++        "ebt_param_count",
++        "peak_vram_mb",
++        "n_train",
++        "loss_finite",
++        "loss_decreased",
++        "first_step_losses",
++        "reproducibility_checksum",
++    ),
++    3727: (
++        "honest_verdict",
++        "unit_tests_added",
++        "unit_tests_passed",
++        "flop_model_description",
++        "matched_compute_report.ebt_total_flops",
++        "matched_compute_report.ar_total_flops",
++        "matched_compute_report.budget_match.ar_best_of_m",
++        "matched_compute_report.budget_match.within_tolerance",
++        "reproducibility_checksum",
++    ),
++    3728: (
++        "honest_verdict",
++        "cumulative_steps_trained",
++        "ebt_loss_curve",
++        "ar_loss_curve",
++        "ebt_converged",
++        "nan_or_divergence_events",
++        "stabilizers_applied",
++        "peak_vram_mb",
++        "reproducibility_checksum",
++    ),
++    3729: (
++        "honest_verdict",
++        "ebt_trained_stably",
++        "green_light_342",
++        "kill_gate_conclusion",
++        "stability_diagnostics.ebt_trained_stably",
++        "reproducibility_checksum",
++    ),
++    3730: (
++        "honest_verdict",
++        "terminal_state_holds",
++        "kv260_ssh_reachable",
++        "kv260_overlay_loadable",
++        "speedup_claim_made",
++        "reproducibility_checksum",
++    ),
++}
++
++
++def load_json(path: Path) -> dict[str, Any]:
++    """Read an artifact JSON object; arrays cannot serve as provenance records."""
++    with path.open("r", encoding="utf-8") as handle:
++        data = json.load(handle)
++    if not isinstance(data, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return data
++
++
++def sha256_file(path: Path) -> str:
++    """Hash the exact upstream file so citations detect silent result drift."""
++    digest = hashlib.sha256()
++    with path.open("rb") as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
++            digest.update(chunk)
++    return digest.hexdigest()
++
++
++def _get_nested(data: Mapping[str, Any], field: str) -> Any:
++    value: Any = data
++    for part in field.split("."):
++        if not isinstance(value, Mapping) or part not in value:
++            return None
++        value = value[part]
++    return value
++
++
++def _is_flagged(data: Mapping[str, Any]) -> bool:
++    return data.get("flagged_adversarial") is True
++
++
++def _citation(experiment_id: int, path: Path, data: Mapping[str, Any]) -> dict[str, Any]:
++    fields = [field for field in UPSTREAM_FIELDS[experiment_id] if _get_nested(data, field) is not None]
++    return {
++        "experiment_id": experiment_id,
++        "path": str(path),
++        "fields_imported": fields,
++        "sha256": sha256_file(path),
++    }
++
++
++def _valid_g_gates(exp3724: Mapping[str, Any]) -> dict[str, bool]:
++    gates = exp3724.get("g_gates_preserved")
++    if not isinstance(gates, Mapping):
++        gates = {
++            key: _get_nested(exp3724, f"paper_ready_evidence.{key}")
++            for key in ("g1", "g2", "g3", "g4")
++        }
++    return {key: bool(gates.get(key)) for key in ("g1", "g2", "g3", "g4")}
++
++
++def _bringup_evidence(unflagged: Mapping[int, Mapping[str, Any]]) -> dict[str, Any]:
++    evidence: dict[str, Any] = {}
++    if 3725 in unflagged:
++        exp3725 = unflagged[3725]
++        evidence["ebt_vendored_energy_path_audited"] = {
++            "importable": bool(exp3725.get("importable")),
++            "license_confirmed": bool(exp3725.get("license_confirmed")),
++            "upstream_commit_sha": exp3725.get("upstream_commit_sha"),
++            "smoke_energy_value": exp3725.get("smoke_energy_value"),
++            "energy_path_audited": exp3725.get("energy_path_audit") is not None,
++        }
++    if 3726 in unflagged:
++        exp3726 = unflagged[3726]
++        evidence["tiny_ebt_3090_smoke"] = {
++            "ebt_param_count": exp3726.get("ebt_param_count"),
++            "peak_vram_mb": exp3726.get("peak_vram_mb"),
++            "n_train": exp3726.get("n_train"),
++            "loss_finite": bool(exp3726.get("loss_finite")),
++            "loss_decreased": bool(exp3726.get("loss_decreased")),
++        }
++    if 3727 in unflagged:
++        exp3727 = unflagged[3727]
++        evidence["matched_compute_eval_harness"] = {
++            "unit_tests_passed": exp3727.get("unit_tests_passed"),
++            "ebt_total_flops": _get_nested(exp3727, "matched_compute_report.ebt_total_flops"),
++            "ar_total_flops": _get_nested(exp3727, "matched_compute_report.ar_total_flops"),
++            "ar_best_of_m": _get_nested(exp3727, "matched_compute_report.budget_match.ar_best_of_m"),
++            "within_tolerance": _get_nested(exp3727, "matched_compute_report.budget_match.within_tolerance"),
++        }
++    if 3728 in unflagged:
++        exp3728 = unflagged[3728]
++        evidence["bounded_checkpointed_training_stability"] = {
++            "honest_verdict": exp3728.get("honest_verdict"),
++            "cumulative_steps_trained": exp3728.get("cumulative_steps_trained"),
++            "ebt_converged": bool(exp3728.get("ebt_converged")),
++            "nan_or_divergence_events": bool(exp3728.get("nan_or_divergence_events")),
++            "stabilizers_applied": exp3728.get("stabilizers_applied"),
++        }
++    if 3729 in unflagged:
++        exp3729 = unflagged[3729]
++        evidence["kill_gate_part_a_verdict"] = {
++            "honest_verdict": exp3729.get("honest_verdict"),
++            "ebt_trained_stably": bool(exp3729.get("ebt_trained_stably")),
++            "green_light_342": bool(exp3729.get("green_light_342")),
++        }
++    if 3730 in unflagged:
++        exp3730 = unflagged[3730]
++        evidence["kv260_opportunistic_continuity"] = {
++            "terminal_state_holds": bool(exp3730.get("terminal_state_holds")),
++            "kv260_ssh_reachable": bool(exp3730.get("kv260_ssh_reachable")),
++            "kv260_overlay_loadable": bool(exp3730.get("kv260_overlay_loadable")),
++            "speedup_claim_made": bool(exp3730.get("speedup_claim_made")),
++        }
++    return evidence
++
++
++def _checksum_payload(artifact: Mapping[str, Any]) -> dict[str, Any]:
++    return {
++        key: value
++        for key, value in artifact.items()
++        if key not in {"reproducibility_checksum", "duration_s"}
++    }
++
++
++def _checksum(artifact: Mapping[str, Any]) -> str:
++    encoded = json.dumps(_checksum_payload(artifact), sort_keys=True).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def build_artifact(paths: Mapping[int, Path], *, duration_s: float) -> dict[str, Any]:
++    """Build the Exp 3731 capstone from upstream artifact paths."""
++    upstream = {experiment_id: load_json(paths[experiment_id]) for experiment_id in UPSTREAM_IDS}
++    flagged_artifacts_excluded = [
++        {
++            "experiment_id": experiment_id,
++            "path": str(paths[experiment_id]),
++            "reason": "flagged_adversarial=true",
++        }
++        for experiment_id, data in upstream.items()
++        if _is_flagged(data)
++    ]
++    unflagged = {
++        experiment_id: data
++        for experiment_id, data in upstream.items()
++        if not _is_flagged(data)
++    }
++    exp3724 = unflagged.get(3724, {})
++    exp3729 = unflagged.get(3729, {})
++    g_gates_preserved = _valid_g_gates(exp3724)
++    paper_ready_preserved = bool(exp3724.get("paper_ready_preserved")) and all(g_gates_preserved.values())
++    frozen_fover_auroc = exp3724.get("frozen_headline_auroc_preserved")
++    frozen_headline_unchanged = bool(
++        _get_nested(exp3724, "paper_ready_evidence.frozen_headline_unchanged")
++    ) and math.isclose(float(frozen_fover_auroc or 0.0), FROZEN_FOVER_AUROC, rel_tol=0.0, abs_tol=1e-12)
++    kill_gate_part_a_passed = bool(exp3729.get("green_light_342"))
++    outcome = PASS_OUTCOME if kill_gate_part_a_passed else BOUNDED_OUTCOME
++    verdict = PASS_VERDICT if kill_gate_part_a_passed else BOUNDED_VERDICT
++    if kill_gate_part_a_passed:
++        summary = (
++            ".341 outcome: green-light .342 only. Exp 3725-3729 show EBT vendoring, "
++            "single-step tiny EBT bring-up, matched-compute harness readiness, and evidence "
++            "stable enough to run the matched-compute comparison; the actual thesis test is .342."
++        )
++    else:
++        summary = (
++            ".341 outcome: bounded at small scale. Exp 3725 vendored and audited EBT, Exp 3726 fit "
++            "a tiny EBT on the 3090 for one smoke step, and Exp 3727 built the matched-compute "
++            "harness, but Exp 3728 did not provide stable bounded checkpointed training and Exp 3729 "
++            "stopped the route. The actual thesis test is .342, and this record does not sanction it."
++        )
++    artifact: dict[str, Any] = {
++        "schema": "carnot.experiment_3731_capstone_v341.v1",
++        "experiment": EXPERIMENT_ID,
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "thesis_a_bringup_outcome": outcome,
++        "thesis_a_bringup_summary": summary,
++        "kill_gate_part_a_passed": kill_gate_part_a_passed,
++        "green_light_342": kill_gate_part_a_passed,
++        "paper_ready_preserved": paper_ready_preserved,
++        "g_gates_preserved": g_gates_preserved,
++        "frozen_headline_unchanged": frozen_headline_unchanged,
++        "frozen_fover_auroc": frozen_fover_auroc,
++        "p01_energy_selection_status": exp3724.get("p01_status_preserved"),
++        "generation_mechanism_under_test": _get_nested(exp3724, "thesis_a_evidence.mechanism"),
++        "bringup_evidence": _bringup_evidence(unflagged),
++        "headline_aggregation_experiment_ids": sorted(unflagged),
++        "flagged_artifacts_excluded": flagged_artifacts_excluded,
++        "cited_upstream_artifacts": [
++            _citation(experiment_id, paths[experiment_id], unflagged[experiment_id])
++            for experiment_id in sorted(unflagged)
++        ],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": round(float(duration_s), 6),
++    }
++    artifact["reproducibility_checksum"] = _checksum(artifact)
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> list[str]:
++    """Return schema and honesty errors for the capstone artifact."""
++    errors: list[str] = []
++    missing = sorted(set(REQUIRED_ARTIFACT_FIELDS) - set(artifact))
++    if missing:
++        errors.append(f"missing required fields: {', '.join(missing)}")
++    if artifact.get("honest_verdict") not in {PASS_VERDICT, BOUNDED_VERDICT}:
++        errors.append("honest_verdict must be a terminal Exp 3731 verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare aggregation-only capstone provenance")
++    if not str(artifact.get("thesis_a_bringup_outcome") or "").strip():
++        errors.append("thesis_a_bringup_outcome must be present")
++    if not isinstance(artifact.get("kill_gate_part_a_passed"), bool):
++        errors.append("kill_gate_part_a_passed must be boolean")
++    if not isinstance(artifact.get("green_light_342"), bool):
++        errors.append("green_light_342 must be boolean")
++    if artifact.get("green_light_342") != artifact.get("kill_gate_part_a_passed"):
++        errors.append("green_light_342 must match kill_gate_part_a_passed")
++    if artifact.get("paper_ready_preserved") is not True:
++        errors.append("paper_ready_preserved must be true")
++    if artifact.get("frozen_headline_unchanged") is not True:
++        errors.append("frozen_headline_unchanged must be true")
++    if not isinstance(artifact.get("flagged_artifacts_excluded"), list):
++        errors.append("flagged_artifacts_excluded must be a list")
++    citations = artifact.get("cited_upstream_artifacts")
++    if not isinstance(citations, list) or not citations:
++        errors.append("cited_upstream_artifacts must cite unflagged upstream artifacts")
++    else:
++        for item in citations:
++            if not isinstance(item, dict):
++                errors.append("each citation must be an object")
++                continue
++            if not item.get("fields_imported"):
++                errors.append("each citation must include fields_imported")
++            sha = item.get("sha256")
++            if not isinstance(sha, str) or len(sha) != 64:
++                errors.append("each citation must include a sha256 hex string")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        errors.append("random_seed must equal 3731")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        errors.append("reproducibility_checksum must be a sha256 hex string")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or isinstance(duration, bool) or float(duration) <= 0.0:
++        errors.append("duration_s must be positive")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, dict) or set(REQUIRED_ARTIFACT_FIELDS) - set(principles):
++        errors.append("field_principles must cover all required artifact fields")
++    if "live_llm_inference" in json.dumps(artifact, sort_keys=True):
++        errors.append("artifact must not copy live-model substrate markers")
++    return errors
++
++
++def write_artifact(path: Path, artifact: Mapping[str, Any]) -> None:
++    """Write stable JSON so downstream checksum comparisons are meaningful."""
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _parse_args(argv: list[str] | None) -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    for experiment_id in UPSTREAM_IDS:
++        parser.add_argument(
++            f"--exp{experiment_id}",
++            type=Path,
++            default=DEFAULT_UPSTREAM_PATHS[experiment_id],
++        )
++    parser.add_argument("--output", type=Path, default=RESULT_PATH)
++    return parser.parse_args(argv)
++
++
++def main(argv: list[str] | None = None) -> int:
++    """CLI entrypoint for writing the Exp 3731 capstone artifact."""
++    start = time.monotonic()
++    args = _parse_args(argv)
++    paths = {experiment_id: getattr(args, f"exp{experiment_id}") for experiment_id in UPSTREAM_IDS}
++    artifact = build_artifact(paths, duration_s=max(time.monotonic() - start, 0.000001))
++    write_artifact(args.output, artifact)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3731_capstone_v341.py b/tests/python/test_experiment_3731_capstone_v341.py
+new file mode 100644
+index 0000000000..21c93158bc
+--- /dev/null
++++ b/tests/python/test_experiment_3731_capstone_v341.py
+@@ -0,0 +1,299 @@
++"""Tests for Exp 3731 Thesis-A EBT bring-up capstone.
++
++Spec refs: REQ-EBT-3731, SCENARIO-EBT-3731, SCENARIO-EBT-3731-FLAGGED.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from scripts import experiment_3731_capstone_v341 as exp3731
++
++
++def _write(path: Path, data: dict[str, object]) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
++    return path
++
++
++def _artifact_paths(
++    tmp_path: Path,
++    *,
++    green_light_342: bool = False,
++    flagged: set[int] | None = None,
++) -> dict[int, Path]:
++    flagged = flagged or set()
++    results = tmp_path / "results"
++    payloads: dict[int, dict[str, object]] = {
++        3724: {
++            "honest_verdict": (
++                "complete: archived_v340_convergence_hardened_thesis_a_energy_generator_"
++                "seeded_v341_active_paper_ready_true_frozen_headline_unchanged"
++            ),
++            "paper_ready_preserved": True,
++            "paper_ready_evidence": {
++                "g1": True,
++                "g2": True,
++                "g3": True,
++                "g4": True,
++                "paper_ready": True,
++                "frozen_headline_unchanged": True,
++            },
++            "g_gates_preserved": {"g1": True, "g2": True, "g3": True, "g4": True},
++            "frozen_headline_auroc_preserved": 0.9131,
++            "p01_status_preserved": "honest-negative-bounded",
++            "thesis_a_evidence": {"mechanism": "energy_as_generator_not_selector"},
++            "random_seed": 3724,
++            "reproducibility_checksum": "1" * 64,
++            "duration_s": 0.0001,
++        },
++        3725: {
++            "honest_verdict": "complete: ebt_vendored_energy_path_audited",
++            "importable": True,
++            "license_confirmed": True,
++            "upstream_commit_sha": "19420cbeae655bbf11930219a675ade6897019e8",
++            "smoke_energy_value": 0.5541654229164124,
++            "energy_path_audit": "audited",
++            "random_seed": 42,
++            "reproducibility_checksum": "2" * 64,
++            "duration_s": 15,
++        },
++        3726: {
++            "honest_verdict": "complete: tiny_ebt_38M_fits_3090",
++            "ebt_param_count": 37_954_560,
++            "peak_vram_mb": 1283,
++            "n_train": 2048,
++            "loss_finite": True,
++            "loss_decreased": True,
++            "first_step_losses": [-0.1, -1.0],
++            "random_seed": 3726,
++            "reproducibility_checksum": "3" * 64,
++            "duration_s": 7.84,
++        },
++        3727: {
++            "honest_verdict": "complete: matched_compute_eval_harness_built",
++            "unit_tests_added": "tests/python/test_matched_compute_eval_harness.py",
++            "unit_tests_passed": "5_of_5_pass",
++            "flop_model_description": "parameter_count * sequence_tokens * forward_passes",
++            "matched_compute_report": {
++                "ebt_total_flops": 10_000,
++                "ar_total_flops": 10_000,
++                "budget_match": {"ar_best_of_m": 5, "within_tolerance": True},
++            },
++            "random_seed": 20260602,
++            "reproducibility_checksum": "4" * 64,
++            "duration_s": 1.9,
++        },
++        3728: {
++            "honest_verdict": "blocked_ebt" if not green_light_342 else "complete: stable",
++            "cumulative_steps_trained": 0 if not green_light_342 else 100,
++            "ebt_loss_curve": [] if not green_light_342 else [5.0, 3.0],
++            "ar_loss_curve": [],
++            "ebt_converged": green_light_342,
++            "nan_or_divergence_events": False,
++            "stabilizers_applied": "none" if not green_light_342 else "grad_clip",
++            "peak_vram_mb": 0 if not green_light_342 else 4500,
++            "random_seed": 3728,
++            "reproducibility_checksum": "5" * 64,
++            "duration_s": 65.5,
++        },
++        3729: {
++            "honest_verdict": (
++                "complete: kill_gate_part_a_PASS_ebt_trained_stably_green_light_342_matched_compute_comparison"
++                if green_light_342
++                else "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop"
++            ),
++            "ebt_trained_stably": green_light_342,
++            "green_light_342": green_light_342,
++            "kill_gate_conclusion": "green-light .342 only" if green_light_342 else "bounded at small scale",
++            "stability_diagnostics": {"ebt_trained_stably": green_light_342},
++            "random_seed": 3729,
++            "reproducibility_checksum": "6" * 64,
++            "duration_s": 0.1,
++        },
++        3730: {
++            "honest_verdict": "complete: kv260_terminal_state_holds",
++            "terminal_state_holds": True,
++            "kv260_ssh_reachable": True,
++            "kv260_overlay_loadable": True,
++            "speedup_claim_made": False,
++            "random_seed": 3730,
++            "reproducibility_checksum": "7" * 64,
++            "duration_s": 6.4,
++        },
++    }
++    paths: dict[int, Path] = {}
++    for experiment_id, payload in payloads.items():
++        if experiment_id in flagged:
++            payload["flagged_adversarial"] = True
++        paths[experiment_id] = _write(results / f"experiment_{experiment_id}.json", payload)
++    return paths
++
++
++def test_openspec_has_3731_requirement() -> None:
++    """REQ-EBT-3731: the capstone is OpenSpec anchored before code."""
++    spec = Path("openspec/capabilities/ebt-nrgpt/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-EBT-3731" in spec
++    assert "SCENARIO-EBT-3731" in spec
++    assert "SCENARIO-EBT-3731-FLAGGED" in spec
++
++
++def test_bounded_kill_gate_writes_honest_capstone(tmp_path: Path) -> None:
++    """SCENARIO-EBT-3731: a bounded kill-gate cannot be promoted to thesis success."""
++    artifact = exp3731.build_artifact(_artifact_paths(tmp_path), duration_s=0.25)
++
++    assert artifact["honest_verdict"] == (
++        "complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_"
++        "bounded_paper_ready_true_frozen_headline_unchanged"
++    )
++    assert artifact["inference_substrate"] == exp3731.INFERENCE_SUBSTRATE
++    assert artifact["thesis_a_bringup_outcome"] == "bounded_at_small_scale_do_not_auto_propose_342"
++    assert artifact["kill_gate_part_a_passed"] is False
++    assert artifact["green_light_342"] is False
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["frozen_headline_unchanged"] is True
++    assert artifact["frozen_fover_auroc"] == 0.9131
++    assert artifact["p01_energy_selection_status"] == "honest-negative-bounded"
++    assert artifact["flagged_artifacts_excluded"] == []
++    assert {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]} == set(range(3724, 3731))
++    assert set(exp3731.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert "live_llm_inference" not in json.dumps(artifact)
++    assert exp3731.validate_artifact(artifact) == []
++
++    fallback_paths = _artifact_paths(tmp_path / "fallback")
++    exp3724 = json.loads(fallback_paths[3724].read_text(encoding="utf-8"))
++    exp3724.pop("g_gates_preserved")
++    _write(fallback_paths[3724], exp3724)
++    fallback_artifact = exp3731.build_artifact(fallback_paths, duration_s=0.25)
++    assert fallback_artifact["g_gates_preserved"] == {"g1": True, "g2": True, "g3": True, "g4": True}
++
++
++def test_green_light_is_narrow_not_energy_generator_success(tmp_path: Path) -> None:
++    """REQ-EBT-3731: a pass only sanctions .342 matched-compute comparison."""
++    artifact = exp3731.build_artifact(
++        _artifact_paths(tmp_path, green_light_342=True),
++        duration_s=0.25,
++    )
++
++    assert artifact["honest_verdict"].endswith("part_a_pass_paper_ready_true_frozen_headline_unchanged")
++    assert artifact["kill_gate_part_a_passed"] is True
++    assert artifact["green_light_342"] is True
++    assert artifact["thesis_a_bringup_outcome"] == (
++        "green_light_342_stable_enough_for_matched_compute_comparison_not_energy_as_generator_success"
++    )
++    assert "stable enough to run the matched-compute comparison" in artifact["thesis_a_bringup_summary"]
++    assert "energy-as-generator works" not in artifact["thesis_a_bringup_summary"]
++
++
++def test_flagged_upstream_is_excluded_from_headline_citations(tmp_path: Path) -> None:
++    """SCENARIO-EBT-3731-FLAGGED: flagged sources are named and excluded."""
++    paths = _artifact_paths(tmp_path, flagged={3726})
++
++    artifact = exp3731.build_artifact(paths, duration_s=0.25)
++
++    assert artifact["flagged_artifacts_excluded"] == [
++        {
++            "experiment_id": 3726,
++            "path": str(paths[3726]),
++            "reason": "flagged_adversarial=true",
++        }
++    ]
++    assert 3726 not in {item["experiment_id"] for item in artifact["cited_upstream_artifacts"]}
++    assert 3726 not in artifact["headline_aggregation_experiment_ids"]
++    assert "tiny_ebt_3090_smoke" not in artifact["bringup_evidence"]
++
++
++def test_validate_artifact_reports_schema_errors() -> None:
++    """REQ-EBT-3731: malformed capstones fail schema validation explicitly."""
++    missing_errors = exp3731.validate_artifact({})
++    assert any(error.startswith("missing required fields:") for error in missing_errors)
++    assert "green_light_342 must be boolean" in missing_errors
++    assert "cited_upstream_artifacts must cite unflagged upstream artifacts" in missing_errors
++
++    errors = exp3731.validate_artifact(
++        {
++            "honest_verdict": "complete: made_up",
++            "inference_substrate": "hardware_smoke",
++            "thesis_a_bringup_outcome": "",
++            "kill_gate_part_a_passed": "yes",
++            "green_light_342": True,
++            "paper_ready_preserved": False,
++            "frozen_headline_unchanged": False,
++            "flagged_artifacts_excluded": "none",
++            "cited_upstream_artifacts": [123, {"experiment_id": 3724, "fields_imported": [], "sha256": "bad"}],
++            "field_principles": {},
++            "random_seed": 0,
++            "reproducibility_checksum": "bad",
++            "duration_s": 0,
++        }
++    )
++
++    assert "honest_verdict must be a terminal Exp 3731 verdict" in errors
++    assert "inference_substrate must declare aggregation-only capstone provenance" in errors
++    assert "thesis_a_bringup_outcome must be present" in errors
++    assert "kill_gate_part_a_passed must be boolean" in errors
++    assert "paper_ready_preserved must be true" in errors
++    assert "frozen_headline_unchanged must be true" in errors
++    assert "flagged_artifacts_excluded must be a list" in errors
++    assert "each citation must be an object" in errors
++    assert "each citation must include fields_imported" in errors
++    assert "each citation must include a sha256 hex string" in errors
++    assert "random_seed must equal 3731" in errors
++    assert "reproducibility_checksum must be a sha256 hex string" in errors
++    assert "duration_s must be positive" in errors
++    assert "field_principles must cover all required artifact fields" in errors
++
++    live_marker = {
++        "honest_verdict": exp3731.BOUNDED_VERDICT,
++        "inference_substrate": exp3731.INFERENCE_SUBSTRATE,
++        "thesis_a_bringup_outcome": exp3731.BOUNDED_OUTCOME,
++        "kill_gate_part_a_passed": False,
++        "green_light_342": False,
++        "paper_ready_preserved": True,
++        "frozen_headline_unchanged": True,
++        "flagged_artifacts_excluded": [],
++        "cited_upstream_artifacts": [
++            {"experiment_id": 3724, "fields_imported": ["honest_verdict"], "sha256": "a" * 64}
++        ],
++        "field_principles": dict(exp3731.FIELD_PRINCIPLES),
++        "random_seed": 3731,
++        "reproducibility_checksum": "b" * 64,
++        "duration_s": 1.0,
++        "copied_marker": "live_llm_inference",
++    }
++    assert "artifact must not copy live-model substrate markers" in exp3731.validate_artifact(live_marker)
++
++
++def test_loader_builder_and_main_failure_paths(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-EBT-3731: CLI writes valid JSON and invalid inputs fail closed."""
++    list_path = tmp_path / "list.json"
++    list_path.write_text("[1, 2, 3]", encoding="utf-8")
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        exp3731.load_json(list_path)
++    assert exp3731._get_nested({}, "missing.path") is None
++
++    paths = _artifact_paths(tmp_path)
++    output_path = tmp_path / "results" / "experiment_3731_capstone_v341.json"
++    args = []
++    for experiment_id in exp3731.UPSTREAM_IDS:
++        args.extend([f"--exp{experiment_id}", str(paths[experiment_id])])
++    args.extend(["--output", str(output_path)])
++
++    assert exp3731.main(args) == 0
++    written = json.loads(output_path.read_text(encoding="utf-8"))
++    assert written["honest_verdict"] == exp3731.BOUNDED_VERDICT
++    assert exp3731.BOUNDED_VERDICT in capsys.readouterr().out
++
++    monkeypatch.setattr(exp3731, "validate_artifact", lambda artifact: ["forced validation error"])
++    with pytest.raises(ValueError, match="forced validation error"):
++        exp3731.build_artifact(paths, duration_s=0.25)
++    with pytest.raises(ValueError, match="forced validation error"):
++        exp3731.main(args)
+-- 
+2.55.0
+

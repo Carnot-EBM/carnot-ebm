@@ -1,0 +1,31 @@
+From 8c2854a5f1e282c29f1e926e1c8b4ccde4cbafa9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 11:01:17 -0400
+Subject: [PATCH 00157/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Backend-state=20diagnostic=20v6=20=E2=80=94=20sixth=20prob?=
+ =?UTF-8?q?e=20of=20gemini=20quota/crash=20stability=20(exp3653/3666/3679/?=
+ =?UTF-8?q?3691/3703=20all=20showed=20probe-OK-but-real-workload-crash);?=
+ =?UTF-8?q?=20record=20the=20probe-vs-real-workload=20divergence;=20recomm?=
+ =?UTF-8?q?end=20whether=20.341=20may=20flip=20to=20gemini-default;=20.340?=
+ =?UTF-8?q?=20stays=20on=20codex=20(documentation-only)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 31ad7e7d93..a454c7770c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8298,3 +8298,4 @@ canonical-URL lint clean.
+ 
+ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+ - 2026-06-02: Archive milestone .339 honestly (CONVERGENCE milestone: re-freeze CLOSED-NEGATIVE — no reweighting candidate beats frozen 0.9131 under dual-condition rigor, but exp3704 carries a benign TAUTOLOGY flag; code AUROC=1.0 was a LEAK -> detector narrowed to math-only-with-abstain; selection diagnosis FORMALLY CLOSED; KV260 TERMINAL; FR-11 v13 positive; paper_ready stayed TRUE; frozen 0.9131 unchanged) and activate .340 (⚠️ Research Finding) — honest_verdict=complete: archived_v339_convergence_refreeze_closed_negative_code_leak_narrowed_selection_closed_kv260_terminal_v340_active_paper_ready_true_frozen_headline_unchanged; results/experiment_3713_archive_v339_activate_v340.json
++- 2026-06-02: Backend-state diagnostic v6 — sixth probe of gemini quota/crash stability (exp3653/3666/3679/3691/3703 all showed probe-OK-but-real-workload-crash); record the probe-vs-real-workload divergence; recommend whether .341 may flip to gemini-default; .340 stays on codex (documentation-only) (❌ Failed) — honest_verdict=complete: backend_diagnosed_gemini_probe_ok_but_real_workload_crash_keep_codex_routing; results/experiment_3714_backend_state_diagnostic_v6.json
+-- 
+2.55.0
+

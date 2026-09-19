@@ -1,0 +1,70 @@
+From 564ea5cc371fce0d4086e6c2fcd695d654ab99fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 14:16:42 -0400
+Subject: [PATCH 01661/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...ent_4163_verifier_registry_gaps_hygiene.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e05b4535c1..584eec98b7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 491300, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-13T18:10:01Z"}
+\ No newline at end of file
++{"pid": 491300, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-13T18:16:40Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9391dc066a..4664fda91b 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8438,3 +8438,4 @@ c |
+ | 2026-06-13 17:10 UTC | NORTH STAR (ARC-AGI-3 EFFICIENCY axis, OFFLINE/air | OK | 89 passed, 1 warning in 5.62s |
+ | 2026-06-13 17:26 UTC | OBSERVABILITY FIX (reserved infra slot; OVERDUE ~2 | OK | 91 passed, 1 warning in 5.85s |
+ | 2026-06-13 17:41 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 6.00s |
++| 2026-06-13 18:14 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 06fe455a9e..41aa3dca66 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 491300, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-13T18:10:01Z"}
+\ No newline at end of file
++{"pid": 491300, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-13T18:16:40Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4163_verifier_registry_gaps_hygiene.json b/results/experiment_4163_verifier_registry_gaps_hygiene.json
+index a84186fdb3..8c82a279d7 100644
+--- a/results/experiment_4163_verifier_registry_gaps_hygiene.json
++++ b/results/experiment_4163_verifier_registry_gaps_hygiene.json
+@@ -585,5 +585,18 @@
+     "status": "open_rerank_uninformative_no_headroom_flagged",
+     "verifier_recovers_outvoted": 0,
+     "vote_at_1": 0.140625
+-  }
+-}
++  },
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.734 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

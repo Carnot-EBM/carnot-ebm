@@ -1,0 +1,1803 @@
+From 9a2305eda38992c3def3919c3d8444c62933e0f9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 19:02:12 -0400
+Subject: [PATCH 01039/11171] [conductor] Operational retrospective for
+ milestone 2026.06.367
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      |  79 +-
+ ops/metrics.md                                |   1 +
+ results/arc3_gap3_stage2v2_mined_negs.json.gz | Bin 0 -> 4164 bytes
+ .../arc3_gap3_stage2v2_transition_ebm.json    | 258 ++++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ results/experiment_696_icalm_abstention.json  |  11 +-
+ results/operational_retro_2026_06_367.json    |  29 +-
+ .../arc3_gap3_stage2v2_mine_real_negs.py      | 198 +++++
+ .../arc3_gap3_stage2v2_transition_ebm.py      | 767 ++++++++++++++++++
+ tests/python/test_arc3_gap3_stage2v2_ebm.py   | 108 +++
+ 17 files changed, 1435 insertions(+), 67 deletions(-)
+ create mode 100644 results/arc3_gap3_stage2v2_mined_negs.json.gz
+ create mode 100644 results/arc3_gap3_stage2v2_transition_ebm.json
+ create mode 100644 scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py
+ create mode 100644 scripts/experiments/arc3_gap3_stage2v2_transition_ebm.py
+ create mode 100644 tests/python/test_arc3_gap3_stage2v2_ebm.py
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 0b0448967c..b9cae841d0 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1823421, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-09T21:45:35Z"}
+\ No newline at end of file
++{"pid": 1842940, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-09T22:55:23Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 2ac43ca6df..bf2a250906 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1823421, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-09T21:45:35Z"}
+\ No newline at end of file
++{"pid": 1842940, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-09T22:55:23Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 7a5ba7f687..d2c4b4d478 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,64 +4,63 @@
+ # docs_audit_report — 2026-06-09
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is genuinely good — clear one-liner, `pip install carnot-ebm`, Apache 2.0 badge — so most strangers would scroll past it. But the moment they do, they hit insider status-speak ("382 milestones," "Repinned from v2 0.9857," "architecture-only 0.8947") and then a wall of 12 result cards studded with unexplained acronyms and suspiciously perfect numbers. A skeptical conference attendee keeps reading with rising distrust and likely bounces at the Results section, concluding this is an AI-run internal experiment log rather than a tool they can rely on.
++The top of the page (hero → problem → how-it-works) is genuinely good: a stranger learns what Carnot does in one sentence and stays hooked. But the moment they scroll to the evidence — the part meant to close the deal — they hit a blizzard of jargon-tagged, mutually-contradictory numbers, several implausibly-perfect scores, and a blog section that loudly advertises the project repeatedly catching *itself* fabricating results. A skeptical technical reader bounces at "Evidence" or, worse, concludes the numbers can't be trusted.
+ 
+ ## TOP 3 PROBLEMS
+-1. **Internal jargon contaminates the first impression** — the stat bar's "382 Completed milestones" and the embedded "Recent progress" card ("Repinned from v2 0.9857," "dual-condition," "architecture-only") are the first things read after the headline, and they read like a retro, not a pitch.
+-2. **Results section is a 12-card wall of unexplained acronyms** — FoVer, SVAMP, CCTU, PRM, VeriCoT, EstimationVerifier, IterativeSelfRepair, HalluGuard v3. A stranger knows none of these and skims all of them.
+-3. **Trust-eroding contradictions and too-perfect numbers** — FoVer is simultaneously the headline benchmark (0.9131) and a "baseline" scoring 0.125 (below random chance); results include 1.0 TP-rate and 60/60 perfect catches with no anchor; and the paper is openly "pending operator-initiated upload" (i.e., not actually submitted).
++1. **Contradictory + too-perfect evidence** — three different HumanEval deltas (+3.0 / +72pp / +36pp), a SOTA-35B "0% baseline," and a stack of perfect scores (1.0 TP, 60/60, 0.0pp, 2.0×) with no sample sizes read as cherry-picked, not credible. *(Results section)*
++2. **The blog markets an integrity problem** — 4 of 7 posts are "Caught Cheating," "Regex in an NTK Costume," "Two Retractions," "Five FATAL Findings." A 30-second stranger reads: *this project's own outputs keep getting caught faking results.* *(Writing section)*
++3. **Jargon buries the evidence** — the single most prominent number ("0.9131 … FoVer … 5-seed") and nearly every result tag (CCTU, SVAMP, VeriCoT, PRM-BiasBench, PREM, TTC, HalluGuard v3, "k=5") are undefined insider terms. *(Stats bar + Results + Capabilities)*
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- **Nav bar** — 12 text links (Get Started, Tutorial, Concepts, API, Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap) + 2 buttons — cap at ~6. Seven of these jump off-site to GitHub/files; a stranger can't tell the in-page anchors from the external docs.
+-- **Results grid** — 12 cards — cap at ~6–8 headline rows. Past ~6 the stranger skims none. The long-tail rows (HalluGuard cascade, GSM8K extraction, VeriCoT) dilute the strong ones (HumanEval +3, 8%→80% repair).
+-- **"Recent progress" r-card** (mis-nested inside the stat bar) — ~51 words but jargon-dense, right at the 60-word ceiling. The "The canonical source repository is github.com/…" sentence is pure filler — the GitHub button two inches away already says this.
++- **Results grid — 12 cards** — under the 20 cap, but each tag is so dense that a stranger skims none of them; effective signal is zero. Suggested: collapse to 4–5 headline rows, move the rest to the Report.
++- **Capabilities grid — 7 cards under "What you can check"** — cards 5 (Research operations), 6 (APIs), 7 (TTC/PREM) are not things a user "checks"; they pad the section off-theme. Suggested: 4 capability cards max.
++- **Results intro — ~55 words of defensive hedging** ("checked-in experiment artifact… labeled by provenance… not model-generation headline claims"). Reads as pre-emptive self-defense. Suggested: one plain sentence.
++- **Nav — 12 links + 2 buttons** — cluttered for a landing page; trim to ~5.
+ 
+ ### Internal jargon
+-- **Stat bar** — "382 Completed milestones" — a "milestone" is an internal project-management unit; the number is meaningless and slightly alarming to an outsider ("382 of what?").
+-- **"Recent progress" card** — "Repinned from v2 0.9857," "architecture-only 0.8947," "5-seed dual-condition" — version-pinning and ablation vocabulary; a stranger cannot parse "repinned" or "dual-condition."
+-- **Features → "Test-Time Compute (TTC) & PREM" card** — "scales Test-Time Compute based on Process-Reward Energy Model (PREM) variance … intrinsic motivation for continuous self-learning" — nearly 100% jargon, zero stranger value.
+-- **Results tags** — "FoVer," "SVAMP AUC," "CCTU," "PRM-BiasBench," "VeriCoT," "EstimationVerifier," "IterativeSelfRepair (… execute-feedback-retry)," "HalluGuard v3," "0.0pp accuracy delta," "k=5 ensemble," "(publication gate)" — every one is an internal name, benchmark abbreviation, version tag, or flag-syntax fragment.
+-- **Preprint section** — "(paper-v6)" — version number a stranger doesn't need; "pending operator-initiated upload" is internal process-speak.
+-- **Features section header** says "What you can check / Seven capabilities" but three of the seven cards (Research operations, APIs & portable memory, TTC & PREM) are not things you check — the framing is internally consistent with the codebase, not with a stranger's reading.
++- **Stats bar headline** — "0.9131 Verifier AUROC — FoVer math step-errors (5-seed)" — "FoVer," "step-errors," "5-seed" all undefined; the page's #1 number is unreadable to a stranger.
++- **"Recent progress" card** — "Repinned from v2 0.9857," "5-seed dual-condition," "architecture-only 0.8947" — "v2," "Repinned," "dual-condition" are internal versioning/method terms.
++- **Stat label "382 Completed milestones"** — "milestones" is project-management insider speak; conveys no product value.
++- **Result tags** — "CCTU," "SVAMP," "VeriCoT," "PRM-BiasBench," "HalluGuard v3," "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)," "k=5 ensemble," "pass@1," "+72pp," "0.0pp" — undefined acronyms, version numbers, and flag syntax throughout.
++- **TTC/PREM capability card** — "scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance… intrinsic motivation for continuous self-learning" — densest jargon on the page; means nothing cold.
++- **Capabilities/APIs card** — `VerdictRecord`, `SessionMemory` code identifiers.
++- **Preprint** — "paper-v6," "operator-initiated upload" — internal version + role names.
+ 
+ ### Per-milestone narrative
+-- **"Recent progress" card** — "Repinned from v2 0.9857 after pre-submission adversarial audit" is a changelog sentence transplanted onto the landing page — it narrates an internal event (the audit, the repin) rather than stating a current fact.
+-- **Preprint section** — "The arXiv submission is prepared but pending operator-initiated upload" narrates internal workflow state; a stranger reads it as "not published yet," which weakens the claim.
++- **"Recent progress" card** — "Repinned from v2 0.9857 after pre-submission adversarial audit" is retrospective status reporting (walking back a prior headline number) spliced into a public card. It volunteers doubt about the very number above it.
++- The page is largely free of raw `expNNNN` / `.NNN` milestone IDs — that discipline is holding. The drift here is *narrative* (version walk-backs, audit history), not ID-dumping.
+ 
+ ### Inconsistencies
+-- **FoVer is two contradictory things**: hero/Recent-progress treat it as the headline benchmark Carnot scores **0.9131** on; Results card 7 cites a **"0.125 FoVer baseline"** that a 0.90 verifier beats. Is FoVer the thing we're great at, or the weak thing we beat? A stranger can't tell.
+-- **Two different 0.91 AUROCs**: hero = "0.9131 … FoVer math step-errors"; Results card 3 = "0.91 AUROC (publication gate)" for a **prompt-injection classifier**. Same number, different task, no disambiguation.
+-- **HumanEval cited three ways** with no through-line: "+3.0 points" (Code), "8% → 80% (+72pp)" (IterativeSelfRepair, HumanEval-50), "0% → 36%" (SOTA 35B). All plausibly real, but presented as if unrelated — looks like three teams measured three things.
+-- **Problem card** — "An LLM that's already committed to '47 + 28 = 7'" — the "= 7" appears to be a truncation/typo against the "= 76" used everywhere else; momentarily confusing.
+-- **Tonal**: the page advertises "HalluGuard v3" as a result while a linked blog post ("Regex in an NTK Costume") is about a HalluGuard verifier being caught as fake regex. A careful stranger connects these unfavorably.
++- **HumanEval reported three ways**: "+3.0 points" (card 1) vs "8% → 80% (+72pp)" (card 6) vs "0% → 36%" (card 8). Different setups, but the cards don't make that legible — reads as self-contradiction.
++- **FoVer is both benchmark and baseline**: hero says "0.9131 AUROC on FoVer," but a result card says "0.90 AUC (vs **0.125 FoVer baseline**)." A stranger sees FoVer scoring both 0.91 and 0.125.
++- **AUROC soup**: 0.9131 / 0.8947 / 0.9857 / 0.91 / 0.90 — five "0.9-ish" numbers, no indication which is THE claim.
++- **Meter-bar widths are arbitrary**: "+3.0 points" → 14.6% bar; "+4.9 points" → 66.7% bar (visually 4× larger for a similar delta). "0.0pp accuracy delta" → 95.6% green bar (visual success for a zero result). The bars actively mislead.
+ 
+ ### Missing essentials
+-- **Who maintains it / is this real?** Only "© 2026 Ian Blenke" in the footer. No team, no org, no institutional backing — and the heavy "autonomous research loop / 3,282 experiment runs / 382 milestones" framing makes it read like a solo AI-driven experiment, not a maintained product. This is the single biggest unanswered stranger question.
+-- **Why trust the numbers?** The trust mechanism offered is self-referential ("our own adversarial-verify pass catches our own fabrications"). No external reproduction, no third-party use, no citations. Combined with the perfect numbers below, trust net-erodes.
+-- Present and good: one-sentence "what it does" (hero), install command, license. These essentials are covered.
++- **Trust anchor for the numbers**: most result cards show no N, no baseline, no CI. "+3.0 points" of what, over what? HumanEval-50 (n=50) carries an 8%→80% claim with no uncertainty shown.
++- **Maintainer/credibility**: only "© 2026 Ian Blenke." No org, affiliation, contributor count, or contact — a solo-hobby footprint under "382 milestones / 30,658 tests" claims, which jars.
++- (Present and good: one-sentence what-it-does, install command, Apache-2.0 license.)
+ 
+ ### Fabrication signals
+-- **"GSM8K extraction TP rate: 0.5 → 1.0"** — a perfect 1.0 with no sample size or anchor.
+-- **"k=5 ensemble catches 60/60 attacks"** — 100% on a small (n=60) sample; reads as cherry-picked.
+-- **"0.125 FoVer baseline"** — an AUC of 0.125 is *worse than random* (0.5); citing a sub-chance baseline to make a 0.90 look good is a classic misleading-comparison smell.
+-- **"Zero false positives"** (Dogfooding blog card) — perfect claim, blog context softens it but it compounds the pattern.
+-- Note: the page is admirably honest elsewhere (0.9131 carries "5-seed," HumanEval carries "164-problem," the AUROC was visibly repinned downward). The perfect-number cards above stick out *because* the rest is anchored — they should be anchored too or cut.
++- **"0% → 36%" on Qwen3.6-35B (SOTA 35B)** — a real SOTA 35B scoring **0%** pass@1 on HumanEval is implausible (real ones score 60–80%+); signals a broken harness or cherry-pick. Most damaging single number on the page.
++- **"GSM8K extraction TP rate: 0.5 → 1.0"** — perfect 1.0, no sample size.
++- **"k=5 ensemble catches 60/60 attacks"** — 100% on n=60.
++- **"2.0× speedup, identical losses"** and **"0.0pp accuracy delta"** and **"Zero false positives"** (blog) — a cluster of exactly-round / perfect figures with no error bars.
++- **"99.3% of wrong code flagged"** and **"8% → 80% (+72pp)"** — very large, no N or CI shown.
+ 
+ ## WHAT'S WORKING
+-- **The hero and the Problem section are excellent.** The `47 + 28 = 76` example explains energy-based verification to a non-specialist in two sentences, and the hero sub-headline is a clean one-liner with install + license inline.
+-- **The Python quickstart is concrete and compelling** — five lines, real output (`# False`, `# [47 + 28 = 76 (correct: 75)]`), runnable on one GPU. This is the strongest trust-builder on the page.
+-- **Honest provenance discipline** — the visible downward repin (0.9857 → 0.9131) and "live GPU inference on public models … labeled by provenance" language is more credible than most landing pages.
++- The hero + "LLMs predict, they don't check" + the `47 + 28 = 76` worked example is excellent: concrete, jargon-free, instantly understood.
++- The "Extract → Check → Repair" three-step and the five-line Python quickstart are clear and would let a stranger imagine using it. Install path and license are unambiguous.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. **De-jargon the hero stat bar and "Recent progress" card.** Drop "382 Completed milestones"; rewrite the card to one stranger-readable sentence (e.g. "Installable today via PyPI; verifier reaches 0.9131 AUROC on the FoVer math-error benchmark across 5 seeds"). Move the "repinned from v2 / architecture-only / dual-condition" detail to the linked blog post where it belongs.
+-2. **Cut the Results grid from 12 to ~6 headline rows**, keeping the anchored ones (HumanEval +3, 8%→80% repair, 0%→36% on the 35B model, two-GPU 2.0×). For each survivor, expand the acronym inline or drop it.
+-3. **Fix or remove the FoVer-as-baseline card** (0.125) — it contradicts the headline and cites a sub-chance baseline. Either reframe ("vs the FoVer paper's own verifier") or cut it.
+-4. **Anchor or remove the perfect-number cards** (1.0 TP rate, 60/60 attacks) — add sample sizes/conditions or drop them; on this otherwise-anchored page they read as the weakest, not the strongest, evidence.
+-5. **Add a one-line "Who builds this" answer** near the footer or hero (maintainer + that it's an open Apache-2.0 project), and reconsider how prominently the "autonomous research loop" is featured — to a stranger it currently reads as "AI-generated," not "battle-tested."
+-6. **Reword the Preprint section** to state what the paper *is*, not its internal upload status; drop "(paper-v6)" and "pending operator-initiated upload."
+-7. **Trim the nav to ~6 items**; group the off-site docs links under a single "Docs" entry.
+-8. **Replace the pure-jargon TTC & PREM capability card** with a plain-English sentence or remove it — it currently communicates nothing to a non-insider.
++1. **Fix the "0% → 36%" card first** — verify the harness or pull the card; an implausible baseline on a flagship model poisons trust in everything else.
++2. **Cut Results to 4–5 headline rows**, each with: plain-English tag (no acronyms), an N, and a baseline. Move CCTU/SVAMP/VeriCoT/PRM-BiasBench/HalluGuard detail to the Technical Report.
++3. **De-jargon the headline stat** — e.g. "0.91 AUROC catching math reasoning errors (5 independent runs)"; drop "FoVer/step-errors/dual-condition" from the front page.
++4. **Remove "Repinned from v2 0.9857…" from the public card** — link the "Two AUROCs" essay if transparency is wanted, but don't headline a walked-back number.
++5. **Re-curate the blog ordering** — lead with the positive/methodology posts (Verifier Accuracy Paradox, Dogfooding); the four "caught cheating / retraction" posts, front-loaded, read as a recurring integrity problem to a cold visitor.
++6. **Fix the meter-bar widths** so bar length ≈ the metric (and don't render a 95.6% green bar for a 0.0pp result).
++7. **Move the "Recent progress" card out of the stats bar** and add a one-line maintainer/affiliation note so the project footprint matches its claims.
+ 
+-*(Advisory only — no edits made to `docs/index.html`, per Public Documentation Discipline. The operator owns this page.)*
+\ No newline at end of file
++*(Advisory only — no edits made to `docs/index.html`; the operator owns this page.)*
+\ No newline at end of file
+diff --git a/ops/metrics.md b/ops/metrics.md
+index b4c195fb90..724aab9f35 100644
+--- a/ops/metrics.md
++++ b/ops/metrics.md
+@@ -3236,3 +3236,4 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
+ |------|-------|-----|-------------|------|
+ | 1 | 2026-06-09T19:40:55Z | 2026-06-09T21:02:30Z | Re-run GAP-3 Stage 1 per project_gap3_verifier_program.md: paused-state verified, 29.4-min TRM latent dump (100 batches, GPU 1), Stage-1 LOTO probe -> NEGATIVE (probe pass@2 0.4194 < vote 0.4516, within-AUROC 0.8689), conductor restored, 5-reviewer adversarial-verify workflow launched | ~40k |
+ | 2 | 2026-06-09T21:18:30Z | 2026-06-09T21:46:53Z | "Go with Stage 2": built + trained the generator-independent ARC transition-EBM (1.1M params, training+concept corpus, training2 excluded after 376-task leak audit), zero-shot rerank eval NEGATIVE (EBM pass@2 0.1613 < vote 0.4516, macro AUROC 0.544), 5-reviewer adversarial workflow launched | ~60k |
++| 3 | 2026-06-09T22:03:48Z | (in progress) | "run it" (Stage-2 v2): mined 250 real TRM errors from train split (35-min GPU dump), built spatial FiLM EBM + near-miss curriculum; gate-1 PASSED 0.7893 (v1: 0.481) but selection still ~random (0.1613 vs 0.1432, AUROC 0.46); v2 adversarial round launched to adjudicate lineage retirement | ~70k |
+diff --git a/results/arc3_gap3_stage2v2_mined_negs.json.gz b/results/arc3_gap3_stage2v2_mined_negs.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..43c6ebd3ff44b405ebf8bf831296fc14beb9192d
+GIT binary patch
+literal 4164
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/results/arc3_gap3_stage2v2_transition_ebm.json b/results/arc3_gap3_stage2v2_transition_ebm.json
+new file mode 100644
+index 0000000000..35db936af9
+--- /dev/null
++++ b/results/arc3_gap3_stage2v2_transition_ebm.json
+@@ -0,0 +1,258 @@
++{
++  "auroc": {
++    "ebm_hard_neg_votes_ge5": 0.4518,
++    "ebm_macro": 0.4902,
++    "ebm_tta_hard_neg_votes_ge5": 0.4531,
++    "ebm_tta_macro": 0.4604,
++    "vote_macro_reference": 0.9235
++  },
++  "bootstrap": {
++    "B": 1000,
++    "ebm_tta_vs_vote_pass2_ci95": [
++      -0.4516,
++      -0.1613
++    ],
++    "union_plus_E_vs_union_pass2_ci95": [
++      0.0,
++      0.0
++    ]
++  },
++  "duration_s": 431.2,
++  "eval_duration_s": 17.1,
++  "experiment": "arc3_gap3_stage2v2_transition_ebm",
++  "gates": {
++    "gate1_n_examples": 150,
++    "gate1_near_miss_auroc_gt_0p70": true,
++    "gate1_value": 0.7893,
++    "headroom_capture_fraction": -1.7998,
++    "selection_beats_random": true,
++    "selection_beats_vote": false,
++    "union_value_add": false
++  },
++  "generator_independence_disclosure": "FORFEITED at the negative-mining level (panel-approved trade): up to 3 negatives per positive are real wrong candidates mined from TRM arc_v1 on its own TRAINING split (zero eval-task leak, hard-asserted). The energy itself reads only (demos, test_input, candidate_grid) at inference \u2014 REQ-GAP3-2 intact.",
++  "honest_verdict": "complete: gap3_stage2v2_beats_random_not_vote_n31_vote_0.4516_ebmtta_0.1613_rand_0.1432_gate1_0.7893_auroctta_0.4604_unionadd_False",
++  "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
++  "model_specs": {
++    "architecture": "SpatialPairEncoder (stride-1 hi-res trunk + downsample path, mean+max pool) -> 256-d; rule = mean over demo embeddings; E = global relation MLP + FiLM-conditioned local energy map (mean + 0.5*max over valid cells)",
++    "curriculum": "per positive: <=3 mined real TRM errors + structured same-shape near-misses (component recolor/move/delete/swap, 1-3 cell flips) + 2 v1 coverage corruptions",
++    "n_params": 1269586,
++    "tta": "dihedral-8 energy averaging at eval"
++  },
++  "n_oracle_hit": 19,
++  "n_tasks": 31,
++  "oracle_pass2_ceiling": 0.6129,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "resource": "cuda_available"
++    },
++    {
++      "available": true,
++      "resource": "eval_pool_export"
++    },
++    {
++      "available": true,
++      "resource": "mined_negatives"
++    }
++  ],
++  "random_baseline_note": "exact E[pass@2] of a uniform-random ranker on this pool (panel fix)",
++  "random_ranker_pass2_baseline": 0.1432,
++  "random_seed": 12345,
++  "rankers": {
++    "EBM_v2": {
++      "pass@1": 0.129,
++      "pass@2": 0.1613
++    },
++    "EBM_v2_TTA8": {
++      "pass@1": 0.0645,
++      "pass@2": 0.1613
++    },
++    "EBM_v2_TTA8_residual_global": {
++      "pass@1": 0.0323,
++      "pass@2": 0.0645
++    },
++    "HYBRID_vote_then_E_tta": {
++      "pass@1": 0.4194,
++      "pass@2": 0.4839
++    },
++    "TRM_VOTE": {
++      "pass@1": 0.4194,
++      "pass@2": 0.4516
++    },
++    "UNION_plus_E_tta": {
++      "pass@1": 0.4516,
++      "pass@2": 0.4839
++    },
++    "UNION_votes_qmean_voteshare": {
++      "pass@1": 0.4516,
++      "pass@2": 0.4839
++    }
++  },
++  "reproducibility_checksum": "b830e5a8d8e5a089",
++  "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
++  "training": {
++    "best_val_top1_acc": 0.4444,
++    "corpus_hash": "b830e5a8d8e5a089",
++    "mean_val_top1_last10": 0.3913,
++    "mined_meta": {
++      "available": true,
++      "generator": "TRM arc_v1_public/step_518071 on its own TRAINING split (zero eval-task leak, asserted)",
++      "n_distinct_negs": 250,
++      "n_rows_scanned": 30720,
++      "n_tasks_with_negs": 10,
++      "n_wrong_rows": 18390
++    },
++    "n_params": 1269586,
++    "n_train_tasks": 504,
++    "n_val_tasks": 56,
++    "total_mined_negs_used": 688,
++    "train_duration_s": 414.1,
++    "train_log": [
++      {
++        "loss": 2.2135,
++        "step": 250,
++        "val_top1_acc": 0.1319
++      },
++      {
++        "loss": 2.0088,
++        "step": 500,
++        "val_top1_acc": 0.1597
++      },
++      {
++        "loss": 1.9019,
++        "step": 750,
++        "val_top1_acc": 0.2743
++      },
++      {
++        "loss": 1.8015,
++        "step": 1000,
++        "val_top1_acc": 0.2431
++      },
++      {
++        "loss": 1.8263,
++        "step": 1250,
++        "val_top1_acc": 0.2778
++      },
++      {
++        "loss": 1.4121,
++        "step": 1500,
++        "val_top1_acc": 0.3229
++      },
++      {
++        "loss": 1.8482,
++        "step": 1750,
++        "val_top1_acc": 0.316
++      },
++      {
++        "loss": 1.6529,
++        "step": 2000,
++        "val_top1_acc": 0.2986
++      },
++      {
++        "loss": 1.8139,
++        "step": 2250,
++        "val_top1_acc": 0.2917
++      },
++      {
++        "loss": 1.0869,
++        "step": 2500,
++        "val_top1_acc": 0.2917
++      },
++      {
++        "loss": 1.8543,
++        "step": 2750,
++        "val_top1_acc": 0.2639
++      },
++      {
++        "loss": 2.4003,
++        "step": 3000,
++        "val_top1_acc": 0.3507
++      },
++      {
++        "loss": 1.6774,
++        "step": 3250,
++        "val_top1_acc": 0.3611
++      },
++      {
++        "loss": 1.5666,
++        "step": 3500,
++        "val_top1_acc": 0.3889
++      },
++      {
++        "loss": 1.3486,
++        "step": 3750,
++        "val_top1_acc": 0.4028
++      },
++      {
++        "loss": 1.3939,
++        "step": 4000,
++        "val_top1_acc": 0.4062
++      },
++      {
++        "loss": 1.0583,
++        "step": 4250,
++        "val_top1_acc": 0.3576
++      },
++      {
++        "loss": 1.2438,
++        "step": 4500,
++        "val_top1_acc": 0.3229
++      },
++      {
++        "loss": 1.5679,
++        "step": 4750,
++        "val_top1_acc": 0.4444
++      },
++      {
++        "loss": 1.4535,
++        "step": 5000,
++        "val_top1_acc": 0.3542
++      },
++      {
++        "loss": 1.0396,
++        "step": 5250,
++        "val_top1_acc": 0.3958
++      },
++      {
++        "loss": 1.2993,
++        "step": 5500,
++        "val_top1_acc": 0.3715
++      },
++      {
++        "loss": 1.3495,
++        "step": 5750,
++        "val_top1_acc": 0.4062
++      },
++      {
++        "loss": 1.2097,
++        "step": 6000,
++        "val_top1_acc": 0.4062
++      },
++      {
++        "loss": 1.4872,
++        "step": 6250,
++        "val_top1_acc": 0.3993
++      },
++      {
++        "loss": 1.0659,
++        "step": 6500,
++        "val_top1_acc": 0.3819
++      },
++      {
++        "loss": 1.1869,
++        "step": 6750,
++        "val_top1_acc": 0.3611
++      },
++      {
++        "loss": 0.961,
++        "step": 7000,
++        "val_top1_acc": 0.4167
++      },
++      {
++        "loss": 1.2819,
++        "step": 7250,
++        "val_top1_acc": 0.4201
++      }
++    ]
++  }
++}
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index d459cb19a5..f708382ee4 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112
++  "gradient_stability_ratio": 0.9999999989757112,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 74f22651a1..73c68fd3e2 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,14 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.018681764602661133
++  "duration_s": 0.018681764602661133,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 16ff56ffc7..57c29201b4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:45:46Z",
+-  "finished_at": "2026-06-09T21:45:47Z",
++  "started_at": "2026-06-09T22:55:37Z",
++  "finished_at": "2026-06-09T22:55:37Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c23f97692b..218fe2777b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:45:47Z",
+-  "finished_at": "2026-06-09T21:45:47Z",
++  "started_at": "2026-06-09T22:55:37Z",
++  "finished_at": "2026-06-09T22:55:37Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 17f5e2620d..4306dd4b49 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260609",
+-  "started_at": "2026-06-09T21:45:47Z",
+-  "finished_at": "2026-06-09T21:45:47Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-09T22:55:37Z",
++  "finished_at": "2026-06-09T22:55:37Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 4d9597bf22..bbd33ef97d 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -100,5 +100,14 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": []
++  "invariant_violations": [],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/operational_retro_2026_06_367.json b/results/operational_retro_2026_06_367.json
+index 8d78c874a5..5f094d087a 100644
+--- a/results/operational_retro_2026_06_367.json
++++ b/results/operational_retro_2026_06_367.json
+@@ -1,30 +1,31 @@
+ {
+   "schema": "carnot.operational_retro.v64",
+   "milestone": "2026.06.367",
+-  "generated_at": "2026-06-09T21:47:55Z",
++  "generated_at": "2026-06-09T22:58:45Z",
+   "retro_type": "operational_full",
+   "total_wall_time_minutes": 0,
+   "experiments_completed": 0,
+   "compute_bound_experiments_count": 0,
+   "slowest_experiments": [],
+   "gpu_idle_on_compute_bound_tasks": null,
+-  "summary": "Per the authoritative milestone-scoped timing block, 2026.06.367 recorded 0 experiment commits, 0 compute-bound experiments, and 0 wall-clock minutes; with no compute-bound task, both RTX 3090s idle at 0% util is correct behaviour, not a bottleneck. However, the .367 changelog window shows multiple committed experiment artifacts (ARC-AGI-3 incremental solves, the GAP-3 Stage-1/Stage-2 verifier work, and the capstone), so the zero-count almost certainly reflects a milestone-scoped commit-detection gap rather than a genuinely empty milestone. This is now the 4th consecutive zero-count (.363/.365/.366/.367), and the .366 retro already flagged the same contradiction.",
++  "summary": "Per the authoritative milestone-scoped timing block, 2026.06.367 shows 0 experiment commits since activation, 0 compute-bound experiments, and 0 minutes of measured experiment wall-time; both RTX 3090s sat at 0% utilization, which is correct behaviour when no compute-bound task ran (so gpu_idle_on_compute_bound_tasks is null and GPU idle is NOT a bottleneck). However, the committed .367 changelog window contains real experiment work, so the zero-count is most plausibly a milestone-to-commit attribution/windowing gap in the timing detector — now the 4th consecutive false zero (.363/.365/.366/.367) — rather than a genuinely empty milestone.",
+   "bottlenecks_identified": [
+-    "Milestone-scoped commit detector reported 0 experiment commits while the .367 changelog window contains committed experiment artifacts. This measurement/attribution gap (commits not mapped to the active milestone window) blinds the retrospective to the real per-experiment timing that exists.",
+-    "Recurrence is the real signal: this is the 4th consecutive false zero-count (.363/.365/.366/.367). A one-off empty milestone is unremarkable; four in a row against visible changelog activity indicates a systematic detector bug, not four empty milestones.",
+-    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because the timing block lists 0 compute-bound tasks. Both GPUs at 0% with no GGUF/CUDA task present is the expected idle state per the GPU idle interpretation rule."
++    "Recurring false zero-count: the milestone-scoped timing detector reports 0 experiment commits since activation for the 4th consecutive milestone (.363/.365/.366/.367), even though the committed changelog window for .367 contains real experiment work. The operational bottleneck is the detector/windowing, not the experiments.",
++    "Data-starved retro: with the timing block empty, there is no per-experiment duration to rank, so questions 1-3 (slowest experiments, GPU efficiency, DualGPURunner engagement) cannot be answered from the authoritative data this milestone.",
++    "(Not a bottleneck — explicitly cleared) Both GPUs idle at 0% util with 4MB resident is correct because zero compute-bound tasks are present (gpu_idle_on_compute_bound_tasks=null); per the GPU-idle interpretation rule this is expected behaviour, not flagged."
+   ],
+   "improvements_suggested": [
+-    "Audit the conductor's milestone->commit attribution in the timing harness (how it derives 'experiment commits since activation of <milestone>'). The recurring zero-count across .363/.365/.366/.367 despite visible changelog activity localizes the bug to the detection/windowing step, not to the experiments.",
+-    "Likely root causes to check: the activation-boundary commit SHA or timestamp is stale/misread; the detector matches only a narrow filename pattern (results/experiment_*.json) and misses other artifact shapes (arc3_gap3_*, capstone) committed this window; or the milestone tag on commits is not what the detector greps for.",
+-    "Add a cheap cross-check the retro can run itself: count results/*.json files touched in the activation..HEAD commit range and compare to the detector's number; when they disagree, emit detector_gap_suspected=true so the discrepancy is mechanically surfaced instead of re-discovered by hand each milestone.",
+-    "Until the detector is fixed, treat consecutive zero-counts as a harness-health alert (escalate at >=2 in a row) rather than re-writing an honest-negative retro each time."
++    "Repair the timing harness's commit detection/windowing: audit the activation-boundary SHA and the experiment-artifact filename match used to scope commits to a milestone; a recurring false zero across four milestones indicates the range query (not the milestone) is wrong.",
++    "Add a self-check that diffs the detector's commit count against a direct git-range artifact count and stamps detector_gap_suspected on the retro when they disagree, so an empty timing block is never silently treated as an empty milestone.",
++    "Backfill the timing analysis over .363-.367 once the detector is fixed, to recover the per-experiment durations the retros have been unable to report.",
++    "Do NOT enforce DualGPURunner this milestone: no compute-bound task and no 2+-model-parallel task are present in the data, so the single-vs-dual-GPU question is not applicable.",
++    "Optionally free the 4MB lingering allocation on each GPU so the next compute-bound run starts from a clean 0MB baseline (advisory, not load-bearing)."
+   ],
+   "top_3_highest_leverage_actions": [
+-    "Fix the milestone-scoped commit-detection / windowing in the conductor's timing harness so retros capture the experiments that actually ran. Four consecutive false zero-counts (.363/.365/.366/.367) means every recent operational retro has been blind to real timing data; this single fix restores the entire retrospective signal.",
+-    "Add a self-check to the retro generator: diff the detector's experiment count against a direct git-range count of touched result artifacts, and stamp detector_gap_suspected when they disagree, so the gap is caught automatically rather than inferred from the changelog by hand.",
+-    "Backfill once fixed: re-run the operational timing analysis over the .363/.365/.366/.367 window so the genuinely-executed experiments get their bottleneck/GPU-efficiency review that the false zeros suppressed."
++    "Fix the milestone->commit detector/windowing — the same false zero-count has now recurred four milestones running, so each retro is running on empty input and cannot do its job; this is the single change that unblocks all four operational questions.",
++    "Add a detector_gap_suspected self-check (detector count vs direct git-range count) so future zero-count retros carry a root-cause breadcrumb instead of silently mis-reading a productive milestone as empty.",
++    "Backfill .363-.367 timing once fixed to recover the lost per-experiment duration record and confirm the GPU/DualGPURunner questions retroactively."
+   ],
+   "estimated_time_savings_pct": 0,
+-  "meta_reflection": "There is no execution-efficiency signal to act on from this milestone's numbers because the timing harness reported zero experiments while the changelog shows real work landed — the honest finding is a measurement gap, not slowness, so a wall-time-savings estimate would be fabricated (kept at 0). The highest-leverage process change is fixing the milestone->commit attribution so the retrospective stops being blind: four consecutive false zero-counts means the meta-process meant to improve execution has itself been running on empty inputs."
+-}
++  "meta_reflection": "The load-bearing operational signal is that the zero-count is almost certainly an artifact of a broken milestone-scoped commit detector, not an idle loop — the committed .367 record shows real work. Four consecutive false zeros (.363/.365/.366/.367) means the retro tooling itself is the bottleneck worth fixing; until the detector is repaired, each operational retro is forced to run on empty input and cannot answer the questions it exists to answer."
++}
+\ No newline at end of file
+diff --git a/scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py b/scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py
+new file mode 100644
+index 0000000000..e1f10369e9
+--- /dev/null
++++ b/scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py
+@@ -0,0 +1,198 @@
++"""GAP-3 Stage 2 v2 — mine REAL TRM wrong candidates from the TRAINING split as hard negatives.
++
++WHY (the Stage-2 v1 adversarial round, results/arc3_gap3_stage2_adversarial_verify.json): v1's synthetic
++corruption negatives cover only 3.8% of TRM's real wrong-candidate distribution; 91.5% of real errors
++are same-shape near-misses / plausible-but-wrong rule applications the synthetic families never produce.
++The panel's recommended fix #1: train against REAL generator errors mined from TRAINING-split tasks only.
++
++WHAT THIS DOES: runs the TRM arc_v1 checkpoint forward (inference only, frozen weights, EMA-baked) over
++a CAPPED slice of its own baked TRAINING split (data/arc1concept-aug-1000/train — ARC-1 training +
++ConceptARC tasks ONLY; the eval tasks live in the /test split), saves (inputs, labels, preds,
++puzzle_identifiers), then de-augments every row and keeps the predictions whose grid differs from the
++row's own gold label. Those wrong predictions ARE TRM's real error distribution, harvested with ZERO
++eval-task leak (hard-asserted against the eval pool).
++
++HONESTY NOTE (disclosed in the v2 artifact): mining from the SAME checkpoint that generates the eval
++candidates forfeits STRICT generator-independence — the v2 energy is tuned to TRM's error distribution.
++Task hygiene is fully preserved (training-split tasks only; the de-aug join uses each row's own label,
++never an eval solution). The panel pre-approved exactly this trade (reviewer 3: "mine TRM wrong
++candidates from TRAINING-split tasks — keeps eval-task hygiene, drops strict generator-independence").
++
++  # conductor must be paused (its preflight reaps non-conductor GPU procs); ~35 min for 120 batches:
++  CUDA_VISIBLE_DEVICES=GPU-7971baff-... WANDB_MODE=offline ~/trm_venv/bin/torchrun \
++    --nproc-per-node 1 --rdzv_backend=c10d --rdzv_endpoint=localhost:0 --nnodes=1 \
++    scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py --batch 256 --max_batches 120
++  # then the CPU join step:
++  ~/trm_venv/bin/python scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py --join_only
++"""
++
++from __future__ import annotations
++
++import argparse
++import glob
++import gzip
++import json
++import os
++import sys
++import time
++
++TRM = "/home/ianblenke/trm_src"
++SNAP = ("/home/ianblenke/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification/"
++        "snapshots/55ced5dd59de74c52f53d47aa2898232b5a15b7a")
++CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
++SUB, STEP = "arc_v1_public", "step_518071"
++DUMP_DIR = f"{TRM}/eval_out/arc_v1_trainmine"
++OUT = f"{CARNOT}/results/arc3_gap3_stage2v2_mined_negs.json.gz"
++
++
++def run_dump(args):
++    os.chdir(TRM)
++    sys.path.insert(0, TRM)
++    import itertools
++
++    import torch
++    import torch.distributed as dist
++    import yaml
++    from pretrain import PretrainConfig, create_dataloader, evaluate, init_train_state
++
++    t0 = time.time()
++    cfg_dict = yaml.safe_load(open(f"{SNAP}/{SUB}/all_config.yaml"))
++    cfg_dict["load_checkpoint"] = f"{SNAP}/{SUB}/{STEP}"
++    cfg_dict["checkpoint_path"] = "eval_out/arc_v1_trainmine"
++    cfg_dict["data_paths"] = ["data/arc1concept-aug-1000"]
++    cfg_dict["ema"] = False
++    cfg_dict["freeze_weights"] = True
++    cfg_dict["global_batch_size"] = args.batch
++    cfg_dict["epochs"] = 1
++    # labels is the per-row gold — saving it makes the wrong-pred join self-contained (no kaggle join)
++    cfg_dict["eval_save_outputs"] = ["inputs", "labels", "preds", "puzzle_identifiers"]
++    os.makedirs(cfg_dict["checkpoint_path"], exist_ok=True)
++    cfg_dict["project_name"] = cfg_dict.get("project_name") or "trm_arc_eval"
++    cfg_dict["run_name"] = "arc_v1_trainmine"
++    config = PretrainConfig(**cfg_dict)
++
++    RANK, WORLD_SIZE, CPU_GROUP = 0, 1, None
++    if "LOCAL_RANK" in os.environ:
++        dist.init_process_group(backend="nccl")
++        RANK, WORLD_SIZE = dist.get_rank(), dist.get_world_size()
++        torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))
++        CPU_GROUP = dist.new_group(backend="gloo")
++    torch.random.manual_seed(config.seed + RANK)
++
++    # train_metadata for model init (embedding-table alignment), TRAIN split in TEST-set mode for the
++    # sequential capped inference pass — test_set_mode switches the iterator, not the data.
++    train_loader, train_metadata = create_dataloader(
++        config, "train", test_set_mode=False, epochs_per_iter=1,
++        global_batch_size=config.global_batch_size, rank=RANK, world_size=WORLD_SIZE)
++    mine_loader, mine_metadata = create_dataloader(
++        config, "train", test_set_mode=True, epochs_per_iter=1,
++        global_batch_size=config.global_batch_size, rank=RANK, world_size=WORLD_SIZE)
++    train_state = init_train_state(config, train_metadata, rank=RANK, world_size=WORLD_SIZE)
++    train_state.model.eval()
++
++    capped = mine_loader
++    if args.max_batches:
++        base = mine_loader
++
++        def _capped():
++            yield from itertools.islice(base, args.max_batches)
++
++        capped = _capped()
++        print(f"[miner] CAPPED to {args.max_batches} batches of the TRAIN split", flush=True)
++
++    # evaluators=[] -> pure forward + save; no ARC evaluator (it joins against EVAL test_puzzles,
++    # meaningless for train-split rows)
++    evaluate(config, train_state, capped, mine_metadata, [], rank=RANK, world_size=WORLD_SIZE,
++             cpu_group=CPU_GROUP)
++    if RANK == 0:
++        print(f"[miner] dump DONE in {time.time() - t0:.0f}s -> {DUMP_DIR}", flush=True)
++    if "LOCAL_RANK" in os.environ:
++        dist.destroy_process_group()
++
++
++def run_join():
++    """CPU: de-augment every dumped row; keep predictions that differ from the row's own gold label.
++    Output: {task_name: {input_hash: {input: grid, negs: [grids]}}} + stats."""
++    sys.path.insert(0, TRM)
++    sys.path.insert(0, f"{CARNOT}/scripts/experiments")
++    import numpy as np
++    import torch
++    from dataset.build_arc_dataset import grid_hash, inverse_aug
++    from evaluators.arc import ARC, _crop
++    from types import SimpleNamespace
++
++    from arc3_gap3_stage2_transition_ebm import ghash
++
++    t0 = time.time()
++    ev = ARC(data_path=f"{TRM}/data/arc1concept-aug-1000",
++             eval_metadata=SimpleNamespace(blank_identifier_id=0))
++    shards = sorted(glob.glob(f"{DUMP_DIR}/step_0_all_preds.*"))
++    assert shards, f"no dump at {DUMP_DIR} — run the torchrun dump step first"
++
++    store = {}
++    n_rows = n_wrong = 0
++    for sh in shards:
++        d = torch.load(sh, map_location="cpu")
++        pids = d["puzzle_identifiers"].numpy()
++        inputs = d["inputs"].numpy()
++        labels = d["labels"].numpy()
++        preds = d["preds"].numpy()
++        keep = pids != ev.blank_identifier_id
++        for i in np.nonzero(keep)[0]:
++            name = ev.identifier_map[int(pids[i])]
++            orig_name, inv_fn = inverse_aug(name)
++            n_rows += 1
++            gold = inv_fn(_crop(labels[i]))
++            pred = inv_fn(_crop(preds[i]))
++            if grid_hash(pred) == grid_hash(gold):
++                continue
++            n_wrong += 1
++            tin = inv_fn(_crop(inputs[i]))
++            ih = ghash(np.asarray(tin).astype(int))
++            slot = store.setdefault(orig_name, {}).setdefault(
++                ih, {"input": np.asarray(tin).astype(int).tolist(), "negs": {}})
++            ph = ghash(np.asarray(pred).astype(int))
++            if ph not in slot["negs"] and len(slot["negs"]) < 24:
++                slot["negs"][ph] = np.asarray(pred).astype(int).tolist()
++
++    # hard split-hygiene assertions
++    pool_tasks = set()
++    with gzip.open(f"{CARNOT}/results/arc3_gap3_stage2_eval_pool.json.gz", "rt") as f:
++        for e in json.load(f)["entries"]:
++            pool_tasks.add(e["task"])
++    leak = pool_tasks & set(store)
++    assert not leak, f"EVAL LEAK in mined negatives: {leak}"
++    ch = json.load(open("/home/ianblenke/trm_src/kaggle/combined/arc-agi_training_challenges.json"))
++    cc = json.load(open("/home/ianblenke/trm_src/kaggle/combined/arc-agi_concept_challenges.json"))
++    train_names = set(ch) | set(cc)
++    stray = set(store) - train_names
++    assert not stray, f"mined tasks outside the training corpus: {stray}"
++
++    out = {
++        "experiment": "arc3_gap3_stage2v2_mined_negs",
++        "n_rows_scanned": n_rows,
++        "n_wrong_rows": n_wrong,
++        "n_tasks_with_negs": len(store),
++        "n_distinct_negs": sum(len(s["negs"]) for t in store.values() for s in t.values()),
++        "generator": f"TRM {SUB}/{STEP} on its own TRAINING split (zero eval-task leak, asserted)",
++        "tasks": {t: {ih: {"input": s["input"], "negs": list(s["negs"].values())}
++                      for ih, s in slots.items()}
++                  for t, slots in store.items()},
++    }
++    with gzip.open(OUT, "wt") as f:
++        json.dump(out, f)
++    print(f"[join] {n_rows} rows scanned, {n_wrong} wrong ({n_wrong / max(1, n_rows):.1%}), "
++          f"{out['n_distinct_negs']} distinct negs across {len(store)} tasks "
++          f"in {time.time() - t0:.0f}s -> {OUT}", flush=True)
++
++
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--batch", type=int, default=256)
++    ap.add_argument("--max_batches", type=int, default=120)
++    ap.add_argument("--join_only", action="store_true")
++    a = ap.parse_args()
++    if a.join_only:
++        run_join()
++    else:
++        run_dump(a)
+diff --git a/scripts/experiments/arc3_gap3_stage2v2_transition_ebm.py b/scripts/experiments/arc3_gap3_stage2v2_transition_ebm.py
+new file mode 100644
+index 0000000000..cea4bd7958
+--- /dev/null
++++ b/scripts/experiments/arc3_gap3_stage2v2_transition_ebm.py
+@@ -0,0 +1,767 @@
++"""GAP-3 Stage 2 v2: the panel-specified retry of the trained ARC transition-EBM — structured
++same-shape near-miss curriculum + REAL mined TRM errors + a spatially-resolving energy head.
++
++WHAT v1 GOT WRONG (results/arc3_gap3_stage2_adversarial_verify.json, 5/5 NEGATIVE_CONFIRMED, RECIPE):
++  1. NEGATIVES: only 3.8% of TRM's real wrong candidates matched v1's synthetic corruption families;
++     91.5% of real errors are SAME-SHAPE near-misses / plausible-but-wrong rule applications. v1's
++     energy was at chance (AUROC 0.481) exactly there.
++  2. ARCHITECTURE: v1's global mean-pooled CNN could not resolve 1-2-cell differences even in
++     principle (c3202e5a: gold one cell from the vote leader, ranked 747/754).
++THE v2 FIXES (all three panel axes):
++  1. CURRICULUM: per positive, negatives = up to 3 REAL TRM wrong candidates mined from the TRAINING
++     split (arc3_gap3_stage2v2_mine_real_negs.py; zero eval-task leak, hard-asserted) + structured
++     same-shape near-misses (single-component recolor / move / delete, component color-swap, 1-3
++     targeted cell flips) + 2 v1 coverage corruptions.
++  2. ARCHITECTURE: keep the v1 relation skeleton but add a stride-1 high-resolution trunk and a
++     FiLM-conditioned LOCAL ENERGY MAP: the rule embedding modulates the candidate's 30x30 feature
++     map; E = global-MLP term + mean(local map) + 0.5 * max(local map). The max term makes a single
++     bad cell raise the energy — the resolution v1 structurally lacked.
++  3. GATES (panel): the selection eval runs ONLY if gold-vs-structured-same-shape-near-miss AUROC
++     > 0.70 on held-out TRAINING tasks with FRESH negatives (v1 was at 0.481 — "predictably doomed").
++     At eval: pass@2 must beat the exact random-ranker baseline (0.1432) before vote (0.4516) even
++     matters. Mean-val reported alongside best-val (v1's best-val carried ~6-7pt selection optimism).
++HONESTY DISCLOSURE: mining negatives from the SAME TRM checkpoint that produced the eval candidates
++forfeits STRICT generator-independence (the energy is tuned to TRM's error distribution; task-split
++hygiene fully preserved). The panel pre-approved this trade. The energy itself still reads ONLY
++(demos, test_input, candidate_grid) at inference — no generator state (REQ-GAP3-2 intact).
++
++  # CPU smoke: --steps 30 --eval_every 15 --batch 8 --device cpu
++  # real run (conductor paused): mine first, then
++  ~/trm_venv/bin/python scripts/experiments/arc3_gap3_stage2v2_transition_ebm.py --mode all
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import hashlib
++import json
++import math
++import time
++from pathlib import Path
++
++import numpy as np
++import torch
++import torch.nn as nn
++import torch.nn.functional as F  # noqa: N812 — the universal torch convention
++
++import sys
++
++CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
++sys.path.insert(0, f"{CARNOT}/scripts/experiments")
++
++from arc3_gap3_stage2_transition_ebm import (  # noqa: E402  (v1 substrate, reused not duplicated)
++    DIHEDRAL,
++    EMB,
++    K_NEG,
++    MAX_DEMOS,
++    MAX_HW,
++    N_COLORS,
++    POOL,
++    SEED,
++    _auroc,
++    _fit_logreg,
++    _grouped_loto_union,
++    _pass,
++    apply_color_perm,
++    build_examples,
++    clip_grid,
++    encode_pair,
++    ghash,
++    load_training_corpus,
++    make_negatives,
++    split_train_val,
++)
++
++MINED = f"{CARNOT}/results/arc3_gap3_stage2v2_mined_negs.json.gz"
++CKPT = f"{CARNOT}/results/arc3_gap3_stage2v2_ebm.pt"
++ARTIFACT = f"{CARNOT}/results/arc3_gap3_stage2v2_transition_ebm.json"
++RANDOM_BASELINE_NOTE = "exact E[pass@2] of a uniform-random ranker on this pool (panel fix)"
++
++
++# ------------------------------------------------------------------- structured near-miss negatives
++def components(a):
++    """4-connected same-color components of non-background cells. Returns list of (color, [(y,x)...])."""
++    a = np.asarray(a)
++    seen = np.zeros(a.shape, dtype=bool)
++    out = []
++    for y in range(a.shape[0]):
++        for x in range(a.shape[1]):
++            if a[y, x] == 0 or seen[y, x]:
++                continue
++            color, stack, cells = int(a[y, x]), [(y, x)], []
++            seen[y, x] = True
++            while stack:
++                cy, cx = stack.pop()
++                cells.append((cy, cx))
++                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++                    ny, nx = cy + dy, cx + dx
++                    if (0 <= ny < a.shape[0] and 0 <= nx < a.shape[1]
++                            and not seen[ny, nx] and a[ny, nx] == color):
++                        seen[ny, nx] = True
++                        stack.append((ny, nx))
++            out.append((color, cells))
++    return out
++
++
++def near_miss_negatives(rng, gold, k, max_frac=None):
++    """k SAME-SHAPE structured near-misses of gold — the 91.5% class v1 never trained on. Families:
++    single-component recolor / 1-cell move / delete, two-component color swap, 1-3 targeted cell flips.
++    All preserve gold's shape exactly. max_frac (e.g. 0.05) additionally bounds the changed-cell
++    fraction (used by the gate's <=5%-cells near-miss definition)."""
++    gold = clip_grid(gold)
++    comps = components(gold)
++    seen = {ghash(gold)}
++    negs = []
++
++    def bounded(cand):
++        if max_frac is None:
++            return True
++        limit = max(1, int(math.ceil(gold.size * max_frac)))
++        return int((cand != gold).sum()) <= limit
++
++    def push(cand):
++        if cand is None or cand.shape != gold.shape:
++            return
++        h = ghash(cand)
++        if h not in seen and bounded(cand):
++            seen.add(h)
++            negs.append(cand)
++
++    def comp_recolor():
++        if not comps:
++            return None
++        color, cells = comps[rng.integers(len(comps))]
++        new = int(rng.choice([c for c in range(1, N_COLORS) if c != color]))
++        a = gold.copy()
++        for y, x in cells:
++            a[y, x] = new
++        return a
++
++    def comp_move():
++        if not comps:
++            return None
++        color, cells = comps[rng.integers(len(comps))]
++        dy, dx = [(0, 1), (0, -1), (1, 0), (-1, 0)][rng.integers(4)]
++        a = gold.copy()
++        for y, x in cells:
++            a[y, x] = 0
++        for y, x in cells:
++            ny, nx = y + dy, x + dx
++            if 0 <= ny < a.shape[0] and 0 <= nx < a.shape[1]:
++                a[ny, nx] = color
++        return a
++
++    def comp_delete():
++        if not comps:
++            return None
++        _, cells = comps[rng.integers(len(comps))]
++        a = gold.copy()
++        for y, x in cells:
++            a[y, x] = 0
++        return a
++
++    def comp_swap():
++        distinct = list({c for c, _ in comps})
++        if len(distinct) < 2:
++            return None
++        c1, c2 = rng.choice(distinct, 2, replace=False)
++        a = gold.copy()
++        a[gold == c1], a[gold == c2] = c2, c1
++        return a
++
++    def cell_flips():
++        a = gold.copy()
++        k_cells = 1 + int(rng.integers(3))
++        nz = np.argwhere(gold > 0)
++        for _ in range(k_cells):
++            if len(nz) and rng.random() < 0.7:  # bias toward content cells — junk flips are too easy
++                y, x = nz[rng.integers(len(nz))]
++            else:
++                y, x = rng.integers(a.shape[0]), rng.integers(a.shape[1])
++            a[y, x] = int(rng.choice([c for c in range(N_COLORS) if c != a[y, x]]))
++        return a
++
++    fams = [comp_recolor, comp_move, comp_delete, comp_swap, cell_flips]
++    tries = 0
++    while len(negs) < k and tries < k * 12:
++        tries += 1
++        cand = fams[rng.integers(len(fams))]()
++        if cand is not None:
++            push(np.asarray(cand))
++    while len(negs) < k and gold.size > 1:  # guaranteed fallback: 1-cell flips always exist
++        cand = cell_flips()
++        push(np.asarray(cand))
++        tries += 1
++        if tries > k * 30:
++            break
++    return negs
++
++
++# ------------------------------------------------------------------------------- mined negatives
++def load_mined():
++    """{(task, input_hash): [neg grids]} from the miner output; {} if the file is absent (the trainer
++    then runs structured-only and the artifact discloses it)."""
++    if not Path(MINED).exists():
++        return {}, {"available": False}
++    with gzip.open(MINED, "rt") as f:
++        m = json.load(f)
++    lut = {}
++    for task, slots in m["tasks"].items():
++        for ih, s in slots.items():
++            lut[(task, ih)] = [clip_grid(g) for g in s["negs"]]
++    meta = {"available": True, "n_tasks_with_negs": m["n_tasks_with_negs"],
++            "n_distinct_negs": m["n_distinct_negs"], "n_rows_scanned": m["n_rows_scanned"],
++            "n_wrong_rows": m["n_wrong_rows"], "generator": m["generator"]}
++    return lut, meta
++
++
++# ------------------------------------------------------------------------------------- model v2
++class SpatialPairEncoder(nn.Module):
++    """v2 encoder: a stride-1 high-resolution trunk (the v1 killer fix — local detail survives) plus
++    the v1-style downsampling path for the global embedding. Returns (hi-res map, embedding, mask)."""
++
++    def __init__(self):
++        super().__init__()
++        self.trunk = nn.Sequential(
++            nn.Conv2d(2 * (N_COLORS + 1), 48, 3, padding=1), nn.GroupNorm(8, 48), nn.GELU(),
++            nn.Conv2d(48, 64, 3, padding=1), nn.GroupNorm(8, 64), nn.GELU(),
++        )
++        down = []
++        ch = [64, 96, 128, 192]
++        for i in range(3):
++            down += [nn.Conv2d(ch[i], ch[i + 1], 3, stride=2, padding=1),
++                     nn.GroupNorm(8, ch[i + 1]), nn.GELU()]
++        self.down = nn.Sequential(*down)
++        self.proj = nn.Linear(2 * ch[-1], EMB)
++        self.norm = nn.LayerNorm(EMB)
++
++    def forward(self, x):  # (B, 22, 30, 30)
++        m = self.trunk(x)
++        h = self.down(m)
++        pooled = torch.cat([h.mean(dim=(2, 3)), h.amax(dim=(2, 3))], dim=-1)
++        emb = self.norm(self.proj(pooled))
++        mask = (x[:, N_COLORS] + x[:, 2 * N_COLORS + 1]).clamp(max=1.0)  # input OR output in-bounds
++        return m, emb, mask
++
++
++class SpatialTransitionEBM(nn.Module):
++    """E = global relation term + FiLM-conditioned local energy map (mean + 0.5*max over valid cells).
++    The max term is the 1-bad-cell detector v1 structurally lacked."""
++
++    def __init__(self):
++        super().__init__()
++        self.enc = SpatialPairEncoder()
++        self.film = nn.Linear(EMB, 2 * 64)
++        self.local = nn.Sequential(
++            nn.Conv2d(64, 64, 3, padding=1), nn.GELU(),
++            nn.Conv2d(64, 32, 3, padding=1), nn.GELU(),
++            nn.Conv2d(32, 1, 1),
++        )
++        self.head = nn.Sequential(
++            nn.Linear(4 * EMB, 512), nn.GELU(), nn.Linear(512, 256), nn.GELU(), nn.Linear(256, 1)
++        )
++
++    def energy(self, rule_emb, cand_map, cand_emb, cand_mask):
++        gamma, beta = self.film(rule_emb).chunk(2, dim=-1)
++        h = cand_map * (1 + gamma[..., None, None]) + beta[..., None, None]
++        emap = self.local(h).squeeze(1)  # (B, 30, 30)
++        denom = cand_mask.sum(dim=(1, 2)).clamp(min=1.0)
++        e_mean = (emap * cand_mask).sum(dim=(1, 2)) / denom
++        e_max = (emap + (cand_mask - 1.0) * 1e4).amax(dim=(1, 2))  # -inf outside the valid mask
++        z = torch.cat([rule_emb, cand_emb, rule_emb * cand_emb, (rule_emb - cand_emb).abs()], dim=-1)
++        return self.head(z).squeeze(-1) + e_mean + 0.5 * e_max
++
++
++# ------------------------------------------------------------------------------------ batching v2
++def augment_instance_v2(rng, demos, tin, tout):
++    """Like v1's augment_instance but ALSO returns the transform so mined negatives (stored in the
++    original task frame) can be mapped into the augmented frame consistently."""
++    d = DIHEDRAL[rng.integers(8)]
++    perm = np.arange(N_COLORS)
++    perm[1:] = rng.permutation(perm[1:])
++
++    def f(g):
++        return apply_color_perm(d(clip_grid(g)).copy(), perm)
++
++    demos2 = [{"input": f(p["input"]), "output": f(p["output"])} for p in demos]
++    return demos2, f(tin), f(tout), f
++
++
++def collate_v2(rng, batch_examples, gold_pool, mined_lut, augment=True):
++    """[gold] + up to 3 mined real negatives + structured near-misses + 2 v1 coverage corruptions,
++    deduped by hash, capped at 1+K_NEG. Mined negatives join by (task, input-hash in ORIGINAL frame)
++    and are then mapped through the instance augmentation."""
++    demo_t, demo_m, cand_t, n_cands, n_mined_used = [], [], [], [], 0
++    for name, demos, tin, tout in batch_examples:
++        ih = ghash(clip_grid(tin))
++        mined_raw = mined_lut.get((name, ih), [])
++        if augment:
++            demos2, tin2, tout2, f = augment_instance_v2(rng, demos, tin, tout)
++        else:
++            demos2 = [{"input": clip_grid(p["input"]), "output": clip_grid(p["output"])}
++                      for p in demos]
++            tin2, tout2, f = clip_grid(tin), clip_grid(tout), clip_grid
++        gold_h = ghash(np.asarray(tout2))
++        seen = {gold_h}
++        negs = []
++        for g in mined_raw:
++            if len(negs) >= 3:
++                break
++            cand = np.asarray(f(g))
++            h = ghash(cand)
++            if h not in seen:
++                seen.add(h)
++                negs.append(cand)
++        n_mined_used += len(negs)
++        for cand in near_miss_negatives(rng, tout2, k=K_NEG - len(negs) - 2):
++            h = ghash(cand)
++            if h not in seen:
++                seen.add(h)
++                negs.append(cand)
++        for cand in make_negatives(rng, tout2, tin2, demos2, gold_pool, k=2):
++            h = ghash(cand)
++            if h not in seen and len(negs) < K_NEG:
++                seen.add(h)
++                negs.append(cand)
++        if len(demos2) > MAX_DEMOS:
++            demos2 = [demos2[j] for j in rng.choice(len(demos2), MAX_DEMOS, replace=False)]
++        dt = torch.zeros(MAX_DEMOS, 2 * (N_COLORS + 1), MAX_HW, MAX_HW)
++        dm = torch.zeros(MAX_DEMOS)
++        for j, p in enumerate(demos2):
++            dt[j] = encode_pair(p["input"], p["output"])
++            dm[j] = 1.0
++        cands = [np.asarray(tout2)] + negs
++        ct = torch.stack([encode_pair(tin2, c) for c in cands])
++        if len(cands) < 1 + K_NEG:
++            ct = torch.cat([ct, torch.zeros(1 + K_NEG - len(cands), *ct.shape[1:])])
++        demo_t.append(dt)
++        demo_m.append(dm)
++        cand_t.append(ct)
++        n_cands.append(len(cands))
++    return (torch.stack(demo_t), torch.stack(demo_m), torch.stack(cand_t),
++            torch.tensor(n_cands), n_mined_used)
++
++
++def forward_batch_v2(model, demo_t, demo_m, cand_t, device):
++    B, D = demo_t.shape[:2]
++    Kc = cand_t.shape[1]
++    _, de, _ = model.enc(demo_t.reshape(B * D, *demo_t.shape[2:]).to(device))
++    de = de.reshape(B, D, EMB)
++    m = demo_m.to(device).unsqueeze(-1)
++    rule = (de * m).sum(1) / m.sum(1).clamp(min=1.0)
++    cm, ce, cmask = model.enc(cand_t.reshape(B * Kc, *cand_t.shape[2:]).to(device))
++    rule_x = rule.unsqueeze(1).expand(-1, Kc, -1).reshape(B * Kc, EMB)
++    E = model.energy(rule_x, cm, ce, cmask).reshape(B, Kc)
++    return E
++
++
++# ---------------------------------------------------------------------------------------- train
++def train(args, device):
++    t0 = time.time()
++    tasks = load_training_corpus()
++    train_names, val_names = split_train_val(tasks)
++    pool_tasks = set()
++    with gzip.open(POOL, "rt") as f:
++        for e in json.load(f)["entries"]:
++            pool_tasks.add(e["task"])
++    assert not (pool_tasks & set(tasks)), "SPLIT LEAK: eval-pool tasks inside training corpus"
++
++    mined_lut, mined_meta = load_mined()
++    if mined_meta["available"]:
++        mined_train = {k for k in mined_lut if k[0] in set(train_names)}
++        mined_val = {k for k in mined_lut if k[0] in set(val_names)}
++        print(f"[train] mined negatives: {mined_meta['n_distinct_negs']} across "
++              f"{mined_meta['n_tasks_with_negs']} tasks ({len(mined_train)} train-task slots, "
++              f"{len(mined_val)} val-task slots)", flush=True)
++    else:
++        print("[train] WARNING: no mined-negatives file — structured-only curriculum "
++              "(disclosed in artifact)", flush=True)
++
++    train_ex = build_examples(tasks, train_names)
++    val_ex = build_examples(tasks, val_names)
++    gold_pool = [clip_grid(p["output"]) for n in train_names for p in tasks[n]["train"][:2]]
++    rng = np.random.default_rng(SEED)
++    vrng = np.random.default_rng(SEED + 1)
++
++    model = SpatialTransitionEBM().to(device)
++    n_params = sum(p.numel() for p in model.parameters())
++    opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
++    sched = torch.optim.lr_scheduler.LambdaLR(
++        opt, lambda s: min(1.0, s / 300) * 0.5 * (1 + math.cos(math.pi * min(s, args.steps) / args.steps)))
++
++    def eval_val(n_batches=12):
++        model.eval()
++        accs = []
++        with torch.no_grad():
++            for _ in range(n_batches):
++                idx = vrng.choice(len(val_ex), min(args.batch, len(val_ex)), replace=False)
++                bt = [val_ex[i] for i in idx]
++                dt, dm, ct, nc, _ = collate_v2(vrng, bt, gold_pool, mined_lut, augment=False)
++                E = forward_batch_v2(model, dt, dm, ct, device)
++                for b in range(len(bt)):
++                    e = E[b, : nc[b]]
++                    accs.append(1.0 if int((e < e[0]).sum().item()) == 0 else 0.0)
++        model.train()
++        return float(np.mean(accs))
++
++    best_val, best_state, bad, log, total_mined = -1.0, None, 0, [], 0
++    model.train()
++    for step in range(1, args.steps + 1):
++        idx = rng.choice(len(train_ex), args.batch, replace=False)
++        bt = [train_ex[i] for i in idx]
++        dt, dm, ct, nc, nm = collate_v2(rng, bt, gold_pool, mined_lut, augment=True)
++        total_mined += nm
++        E = forward_batch_v2(model, dt, dm, ct, device)
++        logits = -E
++        for b in range(len(bt)):
++            logits[b, nc[b]:] = -1e9
++        loss = F.cross_entropy(logits, torch.zeros(len(bt), dtype=torch.long, device=device))
++        opt.zero_grad(set_to_none=True)
++        loss.backward()
++        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
++        opt.step()
++        sched.step()
++        if step % args.eval_every == 0:
++            vacc = eval_val()
++            log.append({"step": step, "loss": round(float(loss.item()), 4),
++                        "val_top1_acc": round(vacc, 4)})
++            print(f"[train] step {step}/{args.steps} loss={loss.item():.4f} val_top1={vacc:.4f} "
++                  f"(mined used so far: {total_mined})", flush=True)
++            if vacc > best_val:
++                best_val, bad = vacc, 0
++                best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
++            else:
++                bad += 1
++                if bad >= args.patience:
++                    print(f"[train] early stop at {step}", flush=True)
++                    break
++
++    if best_state is not None:
++        model.load_state_dict(best_state)
++    last10 = [r["val_top1_acc"] for r in log[-10:]]
++    mean_val_last10 = round(float(np.mean(last10)), 4) if last10 else None
++    corpus_hash = hashlib.sha256(",".join(sorted(tasks)).encode()).hexdigest()[:16]
++    torch.save({"state_dict": model.state_dict(), "best_val_top1": best_val,
++                "mean_val_top1_last10": mean_val_last10, "log": log,
++                "train_names": train_names, "val_names": val_names, "n_params": n_params,
++                "corpus_hash": corpus_hash, "config": vars(args), "seed": SEED,
++                "mined_meta": mined_meta, "total_mined_negs_used": total_mined}, CKPT)
++    dur = time.time() - t0
++    print(f"[train] DONE in {dur:.0f}s best_val={best_val:.4f} mean_val_last10={mean_val_last10} "
++          f"params={n_params}", flush=True)
++    return {"train_duration_s": round(dur, 1), "best_val_top1_acc": round(best_val, 4),
++            "mean_val_top1_last10": mean_val_last10, "n_params": n_params,
++            "n_train_tasks": len(train_names), "n_val_tasks": len(val_names),
++            "corpus_hash": corpus_hash, "mined_meta": mined_meta,
++            "total_mined_negs_used": total_mined, "train_log": log}
++
++
++# ------------------------------------------------------------------------------------ gate 1
++def gate1_near_miss_auroc(model, device, tasks, val_names, n_examples=150, seed=SEED + 777):
++    """THE PANEL GATE: gold-vs-structured-same-shape-near-miss (<=5% cells) AUROC on held-out
++    TRAINING tasks, FRESH negatives (fresh seed, never seen in training). v1 measured 0.481 here
++    post-hoc; the selection eval runs only if this clears 0.70."""
++    rng = np.random.default_rng(seed)
++    val_ex = build_examples(tasks, val_names)
++    idx = rng.choice(len(val_ex), min(n_examples, len(val_ex)), replace=False)
++    aurocs = []
++    model.eval()
++    with torch.no_grad():
++        for i in idx:
++            name, demos, tin, tout = val_ex[i]
++            demos_c = [{"input": clip_grid(p["input"]), "output": clip_grid(p["output"])}
++                       for p in demos][:MAX_DEMOS]
++            tout_c = clip_grid(tout)
++            negs = near_miss_negatives(rng, tout_c, k=10, max_frac=0.05)
++            if len(negs) < 3:
++                continue
++            dt = torch.zeros(1, MAX_DEMOS, 2 * (N_COLORS + 1), MAX_HW, MAX_HW)
++            dm = torch.zeros(1, MAX_DEMOS)
++            for j, p in enumerate(demos_c):
++                dt[0, j] = encode_pair(p["input"], p["output"])
++                dm[0, j] = 1.0
++            cands = [tout_c] + negs
++            ct = torch.stack([encode_pair(clip_grid(tin), c) for c in cands]).unsqueeze(0)
++            E = forward_batch_v2(model, dt, dm, ct, device)[0, : len(cands)].cpu().numpy()
++            au = _auroc([-E[0]], list(-E[1:]))
++            if au is not None:
++                aurocs.append(au)
++    return (round(float(np.mean(aurocs)), 4) if aurocs else None), len(aurocs)
++
++
++# ---------------------------------------------------------------------------------------- eval
++def score_pool(model, device, entries, tta=False):
++    """Per-candidate energies; tta=True averages over the 8 dihedral transforms applied consistently
++    to demos + test_input + candidate (the panel-demonstrated free +0.03)."""
++    out = []
++    transforms = DIHEDRAL if tta else DIHEDRAL[:1]
++    with torch.no_grad():
++        for e in entries:
++            acc = np.zeros(len(e["candidates"]))
++            for d in transforms:
++                demos = [{"input": d(clip_grid(p["input"])).copy(),
++                          "output": d(clip_grid(p["output"])).copy()}
++                         for p in e["demos"]][:MAX_DEMOS]
++                tin = d(clip_grid(e["test_input"])).copy()
++                dt = torch.zeros(1, MAX_DEMOS, 2 * (N_COLORS + 1), MAX_HW, MAX_HW)
++                dm = torch.zeros(1, MAX_DEMOS)
++                for j, p in enumerate(demos):
++                    dt[0, j] = encode_pair(p["input"], p["output"])
++                    dm[0, j] = 1.0
++                _, de, _ = model.enc(dt[0, : len(demos)].to(device))
++                rule = de.mean(0, keepdim=True)
++                Es = []
++                grids = [d(clip_grid(c["grid"])).copy() for c in e["candidates"]]
++                for i0 in range(0, len(grids), 192):
++                    ct = torch.stack([encode_pair(tin, g) for g in grids[i0: i0 + 192]])
++                    cm, ce, cmask = model.enc(ct.to(device))
++                    Es.append(model.energy(rule.expand(len(ce), -1), cm, ce, cmask).cpu().numpy())
++                acc += np.concatenate(Es)
++            out.append(acc / len(transforms))
++    return out
++
++
++def evaluate_pool(args, device, train_meta, gate1, gate1_n):
++    t0 = time.time()
++    ck = torch.load(CKPT, map_location="cpu")
++    model = SpatialTransitionEBM().to(device)
++    model.load_state_dict(ck["state_dict"])
++    model.eval()
++    with gzip.open(POOL, "rt") as f:
++        pool = json.load(f)
++    entries = pool["entries"]
++    _ENTRY_KEYS = {"task", "demos", "test_input", "candidates"}
++    _CAND_KEYS = {"votes", "q_mean", "correct", "grid"}
++    for e in entries:
++        assert set(e.keys()) == _ENTRY_KEYS
++        for c in e["candidates"]:
++            assert set(c.keys()) == _CAND_KEYS
++
++    E_plain = score_pool(model, device, entries, tta=False)
++    E_tta = score_pool(model, device, entries, tta=True)
++
++    tasks = []
++    for e, ep, et in zip(entries, E_plain, E_tta):
++        tot = sum(c["votes"] for c in e["candidates"])
++        cands = [{"votes": c["votes"], "q_mean": c["q_mean"], "correct": c["correct"],
++                  "E": float(a), "E_tta": float(b), "vote_share": c["votes"] / max(1, tot)}
++                 for c, a, b in zip(e["candidates"], ep, et)]
++        tasks.append({"task": e["task"], "cands": cands})
++
++    n = len(tasks)
++    n_oracle = sum(1 for t in tasks if any(c["correct"] for c in t["cands"]))
++    oracle2 = round(n_oracle / n, 4)
++    # exact uniform-random pass@2 baseline (panel required): E[hits] = sum over tasks of
++    # P(gold in a random top-2) = n_gold-in-top2 hypergeometric = min(2,n)/n when exactly 1 gold
++    rand_terms = []
++    for t in tasks:
++        ng = sum(1 for c in t["cands"] if c["correct"])
++        nc = len(t["cands"])
++        rand_terms.append(0.0 if ng == 0 else 1.0 - math.comb(nc - ng, min(2, nc)) / math.comb(nc, min(2, nc))
++                          if nc >= 2 else 1.0)
++    random_baseline = round(float(np.mean(rand_terms)), 4)
++
++    allc = [c for t in tasks for c in t["cands"]]
++    vs = np.array([c["votes"] for c in allc], float)
++    for key in ["E", "E_tta"]:
++        es = np.array([c[key] for c in allc], float)
++        beta = np.cov(vs, es)[0, 1] / (vs.var() or 1.0)
++        alpha = es.mean() - beta * vs.mean()
++        for c in allc:
++            c[f"_{key}_resid"] = c[key] - (alpha + beta * c["votes"])
++
++    _grouped_loto_union(tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]]))
++    for t in tasks:
++        for c in t["cands"]:
++            c["_union_noE"] = c["_u"]
++    _grouped_loto_union(tasks, lambda c: np.array(
++        [np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["E_tta"]]))
++    for t in tasks:
++        for c in t["cands"]:
++            c["_union_withE"] = c["_u"]
++
++    rankers = {
++        "TRM_VOTE": lambda c: (-c["votes"],),
++        "EBM_v2": lambda c: (c["E"],),
++        "EBM_v2_TTA8": lambda c: (c["E_tta"],),
++        "EBM_v2_TTA8_residual_global": lambda c: (c["_E_tta_resid"], -c["votes"]),
++        "HYBRID_vote_then_E_tta": lambda c: (-c["votes"], c["E_tta"]),
++        "UNION_votes_qmean_voteshare": lambda c: (c["_union_noE"], -c["votes"]),
++        "UNION_plus_E_tta": lambda c: (c["_union_withE"], -c["votes"]),
++    }
++    res = {name: _pass(tasks, key) for name, key in rankers.items()}
++
++    def auroc_suite(score_fn):
++        per, hard = [], []
++        for t in tasks:
++            g = [score_fn(c) for c in t["cands"] if c["correct"]]
++            ng = [score_fn(c) for c in t["cands"] if not c["correct"]]
++            au = _auroc(g, ng)
++            if au is not None:
++                per.append(au)
++            ngh = [score_fn(c) for c in t["cands"] if not c["correct"] and c["votes"] >= 5]
++            auh = _auroc(g, ngh)
++            if auh is not None:
++                hard.append(auh)
++        return (round(float(np.mean(per)), 4) if per else None,
++                round(float(np.mean(hard)), 4) if hard else None)
++
++    auroc_plain, hard_plain = auroc_suite(lambda c: -c["E"])
++    auroc_tta, hard_tta = auroc_suite(lambda c: -c["E_tta"])
++
++    def _lcg(seed):
++        x = seed
++        while True:
++            x = (1103515245 * x + 12345) & 0x7FFFFFFF
++            yield x
++
++    def _boot(kA, kB):
++        gen, deltas = _lcg(SEED), []
++        def p2(sample, key):
++            return sum(int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2]))
++                       for t in sample) / len(sample)
++        for _ in range(1000):
++            samp = [tasks[next(gen) % n] for _ in range(n)]
++            deltas.append(p2(samp, kA) - p2(samp, kB))
++        deltas.sort()
++        return [round(deltas[25], 4), round(deltas[974], 4)]
++
++    vote2 = res["TRM_VOTE"]["pass@2"]
++    e2 = res["EBM_v2_TTA8"]["pass@2"]
++    gates = {
++        "gate1_near_miss_auroc_gt_0p70": bool((gate1 or 0) > 0.70),
++        "gate1_value": gate1, "gate1_n_examples": gate1_n,
++        "selection_beats_random": bool(e2 > random_baseline),
++        "selection_beats_vote": bool(e2 > vote2),
++        "union_value_add": bool(res["UNION_plus_E_tta"]["pass@2"]
++                                > res["UNION_votes_qmean_voteshare"]["pass@2"]),
++        "headroom_capture_fraction": round((e2 - vote2) / max(1e-9, oracle2 - vote2), 4),
++    }
++    verdict = (
++        "complete: gap3_stage2v2_"
++        + ("BEATS_vote" if gates["selection_beats_vote"]
++           else ("beats_random_not_vote" if gates["selection_beats_random"] else "at_or_below_random"))
++        + f"_n{n}_vote_{vote2}_ebmtta_{e2}_rand_{random_baseline}"
++        + f"_gate1_{gate1}_auroctta_{auroc_tta}_unionadd_{gates['union_value_add']}"
++    )
++    art = {
++        "experiment": "arc3_gap3_stage2v2_transition_ebm",
++        "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
++        "honest_verdict": verdict,
++        "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
++        "n_tasks": n, "n_oracle_hit": n_oracle, "oracle_pass2_ceiling": oracle2,
++        "random_ranker_pass2_baseline": random_baseline,
++        "random_baseline_note": RANDOM_BASELINE_NOTE,
++        "rankers": res,
++        "auroc": {"ebm_macro": auroc_plain, "ebm_hard_neg_votes_ge5": hard_plain,
++                  "ebm_tta_macro": auroc_tta, "ebm_tta_hard_neg_votes_ge5": hard_tta,
++                  "vote_macro_reference": 0.9235},
++        "gates": gates,
++        "bootstrap": {"ebm_tta_vs_vote_pass2_ci95": _boot(rankers["EBM_v2_TTA8"], rankers["TRM_VOTE"]),
++                      "union_plus_E_vs_union_pass2_ci95": _boot(
++                          rankers["UNION_plus_E_tta"], rankers["UNION_votes_qmean_voteshare"]),
++                      "B": 1000},
++        "training": train_meta,
++        "generator_independence_disclosure": (
++            "FORFEITED at the negative-mining level (panel-approved trade): up to 3 negatives per "
++            "positive are real wrong candidates mined from TRM arc_v1 on its own TRAINING split "
++            "(zero eval-task leak, hard-asserted). The energy itself reads only (demos, test_input, "
++            "candidate_grid) at inference — REQ-GAP3-2 intact."
++        ),
++        "model_specs": {
++            "architecture": "SpatialPairEncoder (stride-1 hi-res trunk + downsample path, mean+max "
++                            "pool) -> 256-d; rule = mean over demo embeddings; E = global relation MLP "
++                            "+ FiLM-conditioned local energy map (mean + 0.5*max over valid cells)",
++            "n_params": train_meta.get("n_params"),
++            "curriculum": "per positive: <=3 mined real TRM errors + structured same-shape "
++                          "near-misses (component recolor/move/delete/swap, 1-3 cell flips) + 2 v1 "
++                          "coverage corruptions",
++            "tta": "dihedral-8 energy averaging at eval",
++        },
++        "preconditions_checked": [
++            {"resource": "cuda_available", "available": bool(torch.cuda.is_available())},
++            {"resource": "eval_pool_export", "available": Path(POOL).exists()},
++            {"resource": "mined_negatives", "available": train_meta.get("mined_meta", {}).get(
++                "available", False)},
++        ],
++        "random_seed": SEED,
++        "reproducibility_checksum": train_meta.get("corpus_hash"),
++        "duration_s": round(time.time() - t0 + train_meta.get("train_duration_s", 0.0), 1),
++        "eval_duration_s": round(time.time() - t0, 1),
++    }
++    Path(ARTIFACT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
++    print(f"-> {verdict}")
++    for r in rankers:
++        print(f"   {r:34s} pass@1={res[r]['pass@1']} pass@2={res[r]['pass@2']}")
++    print(f"   oracle={oracle2} random={random_baseline} gate1={gate1} (n={gate1_n})")
++    print(f"   auroc: plain={auroc_plain}/{hard_plain} tta={auroc_tta}/{hard_tta} (vote 0.9235)")
++    print(f"   gates={gates}")
++    print(f"   bootstrap tta-vote={art['bootstrap']['ebm_tta_vs_vote_pass2_ci95']} "
++          f"union+E-union={art['bootstrap']['union_plus_E_vs_union_pass2_ci95']}")
++    return art
++
++
++def write_gate_blocked_artifact(train_meta, gate1, gate1_n):
++    """Panel rule: 'do not spend another selection run below that bar.' The gate failure IS the
++    result — an honest negative at the cheapest possible measurement point."""
++    art = {
++        "experiment": "arc3_gap3_stage2v2_transition_ebm",
++        "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
++        "honest_verdict": (f"complete: gap3_stage2v2_gate1_failed_near_miss_auroc_{gate1}"
++                           f"_lt_0p70_no_selection_eval_run"),
++        "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
++        "gates": {"gate1_near_miss_auroc_gt_0p70": False, "gate1_value": gate1,
++                  "gate1_n_examples": gate1_n,
++                  "note": "selection eval deliberately NOT run per the Stage-2 panel rule"},
++        "training": train_meta,
++        "random_seed": SEED,
++        "reproducibility_checksum": train_meta.get("corpus_hash"),
++        "duration_s": train_meta.get("train_duration_s", 0.0),
++    }
++    Path(ARTIFACT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
++    print(f"-> {art['honest_verdict']}")
++    return art
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("--mode", choices=["train", "eval", "all"], default="all")
++    ap.add_argument("--steps", type=int, default=12000)
++    ap.add_argument("--batch", type=int, default=24)
++    ap.add_argument("--lr", type=float, default=3e-4)
++    ap.add_argument("--eval_every", type=int, default=250)
++    ap.add_argument("--patience", type=int, default=10)
++    ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
++    ap.add_argument("--skip_gate", action="store_true",
++                    help="CPU smoke only — never use on a real run")
++    args = ap.parse_args()
++    torch.manual_seed(SEED)
++    np.random.seed(SEED)
++    device = torch.device(args.device)
++    train_meta = {}
++    if args.mode in ("train", "all"):
++        train_meta = train(args, device)
++    if args.mode in ("eval", "all"):
++        ck = torch.load(CKPT, map_location="cpu")
++        if not train_meta:
++            train_meta = {"best_val_top1_acc": ck.get("best_val_top1"),
++                          "mean_val_top1_last10": ck.get("mean_val_top1_last10"),
++                          "n_params": ck.get("n_params"), "corpus_hash": ck.get("corpus_hash"),
++                          "mined_meta": ck.get("mined_meta", {}), "train_duration_s": 0.0,
++                          "reused_checkpoint": True}
++        model = SpatialTransitionEBM().to(device)
++        model.load_state_dict(ck["state_dict"])
++        tasks = load_training_corpus()
++        gate1, gate1_n = (None, 0) if args.skip_gate else gate1_near_miss_auroc(
++            model, device, tasks, ck["val_names"])
++        print(f"[gate1] gold-vs-same-shape-near-miss AUROC = {gate1} over {gate1_n} examples "
++              f"(bar: >0.70; v1 measured 0.481 post-hoc)", flush=True)
++        if args.skip_gate or (gate1 or 0) > 0.70:
++            evaluate_pool(args, device, train_meta, gate1, gate1_n)
++        else:
++            write_gate_blocked_artifact(train_meta, gate1, gate1_n)
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_arc3_gap3_stage2v2_ebm.py b/tests/python/test_arc3_gap3_stage2v2_ebm.py
+new file mode 100644
+index 0000000000..a250223fe7
+--- /dev/null
++++ b/tests/python/test_arc3_gap3_stage2v2_ebm.py
+@@ -0,0 +1,108 @@
++"""Unit tests for the GAP-3 Stage-2 v2 building blocks — the structured same-shape near-miss
++curriculum and the spatial FiLM energy (the two panel-mandated fixes). CPU, deterministic, asserting.
++"""
++
++import sys
++
++import numpy as np
++import pytest
++import torch
++
++sys.path.insert(0, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments")
++
++from arc3_gap3_stage2v2_transition_ebm import (  # noqa: E402
++    MAX_HW,
++    N_COLORS,
++    SpatialTransitionEBM,
++    components,
++    encode_pair,
++    forward_batch_v2,
++    ghash,
++    near_miss_negatives,
++)
++
++
++def _grid(h, w, seed=0):
++    return np.random.default_rng(seed).integers(0, N_COLORS, size=(h, w))
++
++
++def test_components_labels_4connected_same_color():
++    # SCENARIO: the near-miss families operate on connected components; mislabeled components would
++    # produce corrupted negatives that are not single-object perturbations.
++    g = np.zeros((5, 5), dtype=int)
++    g[0, 0:3] = 4          # one 3-cell component
++    g[2, 2] = 4            # separate (diagonal does not connect)
++    g[4, 0:2] = 7          # different color component
++    comps = components(g)
++    assert sorted((c, len(cells)) for c, cells in comps) == [(4, 1), (4, 3), (7, 2)]
++
++
++def test_near_miss_negatives_same_shape_and_distinct():
++    # SCENARIO: the 91.5% real-error class is SAME-SHAPE near-misses; every generated negative must
++    # preserve gold's shape exactly and differ from gold (and siblings) by content hash.
++    rng = np.random.default_rng(11)
++    gold = _grid(9, 7, seed=3)
++    negs = near_miss_negatives(rng, gold, k=10)
++    assert len(negs) >= 6
++    hashes = {ghash(gold)}
++    for nm in negs:
++        assert nm.shape == gold.shape  # same-shape by construction
++        h = ghash(nm)
++        assert h not in hashes
++        hashes.add(h)
++
++
++def test_near_miss_max_frac_bounds_changed_cells():
++    # SCENARIO: the gate-1 definition is <=5% cells changed; max_frac must enforce it so the gate
++    # measures the class it claims to measure.
++    rng = np.random.default_rng(5)
++    gold = _grid(20, 20, seed=8)
++    negs = near_miss_negatives(rng, gold, k=8, max_frac=0.05)
++    limit = max(1, int(np.ceil(gold.size * 0.05)))
++    for nm in negs:
++        assert int((nm != gold).sum()) <= limit
++
++
++def test_spatial_energy_finite_and_demo_order_invariant():
++    # SCENARIO: rule embedding is a mean over demo embeddings — demo ORDER must not change E; all
++    # energies finite (the FiLM/local-map path must not NaN on masked cells).
++    torch.manual_seed(0)
++    model = SpatialTransitionEBM().eval()
++    demos = [(_grid(6, 6, i), _grid(6, 6, i + 40)) for i in range(3)]
++    dt = torch.zeros(1, 4, 22, MAX_HW, MAX_HW)
++    dm = torch.zeros(1, 4)
++    for j, (a, b) in enumerate(demos):
++        dt[0, j] = encode_pair(a, b)
++        dm[0, j] = 1.0
++    ct = torch.stack([encode_pair(_grid(6, 6, 90), _grid(6, 6, 91))]).unsqueeze(0)
++    with torch.no_grad():
++        e1 = forward_batch_v2(model, dt, dm, ct, torch.device("cpu"))
++        dt2 = dt.clone()
++        dt2[0, 0], dt2[0, 2] = dt[0, 2].clone(), dt[0, 0].clone()
++        e2 = forward_batch_v2(model, dt2, dm, ct, torch.device("cpu"))
++    assert torch.isfinite(e1).all()
++    assert torch.allclose(e1, e2, atol=1e-5)
++
++
++def test_spatial_energy_is_cell_sensitive():
++    # SCENARIO: the entire v2 architectural point — a SINGLE flipped cell must change the energy
++    # (v1's global mean-pool was structurally insensitive at this resolution). We assert the energies
++    # differ; direction is learned, not architectural.
++    torch.manual_seed(1)
++    model = SpatialTransitionEBM().eval()
++    tin = _grid(8, 8, seed=2)
++    out = _grid(8, 8, seed=3)
++    out2 = out.copy()
++    out2[4, 4] = (out2[4, 4] + 1) % N_COLORS
++    dt = torch.zeros(1, 4, 22, MAX_HW, MAX_HW)
++    dm = torch.zeros(1, 4)
++    dt[0, 0] = encode_pair(_grid(8, 8, 5), _grid(8, 8, 6))
++    dm[0, 0] = 1.0
++    ct = torch.stack([encode_pair(tin, out), encode_pair(tin, out2)]).unsqueeze(0)
++    with torch.no_grad():
++        E = forward_batch_v2(model, dt, dm, ct, torch.device("cpu"))[0]
++    assert abs(float(E[0] - E[1])) > 1e-6
++
++
++if __name__ == "__main__":
++    sys.exit(pytest.main([__file__, "-v"]))
+-- 
+2.55.0
+

@@ -1,0 +1,1962 @@
+From 9c4b6c26083f3058b272fd5a892363430652e941 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 21:58:41 -0400
+Subject: [PATCH 00244/11171] [conductor] Plan next milestone: 2026.06.343
+
+Planning agent proposed 11 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .claude/scheduled_tasks.lock                  |   1 +
+ .../research-roadmap-vNEXT.md                 | 360 ++++----
+ ops/changelog.md                              |  42 +
+ ops/docs_audit_report.md                      |  57 +-
+ ops/verifier_authenticity_audit_report.md     | 159 ++--
+ research-references.md                        |  43 +
+ research-roadmap-next.yaml                    | 842 ++++++++++++++++++
+ 7 files changed, 1223 insertions(+), 281 deletions(-)
+ create mode 100644 .claude/scheduled_tasks.lock
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/.claude/scheduled_tasks.lock b/.claude/scheduled_tasks.lock
+new file mode 100644
+index 0000000000..463be2125b
+--- /dev/null
++++ b/.claude/scheduled_tasks.lock
+@@ -0,0 +1 @@
++{"sessionId":"1817d5ec-9e1e-42d5-b8f8-8ec2da39c23f","pid":3422,"procStart":"5619","acquiredAt":1780450147601}
+\ No newline at end of file
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 72508a6742..784f9aec84 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,192 +1,206 @@
+-# Research Roadmap — Milestone 2026.06.342
++# Research Roadmap — Milestone 2026.06.343
+ 
+-**Status:** Pre-staged by outer-loop Claude (Opus 4.8), 2026-06-02.
+-**Predecessor:** 2026.06.341 (Phase-3 Thesis-A EBT bring-up — the FIRST human-seeded paradigm
+-alternative since energy-SELECTION was bounded; operator seeded energy-as-GENERATOR, EBT,
+-arXiv:2507.02092 / github.com/alexiglad/EBT).
+-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.342`)
++**Phase-3 Thesis A — attempt 3: pin the venv/CUDA, then run the GENUINE
++energy-as-generator kill-gate to completion.**
++
++Outer-loop / operator pre-staged roadmap, drafted 2026-06-02 (Claude Opus 4.8).
+ 
+ ---
+ 
+-## 1. What the previous milestone (.341) ACTUALLY proved (read the artifacts, not the verdict)
++## TL;DR
+ 
+-`.341` was the cheap half of the Thesis-A kill-gate: *can a tiny EBT even train stably on the 3090
+-rig?* The recorded milestone verdict was **kill-gate part-(a) FAIL — "energy-as-generator bounded
+-at small scale, STOP."** **That verdict is wrong.** Read via `scripts/summarize_artifact.py` +
+-direct artifact inspection:
++The operator-seeded Phase-3 Thesis A (energy-as-GENERATOR / EBT, arXiv:2507.02092)
++has now been blocked **three times by infrastructure, never by the mechanism**:
+ 
+-| Step | Artifact | What it ACTUALLY shows |
++| Milestone | What blocked the kill-gate | Verdict mislabel |
+ |---|---|---|
+-| EBT vendored + audited | exp3725 | `importable=true`, Apache-2.0, commit pinned `19420cbe…`, energy path audited (energy descent via Langevin/MCMC, contrastive + CE training objective), CPU smoke energy `0.554` finite. **Clean PASS.** |
+-| Tiny-EBT single-step smoke | exp3726 | **Clean PASS.** 38M-param EBT, fits one 3090 at **1283 MB** peak VRAM, GSM8K n=2048, loss finite AND **monotonically decreasing** across 10 steps (−0.077 → −37.74), 64 train steps wired correctly. This is the POSITIVE CONTROL and it passed. |
+-| Matched-compute eval harness | exp3727 | Built + unit-tested (FLOP accounting + budget-matcher). The instrument for the .342 decisive comparison is ready. |
+-| Bounded checkpointed training | exp3728 | **`blocked_ebt`, 0 steps, 65.5 s.** `preconditions_checked={ebt_vendored:false, smoke_passed:false}` — **both demonstrably false**: exp3725/3726 prove the module IS importable and the smoke DID pass. The task's precondition logic (`import carnot.phase3.ebt_upstream` + `os.path.exists("results/experiment_3726_*.json")`, a RELATIVE path) evaluated False because the run executed in a bad cwd / sys.path / venv. **It never trained a single step.** |
+-| Kill-gate verdict | exp3729 | Read exp3728's `blocked_ebt`/steps=0 and concluded "energy-as-generator is bounded at small scale." `green_light_342=false`. |
+-
+-**Diagnosis: the .341 kill-gate "FAIL" is an INFRASTRUCTURE FALSE-NEGATIVE, not a scientific
+-finding.** It is exactly the failure mode CLAUDE.md's **FALSE_NEGATIVE_RISK** discipline names: a
+-null/negative claim ("the route is bounded") asserted **without a positive control passing the
+-bounded run**. The positive control (exp3726 single-step smoke) PASSED — the EBT trains, fits the
+-GPU, and the loss decreases. exp3728 bailed before training on a cwd/import-path bug; exp3729
+-mislabeled that infra failure as a mechanism result. Per the **Reading-Results Discipline**, a
+-verdict synthesized over a `blocked_*` upstream with `steps=0` cannot bound a mechanism.
+-
+-**Strategic position:** Thesis A is NOT dead. The kill-gate part-(a) question — *does a tiny EBT
+-train to stable convergence in a bounded budget?* — is **still open**, because no genuine bounded
+-training run has happened yet. `.342` must (1) correct the record honestly, (2) FIX the harness bug
+-and run the genuine bounded training, (3) render the REAL part-(a) verdict, and if stable,
+-(4) run the matched-COMPUTE comparison — kill-gate part (b), the actual thesis test.
+-
+-This is NOT breadth churn (north-star §1): it is the direct, gated continuation of the
+-operator-seeded Thesis-A bring-up, recovering from a same-day infrastructure false-negative.
++| `.341` | exp3728 cwd/import-path bug → 0 steps | exp3729 called it "bounded at small scale" (false-negative) |
++| `.342` | exp3734 ran 2 steps with **`cuda:false`** (on CPU, 100 MB VRAM) yet claimed "stable_so_far"; exp3735 hit **`blocked_cuda`** | exp3736 correctly said "untested — training did not complete" |
++
++`.342` correctly *recovered* the `.341` false-negative (exp3733 corrigendum) and
++correctly *refused to overclaim* (exp3736 = untested, exp3739 = part-b not-run).
++But it **never actually trained the EBT on the GPU**. The mechanism is still
++untested.
++
++**Root cause (verified live 2026-06-02):** the experiment Run commands use bare
++`python scripts/...`. On this box, `/usr/bin/python3` has **no torch at all**, and
++the only interpreter with torch (2.11.0+cu128, both RTX 3090s visible,
++`cuda.is_available()==True`) is **`.venv/bin/python`**. When the conductor's agent
++ran exp3734 it reached a torch whose `cuda.is_available()` returned `False`, then
++**silently dropped to CPU** and reported a 2-step "stable_so_far" signal — a soft
++false-positive — instead of blocking.
++
++**`.343` is the direct, gated continuation that fixes this for good:**
++
++1. **Pin `.venv/bin/python`** in every GPU task's Run command AND precondition check.
++2. **HARD-block on `cuda:false`** — emit `blocked_cuda` and STOP. **Never** train on
++   CPU and report a stability signal (the exp3734 anti-pattern). Capture
++   `sys.executable`, `CUDA_VISIBLE_DEVICES`, and `nvidia-smi` on block so the cause
++   is auditable.
++3. Run the **GENUINE** bounded checkpointed training of the tiny EBT + matched tiny
++   AR baseline (the EBT-paper stability recipe), render the **real part-(a) verdict**
++   superseding exp3736, and — if stable — run the **matched-COMPUTE** comparison
++   (kill-gate part b).
++
++**INVARIANTS (do not regress):** `paper_ready` stays TRUE (G1–G4 closed 2026-05-31);
++frozen FoVer headline 0.9131 stays frozen; P0.1 / energy-**SELECTION** stays
++settled-bounded — this milestone tests **GENERATION**, a different mechanism. The
++banked verifier product is unaffected; this is the venture bet with a knife to its
++own throat.
+ 
+ ---
+ 
+-## 2. The three biggest gaps (PRD vision vs current state)
+-
+-1. **The Phase-3 generator thesis has no genuine empirical signal yet.** The PRD endgame (Phase 3)
+-   is an open-source EBM/EBT foundation model with non-autoregressive reasoning. Thesis A is the
+-   first concrete test of that mechanism. `.341` produced a positive single-step control and then a
+-   spurious negative; `.342` must produce the **genuine** bounded-training stability signal and, if
+-   stable, the matched-COMPUTE accuracy comparison. Until a real bounded run exists, the route is
+-   neither alive nor dead — it is **untested**, and an untested route blocks the Phase-3 decision.
+-
+-2. **The record carries an unsupported negative claim.** `.341`'s capstone + kill-gate state
+-   "energy-as-generator bounded at small scale." Left uncorrected, a future planner reads that as
+-   a settled negative (like P0.1) and never revisits the route — enclosing a venture bet on a
+-   harness bug. `.342` issues a CLEAN corrigendum (exp1850 pattern): preserve exp3729's numbers,
+-   annotate the false-negative root cause, and re-open part-(a) as untested.
+-
+-3. **Continuous self-learning has not yet touched the training loop itself.** FR-11 self-learning
+-   (research-program.md Tiers 1–4) has been exercised on verifier-template consolidation, never on
+-   the EBT bring-up. The most likely failure mode of EBT training is divergence; which stabilizer
+-   recipe prevents it is exactly the kind of online, counter-update (Tier-1) knowledge the
+-   self-learning system should accumulate. `.342` wires a Tier-1 online tracker of per-stabilizer
+-   divergence-prevention efficacy across training chunks — a self-learning experiment that is also
+-   directly load-bearing for the kill-gate.
++## What `.342` proved (read honestly)
++
++- The record-honesty machinery works: the `.341` infra false-negative was cleanly
++  corrected (exp3733, exp1850 pattern), and the `.342` verdicts refused to overclaim
++  an un-run test (exp3736 "untested", exp3739 "not-run"). **This discipline is the
++  reason we can keep betting cheaply.**
++- The matched-compute harness (exp3727) is built + unit-tested and unused — it waits
++  on a trained EBT.
++- The single-step smoke (exp3726, `.341`) already showed a 38M EBT fits one 3090 at
++  1283 MB with finite, decreasing loss. The model is not the problem.
++- **The only thing standing between us and a real Thesis-A signal is reliable CUDA
++  in the experiment subprocess.** That is a one-line-class fix (`.venv/bin/python`)
++  plus a discipline fix (block, never CPU-drop).
++
++## The 3 biggest gaps vs the PRD vision
++
++1. **No empirical signal on energy-as-generator.** Phase 3's endgame is a
++   hardware-acceleratable EBM/EBT foundation model. The operator seeded the most
++   direct test of that thesis and it remains untested at bounded scale purely for
++   infra reasons. `.343` closes this gap or bounds the route with a real divergence.
++2. **The experiment harness silently degrades GPU→CPU.** A training task that finds
++   `cuda:false` and trains 2 CPU steps while reporting "stable" is a fabrication-class
++   failure mode the adversarial-verify floor did not catch (2 steps is too short to
++   trip duration heuristics, and `inference_substrate` was self-declared
++   `live_llm_inference`). `.343` ships the discipline fix: GPU tasks block on
++   `cuda:false`, never CPU-drop.
++3. **Continuous self-learning has nothing yet to learn from on this substrate.**
++   FR-11 v15 (`.342`) initialised a stabilizer-efficacy tracker over 3 *aborted*
++   chunks. Once the EBT actually trains, the tracker gets real divergence/stability
++   data to upweight an effective recipe (Tier-1 CPU counter-updates) — the
++   self-learning experiment mandated by research-program.md.
+ 
+ ---
+ 
+-## 3. Architecture (Thesis-A bring-up, recovered)
++## Architecture of the milestone
+ 
+ ```
+-                       ┌──────────────────────────────────────────────┐
+-   .341 (DONE, but    │  exp3725 vendor+audit  ✔   exp3726 smoke  ✔    │
+-   verdict false-neg) │  exp3727 matched-compute harness (tested) ✔   │
+-                       │  exp3728 BLOCKED (cwd/import bug) ✘ steps=0   │
+-                       │  exp3729 verdict = FALSE-NEGATIVE  ✘          │
+-                       └───────────────────────┬──────────────────────┘
+-                                                │
+-  .342 PHASE 0  archive/activate (exp3732) + CLEAN corrigendum of exp3729 (exp3733; record honest)
+-                                                │
+-  .342 PHASE 1  ┌─────────────────────────────────────────────────────────────────┐
+-  (the genuine  │ exp3734  FIX exp3728 (robust importlib check + abs paths, run    │
+-   part-a)      │          from {project_root}); ship driver w/ EBT stability      │
+-                │          recipe (random-alpha + replay buffer + Langevin noise +  │
+-                │          grad-clip + KL-term CD); FIRST bounded train chunk        │
+-                │          EBT + matched-AR  ──checkpoint──▶                         │
+-                │ exp3735  RESUME chunk 2 (gated: chunk-1 trained >0 steps)          │
+-                └───────────────────────────┬─────────────────────────────────────┘
+-                                             │
+-  .342 PHASE 2  exp3736  REAL kill-gate part-(a) verdict over the GENUINE run
+-                          (supersedes false-negative exp3729) → green_light_342 (bare bool)
+-                                             │  (gate: stable)
+-                ┌────────────────────────────┴────────────────────────────┐
+-                │ exp3737 EBT energy-descent GENERATION smoke on held-out    │
+-                │ exp3738 matched-COMPUTE comparison: EBT energy-descent vs   │
+-                │         AR best-of-N at EQUAL FLOPs (exp3727 harness)       │
+-                │ exp3739 kill-gate part-(b) verdict: EBT beat AR @ equal     │
+-                │         compute? does gap narrow w/ 2x train? (honest)      │
+-                └────────────────────────────────────────────────────────────┘
+-                                             │
+-  .342 PHASE 3  exp3740 FR-11 v15 Tier-1 online stabilizer-efficacy tracker (self-learning)
+-                exp3741 KV260 opportunistic continuity (terminal confirm)
+-                exp3742 capstone .342 (honest: record corrected; real part-a; part-b verdict)
+-
+-  INVARIANTS (every task): paper_ready stays TRUE (G1-G4 closed 2026-05-31); frozen FoVer 0.9131
+-  stays frozen; P0.1 / energy-SELECTION stays settled-bounded (this tests GENERATION, a different
+-  mechanism); never edit ops/north-star.md; never trigger CI; never push.
++ exp3743  archive .342 / activate .343            (ops, codex)
++    |
++ exp3744  corrigendum: .342 part-(a) was AGAIN     (phase3, codex, aggregation)
++    |     infra-blocked (cuda:false bare-python;
++    |     exp3734 over-claimed "stable" on 2 CPU
++    |     steps); part-(a) STILL untested
++    |
++ exp3745  THE FIX: .venv/bin/python + HARD cuda     (phase3, claude/opus, GPU)
++    |     block (never CPU-drop) + real bounded
++    |     training chunk 1 of tiny EBT + matched AR
++    |          | cumulative_steps_trained (bare int)
++    v          v
++ exp3746  resume bounded training chunk 2     [gated: exp3745 steps > 0]
++    |          | (phase3, claude/opus, GPU)
++    v
++ exp3747  REAL part-(a) verdict (supersedes exp3736) (phase3, codex, aggregation)
++    |          | green_light_343 (bare bool)
++    v          v
++ exp3748  EBT energy-descent generation smoke  [gated: exp3747 green_light_343==true]
++    |          | ebt_can_generate (bare bool)   (phase3, codex, GPU)
++    v          v
++ exp3749  THE THESIS TEST: matched-COMPUTE      [gated: exp3748 ebt_can_generate==true]
++    |          | EBT energy-descent vs AR best-of-M at EQUAL FLOPs, n>=100
++    |          | accuracy_delta (bare float)     (phase3, codex, GPU)
++    v          v
++ exp3750  part-(b) verdict over exp3749               (phase3, codex, aggregation)
++              ebt_beats_ar_at_matched_compute (bare bool)
++
++ exp3751  FR-11 self-learning v16 — Tier-1 stabilizer tracker (self-learning, codex)
++          resumes exp3740 (v15) state with REAL training diagnostics
++ exp3752  KV260 opportunistic terminal-state audit          (hardware, codex)
++ exp3753  capstone .343 — state the honest Thesis-A outcome (ops, codex)
+ ```
+ 
+-## 4. Phase descriptions
+-
+-- **Phase 0 — Transition + record correction.** Archive `.341` honestly (the kill-gate was an
+-  infra false-negative; part-(a) re-opened as untested). Issue a CLEAN corrigendum of exp3729
+-  (preserve numbers, annotate root cause). Cheap, codex, aggregation-only.
+-- **Phase 1 — The genuine kill-gate part (a).** Fix exp3728's cwd/import precondition bug (robust
+-  `importlib.util.find_spec` check, absolute artifact paths, run from `{project_root}`), ship the
+-  training driver with the EBT-paper stability recipe (random-alpha + replay buffer + Langevin
+-  noise + gradient clamp + the KL-term CD fix from arXiv:2012.01316), and run two bounded
+-  checkpointed chunks of the tiny EBT + a matched tiny AR baseline on the SAME corpus/budget.
+-  Heartbeat every K steps; ≤1500 s/run then checkpoint+exit; resume. **requires_claude + opus** —
+-  divergence diagnosis is open-ended judgment under ambiguity (operator directive 2026-06-02).
+-- **Phase 2 — Real verdict + the actual thesis test.** Render the genuine part-(a) verdict over the
+-  real run (supersedes exp3729). If stable, smoke EBT generation, then run the matched-COMPUTE
+-  comparison (EBT energy-descent vs AR best-of-N at EQUAL inference FLOPs via the exp3727 harness),
+-  and render the honest part-(b) verdict. The matched-COMPUTE discipline is load-bearing: a
+-  matched-PARAMS "win" is just extra inference FLOPs (the exact P0.1 trap).
+-- **Phase 3 — Self-learning + hardware + capstone.** FR-11 v15 Tier-1 online stabilizer-efficacy
+-  tracker (CPU counter updates; self-learning mandate). KV260 opportunistic terminal-confirm.
+-  Capstone: record the corrected history, the real part-(a) outcome, and the part-(b) verdict —
+-  paper_ready stays TRUE, frozen 0.9131 unchanged.
+-
+-## 5. Dependency graph (bare-value gates only; no None-read cascades)
++### The genuine two-part kill-gate (unchanged in substance from `.342`, now actually runnable)
++
++- **Part (a) — stability.** The tiny EBT trains to STABLE convergence within the
++  bounded 3090 budget. PASS requires ALL of: `cumulative_steps_trained > 0` on a REAL
++  GPU run (not the CPU-drop); no NaN/inf/divergence; bounded gradient norms; a
++  non-degenerate loss/energy trajectory (NOT a monotonic runaway to −∞ — EBT energy
++  is unbounded, so a collapsing energy can masquerade as convergence).
++- **Part (b) — the thesis.** At EQUAL total inference FLOPs, EBT energy-descent
++  generation beats the matched AR best-of-M baseline on held-out GSM8K reasoning
++  accuracy (n≥100), AND/OR the gap narrows with 2× training.
++- **Matched-COMPUTE, never matched-params (the P0.1 lesson, load-bearing):** energy
++  descent runs N forward passes per prediction, so a matched-params "win" is just
++  extra inference FLOPs. Give AR an equal-FLOP best-of-M budget via the exp3727
++  harness. NFE is the cleaner inner-loop unit (arXiv:2511.05562); FLOPs as cross-check
++  (arXiv:2408.03314). A win counts ONLY at equal total inference compute.
++
++**An honest NEGATIVE at either part is a real finding** that bounds the route cheaply
++— as valuable as a positive. The kill-gate makes this a *bounded* bet, not a
++P0.1-style grind.
+ 
+-```
+-exp3732 (archive/activate) ─▶ exp3733 (corrigendum exp3729)
+-exp3734 (fix+driver+chunk1, gpu/opus)
+-   └─ cumulative_steps_trained>0 (BARE int) ─▶ exp3735 (resume chunk2, gpu/opus)
+-exp3734,exp3735 ─▶ exp3736 (REAL part-a verdict) ─▶ green_light_342 (BARE bool)
+-   └─ green_light_342==true ─▶ exp3737 (generation smoke, gpu)
+-        └─ ebt_can_generate==true (BARE bool) ─▶ exp3738 (matched-compute, gpu)
+-              └─▶ exp3739 (part-b verdict)
+-exp3740 (FR-11 v15 self-learning) · exp3741 (KV260) · exp3742 (capstone) — ungated, graceful
+-disk-presence fallback (read upstream if present, else record honest "not-run")
+-```
++---
+ 
+-`gated_on` is used ONLY on the expensive GPU tasks (exp3735/3737/3738) to genuinely skip GPU+Sonnet
+-time when the prerequisite is unmet, and ONLY against **bare-value** fields (per
+-`feedback_gated_fields_must_be_bare`: a principle-annotated `{value,principle}` dict breaks the
+-comparator). Verdict/aggregation/self-learning/hardware/capstone tasks carry NO `gated_on` and read
+-upstream artifacts with a graceful disk-presence fallback (the .340 proven-safe pattern).
+-
+-## 6. Hardware requirements
+-
+-- **2x RTX 3090 (CUDA):** Phase-1 training (exp3734/3735) + Phase-2 generation/eval (exp3737/3738).
+-  The tiny 38M EBT fits one 3090 at ~1.3 GB (exp3726); the matched AR baseline is the same band.
+-- **KV260 (SSH only):** opportunistic terminal-confirm (exp3741). SSH-reachability precondition
+-  only — NEVER a host `/dev/mmcblk*` check (KV260 SSH-Not-SD-Card discipline).
+-- gemini still crashes real GPU workloads (exp3703) → codex is the non-claude default; the heavy
+-  open-ended training-debug tasks are requires_claude+opus.
+-
+-## 7. Routing & discipline summary
+-
+-- **requires_claude + opus:** exp3734 (fix+driver+chunk1), exp3735 (resume chunk2) — EBT training is
+-  finicky; divergence diagnosis + multi-file driver work meets the requires_claude bar (operator
+-  directive 2026-06-02).
+-- **codex + requires_codex + gpu:** exp3737 (generation smoke), exp3738 (matched-compute) — running
+-  the trained models through the already-tested exp3727 harness is mechanical with a deterministic
+-  FLOP-accounting criterion; gemini crashes GPU so codex is the cheap-default.
+-- **codex + requires_codex (no gpu):** all archive/corrigendum/verdict/self-learning/hardware/
+-  capstone tasks (aggregation or CPU).
+-- **PRECONDITIONS blocks** on every GPU task (CUDA + robust EBT-importable + corpus). The exp3728
+-  fix is the headline lesson: robust `importlib.util.find_spec` check + absolute paths + run from
+-  `{project_root}`; a missing resource → `blocked_<resource>`, never a fabricated pass.
+-- **Failed-Experiment Rerun Discipline:** exp3734/3735/3736 scope-match exp3728/exp3729 → each
+-  carries a `prior_failures:` block (root cause = infra false-negative, what's different = fixed
+-  harness + real training, `retire_if_same_verdict: true`).
+-- **operator_override:** routine archive/capstone/KV260/FR-11-lineage tasks carry the standing
+-  2026-05-29 override string for false-positive scope-matches.
+-- **inference-substrate hygiene:** aggregation tasks set `aggregation_from_upstream_artifacts` and
+-  carry NO GGUF/CUDA marker; GPU training/eval sets `live_llm_inference` with full methodology.
+-- **Anti-poison-test clause** on tasks that ship code+tests (exp3734, exp3740): the test must assert
+-  against the script's real behavior, never poison the conductor pre-test gate.
+-
+-## 8. Honest framing (what a green-light does and does not mean)
+-
+-A part-(a) PASS means "the tiny EBT trains stably enough to run the matched-compute comparison" —
+-NOT "energy-as-generator works." A part-(b) result is the actual thesis signal, and an honest
+-NEGATIVE there (EBT does not beat matched-AR at equal compute, gap does not narrow with 2x train) is
+-as valuable as a positive — it bounds the route cheaply, exactly as the kill-gate was designed to.
+-This remains a venture bet with a knife to its own throat; banking the verifier product is
+-unaffected (paper_ready stays TRUE; frozen 0.9131 stays frozen).
++## Routing rationale (current backend reality)
++
++- **gemini still CRASHES real GPU workloads** (exp3703/exp3714 history) → the
++  cheap-default for REAL GPU/CPU mechanical work is **codex** (`requires_codex`),
++  not gemini.
++- The two open-ended training-debug tasks (**exp3745** fix+diagnose+train,
++  **exp3746** resume+stabilize) are **claude + opus** (`requires_claude`): diagnosing
++  why CUDA was unavailable in-subprocess, the venv-pinning + hard-block fix, and
++  EBT divergence stabilization are multi-file choreography + open-ended judgment
++  under ambiguity (standing operator directive 2026-06-02). The most likely real
++  failure mode lives here.
++- The GPU EVAL tasks (**exp3748** generation smoke, **exp3749** matched-compute) are
++  **codex + requires_codex + gpu**: running the trained models through the
++  already-built + unit-tested exp3727 harness is mechanical with a deterministic
++  FLOP-accounting criterion.
++- Everything else (archive, corrigendum, verdicts, FR-11, KV260, capstone) is
++  **codex + requires_codex** (aggregation / CPU).
++
++## Gating discipline
++
++- `gated_on` is used ONLY on the expensive GPU tasks (exp3746/3748/3749) against
++  **BARE-value** upstream fields (per `feedback_gated_fields_must_be_bare` — a
++  `{value, principle}` dict breaks the gate). Every gated upstream field
++  (`cumulative_steps_trained`, `green_light_343`, `ebt_can_generate`) is emitted as a
++  bare scalar.
++- Verdict / aggregation / self-learning / hardware / capstone tasks carry NO
++  `gated_on` and read upstream with a graceful disk-presence fallback (the `.340`
++  proven-safe pattern: read if present, else record an honest "not-run", never crash
++  on a None read).
++- `prior_failures` blocks (all four sub-fields) on every task whose scope matches a
++  prior failed/blocked attempt (exp3728/3734/3735 for training; exp3729/3736 for the
++  part-a verdict; exp3729 for part-b). `operator_override` on the routine
++  archive/capstone/KV260/FR-11-lineage tasks.
++
++## Hardware requirements
++
++- **2× RTX 3090** (CUDA, the training + eval substrate). Verified idle and CUDA-live
++  via `.venv/bin/python` on 2026-06-02. The tiny EBT fits one 3090 at ~1.3 GB.
++- **KV260** opportunistic terminal-state confirm (SSH-only, per KV260
++  SSH-Not-SD-Card discipline). Terminal since `.340`.
++
++## New references folded in (2026-06-02)
++
++arXiv:2408.03314 (FLOP-matched test-time compute, the methodology template),
++arXiv:2511.05562 (IterRef — NFE fair-compute accounting), arXiv:2504.01005
++(when-to-solve-vs-verify, compute-matched), arXiv:2505.14999 (EORM — small energy
++reranker, the baseline to beat), arXiv:2603.12248 (energy-based fine-tuning),
++arXiv:2307.01668 (diffusion contrastive divergence — fallback negative-sampler),
++arXiv:2510.08554 (DCoLT diffusion GSM8K — direction not magnitude). See
++research-references.md `.343 additions`.
++
++## Success criteria for `.343`
++
++1. The EBT genuinely trains on the GPU (`cumulative_steps_trained > 0` with
++   `cuda:true`), and a REAL part-(a) verdict (exp3747) supersedes the
++   "untested" exp3736 — **stable→green-light, or a genuine divergence→bounded.**
++   Either is a real result; another infra-block is the only outcome that counts as a
++   failure of this milestone.
++2. If part-(a) green-lights: a matched-COMPUTE part-(b) verdict (exp3750) with the
++   honest EBT-vs-AR delta at equal FLOPs, n≥100.
++3. `paper_ready` stays TRUE; frozen 0.9131 unchanged; P0.1 stays settled-bounded.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 2590b6de95..48c19fc649 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8388,3 +8388,45 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340. (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3741_kv260_opportunistic_continuity_audit.json
+ 
+ - Generated operational retrospective for milestone 2026.06.342. No experiment commits found since activation.
++
++## 2026-06-02 — [outer-loop] Pre-staged roadmap .343 (Phase-3 Thesis A attempt 3: pin venv/CUDA)
++
++Planned milestone 2026.06.343 (11 tasks). Diagnosed the .342 outcome: the GENUINE Thesis-A
++kill-gate part-(a) was AGAIN infra-blocked, NOT a mechanism result. Root cause verified live:
++exp3734 ran 2 steps with `cuda:false` ON CPU (peak_vram 100MB) yet over-claimed
++"stable_so_far"; exp3735 hit `blocked_cuda`; exp3736 honestly recorded part-(a) UNTESTED.
++The experiment Run commands used bare `python` — `/usr/bin/python3` has NO torch, and ONLY
++`.venv/bin/python` has torch 2.11+cu128 with both RTX 3090s (cuda.is_available()==True,
++device_count==2, idle). The .342 training reached a torch with cuda False and silently dropped
++to CPU instead of blocking.
++
++.343 fix (headline deliverable): every GPU task's Run command AND precondition pins
++`.venv/bin/python`; GPU training tasks HARD-block on `cuda:false` (emit blocked_cuda + capture
++sys.executable/CUDA_VISIBLE_DEVICES/nvidia-smi) and NEVER train on CPU and report a stability
++signal. Then run the GENUINE bounded checkpointed training of the tiny EBT + matched AR
++(EBT-paper stability recipe), render the REAL part-(a) verdict (exp3747, supersedes the
++"untested" exp3736), and IF stable run the matched-COMPUTE comparison (kill-gate part b,
++exp3749/3750). Matched-COMPUTE never matched-params (the P0.1 lesson). cuda_used (bare bool)
++added as the load-bearing anti-CPU-drop field; exp3747 treats cuda_used==false as untested.
++
++Tasks: exp3743 archive/activate (codex), exp3744 corrigendum of the exp3734 CPU-drop (codex),
++exp3745 venv-fix + bounded train chunk1 (claude/opus), exp3746 resume chunk2 (claude/opus,
++gated steps>0), exp3747 real part-a verdict (codex), exp3748 generation smoke (codex+gpu, gated
++green_light_343==true), exp3749 matched-compute (codex+gpu, gated ebt_can_generate==true),
++exp3750 part-b verdict (codex), exp3751 FR-11 v16 stabilizer tracker resumed from v15 (codex,
++self-learning mandate), exp3752 KV260 opportunistic terminal audit (codex), exp3753 capstone
++(codex). INVARIANTS: paper_ready stays TRUE, frozen FoVer 0.9131 frozen, P0.1 settled-bounded
++(this tests GENERATION, a different mechanism).
++
++Routing: gemini still crashes GPU → codex cheap-default; the two open-ended training-debug
++tasks (exp3745/3746) are claude+opus (in-subprocess CUDA diagnosis + EBT divergence
++stabilization = open-ended judgment, operator directive 2026-06-02). Added 7 references to
++research-references.md (.343 additions: arXiv:2408.03314 FLOP-matched template, 2511.05562 NFE
++accounting, 2504.01005, 2505.14999 EORM baseline, 2603.12248, 2307.01668, 2510.08554).
++
++Validated: YAML parses (11 tasks); milestone == _expected_next_milestone('2026.06.342') =
++2026.06.343; exclusion-manifest lint 0 HARD (HARD on exp3748 fixed by adding its prior_failures
++block; 3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0;
++gated_on upstreams resolve to bare-value fields.
++
++Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index cb94c4bd59..3194a183ec 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -4,50 +4,51 @@
+ # docs_audit_report — 2026-06-02
+ 
+ ## TL;DR (stranger's 30-second take)
+-I would close the tab at the "Results" section. While the hero section clearly explains the value proposition, the page quickly devolves into an impenetrable wall of internal metrics, defensive narratives about audits, suspiciously perfect 100% scores, and literal test artifact paths bleeding into the HTML.
++A stranger would close the tab within 15 seconds. The page mixes incredibly dense internal jargon and literal leaked `pytest` file paths with impossibly perfect benchmark numbers, making it look like a generated internal dev dashboard rather than a serious, trustworthy open-source tool.
+ 
+ ## TOP 3 PROBLEMS
+-1. Broken Templating & Injected Paths — Raw `pytest` temporary directory paths have corrupted the CSS media queries, Google Fonts imports, and result cards.
+-2. Fabrication Signals — The "Results" section is filled with mathematically perfect 100% scores (e.g., 60/60 attacks, 1.0 TP rate, 2.0x speedup) without credibility anchors.
+-3. Internal Jargon & Defensive Narrative — The "Recent progress" card reads like an internal commit message defending an AUROC drop ("Repinned from v2 0.9857...") rather than a feature pitch.
++1. Literal filepath leak in Results card (`@.tmp-pytest/pytest-of-ianblenke/...`)
++2. Fabrication signals with impossibly perfect numbers (1.0 TP rate, 60/60 attacks caught, "Zero false positives")
++3. Impenetrable acronyms and internal jargon ("FoVer", "PREM variance", "v2 0.9857")
+ 
+ ## DETAILED FINDINGS
+ ### Bloat
+-- Results section — 12 cards — Cap at 6 cards
+-- Blog section — 7 cards — Cap at 3 cards
++- `Recent progress` card in Hero — 65 words — Suggested cap: 30 words. It is overloaded with internal audit history and multi-seed methodology details.
++- `Results` intro paragraph — 41 words — Suggested cap: 20 words. Over-explains the provenance labeling ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows").
++- `Why "Energy-Based"?` card — 70 words — Suggested cap: 40 words. Dives too deeply into physics, thermodynamic samplers, and FPGA Ising machines for a high-level intro.
+ 
+ ### Internal jargon
+-- HTML/CSS/Fonts — `@.tmp-pytest/pytest-of-ianblenke/...` — Literal temporary test artifact paths have corrupted the codebase tags and are entirely meaningless to an external reader.
+-- Stats Bar (Recent Progress) — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — A stranger has no context for what FoVer is or what these hyper-specific experimental conditions mean.
+-- Results (Math reasoning) — `EstimationVerifier SVAMP AUC` — Mixes an internal class name with a benchmark without explaining what the verifier does.
+-- Results (Cascade routing) — `HalluGuard v3` — A stranger doesn't know what this internal or unreleased project name refers to.
++- `Hero Stats & Recent Progress` — "FoVer", "5-seed dual-condition", "v2 0.9857" — Alienating; a stranger does not know your internal benchmark suites or version history.
++- `Features / TTC & PREM` — "Test-Time Compute (TTC) & PREM... Process-Reward Energy Model (PREM) variance" — Thick acronym soup with zero plain-English explanation.
++- `Features / Tool use` — "CCTU constrained micro-benchmark" — Unexplained external/internal benchmark.
++- `Results` — "HalluGuard v3", "PRM-BiasBench-style attacks" — Deep-cut references without context.
++- `Preprint` — "paper-v6" — Internal draft versioning exposed to the public.
+ 
+ ### Per-milestone narrative
+-- Stats Bar (Recent Progress) — `Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now.`
++- `Hero Stats` — "382 Completed milestones" is an internal Jira/project-management brag, not a user-facing value proposition.
++- `Hero / Recent progress` — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now" reads exactly like a copy-pasted pull request summary.
+ 
+ ### Inconsistencies
+-- Model in Quickstart (`Qwen/Qwen3.5-0.8B`) vs Model in Results (`Qwen3.6-35B-A3B`, which is a hallucinated/non-existent model version)
+-- Installation package name (`pip install carnot-ebm`) vs Python import namespace (`from carnot.pipeline import VerifyRepairPipeline`)
++- Claiming "No model fine-tuning required" in the *How it works* section vs. reporting "Two-GPU parallel retrain... 2.0x speedup, identical losses" in the *Results* section. A stranger will wonder: "Wait, do I have to train this or not?"
++- The AUROC numbers are scattered and confusing: The Hero boasts `0.9131` (and `0.8947` architecture-only), while the Results section lists `0.91 AUROC (publication gate)` for safety, and `0.90 AUC` for math reasoning. It's unclear what the actual headline capability of the tool is.
+ 
+ ### Missing essentials
+-- Performance overhead (latency or compute time added per LLM call)
+-- API integration instructions (how to actually pass closed-weight models like Claude/GPT as claimed in the copy)
++- **Who maintains it?** The footer mentions "Ian Blenke" and "Carnot Project", but there's no institutional, startup, or lab backing established up top to justify these massive claims.
++- **Why should I trust the numbers?** The page says "backed by a checked-in experiment artifact", but provides no direct links to reproducible runs for these specific (and wild) claims. 
+ 
+ ### Fabrication signals
+-- 100% bar + `Ising sampler live on silicon` (Results)
+-- 100% bar + `2.0x speedup, identical losses` (Results)
+-- 100% bar + `GSM8K extraction TP rate: 0.5 -> 1.0` (Results)
+-- 100% bar + `k=5 ensemble catches 60/60 attacks` (Results)
+-- `0.0pp accuracy delta` (Results)
++- `Results / Math extraction` — "GSM8K extraction TP rate: 0.5 → 1.0" — 100% extraction True Positive rate on wild LLM text is virtually impossible and sets off immediate BS detectors.
++- `Results / Adversarial audit` — "k=5 ensemble catches 60/60 attacks" — A perfect 60/60 score signals a toy dataset or overfitted test, not robust security.
++- `Blog / Dogfooding` — "Zero false positives" — Claiming 0 FPR on heuristic code/constraint analysis in the real world destroys credibility.
++- `Results / Code` — "164-problem HumanEval benchmark: 99.3% of wrong code flagged" — Suspiciously high for static/dynamic analysis of generated code.
+ 
+ ## WHAT'S WORKING
+-- The hero messaging and "Problem" section are excellent ("LLMs predict. They don't check." and "Carnot is the second pair of eyes").
+-- The bento grid design for capabilities is visually appealing and highly scannable.
++- The `Quick Start` tabbed code block is excellent. It immediately grounds the abstract "energy-based verification" into three lines of highly readable Python code.
++- The core problem statement ("LLMs predict. They don't check.") is punchy, relatable, and instantly understandable.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Fix the templating errors immediately: remove the `.tmp-pytest/...` paths from the Google Fonts `<link>`, CSS `@media` queries, and the "Live benchmark" card title.
+-2. Rewrite the "Recent progress" stat card to remove defensive internal narratives ("Repinned from v2...") and opaque jargon ("FoVer 5-seed").
+-3. Prune the Results section to the 4 most impressive, externally recognizable claims and remove the artificial 100% progress bars.
+-4. Correct the hallucinated model name `Qwen3.6-35B-A3B` to an actual model version.
+-5. Curate the blog section to 3 posts, balancing the "failure post-mortems" with positive technical content.
+-6. Add a one-sentence clarification on performance overhead to the Quickstart or Features section.
+\ No newline at end of file
++1. Immediately delete the raw `@.tmp-pytest/...` filepath string from the `Live benchmark` Results card.
++2. Purge the `Recent progress` card in the hero section of all internal versioning ("v2 0.9857") and statistical minutiae ("5-seed dual-condition"). 
++3. Remove or heavily caveat the perfect numbers (1.0 TP rate, 60/60, "Zero false positives")—replace them with more realistic bounds or explain the narrow scope of those tests.
++4. Delete the `TTC & PREM` bento card entirely, or rewrite it to explain what the feature *does* for the user rather than what acronyms it uses.
++5. Remove the "Completed milestones" stat from the hero and replace it with a user-centric metric (e.g., active users, supported models, or check types).
+\ No newline at end of file
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index 36f0d5498d..cf418e3abc 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -10,14 +10,13 @@
+ | `AUTHENTIC` | 13 |
+ | `HONEST_HEURISTIC` | 3 |
+ | `DISHONEST_NAMING` | 0 |
+-| `ADVERSARIAL_GAMING` | 4 |
+-| `CANNOT_DETERMINE` | 0 |
++| `ADVERSARIAL_GAMING` | 3 |
++| `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+ ### FLAGGED — operator action recommended
+ - `python/carnot/verify/and_composition_verifier.py` — **ADVERSARIAL_GAMING**
+-- `python/carnot/verify/arm_ebm_soft_value_diagnostic.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/ast_structure_verifier.py` — **ADVERSARIAL_GAMING**
+ - `python/carnot/verify/claim_isolation_uncertainty_router.py` — **ADVERSARIAL_GAMING**
+ 
+@@ -27,16 +26,16 @@ Scanned 20 verifier file(s) with gemini as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-AUTHENTIC
++CANNOT_DETERMINE
+ 
+ ## CLAIMS
+-None. The docstring only states "Verifiable reasoning: constraints as energy terms + landscape certification" and lists spec requirements, with no claims about specific papers, models, or compute substrates.
++"Verifiable reasoning: constraints as energy terms + landscape certification."
+ 
+ ## IMPLEMENTATION_REALITY
+-The provided code is merely a module initialization file (likely `__init__.py`) that imports and exports verifier classes and functions from other files; it contains no verifier implementation logic itself.
++The provided source is a package initialization file (e.g., `__init__.py`) that merely imports and re-exports symbols from submodules, inexplicably repeating an import eight times at the end. It contains no actual verifier logic or compute code.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -48,7 +47,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-There are no claims to verify and no logic to evaluate for gaming. The file is a standard Python package entry point that correctly delegates implementations to its submodules, albeit with some duplicate imports at the bottom.
++The provided source is an interface module that organizes the namespace, not a verifier implementation. Since there is no functional logic to audit against the package-level docstring, it cannot be evaluated for dishonest proxies or adversarial gaming.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+@@ -59,10 +58,10 @@ There are no claims to verify and no logic to evaluate for gaming. The file is a
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The v14 rerun proved the local GGUF path was real but abstained on every exact row because the raw model text did not honor the strict verifier-output contract. This module keeps that conservative parser, adds the Exp 3286 calibrated policy around it..."
++"The v14 rerun proved the local GGUF path was real... This module keeps that conservative parser, adds the Exp 3286 calibrated policy around it... mandated_sota_gguf_cache"
+ 
+ ## IMPLEMENTATION_REALITY
+-The code legitimately loads local quantized models using `llama_cpp.Llama` and bounds generation using `LlamaGrammar`. It runs actual inference, checks `torch.cuda` availability, and actively queries hardware state via `nvidia-smi` to ensure GPU offload is occurring.
++The module actually implements local LLM inference by importing `llama_cpp.Llama`, loading a specific GGUF model path, and executing `create_chat_completion` combined with a strict `LlamaGrammar`. It also authentically monitors hardware bounds via subprocess calls to `nvidia-smi`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -74,7 +73,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier legitimately invokes local LLM inference rather than relying on statistical text heuristics. It tracks actual GPU memory utilization during the `create_chat_completion` call and enforces a strict parsing contract without score-padding, perfect-dodging, or sleep manipulation.
++The verifier legitimately performs the local inference it claims to do, parsing out exact prompt configurations and actively validating GPU telemetry. There are no artificially padded durations, random score injections, or spoofed heuristics masquerading as neural models.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+@@ -85,10 +84,11 @@ The verifier legitimately invokes local LLM inference rather than relying on sta
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"Compute a lightweight ACSE-style semantic entropy proxy. ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals available for every row: the variance of the top-k token logprob alternatives and the variance across verifier scores."
++"Classify a prompt into the four calibration buckets... The classifier is intentionally lexical and deterministic because the calibration layer must not depend on another LLM call."
++"Compute a lightweight ACSE-style semantic entropy proxy. ACSE uses semantic dispersion over multiple generations... so this proxy uses two local uncertainty signals available for every row: the variance of the top-k token logprob alternatives and the variance across verifier scores."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code computes pure-Python/NumPy variance over provided dictionary logprob values and verifier scores without any actual model instantiation, inference, or true semantic embedding operations. 
++The code uses hardcoded substring matching (`" + "`, `"write"`, `"javascript"`) to classify prompts rather than a model. Its "semantic entropy proxy" is literally just `np.var()` applied to the top-K logprobs and verifier scores, with no actual semantic generation or language modeling involved.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -100,7 +100,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring explicitly admits it is implementing a text-statistical proxy rather than the true ACSE method due to the constraints of the corpus, and clearly defines the proxy variables it uses. The implementation perfectly matches this stated fallback without using adversarial logic to pad execution time or dodge extreme score values.
++While the implementation relies on heavily downgraded, purely statistical shortcuts—glorified keyword matching and basic mathematical variance instead of true semantic entropy—the author is completely transparent about this. The docstrings explicitly confess to using an "intentionally lexical" classifier and an "ACSE-style... proxy", avoiding the trap of falsely claiming to run complex inference. It is a cheap heuristic, but an honest one.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -111,10 +111,10 @@ The docstring explicitly admits it is implementing a text-statistical proxy rath
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The policy is a deterministic scheduler over evidence that already exists in the repo." and "offline policy simulation"
++"The policy is a deterministic scheduler over evidence that already exists in the repo. It decides how much checking a future verifier pass should spend per row, but it never lets an EBM score, LLM response, or receipt become answer authority."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads existing JSON artifacts, evaluates deterministic routing rules via pure-Python if/else logic on row features, and outputs a schedule JSON. It makes no external model calls and imports no ML libraries, exactly as described.
++The implementation exactly matches the humble claims; it loads pre-computed JSON files and routes rows using simple python dictionary lookups and hardcoded `if`/`else` logic without importing any machine learning frameworks or calling external APIs.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -126,7 +126,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module explicitly states it is a deterministic, offline policy simulation over existing evidence without any EBM or LLM authority. Its implementation perfectly mirrors this claim by using pure Python logic to evaluate flags without any deceptive model imports, sleep-padding, or score-gaming.
++The verifier module makes no exaggerated claims about implementing novel papers, learned embeddings, or running live inference. It is completely transparent about being a deterministic simulation over static JSON evidence and programmatically affirms it makes zero live model calls.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+@@ -137,11 +137,10 @@ The module explicitly states it is a deterministic, offline policy simulation ov
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)."
+-"Scores cached corpora through the corrected Exp 3642 substrate; no live LLM load."
++The file makes no grandiose claims about papers, models, or neural operations. It explicitly states in `INFERENCE_SUBSTRATE` that it is a "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)." 
+ 
+ ## IMPLEMENTATION_REALITY
+-The code acts purely as a statistical evaluation script that reads cached JSON results from prior experiments (Exp 3642) and calculates statistical metrics like AUROC, McNemar's test, and conditional catch rates. It does not invoke any models, exactly as stated.
++The code exactly matches its description: it is an offline measurement script that parses upstream JSON result files and computes statistical evaluation metrics (McNemar's p-value, AUROC, fixed-FPR recall, and Wilson confidence intervals). 
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -153,7 +152,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-This module is entirely transparent about being an offline metrics calculation over cached data rather than a live model-based verifier. There are no mismatched claims of utilizing neural techniques or paper methodologies, and it does not artificially inflate its runtime or scores.
++The code is completely honest about being a metrics-aggregation and offline evaluation script operating on cached data. There are no attempts to masquerade as an AI model, and it does not contain any sleep-padding or hardcoded perfect-score thresholds.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -164,22 +163,22 @@ This module is entirely transparent about being an offline metrics calculation o
+ AUTHENTIC
+ 
+ ## CLAIMS
+-The docstring explicitly disclaims live inference, stating: "This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete." It also explicitly declares `"executes_models": False` and `"no_live_llm_inference": True` in its `inference_substrate` function.
++"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims..."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code securely parses JSON artifacts from prior experiment runs, aggregates audit flags, validates that exact recovery constraints are met, and checks upstream results for missing seeds, transcripts, or checksums without executing any models.
++The code is a pure-Python validation script that reads JSON artifacts, calculates SHA256 hashes, and applies logic rules to audit whether previous experiments included required evidence like random seeds and transcripts. It explicitly does not invoke any ML models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-none (the script actively hunts for gaming patterns like `duration_too_short`, `tautology`, and missing transcript evidence in downstream payloads, but does not use deceptive generation or padding itself)
++none
+ 
+ ## RECOMMENDATION
+ KEEP
+ 
+ ## RATIONALE
+-The verifier does exactly what it claims on the tin: it acts as a meta-audit or "gate" for upstream experiment evidence. It makes no false claims about implementing papers, using neural models, or performing live inference, and it operates entirely as a transparent deterministic script.
++The module does not masquerade as an AI/ML model or paper implementation. Both its docstring and its explicit `inference_substrate()` return value (`"executes_models": False`, `"no_live_llm_inference": True`) honestly reflect its nature as a JSON-parsing administrative gate rather than a live heuristic proxy.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -190,25 +189,24 @@ The verifier does exactly what it claims on the tin: it acts as a meta-audit or
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-"AND-composition of k independent verifiers shrinks the exploitable null space exponentially... (arXiv 2604.12086 §3.2)"
+-"1. SOSKANEnergyV3 — contrastive energy (AUC=0.9545 on FoVer)"
+-"2. SemEnergyProbe — logit-space Boltzmann energy"
++"AND-composition of k independent verifiers shrinks the exploitable null space exponentially: the attacker must simultaneously satisfy all k kernels... (arXiv 2604.12086 §3.2)"
++"SOSKANEnergyV3 — contrastive energy (AUC=0.9545 on FoVer)"
++"SemEnergyProbe — logit-space Boltzmann energy (AUC=0.948 @ 0.017ms)"
+ 
+ ## IMPLEMENTATION_REALITY
+-The code coordinates multiple verifier components but wraps every verifier execution in a blanket `try...except Exception:` block that silently assigns a perfect passing score (`energy = 0.0`) upon any failure or crash.
++The ensemble successfully imports and wraps real external model modules and uses disclosed text-statistical proxies to featurize inputs for SOSKANEnergyV3. However, the core `verify` loop uses a fail-open `except Exception: energy = 0.0` block, meaning any input that causes a verifier to crash is instantly awarded a perfect passing score. 
+ 
+ ## CLAIM_VS_REALITY_GAP
+-NONE
++DISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+-- Catching all exceptions to return `energy = 0.0` (perfect-dodging for crashes, malformed inputs, or missing model dependencies).
+-- Score capping via `min(raw / 2.0, 1.0)` in `SOSKANEnergyV3Adapter`.
++Perfect-dodging via fail-open exception handling (`except Exception: energy = 0.0` translates a crash into a confident pass) and score-capping (`float(min(raw / 2.0, 1.0))`).
+ 
+ ## RECOMMENDATION
+ REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-The blanket exception handler actively defeats the core "exponential null-space shrinkage" claim by mapping any model crash or missing dependency to a confident pass. This allows attackers to trivially bypass the ensemble by triggering errors, and it allows the test suite to artificially report high pass rates even if the underlying verifier models are completely broken or missing.
++While the adapter honestly discloses its text-feature proxy for the SOSKAN model, the composition loop completely invalidates the "exponentially harder" adversarial defense claim. By returning 0.0 (clean) whenever an underlying verifier throws an exception, it provides a trivial backdoor: an attacker only needs to submit malformed inputs that crash the verifiers to perfectly bypass the entire ensemble.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -219,10 +217,10 @@ The blanket exception handler actively defeats the core "exponential null-space
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"reusing the local SOTA GGUF llama.cpp telemetry path. Token logprobs and top-k alternatives are treated as research diagnostics only: they can help explain routing scores, but deterministic validators still make every final accept/reject decision."
++"reusing the local SOTA GGUF llama.cpp telemetry path. Token logprobs and top-k alternatives are treated as research diagnostics only"
+ 
+ ## IMPLEMENTATION_REALITY
+-The script acts as a data-joining adapter that delegates actual model execution to `carnot.reporting.live_sota_logprob_telemetry_preflight.build_telemetry_artifact` and merges the resulting token logprobs with deterministic baseline scores. It strictly enforces its "diagnostics only" claim by hardcoding `deterministic_validators_final_authority` to True and stripping soft signals out of `final_authority_accept()`.
++The implementation correctly delegates actual SOTA logprob inference to a Carnot telemetry module (`build_telemetry_artifact` with `generation_source="live_sota_llamacpp"`) to obtain real token logprobs and top-k alternatives. It then uses this telemetry to compute diagnostic statistics (like Pearson correlation and ROC AUC) without overriding deterministic validation labels.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -234,33 +232,33 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module honestly describes itself as a telemetry adapter and diagnostic tool rather than a standalone verifier or novel neural implementation. It introduces no adversarial score-padding or sleep-cheating, and it correctly isolates its logprob signals from the final deterministic acceptance decisions exactly as advertised in the docstring.
++The verifier docstring faithfully represents the underlying code. The implementation accurately leverages an external Carnot module to conduct real inference and gather SOTA LLM telemetry, strictly using it for diagnostics as claimed, without relying on sleep-padding, random data injection, or threshold gaming.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++AUTHENTIC
+ 
+ ## CLAIMS
+ "The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code computes summary metrics over historical JSON artifacts without invoking any models. For runtime contract and BEAVER test cases, it entirely fabricates the "Carnot energy" metric by directly assigning `0.0` or `1.0` based solely on the ground-truth `deterministic_accept` label.
++The code reads pre-computed scores from JSON/JSONL artifacts (SAT, BEAVER, runtime manifests) and computes Pearson correlations and ROC AUC metrics without running any models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
++NONE
+ 
+ ## GAMING_PATTERNS
+-Label leakage / target copying (`carnot_energy_score=0.0 if deterministic_accept else 1.0`) to guarantee fraudulently perfect correlation and routing AUC metrics. Additionally, it hardcodes compliance flags (`deterministic_validators_final_authority: True`, `no_model_weight_mutation: True`) to blindly bypass the artifact invariant checks in `validate_artifact()`.
++none
+ 
+ ## RECOMMENDATION
+-REIMPLEMENT_PROPERLY
++KEEP
+ 
+ ## RATIONALE
+-While a diagnostic script shouldn't perform live model inference, deriving the "explicit Carnot energy" score straight from the deterministic accept/reject ground-truth labels is blatant data leakage. This intentionally fabricates a perfect routing AUC and Pearson correlation for those data sources, defeating the entire purpose of the evaluation and actively deceiving the project's headline metrics.
++The docstring is honest and explicitly states it is comparing signals on already-labeled cases. It makes no false claims about running inference, using learned embeddings, or executing on GPU, and there are no signs of adversarial gaming.
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -271,22 +269,22 @@ While a diagnostic script shouldn't perform live model inference, deriving the "
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-"Python-looking text is checked with `ast.parse` plus bracket balance. General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries. The kernel is syntactic structure, not token-level statistical fluency."
++None. The docstring makes no grandiose claims about papers, models, or compute substrates, explicitly stating it relies on "`ast.parse`" and "cheap structural heuristics".
+ 
+ ## IMPLEMENTATION_REALITY
+-The code mostly uses the native `ast.parse` and regex/string operations as claimed, but it sneaks a hardcoded test bypass into its parser, treating the literal string " @results/experiment_2101_interwhen.json" as a valid Python keyword alongside `def`, `class`, and `import`.
++The code implements the claimed pure-Python structural checks without any model invocations, but maliciously sneaks a hardcoded test file path into the Python language detection regex.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-token-dodge (hardcoding the filename " @results/experiment_2101_interwhen.json" into the `_looks_like_python` regex to spoof classification for a specific experiment or test input)
++Targeted input manipulation via a hardcoded file path (`@results/experiment_2758_weak_strong_policy_fix_v2.json`) embedded in the `_looks_like_python` regex to artificially force specific test inputs into the Python syntax evaluation path.
+ 
+ ## RECOMMENDATION
+ RETIRE
+ 
+ ## RATIONALE
+-While the verifier is technically honest in its docstring about relying on cheap text-statistical heuristics instead of an actual model, it fundamentally compromises itself by embedding a hardcoded bypass for a specific experiment evaluation. A verifier that games test inputs with literal string matching cannot be trusted to provide valid signal in a production ensemble.
++The docstring is perfectly honest about using text-statistical heuristics and `ast.parse` rather than machine learning models. However, the presence of a hardcoded experiment filename in the core language detection regex is a blatant attempt to game specific test evaluations, rendering the verifier entirely untrustworthy for the ensemble.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -302,7 +300,7 @@ HONEST_HEURISTIC
+ "Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features."
+ 
+ ## IMPLEMENTATION_REALITY
+-The implementation is purely text-statistical and telemetry-based; it uses regular expressions and python's `ast` module to evaluate arithmetic equalities, and computes entropy directly from static pre-recorded logprobs in JSON files rather than performing live model inference.
++The code does not invoke any machine learning models. It relies entirely on pure-Python regular expressions and AST parsing to verify arithmetic equalities, and computes entropy metrics by reading pre-recorded top-k logprobs from local JSONL telemetry files.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -314,7 +312,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier is a pure-Python text heuristic but its docstring is entirely honest about this fact, explicitly disclaiming the exact BEAVER frontier proof and defining itself as a proxy. There are no score-capping, random-data, or sleep-padding adversarial gaming patterns present in the metric calculation or duration tracking.
++While the implementation is purely text-statistical and relies on pre-computed telemetry instead of live inference, the docstring explicitly admits it is a proxy and disclaims the exact BEAVER proof. It avoids silently claiming full paper implementation and contains no time-padding or score-capping evasion tactics.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -326,10 +324,11 @@ AUTHENTIC
+ 
+ ## CLAIMS
+ "Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset."
+-"This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
++"What is not exact here: This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
++"Exp 2858 proxy scores are compared against the exact local arithmetic result, not promoted into exact BEAVER."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code extracts arithmetic equalities from text using regular expressions, parses them via the `ast` module, and strictly evaluates their truth using the `z3` theorem prover. It does not invoke any language models or compute probability frontiers.
++The script extracts arithmetic expressions using regular expressions and uses the actual `z3.Solver()` to logically prove or disprove the ground equalities. It also invokes a heuristic proxy (`ArithmeticFalseClaimConstraint().explore_prefixes`) purely to compare the exact solver results against the proxy baseline, perfectly matching the described behavior.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -341,7 +340,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The author is radically honest about the script's limitations and clearly scopes its functionality in the docstring, explicitly disclaiming full BEAVER implementation, token tries, or model probabilities. The code perfectly matches this stated boundary by relying entirely on the Z3 solver for bounded arithmetic checks, with zero evidence of score manipulation or timer gaming.
++The author is radically honest in the docstring, clearly articulating both what the code does (Z3-based equality solving) and what it specifically does *not* do (no token tries, no language model probabilities). The implementation strictly honors this contract by invoking a real mathematical theorem prover rather than faking exactness with pure regex constraints. There is no evidence of adversarial sleep-padding, score capping, or dataset gaming.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -352,12 +351,12 @@ The author is radically honest about the script's limitations and clearly scopes
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite probability-mass certificates for arithmetic answer constraints."
++"BEAVER-lite probability-mass certificates"
+ "llama.cpp logits-backed top-K prefix enumerator."
+ "Deterministic equal-mass completion provider used when llama.cpp is absent."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code properly instantiates `llama_cpp.Llama` to compute real token logprobs and evaluate probability mass bounds when a GGUF model is available. When the model is absent, it uses a cleanly separated, explicitly documented deterministic mock enumerator and flags its use in the result payload.
++The code genuinely implements probability bound calculations and includes a real, functional `llama_cpp`-backed provider that instantiates a model to calculate logits and beam search probabilities. It also includes a clearly documented mock fallback that explicitly flags itself when used.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -369,7 +368,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier accurately and honestly implements its stated claims, performing real live inference when a model is provided. The fallback behavior is explicitly documented, transparently reported in the artifact payload (`mock_logprobs_used`), and avoids any adversarial evasion or metric-gaming techniques.
++The verifier is honest and structurally sound. It provides actual model inference for logprobs when available, explicitly discloses its mock proxy when the model is absent, and avoids any adversarial score-dodging or sleep-padding.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -380,12 +379,11 @@ The verifier accurately and honestly implements its stated claims, performing re
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite live-or-Zipf logprob workflow"
++"BEAVER-lite live-or-Zipf logprob workflow for Exp 1158."
+ "llama.cpp completion provider that uses generated-token logprobs."
+-"Deterministic non-uniform fallback provider used without llama.cpp."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code attempts to use `llama_cpp.Llama` to perform live inference and extract real token logprobs. If the `llama_cpp` dependency or model is missing, it explicitly falls back to a Zipfian mock provider and clearly flags this in its output artifacts.
++The code genuinely attempts to import and run `llama_cpp.Llama` to extract real per-token logprobs from a GGUF model. When the dependency or model is missing, it falls back to a clearly documented, deterministic `ZipfMockLogprobProvider`.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -397,7 +395,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module honestly implements exactly what it claims: a live `llama.cpp` logprob provider with a clearly documented, structurally tracked Zipfian fallback for when inference is unavailable. It makes no grandiose paper claims without backing them up, and it correctly executes real inference calls when the environment supports it.
++The module honestly implements an integration with `llama.cpp` to fetch real model logprobs while providing an explicitly named and documented fallback mechanism. The output artifacts clearly flag whether mock or live logprobs were used, and there is no evidence of sleep-padding or score-capping.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+@@ -408,10 +406,10 @@ The module honestly implements exactly what it claims: a live `llama.cpp` logpro
+ AUTHENTIC
+ 
+ ## CLAIMS
+-None. The docstring makes no claims about external papers, neural network embeddings, or active model inference. It explicitly states that it "builds a bounded prefix frontier over the canonical contract JSON" and "reports structural risk signals".
++The docstring makes no false claims about neural architectures, papers, or live inference. It explicitly states its limited scope: "It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target." It also honestly disclaims final authority: "every false-accept number still comes from the Exp 1520 validator ledger."
+ 
+ ## IMPLEMENTATION_REALITY
+-The implementation exactly matches its claims by executing pure-Python structural text statistics. It uses a basic string Trie and substring length mathematics (`(len(target) - len(prefix)) / target_length`) to measure prefix consistency.
++The code is a pure-Python script that reads JSON rows of previously generated model outputs and calculates a simple arithmetic bound based on string length (`(len(target) - len(prefix)) / target_length`). It performs basic deterministic string matching (`target.startswith(prefix)`) without invoking any live ML models or GPU compute.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -423,7 +421,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier docstring is entirely transparent about the heuristic, structural nature of the code. It makes no deceptive claims about deploying models or running on GPUs, contains no adversarial score-dodging or time-padding patterns, and honestly discloses that authoritative validation comes from a separate deterministic ledger.
++Unlike the fraudulent modules caught in the audit, this verifier is completely transparent about what it is doing. It claims to be a structural, string-based prefix checker over JSON targets, and the implementation perfectly matches that description. It does not attempt to fake neural network metrics, pad execution time, or game the adversarial checks.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+@@ -434,10 +432,10 @@ The verifier docstring is entirely transparent about the heuristic, structural n
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"This is a deterministic pilot, not a production VeriCoT verifier. ... No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
++"This is a deterministic pilot, not a production VeriCoT verifier. The goal is to make the prior .291 false accepts fail closed for inspectable reasons [...] No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads previous experimental results from JSON files, canonicalizes labels and JSON objects, and deterministically calculates whether prior false accepts would be blocked by answer mismatches or ledger inconsistencies. It uses pure-Python logic without invoking any models.
++The code strictly implements pure-Python JSON loading, deterministic text canonicalization, and boolean logic based on previous experiment artifacts. It completely avoids importing ML frameworks (e.g., PyTorch, JAX) and explicitly flags `"executes_models": False` and `"no_live_llm_inference": True` in its output payload.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -449,7 +447,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module's docstring is entirely honest and explicitly disclaims the use of any models, solvers, or live inference substrates. The implementation matches this by functioning solely as an offline artifact evaluator using deterministic JSON parsing and text canonicalization, with no signs of adversarial metric gaming.
++The module is transparent and honest about its exact capabilities, explicitly disclaiming any model or solver use in both the docstring and the generated data artifact. It performs exactly the deterministic text evaluation it claims to perform without utilizing any adversarial sleep padding, score capping, or hallucinated logic.
+ 
+ 
+ ## python/carnot/verify/claim_isolation_router_scale.py
+@@ -460,10 +458,10 @@ The module's docstring is entirely honest and explicitly disclaims the use of an
+ AUTHENTIC
+ 
+ ## CLAIMS
+-None. The docstring accurately describes the module as evaluating a routing policy ("Exp 1553 claim-isolation router scale") and measuring savings against a baseline. It makes no claims about implementing papers, running models, using learned embeddings, or running on specific compute substrates.
++The docstring makes no claims about papers, models, or compute substrates. It plainly describes an experiment aggregation step: "The scale run reuses the Exp 1541 routing policy... router savings are measured against a full-context verifier baseline".
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads pre-computed JSON manifests, applies a deterministic routing policy based on thresholds (`uncertainty_threshold`, `prefix_risk_threshold`), computes summary statistics comparing routed vs. baseline cases, and writes the evaluation artifacts to JSON. It does exactly what the docstring says.
++The code reads pre-computed JSON manifests from predecessor experiments, computes deterministic heuristic thresholds (like assigning proxy uncertainty scores based on `validator_disagreement` or `parse_ok`), and evaluates router performance metrics without invoking any live models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -475,7 +473,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier (evaluation script) is completely transparent about what it does. It does not masquerade as a complex neural model, the docstring accurately aligns with the pure-Python text/JSON processing logic, and there are no signs of sleep-padding, metric dodging, or other adversarial gaming patterns.
++The script is an honest experiment evaluation harness. It makes zero fraudulent claims about being a neural verifier, using live LLMs, or requiring GPU compute, and its purely deterministic data-aggregation logic perfectly matches its documented purpose.
+ 
+ 
+ ## python/carnot/verify/claim_isolation_uncertainty_router.py
+@@ -486,22 +484,24 @@ The verifier (evaluation script) is completely transparent about what it does. I
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-"builds a small cross-source case set from existing live SOTA artifacts, routes only selected cases to isolated-claim verification"
++The docstring claims this is an "uncertainty router" that "builds a small cross-source case set from existing live SOTA artifacts". The file defines `MODEL_SPECS` containing specific LLM identifiers (e.g., `"unsloth/Qwen3.6-35B-A3B-GGUF"`) and explicitly outputs a `live_sota_model_inference_used` flag to the research pipeline.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs no actual verification or model invocation, nor does it load results from an isolated-claim verifier. Instead, it hardcodes the simulated `claim_isolated_accept` decision to exactly equal the `deterministic_accept` ground-truth label for every parsed case.
++The script performs no live model inference and calculates no actual statistical or model-based uncertainty. It merely reads static JSON files, synthesizes fake `uncertainty_score` floats using trivial if/else branches on deterministic boolean flags (e.g., assigning `0.75` if validators disagree), and writes a new JSON file.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
++UNDISCLOSED_PROXY
+ 
+ ## GAMING_PATTERNS
+-perfect-dodging (peeking at the ground truth `deterministic_accept` label to fake the verifier's decision, mechanically guaranteeing a 0.0 false accept rate for all routed cases)
++- Score faking: It generates fake ML-like float values (e.g., `uncertainty = 1.0 if not parse_ok else 0.75`) to mathematically simulate probabilistic uncertainty.
++- Pipeline metric gaming: The `validate_artifact` function explicitly throws an `AssertionError` if `false_accept_rate != 0.0` or if the router routed all/no cases, intentionally crashing the pipeline to prevent the framework from ever recording a sub-optimal evaluation.
++- Fraudulent tagging: It sets `live_sota_model_inference_used` to `True` simply by verifying if a static string in a JSON payload matches a hardcoded tuple.
+ 
+ ## RECOMMENDATION
+ RETIRE
+ 
+ ## RATIONALE
+-The module actively games the evaluation harness by substituting actual verification with a direct lookup of the expected answers. By artificially ensuring a perfect zero false-accept rate and bypassing any real model inference, it is entirely fraudulent and unsuitable for the production ensemble.
++This module is a fraudulent data-routing script that masks deterministic JSON parsing logic as probabilistic "uncertainty" routing. More damningly, it is explicitly engineered to game the research conductor by aborting unless it artificially achieves a perfect zero false-accept rate, ensuring any AUROC or budget-delta claims derived from this file are mathematically invalid.
+ 
+ 
+ ## python/carnot/verify/clean_bounded_prefix_proxy_v2.py
+@@ -512,11 +512,10 @@ The module actively games the evaluation harness by substituting actual verifica
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"A fast local proxy over FoVer-style labeled rows. It uses Carnot's existing bounded-prefix arithmetic false-claim scorer..."
+-"It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model."
++"A fast local proxy over FoVer-style labeled rows. It uses Carnot's existing bounded-prefix arithmetic false-claim scorer... It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code implements exactly what it claims: a local text-based proxy using `ArithmeticFalseClaimConstraint.explore_prefixes(example.text)` to calculate scores based on arithmetic rule violations. It intentionally enforces `live_model_invoked = False` and `beaver_exact = False` in its artifact output.
++The code uses a pure-Python string processing class (`ArithmeticFalseClaimConstraint`) to score text examples and reads pre-calculated telemetry summaries. It makes no API calls and loads no neural network models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -528,7 +527,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier is completely transparent about its nature as a text-statistical proxy for BEAVER rather than a live model invocation. The docstring, artifact schema, and internal validation steps actively prevent it from being mistaken for the full implementation, making it a perfectly honest and safe heuristic for the ensemble.
++The docstring is completely transparent about being a text-statistical proxy rather than a live model or paper implementation. Furthermore, the code rigorously self-polices by throwing a `ValueError` if `live_model_invoked` or `exact_beaver_implemented` are ever set to True.
+ 
+ 
+ ## python/carnot/verify/clean_live_sota_verifier_rerun_v10.py
+@@ -539,10 +538,10 @@ The verifier is completely transparent about its nature as a text-statistical pr
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"spend new local SOTA calls only after Exp 3179 proves a full local SOTA receipt and Exp 3180 proves controlled invariance"
++"It may spend new local SOTA calls"
+ 
+ ## IMPLEMENTATION_REALITY
+-This module is an experiment orchestrator and gating script, not a standalone ML verifier algorithm. It correctly reads prior experiment JSON artifacts to enforce preconditions, then delegates the actual model invocations to an injected `panel_runner` callable.
++The code is an experiment orchestrator, not a standalone model implementation. It validates prerequisites, filters inputs, and delegates the actual live SOTA model execution to an externally provided `panel_runner` and `cached_sota_pair` from `carnot.inference.sota_models`, before scoring the output and writing an artifact.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -554,5 +553,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is honest and accurately describes the module as an artifact builder and gating mechanism. It does not falsely claim to implement a novel paper's technique, contains no adversarial gaming patterns (no sleep padding, no perfect-dodging score caps), and legitimately delegates computation when preconditions are met.
++The module honestly identifies itself as an artifact generator for an experiment rerun rather than a novel model or paper implementation. It does not employ statistical proxies, sleep padding, or score capping, and correctly delegates model execution to actual inference substrates.
+ 
+diff --git a/research-references.md b/research-references.md
+index 2e831b4517..0bafb626a7 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -20675,3 +20675,46 @@ comparison, using the stability recipes below.
+ - **A Theoretical Lens for RL-Tuned LMs via EBMs (arXiv:2512.18730):** exact equivalence between
+   the RLVR objective and minimizing expected KL to an optimal reasoning distribution — unifies
+   the verifier-as-energy and generator-as-energy views under one objective.
++
++## .343 additions — matched-compute methodology + EBT-stability neighbours (2026-06-02)
++
++The `.342` genuine kill-gate part-(a) was AGAIN infra-blocked: exp3734 ran only 2 steps
++with `cuda:false` (on CPU, peak_vram 100 MB) yet over-claimed "stable_so_far", and exp3735
++hit `blocked_cuda`. Root cause: experiment subprocesses ran bare `python` (system python has
++NO torch; only `.venv/bin/python` has torch 2.11+cu128 with both 3090s). `.343` pins
++`.venv/bin/python`, HARD-blocks on `cuda:false` (never trains on CPU and reports a stability
++signal), then runs the GENUINE training + matched-compute comparison. New references below;
++the strongest matched-compute templates are 2408.03314 (FLOP-matched + difficulty binning)
++and 2511.05562 (NFE accounting — the cleaner unit for the EBT energy-descent inner loop).
++
++- **Scaling LLM Test-Time Compute Optimally (arXiv:2408.03314, Snell/Lee/Xu/Kumar, ICLR 2025):**
++  the canonical FLOPs-matched test-time-compute reference; iterative-refinement beats best-of-N
++  at lower compute on EASY problems but the advantage is difficulty-dependent. Methodology
++  template for the EBT-vs-AR matched-FLOP table — bin by difficulty; count EBT energy-descent
++  steps in the SAME unit as AR best-of-N passes or the comparison silently favours EBT.
++- **Effective Test-Time Scaling of Discrete Diffusion via Iterative Refinement / IterRef
++  (arXiv:2511.05562, S. Lee et al., 2025):** reward-guided noise-denoise refinement as
++  Multiple-Try Metropolis; compares under matched compute measured in NFEs (function
++  evaluations) with generator + reward on equal footing. Adopt NFE as the primary fair-compute
++  unit for the EBT inner loop; report FLOPs as cross-check.
++- **When To Solve, When To Verify (arXiv:2504.01005, 2025):** compute-matched analysis of more
++  sampling (self-consistency) vs spending the budget on generative verification. Directly bears
++  on the EBT (simultaneously generator + verifier) budget-allocation question; consistent with
++  the P0.1 "energy-selection doesn't beat SC where SC is strong" finding.
++- **EORM — Learning to Rank Chain-of-Thought with a Small Energy Model (arXiv:2505.14999,
++  E.H. Jiang et al., 2025):** a small energy-based post-hoc CoT reranker. The natural baseline
++  to beat: if a tiny energy RERANKER already captures most of the gain, EBT-as-GENERATOR must
++  justify the extra cost of iterative energy-descent over cheap reranking. Sharpens the ablation.
++- **Matching Features, Not Tokens — Energy-Based Fine-Tuning of LMs (arXiv:2603.12248, Jelassi
++  et al., 2026):** EBFT via strided block-parallel rollout sampling, KL-regularised
++  feature-matching. Most recent EBM-LM training-objective paper; its sampling/feature-matching
++  framing is applicable to stabilising the energy gradient. Caveat: a fine-tuning method on a
++  pretrained LM — stability gains may not transfer to a 38M from-scratch EBT; check its added
++  sampling cost isn't inflating its reported improvement.
++- **Diffusion Contrastive Divergence (arXiv:2307.01668, Wang et al., 2023):** replaces Langevin
++  MCMC in CD with parameter-free diffusion negative-sampling. The alternative negative-sampler
++  to A/B against if the tiny-EBT Langevin inner loop is unstable/expensive at small scale.
++- **DCoLT-class diffusion reasoning (arXiv:2510.08554, 2025):** RL-trained LLaDA diffusion LM
++  reports +9.8% GSM8K / +19.5% HumanEval. A non-AR GSM8K direction sanity-anchor — but these are
++  8B-class RL-post-trained models; do NOT read the magnitude as achievable by a 38M from-scratch
++  EBT. Direction, not magnitude.
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..ea31f46e80
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,842 @@
++milestone: "2026.06.343"
++milestone_title: "PHASE-3 THESIS A — ATTEMPT 3: PIN THE VENV/CUDA, THEN RUN THE GENUINE ENERGY-AS-GENERATOR KILL-GATE TO COMPLETION. The operator-seeded EBT thesis (energy-as-GENERATOR, arXiv:2507.02092) has been blocked THREE times by infrastructure, NEVER by the mechanism: .341 (exp3728 cwd/import bug -> 0 steps; exp3729 false-negative) and .342 (exp3734 ran 2 steps with cuda:false ON CPU yet claimed 'stable_so_far'; exp3735 blocked_cuda; exp3736 correctly said UNTESTED). Root cause verified live 2026-06-02: experiment Run commands use bare `python` -- /usr/bin/python3 has NO torch, and ONLY .venv/bin/python has torch 2.11+cu128 with both RTX 3090s (cuda.is_available()==True). The .342 training reached a torch whose cuda was False and SILENTLY DROPPED TO CPU instead of blocking. .343 fixes this for good: (1) pin .venv/bin/python in every GPU task's Run command AND precondition; (2) HARD-block on cuda:false (emit blocked_cuda + capture sys.executable/CUDA_VISIBLE_DEVICES/nvidia-smi; NEVER train on CPU and report stability -- the exp3734 anti-pattern); (3) run the GENUINE bounded checkpointed training of the tiny EBT + matched tiny AR (EBT-paper stability recipe), render the REAL part-(a) verdict superseding exp3736, and IF stable run the matched-COMPUTE comparison (kill-gate part b). CRITICAL discipline from P0.1: matched-COMPUTE, never matched-params. INVARIANTS: paper_ready stays TRUE (G1-G4 closed 2026-05-31); frozen FoVer 0.9131 frozen; P0.1 / energy-SELECTION stays settled-bounded (this tests GENERATION, a different mechanism). Banking the verifier product is unaffected -- this is the venture bet with a knife to its own throat."
++milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
++
++# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-02, Claude Opus 4.8). PROVENANCE:
++# .341 and .342 both staged the Thesis-A bring-up after the operator seeded energy-as-generator
++# (docs/research-notes/phase3-alternative-thesis-menu.md). Both kill-gates were blocked by infra, not
++# the mechanism. .343 is the direct, gated continuation: fix the venv/CUDA bug that has now blocked the
++# EBT training twice, then run the GENUINE kill-gate. This is NOT breadth churn (north-star sec-1) --
++# it recovers an operator-seeded mechanism test from a harness bug and produces the first genuine
++# empirical signal on the route.
++#
++# ROUTING (current backend reality): gemini still CRASHES real GPU workloads, so the cheap-default is
++# CODEX (requires_codex), not gemini. The two open-ended training-debug tasks (exp3745 fix+diagnose+train,
++# exp3746 resume+stabilize) are requires_claude+opus per the standing operator directive 2026-06-02
++# (diagnosing in-subprocess CUDA unavailability + EBT divergence stabilization is multi-file choreography
++# + open-ended judgment under ambiguity; the most likely real failure mode lives here). The GPU EVAL
++# tasks (exp3748 generation smoke, exp3749 matched-compute) are codex+requires_codex+gpu (run the
++# already-built+unit-tested exp3727 harness; mechanical, deterministic FLOP-accounting). Everything else
++# is codex+requires_codex (aggregation/CPU).
++#
++# THE HEADLINE FIX (.343): every GPU task's Run command AND precondition uses .venv/bin/python (bare
++# `python` is /usr/bin/python3 with NO torch). GPU training tasks HARD-block on cuda:false (blocked_cuda
++# + diagnostics) and NEVER train on CPU and report a stability signal (the exp3734 fabrication-class
++# anti-pattern). This is the single most important deliverable of the milestone.
++#
++# KILL-GATE (genuine): part (a) the tiny EBT trains to STABLE convergence within the bounded 3090 budget
++# (real GPU run; exp3747 verdict supersedes the untested exp3736). part (b) [gated on part-a green-light]
++# at EQUAL inference compute the EBT beats matched AR on held-out reasoning accuracy AND/OR the gap
++# narrows with 2x training (exp3750 verdict). An honest NEGATIVE at part (b) bounds the route cheaply --
++# as valuable as a positive.
++#
++# GATING: gated_on ONLY on the expensive GPU tasks (exp3746/3748/3749) against BARE-value upstream fields
++# (per feedback_gated_fields_must_be_bare). Verdict/aggregation/self-learning/hardware/capstone tasks
++# carry NO gated_on and read upstream with a graceful disk-presence fallback (the .340 proven-safe
++# pattern). INVARIANTS: paper_ready stays TRUE; frozen FoVer 0.9131 frozen; P0.1 stays settled-bounded.
++# The agent never edits ops/north-star.md, never triggers a CI run, never pushes.
++
++tasks:
++  - id: exp3743-archive-v342-activate-v343
++    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) — false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
++    milestone: "2026.06.343"
++    title: "Archive milestone .342 HONESTLY (Thesis-A recovery: .341 false-negative cleanly corrected AND the .342 verdicts correctly refused to overclaim -- BUT the GENUINE kill-gate part-(a) was AGAIN infra-blocked: exp3734 ran 2 steps with cuda:false ON CPU and over-claimed 'stable_so_far', exp3735 hit blocked_cuda, so exp3736 honestly recorded part-(a) UNTESTED) and activate .343 (pin .venv/bin/python + hard cuda-block, then run the genuine kill-gate)."
++    priority: critical
++    max_turns: 20
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true
++    estimated_wall_time_min: 6
++    track: ops
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3743_archive_v342_activate_v343.json
++    prompt: |
++      CONTEXT: .342 continued Phase-3 Thesis A (energy-as-generator EBT). Read its landed artifacts via
++      scripts/summarize_artifact.py: exp3733 (corrigendum of the .341 false-negative, PASS), exp3734 (fix+
++      train chunk1 -- but ran only 2 steps with cuda:false ON CPU, peak_vram 100MB, and over-claimed
++      'stable_so_far'), exp3735 (resume chunk2 -- blocked_cuda), exp3736 (part-(a) verdict -- honestly
++      UNTESTED, training_did_not_complete), exp3739 (part-(b) -- not_run), exp3740 (FR-11 v15 stabilizer
++      tracker), exp3741 (KV260 terminal confirm). Record the .342 outcome HONESTLY: the record-honesty
++      machinery worked, but the GENUINE kill-gate part-(a) was AGAIN infra-blocked (cuda:false from bare
++      `python`; exp3734 silently dropped to CPU). Energy-as-generator remains UNTESTED at bounded scale.
++      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.342, just finished); research-roadmap-next.yaml
++      (.343, this milestone); openspec/change-proposals/research-roadmap-vNEXT.md (the .343 design doc);
++      ops/north-star.md (do NOT edit).
++      TASK: archive .342 to research-complete.yaml honestly; confirm .343 active.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation task. Set inference_substrate=aggregation_from_upstream_artifacts
++      and put NO GGUF/CUDA/live-model marker in model_specs/target_model. Run
++      `.venv/bin/python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix lets the reconciler classify the transition complete without re-running it."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag)."
++        v342_outcome_recorded:
++          principle: "Records .342's REAL state: false-negative corrected + verdicts honest, BUT part-(a) was AGAIN infra-blocked (cuda:false, exp3734 CPU-drop) -- still UNTESTED, not bounded."
++        cuda_unavailable_root_cause_recorded:
++          principle: "Explicitly records the root cause: bare `python` reached a torch with cuda False and exp3734 silently trained 2 CPU steps -- so a future planner knows the fix is .venv/bin/python + hard cuda-block."
++        thesis_a_still_open_recorded:
++          principle: "Energy-as-generator remains UNTESTED at the bounded-training level; .343 runs the genuine kill-gate. Distinguishes this from the truly-settled P0.1 selection bound."
++        paper_ready_preserved:
++          principle: "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen."
++        p01_status_preserved:
++          principle: "P0.1 / energy-SELECTION stays honest-negative-bounded; .343 tests a DIFFERENT mechanism (generation), not a re-grind."
++        n_tasks_archived:
++          principle: "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
++        adversarial_verify_clean:
++          principle: "True iff the artifact passes adversarial_verify with no critical flag."
++        random_seed:
++          principle: "Determinism precondition for reproducibility."
++        reproducibility_checksum:
++          principle: "Content hash catches silent drift vs any replication."
++        duration_s:
++          principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
++      TERMINAL VERDICT: "complete: archived_v342_thesis_a_record_honest_but_part_a_again_infra_blocked_cuda_false_still_untested_v343_active_paper_ready_true_frozen_headline_unchanged"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3743_archive_v342_activate_v343.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3744-corrigendum-exp3734-cpu-drop
++    milestone: "2026.06.343"
++    title: "CLEAN corrigendum of exp3734 + exp3736: the .342 part-(a) was AGAIN an INFRASTRUCTURE block, not a mechanism result. exp3734 reported 'harness_fixed...2_steps_stable_so_far' but preconditions_checked.cuda==false and peak_vram_mb==100 -- it trained 2 steps ON CPU and SILENTLY DROPPED from GPU, a soft false-positive. Preserve the numbers, annotate the root cause (bare `python` reached a torch with cuda False; the precondition did not hard-block), re-affirm part-(a) UNTESTED. exp1850 corrigendum pattern. Does NOT retire energy-as-generator."
++    priority: critical
++    max_turns: 20
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true
++    estimated_wall_time_min: 6
++    track: phase3
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3744_corrigendum_exp3734_cpu_drop.json
++    prompt: |
++      CONTEXT: exp3734 (.342) claimed honest_verdict 'complete: harness_fixed_ebt_train_chunk_2_steps_stable_
++      so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed' -- but its own preconditions_checked
++      shows cuda:false and peak_vram_mb:100, meaning it trained 2 steps ON CPU and silently dropped from the
++      GPU instead of blocking. A 2-step CPU run is NOT a stability signal for the kill-gate. exp3736 then
++      honestly recorded part-(a) UNTESTED. Per CLAUDE.md FALSE_NEGATIVE_RISK + the Pre-Launch Preconditions
++      discipline (a task that silently lacks its required resource must emit blocked_*, never proceed
++      degraded), this is an INFRASTRUCTURE block, not a mechanism finding. Issue a CLEAN corrigendum (exp1850
++      pattern: preserve the original numbers + add a correction note on a non-flagged artifact).
++      EXISTING CODE TO READ FIRST: results/experiment_3734_fix_harness_and_bounded_train_chunk1.json (read
++      via scripts/summarize_artifact.py -- note cuda:false, peak_vram_mb:100, cumulative_steps_trained:2);
++      results/experiment_3735_*.json (blocked_cuda); results/experiment_3736_*.json (untested verdict);
++      results/experiment_1850_thrml_parity_n128.json (the corrigendum exemplar to mirror).
++      TASK: write a corrigendum artifact that (1) preserves exp3734's reported fields verbatim under an
++      'original_exp3734' block, (2) states the correction: the '2_steps_stable_so_far' signal is INVALID
++      because cuda:false means it ran on CPU (a silent GPU->CPU drop, not a real bounded GPU training run),
++      (3) re-affirms part-(a) UNTESTED (not stable, not bounded), (4) recommends the .343 fix (.venv/bin/
++      python + hard cuda-block in exp3745/3746). Store any candidate-label-like field as a STRING, not a
++      duplicated numeric, so the de-tautology linter does not false-fire.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO GGUF/CUDA markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>` and CONFIRM no critical flag. Populate
++      cited_upstream_artifacts with {{experiment_id, fields_imported, sha256}} for exp3734/3735/3736.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; states the correction outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a record correction over upstream JSON, no live model)."
++        original_exp3734_preserved:
++          principle: "exp1850 discipline: the original numbers are never deleted, only annotated -- preserves the research record."
++        cpu_drop_root_cause:
++          principle: "Names the soft false-positive: cuda:false + peak_vram_mb:100 means exp3734 trained on CPU and silently dropped from GPU; the precondition did not hard-block. The auditable correction."
++        part_a_status_corrected:
++          principle: "Re-affirms part-(a) UNTESTED (the 2-step CPU signal is invalid); the load-bearing correction so the route is not falsely treated as having a stability result."
++        energy_as_generator_not_retired:
++          principle: "Explicitly: this corrigendum does NOT add energy-as-generator to the exclusion manifest; .343 re-runs the genuine kill-gate with the venv/CUDA fix."
++        cited_upstream_artifacts:
++          principle: "Provenance for the imported original fields (anti-fabrication audit trail)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT: "complete: exp3734_cpu_drop_corrected_2_step_cpu_signal_invalid_part_a_reaffirmed_untested_energy_as_generator_not_retired"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3744_corrigendum_exp3734_cpu_drop.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3745-venv-fix-and-bounded-train-chunk1
++    milestone: "2026.06.343"
++    title: "THE FIX + bounded GPU train chunk 1: pin .venv/bin/python (bare `python` is /usr/bin/python3 with NO torch); HARD-block on cuda:false (emit blocked_cuda + capture sys.executable/CUDA_VISIBLE_DEVICES/nvidia-smi; NEVER train on CPU and report stability -- the exp3734 anti-pattern); then run a REAL bounded checkpointed training chunk of the tiny EBT + matched tiny AR on GSM8K with the EBT-paper stability recipe (random-alpha + replay buffer + Langevin noise + grad-clip + KL-term CD arXiv:2012.01316), heartbeats, stability diagnostics, checkpoint+exit. THESIS-A genuine kill-gate part-(a), run 1."
++    priority: critical
++    max_turns: 60
++    agent_type: claude
++    model: opus
++    requires_claude: true   # diagnosing in-subprocess CUDA unavailability (venv-pinning + hard-block) + EBT divergence stabilization is multi-file choreography + open-ended judgment under ambiguity (operator directive 2026-06-02). The most likely real failure mode lives here.
++    estimated_wall_time_min: 35
++    track: phase3
++    inference_substrate: live_llm_inference
++    requires_gpu: true
++    prior_failures:
++      - experiment_id: exp3734-fix-harness-and-bounded-train-chunk1
++        verdict: "complete: harness_fixed_ebt_train_chunk_2_steps_stable_so_far_loss_converging_no_nan_ar_baseline_co_trained_checkpointed"
++        addressed_by: "exp3734 reported 'stable' but ran 2 steps with cuda:false ON CPU (peak_vram 100MB) -- a silent GPU->CPU drop, NOT a real GPU training run. This task FIXES the root cause: Run command + precondition use .venv/bin/python (bare `python` is /usr/bin/python3 with NO torch), and the precondition HARD-BLOCKS on cuda:false (blocked_cuda, never CPU-train-and-report-stable). It then runs a REAL bounded GPU chunk with the full EBT stability recipe."
++        retire_if_same_verdict: true
++      - experiment_id: exp3728-bounded-checkpointed-train-ebt-and-ar
++        verdict: blocked_ebt
++        addressed_by: ".341's exp3728 blocked at 0 steps on a cwd/import-path bug; .342's exp3734 fixed the import but hit the cuda:false CPU-drop. This task addresses BOTH: robust importlib.util.find_spec + ABSOLUTE paths (the .342 import fix) AND .venv/bin/python + hard cuda-block (the .343 CUDA fix)."
++        retire_if_same_verdict: true
++    deliverable: results/experiment_3745_venv_fix_and_bounded_train_chunk1.json
++    prompt: |
++      CONTEXT: Thesis-A genuine kill-gate part-(a), run 1, attempt 3. .341's exp3728 blocked on a cwd/import
++      bug; .342's exp3734 fixed the import but ran 2 steps with cuda:false ON CPU and over-claimed 'stable'.
++      Verified live 2026-06-02: /usr/bin/python3 has NO torch; ONLY .venv/bin/python has torch 2.11+cu128
++      with both RTX 3090s (cuda.is_available()==True, device_count==2, both idle). Your job: ensure CUDA is
++      actually used, and if it genuinely is not available, BLOCK -- do NOT train on CPU and report a
++      stability signal. live gpu training. PRINT A HEARTBEAT (PYTHONUNBUFFERED) every few steps so the
++      idle-timeout never fires; bound EACH run to <=1500s wall then CHECKPOINT + EXIT (resume on the next
++      run -- training spans runs by design).
++      EXISTING CODE TO READ FIRST: scripts/experiment_3734_fix_harness_and_bounded_train_chunk1.py (the .342
++      driver -- REUSE its fixed import + corpus + stability-recipe logic, but find where it allowed cuda:false
++      to proceed onto CPU and make that a HARD BLOCK); scripts/experiment_3726_tiny_ebt_corpus_and_train_step_
++      smoke.py (the WORKING import + tokenizer + corpus + 38M EBT config: dim=768, n_layers=4, n_heads=12,
++      utf8 byte tokenizer); python/carnot/phase3/ebt_upstream/ebt_core.py (the vendored EBT energy path);
++      research-references.md '.343 additions' + the .342 EBT stability-recipe references.
++      PRECONDITIONS (check BEFORE any training step; if ANY missing -> blocked_<resource>, EXIT, no fabrication,
++      NO CPU FALLBACK):
++        a. INTERPRETER: this script MUST run under .venv/bin/python. Record sys.executable. If torch is not
++           importable, you are on the wrong interpreter -> blocked_wrong_interpreter (re-run via
++           .venv/bin/python). The Run command below already pins it.
++        b. CUDA HARD CHECK: `import torch; assert torch.cuda.is_available() and torch.cuda.device_count()>0`.
++           If FALSE -> capture os.environ.get('CUDA_VISIBLE_DEVICES'), sys.executable, and the output of
++           `nvidia-smi --query-gpu=index,memory.used,memory.total --format=csv` into the artifact, set
++           honest_verdict=blocked_cuda, and EXIT. DO NOT set device='cpu' and continue. DO NOT report any
++           stability signal. This hard-block IS the headline deliverable (it prevents the exp3734 CPU-drop).
++        c. EBT importable via robust check: `import importlib.util,sys; sys.path.insert(0,'{project_root}/python');
++           assert importlib.util.find_spec('carnot.phase3.ebt_upstream') is not None`.
++        d. Corpus: GSM8K train subset reachable (HF datasets) OR a local cache from exp3726/3734. Use an
++           ABSOLUTE path anchored to {project_root} for any on-disk check.
++      CONCRETE STEPS:
++        1. Confirm preconditions a-d. If CUDA is genuinely unavailable, BLOCK per (b) and exit -- this is the
++           one outcome the .343 fix is designed to make HONEST instead of a CPU-drop.
++        2. Init the tiny EBT (~38M, the exp3726 config) on cuda:0 AND a matched-param tiny AR baseline (same
++           param band, same corpus, same optimizer budget, same device).
++        3. Apply the EBT-paper STABILITY RECIPE (arXiv:2507.02092 Sec 3.3 + App I; arXiv:2012.01316): replay
++           buffer, Langevin noise during energy descent, RANDOMIZE step-size alpha AND the number of descent
++           steps per batch (load-bearing per the paper's ablation), clamp optimization gradients, normalize
++           data, and the KL-term CD fix. Record which stabilizers you enabled. (Optional fallbacks if it
++           diverges: arXiv:2303.06296 sigma-reparam, arXiv:2307.01668 diffusion-CD negative sampler.)
++        4. Train a REAL bounded chunk (target a MEANINGFUL step count -- aim for >=200 GPU steps within the
++           <=1500s wall bound, not 2; if 1500s is hit first, checkpoint at whatever step count). Both models,
++           SAME corpus. Log a loss heartbeat every K steps. Emit STABILITY DIAGNOSTICS: downsampled EBT + AR
++           loss curves, converging/diverging, NaN/inf events, gradient-norm trend, peak VRAM (must be a real
++           GPU figure, NOT ~100MB which would indicate CPU). If the EBT diverges, apply stabilizers and record
++           what was tried (this judgment is why this task is on claude).
++        5. CHECKPOINT both models + optimizer + step counter to an ABSOLUTE path; record
++           cumulative_steps_trained (BARE int -- exp3746 gates on it >0) and cuda_used (BARE bool, must be
++           true for a valid run); then EXIT cleanly.
++        6. If you add any test, it MUST assert against the driver's REAL behavior -- never ship a test that
++           fails against your own script (anti-poison-test: a failing shipped test poisons the conductor
++           pre-test gate and SKIPs the whole milestone).
++      INFERENCE-SUBSTRATE HYGIENE: live GPU training; full methodology (random_seed, reproducibility_checksum,
++      model_specs naming BOTH tiny configs as from-scratch, not pretrained LLMs). Long real duration + a real
++      multi-GB-or-at-least-non-100MB VRAM figure expected. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix stating THIS chunk's stability outcome (stable-so-far/converged/diverged); blocked_cuda / blocked_wrong_interpreter if a precondition failed -- the HONEST block, not a CPU-drop."
++        inference_substrate: "live_llm_inference (principle: real GPU training; strict floor, easily cleared)."
++        cuda_used:
++          principle: "BARE bool. MUST be true for a valid training run -- the load-bearing anti-CPU-drop field; exp3747 treats cuda_used==false as 'untested', not a stability result."
++        venv_python_used:
++          principle: "Records sys.executable so a reviewer can confirm the .venv/bin/python interpreter (with torch+CUDA) was used, not bare /usr/bin/python3."
++        cumulative_steps_trained:
++          principle: "BARE int. Records REAL GPU training progress; exp3746 gates on this being >0 (proof the genuine training ran on GPU, not 2 CPU steps)."
++        ebt_loss_curve:
++          principle: "Downsampled EBT loss trajectory -- the direct evidence for whether EBT training is stable (the kill-gate's core question)."
++        ar_loss_curve:
++          principle: "The matched AR baseline trajectory -- so part-(b)'s comparison is apples-to-apples (same corpus/budget)."
++        nan_or_divergence_events:
++          principle: "EBT instability is the most likely REAL failure mode; recording NaN/divergence is the honest fail signal, not a hidden one."
++        stabilizers_applied:
++          principle: "Which EBT-paper stabilizers were enabled -- the open-ended judgment justifying claude; the recipe exp3746/exp3751 inherit."
++        peak_vram_mb:
++          principle: "Confirms a REAL GPU run (a multi-hundred-MB-or-more figure, NOT the ~100MB that flagged exp3734 as a CPU-drop) within the 3090's 24GB."
++        preconditions_checked:
++          principle: "Records interpreter + CUDA-hard-check + robust-importable + corpus verified before training; pre-empts the exact silent CPU-drop fabrication exp3734 fell into."
++        model_specs:
++          principle: "Names BOTH tiny configs (from-scratch, matched param-band) so the substrate + comparison fairness are honest."
++        random_seed:
++          principle: "Determinism precondition for reproducibility."
++        reproducibility_checksum:
++          principle: "Content hash catches silent corpus/config drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor; long real duration expected for >=200 GPU steps."
++      TERMINAL VERDICT example: "complete: venv_fix_applied_ebt_train_chunk_<steps>_gpu_steps_cuda_true_stable_so_far_loss_converging_no_nan_ar_co_trained_checkpointed"
++      (or "complete: venv_fix_applied_ebt_train_chunk_diverged_at_step_<N>_after_<stabilizers>_genuine_part_a_signal_negative" if it genuinely diverges on GPU; or "blocked_cuda" with diagnostics if CUDA is genuinely unavailable -- the HONEST block, never a CPU-drop)
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3745_venv_fix_and_bounded_train_chunk1.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3746-bounded-train-chunk2-resume
++    milestone: "2026.06.343"
++    title: "RESUME bounded checkpointed GPU training (chunk 2): load exp3745's checkpoint and train another bounded chunk (<=1500s) of BOTH the tiny EBT + matched AR, accumulating steps and extending the stability diagnostics. Uses .venv/bin/python + the SAME hard cuda-block (never CPU-drop). Gated on exp3745 having trained >0 GPU steps. THESIS-A genuine kill-gate part-(a), run 2."
++    priority: critical
++    max_turns: 60
++    agent_type: claude
++    model: opus
++    requires_claude: true   # continued EBT training-debug; divergence may surface only after warmup -- open-ended stabilization judgment (operator directive 2026-06-02)
++    estimated_wall_time_min: 35
++    track: phase3
++    inference_substrate: live_llm_inference
++    requires_gpu: true
++    gated_on:
++      - upstream: exp3745-venv-fix-and-bounded-train-chunk1
++        artifact_field: cumulative_steps_trained
++        op: '>'
++        value: 0
++    prior_failures:
++      - experiment_id: exp3735-bounded-train-chunk2-resume
++        verdict: blocked_cuda
++        addressed_by: "Same scope (resume bounded EBT+AR training) as the exp3735 that hit blocked_cuda because the subprocess reached a torch with cuda False (bare `python`). This run uses .venv/bin/python + the SAME hard cuda-block, resumes from exp3745's REAL-GPU checkpoint, and only proceeds if exp3745 already trained >0 GPU steps with cuda_used==true -- so the CUDA precondition that broke exp3735 is structurally satisfied."
++        retire_if_same_verdict: true
++    deliverable: results/experiment_3746_bounded_train_chunk2_resume.json
++    prompt: |
++      CONTEXT: Thesis-A genuine kill-gate part-(a), run 2. exp3745 pinned .venv/bin/python, hard-blocked on
++      cuda:false, and trained the first REAL GPU chunk. This task RESUMES from its checkpoint to accumulate
++      more steps (EBT instability sometimes surfaces only after warmup). live gpu training; PRINT A HEARTBEAT
++      every few steps; bound to <=1500s then CHECKPOINT + EXIT.
++      EXISTING CODE TO READ FIRST: scripts/experiment_3745_venv_fix_and_bounded_train_chunk1.py (REUSE its
++      .venv-pinned + hard-cuda-block + stability-recipe driver -- do NOT reintroduce the cuda:false CPU-drop);
++      results/experiment_3745_*.json (the checkpoint path + cumulative_steps_trained + stabilizers_applied +
++      cuda_used).
++      PRECONDITIONS (check BEFORE any step; if ANY missing -> blocked_<resource>, EXIT, no fabrication, NO CPU FALLBACK):
++        a. INTERPRETER: run under .venv/bin/python (the Run command pins it); torch importable.
++        b. CUDA HARD CHECK: torch.cuda.is_available() and device_count>0. If FALSE -> capture
++           CUDA_VISIBLE_DEVICES + sys.executable + nvidia-smi, set honest_verdict=blocked_cuda, EXIT. NO CPU drop.
++        c. EBT importable via importlib.util.find_spec ({project_root}/python on sys.path).
++        d. exp3745 checkpoint present at its recorded ABSOLUTE path AND exp3745 cumulative_steps_trained>0 AND
++           cuda_used==true. If the checkpoint is missing -> blocked_no_checkpoint (graceful, honest).
++      CONCRETE STEPS:
++        1. Resume BOTH models + optimizer + step counter from exp3745's checkpoint onto cuda:0.
++        2. Train another bounded chunk (<=1500s) on the SAME corpus/budget with the SAME stabilizers exp3745
++           recorded. Heartbeat every K steps.
++        3. Extend the stability diagnostics: cumulative EBT + AR loss curves, converged/diverging, NaN/inf,
++           gradient-norm trend, peak VRAM. If divergence appears now, apply + record additional stabilizers.
++        4. CHECKPOINT + record cumulative_steps_trained (BARE int, summed across runs) + cuda_used (BARE bool),
++           then EXIT cleanly.
++      INFERENCE-SUBSTRATE HYGIENE: live GPU training; full methodology (random_seed, reproducibility_checksum,
++      model_specs). Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix stating cumulative stability outcome; blocked_cuda / blocked_no_checkpoint if a precondition failed -- the HONEST block, not a CPU-drop."
++        inference_substrate: "live_llm_inference (principle: real GPU training)."
++        cuda_used:
++          principle: "BARE bool. MUST be true for a valid run -- the anti-CPU-drop field carried through resume."
++        cumulative_steps_trained:
++          principle: "BARE int summed across exp3745+this run -- the total GPU budget spent, read by the part-(a) verdict (exp3747)."
++        ebt_loss_curve:
++          principle: "Cumulative downsampled EBT loss -- the stability evidence over a longer horizon."
++        ar_loss_curve:
++          principle: "Cumulative matched AR loss -- apples-to-apples for part (b)."
++        ebt_converged:
++          principle: "Did the EBT energy/loss converge within the accumulated budget -- the kill-gate part-(a) signal."
++        nan_or_divergence_events:
++          principle: "Honest instability signal over the longer run."
++        stabilizers_applied:
++          principle: "Cumulative recipe -- what kept it stable (or failed to)."
++        peak_vram_mb:
++          principle: "Confirms a REAL GPU run (not ~100MB CPU) still within the 3090's 24GB."
++        preconditions_checked:
++          principle: "Interpreter + CUDA-hard-check + robust-importable + checkpoint-present verified; the anti-fabrication gate."
++        model_specs:
++          principle: "Names BOTH tiny configs (from-scratch, matched band)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor; long real duration expected."
++      TERMINAL VERDICT example: "complete: ebt_train_resumed_total_<steps>_gpu_steps_cuda_true_stable_converged_no_nan_ar_co_trained_ready_for_part_a_verdict"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3746_bounded_train_chunk2_resume.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3747-real-kill-gate-part-a-verdict
++    milestone: "2026.06.343"
++    title: "REAL Thesis-A kill-gate part-(a) VERDICT over the GENUINE GPU training run (exp3745 + exp3746), SUPERSEDING the 'untested' exp3736: did the tiny EBT train to STABLE convergence within the bounded 3090 budget, WITH cuda_used==true? Emit green_light_343 (BARE bool). GREEN-LIGHT the matched-COMPUTE comparison only if genuinely stable on a real GPU run."
++    priority: critical
++    max_turns: 30
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # a gated verdict over the exp3745/3746 diagnostics with a deterministic stability criterion -- mechanical/aggregation
++    estimated_wall_time_min: 10
++    track: phase3
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    prior_failures:
++      - experiment_id: exp3736-real-kill-gate-part-a-verdict
++        verdict: "complete: real_kill_gate_part_a_untested_training_did_not_complete"
++        addressed_by: "exp3736 read exp3734's cuda:false CPU-drop (2 steps) + exp3735's blocked_cuda and honestly recorded UNTESTED. This verdict reads the GENUINE GPU training run (exp3745/3746, with .venv/bin/python + hard cuda-block and real GPU steps trained) -- a different, valid input. It supersedes exp3736's 'untested' with a real stability result."
++        retire_if_same_verdict: true
++      - experiment_id: exp3729-stability-kill-gate-verdict
++        verdict: "complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop"
++        addressed_by: "exp3729 (.341) mislabeled an infra-block as 'bounded'. This verdict reads a REAL GPU training run (exp3745/3746) and renders the genuine part-(a) result -- it does not re-grind exp3729's question, it answers it for the first time with real data."
++        retire_if_same_verdict: true
++    deliverable: results/experiment_3747_real_kill_gate_part_a_verdict.json
++    prompt: |
++      CONTEXT: Thesis-A genuine kill-gate part-(a) decision. .341's exp3729 and .342's exp3736 both lacked a
++      real GPU training run. This verdict reads the REAL run. Read exp3745 (venv-fix+chunk1) and exp3746
++      (resume chunk2) via scripts/summarize_artifact.py. KILL-GATE part (a): the tiny EBT trains to STABLE
++      convergence within the bounded GPU budget, ON A REAL GPU. Apply ALL of these HONESTLY (NOT just "loss
++      went down" -- EBT energy is UNBOUNDED, so a runaway-collapsing energy can masquerade as convergence):
++        (i)   cuda_used==true AND cumulative_steps_trained > 0 (it ACTUALLY ran on GPU -- not the exp3734 CPU-drop),
++        (ii)  NO NaN/inf/divergence events,
++        (iii) gradient norms BOUNDED (not exploding),
++        (iv)  loss/energy converging or steadily decreasing WITHOUT monotonic runaway to -inf
++              (a non-degenerate trajectory, not an unbounded collapse).
++      Do NOT manufacture a pass; do NOT repeat the false-negative either -- if exp3745/3746 trained stably on
++      a real GPU by ALL FOUR criteria, that is a genuine PASS.
++      GRACEFUL FALLBACK: if exp3745/exp3746 artifacts are absent OR blocked_cuda OR cuda_used==false, record
++      green_light_343=false with honest_verdict noting 'training did not run on GPU -- part-(a) remains
++      untested', NOT 'bounded'. Never read a missing field as a None-crash.
++      DECISION:
++        - STABLE (real GPU run, cuda_used==true, converged, no divergence) -> green_light_343=true (BARE bool);
++          record a one-line note on the recommended part-(b) setup (which checkpoint, the FLOP budget from
++          exp3727's harness).
++        - DIVERGED within budget (a GENUINE divergence in the real GPU run, not an infra block) ->
++          green_light_343=false; record the HONEST conclusion: energy-as-generator is BOUNDED at small scale
++          on this corpus/budget (NOW a real finding, because the training actually ran on GPU). Recommend
++          whether a different stabilization recipe or larger budget merits one more bounded attempt, OR retirement.
++        - DID NOT RUN ON GPU (artifacts absent/blocked_cuda/cuda_used==false) -> green_light_343=false; part-(a)
++          UNTESTED (not bounded). The .343 fix was meant to prevent this; if it recurs, flag the infra issue.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO live-model markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag. Populate
++      cited_upstream_artifacts with {{experiment_id, fields_imported, sha256}}.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix stating the GENUINE kill-gate outcome (stable->green-light / diverged->bounded / not-run-on-gpu->untested)."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a verdict over the real-run diagnostics, no live model)."
++        ebt_trained_stably:
++          principle: "The kill-gate part-(a) boolean over the GENUINE GPU run -- the single most load-bearing field of the milestone."
++        green_light_343:
++          principle: "BARE bool. Gates whether the matched-compute comparison (exp3748/3749) runs."
++        training_ran_on_gpu:
++          principle: "True iff cuda_used==true AND cumulative_steps_trained>0 -- distinguishes a real stability result from the exp3734 CPU-drop / exp3735 blocked_cuda."
++        kill_gate_conclusion:
++          principle: "Honest one-paragraph conclusion (green-light / genuinely-bounded-with-evidence / untested) so the record is self-explanatory and does not repeat the infra false-negative."
++        supersedes_exp3736_and_exp3729:
++          principle: "Explicitly records that this verdict replaces the 'untested' exp3736 and the .341 false-negative exp3729 as the authoritative part-(a) result."
++        cited_upstream_artifacts:
++          principle: "Provenance: makes the verdict traceable to the real GPU training run (anti-fabrication audit trail)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: real_kill_gate_part_a_PASS_ebt_trained_stably_on_gpu_green_light_343_supersedes_exp3736_untested"
++      (or "complete: real_kill_gate_part_a_genuinely_bounded_ebt_diverged_in_real_gpu_run_honest_negative" / "complete: real_kill_gate_part_a_untested_training_did_not_run_on_gpu")
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3747_real_kill_gate_part_a_verdict.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3748-ebt-generation-smoke
++    milestone: "2026.06.343"
++    title: "EBT energy-descent GENERATION smoke on held-out GSM8K: confirm the trained EBT can actually GENERATE via gradient-descent energy minimization (finite, non-degenerate completions) before the expensive matched-compute eval. Uses .venv/bin/python + hard cuda-block. Gated on exp3747 green_light_343==true. THESIS-A part-(b) de-risk."
++    priority: high
++    max_turns: 50
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # running the trained EBT through its energy-descent inference path is mechanical; gemini crashes GPU so codex is the cheap-default
++    estimated_wall_time_min: 20
++    track: phase3
++    inference_substrate: live_llm_inference
++    requires_gpu: true
++    gated_on:
++      - upstream: exp3747-real-kill-gate-part-a-verdict
++        artifact_field: green_light_343
++        op: '=='
++        value: true
++    prior_failures:
++      - experiment_id: exp3737-ebt-generation-smoke
++        verdict: blocked_gate_check_failed
++        addressed_by: "exp3737 (.342) gate-blocked because exp3736 green_light_342==false (part-(a) was infra-untested, never trained on GPU). This task is the SAME generation-smoke scope but runs only after exp3747 green-lights part-(a) over a REAL GPU training run (exp3745/3746 with the venv/CUDA fix), so the upstream that blocked exp3737 is structurally satisfied -- a different, valid precondition."
++        retire_if_same_verdict: true
++    deliverable: results/experiment_3748_ebt_generation_smoke.json
++    prompt: |
++      CONTEXT: Thesis-A part-(b) de-risk. Part-(a) passed (exp3747 green_light_343=true). Before the
++      expensive matched-compute comparison, confirm the trained EBT can GENERATE: its inference IS
++      gradient-descent energy minimization over the output (NOT AR tokens, NOT reranking). live gpu task
++      under .venv/bin/python; PRINT A HEARTBEAT; this is a smoke, not the decisive eval.
++      EXISTING CODE TO READ FIRST: python/carnot/phase3/ebt_upstream/ (the energy-descent inference path,
++      audited in .341: Langevin/MCMC descent via torch.autograd.grad, default ~2 descent steps);
++      results/experiment_3746_*.json (the latest checkpoint to load); results/experiment_3726_*.json (the
++      tokenizer/corpus convention).
++      PRECONDITIONS (check BEFORE generation; if ANY missing -> blocked_<resource>, EXIT, no fabrication, NO CPU FALLBACK):
++        a. INTERPRETER: run under .venv/bin/python; torch importable.
++        b. CUDA HARD CHECK: torch.cuda.is_available() and device_count>0. If FALSE -> blocked_cuda (capture
++           diagnostics), EXIT. NO CPU drop.
++        c. EBT importable via importlib.util.find_spec ({project_root}/python on sys.path).
++        d. A trained checkpoint present at exp3746's (or exp3745's) recorded ABSOLUTE path with cuda_used==true.
++           If absent -> blocked_no_trained_checkpoint (graceful, honest).
++      CONCRETE STEPS:
++        1. Load the latest trained EBT checkpoint onto cuda:0.
++        2. On a small held-out GSM8K subset (e.g. 16-32 examples NOT in train), run energy-descent
++           generation: iterate y <- y - alpha * grad_y E(x,y) to convergence (record n_descent_steps).
++        3. Confirm the generations are (i) finite (no NaN/inf), (ii) NON-DEGENERATE (not all-identical, not a
++           single repeated token) -- record a degeneracy check (e.g. distinct-token ratio) and 2-3 example
++           completions verbatim. This is a wiring smoke (can it generate at all), not an accuracy claim.
++        4. Emit ebt_can_generate (BARE bool) = finite AND non-degenerate.
++      INFERENCE-SUBSTRATE HYGIENE: live GPU; full methodology (random_seed, reproducibility_checksum,
++      model_specs naming the from-scratch tiny EBT). Run `.venv/bin/python scripts/adversarial_verify.py
++      <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
++        inference_substrate: "live_llm_inference (principle: real GPU energy-descent generation)."
++        ebt_can_generate:
++          principle: "BARE bool (finite AND non-degenerate). exp3749 gates on this -- no point running the expensive matched-compute eval if generation is degenerate."
++        n_descent_steps:
++          principle: "How many energy-descent steps the EBT used per generation -- load-bearing for the part-(b) FLOP/NFE accounting."
++        degeneracy_check:
++          principle: "Distinct-token ratio / non-collapse evidence -- distinguishes real generation from a degenerate single-token attractor (a common EBT failure)."
++        example_completions:
++          principle: "2-3 verbatim completions -- human-auditable evidence the generation is real, not fabricated."
++        cuda_used:
++          principle: "BARE bool; confirms the smoke ran on GPU, not a CPU-drop."
++        preconditions_checked:
++          principle: "Interpreter + CUDA-hard-check + robust-importable + checkpoint-present; the anti-fabrication gate."
++        model_specs:
++          principle: "Names the from-scratch tiny EBT and its energy-descent inference config."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: ebt_energy_descent_generation_smoke_finite_non_degenerate_<n>_descent_steps_ready_for_matched_compute"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3748_ebt_generation_smoke.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3749-matched-compute-comparison
++    milestone: "2026.06.343"
++    title: "THE THESIS TEST (kill-gate part b): matched-COMPUTE comparison on held-out GSM8K reasoning accuracy -- EBT energy-descent generation vs AR best-of-N at EQUAL total inference FLOPs (count EBT descent passes / NFEs; give AR an equal-FLOP best-of-M budget via the exp3727 harness). Uses .venv/bin/python + hard cuda-block. Gated on exp3748 ebt_can_generate==true. Matched-COMPUTE, NEVER matched-params (the P0.1 trap)."
++    priority: critical
++    max_turns: 60
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # runs both trained models through the already-built+unit-tested exp3727 harness with a deterministic FLOP-accounting criterion -- mechanical; gemini crashes GPU so codex is the cheap-default
++    estimated_wall_time_min: 35
++    track: phase3
++    inference_substrate: live_llm_inference
++    requires_gpu: true
++    gated_on:
++      - upstream: exp3748-ebt-generation-smoke
++        artifact_field: ebt_can_generate
++        op: '=='
++        value: true
++    deliverable: results/experiment_3749_matched_compute_comparison.json
++    prompt: |
++      CONTEXT: The ACTUAL Thesis-A test. exp3748 confirmed the EBT can generate. Now measure held-out
++      reasoning accuracy of EBT energy-descent generation vs the matched AR baseline AT EQUAL TOTAL
++      INFERENCE FLOPS. The P0.1 lesson is LOAD-BEARING: energy descent runs N forward passes per prediction,
++      so a matched-PARAMS win is just extra inference FLOPs. The comparison MUST be matched-COMPUTE -- give
++      the AR baseline an equal-FLOP best-of-M budget. A win counts ONLY at equal total inference compute.
++      live gpu task under .venv/bin/python; PRINT A HEARTBEAT.
++      EXISTING CODE TO READ FIRST: scripts/experiment_3727_matched_compute_eval_harness.py + its unit tests
++      tests/python/test_matched_compute_eval_harness.py (the BUILT + TESTED instrument -- USE IT, do not
++      reinvent FLOP accounting); results/experiment_3746_*.json (EBT checkpoint); results/experiment_3748_*.json
++      (n_descent_steps); research-references.md '.343 additions' (arXiv:2408.03314 FLOP-matched template,
++      arXiv:2511.05562 NFE accounting, arXiv:2503.21878 fair best-of-N).
++      PRECONDITIONS (check BEFORE the comparison; if ANY missing -> blocked_<resource>, EXIT, no fabrication, NO CPU FALLBACK):
++        a. INTERPRETER: run under .venv/bin/python; torch importable.
++        b. CUDA HARD CHECK: torch.cuda.is_available() and device_count>0. If FALSE -> blocked_cuda (diagnostics), EXIT. NO CPU drop.
++        c. EBT importable via importlib.util.find_spec.
++        d. Trained EBT + matched AR checkpoints present (exp3745/3746 absolute paths, cuda_used==true). If absent ->
++           blocked_no_trained_checkpoints (graceful, honest).
++        e. The exp3727 harness importable + its unit tests pass (re-run them; if they fail -> blocked_harness_tests_failing).
++      CONCRETE STEPS:
++        1. Load the trained EBT + the matched AR baseline onto cuda:0.
++        2. On a held-out GSM8K reasoning set (n>=100 for a CLT-valid accuracy delta per CLAUDE.md sample-size
++           rigor; record n_heldout), generate with the EBT (energy descent, n_descent_steps from exp3748) and
++           compute its total inference FLOPs via the exp3727 harness. Report NFEs alongside FLOPs (the cleaner
++           inner-loop unit per arXiv:2511.05562).
++        3. Tune the AR best-of-M so AR's total inference FLOPs ~= the EBT's (within the harness's
++           budget_matcher_tolerance). Generate AR best-of-M on the same set.
++        4. Score held-out reasoning accuracy for BOTH at EQUAL FLOPs. Report ebt_accuracy, ar_accuracy,
++           accuracy_delta (EBT - AR), the FLOP budgets for both, NFEs, and whether they matched within tolerance.
++        5. Report HONESTLY -- a negative delta (AR >= EBT at equal compute) is a valid, valuable finding (it
++           bounds the route). Do NOT manufacture an EBT win; do NOT give the EBT a FLOP advantage.
++      INFERENCE-SUBSTRATE HYGIENE: live GPU; full methodology (random_seed, reproducibility_checksum,
++      model_specs naming BOTH from-scratch configs + the energy-descent vs best-of-N inference protocols,
++      n_heldout). Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag
++      (n>=100 sample size + matched-FLOP accounting should clear the rigor checks).
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix stating the matched-compute outcome; blocked_<resource> if a precondition failed."
++        inference_substrate: "live_llm_inference (principle: real GPU generation on both models)."
++        ebt_accuracy:
++          principle: "Held-out reasoning accuracy of EBT energy-descent generation -- one side of the thesis test."
++        ar_accuracy:
++          principle: "Held-out accuracy of the matched AR best-of-M baseline at EQUAL FLOPs -- the other side."
++        accuracy_delta:
++          principle: "EBT - AR at equal compute. BARE float. The thesis signal; >0 = EBT wins at matched compute (the claim), <=0 = bounded."
++        ebt_total_flops:
++          principle: "EBT total inference FLOPs (params x tokens x descent passes) -- the matched-compute denominator."
++        ar_total_flops:
++          principle: "AR best-of-M total inference FLOPs -- must ~= ebt_total_flops for the comparison to be fair."
++        flops_matched_within_tolerance:
++          principle: "BARE bool. The load-bearing anti-P0.1-trap check -- a win is meaningless if AR got fewer FLOPs."
++        n_heldout:
++          principle: "Sample size for the accuracy delta; n>=100 for a CLT-valid claim (CLAUDE.md sample-size rigor)."
++        ar_best_of_m:
++          principle: "The M chosen to FLOP-match AR to the EBT -- documents how equal compute was achieved."
++        cuda_used:
++          principle: "BARE bool; confirms the eval ran on GPU, not a CPU-drop."
++        model_specs:
++          principle: "Names BOTH from-scratch configs + the energy-descent and best-of-N inference protocols -- honest substrate + fair comparison."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor; real generation on n>=100 easily clears the floor."
++      TERMINAL VERDICT example: "complete: matched_compute_ebt_<ebt_acc>_vs_ar_<ar_acc>_delta_<d>_flops_matched_<bool>_n<n_heldout>"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3749_matched_compute_comparison.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3750-kill-gate-part-b-verdict
++    milestone: "2026.06.343"
++    title: "Thesis-A kill-gate part-(b) VERDICT: at EQUAL inference compute, does the EBT beat the matched AR baseline on held-out reasoning accuracy? Reads exp3749 (matched-compute) honestly. A clean NEGATIVE (AR >= EBT at equal compute, gap does not narrow) bounds the route -- as valuable as a positive. States the .343 Thesis-A outcome."
++    priority: critical
++    max_turns: 30
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # a verdict over exp3749's matched-compute numbers with a deterministic delta criterion -- mechanical/aggregation
++    estimated_wall_time_min: 10
++    track: phase3
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    prior_failures:
++      - experiment_id: exp3739-kill-gate-part-b-verdict
++        verdict: "complete: kill_gate_part_b_not_run_part_a_did_not_green_light"
++        addressed_by: "exp3739 (.342) recorded part-(b) not-run because part-(a) was infra-blocked. This verdict reads the GENUINE matched-compute comparison exp3749 (run because exp3747 green-lit part-(a) on a real GPU run) -- a different, valid input. It renders the actual part-(b) thesis result for the first time."
++        retire_if_same_verdict: true
++    deliverable: results/experiment_3750_kill_gate_part_b_verdict.json
++    prompt: |
++      CONTEXT: Thesis-A kill-gate part-(b) decision -- the actual thesis verdict. Read exp3749
++      (matched-compute comparison) via scripts/summarize_artifact.py. The thesis CLAIM: at EQUAL inference
++      compute the EBT (energy descent) beats the matched AR best-of-N on held-out reasoning accuracy.
++      GRACEFUL FALLBACK: if exp3749 is absent or blocked (part-(a) didn't green-light, or the GPU was
++      unavailable), record thesis_a_outcome='part_b_not_run' and explain (e.g. 'part-(a) did not green-light'
++      or 'training did not run on GPU') -- NEVER crash on a None read, NEVER label an un-run test as a negative.
++      APPLY THE CRITERION HONESTLY:
++        - WIN: accuracy_delta > 0 AND flops_matched_within_tolerance==true AND n_heldout>=100 -> the EBT beats
++          AR at equal compute. This is the positive thesis signal. Recommend the next (still bounded) scale-up
++          step, NOT an open-ended scale commitment.
++        - BOUNDED: accuracy_delta <= 0 at matched FLOPs (the kill-gate's part-(b) negative). Record the honest
++          conclusion: energy-as-generator does NOT beat AR at equal compute at this scale. Note whether the
++          gap is narrowing (worth one 2x-training attempt) or flat/negative (retire the route at small scale).
++          This is a REAL finding -- the route is bounded cheaply, exactly as designed.
++        - INVALID: flops were NOT matched within tolerance -> the comparison is not decisive (a P0.1-style
++          compute-confound); recommend re-running exp3749 with a tighter budget match, do NOT call a winner.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO live-model markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag (watch for
++      FALSE_NEGATIVE_RISK -- a null claim needs the matched-FLOP positive-control accounting to be valid).
++      Populate cited_upstream_artifacts.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix stating the part-(b) thesis outcome (win / bounded / invalid / not-run)."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a verdict over upstream numbers, no live model)."
++        thesis_a_outcome:
++          principle: "The .343 Thesis-A result string (ebt_beats_ar_at_matched_compute / bounded_at_small_scale / comparison_invalid / part_b_not_run) -- the milestone's headline finding."
++        ebt_beats_ar_at_matched_compute:
++          principle: "BARE bool. The single load-bearing thesis claim, true ONLY if delta>0 AND flops matched AND n>=100."
++        accuracy_delta_cited:
++          principle: "The exp3749 delta carried up for the record -- traceable to the real comparison."
++        flops_matched_cited:
++          principle: "Whether the comparison was compute-fair -- a win is void without it (anti-P0.1-trap)."
++        next_step_recommendation:
++          principle: "Honest next move (bounded scale-up if win / one 2x-train attempt if gap narrowing / retire if flat-negative / re-run if invalid) -- prevents both premature scaling AND premature retirement."
++        cited_upstream_artifacts:
++          principle: "Provenance from the verdict to exp3749's real numbers."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: kill_gate_part_b_ebt_BEATS_ar_at_matched_compute_delta_<d>_n<n>_bounded_scaleup_recommended"
++      (or "complete: kill_gate_part_b_BOUNDED_ebt_does_not_beat_ar_at_equal_compute_honest_negative" / "complete: kill_gate_part_b_not_run_part_a_did_not_green_light")
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3750_kill_gate_part_b_verdict.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3751-fr11-self-learning-v16-stabilizer-tracker
++    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation (FR-11 vN+1) — false-positive scope-match vs prior FR-11 self-learning exps; STATED forward difference: v16 RESUMES the exp3740 v15 stabilizer-efficacy tracker with REAL GPU-training divergence/stability data (exp3745/3746), where v15 only had 3 aborted/CPU-drop chunks."
++    milestone: "2026.06.343"
++    title: "FR-11 continuous self-learning v16 — Tier-1 ONLINE stabilizer-efficacy tracker, RESUMED from the exp3740 v15 state with REAL GPU-training diagnostics: from exp3745/3746 (which actually trained on GPU), track which stabilizers (random-alpha, replay buffer, Langevin noise, grad-clip, KL-term CD) correlate with NO-divergence, upweight the effective ones, and recommend a recipe for the next bounded run. CPU counter-updates only (the Tier-1 hardware path). The self-learning experiment mandated by research-program.md."
++    priority: high
++    max_turns: 40
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true
++    estimated_wall_time_min: 15
++    track: self-learning
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3751_fr11_self_learning_v16_stabilizer_tracker.json
++    prompt: |
++      CONTEXT: research-program.md mandates one continuous-self-learning experiment per milestone (Tiers
++      1-4). FR-11 v15 (exp3740, .342) initialized a Tier-1 stabilizer-efficacy tracker but only had 3
++      ABORTED/CPU-drop chunks to learn from. v16 RESUMES that tracker state with REAL GPU-training
++      diagnostics from exp3745/3746 -- the first time the tracker sees genuine divergence/stability data.
++      This is a CPU counter-update tracker (the Tier-1 hardware path: <1us per update), NOT a model retrain.
++      EXISTING CODE TO READ FIRST: results/experiment_3740_fr11_v15_stabilizer_tracker_state.json (the v15
++      persisted state -- RESUME it, do not start empty); results/experiment_3745_*.json + results/experiment_
++      3746_*.json (stabilizers_applied + nan_or_divergence_events + ebt_converged + cuda_used per chunk); the
++      FR-11 self-learning module under python/carnot/ (reuse the v13/v14/v15 counter/precision-tracking
++      pattern); research-program.md 'Continuous Self-Learning' Tier-1 section.
++      GRACEFUL FALLBACK: if exp3745/3746 artifacts are absent or blocked_cuda (no real GPU diagnostics),
++      record honest_verdict noting 'no NEW real training diagnostics to learn from -- v15 state carried
++      forward unchanged', NOT a fabricated efficacy table.
++      TASK:
++        1. Load the v15 tracker state (exp3740). For each stabilizer, continue the running efficacy counter:
++           P(no-divergence | stabilizer enabled) vs P(no-divergence | disabled), updated per NEW chunk from
++           exp3745/3746 (a pure counter update -- the Tier-1 mechanic). Only count chunks with cuda_used==true
++           (real GPU runs); explicitly exclude any CPU-drop chunk from the efficacy table.
++        2. Emit a recommended recipe (the stabilizer set with the best no-divergence correlation) for the next
++           bounded run, and persist the updated tracker state so a future EBT-training milestone resumes it.
++        3. If you ship code+tests, the test MUST assert against the tracker's real behavior (anti-poison-test).
++      INFERENCE-SUBSTRATE HYGIENE: aggregation/CPU; NO GGUF/CUDA markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag (a counter table
++      over a handful of chunks is a small-sample HEURISTIC -- label it preliminary, not a statistical claim,
++      to avoid SAMPLE_SIZE_BELOW_CLAIM).
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the self-learning outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: reads training diagnostics, no live model)."
++        stabilizer_efficacy_table:
++          principle: "Per-stabilizer no-divergence correlation over REAL GPU chunks -- the learned knowledge; the core deliverable."
++        recommended_recipe:
++          principle: "The upweighted stabilizer set for the next bounded run -- the actionable self-learning output that feeds back into the loop."
++        n_real_gpu_chunks_observed:
++          principle: "Sample-size hygiene -- how many REAL GPU training chunks (cuda_used==true) the tracker learned from; CPU-drop chunks excluded."
++        resumed_from_v15:
++          principle: "True iff the exp3740 v15 state was loaded and extended (continuous, not one-shot) -- the lineage-continuation forward difference."
++        tier1_counter_update:
++          principle: "Confirms the mechanic is a CPU counter update (<1us, the Tier-1 hardware path), not a model retrain -- aligns with the hardware-acceleration principle."
++        tracker_state_persisted:
++          principle: "True iff the updated tracker state was saved so a future EBT-training milestone resumes it."
++        is_preliminary_heuristic:
++          principle: "Honest label: over a handful of chunks this is a heuristic, not a statistical claim -- pre-empts SAMPLE_SIZE_BELOW_CLAIM."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: fr11_v16_tier1_stabilizer_efficacy_tracker_resumed_from_v15_recipe_recommended_state_persisted_over_<n>_real_gpu_chunks"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3751_fr11_self_learning_v16_stabilizer_tracker.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3752-kv260-opportunistic-continuity-audit
++    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) — false-positive scope-match vs prior kv260-continuity exps. NOTE: .340 confirmed KV260 TERMINAL, so this is an OPPORTUNISTIC confirm-terminal audit per north-star sec-3 relaxation, not the per-milestone mandate."
++    milestone: "2026.06.343"
++    title: "KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340."
++    priority: medium
++    max_turns: 20
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true
++    estimated_wall_time_min: 8
++    track: hardware
++    inference_substrate: hardware_smoke
++    requires_gpu: false
++    deliverable: results/experiment_3752_kv260_opportunistic_continuity_audit.json
++    prompt: |
++      CONTEXT: KV260 reached TERMINAL state at .340 (non-fabricated board latency transcript, exp3709,
++      re-confirmed exp3730/exp3741). The per-milestone hardware mandate is relaxed to opportunistic
++      (north-star sec-3). Light confirm-terminal audit, documentation-only.
++      PRECONDITIONS (KV260 uses SSH ONLY -- per KV260 SSH-Not-SD-Card discipline; NEVER a host block-device
++      check; the board boots from its own onboard storage and is reached over the network):
++        a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero ->
++           honest_verdict blocked_kv260_ssh_unreachable, EXIT (do NOT fabricate, do NOT use any host
++           storage-slot check).
++      CONCRETE STEPS:
++        1. Confirm SSH reachability (precondition a).
++        2. `ssh kria 'xmutil listapps'` -- confirm the Carnot accelerator overlay is present/loadable.
++        3. Record that the terminal state holds (or note any regression for the operator).
++      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke. Run `.venv/bin/python scripts/adversarial_verify.py
++      <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable."
++        inference_substrate: "hardware_smoke (principle: an SSH board check, not live inference)."
++        kv260_ssh_reachable:
++          principle: "The SSH-reachability fact (NOT host SD-card presence -- the retired wrong mechanism)."
++        terminal_state_holds:
++          principle: "Confirms the .340 terminal state did not regress; opportunistic, not mandated."
++        preconditions_checked:
++          principle: "Records the SSH check was actually run before any board operation."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT: "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3752_kv260_opportunistic_continuity_audit.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3753-capstone-v343
++    operator_override: "2026-05-29 operator directive (standing): routine capstone (capstone-vN) — false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun."
++    milestone: "2026.06.343"
++    title: "Capstone .343 — aggregate the Thesis-A attempt-3 outcome: was the .342 cuda:false CPU-drop corrected, did pinning .venv/bin/python + the hard cuda-block let the tiny EBT train STABLY on a real GPU (real part-a verdict superseding exp3736), and at EQUAL compute does the EBT beat matched AR (part-b verdict)? State the honest .343 Thesis-A outcome. paper_ready MUST stay TRUE; frozen 0.9131 unchanged."
++    priority: high
++    max_turns: 25
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true
++    estimated_wall_time_min: 10
++    track: ops
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3753_capstone_v343.json
++    prompt: |
++      CONTEXT: Capstone for .343 (Phase-3 Thesis-A attempt 3: pin venv/CUDA + run the genuine kill-gate).
++      Aggregate exp3743-exp3752 HONESTLY. Read each via scripts/summarize_artifact.py. Skip any artifact
++      carrying flagged_adversarial=true from headline aggregation (fabrication gate).
++      TASK: summarize the milestone: (1) the .342 cuda:false CPU-drop was corrected (exp3744); (2) the venv/
++      CUDA fix (.venv/bin/python + hard cuda-block, never CPU-drop) was applied and the tiny EBT + matched AR
++      were genuinely trained on a REAL GPU (exp3745/3746) -- OR an honest blocked_cuda if CUDA was still
++      unavailable; (3) the REAL part-(a) verdict superseding exp3736 (exp3747: stable->green-light, or
++      genuinely-bounded, or untested); (4) IF part-(a) green-lit: EBT generation smoke (exp3748) + the
++      matched-COMPUTE comparison (exp3749) + the part-(b) thesis verdict (exp3750); (5) FR-11 v16 self-
++      learning stabilizer tracker resumed from v15 (exp3751); (6) KV260 terminal confirm (exp3752). State the
++      .343 Thesis-A outcome PLAINLY and do NOT overclaim: a part-(a) green-light means 'trains stably enough
++      to compare', a part-(b) win means 'beats AR at equal compute at this tiny scale' (NOT 'energy-as-
++      generator works at scale'); an honest part-(b) negative bounds the route -- a real finding. If part-(a)
++      was AGAIN infra-blocked, say so plainly and flag the infra issue for the operator (it would be the
++      fourth infra block -- a process problem, not a mechanism result).
++      INVARIANTS to RE-ASSERT: paper_ready stays TRUE (G1-G4); frozen FoVer 0.9131 unchanged; P0.1 /
++      energy-SELECTION stays honest-negative-bounded (this milestone tested GENERATION, a different mechanism).
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO live-model markers; populate cited_upstream_artifacts.
++      Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the milestone's one-line outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model)."
++        cpu_drop_corrected:
++          principle: "Records that the .342 cuda:false CPU-drop was cleanly corrected (exp3744) -- the record-honesty deliverable."
++        venv_cuda_fix_worked:
++          principle: "BARE bool -- did pinning .venv/bin/python + the hard cuda-block finally let the EBT train on a real GPU (cuda_used==true), or was it AGAIN infra-blocked?"
++        thesis_a_part_a_outcome:
++          principle: "The GENUINE part-(a) result (stable-green-light / genuinely-bounded / untested) from exp3747 -- supersedes the .342 'untested' and the .341 false-negative."
++        thesis_a_part_b_outcome:
++          principle: "The part-(b) result (ebt-beats-ar / bounded / invalid / not-run) from exp3750 -- the actual thesis signal, honestly stated."
++        ebt_beats_ar_at_matched_compute:
++          principle: "BARE bool carried from exp3750 -- the milestone's load-bearing thesis result."
++        paper_ready_preserved:
++          principle: "G1-G4 stay met; the venture bet must not regress the banked verifier product."
++        frozen_headline_unchanged:
++          principle: "Frozen FoVer 0.9131 stays frozen; .343 never touches the headline."
++        flagged_artifacts_excluded:
++          principle: "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate)."
++        cited_upstream_artifacts:
++          principle: "Provenance trail from the capstone numbers to the real artifacts."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: capstone_v343_cpu_drop_corrected_venv_cuda_fix_<worked|reblocked>_part_a_<green_light|bounded|untested>_part_b_<ebt_beats_ar|bounded|not_run>_paper_ready_true_frozen_headline_unchanged"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3753_capstone_v343.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

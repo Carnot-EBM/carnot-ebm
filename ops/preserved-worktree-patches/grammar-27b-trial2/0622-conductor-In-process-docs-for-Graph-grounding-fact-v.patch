@@ -1,0 +1,32 @@
+From c8ddf2556a4110a72d5a6fd15d31f61edfc92b08 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 07:04:39 -0400
+Subject: [PATCH 00622/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Graph-grounding=20fact-verifier=20PROTOTYPE=20(NEW=20archi?=
+ =?UTF-8?q?tecture=20for=20the=20earned-negative=20FACTS=20domain,=20re-is?=
+ =?UTF-8?q?sue=20of=20exp3850):=20a=20KG-alignment=20grounding=20check=20(?=
+ =?UTF-8?q?MemGraphRAG/HalluGraph-inspired)=20on=20RAGTruth=20=E2=80=94=20?=
+ =?UTF-8?q?does=20graph=20grounding=20catch=20factual=20hallucinations=20t?=
+ =?UTF-8?q?he=20math-bound=20ensemble=20structurally=20cannot=3F=20Prototy?=
+ =?UTF-8?q?pe-first,=20small=20scale.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 7e6fdd9c50..8b3e90f11e 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8632,3 +8632,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-05: Verifier error-INDEPENDENCE scissor AT SCALE (DT-P2 moat-durability): of the gold step-errors a strong SOTA reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot's k=15 ensemble independently catch? N>=1000, bootstrap CI95, two positive controls. Confirms or refutes exp3827's small-sample 'moat survives'. (⚠️ Blocked) — honest_verdict=blocked_fover_balanced_corpus_not_available; results/experiment_3844_verifier_error_independence_scissor_at_scale.json
+ - 2026-06-05: Operational Retrospective for 2026.06.355 — no data available this milestone.
+ - 2026-06-05: Archive milestone .355 honestly (TOTAL WIPEOUT — zero usable artifacts: a corrupted research-complete.yaml line poisoned test_docs.py's YAML parse → conductor pre-test gate SKIP-cascade since .350, plus a gemini-CLI crash on the archive task; the poison was FIXED by the outer-loop this session) and activate .356 (re-issued verifier-moat-durability adjudication, all-codex anti-wipeout routing). (✅ Complete) — honest_verdict=complete: archived_v355_total_wipeout_poison_fixed_pretest_green_v356_active_moat_durability_reissued_paper_ready_true_frozen_headline_unchanged; results/experiment_3857_archive_v355_activate_v356.json
++- 2026-06-05: Graph-grounding fact-verifier PROTOTYPE (NEW architecture for the earned-negative FACTS domain, re-issue of exp3850): a KG-alignment grounding check (MemGraphRAG/HalluGraph-inspired) on RAGTruth — does graph grounding catch factual hallucinations the math-bound ensemble structurally cannot? Prototype-first, small scale. (✅ Complete) — honest_verdict=complete: graph_grounding_prototype_SIGNAL_auroc0.643_delta0.232_new_architecture_has_facts_traction; results/experiment_3862_graph_grounding_fact_verifier_prototype_v2.json
+-- 
+2.55.0
+

@@ -1,0 +1,43 @@
+From c5fffadf5b3bdb92e8d8776d8838deb3d2d93d43 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 03:48:49 -0400
+Subject: [PATCH 00969/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index a466142ee0..c4c9815d10 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-06-09T07:41:38Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 25, "phase": "iteration_start", "last_beat": "2026-06-09T07:48:47Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 057b306495..c205b93a47 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8075,3 +8075,4 @@ c |
+ | 2026-06-09 07:39 UTC | Archive .365 -> activate .366; GREEN-GATE: assert  | FAIL | Codex CLI error: : pytest.CaptureFixture[str],
+ +) -> None:
+ +    """REQ-REPORT |
++| 2026-06-09 07:46 UTC | Archive .365 -> activate .366; GREEN-GATE: assert  | OK | cache hit: 109 passed in 4.51s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5bc06109ec..95fd9b27a1 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 24, "phase": "iteration_start", "started_at": "2026-06-09T07:41:38Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 25, "phase": "iteration_start", "started_at": "2026-06-09T07:48:47Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

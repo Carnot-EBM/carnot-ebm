@@ -1,0 +1,43 @@
+From 9b052d969353dd38b1d0ae914062f70ccb3810fb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 02:41:04 -0400
+Subject: [PATCH 00382/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 44759f5dcd..2d1242c8e8 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 299981, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-04T06:30:04Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-04T06:41:02Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index d89de4b92b..2d1b2a6fc8 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7736,3 +7736,4 @@ ERROR: {
+ | 2026-06-04 05:36 UTC | SCAFFOLD the operator's next-thesis seed (NOT a lo | OK | 83 passed in 4.37s |
+ | 2026-06-04 06:16 UTC | Technical-report G4 correction PREP (the standing | OK | Deliverable already exists in repo |
+ | 2026-06-04 06:28 UTC | External research refresh for .346: file the genui | OK | 98 passed in 5.84s |
++| 2026-06-04 06:39 UTC | KV260 opportunistic continuity audit -- confirm te | OK | 90 passed in 5.61s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index c692762f40..4d275c4281 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 299981, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-04T06:30:04Z"}
+\ No newline at end of file
++{"pid": 299981, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-04T06:41:02Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

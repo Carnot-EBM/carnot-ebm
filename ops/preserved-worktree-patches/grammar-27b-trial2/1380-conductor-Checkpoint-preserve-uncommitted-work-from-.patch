@@ -1,0 +1,70 @@
+From 486f65d99d5d3cfb917d7a3cad0023aa925c790c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 01:47:59 -0400
+Subject: [PATCH 01380/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...t_4077_verifier_reward_rft_corpus_build.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8685c82c31..603e50cc58 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 119, "phase": "iteration_start", "last_beat": "2026-06-12T05:25:28Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 120, "phase": "iteration_start", "last_beat": "2026-06-12T05:47:58Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index a8c66258da..434fc026f2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8305,3 +8305,4 @@ c |
+ | 2026-06-12 05:02 UTC | Capstone .376 (UNGATED): the milestone's headline  | OK | 87 passed in 4.93s |
+ | 2026-06-12 05:05 UTC | Milestone 2026.06.377 activated | OK | 10 tasks queued |
+ | 2026-06-12 05:23 UTC | Archive .376 -> activate .377; KEEP the hardened g | OK | 157 passed in 4.53s |
++| 2026-06-12 05:45 UTC | VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7b6df5e725..1781b5e801 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 119, "phase": "iteration_start", "started_at": "2026-06-12T05:25:28Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 120, "phase": "iteration_start", "started_at": "2026-06-12T05:47:58Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4077_verifier_reward_rft_corpus_build.json b/results/experiment_4077_verifier_reward_rft_corpus_build.json
+index 7007a59e69..4a7a850728 100644
+--- a/results/experiment_4077_verifier_reward_rft_corpus_build.json
++++ b/results/experiment_4077_verifier_reward_rft_corpus_build.json
+@@ -59,5 +59,18 @@
+     "SCENARIO-LEARN-4077",
+     "SCENARIO-LEARN-4077-NMATCH"
+   ],
+-  "trainer_smoke_passed": false
+-}
++  "trainer_smoke_passed": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=5.6321884479839355 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

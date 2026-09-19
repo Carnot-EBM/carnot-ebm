@@ -1,0 +1,43 @@
+From 86905d043d6310de04dbc70561614ee5915df616 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 22:39:41 -0400
+Subject: [PATCH 00248/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 14f8c5f427..a27ab0c2e7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1910, "iteration": 7, "phase": "iteration_start", "last_beat": "2026-06-03T02:37:22Z"}
+\ No newline at end of file
++{"pid": 1910, "iteration": 8, "phase": "iteration_start", "last_beat": "2026-06-03T02:39:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 473dec2555..fe35eb61a5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7652,3 +7652,4 @@ ERROR: {
+ | 2026-06-03 02:30 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.39s |
+ | 2026-06-03 02:33 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.50s |
+ | 2026-06-03 02:35 UTC | CLEAN corrigendum of exp3734 + exp3736: the .342 p | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.33s |
++| 2026-06-03 02:37 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 104 passed in 4.04s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 6cccf2615e..c4331255d0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1910, "iteration": 7, "phase": "iteration_start", "started_at": "2026-06-03T02:37:22Z"}
+\ No newline at end of file
++{"pid": 1910, "iteration": 8, "phase": "iteration_start", "started_at": "2026-06-03T02:39:39Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

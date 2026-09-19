@@ -1,0 +1,43 @@
+From 9e76d1057e415f333eecc17d103262dc15529fad Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 09:32:12 -0400
+Subject: [PATCH 00290/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fbc5b0acb9..867e0cdda9 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 23, "phase": "iteration_start", "last_beat": "2026-06-03T13:29:57Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 24, "phase": "iteration_start", "last_beat": "2026-06-03T13:32:10Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 54d26242df..a83a4649fa 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7704,3 +7704,4 @@ ERROR: {
+ | 2026-06-03 13:27 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
+ | 2026-06-03 13:27 UTC | FR-11 continuous self-learning v17 -- Tier-1 ONLIN | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.97s |
+ | 2026-06-03 13:29 UTC | Ship a DEPLOYABLE certified abstention operating p | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3756-g2-mechanical-reproducer) |
++| 2026-06-03 13:30 UTC | FR-11 continuous self-learning v17 -- Tier-1 ONLIN | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.38s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1d65fc1c74..65c38dd361 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 23, "phase": "iteration_start", "started_at": "2026-06-03T13:29:57Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 24, "phase": "iteration_start", "started_at": "2026-06-03T13:32:10Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

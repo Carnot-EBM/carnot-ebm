@@ -1,0 +1,1997 @@
+From 2b4c02e5b2c94ff727ade75ccd1a0b22660bbaab Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 20:51:34 -0400
+Subject: [PATCH 00053/11171] =?UTF-8?q?[conductor]=20FR-11=20continuous=20?=
+ =?UTF-8?q?self-learning=20v11=20=E2=80=94=20drift-aware=20online=20depend?=
+ =?UTF-8?q?ency-aware=20weighting:=20detect=20distribution=20drift=20and?=
+ =?UTF-8?q?=20re-estimate=20the=20dependency=20structure=20online=20(forwa?=
+ =?UTF-8?q?rd=20diff=20from=20v10's=20fixed-structure=20online=20weights),?=
+ =?UTF-8?q?=20under=20a=20conservative-default=20/=20uncertainty-gated=20r?=
+ =?UTF-8?q?ule=20that=20provably=20prevents=20collapse?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3685-fr11-continuous-self-learning-v11-drift-aware
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  72 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../fr11/continuous_self_learning_v11.py      | 829 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ ...685_fr11_continuous_self_learning_v11.json | 381 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ..._3685_fr11_continuous_self_learning_v11.py |  27 +
+ .../test_experiment_3685_fr11_csl_v11.py      | 282 ++++++
+ 26 files changed, 1630 insertions(+), 39 deletions(-)
+ create mode 100644 python/carnot/fr11/continuous_self_learning_v11.py
+ create mode 100644 results/experiment_3685_fr11_continuous_self_learning_v11.json
+ create mode 100644 scripts/experiment_3685_fr11_continuous_self_learning_v11.py
+ create mode 100644 tests/python/test_experiment_3685_fr11_csl_v11.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 067d1ed02a..bc89abb2a4 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -10443,3 +10443,75 @@ maintained.
+ | Requirement  | Python | Tests |
+ |-------------|--------|-------|
+ | REQ-LEARN-3673 | Proposed (python/carnot/fr11/continuous_self_learning_v10.py; scripts/experiment_3673_fr11_continuous_self_learning_v10.py) | Proposed (tests/python/test_experiment_3673_fr11_csl_v10.py) |
++
++---
++
++## REQ-LEARN-3685: FR-11 Continuous Self Learning v11 Drift-Aware Online Dependency Re-estimation
++
++**Given** the FR-11 module and cached per-verifier trace scores with binary
++labels are present, and the cached score stream contains two
++distributionally-distinct verifier-vote slices
++**When** Exp 3685 runs a closed FR-11 continuous self-learning loop over at
++least 200 cached examples with an injected mid-stream verifier-vote
++distribution shift
++**Then** the deploy arm SHALL explicitly detect verifier-vote distribution
++drift and re-estimate the dependency structure online after the drift point
++**And** the deploy arm SHALL keep the v10 conservative default,
++uncertainty-gated update rule, and collapse guard so no single verifier weight
++concentrates at 0 or 1
++**And** the control arm SHALL run a naive online update without drift detection
++or the guard, so single-verifier collapse or adaptation failure is visible as a
++positive control
++**And** the artifact SHALL report pre-drift and post-drift AUROC for the deploy
++arm, control arm, v10 fixed-structure online baseline, and static Carnot
++baseline, plus the post-drift AUROC gain over v10, quality maintenance,
++collapse status, drift-detection status, and pass-rate-vs-true-accuracy
++distinctness.
++
++### REQ-LEARN-3685 Sub-requirements
++
++- REQ-LEARN-3685-1: Runnable artifacts SHALL use cached traces only, with
++  `inference_substrate` equal to
++  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).`.
++- REQ-LEARN-3685-2: If the FR-11 module, cached per-verifier trace scores, or
++  two distributionally-distinct verifier-vote slices are unavailable, the
++  workflow SHALL write the terminal verdict
++  `complete: blocked_fr11_module_or_traces_unavailable`.
++- REQ-LEARN-3685-3: `n_online_updates` SHALL be at least 200 for runnable
++  artifacts.
++- REQ-LEARN-3685-4: The acceptance gate SHALL pass only when
++  `drift_detected_deploy_arm == true`,
++  `collapse_detected_deploy_arm == false`,
++  `collapse_detected_control == true`, and
++  `pass_rate_vs_true_accuracy_distinct_assert == true`.
++- REQ-LEARN-3685-5: Runnable artifacts SHALL include principle annotations for
++  `honest_verdict`, `inference_substrate`, `n_online_updates`,
++  `drift_detected_deploy_arm`, `collapse_detected_deploy_arm`,
++  `collapse_detected_control`, `post_drift_auroc_gain_over_v10`,
++  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
++  `random_seed`, `reproducibility_checksum`, and `duration_s`.
++- REQ-LEARN-3685-6: The terminal verdict SHALL be
++  `complete: fr11_v11_drift_aware_online_dependency_aware_recovers_no_collapse_quality_maintained`
++  when the acceptance gate passes, quality is maintained, and the drift-aware
++  deploy arm improves post-drift AUROC over the v10 fixed-structure online
++  baseline, otherwise
++  `complete: fr11_v11_no_gain_over_v10_fixed_structure_online_sufficient`.
++
++### SCENARIO-LEARN-3685: Drift-Aware Re-estimation Recovers Without Collapse
++
++**Given** cached verifier scores whose first slice and second slice have
++different verifier-vote distributions
++**When** the v11 evaluator streams the first slice before the second slice
++**Then** the deploy arm detects the mid-stream drift, re-learns a dependency
++structure using post-drift evidence, keeps verifier weights bounded away from
++single-verifier collapse, and reports pass-rate and true-accuracy trajectories
++that are not element-wise identical
++**And** the naive control arm collapses to one verifier while the deploy arm's
++post-drift AUROC is compared against v10 fixed-structure online weighting and
++static Carnot weighting.
++
++## Implementation Status (REQ-LEARN-3685)
++
++| Requirement  | Python | Tests |
++|-------------|--------|-------|
++| REQ-LEARN-3685 | Proposed (python/carnot/fr11/continuous_self_learning_v11.py; scripts/experiment_3685_fr11_continuous_self_learning_v11.py) | Proposed (tests/python/test_experiment_3685_fr11_csl_v11.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index dfd3700272..0f00b770d4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2810,
++  "experiments_checked": 2811,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/fr11/continuous_self_learning_v11.py b/python/carnot/fr11/continuous_self_learning_v11.py
+new file mode 100644
+index 0000000000..ce0a69d9e2
+--- /dev/null
++++ b/python/carnot/fr11/continuous_self_learning_v11.py
+@@ -0,0 +1,829 @@
++"""FR-11 continuous self-learning v11 with drift-aware dependency re-estimation.
++
++Spec: REQ-LEARN-3685, SCENARIO-LEARN-3685.
++
++The v11 forward difference over v10 is explicit verifier-vote distribution
++drift detection.  Cached verifier traces are ordered into a deterministic
++two-slice stream whose vote distribution shifts mid-run; the deploy arm watches
++that stream, re-estimates the dependency graph after drift, and keeps v10's
++conservative default, uncertainty gate, and collapse guard.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import math
++from pathlib import Path
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot.fr11 import continuous_self_learning_v10 as v10
++
++
++JsonDict = dict[str, Any]
++
++OUTPUT_REL_PATH = Path("results/experiment_3685_fr11_continuous_self_learning_v11.json")
++DEFAULT_RANDOM_SEED = 3685
++DEFAULT_CORPUS_RANDOM_SEED = 3673
++DEFAULT_N_ONLINE_UPDATES = 1000
++MIN_ONLINE_UPDATES = v10.MIN_ONLINE_UPDATES
++DRIFT_QUANTILE = 0.35
++DRIFT_DISTANCE_THRESHOLD = 0.30
++DRIFT_WINDOW = 50
++UPDATE_PERIOD = v10.UPDATE_PERIOD
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates "
++    "(principle: scores cached traces; no LLM load)."
++)
++SUCCESS_VERDICT = (
++    "complete: "
++    "fr11_v11_drift_aware_online_dependency_aware_recovers_no_collapse_quality_maintained"
++)
++NO_GAIN_VERDICT = "complete: fr11_v11_no_gain_over_v10_fixed_structure_online_sufficient"
++BLOCKED_VERDICT = "complete: blocked_fr11_module_or_traces_unavailable"
++TERMINAL_VERDICTS = (SUCCESS_VERDICT, NO_GAIN_VERDICT, BLOCKED_VERDICT)
++VERIFIER_NAMES = v10.VERIFIER_NAMES
++
++score_fover_corpus = v10.score_fover_corpus
++score_matrix = v10.score_matrix
++online_metric_trajectories = v10.online_metric_trajectories
++detect_weight_collapse = v10.detect_weight_collapse
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "n_online_updates",
++    "drift_detected_deploy_arm",
++    "collapse_detected_deploy_arm",
++    "collapse_detected_control",
++    "post_drift_auroc_gain_over_v10",
++    "pass_rate_vs_true_accuracy_distinct_assert",
++    "quality_maintained",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "Scores cached traces; no LLM load.",
++    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
++    "drift_detected_deploy_arm": (
++        "The deploy arm must detect the injected distribution drift "
++        "(the v11 forward difference)."
++    ),
++    "collapse_detected_deploy_arm": (
++        "The conservative-default + uncertainty-gated rule must prevent weight "
++        "collapse (alpha_t grounding)."
++    ),
++    "collapse_detected_control": (
++        "Positive control: the naive arm must collapse or fail to adapt, else the test has no contrast."
++    ),
++    "post_drift_auroc_gain_over_v10": (
++        "The forward difference -- does drift-aware re-estimation beat v10's "
++        "fixed-structure online weighting after drift?"
++    ),
++    "pass_rate_vs_true_accuracy_distinct_assert": (
++        "De-flags the tautology where pass_rate and true_accuracy are the same array."
++    ),
++    "quality_maintained": (
++        "Collapse-prevention + drift adaptation must not come at the cost of ensemble quality."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection (of the artifact, vs the corpus drift it measures).",
++    "duration_s": "Plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class DriftStream:
++    """Cached verifier rows ordered so the vote distribution shifts mid-stream."""
++
++    labels: np.ndarray
++    score_matrix: np.ndarray
++    drift_point: int
++    projection: str
++    drift_distance: float
++    pre_vote_mean: np.ndarray
++    post_vote_mean: np.ndarray
++
++
++@dataclass(frozen=True)
++class DriftAwareOnlineFit:
++    """Final deploy-arm weights plus the drift events that caused re-estimation."""
++
++    weights: np.ndarray
++    edges: list[JsonDict]
++    drift_events: list[JsonDict]
++    n_weight_updates: int
++    n_structure_reestimates: int
++    catch_utility: np.ndarray
++
++
++def build_artifact(
++    repo_root: Path | str,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    n_examples: int = DEFAULT_N_ONLINE_UPDATES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    corpus_random_seed: int = DEFAULT_CORPUS_RANDOM_SEED,
++) -> JsonDict:
++    """Build Exp 3685 from cached FoVer rows and FR-11 verifier state."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    preconditions = [
++        _fr11_precondition(root),
++        *probe_cached_trace_preconditions(root, n_examples=n_examples),
++    ]
++    if not all(item["available"] for item in preconditions):
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=preconditions,
++        )
++
++    try:
++        labels, scores_by_verifier = score_fover_corpus(
++            root,
++            n_examples=n_examples,
++            random_seed=corpus_random_seed,
++        )
++    except Exception as exc:  # noqa: BLE001 - cached scoring failure is terminal.
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=[
++                *preconditions,
++                {
++                    "resource": "cached_trace_scoring",
++                    "available": False,
++                    "detail": f"{type(exc).__name__}: {exc}",
++                },
++            ],
++        )
++
++    return build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=start,
++        now_s=now_s,
++        random_seed=random_seed,
++        preconditions=preconditions,
++    )
++
++
++def probe_cached_trace_preconditions(repo_root: Path | str, *, n_examples: int) -> list[JsonDict]:
++    """Check cached trace scoring and the v11 drift-aware online functions."""
++
++    checks = v10.probe_cached_trace_preconditions(Path(repo_root), n_examples=n_examples)
++    checks.append(
++        {
++            "resource": "drift_aware_online_reestimation_implementation",
++            "available": all(
++                callable(func)
++                for func in (
++                    build_drifting_trace_stream,
++                    drift_aware_streaming_dependency_weights,
++                    fixed_structure_v10_weights,
++                )
++            ),
++            "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
++        }
++    )
++    return [dict(item) for item in checks]
++
++
++def build_artifact_from_scores(
++    *,
++    labels: Sequence[int],
++    scores_by_verifier: Mapping[str, Sequence[float]],
++    started_s: float,
++    now_s: float | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    preconditions: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Evaluate drift-aware deploy, naive control, v10 fixed, and Carnot baselines."""
++
++    if not labels or not scores_by_verifier:
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition([], {})],
++        )
++
++    names = list(scores_by_verifier)
++    matrix = score_matrix(scores_by_verifier, names)
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    if matrix.shape[0] != len(labels_arr):
++        raise ValueError("labels and verifier scores must have the same length")
++    if not _runnable(labels_arr):
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition(labels_arr, scores_by_verifier)],
++        )
++
++    try:
++        stream = build_drifting_trace_stream(
++            labels=labels_arr,
++            score_matrix=matrix,
++            verifier_names=names,
++            random_seed=random_seed,
++        )
++    except ValueError as exc:
++        blocked_preconditions = [
++            *(preconditions or [_trace_precondition(labels_arr, scores_by_verifier)]),
++            {"resource": "distributionally_distinct_drift_slices", "available": False, "detail": str(exc)},
++        ]
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=blocked_preconditions,
++        )
++
++    deploy = drift_aware_streaming_dependency_weights(
++        labels=stream.labels,
++        score_matrix=stream.score_matrix,
++        verifier_names=names,
++    )
++    control = v10.naive_online_dependency_weights(
++        labels=stream.labels,
++        score_matrix=stream.score_matrix,
++        verifier_names=names,
++    )
++    v10_fixed_weights = fixed_structure_v10_weights(
++        labels=stream.labels,
++        score_matrix=stream.score_matrix,
++        verifier_names=names,
++        drift_point=stream.drift_point,
++    )
++    carnot_weights = v10.exp3644.carnot_current_weights(names)
++
++    arm_scores = {
++        "deploy": _signed_scores(stream.score_matrix, deploy.weights),
++        "control": _signed_scores(stream.score_matrix, control["weights"]),
++        "v10_fixed_structure_online": _signed_scores(stream.score_matrix, v10_fixed_weights),
++        "static_carnot": _signed_scores(stream.score_matrix, carnot_weights),
++    }
++    pre_metrics = _arm_metrics(
++        stream.labels[: stream.drift_point],
++        {name: scores[: stream.drift_point] for name, scores in arm_scores.items()},
++    )
++    post_metrics = _arm_metrics(
++        stream.labels[stream.drift_point :],
++        {name: scores[stream.drift_point :] for name, scores in arm_scores.items()},
++    )
++    all_metrics = _arm_metrics(stream.labels, arm_scores)
++    post_drift_gain_over_v10 = (
++        post_metrics["deploy"]["auroc"] - post_metrics["v10_fixed_structure_online"]["auroc"]
++    )
++    quality_maintained = bool(
++        post_metrics["deploy"]["auroc"] >= post_metrics["static_carnot"]["auroc"] - 1e-12
++        and all_metrics["deploy"]["auroc"] >= all_metrics["static_carnot"]["auroc"] - 1e-12
++    )
++    collapse_detected_deploy_arm = detect_weight_collapse(deploy.weights)
++    collapse_detected_control = detect_weight_collapse(control["weights"])
++    drift_detected_deploy_arm = bool(deploy.drift_events)
++    pass_rate, true_accuracy = online_metric_trajectories(stream.labels, arm_scores["deploy"])
++    distinct_assert = [_round(value) for value in pass_rate] != [
++        _round(value) for value in true_accuracy
++    ]
++    gate_passed = bool(
++        drift_detected_deploy_arm
++        and not collapse_detected_deploy_arm
++        and collapse_detected_control
++        and distinct_assert
++    )
++    verdict = select_honest_verdict(
++        gate_passed=gate_passed,
++        quality_maintained=quality_maintained,
++        post_drift_auroc_gain_over_v10=post_drift_gain_over_v10,
++    )
++
++    artifact: JsonDict = {
++        "artifact": "experiment_3685_fr11_continuous_self_learning_v11",
++        "schema": "carnot.fr11_continuous_self_learning_v11",
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "n_online_updates": int(len(stream.labels)),
++        "drift_detected_deploy_arm": drift_detected_deploy_arm,
++        "collapse_detected_deploy_arm": bool(collapse_detected_deploy_arm),
++        "collapse_detected_control": bool(collapse_detected_control),
++        "post_drift_auroc_gain_over_v10": _round(post_drift_gain_over_v10),
++        "pass_rate_vs_true_accuracy_distinct_assert": bool(distinct_assert),
++        "quality_maintained": bool(quality_maintained),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": reproducibility_checksum(
++            stream.labels,
++            stream.score_matrix,
++            names,
++            deploy.weights,
++            control["weights"],
++            deploy.drift_events,
++            random_seed=random_seed,
++        ),
++        "duration_s": _round(_duration(float(started_s), now_s)),
++        "acceptance_gate": {
++            "condition": (
++                "drift_detected_deploy_arm == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "collapse_detected_control == true AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": gate_passed,
++            "principle": (
++                "Drift-aware self-learning is validated only when the deploy "
++                "arm detects drift, does not collapse, the control collapses, "
++                "and the two metrics are genuinely distinct (not a tautology)."
++            ),
++        },
++        "drift_stream": {
++            "drift_point": int(stream.drift_point),
++            "projection": stream.projection,
++            "vote_distribution_distance": _round(stream.drift_distance),
++            "pre_vote_mean": [_round(value) for value in stream.pre_vote_mean],
++            "post_vote_mean": [_round(value) for value in stream.post_vote_mean],
++            "verifier_names": names,
++        },
++        "metrics_pre_drift": pre_metrics,
++        "metrics_post_drift": post_metrics,
++        "metrics_all": all_metrics,
++        "post_drift_auroc_gain_over_static_carnot": _round(
++            post_metrics["deploy"]["auroc"] - post_metrics["static_carnot"]["auroc"]
++        ),
++        "post_drift_window_metrics": post_drift_window_metrics(
++            labels=stream.labels,
++            scores_by_arm=arm_scores,
++            drift_point=stream.drift_point,
++        ),
++        "weights_deploy_initial": _weights_to_json(
++            names,
++            np.ones(len(names), dtype=np.float64) / float(len(names)),
++        ),
++        "weights_deploy_final": _weights_to_json(names, deploy.weights),
++        "weights_control_final": _weights_to_json(names, control["weights"]),
++        "weights_v10_fixed_structure_online": _weights_to_json(names, v10_fixed_weights),
++        "weights_static_carnot": _weights_to_json(names, carnot_weights),
++        "deploy_dependency_edges_final": deploy.edges,
++        "deploy_drift_events": deploy.drift_events,
++        "deploy_n_weight_updates": int(deploy.n_weight_updates),
++        "deploy_n_structure_reestimates": int(deploy.n_structure_reestimates),
++        "control_selected_verifier": control["selected_verifier"],
++        "observed_catch_utility_by_verifier": _weights_to_json(names, deploy.catch_utility),
++        "pass_rate_trajectory": [_round(value) for value in pass_rate],
++        "true_accuracy_trajectory": [_round(value) for value in true_accuracy],
++        "verifier_names": names,
++        "preconditions_checked": [dict(item) for item in preconditions or []],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_drifting_trace_stream(
++    *,
++    labels: Sequence[int] | np.ndarray,
++    score_matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    random_seed: int,
++) -> DriftStream:
++    """Select two cached slices with distinct verifier-vote distributions."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix = np.asarray(score_matrix, dtype=np.float64)
++    _validate_scores(labels_arr, matrix, verifier_names)
++    rng = np.random.default_rng(int(random_seed))
++    candidates: list[tuple[float, str, np.ndarray, np.ndarray]] = []
++    projections = [("mean_score", np.mean(matrix, axis=1))]
++    projections.extend((f"{name}_score", matrix[:, index]) for index, name in enumerate(verifier_names))
++    projections.extend((f"negative_{name}_score", -matrix[:, index]) for index, name in enumerate(verifier_names))
++    for projection_name, projection in projections:
++        lower = projection <= float(np.quantile(projection, DRIFT_QUANTILE))
++        upper = projection >= float(np.quantile(projection, 1.0 - DRIFT_QUANTILE))
++        low_idx = np.where(lower)[0]
++        high_idx = np.where(upper)[0]
++        n_each = min(len(low_idx), len(high_idx))
++        if n_each < MIN_ONLINE_UPDATES // 2:
++            continue
++        rng.shuffle(low_idx)
++        rng.shuffle(high_idx)
++        low_idx = low_idx[:n_each]
++        high_idx = high_idx[:n_each]
++        if not _slice_has_binary_support(labels_arr[low_idx]) or not _slice_has_binary_support(
++            labels_arr[high_idx]
++        ):
++            continue
++        distance = vote_distribution_distance(matrix[low_idx], matrix[high_idx])
++        candidates.append((distance, projection_name, low_idx, high_idx))
++
++    if not candidates:
++        raise ValueError("no two binary cached slices can support a drift stream")
++    distance, projection_name, pre_idx, post_idx = max(
++        candidates,
++        key=lambda item: (item[0], item[1]),
++    )
++    if distance < DRIFT_DISTANCE_THRESHOLD:
++        raise ValueError(
++            f"vote-distribution distance {distance:.6f} below required {DRIFT_DISTANCE_THRESHOLD:.6f}"
++        )
++    ordered = np.concatenate([pre_idx, post_idx])
++    drift_point = int(len(pre_idx))
++    return DriftStream(
++        labels=labels_arr[ordered],
++        score_matrix=matrix[ordered],
++        drift_point=drift_point,
++        projection=projection_name,
++        drift_distance=float(distance),
++        pre_vote_mean=vote_mean(matrix[pre_idx]),
++        post_vote_mean=vote_mean(matrix[post_idx]),
++    )
++
++
++def drift_aware_streaming_dependency_weights(
++    *,
++    labels: Sequence[int] | np.ndarray,
++    score_matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    drift_window: int = DRIFT_WINDOW,
++) -> DriftAwareOnlineFit:
++    """Learn graph-aware weights online and reset the training window on drift."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix = np.asarray(score_matrix, dtype=np.float64)
++    names = list(verifier_names)
++    _validate_scores(labels_arr, matrix, names)
++    weights = np.ones(matrix.shape[1], dtype=np.float64) / float(matrix.shape[1])
++    edges: list[JsonDict] = []
++    drift_events: list[JsonDict] = []
++    catch_utility = np.zeros(matrix.shape[1], dtype=np.float64)
++    n_weight_updates = 0
++    train_start = 0
++    reference_window: np.ndarray | None = None
++
++    for end in _update_points(len(labels_arr)):
++        if end >= drift_window and reference_window is None:
++            reference_window = matrix[:drift_window]
++        drift_distance = 0.0
++        drift_now = False
++        if reference_window is not None and end >= 2 * drift_window:
++            current_window = matrix[end - drift_window : end]
++            drift_distance = vote_distribution_distance(reference_window, current_window)
++            drift_now = detect_vote_distribution_drift(reference_window, current_window)
++            if drift_now and (not drift_events or end - int(drift_events[-1]["end_index"]) >= drift_window):
++                train_start = max(0, end - drift_window)
++                reference_window = current_window
++                drift_events.append(
++                    {
++                        "end_index": int(end),
++                        "reestimate_from_index": int(train_start),
++                        "vote_distribution_distance": _round(drift_distance),
++                    }
++                )
++
++        fit_start = train_start if drift_events else 0
++        seen_labels = labels_arr[fit_start:end]
++        seen_matrix = matrix[fit_start:end]
++        catch_utility = v10.balanced_catch_utilities(seen_labels, seen_matrix)
++        if not v10.uncertainty_gate_cleared(seen_labels, catch_utility):
++            continue
++        fit = v10.fit_dependency_aware_weights(
++            labels=seen_labels,
++            score_matrix=seen_matrix,
++            verifier_names=names,
++        )
++        candidate = v10.collapse_guarded_weights(fit.weights)
++        if not detect_weight_collapse(candidate):
++            weights = candidate
++            edges = [dict(edge) for edge in fit.edges]
++            n_weight_updates += 1
++            if drift_now:
++                drift_events[-1]["structure_reestimated"] = True
++
++    for event in drift_events:
++        event.setdefault("structure_reestimated", False)
++    return DriftAwareOnlineFit(
++        weights=weights,
++        edges=edges,
++        drift_events=drift_events,
++        n_weight_updates=n_weight_updates,
++        n_structure_reestimates=sum(1 for event in drift_events if event["structure_reestimated"]),
++        catch_utility=catch_utility,
++    )
++
++
++def fixed_structure_v10_weights(
++    *,
++    labels: Sequence[int] | np.ndarray,
++    score_matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    drift_point: int,
++) -> np.ndarray:
++    """Fit v10's dependency structure before drift and hold it fixed afterward."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix = np.asarray(score_matrix, dtype=np.float64)
++    split = max(MIN_ONLINE_UPDATES // 2, min(int(drift_point), len(labels_arr)))
++    pre_labels = labels_arr[:split]
++    pre_matrix = matrix[:split]
++    fit = v10.fit_dependency_aware_weights(
++        labels=pre_labels,
++        score_matrix=pre_matrix,
++        verifier_names=verifier_names,
++    )
++    return v10.collapse_guarded_weights(fit.weights)
++
++
++def vote_mean(matrix: np.ndarray) -> np.ndarray:
++    """Return per-verifier binary vote rates for a score matrix."""
++
++    values = np.asarray(matrix, dtype=np.float64)
++    if values.ndim != 2:
++        raise ValueError("score matrix must be two-dimensional")
++    return np.mean(values >= 0.5, axis=0)
++
++
++def vote_distribution_distance(reference: np.ndarray, current: np.ndarray) -> float:
++    """Measure verifier-vote distribution drift with an L2 distance."""
++
++    return float(np.linalg.norm(vote_mean(current) - vote_mean(reference)))
++
++
++def detect_vote_distribution_drift(
++    reference: np.ndarray,
++    current: np.ndarray,
++    *,
++    threshold: float = DRIFT_DISTANCE_THRESHOLD,
++) -> bool:
++    """Return true when two vote windows differ enough to trigger re-estimation."""
++
++    return bool(vote_distribution_distance(reference, current) >= float(threshold))
++
++
++def post_drift_window_metrics(
++    *,
++    labels: Sequence[int] | np.ndarray,
++    scores_by_arm: Mapping[str, Sequence[float] | np.ndarray],
++    drift_point: int,
++    n_windows: int = 4,
++) -> list[JsonDict]:
++    """Measure post-drift recovery windows for each arm."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    window_size = max(1, int(math.ceil((len(labels_arr) - int(drift_point)) / n_windows)))
++    windows: list[JsonDict] = []
++    for start in range(int(drift_point), len(labels_arr), window_size):
++        end = min(len(labels_arr), start + window_size)
++        window_scores = {
++            name: np.asarray(scores, dtype=np.float64)[start:end]
++            for name, scores in scores_by_arm.items()
++        }
++        metrics = _arm_metrics(labels_arr[start:end], window_scores)
++        windows.append(
++            {
++                "start_index": int(start),
++                "end_index": int(end),
++                "deploy_beats_v10_and_static": bool(
++                    metrics["deploy"]["auroc"]
++                    >= max(
++                        metrics["v10_fixed_structure_online"]["auroc"],
++                        metrics["static_carnot"]["auroc"],
++                    )
++                ),
++                "metrics": metrics,
++            }
++        )
++    return windows
++
++
++def select_honest_verdict(
++    *,
++    gate_passed: bool,
++    quality_maintained: bool,
++    post_drift_auroc_gain_over_v10: float,
++) -> str:
++    """Choose the allowed Exp 3685 terminal verdict."""
++
++    if gate_passed and quality_maintained and post_drift_auroc_gain_over_v10 > 0.0:
++        return SUCCESS_VERDICT
++    return NO_GAIN_VERDICT
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3685 artifact schema before writing JSON."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = artifact.get("honest_verdict")
++    if verdict not in set(TERMINAL_VERDICTS):
++        raise ValueError(f"unsupported honest_verdict: {verdict!r}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be present")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    gate = artifact.get("acceptance_gate")
++    if not isinstance(gate, Mapping) or not isinstance(gate.get("passed"), bool):
++        raise ValueError("acceptance_gate.passed must be present as a boolean")
++    if not isinstance(artifact.get("duration_s"), int | float):
++        raise ValueError("duration_s must be numeric")
++    if verdict == BLOCKED_VERDICT:
++        return
++    if int(artifact["n_online_updates"]) < MIN_ONLINE_UPDATES:
++        raise ValueError(f"runnable artifact must report at least {MIN_ONLINE_UPDATES} updates")
++    for field in (
++        "drift_detected_deploy_arm",
++        "collapse_detected_deploy_arm",
++        "collapse_detected_control",
++        "pass_rate_vs_true_accuracy_distinct_assert",
++        "quality_maintained",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a boolean")
++    gain = artifact.get("post_drift_auroc_gain_over_v10")
++    if not isinstance(gain, int | float) or not math.isfinite(float(gain)):
++        raise ValueError("post_drift_auroc_gain_over_v10 must be finite")
++
++
++def write_artifact(
++    repo_root: Path | str,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    labels: Sequence[int] | None = None,
++    scores_by_verifier: Mapping[str, Sequence[float]] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and persist the Exp 3685 JSON artifact."""
++
++    root = Path(repo_root)
++    if labels is None or scores_by_verifier is None:
++        artifact = build_artifact(root, started_s=started_s, now_s=now_s)
++    else:
++        artifact = build_artifact_from_scores(
++            labels=labels,
++            scores_by_verifier=scores_by_verifier,
++            started_s=time.time() if started_s is None else float(started_s),
++            now_s=now_s,
++        )
++    output = root / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def reproducibility_checksum(
++    labels: np.ndarray,
++    score_matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    deploy_weights: Sequence[float],
++    control_weights: Sequence[float],
++    drift_events: Sequence[Mapping[str, Any]],
++    *,
++    random_seed: int,
++) -> str:
++    """Hash deterministic inputs, drift detections, and final arm weights."""
++
++    digest = hashlib.sha256()
++    digest.update(np.ascontiguousarray(labels, dtype=np.int64).tobytes())
++    digest.update(np.ascontiguousarray(score_matrix, dtype=np.float64).tobytes())
++    digest.update(json.dumps(list(verifier_names), separators=(",", ":")).encode("utf-8"))
++    digest.update(np.ascontiguousarray(deploy_weights, dtype=np.float64).tobytes())
++    digest.update(np.ascontiguousarray(control_weights, dtype=np.float64).tobytes())
++    digest.update(json.dumps([dict(event) for event in drift_events], sort_keys=True).encode("utf-8"))
++    digest.update(str(int(random_seed)).encode("ascii"))
++    return digest.hexdigest()
++
++
++def _blocked_artifact(
++    *,
++    duration_s: float,
++    random_seed: int,
++    preconditions: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    payload = json.dumps(
++        {"preconditions": [dict(item) for item in preconditions], "random_seed": random_seed},
++        sort_keys=True,
++        separators=(",", ":"),
++    ).encode("utf-8")
++    artifact: JsonDict = {
++        "artifact": "experiment_3685_fr11_continuous_self_learning_v11",
++        "schema": "carnot.fr11_continuous_self_learning_v11",
++        "honest_verdict": BLOCKED_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "n_online_updates": 0,
++        "drift_detected_deploy_arm": False,
++        "collapse_detected_deploy_arm": False,
++        "collapse_detected_control": False,
++        "post_drift_auroc_gain_over_v10": 0.0,
++        "pass_rate_vs_true_accuracy_distinct_assert": False,
++        "quality_maintained": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": hashlib.sha256(payload).hexdigest(),
++        "duration_s": _round(duration_s),
++        "acceptance_gate": {
++            "condition": (
++                "drift_detected_deploy_arm == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "collapse_detected_control == true AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": False,
++            "principle": (
++                "Drift-aware self-learning is validated only when the deploy "
++                "arm detects drift, does not collapse, the control collapses, "
++                "and the two metrics are genuinely distinct (not a tautology)."
++            ),
++        },
++        "preconditions_checked": [dict(item) for item in preconditions],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _fr11_precondition(root: Path) -> JsonDict:
++    fr11_dir = root / "python/carnot/fr11"
++    return {
++        "resource": "fr11_module",
++        "available": fr11_dir.is_dir(),
++        "detail": str(fr11_dir),
++    }
++
++
++def _trace_precondition(
++    labels: Sequence[int] | np.ndarray,
++    scores_by_verifier: Mapping[str, Sequence[float]],
++) -> JsonDict:
++    return {
++        "resource": "cached_traces_with_per_verifier_scores_and_labels",
++        "available": _runnable(np.asarray(labels, dtype=np.int64)),
++        "detail": (
++            f"n_examples={len(labels)}; labels={sorted(set(int(value) for value in labels))}; "
++            f"n_verifiers={len(scores_by_verifier)}; required>={MIN_ONLINE_UPDATES}"
++        ),
++    }
++
++
++def _runnable(labels: np.ndarray) -> bool:
++    return len(labels) >= MIN_ONLINE_UPDATES and len(set(int(value) for value in labels)) == 2
++
++
++def _validate_scores(labels: np.ndarray, matrix: np.ndarray, verifier_names: Sequence[str]) -> None:
++    if matrix.ndim != 2:
++        raise ValueError("score_matrix must be two-dimensional")
++    if matrix.shape[0] != len(labels):
++        raise ValueError("labels and verifier scores must have the same length")
++    if matrix.shape[1] != len(verifier_names):
++        raise ValueError("score_matrix column count must match verifier_names")
++    if not np.isfinite(matrix).all():
++        raise ValueError("verifier score matrix must be finite")
++    if len(set(int(value) for value in labels)) != 2:
++        raise ValueError("labels must contain both binary classes 0 and 1")
++
++
++def _slice_has_binary_support(labels: np.ndarray) -> bool:
++    counts = [int(np.sum(labels == label)) for label in (0, 1)]
++    return min(counts) >= v10.MIN_CLASS_EXAMPLES
++
++
++def _update_points(n_rows: int) -> list[int]:
++    points = list(range(UPDATE_PERIOD, n_rows + 1, UPDATE_PERIOD))
++    if not points or points[-1] != n_rows:
++        points.append(n_rows)
++    return points
++
++
++def _arm_metrics(
++    labels: Sequence[int] | np.ndarray,
++    scores_by_arm: Mapping[str, Sequence[float] | np.ndarray],
++) -> dict[str, dict[str, float]]:
++    return {
++        arm: v10.score_metrics(labels, np.asarray(scores, dtype=np.float64))
++        for arm, scores in scores_by_arm.items()
++    }
++
++
++def _signed_scores(matrix: np.ndarray, weights: Sequence[float]) -> np.ndarray:
++    return np.clip(np.asarray(matrix, dtype=np.float64) @ np.asarray(weights, dtype=np.float64), 0.0, 1.0)
++
++
++def _weights_to_json(names: Sequence[str], weights: Sequence[float]) -> dict[str, float]:
++    return {name: _round(float(weight)) for name, weight in zip(names, weights, strict=True)}
++
++
++def _duration(started_s: float, now_s: float | None) -> float:
++    end = time.time() if now_s is None else float(now_s)
++    return max(0.0, end - float(started_s))
++
++
++def _round(value: float | int | np.floating[Any], digits: int = 6) -> float:
++    return round(float(value), digits)
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 7d2618b420..e8217b1adc 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:36:33.400100+00:00",
+-  "finished_at": "2026-06-02T00:36:33.424675+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-06-02T00:51:03.048100+00:00",
++  "finished_at": "2026-06-02T00:51:03.071411+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 95c62b722d..6b61f116c4 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T00:36:33Z",
++  "run_date": "2026-06-02T00:51:03Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 1c8310e7ef..ae06a51e95 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+-  "run_date": "20260601",
+-  "started_at": "2026-06-01T23:27:53Z",
+-  "finished_at": "2026-06-01T23:27:53Z",
++  "run_date": "20260602",
++  "started_at": "2026-06-02T00:51:04Z",
++  "finished_at": "2026-06-02T00:51:04Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index a06075cf08..5d9f138212 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-01T23:27:53Z",
++  "run_date": "2026-06-02T00:51:04Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index da616a19b1..a2fc3b95af 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-01T23:27:53Z",
++  "run_date": "2026-06-02T00:51:04Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index e57a76c90c..ebd0cac518 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T00:34:53.429309Z",
+-  "duration_s": 0.009165763854980469,
++  "run_date": "2026-06-02T00:49:23.611312Z",
++  "duration_s": 0.009000778198242188,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "10ad91f5e2561e297a5b6e5330a4d294ba9012d741005980786a49a1f6d4bfd2",
++  "reproducibility_checksum": "194cae54306792fcd0ed9febe44013c272c6933e3dde6bc9025aba5900625177",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "c4bd616425b27029e9ad817916668f25778c2666"
++    "adversarial_verify_version": "8d473ab80d9caba3010da623c18e36f918a7873e"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 631325784e..faa71618bb 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-01T22:05:07.540493Z",
+-  "duration_s": 20.79597759246826,
++  "run_date": "2026-06-02T00:51:27.353999Z",
++  "duration_s": 21.544809818267822,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5b42dc3bab..76fc2a26a1 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T00:34:53.441485Z",
+-  "duration_s": 0.008791446685791016,
++  "run_date": "2026-06-02T00:49:23.623804Z",
++  "duration_s": 0.009223699569702148,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "eee3ac8477dabb78611fff8addc6df9cd9701948ac6aa7e97ca2b622af958956",
++  "reproducibility_checksum": "73634f5528239d5026c779a0d2e0198ded50ed86367762dadb6ca7ed9aec02ac",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "c4bd616425b27029e9ad817916668f25778c2666"
++    "adversarial_verify_version": "8d473ab80d9caba3010da623c18e36f918a7873e"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1fb4135d07..3dfe19340b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.110719680786133,
++  "efficiency_gains_ms": 2.1431446075439453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index e8b139a526..c1da15cac9 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.29537200927734375,
++  "duration_s": 0.25995445251464844,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index ceadf77b91..5a0feaf719 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008587837219238281,
++  "duration_s": 0.0008113384246826172,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a344cb1be6..4d401dd73a 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.95239912904799e-05,
++  "duration_s": 3.2962008845061064e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 98a8255b9e..d2c857d4fc 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 4.0099257603287697e-07,
++  "duration_s": 4.5099295675754547e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 7ea49fa5b6..fd252e5c19 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 3.838539123535156e-05,
++  "duration_s": 4.57763671875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 053b59ac2c..ab6ac0bc71 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 15.072831869125366, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 16.151522874832153, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 6d77eff597..5fea148145 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.008217070508748293,
++  "nonforgetting_metric_random": 0.00877939135208726,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index b35214e4a2..07a49a50a5 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+-  "run_date": "20260601",
+-  "started_at": "2026-06-01T23:28:00Z",
+-  "finished_at": "2026-06-01T23:28:00Z",
++  "run_date": "20260602",
++  "started_at": "2026-06-02T00:51:11Z",
++  "finished_at": "2026-06-02T00:51:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_3685_fr11_continuous_self_learning_v11.json b/results/experiment_3685_fr11_continuous_self_learning_v11.json
+new file mode 100644
+index 0000000000..395463569d
+--- /dev/null
++++ b/results/experiment_3685_fr11_continuous_self_learning_v11.json
+@@ -0,0 +1,381 @@
++{
++  "acceptance_gate": {
++    "condition": "drift_detected_deploy_arm == true AND collapse_detected_deploy_arm == false AND collapse_detected_control == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
++    "passed": true,
++    "principle": "Drift-aware self-learning is validated only when the deploy arm detects drift, does not collapse, the control collapses, and the two metrics are genuinely distinct (not a tautology)."
++  },
++  "artifact": "experiment_3685_fr11_continuous_self_learning_v11",
++  "collapse_detected_control": true,
++  "collapse_detected_deploy_arm": false,
++  "control_selected_verifier": "fr11_session_memory",
++  "deploy_dependency_edges_final": [
++    {
++      "by_label_correlation": {
++        "0": -0.693382,
++        "1": -0.257776
++      },
++      "conditional_mutual_information": 0.15442,
++      "pair": [
++        "tier0r_curry_howard",
++        "tier0s_arithmetic_gap"
++      ]
++    },
++    {
++      "by_label_correlation": {
++        "0": -0.169235,
++        "1": -0.182936
++      },
++      "conditional_mutual_information": 0.016,
++      "pair": [
++        "fr11_session_memory",
++        "tier0r_curry_howard"
++      ]
++    },
++    {
++      "by_label_correlation": {
++        "0": -0.041486,
++        "1": -0.137818
++      },
++      "conditional_mutual_information": 0.006017,
++      "pair": [
++        "fr11_session_memory",
++        "tier0u_logical_consistency"
++      ]
++    }
++  ],
++  "deploy_drift_events": [
++    {
++      "end_index": 375,
++      "reestimate_from_index": 325,
++      "structure_reestimated": true,
++      "vote_distribution_distance": 0.358329
++    },
++    {
++      "end_index": 425,
++      "reestimate_from_index": 375,
++      "structure_reestimated": true,
++      "vote_distribution_distance": 0.325576
++    }
++  ],
++  "deploy_n_structure_reestimates": 2,
++  "deploy_n_weight_updates": 14,
++  "drift_detected_deploy_arm": true,
++  "drift_stream": {
++    "drift_point": 350,
++    "post_vote_mean": [
++      0.52,
++      0.142857,
++      0.517143,
++      0.0
++    ],
++    "pre_vote_mean": [
++      0.022857,
++      0.0,
++      0.005714,
++      0.0
++    ],
++    "projection": "mean_score",
++    "verifier_names": [
++      "fr11_session_memory",
++      "tier0r_curry_howard",
++      "tier0s_arithmetic_gap",
++      "tier0u_logical_consistency"
++    ],
++    "vote_distribution_distance": 0.727405
++  },
++  "duration_s": 0.753909,
++  "field_principles": {
++    "collapse_detected_control": "Positive control: the naive arm must collapse or fail to adapt, else the test has no contrast.",
++    "collapse_detected_deploy_arm": "The conservative-default + uncertainty-gated rule must prevent weight collapse (alpha_t grounding).",
++    "drift_detected_deploy_arm": "The deploy arm must detect the injected distribution drift (the v11 forward difference).",
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "Scores cached traces; no LLM load.",
++    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
++    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
++    "post_drift_auroc_gain_over_v10": "The forward difference -- does drift-aware re-estimation beat v10's fixed-structure online weighting after drift?",
++    "quality_maintained": "Collapse-prevention + drift adaptation must not come at the cost of ensemble quality.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection (of the artifact, vs the corpus drift it measures)."
++  },
++  "honest_verdict": "complete: fr11_v11_drift_aware_online_dependency_aware_recovers_no_collapse_quality_maintained",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load).",
++  "metrics_all": {
++    "control": {
++      "auroc": 0.900469,
++      "brier": 0.125742,
++      "ece": 0.098452
++    },
++    "deploy": {
++      "auroc": 0.927274,
++      "brier": 0.253294,
++      "ece": 0.285039
++    },
++    "static_carnot": {
++      "auroc": 0.911249,
++      "brier": 0.146612,
++      "ece": 0.202912
++    },
++    "v10_fixed_structure_online": {
++      "auroc": 0.863159,
++      "brier": 0.249031,
++      "ece": 0.275359
++    }
++  },
++  "metrics_post_drift": {
++    "control": {
++      "auroc": 0.951119,
++      "brier": 0.112895,
++      "ece": 0.144476
++    },
++    "deploy": {
++      "auroc": 0.97413,
++      "brier": 0.348831,
++      "ece": 0.440551
++    },
++    "static_carnot": {
++      "auroc": 0.959462,
++      "brier": 0.156166,
++      "ece": 0.259244
++    },
++    "v10_fixed_structure_online": {
++      "auroc": 0.885988,
++      "brier": 0.348334,
++      "ece": 0.41916
++    }
++  },
++  "metrics_pre_drift": {
++    "control": {
++      "auroc": 0.722905,
++      "brier": 0.138588,
++      "ece": 0.060429
++    },
++    "deploy": {
++      "auroc": 0.859422,
++      "brier": 0.157757,
++      "ece": 0.129527
++    },
++    "static_carnot": {
++      "auroc": 0.737303,
++      "brier": 0.137059,
++      "ece": 0.159687
++    },
++    "v10_fixed_structure_online": {
++      "auroc": 0.832208,
++      "brier": 0.149727,
++      "ece": 0.131559
++    }
++  },
++  "n_online_updates": 700,
++  "observed_catch_utility_by_verifier": {
++    "fr11_session_memory": 0.765664,
++    "tier0r_curry_howard": 0.043468,
++    "tier0s_arithmetic_gap": -0.713581,
++    "tier0u_logical_consistency": 0.0
++  },
++  "pass_rate_trajectory": [
++    0.931477,
++    0.941497,
++    0.94186,
++    0.937149,
++    0.863438,
++    0.850798,
++    0.861733,
++    0.841277
++  ],
++  "pass_rate_vs_true_accuracy_distinct_assert": true,
++  "post_drift_auroc_gain_over_static_carnot": 0.014668,
++  "post_drift_auroc_gain_over_v10": 0.088142,
++  "post_drift_window_metrics": [
++    {
++      "deploy_beats_v10_and_static": true,
++      "end_index": 438,
++      "metrics": {
++        "control": {
++          "auroc": 0.950263,
++          "brier": 0.118134,
++          "ece": 0.127841
++        },
++        "deploy": {
++          "auroc": 0.991053,
++          "brier": 0.338743,
++          "ece": 0.431154
++        },
++        "static_carnot": {
++          "auroc": 0.984211,
++          "brier": 0.149561,
++          "ece": 0.280306
++        },
++        "v10_fixed_structure_online": {
++          "auroc": 0.913684,
++          "brier": 0.331847,
++          "ece": 0.409793
++        }
++      },
++      "start_index": 350
++    },
++    {
++      "deploy_beats_v10_and_static": true,
++      "end_index": 526,
++      "metrics": {
++        "control": {
++          "auroc": 0.931579,
++          "brier": 0.124776,
++          "ece": 0.138826
++        },
++        "deploy": {
++          "auroc": 0.963158,
++          "brier": 0.338259,
++          "ece": 0.425678
++        },
++        "static_carnot": {
++          "auroc": 0.947368,
++          "brier": 0.159686,
++          "ece": 0.245074
++        },
++        "v10_fixed_structure_online": {
++          "auroc": 0.904211,
++          "brier": 0.327083,
++          "ece": 0.399982
++        }
++      },
++      "start_index": 438
++    },
++    {
++      "deploy_beats_v10_and_static": true,
++      "end_index": 614,
++      "metrics": {
++        "control": {
++          "auroc": 0.973312,
++          "brier": 0.086708,
++          "ece": 0.124432
++        },
++        "deploy": {
++          "auroc": 0.985348,
++          "brier": 0.325179,
++          "ece": 0.416252
++        },
++        "static_carnot": {
++          "auroc": 0.967033,
++          "brier": 0.14645,
++          "ece": 0.266372
++        },
++        "v10_fixed_structure_online": {
++          "auroc": 0.875981,
++          "brier": 0.344046,
++          "ece": 0.407439
++        }
++      },
++      "start_index": 526
++    },
++    {
++      "deploy_beats_v10_and_static": true,
++      "end_index": 700,
++      "metrics": {
++        "control": {
++          "auroc": 0.950298,
++          "brier": 0.122174,
++          "ece": 0.208333
++        },
++        "deploy": {
++          "auroc": 0.945833,
++          "brier": 0.394174,
++          "ece": 0.490248
++        },
++        "static_carnot": {
++          "auroc": 0.9375,
++          "brier": 0.169263,
++          "ece": 0.291418
++        },
++        "v10_fixed_structure_online": {
++          "auroc": 0.839286,
++          "brier": 0.391337,
++          "ece": 0.460364
++        }
++      },
++      "start_index": 614
++    }
++  ],
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
++      "resource": "fr11_module"
++    },
++    {
++      "available": true,
++      "detail": "line_count=8829; required>=1000",
++      "resource": "cached_traces_with_per_verifier_scores_and_labels"
++    },
++    {
++      "available": true,
++      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
++      "resource": "text_scoring_verifiers"
++    },
++    {
++      "available": true,
++      "detail": "state_files=21; memory_loaded=True",
++      "resource": "fr11_session_memory_verifier"
++    },
++    {
++      "available": true,
++      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
++      "resource": "dependency_aware_weighting_implementation"
++    },
++    {
++      "available": true,
++      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
++      "resource": "drift_aware_online_reestimation_implementation"
++    }
++  ],
++  "quality_maintained": true,
++  "random_seed": 3685,
++  "reproducibility_checksum": "ceaa4c306e015052dbae6f31ea24583c49b9e0bcfb4bfa4a7d90fac4e000e67c",
++  "schema": "carnot.fr11_continuous_self_learning_v11",
++  "true_accuracy_trajectory": [
++    0.795455,
++    0.840909,
++    0.806818,
++    0.784091,
++    0.443182,
++    0.409091,
++    0.443182,
++    0.357143
++  ],
++  "verifier_names": [
++    "fr11_session_memory",
++    "tier0r_curry_howard",
++    "tier0s_arithmetic_gap",
++    "tier0u_logical_consistency"
++  ],
++  "weights_control_final": {
++    "fr11_session_memory": 1.0,
++    "tier0r_curry_howard": 0.0,
++    "tier0s_arithmetic_gap": 0.0,
++    "tier0u_logical_consistency": 0.0
++  },
++  "weights_deploy_final": {
++    "fr11_session_memory": 0.327453,
++    "tier0r_curry_howard": 0.103246,
++    "tier0s_arithmetic_gap": -0.142002,
++    "tier0u_logical_consistency": 0.427299
++  },
++  "weights_deploy_initial": {
++    "fr11_session_memory": 0.25,
++    "tier0r_curry_howard": 0.25,
++    "tier0s_arithmetic_gap": 0.25,
++    "tier0u_logical_consistency": 0.25
++  },
++  "weights_static_carnot": {
++    "fr11_session_memory": 0.5,
++    "tier0r_curry_howard": 0.45,
++    "tier0s_arithmetic_gap": 0.0,
++    "tier0u_logical_consistency": 0.05
++  },
++  "weights_v10_fixed_structure_online": {
++    "fr11_session_memory": 0.152761,
++    "tier0r_curry_howard": 0.563507,
++    "tier0s_arithmetic_gap": -0.283732,
++    "tier0u_logical_consistency": 0.0
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e2431f11e2..90ab34f166 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:34:45Z",
+-  "finished_at": "2026-06-02T00:34:45Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T00:51:15Z",
++  "finished_at": "2026-06-02T00:51:15Z",
++  "duration_s": 0.008,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6136d0c8fa..85189eba74 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:34:45Z",
+-  "finished_at": "2026-06-02T00:34:45Z",
++  "started_at": "2026-06-02T00:51:15Z",
++  "finished_at": "2026-06-02T00:51:16Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index ed1c3ecd57..e37029d32f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T00:34:45Z",
+-  "finished_at": "2026-06-02T00:34:45Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T00:51:16Z",
++  "finished_at": "2026-06-02T00:51:16Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3685_fr11_continuous_self_learning_v11.py b/scripts/experiment_3685_fr11_continuous_self_learning_v11.py
+new file mode 100644
+index 0000000000..9fe60a0f7e
+--- /dev/null
++++ b/scripts/experiment_3685_fr11_continuous_self_learning_v11.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3685 FR-11 continuous self-learning v11."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.fr11.continuous_self_learning_v11 import write_artifact  # noqa: E402
++
++
++def main() -> int:
++    output_path = write_artifact(REPO_ROOT)
++    artifact = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3685_fr11_csl_v11.py b/tests/python/test_experiment_3685_fr11_csl_v11.py
+new file mode 100644
+index 0000000000..f789996a37
+--- /dev/null
++++ b/tests/python/test_experiment_3685_fr11_csl_v11.py
+@@ -0,0 +1,282 @@
++"""Tests for Exp 3685 FR-11 continuous self-learning v11.
++
++Spec: REQ-LEARN-3685, SCENARIO-LEARN-3685.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.fr11 import continuous_self_learning_v11 as exp3685
++from carnot.fr11.continuous_self_learning_v11 import (
++    BLOCKED_VERDICT,
++    NO_GAIN_VERDICT,
++    REQUIRED_ARTIFACT_FIELDS,
++    SUCCESS_VERDICT,
++    build_artifact,
++    build_artifact_from_scores,
++    select_honest_verdict,
++    validate_artifact,
++    write_artifact,
++)
++
++VERIFIER_NAMES = exp3685.VERIFIER_NAMES
++
++
++def _score_fixture(outcome: str) -> tuple[list[int], dict[str, list[float]]]:
++    if outcome == "blocked":
++        return [], {}
++
++    rng = np.random.default_rng(11 if outcome == "drift_recovered_no_collapse" else 17)
++    n_each = 180
++    labels_pre = np.asarray([0, 1] * (n_each // 2), dtype=np.int64)
++    labels_post = np.asarray([0, 1] * (n_each // 2), dtype=np.int64)
++    rng.shuffle(labels_pre)
++    rng.shuffle(labels_post)
++
++    if outcome == "drift_recovered_no_collapse":
++        pre = np.column_stack(
++            [
++                0.18 + 0.18 * labels_pre + rng.normal(0.0, 0.035, n_each),
++                0.10 + 0.36 * labels_pre + rng.normal(0.0, 0.035, n_each),
++                0.36 - 0.25 * labels_pre + rng.normal(0.0, 0.045, n_each),
++                0.06 + rng.normal(0.0, 0.020, n_each),
++            ]
++        )
++        post = np.column_stack(
++            [
++                0.36 + 0.28 * labels_post + rng.normal(0.0, 0.045, n_each),
++                0.65 - 0.18 * labels_post + rng.normal(0.0, 0.055, n_each),
++                0.34 + rng.normal(0.0, 0.055, n_each),
++                0.22 + 0.57 * labels_post + rng.normal(0.0, 0.045, n_each),
++            ]
++        )
++    elif outcome == "no_gain_over_v10":
++        pre = np.column_stack(
++            [
++                0.16 + 0.35 * labels_pre + rng.normal(0.0, 0.035, n_each),
++                0.13 + 0.30 * labels_pre + rng.normal(0.0, 0.040, n_each),
++                0.30 - 0.18 * labels_pre + rng.normal(0.0, 0.040, n_each),
++                0.08 + 0.15 * labels_pre + rng.normal(0.0, 0.035, n_each),
++            ]
++        )
++        post = np.column_stack(
++            [
++                0.38 + 0.35 * labels_post + rng.normal(0.0, 0.035, n_each),
++                0.35 + 0.30 * labels_post + rng.normal(0.0, 0.040, n_each),
++                0.56 - 0.18 * labels_post + rng.normal(0.0, 0.040, n_each),
++                0.30 + 0.15 * labels_post + rng.normal(0.0, 0.035, n_each),
++            ]
++        )
++    else:  # pragma: no cover - parametrization guards this branch.
++        raise ValueError(outcome)
++
++    labels = np.concatenate([labels_pre, labels_post]).tolist()
++    matrix = np.clip(np.vstack([pre, post]), 0.0, 1.0)
++    return labels, {
++        name: matrix[:, index].tolist() for index, name in enumerate(VERIFIER_NAMES)
++    }
++
++
++@pytest.mark.parametrize(
++    ("outcome", "expected_verdict"),
++    [
++        ("drift_recovered_no_collapse", SUCCESS_VERDICT),
++        ("no_gain_over_v10", NO_GAIN_VERDICT),
++        ("blocked", BLOCKED_VERDICT),
++    ],
++)
++def test_req_learn_3685_honest_synthetic_outcomes(
++    outcome: str,
++    expected_verdict: str,
++) -> None:
++    """SCENARIO-LEARN-3685: honest outcomes classify from synthetic fixtures."""
++
++    labels, scores_by_verifier = _score_fixture(outcome)
++    artifact = build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=1.0,
++        now_s=3.0,
++    )
++
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] == expected_verdict
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3685.INFERENCE_SUBSTRATE
++    if outcome == "blocked":
++        assert artifact["n_online_updates"] == 0
++        assert artifact["acceptance_gate"]["passed"] is False
++    else:
++        assert artifact["n_online_updates"] >= 200
++        assert artifact["drift_detected_deploy_arm"] is True
++        assert artifact["collapse_detected_deploy_arm"] is False
++        assert artifact["collapse_detected_control"] is True
++        assert artifact["pass_rate_vs_true_accuracy_distinct_assert"] is True
++        assert max(abs(value) for value in artifact["weights_deploy_final"].values()) <= 0.8
++        assert max(artifact["weights_control_final"].values()) == 1.0
++        assert artifact["metrics_post_drift"]["deploy"]["auroc"] >= artifact[
++            "metrics_post_drift"
++        ]["static_carnot"]["auroc"]
++    if outcome == "drift_recovered_no_collapse":
++        assert artifact["post_drift_auroc_gain_over_v10"] > 0.0
++        assert artifact["quality_maintained"] is True
++    if outcome == "no_gain_over_v10":
++        assert artifact["post_drift_auroc_gain_over_v10"] <= 0.0
++
++
++def test_req_learn_3685_build_artifact_preconditions_and_io(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-3685-1/2: cached drift traces are required and JSON is written."""
++
++    blocked = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(blocked)
++    assert blocked["honest_verdict"] == BLOCKED_VERDICT
++    assert blocked["preconditions_checked"][0]["resource"] == "fr11_module"
++
++    labels, scores_by_verifier = _score_fixture("drift_recovered_no_collapse")
++    (tmp_path / "python/carnot/fr11").mkdir(parents=True)
++    monkeypatch.setattr(
++        exp3685,
++        "score_fover_corpus",
++        lambda root, n_examples, random_seed: (labels, scores_by_verifier),
++    )
++    monkeypatch.setattr(
++        exp3685,
++        "probe_cached_trace_preconditions",
++        lambda root, n_examples: [
++            {
++                "resource": "cached_traces_with_per_verifier_scores_and_labels",
++                "available": True,
++                "detail": "fixture",
++            }
++        ],
++    )
++    artifact = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] in exp3685.TERMINAL_VERDICTS
++    assert artifact["preconditions_checked"][1]["available"] is True
++
++    def _raise_score(root: Path, n_examples: int, random_seed: int) -> tuple[list[int], dict[str, list[float]]]:
++        raise RuntimeError("cached traces unavailable")
++
++    monkeypatch.setattr(exp3685, "score_fover_corpus", _raise_score)
++    failed_score = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(failed_score)
++    assert failed_score["honest_verdict"] == BLOCKED_VERDICT
++    assert failed_score["preconditions_checked"][-1]["resource"] == "cached_trace_scoring"
++
++    labels_no_gain, scores_no_gain = _score_fixture("no_gain_over_v10")
++    output = write_artifact(
++        tmp_path,
++        output_path="results/experiment_3685_fixture.json",
++        labels=labels_no_gain,
++        scores_by_verifier=scores_no_gain,
++        started_s=0.0,
++        now_s=1.0,
++    )
++    payload = json.loads(output.read_text(encoding="utf-8"))
++    validate_artifact(payload)
++    assert payload["honest_verdict"] == NO_GAIN_VERDICT
++
++
++def test_req_learn_3685_validation_and_verdict_edges() -> None:
++    """REQ-LEARN-3685-4/6: schema, drift, and verdict selection are strict."""
++
++    assert (
++        select_honest_verdict(
++            gate_passed=True,
++            quality_maintained=True,
++            post_drift_auroc_gain_over_v10=0.01,
++        )
++        == SUCCESS_VERDICT
++    )
++    assert (
++        select_honest_verdict(
++            gate_passed=True,
++            quality_maintained=True,
++            post_drift_auroc_gain_over_v10=0.0,
++        )
++        == NO_GAIN_VERDICT
++    )
++    assert (
++        select_honest_verdict(
++            gate_passed=False,
++            quality_maintained=True,
++            post_drift_auroc_gain_over_v10=1.0,
++        )
++        == NO_GAIN_VERDICT
++    )
++
++    labels, scores_by_verifier = _score_fixture("drift_recovered_no_collapse")
++    artifact = build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=0.0,
++        now_s=1.0,
++    )
++    validate_artifact(artifact)
++
++    missing = dict(artifact)
++    missing.pop("duration_s")
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        validate_artifact(missing)
++
++    bad_verdict = dict(artifact, honest_verdict="complete: unsupported")
++    with pytest.raises(ValueError, match="unsupported honest_verdict"):
++        validate_artifact(bad_verdict)
++
++    no_principles = dict(artifact)
++    no_principles.pop("field_principles")
++    with pytest.raises(ValueError, match="field_principles"):
++        validate_artifact(no_principles)
++
++    missing_principle = dict(artifact)
++    missing_principle["field_principles"] = dict(artifact["field_principles"])
++    missing_principle["field_principles"].pop("duration_s")
++    with pytest.raises(ValueError, match="missing field principles"):
++        validate_artifact(missing_principle)
++
++    bad_gate = dict(artifact, acceptance_gate={"passed": "yes"})
++    with pytest.raises(ValueError, match="acceptance_gate"):
++        validate_artifact(bad_gate)
++
++    bad_duration = dict(artifact, duration_s="fast")
++    with pytest.raises(ValueError, match="duration_s"):
++        validate_artifact(bad_duration)
++
++    bad_n = dict(artifact, n_online_updates=199)
++    with pytest.raises(ValueError, match="at least"):
++        validate_artifact(bad_n)
++
++    bad_bool = dict(artifact, drift_detected_deploy_arm="true")
++    with pytest.raises(ValueError, match="drift_detected_deploy_arm"):
++        validate_artifact(bad_bool)
++
++    bad_gain = dict(artifact, post_drift_auroc_gain_over_v10=float("nan"))
++    with pytest.raises(ValueError, match="post_drift_auroc_gain_over_v10"):
++        validate_artifact(bad_gain)
++
++    assert exp3685.vote_distribution_distance(
++        np.asarray([[0.8, 0.1], [0.7, 0.2]]),
++        np.asarray([[0.1, 0.9], [0.2, 0.8]]),
++    ) > exp3685.DRIFT_DISTANCE_THRESHOLD
++    assert exp3685.detect_vote_distribution_drift(
++        np.asarray([[0.8, 0.1], [0.7, 0.2]]),
++        np.asarray([[0.1, 0.9], [0.2, 0.8]]),
++    )
++
++    pass_rate, true_accuracy = exp3685.online_metric_trajectories(
++        [0, 1],
++        [0.2, 0.8],
++        n_windows=2,
++    )
++    assert pass_rate != true_accuracy
++    assert exp3685.detect_weight_collapse({}) is False
+-- 
+2.55.0
+

@@ -1,0 +1,32 @@
+From 4aff393b4c38c0069e22b214ecb90541c2a1c0f4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 16:02:12 -0400
+Subject: [PATCH 00005/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Re-measure=20the=20FACTS=20row=20on=20a=20REAL=20benchmark?=
+ =?UTF-8?q?=20(RAGTruth,=20exp3669)=20with=20the=20real=20NLI=20grounding?=
+ =?UTF-8?q?=20verifier=20(exp3654)=20=E2=80=94=20AUROC=20AND=20the=20compl?=
+ =?UTF-8?q?ementary=20catch-rate=20lens=20=E2=80=94=20is=20the=20.335=20'f?=
+ =?UTF-8?q?acts=20domain-bound'=20a=20synthetic-corpus=20artifact=20or=20g?=
+ =?UTF-8?q?enuinely=20earned=3F=20(the=20core=20escape-hallucinations=20an?=
+ =?UTF-8?q?swer;=20retire=5Fif=5Fsame)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 8681cb9131..96f9371d9a 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8102,3 +8102,4 @@ Wrote operational retro for 2026.06.331. Found no experiment commits; 0 experime
+ - 2026-06-01: Clean, de-tautologized dependency-aware ensemble weighting (arXiv:1903.05844 learned label-conditional dependency structure + Weaver arXiv:2506.18203) on FoVer — multi-seed + bootstrap CI + DeLong vs Carnot's 0.919; the headline-advancement candidate the exp3656 tautology flag quarantined (✅ Complete) — honest_verdict=complete: dependency_aware_weighting_beats_carnot_clean_significant_headline_candidate; results/experiment_3667_dependency_aware_weighting_clean.json
+ - 2026-06-01: Held-out / cross-split validation of the dependency-aware weighting (fit the learned dependency structure on a FoVer train split, evaluate on a disjoint test split) — guard against overfitting the weighting before it can advance the frozen headline (✅ Complete) — honest_verdict=complete: dependency_aware_weighting_generalizes_heldout_headline_re_freeze_candidate_for_v337; results/experiment_3668_dependency_aware_weighting_heldout.json
+ - 2026-06-01: Build a REAL factual-hallucination corpus from an external benchmark (RAGTruth arXiv:2401.00396, with FELM / HaluEval fallback) — evidence passages + binary hallucination labels + model-confidence — to stress-test whether the .335 'facts domain-bound' negative is a synthetic-corpus artifact (✅ Complete) — honest_verdict=complete: real_factual_corpus_built_ragtruth_non_degenerate; results/experiment_3669_build_real_factual_corpus.json
++- 2026-06-01: Re-measure the FACTS row on a REAL benchmark (RAGTruth, exp3669) with the real NLI grounding verifier (exp3654) — AUROC AND the complementary catch-rate lens — is the .335 'facts domain-bound' a synthetic-corpus artifact or genuinely earned? (the core escape-hallucinations answer; retire_if_same) (⚠️ Research Finding) — honest_verdict=complete: facts_domain_bound_on_real_benchmark_335_negative_genuinely_earned; results/experiment_3670_facts_row_real_benchmark.json
+-- 
+2.55.0
+

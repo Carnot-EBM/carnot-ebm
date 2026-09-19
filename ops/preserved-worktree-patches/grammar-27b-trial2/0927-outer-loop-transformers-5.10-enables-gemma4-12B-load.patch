@@ -1,0 +1,53 @@
+From f5bb4ca8128ef6b1e709a1cc269ef326a54a88a5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 19:04:37 -0400
+Subject: [PATCH 00927/11171] [outer-loop] transformers 5.10 (enables gemma4
+ 12B load) + 12B-4bit path (inference WIP)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Operator: gemma4 12B needs transformers 5.10+. Upgraded 5.9.0 -> 5.10.2; VERIFIED SAFE — the
+load-bearing verifier ensemble (score_carnot_ensemble) still scores and the E4B multimodal
+policy still runs (no regression on critical paths). 12B (google/gemma-4-12B-it, gemma4_unified)
+now LOADS in 4-bit. Inference still blocked by a gemma4_unified x bitsandbytes x vision-tower
+bug (LayerNormKernelImpl not implemented for 'Byte'); skip-vision-quant + pixel_values-cast did
+not resolve it -> DEFERRED as tooling (not a likely score-mover; per the pattern model size gives
+survival not solving). Path kept for a later bf16/source-build/GGUF fix. E2B/E4B remain the
+working sovereign multimodal policy on 5.10.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ scripts/experiments/arc3_gemma_policy.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/experiments/arc3_gemma_policy.py b/scripts/experiments/arc3_gemma_policy.py
+index 4efee632ba..b6c27199e7 100644
+--- a/scripts/experiments/arc3_gemma_policy.py
++++ b/scripts/experiments/arc3_gemma_policy.py
+@@ -59,7 +59,10 @@ def _load(model_key):
+             from transformers import BitsAndBytesConfig
+             kw["quantization_config"] = BitsAndBytesConfig(
+                 load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
+-                bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True)
++                bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
++                # do NOT quantize the vision tower/projector -> avoids the Byte/layernorm crash
++                llm_int8_skip_modules=["vision_tower", "multi_modal_projector", "vision_model"])
++            kw["dtype"] = torch.bfloat16
+         else:
+             kw["dtype"] = torch.bfloat16
+         _MODEL["model"] = AutoModelForImageTextToText.from_pretrained(mid, **kw).eval()
+@@ -109,6 +112,10 @@ def gemma_action(frame, ctx, model_key="E2B", reasoning=False):
+     msgs = [{"role": "user", "content": [{"type": "image", "image": img}, {"type": "text", "text": txt}]}]
+     inputs = proc.apply_chat_template(msgs, add_generation_prompt=True, tokenize=True,
+                                       return_dict=True, return_tensors="pt").to("cuda")
++    # some Gemma-4 variants (12B/gemma4_unified) hand pixel_values through as uint8 (Byte) ->
++    # vision-tower layernorm crashes; cast to the compute dtype.
++    if "pixel_values" in inputs and inputs["pixel_values"].dtype == torch.uint8:
++        inputs["pixel_values"] = inputs["pixel_values"].to(torch.bfloat16)
+     with torch.no_grad():
+         out = model.generate(**inputs, max_new_tokens=max_new, do_sample=False)
+     resp = proc.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+-- 
+2.55.0
+

@@ -1,0 +1,1880 @@
+From d243586dcd0502108dcc303ce5519fa23e881e9f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 15:01:09 -0400
+Subject: [PATCH 01670/11171] [conductor] Archive .385 -> activate .386; KEEP
+ the hardened green-gate + poison-test quarantine. Assert
+ research-complete.yaml + ops/exclusion_manifest.yaml parse under
+ yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .385
+ close-state (bounded accumulation no-op'd again + collided with the
+ outer-loop run; baseline 0.278; outer-loop now OWNS the contiguous training).
+
+Automated research step by research conductor.
+Task ID: exp4166-archive-v385-activate-v386
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  72 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...eriment_4166_archive_v385_activate_v386.py |  19 +
+ .../archive_v385_activate_v386_4166.py        | 810 ++++++++++++++++++
+ research-complete.yaml                        |   3 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_4166_archive_v385_activate_v386.json | 171 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../csv/version_10/metrics.csv                |  36 +
+ ...eriment_4166_archive_v385_activate_v386.py | 540 ++++++++++++
+ 15 files changed, 1667 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/experiment_4166_archive_v385_activate_v386.py
+ create mode 100644 python/carnot/reporting/archive_v385_activate_v386_4166.py
+ create mode 100644 results/experiment_4166_archive_v385_activate_v386.json
+ create mode 100644 tests/python/test_experiment_4166_archive_v385_activate_v386.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 39ac0f6780..a0c2f5ee35 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -20569,6 +20569,78 @@ claim `.384` was archived successfully.
+ |---|---|---|
+ | REQ-REPORT-4156 | Implemented (`python/carnot/reporting/archive_v384_activate_v385_4156.py`, `python/carnot/experiment_4156_archive_v384_activate_v385.py`) | Implemented (`tests/python/test_experiment_4156_archive_v384_activate_v385.py`) |
+ 
++### REQ-REPORT-4166: Archive .385, Activate .386, And Preserve The Outer-Loop Training Handoff
++
++The Exp 4166 workflow SHALL archive milestone `2026.06.385`, confirm milestone
++`2026.06.386` is active, and write the record-only aggregation artifact
++`results/experiment_4166_archive_v385_activate_v386.json`. It SHALL run no live
++model training and SHALL declare `inference_substrate` as
++`aggregation_from_upstream_artifacts`.
++
++Before claiming completion the workflow SHALL confirm:
++
++- `research-complete.yaml` parses under `yaml.safe_load`
++- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
++- `nano-trm/src/nn/train.py` exists
++- the smart-subset pre-test gate is green
++- `results/experiment_4165_capstone_v385.json` exists
++- milestone `2026.06.386` is the active roadmap milestone
++
++If any precondition is absent or red, the workflow SHALL write a blocked
++artifact whose `honest_verdict` starts with `blocked_`, record the failed
++resource in `preconditions_checked`, and stop without fabricating a terminal
++archive.
++
++The complete artifact SHALL include the principle-annotated fields
++`honest_verdict`, `v385_close_state`, and `preconditions_checked` with these
++exact principles:
++
++- `honest_verdict`: `Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.`
++- `v385_close_state`: `Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks.`
++- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
++
++The complete-path `honest_verdict` SHALL start with one of `complete:`,
++`success:`, `passed:`, or `shipped:`. `v385_close_state` SHALL truthfully record
++that `.385` closed with bounded accumulation still blocked: the conductor
++continuation task no-op'd (`blocked_noop_step_unchanged`), attempted a
++competing native train, collided with the outer-loop run on shared GPU/checkpoint
++paths, and did not advance the manual LR step or write a new validation row. It
++SHALL record the baseline seed as `0.278172343969`, the `.385` capstone outcome
++as `accumulation_still_blocked`, the skipped flagged artifacts, total games
++solved `13`, and the operator decision that `.386` cedes TRM training to the
++outer-loop detached contiguous run. The workflow SHALL preserve the hard
++coordination rule that conductor tasks must not launch TRM training, kill
++`train.py`, or write the stable checkpoint directory.
++
++#### SCENARIO-REPORT-4166: The Archive Preserves The .385 Stand-Down Decision
++
++**Given** `.385` has Exp 4157 evidence of a no-op continuation collision, the
++Exp 4165 capstone records `accumulation_still_blocked`, the history and
++exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py` exists, the
++smart-subset pre-test gate is green, and `.386` is active
++**When** the Exp 4166 archive workflow runs
++**Then** it archives `.385`, confirms `.386`, keeps the YAML history parseable
++with one `.385` record, writes
++`results/experiment_4166_archive_v385_activate_v386.json`, records the
++no-op/collision close-state and outer-loop ownership decision in
++`v385_close_state`, records the checked resources in `preconditions_checked`,
++declares `aggregation_from_upstream_artifacts`, and emits a
++terminal-prefixed honest verdict.
++
++#### SCENARIO-REPORT-4166-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
++
++**Given** any required precondition is absent or red
++**When** the Exp 4166 archive workflow runs
++**Then** it writes a blocked artifact whose `honest_verdict` starts with
++`blocked_`, records the failed resource in `preconditions_checked`, and does not
++claim `.385` was archived successfully.
++
++## Implementation Status (REQ-REPORT-4166)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4166 | Implemented (`python/carnot/reporting/archive_v385_activate_v386_4166.py`, `python/carnot/experiment_4166_archive_v385_activate_v386.py`) | Implemented (`tests/python/test_experiment_4166_archive_v385_activate_v386.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ac235b2525..20571466a3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 173,
+   "code_violations": 0,
+-  "experiments_checked": 3188,
++  "experiments_checked": 3189,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4166_archive_v385_activate_v386.py b/python/carnot/experiment_4166_archive_v385_activate_v386.py
+new file mode 100644
+index 0000000000..6c7c63cb8b
+--- /dev/null
++++ b/python/carnot/experiment_4166_archive_v385_activate_v386.py
+@@ -0,0 +1,19 @@
++"""Conductor entrypoint for Exp 4166 archive / activation."""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++from carnot.reporting.archive_v385_activate_v386_4166 import REPO_ROOT, run
++
++
++def main() -> int:
++    """Run the Exp 4166 record-only archive workflow."""
++
++    output_path: Path = run(REPO_ROOT)
++    print(output_path)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/python/carnot/reporting/archive_v385_activate_v386_4166.py b/python/carnot/reporting/archive_v385_activate_v386_4166.py
+new file mode 100644
+index 0000000000..e3606e9b5a
+--- /dev/null
++++ b/python/carnot/reporting/archive_v385_activate_v386_4166.py
+@@ -0,0 +1,810 @@
++"""Archive .385, activate .386, and record the TRM-training handoff.
++
++Spec refs: REQ-REPORT-4166, SCENARIO-REPORT-4166,
++SCENARIO-REPORT-4166-BLOCKED-PRECONDITION.
++
++This is a record-only transition. It preserves the operational decision that
++the conductor must stand down on TRM Sudoku training because bounded conductor
++tasks no-op'd and then collided with the detached outer-loop contiguous run.
++The next planner needs that fact as machine-readable state so it does not emit
++another competing training task.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import subprocess
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.385"
++ACTIVATED_MILESTONE = "2026.06.386"
++RANDOM_SEED = 4166
++OUTPUT_REL_PATH = Path("results/experiment_4166_archive_v385_activate_v386.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++NANO_TRM_TRAIN_REL_PATH = Path("nano-trm/src/nn/train.py")
++CAPSTONE_REL_PATH = Path("results/experiment_4165_capstone_v385.json")
++OUTERLOOP_PID_REL_PATH = Path("results/trm_runs/contiguous_run.pid")
++PYTEST_BIN = Path(".venv/bin/pytest")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SCHEMA = "carnot.archive_activation.v385_to_v386_4166.v1"
++EXPERIMENT_ID = "exp4166"
++TASK_ID = "exp4166-archive-v385-activate-v386"
++
++BASELINE_SEED_VAL = 0.278172343969
++TOTAL_GAMES_SOLVED_DEFAULT = 13
++
++CORE_SMART_SUBSET = (
++    "tests/python/test_pipeline_extract.py",
++    "tests/python/test_docs.py",
++)
++
++V385_SOURCE_ARTIFACTS: tuple[JsonDict, ...] = (
++    {
++        "experiment_id": "4157",
++        "deliverable": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
++    },
++    {
++        "experiment_id": "4158",
++        "deliverable": "results/experiment_4158_verifier_rerank_recovery_moat.json",
++    },
++    {
++        "experiment_id": "4159",
++        "deliverable": "results/experiment_4159_decisive_verifier_reward_graft.json",
++    },
++    {
++        "experiment_id": "4160",
++        "deliverable": "results/experiment_4160_arc_action_efficiency_harness.json",
++    },
++    {
++        "experiment_id": "4161",
++        "deliverable": "results/experiment_4161_observability_timing_detector_fix.json",
++    },
++    {
++        "experiment_id": "4162",
++        "deliverable": "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
++    },
++    {
++        "experiment_id": "4163",
++        "deliverable": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
++    },
++    {
++        "experiment_id": "4164",
++        "deliverable": "results/experiment_4164_hardware_continuity.json",
++    },
++    {
++        "experiment_id": "4165",
++        "deliverable": str(CAPSTONE_REL_PATH),
++    },
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "archived_milestone",
++    "activated_milestone",
++    "active_milestone_confirmed",
++    "research_complete_yaml_parses",
++    "exclusion_manifest_parses",
++    "nano_trm_train_present",
++    "pretest_suite_green",
++    "v385_close_state",
++    "preconditions_checked",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "archived_milestone": "Provenance: the milestone being closed, 2026.06.385.",
++    "activated_milestone": "Confirms .386 is live for outer-loop-owned TRM training.",
++    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
++    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
++    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
++    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
++    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
++    "v385_close_state": (
++        "Honest record (conductor ceded TRM training to the outer-loop after collisions) "
++        "so the next planner does not re-generate competing training tasks."
++    ),
++    "preconditions_checked": (
++        "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
++    ),
++    "honest_verdict": (
++        "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:."
++    ),
++    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
++    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
++}
++
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++RECORD_ID_RE = re.compile(r"^- id:\s*['\"]?2026\.06\.385['\"]?\s*$")
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured subprocess output for one required precondition command."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++def yaml_parses(text: str) -> bool:
++    """Return true when PyYAML can safe-load the supplied text."""
++
++    try:
++        yaml.safe_load(text)
++    except yaml.YAMLError:
++        return False
++    return True
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Compute a positive duration so blocked artifacts still carry timing."""
++
++    if started_s is None:
++        return 0.0001
++    end_s = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(0.0001, end_s - float(started_s)), 6)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a deterministic SHA-256 checksum over artifact content."""
++
++    filtered = {k: v for k, v in payload.items() if k != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    """Return true when value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
++
++
++def write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write deterministic JSON with a trailing newline."""
++
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _milestone_from_text(text: str) -> str:
++    for line in text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def read_active_milestone(root: Path) -> tuple[str, str]:
++    """Return the active milestone and the roadmap path used."""
++
++    for rel_path in (Path("research-roadmap.yaml"), Path("research-roadmap-next.yaml")):
++        path = root / rel_path
++        if path.exists():
++            milestone = _milestone_from_text(path.read_text(encoding="utf-8"))
++            if milestone != "unknown":
++                return milestone, str(rel_path)
++    return "unknown", "research-roadmap.yaml"
++
++
++def train_file_present(root: Path) -> bool:
++    """Return true when the nano-TRM trainer entrypoint exists."""
++
++    return (root / NANO_TRM_TRAIN_REL_PATH).exists()
++
++
++def archive_record_count(text: str) -> int:
++    """Count top-level `.385` archive records without counting nested task ids."""
++
++    return sum(1 for line in text.splitlines() if RECORD_ID_RE.match(line))
++
++
++def _record_id(line: str) -> str | None:
++    if not line.startswith("- id:"):
++        return None
++    return line.split(":", 1)[1].strip().strip("\"'")
++
++
++def _yaml_quote(value: str) -> str:
++    return "'" + value.replace("'", "''") + "'"
++
++
++def _number(value: Any, default: float) -> float:
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else float(default)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def canonical_finding(close_state: Mapping[str, Any]) -> str:
++    """Build the `.385` archive finding from the stand-down close-state."""
++
++    seed = _number(close_state.get("baseline_seed_val_exact_accuracy"), BASELINE_SEED_VAL)
++    return (
++        ".385 close-state: bounded accumulation no-op'd again and the conductor continuation "
++        "collided with the detached outer-loop run on shared GPU/checkpoint paths. "
++        f"The baseline seed remains {seed:.12f}; Exp4157 reported blocked_noop_step_unchanged "
++        "with no manual_lr_step advance and no new validation row. Per operator decision A "
++        "(2026-06-13), the conductor STANDS DOWN on TRM training: the outer-loop owns the "
++        "contiguous training. .386 tasks must not launch TRM training, kill train.py, or write "
++        "results/trm_runs/sudoku_extreme_baseline/."
++    )
++
++
++def build_canonical_record(close_state: Mapping[str, Any]) -> str:
++    """Build a minimal `.385` record for the absent-history case."""
++
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {_yaml_quote('Archive .385 and activate .386; conductor stands down on TRM training')}",
++        "  completed: '2026-06-13'",
++        f"  finding: {_yaml_quote(canonical_finding(close_state))}",
++        "  activation_recorded: exp4166-archive-v385-activate-v386",
++        "  tasks:",
++        "  - id: exp4157-baseline-harvest-contiguous-continue",
++        "    result: 'blocked_noop_step_unchanged; conductor continuation collided with outer-loop run'",
++        "  - id: exp4165-capstone-v385",
++        "    result: 'accumulation_still_blocked; .386 cedes TRM training to outer-loop'",
++    ]
++    return "\n".join(lines) + "\n"
++
++
++def _insert_before_tasks(lines: list[str], new_line: str) -> list[str]:
++    for index, line in enumerate(lines):
++        if line == "  tasks:":
++            return lines[:index] + [new_line] + lines[index:]
++    return lines + [new_line]
++
++
++def _canonicalize_target_span(lines: list[str], close_state: Mapping[str, Any]) -> list[str]:
++    out: list[str] = []
++    finding_written = False
++    activation_written = False
++    for line in lines:
++        if line.startswith("  finding:"):
++            if not finding_written:
++                out.append(f"  finding: {_yaml_quote(canonical_finding(close_state))}")
++                finding_written = True
++            continue
++        if line.startswith("  activation_recorded:"):
++            if not activation_written:
++                out.append("  activation_recorded: exp4166-archive-v385-activate-v386")
++                activation_written = True
++            continue
++        out.append(line)
++    if not finding_written:
++        out = _insert_before_tasks(out, f"  finding: {_yaml_quote(canonical_finding(close_state))}")
++    if not activation_written:
++        out = _insert_before_tasks(out, "  activation_recorded: exp4166-archive-v385-activate-v386")
++    return out
++
++
++def dedupe_or_update_record(text: str, close_state: Mapping[str, Any]) -> tuple[str, int, str]:
++    """Ensure exactly one top-level `.385` record exists and carries the handoff."""
++
++    lines = text.split("\n")
++    starts = [i for i, line in enumerate(lines) if _record_id(line) is not None]
++    spans: list[tuple[int, int]] = []
++    for index, start in enumerate(starts):
++        end = starts[index + 1] if index + 1 < len(starts) else len(lines)
++        spans.append((start, end))
++    target_spans = [(start, end) for start, end in spans if _record_id(lines[start]) == ARCHIVED_MILESTONE]
++    if not target_spans:
++        return f"{text.rstrip()}\n{build_canonical_record(close_state)}", 0, "appended"
++
++    first_start, first_end = target_spans[0]
++    remove: set[int] = set()
++    for start, end in target_spans[1:]:
++        remove.update(range(start, end))
++    replacement = _canonicalize_target_span(lines[first_start:first_end], close_state)
++    rebuilt: list[str] = []
++    for index, line in enumerate(lines):
++        if first_start <= index < first_end:
++            if index == first_start:
++                rebuilt.extend(replacement)
++            continue
++        if index in remove:
++            continue
++        rebuilt.append(line)
++    new_text = "\n".join(rebuilt)
++    if len(target_spans) > 1:
++        return new_text, len(target_spans) - 1, "deduped"
++    if new_text != text:
++        return new_text, 0, "updated"
++    return text, 0, "unchanged"
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON object from disk, returning empty dict on absence or bad shape."""
++
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    if not isinstance(payload, Mapping):
++        return {}
++    return dict(payload)
++
++
++def file_sha256(path: Path) -> str | None:
++    """Return file SHA-256, or None when the file is absent."""
++
++    try:
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def read_v385_sources(root: Path) -> dict[str, JsonDict]:
++    """Read source artifacts that carry the `.385` close-state."""
++
++    out: dict[str, JsonDict] = {}
++    for source in V385_SOURCE_ARTIFACTS:
++        out[str(source["experiment_id"])] = read_json_object(root / str(source["deliverable"]))
++    return out
++
++
++def read_outerloop_pid(root: Path) -> int | None:
++    """Return the recorded outer-loop contiguous-run PID when present."""
++
++    try:
++        digits = "".join(ch for ch in (root / OUTERLOOP_PID_REL_PATH).read_text(encoding="utf-8") if ch.isdigit())
++    except OSError:
++        return None
++    return int(digits) if digits else None
++
++
++def pid_is_alive(pid: int | None) -> bool:
++    """Return true when a recorded local PID still exists."""
++
++    if pid is None:
++        return False
++    try:
++        os.kill(pid, 0)
++    except OSError:
++        return False
++    return True
++
++
++def build_cited_upstream(root: Path) -> list[JsonDict]:
++    """Return provenance hashes for upstream `.385` artifacts."""
++
++    cited: list[JsonDict] = []
++    for source in V385_SOURCE_ARTIFACTS:
++        rel = str(source["deliverable"])
++        cited.append(
++            {
++                "kind": "artifact",
++                "experiment_id": str(source["experiment_id"]),
++                "deliverable": rel,
++                "sha256": file_sha256(root / rel),
++            }
++        )
++    return cited
++
++
++def build_v385_close_state(
++    sources: Mapping[str, Mapping[str, Any]],
++    *,
++    outerloop_pid: int | None,
++    outerloop_alive: bool,
++) -> JsonDict:
++    """Build the honest `.385` close-state from artifacts and the operator handoff."""
++
++    baseline = _mapping(sources.get("4157", {}))
++    rerank = _mapping(sources.get("4158", {}))
++    graft = _mapping(sources.get("4159", {}))
++    registry = _mapping(sources.get("4163", {}))
++    capstone = _mapping(sources.get("4165", {}))
++    task_run = _mapping(baseline.get("task_launched_run"))
++    liveness = _mapping(baseline.get("liveness"))
++    trajectory = _mapping(capstone.get("baseline_val_trajectory"))
++    headline_answers = _mapping(capstone.get("headline_answers"))
++    seed = _number(trajectory.get("seed_val"), _number(_mapping(headline_answers.get("current_val_vs_seed")).get("seed_val"), BASELINE_SEED_VAL))
++    manual_advanced = bool(task_run.get("manual_lr_step_advanced", False))
++    new_val_row = bool(task_run.get("new_val_row_written", False))
++    flagged = capstone.get("flagged_artifacts_skipped", [])
++    flagged_items = [dict(item) for item in flagged] if isinstance(flagged, list) else []
++    flagged_ids = [
++        int(item["experiment_id"])
++        for item in flagged_items
++        if isinstance(item.get("experiment_id"), int | float | str) and str(item.get("experiment_id")).isdigit()
++    ]
++    total_games = int(_number(capstone.get("total_games_solved"), _number(headline_answers.get("total_games_solved"), TOTAL_GAMES_SOLVED_DEFAULT)))
++
++    return {
++        "summary": "bounded_accumulation_noop_collision_outer_loop_owns_training",
++        "operator_decision": "A",
++        "operator_decision_date": "2026-06-13",
++        "conductor_ceded_trm_training_to_outer_loop": True,
++        "outer_loop_owns_contiguous_training": True,
++        "conductor_stands_down_on_trm_training": True,
++        "no_conductor_training_rule": True,
++        "forbidden_conductor_actions": [
++            "launch_trm_training",
++            "pkill_or_kill_train_py",
++            "write_stable_checkpoint_dir",
++        ],
++        "bounded_accumulation_noop_again": not manual_advanced and not new_val_row,
++        "conductor_continuation_collided_with_outer_loop": True,
++        "collision_evidence": str(baseline.get("blocked_cause", "")),
++        "exp4157_honest_verdict": str(baseline.get("honest_verdict", "")),
++        "exp4157_flagged_adversarial": bool(baseline.get("flagged_adversarial", False)),
++        "task_launched_native_trainer": bool(task_run),
++        "task_launched_pid": task_run.get("process_pid", liveness.get("pid")),
++        "task_launched_return_code": task_run.get("return_code"),
++        "manual_lr_step_before": task_run.get("manual_lr_step_before"),
++        "manual_lr_step_after": task_run.get("manual_lr_step_after"),
++        "manual_lr_step_advanced": manual_advanced,
++        "new_val_row_written": new_val_row,
++        "val_rows_before": task_run.get("val_rows_before"),
++        "val_rows_after": task_run.get("val_rows_after"),
++        "outerloop_pid": outerloop_pid,
++        "outerloop_train_alive_at_archive": outerloop_alive,
++        "baseline_seed_val_exact_accuracy": seed,
++        "flagged_current_val_ignored_for_close_state": baseline.get("current_val"),
++        "headline_outcome": str(capstone.get("headline_outcome", "")),
++        "capstone_honest_verdict": str(capstone.get("honest_verdict", "")),
++        "baseline_val_trajectory_status": str(trajectory.get("status", "")),
++        "flagged_artifacts_skipped_count": len(flagged_items),
++        "flagged_artifact_ids": flagged_ids,
++        "rerank_status": "skipped_flagged_adversarial"
++        if bool(rerank.get("flagged_adversarial", False))
++        else str(rerank.get("honest_verdict", "")),
++        "graft_deferred": bool(graft.get("graft_deferred", True)),
++        "verifier_value_added": bool(graft.get("verifier_value_added", False)),
++        "registry_regression_guard_passed": bool(registry.get("regression_guard_passed", False)),
++        "diffusiongemma_gate_status": str(capstone.get("diffusiongemma_gate_status", "")),
++        "total_games_solved": total_games,
++        "v386_coordination_rule": (
++            "Training-related conductor tasks are read-only monitors until the outer-loop run stops."
++        ),
++    }
++
++
++def _run_command(command: list[str], root: Path) -> CommandResult:
++    try:
++        completed = subprocess.run(command, cwd=root, check=False, capture_output=True, text=True)
++    except OSError as exc:
++        return CommandResult(command=command, exit_code=127, stdout="", stderr=str(exc))
++    return CommandResult(
++        command=command,
++        exit_code=int(completed.returncode),
++        stdout=str(completed.stdout),
++        stderr=str(completed.stderr),
++    )
++
++
++def smart_subset_targets(root: Path) -> list[str]:
++    """Return existing smart-subset targets, or the first core target as fallback."""
++
++    targets = [target for target in CORE_SMART_SUBSET if (root / target).exists()]
++    return targets or [CORE_SMART_SUBSET[0]]
++
++
++def smart_subset_command(targets: Sequence[str]) -> list[str]:
++    """Return the smart-subset pytest command."""
++
++    return [str(PYTEST_BIN), *targets, "-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="]
++
++
++def run_smart_subset(root: Path) -> CommandResult:
++    """Run the smart-subset pre-test gate once."""
++
++    return _run_command(smart_subset_command(smart_subset_targets(root)), root)
++
++
++def terminal_verdict(v385_close_state: Mapping[str, Any]) -> str:
++    """Return the complete-path verdict for the archive transition."""
++
++    seed = _number(v385_close_state.get("baseline_seed_val_exact_accuracy"), BASELINE_SEED_VAL)
++    return (
++        "success: archived_v385_v386_active_conductor_stands_down_"
++        f"outer_loop_owns_trm_training_seed_{seed:.12f}_pretest_green"
++    )
++
++
++def _base_payload(
++    *,
++    honest_verdict: str,
++    research_complete_yaml_parses: bool,
++    exclusion_manifest_parses: bool,
++    nano_trm_train_present: bool,
++    pretest_suite_green: bool,
++    v385_close_state: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    active_milestone_confirmed: str,
++    active_roadmap_path: str,
++    research_complete_record_action: str,
++    research_complete_duplicates_removed: int,
++    cited_upstream_artifacts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "active_roadmap_path": active_roadmap_path,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "exclusion_manifest_parses": exclusion_manifest_parses,
++        "nano_trm_train_present": nano_trm_train_present,
++        "pretest_suite_green": pretest_suite_green,
++        "v385_close_state": dict(v385_close_state),
++        "preconditions_checked": dict(preconditions_checked),
++        "honest_verdict": honest_verdict,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "research_complete_record_action": research_complete_record_action,
++        "research_complete_duplicates_removed": research_complete_duplicates_removed,
++        "cited_upstream_artifacts": [dict(item) for item in cited_upstream_artifacts],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(reason: str, **kwargs: Any) -> JsonDict:
++    """Build a blocked artifact without fabricating green resources."""
++
++    defaults: JsonDict = {
++        "research_complete_yaml_parses": False,
++        "exclusion_manifest_parses": False,
++        "nano_trm_train_present": False,
++        "pretest_suite_green": False,
++        "v385_close_state": {"status": "blocked", "reason": reason},
++        "active_milestone_confirmed": "",
++        "active_roadmap_path": "research-roadmap.yaml",
++        "research_complete_record_action": "none",
++        "research_complete_duplicates_removed": 0,
++        "cited_upstream_artifacts": [],
++    }
++    defaults.update(kwargs)
++    return _base_payload(honest_verdict=reason, **defaults)
++
++
++def build_complete_artifact(**kwargs: Any) -> JsonDict:
++    """Build and validate the Exp 4166 complete artifact."""
++
++    close_state = kwargs["v385_close_state"]
++    payload = _base_payload(
++        honest_verdict=terminal_verdict(close_state),
++        research_complete_yaml_parses=True,
++        exclusion_manifest_parses=True,
++        nano_trm_train_present=True,
++        pretest_suite_green=True,
++        active_milestone_confirmed=ACTIVATED_MILESTONE,
++        **kwargs,
++    )
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate fields that stop this archive from laundering the `.385` truth."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    for field in ("honest_verdict", "v385_close_state", "preconditions_checked"):
++        if principles.get(field) != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} principle must match REQ-REPORT-4166")
++    if artifact.get("archived_milestone") != ARCHIVED_MILESTONE:
++        raise ValueError("archived milestone must be 2026.06.385")
++    if artifact.get("activated_milestone") != ACTIVATED_MILESTONE:
++        raise ValueError("activated milestone must be 2026.06.386")
++    if artifact.get("research_complete_yaml_parses") is not True:
++        raise ValueError("research-complete YAML must parse")
++    if artifact.get("exclusion_manifest_parses") is not True:
++        raise ValueError("exclusion manifest must parse")
++    if artifact.get("nano_trm_train_present") is not True:
++        raise ValueError("nano-trm train file must be present")
++    if artifact.get("pretest_suite_green") is not True:
++        raise ValueError("pretest suite must be green")
++    if artifact.get("active_milestone_confirmed") != ACTIVATED_MILESTONE:
++        raise ValueError("active milestone must be confirmed as 2026.06.386")
++    close_state = artifact.get("v385_close_state")
++    if not isinstance(close_state, Mapping):
++        raise ValueError("v385_close_state must be a mapping")
++    if close_state.get("conductor_ceded_trm_training_to_outer_loop") is not True:
++        raise ValueError("conductor_ceded_trm_training_to_outer_loop must be True")
++    if close_state.get("outer_loop_owns_contiguous_training") is not True:
++        raise ValueError("outer_loop_owns_contiguous_training must be True")
++    if close_state.get("conductor_stands_down_on_trm_training") is not True:
++        raise ValueError("conductor_stands_down_on_trm_training must be True")
++    if close_state.get("bounded_accumulation_noop_again") is not True:
++        raise ValueError("bounded_accumulation_noop_again must be True")
++    if close_state.get("conductor_continuation_collided_with_outer_loop") is not True:
++        raise ValueError("conductor_continuation_collided_with_outer_loop must be True")
++    if round(_number(close_state.get("baseline_seed_val_exact_accuracy"), 0.0), 12) != round(BASELINE_SEED_VAL, 12):
++        raise ValueError("baseline seed must remain 0.278172343969")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, int | float) or isinstance(duration, bool) or duration <= 0:
++        raise ValueError("duration_s must be positive")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        raise ValueError("cited_upstream_artifacts must be a list")
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    pretest_result: CommandResult | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Run the `.385` archive and `.386` activation guard."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    manifest_path = root_path / EXCLUSION_MANIFEST_REL_PATH
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    complete_exists = complete_path.exists()
++    complete_text = complete_path.read_text(encoding="utf-8") if complete_exists else ""
++    complete_parses = complete_exists and yaml_parses(complete_text)
++    manifest_exists = manifest_path.exists()
++    manifest_text = manifest_path.read_text(encoding="utf-8") if manifest_exists else ""
++    manifest_parses = manifest_exists and yaml_parses(manifest_text)
++    has_train = train_file_present(root_path)
++
++    preconditions: JsonDict = {
++        "research_complete_yaml_exists": complete_exists,
++        "research_complete_yaml_parses": complete_parses,
++        "exclusion_manifest_exists": manifest_exists,
++        "exclusion_manifest_parses": manifest_parses,
++        "nano_trm_train_present": has_train,
++        "nano_trm_train_path": str(NANO_TRM_TRAIN_REL_PATH),
++        "active_milestone": active_milestone,
++        "active_roadmap_path": active_roadmap_path,
++        "pretest_suite_green": False,
++        "v385_capstone_present": False,
++        "outerloop_pid_file": str(OUTERLOOP_PID_REL_PATH),
++    }
++
++    def blocked(reason: str, **extra: Any) -> Path:
++        write_payload(
++            output_path,
++            build_blocked_artifact(
++                reason,
++                preconditions_checked=preconditions,
++                duration_s=duration_from(start, now_s),
++                active_milestone_confirmed=active_milestone,
++                active_roadmap_path=active_roadmap_path,
++                **extra,
++            ),
++        )
++        return output_path
++
++    if not complete_exists:
++        return blocked("blocked_research_complete_yaml_missing")
++    if not complete_parses:
++        return blocked("blocked_research_complete_yaml_poison")
++    if not manifest_exists:
++        return blocked("blocked_exclusion_manifest_missing", research_complete_yaml_parses=True)
++    if not manifest_parses:
++        return blocked("blocked_exclusion_manifest_yaml_poison", research_complete_yaml_parses=True)
++    if not has_train:
++        return blocked(
++            "blocked_nano_trm_train_missing",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++        )
++    if active_milestone != ACTIVATED_MILESTONE:
++        return blocked(
++            "blocked_v386_not_active",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++        )
++
++    pretest = pretest_result if pretest_result is not None else run_smart_subset(root_path)
++    pretest_green = pretest.exit_code == 0
++    preconditions["pretest_suite_green"] = pretest_green
++    preconditions["pretest_command"] = pretest.command
++    preconditions["pretest_exit_code"] = pretest.exit_code
++    if not pretest_green:
++        return blocked(
++            "blocked_smart_subset_pretest_not_green",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++        )
++
++    capstone_present = (root_path / CAPSTONE_REL_PATH).exists()
++    preconditions["v385_capstone_present"] = capstone_present
++    preconditions["v385_capstone_path"] = str(CAPSTONE_REL_PATH)
++    if not capstone_present:
++        return blocked(
++            "blocked_v385_capstone_missing",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++            pretest_suite_green=True,
++        )
++
++    pid = read_outerloop_pid(root_path)
++    outerloop_alive = pid_is_alive(pid)
++    preconditions["outerloop_pid"] = pid
++    preconditions["outerloop_train_alive_at_archive"] = outerloop_alive
++    sources = read_v385_sources(root_path)
++    close_state = build_v385_close_state(sources, outerloop_pid=pid, outerloop_alive=outerloop_alive)
++
++    new_text, removed, action = dedupe_or_update_record(complete_text, close_state)
++    if not yaml_parses(new_text):
++        return blocked(
++            "blocked_research_complete_edit_invalid",
++            research_complete_yaml_parses=False,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++            pretest_suite_green=True,
++        )
++    if new_text != complete_text:
++        complete_path.write_text(new_text, encoding="utf-8")
++    after_parses = yaml_parses(complete_path.read_text(encoding="utf-8"))
++    preconditions["research_complete_record_action"] = action
++    preconditions["research_complete_duplicates_removed"] = removed
++    preconditions["research_complete_yaml_parses_after_edit"] = after_parses
++    if not after_parses:
++        return blocked(
++            "blocked_research_complete_yaml_poison_after_edit",
++            research_complete_yaml_parses=False,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++            pretest_suite_green=True,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=removed,
++        )
++
++    payload = build_complete_artifact(
++        v385_close_state=close_state,
++        preconditions_checked=preconditions,
++        duration_s=duration_from(start, now_s),
++        active_roadmap_path=active_roadmap_path,
++        research_complete_record_action=action,
++        research_complete_duplicates_removed=removed,
++        cited_upstream_artifacts=build_cited_upstream(root_path),
++    )
++    write_payload(output_path, payload)
++    return output_path
++
++
++def main() -> int:
++    """CLI entrypoint for the conductor-requested script."""
++
++    output_path = run(REPO_ROOT)
++    print(output_path)
++    return 0
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 64e8ebd735..8a7c7b20ac 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -39552,7 +39552,8 @@ milestones:
+     verifier-as-reward graft if val crosses 0.85
+   doc: openspec/change-proposals/research-roadmap-v385.md
+   completed: '2026-06-13'
+-  finding: See conductor log for per-experiment results.
++  finding: '.385 close-state: bounded accumulation no-op''d again and the conductor continuation collided with the detached outer-loop run on shared GPU/checkpoint paths. The baseline seed remains 0.278172343969; Exp4157 reported blocked_noop_step_unchanged with no manual_lr_step advance and no new validation row. Per operator decision A (2026-06-13), the conductor STANDS DOWN on TRM training: the outer-loop owns the contiguous training. .386 tasks must not launch TRM training, kill train.py, or write results/trm_runs/sudoku_extreme_baseline/.'
++  activation_recorded: exp4166-archive-v385-activate-v386
+   tasks:
+   - id: exp4156-archive-v384-activate-v385
+     title: 'Archive .384 -> activate .385; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9a1a937706..e7bf784798 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T18:24:04.457497Z",
+-  "duration_s": 0.02914285659790039,
++  "run_date": "2026-06-13T18:59:53.809294Z",
++  "duration_s": 0.023285627365112305,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "19013d9f0bbbf3e43ed1724dc144cdf581d1e6cfd62f72cb1c0bba0e31f08bf0",
++  "reproducibility_checksum": "92d9ee920cff38a856dd8ede8e4e6a2b4e6edebc706fab640dc8216183638715",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "564ea5cc371fce0d4086e6c2fcd695d654ab99fd"
++    "adversarial_verify_version": "ba10d0ed294d3079591751f71957901ecd26e32b"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 91d7d6db19..230c2c6a4f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T18:24:04.492668Z",
+-  "duration_s": 0.028974294662475586,
++  "run_date": "2026-06-13T18:59:53.842748Z",
++  "duration_s": 0.027498960494995117,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "48e7fb0c9ff78c12a636b49954625b8e188ae8b01db84e57288423884b4ce9c9",
++  "reproducibility_checksum": "e88243f523ae52bdfe55221b1efe7ef3f2de8654629e17e8dd261039f6795c4d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "564ea5cc371fce0d4086e6c2fcd695d654ab99fd"
++    "adversarial_verify_version": "ba10d0ed294d3079591751f71957901ecd26e32b"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index efc4696b43..f467459945 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1097660064697266,
++  "efficiency_gains_ms": 2.1364688873291016,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 7e4a5fc1e2..fd03520b82 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8062000637874007e-05,
++  "duration_s": 4.121799429412931e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4166_archive_v385_activate_v386.json b/results/experiment_4166_archive_v385_activate_v386.json
+new file mode 100644
+index 0000000000..c9167d4b42
+--- /dev/null
++++ b/results/experiment_4166_archive_v385_activate_v386.json
+@@ -0,0 +1,171 @@
++{
++  "activated_milestone": "2026.06.386",
++  "active_milestone_confirmed": "2026.06.386",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "archived_milestone": "2026.06.385",
++  "cited_upstream_artifacts": [
++    {
++      "deliverable": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
++      "experiment_id": "4157",
++      "kind": "artifact",
++      "sha256": "74b8a87af41d8084cf18942f6ce0deb014776dbd529213aac684a5504e7d4a06"
++    },
++    {
++      "deliverable": "results/experiment_4158_verifier_rerank_recovery_moat.json",
++      "experiment_id": "4158",
++      "kind": "artifact",
++      "sha256": "7ce3937e1ececd2d782d32291d730b001d12c4c7de49cfbe7111e282987ef661"
++    },
++    {
++      "deliverable": "results/experiment_4159_decisive_verifier_reward_graft.json",
++      "experiment_id": "4159",
++      "kind": "artifact",
++      "sha256": "4a0776aac992c0b332ac848c941060b19006ca7c49f82966d82bd39c6dc28231"
++    },
++    {
++      "deliverable": "results/experiment_4160_arc_action_efficiency_harness.json",
++      "experiment_id": "4160",
++      "kind": "artifact",
++      "sha256": "4f51f5b525c336b99e79c30f85d0cbdb21770ae8cefc6ef3e7270084a99e3d65"
++    },
++    {
++      "deliverable": "results/experiment_4161_observability_timing_detector_fix.json",
++      "experiment_id": "4161",
++      "kind": "artifact",
++      "sha256": "bdbfce17b9dc9494a9547a0d11cd95883237e00d57a70141ee6911b1ebd1c484"
++    },
++    {
++      "deliverable": "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
++      "experiment_id": "4162",
++      "kind": "artifact",
++      "sha256": "8aa132702c30cd8e05d3584001eaa98cfad80e6ecedc7cc4f043fbd760b6d36c"
++    },
++    {
++      "deliverable": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
++      "experiment_id": "4163",
++      "kind": "artifact",
++      "sha256": "e7f08e2ef41e56051a38ff5188cff6d22cc7f06b3ebcfece69e1cd780c3a60db"
++    },
++    {
++      "deliverable": "results/experiment_4164_hardware_continuity.json",
++      "experiment_id": "4164",
++      "kind": "artifact",
++      "sha256": "cb047392202e56c813ce1712872c39424b9d377767aa96bb98346ae8dd922c28"
++    },
++    {
++      "deliverable": "results/experiment_4165_capstone_v385.json",
++      "experiment_id": "4165",
++      "kind": "artifact",
++      "sha256": "d170cf4de5e22ac104071c98ea19dc17b1d822314c923d8a7e02237a490081e6"
++    }
++  ],
++  "duration_s": 13.84744,
++  "exclusion_manifest_parses": true,
++  "experiment_id": "exp4166",
++  "field_principles": {
++    "activated_milestone": "Confirms .386 is live for outer-loop-owned TRM training.",
++    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
++    "archived_milestone": "Provenance: the milestone being closed, 2026.06.385.",
++    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
++    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
++    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
++    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
++    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
++    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
++    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
++    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
++    "v385_close_state": "Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks."
++  },
++  "honest_verdict": "success: archived_v385_v386_active_conductor_stands_down_outer_loop_owns_trm_training_seed_0.278172343969_pretest_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "nano_trm_train_present": true,
++  "preconditions_checked": {
++    "active_milestone": "2026.06.386",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "exclusion_manifest_exists": true,
++    "exclusion_manifest_parses": true,
++    "nano_trm_train_path": "nano-trm/src/nn/train.py",
++    "nano_trm_train_present": true,
++    "outerloop_pid": 505313,
++    "outerloop_pid_file": "results/trm_runs/contiguous_run.pid",
++    "outerloop_train_alive_at_archive": true,
++    "pretest_command": [
++      ".venv/bin/pytest",
++      "tests/python/test_pipeline_extract.py",
++      "tests/python/test_docs.py",
++      "-q",
++      "--no-header",
++      "-n",
++      "0",
++      "--no-cov",
++      "-o",
++      "addopts="
++    ],
++    "pretest_exit_code": 0,
++    "pretest_suite_green": true,
++    "research_complete_duplicates_removed": 0,
++    "research_complete_record_action": "updated",
++    "research_complete_yaml_exists": true,
++    "research_complete_yaml_parses": true,
++    "research_complete_yaml_parses_after_edit": true,
++    "v385_capstone_path": "results/experiment_4165_capstone_v385.json",
++    "v385_capstone_present": true
++  },
++  "pretest_suite_green": true,
++  "random_seed": 4166,
++  "reproducibility_checksum": "67c6c93703284a5587231d864ab1c9c92ca2c3c9f766c40bbf3229c5b5b7a29d",
++  "research_complete_duplicates_removed": 0,
++  "research_complete_record_action": "updated",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v385_to_v386_4166.v1",
++  "task_id": "exp4166-archive-v385-activate-v386",
++  "v385_close_state": {
++    "baseline_seed_val_exact_accuracy": 0.278172343969,
++    "baseline_val_trajectory_status": "skipped_flagged_adversarial",
++    "bounded_accumulation_noop_again": true,
++    "capstone_honest_verdict": "blocked: capstone_v385_accumulation_still_blocked_baseline_skipped_flagged_adversarial_rerank_skipped_flagged_adversarial_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped4",
++    "collision_evidence": "manual_lr_step did not advance: before=19006 after=19006; trainer_return_code=1; log_tail=  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl |     return forward_call(*args, **kwargs) |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |   File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 190, in forward |     return self.down_proj(F.silu(gate) * up) |                           ~~~~~~~~~~~~~^~~~ | torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 86.31 MiB is free. Including non-PyTorch memory, this process has 23.46 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 89.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf) | return_code=1",
++    "conductor_ceded_trm_training_to_outer_loop": true,
++    "conductor_continuation_collided_with_outer_loop": true,
++    "conductor_stands_down_on_trm_training": true,
++    "diffusiongemma_gate_status": "STILL-PENDING",
++    "exp4157_flagged_adversarial": true,
++    "exp4157_honest_verdict": "blocked_noop_step_unchanged",
++    "flagged_artifact_ids": [
++      4157,
++      4158,
++      4159,
++      4163
++    ],
++    "flagged_artifacts_skipped_count": 4,
++    "flagged_current_val_ignored_for_close_state": 0.501041650772,
++    "forbidden_conductor_actions": [
++      "launch_trm_training",
++      "pkill_or_kill_train_py",
++      "write_stable_checkpoint_dir"
++    ],
++    "graft_deferred": true,
++    "headline_outcome": "accumulation_still_blocked",
++    "manual_lr_step_advanced": false,
++    "manual_lr_step_after": 19006,
++    "manual_lr_step_before": 19006,
++    "new_val_row_written": false,
++    "no_conductor_training_rule": true,
++    "operator_decision": "A",
++    "operator_decision_date": "2026-06-13",
++    "outer_loop_owns_contiguous_training": true,
++    "outerloop_pid": 505313,
++    "outerloop_train_alive_at_archive": true,
++    "registry_regression_guard_passed": true,
++    "rerank_status": "skipped_flagged_adversarial",
++    "summary": "bounded_accumulation_noop_collision_outer_loop_owns_training",
++    "task_launched_native_trainer": true,
++    "task_launched_pid": 447577,
++    "task_launched_return_code": 1,
++    "total_games_solved": 13,
++    "v386_coordination_rule": "Training-related conductor tasks are read-only monitors until the outer-loop run stops.",
++    "val_rows_after": 27,
++    "val_rows_before": 27,
++    "verifier_value_added": false
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 39fe268128..c92860f763 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T18:23:54Z",
+-  "finished_at": "2026-06-13T18:23:54Z",
++  "started_at": "2026-06-13T18:59:40Z",
++  "finished_at": "2026-06-13T18:59:40Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 29307ee287..a9687c2c7f 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T18:23:54Z",
+-  "finished_at": "2026-06-13T18:23:54Z",
++  "started_at": "2026-06-13T18:59:40Z",
++  "finished_at": "2026-06-13T18:59:40Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 2372a3c546..675a9ba180 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T18:23:54Z",
+-  "finished_at": "2026-06-13T18:23:55Z",
++  "started_at": "2026-06-13T18:59:40Z",
++  "finished_at": "2026-06-13T18:59:40Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv b/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv
+index 56d3fcc82e..56db08ed82 100644
+--- a/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv
++++ b/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv
+@@ -13,3 +13,39 @@ epoch,grad/last_mlp,grad/lm_head,grad/q_head,grad/total_norm,step,train/accuracy
+ 6799,,,,,19404,,,,,,,,,0.7519065141677856,0.2604166567325592,0.5924015045166016,0.597425103187561,0.9979166388511658,0.010047138668596745,16.0
+ 6844,0.1398182064294815,0.007187930401414633,0.0296027772128582,0.8739396333694458,19449,0.7805598974227905,1.0,0.3380281627178192,0.713897016356929,7.107643614290282e-05,1.0,0.020231086760759354,12.253520965576172,,,,,,,
+ 6894,0.040702465921640396,0.006770031992346048,0.008017310872673988,0.25141051411628723,19499,0.826326310634613,1.0,0.47297295928001404,0.7013589853610851,7.092899613780901e-05,1.0,0.001352778053842485,10.716216087341309,,,,,,,
++6899,,,,,19504,,,,,,,,,0.7582851648330688,0.2783854305744171,0.5760370492935181,0.58050137758255,0.9979166388511658,0.008928690105676651,16.0
++6944,0.06842206418514252,0.0057005006819963455,0.015600771643221378,0.400974839925766,19549,0.8093948364257812,1.0,0.4146341383457184,0.7039241893713746,7.078133785398677e-05,1.0,0.009613871574401855,11.47560977935791,,,,,,,
++6994,0.08063224703073502,0.006804038770496845,0.02034333534538746,0.4977536201477051,19599,0.7912174463272095,1.0,0.3670886158943176,0.7126403891157469,7.06334612914361e-05,1.0,0.01225899439305067,11.645569801330566,,,,,,,
++6999,,,,,19604,,,,,,,,,0.7695601582527161,0.3072916567325592,0.5576878786087036,0.5612026453018188,0.9984375238418579,0.00702945701777935,16.0
++7044,0.1551373153924942,0.006115448661148548,0.03504951298236847,0.9337567090988159,19649,0.8860028982162476,1.0,0.6363636255264282,0.6936298996394994,7.048537372611463e-05,1.0,0.01791749894618988,9.02597427368164,,,,,,,
++7094,0.056156981736421585,0.00643385061994195,0.01105068251490593,0.32578596472740173,19699,0.8297199010848999,1.0,0.47560974955558777,0.6899809783433055,7.033706788206473e-05,1.0,0.0035209525376558304,10.585366249084473,,,,,,,
++7099,,,,,19704,,,,,,,,,0.7745081782341003,0.3213541805744171,0.5456783771514893,0.54887455701828,0.9994791746139526,0.006392216309905052,16.0
++7144,0.08824058622121811,0.005835304968059063,0.030334463343024254,0.5395706295967102,19749,0.8055967092514038,1.0,0.4266666769981384,0.7079700994764251,7.018855103524402e-05,0.9599999785423279,0.011643603444099426,11.119999885559082,,,,,,,
++7194,0.08637988567352295,0.006338822655379772,0.014304671436548233,0.4891311824321747,19799,0.8067981600761414,1.0,0.4285714328289032,0.7029764556109228,7.00398231856525e-05,0.9870129823684692,0.007138519547879696,11.220779418945312,,,,,,,
++7199,,,,,19804,,,,,,,,,0.7809412479400635,0.33411458134651184,0.535879909992218,0.5392044186592102,0.9989583492279053,0.0066489577293396,16.0
++7244,0.06509798765182495,0.00755271315574646,0.005953865125775337,0.3173901438713074,19849,0.7840628623962402,1.0,0.34545454382896423,0.7138679003034147,6.989088433329016e-05,1.0,0.0013649489264935255,12.018181800842285,,,,,,,
++7294,0.054469820111989975,0.005952325649559498,0.007374795153737068,0.3263176679611206,19899,0.830883800983429,1.0,0.4761904776096344,0.7001669088620749,6.974173447815701e-05,1.0,0.0022364770993590355,10.746031761169434,,,,,,,
++7299,,,,,19904,,,,,,,,,0.7862558364868164,0.35208332538604736,0.5230675339698792,0.526095986366272,0.9997395873069763,0.006056966260075569,16.0
++7344,0.0746358335018158,0.006141334772109985,0.018744030967354774,0.5272731184959412,19949,0.8226874470710754,1.0,0.5072463750839233,0.6994411738309779,6.959238817216828e-05,1.0,0.006279535125941038,10.1304349899292,,,,,,,
++7394,0.09230988472700119,0.005866382736712694,0.03459645435214043,0.4707052409648895,19999,0.8409464955329895,1.0,0.5,0.7076207185777168,6.944283086340874e-05,0.9666666388511658,0.009427158161997795,10.033333778381348,,,,,,,
++7399,,,,,20004,,,,,,,,,0.7919464111328125,0.3726562559604645,0.5128524303436279,0.5159581899642944,0.9989583492279053,0.006211475469172001,16.0
++7444,0.12296898663043976,0.007480442523956299,0.01794050633907318,0.5884140133857727,20049,0.8542413115501404,1.0,0.5322580933570862,0.6968317025770677,6.929306982783601e-05,0.9838709831237793,0.014386377297341824,10.403225898742676,,,,,,,
++7494,0.10309663414955139,0.00688272574916482,0.014924273826181889,0.581439197063446,20099,0.8416749835014343,1.0,0.45945945382118225,0.708849556199443,6.914311234140769e-05,1.0,0.004018441773951054,10.945945739746094,,,,,,,
++7499,,,,,20104,,,,,,,,,0.7969521880149841,0.3851562440395355,0.5041582584381104,0.5071861743927002,0.999218761920929,0.006055852398276329,16.0
++7544,0.2534794807434082,0.009424072690308094,0.039517343044281006,1.0223785638809204,20149,0.821248471736908,1.0,0.49295774102211,0.7175004297062119,6.899295112816617e-05,0.9577465057373047,0.008848447352647781,10.619718551635742,,,,,,,
++7594,0.11721063405275345,0.007972082123160362,0.016190432012081146,0.5563592314720154,20199,0.8618460297584534,1.0,0.5595238208770752,0.6889971961476121,6.884259346406907e-05,0.988095223903656,0.005989511962980032,9.845237731933594,,,,,,,
++7599,,,,,20204,,,,,,,,,0.801810085773468,0.40052083134651184,0.49520042538642883,0.49813443422317505,0.9997395873069763,0.005868046544492245,16.0
++7644,0.10875814408063889,0.005758283659815788,0.01356398407369852,0.6476059556007385,20249,0.8300755023956299,1.0,0.4583333432674408,0.6996490906468886,6.869203934911638e-05,0.9861111044883728,0.005648217163980007,10.666666984558105,,,,,,,
++7694,0.1739012897014618,0.008093700744211674,0.028802521526813507,0.7649547457695007,20299,0.8462709188461304,1.0,0.5479452013969421,0.7051291640535322,6.854128878330812e-05,0.9863013625144958,0.017783980816602707,9.890411376953125,,,,,,,
++7699,,,,,20304,,,,,,,,,0.8052951097488403,0.41093748807907104,0.4866785705089569,0.4897098243236542,0.9994791746139526,0.006062586326152086,16.0
++7744,0.10733359307050705,0.005761510226875544,0.01868036761879921,0.5919770002365112,20349,0.8535493612289429,1.0,0.5375000238418579,0.6891406539365358,6.839034904260188e-05,1.0,0.008414095267653465,9.524999618530273,,,,,,,
++7794,0.22216787934303284,0.006160510238260031,0.04323827847838402,1.3979178667068481,20399,0.7939548492431641,1.0,0.3965517282485962,0.694934849074091,6.823921285104007e-05,1.0,0.020413396880030632,11.17241382598877,,,,,,,
++7799,,,,,20404,,,,,,,,,0.8091306686401367,0.42526042461395264,0.47941410541534424,0.4827215373516083,0.9989583492279053,0.006614952813833952,16.0
++7844,0.049214400351047516,0.005803093779832125,0.005523392930626869,0.2499278336763382,20449,0.8916323184967041,1.0,0.6507936716079712,0.6881319724663488,6.808788748458028e-05,1.0,0.0011586962500587106,8.936508178710938,,,,,,,
++7894,0.12736506760120392,0.006307228468358517,0.016651103273034096,0.7535375952720642,20499,0.8593963980674744,1.0,0.5833333134651184,0.6886553709615116,6.793638021918014e-05,1.0,0.008488517254590988,9.48611068725586,,,,,,,
++7899,,,,,20504,,,,,,,,,0.8120821118354797,0.4351562559604645,0.47238555550575256,0.47609788179397583,0.9997395873069763,0.007424603682011366,16.0
++7944,0.1378834843635559,0.008261376991868019,0.02083597332239151,0.7105140089988708,20549,0.8705989718437195,1.0,0.604938268661499,0.6862888716279543,6.778467650292441e-05,1.0,0.009484687820076942,10.123456954956055,,,,,,,
++7994,0.10101120173931122,0.005702355410903692,0.014259831048548222,0.5207691788673401,20599,0.8282828330993652,1.0,0.44155845046043396,0.6914988966534548,6.763279088772833e-05,1.0,0.009415842592716217,11.116883277893066,,,,,,,
++7999,,,,,20604,,,,,,,,,0.8154256343841553,0.44583332538604736,0.46679309010505676,0.47051486372947693,0.999218761920929,0.007443572860211134,16.0
++8044,0.2032342404127121,0.010407415218651295,0.022484859451651573,0.7066285014152527,20649,0.8395061492919922,1.0,0.5526315569877625,0.7194861044094731,6.74807233735919e-05,0.9868420958518982,0.012495188042521477,9.460526466369629,,,,,,,
++8094,0.06943521648645401,0.005932180676609278,0.0199649129062891,0.4061303734779358,20699,0.8823823928833008,1.0,0.6351351141929626,0.6698154569782182,6.732847396051511e-05,1.0,0.007475574500858784,8.594594955444336,,,,,,,
+diff --git a/tests/python/test_experiment_4166_archive_v385_activate_v386.py b/tests/python/test_experiment_4166_archive_v385_activate_v386.py
+new file mode 100644
+index 0000000000..a76161a48f
+--- /dev/null
++++ b/tests/python/test_experiment_4166_archive_v385_activate_v386.py
+@@ -0,0 +1,540 @@
++"""Tests for Exp 4166 `.385` archive / `.386` activation.
++
++Spec refs: REQ-REPORT-4166, SCENARIO-REPORT-4166,
++SCENARIO-REPORT-4166-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import archive_v385_activate_v386_4166 as mod
++
++
++GREEN = mod.CommandResult(command=["pytest"], exit_code=0, stdout="81 passed", stderr="")
++RED = mod.CommandResult(command=["pytest"], exit_code=1, stdout="FAILED smart subset", stderr="")
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def _research_complete_text(*, duplicates: int = 1) -> str:
++    head = (
++        "# Carnot Research - Completed Experiments\n"
++        "milestones:\n"
++        "- id: 2026.06.384\n"
++        "  finding: prior milestone\n"
++    )
++    block = (
++        "- id: 2026.06.385\n"
++        "  title: old conductor row\n"
++        "  completed: '2026-06-13'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp4165-capstone-v385\n"
++        "    result: OK\n"
++    )
++    return head + block * duplicates
++
++
++def make_repo(tmp_path: Path, *, duplicates: int = 1) -> Path:
++    root = tmp_path
++    root.mkdir(parents=True, exist_ok=True)
++    (root / "research-complete.yaml").write_text(
++        _research_complete_text(duplicates=duplicates), encoding="utf-8"
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "exclusion_manifest.yaml").write_text(
++        "retired:\n- experiment_id: 2091\n  reason: archived\n", encoding="utf-8"
++    )
++    (root / "research-roadmap.yaml").write_text("milestone: 2026.06.386\n", encoding="utf-8")
++    (root / "nano-trm" / "src" / "nn").mkdir(parents=True, exist_ok=True)
++    (root / "nano-trm" / "src" / "nn" / "train.py").write_text("# train\n", encoding="utf-8")
++    (root / "tests" / "python").mkdir(parents=True, exist_ok=True)
++    (root / "tests" / "python" / "test_pipeline_extract.py").write_text(
++        "def test_pipeline_extract():\n    assert True\n", encoding="utf-8"
++    )
++    (root / "tests" / "python" / "test_docs.py").write_text(
++        "def test_docs():\n    assert True\n", encoding="utf-8"
++    )
++    (root / "results" / "trm_runs").mkdir(parents=True, exist_ok=True)
++    (root / "results" / "trm_runs" / "contiguous_run.pid").write_text(
++        "999999\n", encoding="utf-8"
++    )
++    _write_json(
++        root / "results" / "experiment_4157_baseline_harvest_contiguous_continue.json",
++        {
++            "honest_verdict": "blocked_noop_step_unchanged",
++            "flagged_adversarial": True,
++            "current_val": 0.501041650772,
++            "max_val": 0.501041650772,
++            "baseline_faithful": False,
++            "blocked_cause": "manual_lr_step did not advance: before=19006 after=19006; trainer_return_code=1; torch.OutOfMemoryError",
++            "liveness": {
++                "detail": "task-launched contiguous run",
++                "pid": 447577,
++                "process_alive": False,
++                "run_alive": False,
++            },
++            "task_launched_run": {
++                "manual_lr_step_advanced": False,
++                "manual_lr_step_after": 19006,
++                "manual_lr_step_before": 19006,
++                "new_val_row_written": False,
++                "return_code": 1,
++                "val_rows_after": 27,
++                "val_rows_before": 27,
++            },
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4158_verifier_rerank_recovery_moat.json",
++        {
++            "honest_verdict": "complete: no_headroom_rerank_uninformative_at_val_0.50",
++            "flagged_adversarial": True,
++            "baseline_status": {"current_val": 0.501041650772, "max_val": 0.501041650772},
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4159_decisive_verifier_reward_graft.json",
++        {
++            "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
++            "flagged_adversarial": True,
++            "graft_deferred": True,
++            "verifier_value_added": False,
++            "baseline_status": {"current_val": 0.501041650772, "faithful": False},
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4165_capstone_v385.json",
++        {
++            "baseline_val_trajectory": {
++                "seed_val": 0.278172343969,
++                "status": "skipped_flagged_adversarial",
++                "source_status": "skipped_flagged_adversarial",
++                "current_val": None,
++                "run_alive": None,
++            },
++            "headline_answers": {
++                "current_val_vs_seed": {"seed_val": 0.278172343969},
++                "total_games_solved": 13,
++            },
++            "headline_outcome": "accumulation_still_blocked",
++            "honest_verdict": "blocked: capstone_v385_accumulation_still_blocked",
++            "diffusiongemma_gate_status": "STILL-PENDING",
++            "flagged_artifacts_skipped": [
++                {
++                    "experiment_id": 4157,
++                    "path": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
++                    "reason": "flagged_adversarial:true",
++                    "sha256": "a" * 64,
++                },
++                {
++                    "experiment_id": 4158,
++                    "path": "results/experiment_4158_verifier_rerank_recovery_moat.json",
++                    "reason": "flagged_adversarial:true",
++                    "sha256": "b" * 64,
++                },
++                {
++                    "experiment_id": 4159,
++                    "path": "results/experiment_4159_decisive_verifier_reward_graft.json",
++                    "reason": "flagged_adversarial:true",
++                    "sha256": "c" * 64,
++                },
++                {
++                    "experiment_id": 4163,
++                    "path": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
++                    "reason": "flagged_adversarial:true",
++                    "sha256": "d" * 64,
++                },
++            ],
++            "total_games_solved": 13,
++        },
++    )
++    return root
++
++
++def run_happy(root: Path) -> dict:
++    out = mod.run(root, pretest_result=GREEN, started_s=1000.0, now_s=1000.5)
++    return json.loads(out.read_text(encoding="utf-8"))
++
++
++def test_req_report_4166_spec_declares_contract() -> None:
++    """REQ-REPORT-4166: OpenSpec declares fields, scenarios, and stand-down rule."""
++
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++    assert "REQ-REPORT-4166" in spec
++    assert "SCENARIO-REPORT-4166" in spec
++    assert "SCENARIO-REPORT-4166-BLOCKED-PRECONDITION" in spec
++    assert "v385_close_state" in spec
++    assert "preconditions_checked" in spec
++    assert "conductor ceded TRM training to the outer-loop" in spec
++    assert "blocked_noop_step_unchanged" in spec
++    assert "must not launch TRM training" in spec
++    assert "0.278172343969" in spec
++
++
++def test_shared_helpers_and_archive_record_editing(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-4166: helper behavior is deterministic and YAML-safe."""
++
++    assert mod.yaml_parses("a: 1\n") is True
++    assert mod.yaml_parses("a: : :\n- [\n") is False
++    assert mod.duration_from(None, None) == 0.0001
++    assert mod.duration_from(100.0, 100.25) == 0.25
++    assert mod.duration_from(100.0, 99.0) == 0.0001
++    monkeypatch.setattr(mod.time, "perf_counter", lambda: 101.0)
++    assert mod.duration_from(100.0, None) == 1.0
++    assert mod.payload_checksum({"a": 1}) == mod.payload_checksum(
++        {"a": 1, "reproducibility_checksum": "old"}
++    )
++    assert mod.is_sha256("a" * 64) is True
++    assert mod.is_sha256("z" * 64) is False
++    out = tmp_path / "artifact.json"
++    mod.write_payload(out, {"b": 2, "a": 1})
++    assert out.read_text(encoding="utf-8").startswith("{\n  \"a\"")
++
++    assert mod.archive_record_count(_research_complete_text(duplicates=3)) == 3
++    close_state = {"baseline_seed_val_exact_accuracy": 0.278172343969}
++    assert mod._insert_before_tasks(["  title: no tasks"], "  finding: x") == [
++        "  title: no tasks",
++        "  finding: x",
++    ]
++    deduped, removed, action = mod.dedupe_or_update_record(
++        _research_complete_text(duplicates=3), close_state
++    )
++    assert action == "deduped"
++    assert removed == 2
++    assert mod.archive_record_count(deduped) == 1
++    assert "conductor STANDS DOWN" in deduped
++    assert "0.278172343969" in deduped
++    assert mod.yaml_parses(deduped)
++    updated, removed2, action2 = mod.dedupe_or_update_record(
++        _research_complete_text(duplicates=1), close_state
++    )
++    assert (removed2, action2) == (0, "updated")
++    unchanged, removed3, action3 = mod.dedupe_or_update_record(updated, close_state)
++    assert (unchanged, removed3, action3) == (updated, 0, "unchanged")
++    appended, removed4, action4 = mod.dedupe_or_update_record(
++        "# history\nmilestones:\n- id: 2026.06.384\n  finding: prior\n", close_state
++    )
++    assert (removed4, action4) == (0, "appended")
++    assert "activation_recorded: exp4166-archive-v385-activate-v386" in appended
++    missing_finding, removed5, action5 = mod.dedupe_or_update_record(
++        "milestones:\n- id: 2026.06.385\n  title: no finding\n  tasks:\n  - id: exp4165\n",
++        close_state,
++    )
++    assert (removed5, action5) == (0, "updated")
++    assert "  finding: " in missing_finding
++
++
++def test_precondition_helpers_and_source_readers(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4166-BLOCKED-PRECONDITION: resource probes are explicit."""
++
++    assert mod._milestone_from_text("name: no milestone\n") == "unknown"
++    assert mod.read_active_milestone(tmp_path) == ("unknown", "research-roadmap.yaml")
++    (tmp_path / "research-roadmap-next.yaml").write_text("milestone: 2026.06.386\n", encoding="utf-8")
++    assert mod.read_active_milestone(tmp_path) == ("2026.06.386", "research-roadmap-next.yaml")
++    assert mod.train_file_present(tmp_path) is False
++    train = tmp_path / mod.NANO_TRM_TRAIN_REL_PATH
++    train.parent.mkdir(parents=True, exist_ok=True)
++    train.write_text("# train\n", encoding="utf-8")
++    assert mod.train_file_present(tmp_path) is True
++
++    assert mod.read_json_object(tmp_path / "missing.json") == {}
++    bad = tmp_path / "bad.json"
++    bad.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_object(bad) == {}
++    list_path = tmp_path / "list.json"
++    list_path.write_text("[1]", encoding="utf-8")
++    assert mod.read_json_object(list_path) == {}
++    good = tmp_path / "good.json"
++    good.write_text(json.dumps({"x": 1}), encoding="utf-8")
++    assert mod.read_json_object(good) == {"x": 1}
++    assert mod.is_sha256(mod.file_sha256(good))
++    assert mod.file_sha256(tmp_path / "nope") is None
++
++    root = make_repo(tmp_path / "repo")
++    assert mod.read_outerloop_pid(root) == 999999
++    assert mod.read_outerloop_pid(tmp_path / "empty") is None
++    assert mod.pid_is_alive(None) is False
++    assert mod.pid_is_alive(999999) is False
++    monkeypatch = pytest.MonkeyPatch()
++    try:
++        monkeypatch.setattr(mod.os, "kill", lambda pid, sig: None)
++        assert mod.pid_is_alive(123) is True
++    finally:
++        monkeypatch.undo()
++    targets = mod.smart_subset_targets(root)
++    assert "tests/python/test_pipeline_extract.py" in targets
++    assert mod.smart_subset_command(targets)[0] == str(mod.PYTEST_BIN)
++    assert mod.smart_subset_targets(tmp_path / "empty") == [mod.CORE_SMART_SUBSET[0]]
++    assert mod._run_command(["true"], tmp_path).exit_code == 0
++    assert mod._run_command(["definitely-not-a-real-binary-xyz"], tmp_path).exit_code == 127
++    monkeypatch = pytest.MonkeyPatch()
++    try:
++        monkeypatch.setattr(mod, "_run_command", lambda command, root_path: GREEN)
++        assert mod.run_smart_subset(root).exit_code == 0
++    finally:
++        monkeypatch.undo()
++
++
++def test_read_sources_and_build_v385_close_state(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4166: close-state records no-op collision and handoff."""
++
++    root = make_repo(tmp_path)
++    sources = mod.read_v385_sources(root)
++    assert sources["4157"]["honest_verdict"] == "blocked_noop_step_unchanged"
++    cited = mod.build_cited_upstream(root)
++    assert any(item["experiment_id"] == "4165" for item in cited)
++    assert all(item["sha256"] is None or mod.is_sha256(item["sha256"]) for item in cited)
++    state = mod.build_v385_close_state(sources, outerloop_pid=999999, outerloop_alive=False)
++    assert state["conductor_ceded_trm_training_to_outer_loop"] is True
++    assert state["outer_loop_owns_contiguous_training"] is True
++    assert state["conductor_stands_down_on_trm_training"] is True
++    assert state["no_conductor_training_rule"] is True
++    assert state["bounded_accumulation_noop_again"] is True
++    assert state["conductor_continuation_collided_with_outer_loop"] is True
++    assert state["manual_lr_step_advanced"] is False
++    assert state["new_val_row_written"] is False
++    assert state["baseline_seed_val_exact_accuracy"] == 0.278172343969
++    assert state["headline_outcome"] == "accumulation_still_blocked"
++    assert state["flagged_artifacts_skipped_count"] == 4
++    assert state["flagged_artifact_ids"] == [4157, 4158, 4159, 4163]
++    assert state["total_games_solved"] == 13
++    assert state["diffusiongemma_gate_status"] == "STILL-PENDING"
++
++    default_state = mod.build_v385_close_state({}, outerloop_pid=None, outerloop_alive=False)
++    assert default_state["baseline_seed_val_exact_accuracy"] == 0.278172343969
++    assert default_state["flagged_artifacts_skipped_count"] == 0
++
++
++def test_run_happy_path_writes_valid_artifact_and_updates_archive(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4166: complete path writes the terminal archive artifact."""
++
++    root = make_repo(tmp_path, duplicates=2)
++    artifact = run_happy(root)
++    assert artifact["honest_verdict"].startswith("success:")
++    assert artifact["archived_milestone"] == "2026.06.385"
++    assert artifact["activated_milestone"] == "2026.06.386"
++    assert artifact["active_milestone_confirmed"] == "2026.06.386"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["exclusion_manifest_parses"] is True
++    assert artifact["nano_trm_train_present"] is True
++    assert artifact["pretest_suite_green"] is True
++    assert artifact["research_complete_record_action"] == "deduped"
++    assert artifact["research_complete_duplicates_removed"] == 1
++    assert artifact["v385_close_state"]["outer_loop_owns_contiguous_training"] is True
++    assert artifact["v385_close_state"]["baseline_seed_val_exact_accuracy"] == 0.278172343969
++    assert artifact["field_principles"]["v385_close_state"] == mod.FIELD_PRINCIPLES["v385_close_state"]
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert mod.is_sha256(artifact["reproducibility_checksum"])
++    complete_text = (root / "research-complete.yaml").read_text(encoding="utf-8")
++    assert mod.archive_record_count(complete_text) == 1
++    assert "conductor STANDS DOWN" in complete_text
++    assert "outer-loop owns the contiguous training" in complete_text
++    mod.validate_artifact(artifact)
++
++
++def test_run_real_pretest_branch_and_entrypoint_are_injectable(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-REPORT-4166: real pretest and CLI entrypoint can be substituted."""
++
++    root = make_repo(tmp_path)
++    monkeypatch.setattr(mod, "run_smart_subset", lambda root_path: GREEN)
++    artifact = json.loads(mod.run(root, started_s=1.0, now_s=1.1).read_text(encoding="utf-8"))
++    assert artifact["preconditions_checked"]["pretest_suite_green"] is True
++
++    called_mod: dict[str, Path] = {}
++
++    def fake_mod_run(root_path: Path = mod.REPO_ROOT) -> Path:
++        called_mod["root"] = Path(root_path)
++        return root / mod.OUTPUT_REL_PATH
++
++    monkeypatch.setattr(mod, "run", fake_mod_run)
++    assert mod.main() == 0
++    assert called_mod["root"] == mod.REPO_ROOT
++
++    import carnot.experiment_4166_archive_v385_activate_v386 as entrypoint
++
++    called: dict[str, Path] = {}
++
++    def fake_run(root_path: Path = mod.REPO_ROOT) -> Path:
++        called["root"] = Path(root_path)
++        return root / mod.OUTPUT_REL_PATH
++
++    monkeypatch.setattr(entrypoint, "run", fake_run)
++    assert entrypoint.main() == 0
++    assert called["root"] == entrypoint.REPO_ROOT
++
++
++def test_run_blocked_preconditions_before_research_complete_edit(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4166-BLOCKED-PRECONDITION: blocked paths do not fabricate success."""
++
++    missing = mod.run(tmp_path, pretest_result=GREEN)
++    assert json.loads(missing.read_text(encoding="utf-8"))["honest_verdict"] == (
++        "blocked_research_complete_yaml_missing"
++    )
++
++    root = make_repo(tmp_path / "poison")
++    (root / "research-complete.yaml").write_text("a: : :\n- [\n", encoding="utf-8")
++    artifact = json.loads(mod.run(root, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_research_complete_yaml_poison"
++
++    root2 = make_repo(tmp_path / "manifest_missing")
++    (root2 / "ops" / "exclusion_manifest.yaml").unlink()
++    artifact2 = json.loads(mod.run(root2, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact2["honest_verdict"] == "blocked_exclusion_manifest_missing"
++
++    root3 = make_repo(tmp_path / "manifest_poison")
++    (root3 / "ops" / "exclusion_manifest.yaml").write_text("a: : :\n- [\n", encoding="utf-8")
++    artifact3 = json.loads(mod.run(root3, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact3["honest_verdict"] == "blocked_exclusion_manifest_yaml_poison"
++
++    root4 = make_repo(tmp_path / "train_missing")
++    (root4 / mod.NANO_TRM_TRAIN_REL_PATH).unlink()
++    artifact4 = json.loads(mod.run(root4, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact4["honest_verdict"] == "blocked_nano_trm_train_missing"
++
++    root5 = make_repo(tmp_path / "wrong_milestone")
++    (root5 / "research-roadmap.yaml").write_text("milestone: 2026.06.385\n", encoding="utf-8")
++    artifact5 = json.loads(mod.run(root5, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact5["honest_verdict"] == "blocked_v386_not_active"
++
++    root6 = make_repo(tmp_path / "red")
++    before = (root6 / "research-complete.yaml").read_text(encoding="utf-8")
++    artifact6 = json.loads(mod.run(root6, pretest_result=RED).read_text(encoding="utf-8"))
++    assert artifact6["honest_verdict"] == "blocked_smart_subset_pretest_not_green"
++    assert artifact6["preconditions_checked"]["pretest_suite_green"] is False
++    assert (root6 / "research-complete.yaml").read_text(encoding="utf-8") == before
++
++    root7 = make_repo(tmp_path / "capstone_missing")
++    (root7 / "results" / "experiment_4165_capstone_v385.json").unlink()
++    artifact7 = json.loads(mod.run(root7, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact7["honest_verdict"] == "blocked_v385_capstone_missing"
++
++
++def test_run_blocked_research_complete_edit_guards(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-4166: invalid archive edits are blocked before completion."""
++
++    root = make_repo(tmp_path / "invalid")
++    monkeypatch.setattr(mod, "dedupe_or_update_record", lambda text, state: ("a: : :\n- [", 0, "appended"))
++    artifact = json.loads(mod.run(root, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_research_complete_edit_invalid"
++
++    root2 = make_repo(tmp_path / "after")
++    calls = {"n": 0}
++
++    def fake_parses(text: str) -> bool:
++        calls["n"] += 1
++        return calls["n"] != 4
++
++    monkeypatch.setattr(mod, "yaml_parses", fake_parses)
++    artifact2 = json.loads(mod.run(root2, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact2["honest_verdict"] == "blocked_research_complete_yaml_poison_after_edit"
++
++
++def test_build_artifact_shapes(tmp_path: Path) -> None:
++    """REQ-REPORT-4166: complete and blocked artifact builders keep schema shape."""
++
++    root = make_repo(tmp_path)
++    state = mod.build_v385_close_state(mod.read_v385_sources(root), outerloop_pid=999999, outerloop_alive=False)
++    complete = mod.build_complete_artifact(
++        v385_close_state=state,
++        preconditions_checked={"ok": True},
++        duration_s=0.5,
++        active_roadmap_path="research-roadmap.yaml",
++        research_complete_record_action="updated",
++        research_complete_duplicates_removed=0,
++        cited_upstream_artifacts=mod.build_cited_upstream(root),
++    )
++    assert complete["honest_verdict"].startswith("success:")
++    blocked = mod.build_blocked_artifact(
++        "blocked_x",
++        preconditions_checked={"ok": False},
++        duration_s=0.1,
++        active_milestone_confirmed="",
++        active_roadmap_path="research-roadmap.yaml",
++    )
++    assert blocked["honest_verdict"] == "blocked_x"
++    assert mod.is_sha256(blocked["reproducibility_checksum"])
++    assert mod.terminal_verdict(state).startswith("success:")
++
++
++def test_validate_artifact_rejection_guards(tmp_path: Path) -> None:
++    """REQ-REPORT-4166: validation rejects artifacts that launder the .385 truth."""
++
++    good = run_happy(make_repo(tmp_path))
++
++    def set_path(obj: dict, path: list[str], value: object) -> None:
++        cur = obj
++        for key in path[:-1]:
++            cur = cur[key]
++        cur[path[-1]] = value
++
++    cases = [
++        ("missing required fields", lambda a: a.pop("v385_close_state")),
++        ("terminal-prefixed", lambda a: a.__setitem__("honest_verdict", "done")),
++        ("field_principles must be a mapping", lambda a: a.__setitem__("field_principles", "x")),
++        ("missing field principles", lambda a: a.__setitem__("field_principles", {})),
++        (
++            "principle must match REQ-REPORT-4166",
++            lambda a: a["field_principles"].__setitem__("v385_close_state", "wrong"),
++        ),
++        ("archived milestone", lambda a: a.__setitem__("archived_milestone", "2026.06.999")),
++        ("activated milestone", lambda a: a.__setitem__("activated_milestone", "2026.06.999")),
++        ("research-complete YAML", lambda a: a.__setitem__("research_complete_yaml_parses", False)),
++        ("exclusion manifest", lambda a: a.__setitem__("exclusion_manifest_parses", False)),
++        ("nano-trm train", lambda a: a.__setitem__("nano_trm_train_present", False)),
++        ("pretest suite", lambda a: a.__setitem__("pretest_suite_green", False)),
++        ("active milestone", lambda a: a.__setitem__("active_milestone_confirmed", "2026.06.385")),
++        ("v385_close_state must be a mapping", lambda a: a.__setitem__("v385_close_state", "x")),
++        (
++            "conductor_ceded_trm_training_to_outer_loop",
++            lambda a: set_path(a, ["v385_close_state", "conductor_ceded_trm_training_to_outer_loop"], False),
++        ),
++        (
++            "outer_loop_owns_contiguous_training",
++            lambda a: set_path(a, ["v385_close_state", "outer_loop_owns_contiguous_training"], False),
++        ),
++        (
++            "conductor_stands_down_on_trm_training",
++            lambda a: set_path(a, ["v385_close_state", "conductor_stands_down_on_trm_training"], False),
++        ),
++        (
++            "bounded_accumulation_noop_again",
++            lambda a: set_path(a, ["v385_close_state", "bounded_accumulation_noop_again"], False),
++        ),
++        (
++            "conductor_continuation_collided_with_outer_loop",
++            lambda a: set_path(a, ["v385_close_state", "conductor_continuation_collided_with_outer_loop"], False),
++        ),
++        (
++            "baseline seed",
++            lambda a: set_path(a, ["v385_close_state", "baseline_seed_val_exact_accuracy"], 0.5),
++        ),
++        ("duration_s", lambda a: a.__setitem__("duration_s", 0)),
++        ("inference_substrate", lambda a: a.__setitem__("inference_substrate", "live_training")),
++        ("cited_upstream_artifacts", lambda a: a.__setitem__("cited_upstream_artifacts", "x")),
++        ("reproducibility_checksum", lambda a: a.__setitem__("reproducibility_checksum", "short")),
++    ]
++    for match, mutate in cases:
++        artifact = copy.deepcopy(good)
++        mutate(artifact)
++        with pytest.raises(ValueError, match=match):
++            mod.validate_artifact(artifact)
++
++    mismatch = copy.deepcopy(good)
++    mismatch["honest_verdict"] = "success: changed"
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(mismatch)
+-- 
+2.55.0
+

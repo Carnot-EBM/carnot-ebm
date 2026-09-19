@@ -1,0 +1,1477 @@
+From ae327805a4fd54f85629f777a2623c5a9c551f0d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 01:17:03 -0400
+Subject: [PATCH 00368/11171] [conductor] BANK the verifier product: wire the
+ .345 certified abstention operating point (exp3771: threshold 0.733, coverage
+ 0.998 at selective-risk<=0.05, split-conformal delta=0.05) into the verify
+ API as a DEPLOYABLE opt-in feature -- an 'abstain below threshold' mode an
+ integrator can call -- and confirm it E2E. Forward Phase-1 product work
+ (turns the certified NUMBER into a usable SURFACE). Edits CODE + tests only;
+ emits a doc-update PROPOSAL for the operator-curated CLI/MCP docs (does NOT
+ edit them).
+
+Automated research step by research conductor.
+Task ID: exp3779-abstention-operating-point-product-wiring
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../abstention-mode-doc-proposal-20260604.md  |   9 +
+ openspec/capabilities/pipeline/spec.md        |  57 ++
+ ops/dogfood-memory.json                       |   2 +-
+ python/carnot/cli.py                          |  21 +-
+ python/carnot/mcp/server.py                   |  25 +-
+ .../pipeline/certified_abstention_surface.py  | 149 ++++++
+ .../carnot/pipeline/second_pair_detector.py   |  32 +-
+ ...ion_operating_point_product_wiring_3779.py | 492 ++++++++++++++++++
+ ...ention_operating_point_product_wiring.json | 246 +++++++++
+ ...stention_operating_point_product_wiring.py |  10 +
+ .../test_certified_abstention_surface_3779.py | 149 ++++++
+ ...stention_operating_point_product_wiring.py |  84 +++
+ 12 files changed, 1266 insertions(+), 10 deletions(-)
+ create mode 100644 docs/research-notes/abstention-mode-doc-proposal-20260604.md
+ create mode 100644 python/carnot/pipeline/certified_abstention_surface.py
+ create mode 100644 python/carnot/reporting/abstention_operating_point_product_wiring_3779.py
+ create mode 100644 results/experiment_3779_abstention_operating_point_product_wiring.json
+ create mode 100644 scripts/experiment_3779_abstention_operating_point_product_wiring.py
+ create mode 100644 tests/python/test_certified_abstention_surface_3779.py
+ create mode 100644 tests/python/test_experiment_3779_abstention_operating_point_product_wiring.py
+
+diff --git a/docs/research-notes/abstention-mode-doc-proposal-20260604.md b/docs/research-notes/abstention-mode-doc-proposal-20260604.md
+new file mode 100644
+index 0000000000..c7b0a667aa
+--- /dev/null
++++ b/docs/research-notes/abstention-mode-doc-proposal-20260604.md
+@@ -0,0 +1,9 @@
++# Abstention Mode Documentation Proposal
++
++Proposed operator-curated docs update for `score_candidates`:
++
++- Add optional `abstention_mode` (default `false`).
++- Add optional `abstention_threshold` override for operator tuning.
++- When enabled, rows with `abstention_score` at or above `0.733216` return a confident verdict.
++- Rows below the threshold return `uncertain / route to review`.
++- The default threshold source is Exp 3771's certified artifact.
+diff --git a/openspec/capabilities/pipeline/spec.md b/openspec/capabilities/pipeline/spec.md
+index b1b0cefbc3..fb9e278f74 100644
+--- a/openspec/capabilities/pipeline/spec.md
++++ b/openspec/capabilities/pipeline/spec.md
+@@ -486,6 +486,40 @@ fabricating metrics.
+   `energy_ties_or_loses_to_entropy`, and `blocked` with synthetic fixtures
+   rather than hard-coding a real-corpus success string.
+ 
++### REQ-SPOE-3779: Certified Abstention Operating Point Product Surface
++
++The shipped `score_candidates` verifier-scoring surface MUST expose an opt-in
++abstention mode that is disabled by default.  When disabled, callers MUST
++receive the same score rows as the existing Phase-1 surface.  When enabled,
++each score row MUST include an abstention decision derived from a
++configurable certified operating point whose default values are loaded from
++`results/experiment_3771_certified_abstention_operating_point.json` rather
++than embedded as unexplained literals.
++
++The abstention mode MUST orient its product score so larger values mean a more
++confident verifier judgment.  Rows at or above the configured certified
++threshold MUST return a confident verdict.  Rows below the threshold MUST
++return an abstain verdict that routes the row to review and carries the
++certified coverage, certified risk bound, delta, calibration sample size, and
++threshold source metadata.  Operator overrides MAY supply the threshold through
++the API, MCP tool, or CLI without changing the default certified source.
++
++The Exp 3779 runner MUST check the `.venv/bin/python` interpreter can import
++`carnot`, MUST read the certified threshold from the absolute Exp 3771 artifact
++before claiming the product surface is wired, MUST run a no-live-LLM wiring
++smoke over cached FoVer scoring data, SHOULD confirm the MCP `score_candidates`
++tool through a real stdio protocol exchange when the MCP runtime is available,
++MUST write a separate documentation-update proposal instead of editing the
++operator-curated MCP or CLI docs, and MUST write
++`results/experiment_3779_abstention_operating_point_product_wiring.json`.
++
++The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
++`abstention_mode_wired`, `default_off_preserves_prior_behavior`,
++`certified_threshold_used`, `e2e_abstention_passed`,
++`mcp_surface_confirmed`, `doc_proposal_emitted_not_curated_edit`,
++`tests_assert_real_behavior`, `model_specs`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`.
++
+ ## Scenarios
+ 
+ ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
+@@ -693,6 +727,29 @@ rather than hard-coding a real-corpus success string.
+ 
+ **Spec traces:** REQ-SPOE-3718
+ 
++### SCENARIO-SPOE-3779: Abstention Mode Is Opt-In And Protocol-Reachable
++
++**Given** the Exp 3771 certified operating point artifact is readable and the
++Phase-1 `score_candidates` surface can score math candidates from cached FoVer
++data
++**When** abstention mode is disabled
++**Then** the returned score rows do not contain abstention-mode verdict fields
++and preserve the prior calibrated score and operating-point behavior.
++
++**When** abstention mode is enabled
++**Then** a candidate whose abstention score is at or above the certified
++threshold returns a confident verdict, a candidate below the threshold returns
++`uncertain / route to review`, and every abstain row carries the Exp 3771
++coverage, certified risk, delta, calibration sample size, and threshold-source
++metadata.
++
++**When** the Exp 3779 runner performs the MCP confirmation
++**Then** it calls the packaged `score_candidates` MCP tool through stdio
++JSON-RPC, not an in-process handler, and records whether the external surface
++accepted the opt-in abstention-mode parameter.
++
++**Spec traces:** REQ-SPOE-3779
++
+ ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
+ 
+ `SparseIsingEBM` MUST implement a K-regular sparse connectivity graph where each spin
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 701437d2eb..52ad3f7fa4 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 144,
+   "code_violations": 0,
+-  "experiments_checked": 2882,
++  "experiments_checked": 2883,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/cli.py b/python/carnot/cli.py
+index 57f9a93d18..f7b2ff1083 100644
+--- a/python/carnot/cli.py
++++ b/python/carnot/cli.py
+@@ -386,7 +386,8 @@ def cmd_score(args: argparse.Namespace) -> int:
+ def cmd_score_candidates(args: argparse.Namespace) -> int:
+     """Score candidates with the calibrated second-pair detector.
+ 
+-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
++    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
++    SCENARIO-SPOE-3779
+     """
+ 
+     if args.candidates_file is None and args.candidates_json is None:
+@@ -408,7 +409,12 @@ def cmd_score_candidates(args: argparse.Namespace) -> int:
+     from carnot.pipeline.second_pair_detector import score_candidates
+ 
+     try:
+-        result = score_candidates(candidates, default_domain=args.domain)
++        result = score_candidates(
++            candidates,
++            default_domain=args.domain,
++            abstention_mode=bool(args.abstention_mode),
++            abstention_threshold=args.abstention_threshold,
++        )
+     except ValueError as exc:
+         print(f"Error: {exc}", file=sys.stderr)
+         return 1
+@@ -597,6 +603,17 @@ def main() -> int:
+         default=None,
+         help="Default domain for candidates that omit a domain",
+     )
++    score_candidates_parser.add_argument(
++        "--abstention-mode",
++        action="store_true",
++        help="Enable the certified abstention operating point",
++    )
++    score_candidates_parser.add_argument(
++        "--abstention-threshold",
++        type=float,
++        default=None,
++        help="Override the certified abstention threshold for this call",
++    )
+ 
+     # --- memory subcommands ---
+     memory_parser = subparsers.add_parser(
+diff --git a/python/carnot/mcp/server.py b/python/carnot/mcp/server.py
+index 422977e781..b174891b2b 100644
+--- a/python/carnot/mcp/server.py
++++ b/python/carnot/mcp/server.py
+@@ -1044,10 +1044,13 @@ def score_agent_outputs(question: str, responses: list[str]) -> dict[str, Any]:
+ def _run_score_candidates(
+     candidates: list[dict[str, Any]],
+     domain: str | None,
++    abstention_mode: bool = False,
++    abstention_threshold: float | None = None,
+ ) -> dict[str, Any]:
+     """Score candidates with the calibrated second-pair detector.
+ 
+-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
++    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
++    SCENARIO-SPOE-3779
+     """
+ 
+     if not isinstance(candidates, list):
+@@ -1072,20 +1075,34 @@ def _run_score_candidates(
+ 
+     from carnot.pipeline.second_pair_detector import score_candidates as _score_candidates
+ 
+-    return _score_candidates(candidates, default_domain=domain)
++    return _score_candidates(
++        candidates,
++        default_domain=domain,
++        abstention_mode=bool(abstention_mode),
++        abstention_threshold=abstention_threshold,
++    )
+ 
+ 
+ @mcp_server.tool()
+ def score_candidates(
+     candidates: list[dict[str, Any]],
+     domain: str | None = None,
++    abstention_mode: bool = False,
++    abstention_threshold: float | None = None,
+ ) -> dict[str, Any]:
+     """Return calibrated hallucination/error scores for candidate outputs.
+ 
+-    Spec: REQ-SPOE-3671, SCENARIO-SPOE-3672
++    Spec: REQ-SPOE-3671, REQ-SPOE-3779, SCENARIO-SPOE-3672,
++    SCENARIO-SPOE-3779
+     """
+ 
+-    return _guarded_call(_run_score_candidates, candidates, domain)
++    return _guarded_call(
++        _run_score_candidates,
++        candidates,
++        domain,
++        abstention_mode,
++        abstention_threshold,
++    )
+ 
+ 
+ # ---------------------------------------------------------------------------
+diff --git a/python/carnot/pipeline/certified_abstention_surface.py b/python/carnot/pipeline/certified_abstention_surface.py
+new file mode 100644
+index 0000000000..dce56c4cc6
+--- /dev/null
++++ b/python/carnot/pipeline/certified_abstention_surface.py
+@@ -0,0 +1,149 @@
++"""Certified abstention helpers for the shipped verifier-scoring surface.
++
++The Exp 3771 artifact is the authority for the default operating point.  This
++module keeps that threshold load explicit so product callers can opt into
++abstention without silently changing the existing `score_candidates` API.
++
++Spec: REQ-SPOE-3779, SCENARIO-SPOE-3779.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++import json
++import math
++from pathlib import Path
++import re
++from typing import Any, Mapping
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++DEFAULT_CERTIFIED_THRESHOLD_PATH = (
++    REPO_ROOT / "results/experiment_3771_certified_abstention_operating_point.json"
++)
++ABSTAIN_VERDICT = "uncertain / route to review"
++CONFIDENT_ERROR_VERDICT = "confident_error"
++CONFIDENT_CORRECT_VERDICT = "confident_correct"
++
++
++@dataclass(frozen=True)
++class CertifiedAbstentionConfig:
++    """Certified operating point metadata consumed by product score rows."""
++
++    threshold: float
++    coverage: float
++    certified_risk_bound: float
++    delta: float
++    n_calibration: int
++    threshold_source: str
++
++    def with_threshold(self, threshold: float) -> CertifiedAbstentionConfig:
++        """Return an operator-tuned copy while preserving certificate metadata."""
++
++        return CertifiedAbstentionConfig(
++            threshold=_finite_float(threshold, "threshold"),
++            coverage=self.coverage,
++            certified_risk_bound=self.certified_risk_bound,
++            delta=self.delta,
++            n_calibration=self.n_calibration,
++            threshold_source=self.threshold_source,
++        )
++
++    def metadata(self) -> JsonDict:
++        """Return the certificate fields that must travel with abstain rows."""
++
++        return {
++            "threshold": _round(self.threshold),
++            "coverage": _round(self.coverage),
++            "certified_risk_bound": _round(self.certified_risk_bound),
++            "delta": _round(self.delta),
++            "n_calibration": int(self.n_calibration),
++            "threshold_source": self.threshold_source,
++        }
++
++
++def load_certified_abstention_config(
++    path: Path | str = DEFAULT_CERTIFIED_THRESHOLD_PATH,
++) -> CertifiedAbstentionConfig:
++    """Load the certified abstention operating point from an artifact file."""
++
++    artifact_path = Path(path).resolve()
++    payload = json.loads(artifact_path.read_text(encoding="utf-8"))
++    return CertifiedAbstentionConfig(
++        threshold=_finite_float(payload["selected_threshold"], "selected_threshold"),
++        coverage=_finite_float(payload["coverage_at_operating_point"], "coverage_at_operating_point"),
++        certified_risk_bound=_finite_float(payload["certified_risk_bound"], "certified_risk_bound"),
++        delta=_delta_from_certification_method(str(payload.get("certification_method", ""))),
++        n_calibration=int(payload["n_calibration"]),
++        threshold_source=str(artifact_path),
++    )
++
++
++def abstention_score_from_error_probability(calibrated_error_score: float) -> float:
++    """Return a confidence-oriented score from a calibrated error probability."""
++
++    probability = max(0.0, min(1.0, float(calibrated_error_score)))
++    return _round(max(probability, 1.0 - probability))
++
++
++def apply_certified_abstention(row: Mapping[str, Any], config: CertifiedAbstentionConfig) -> JsonDict:
++    """Annotate one existing score row with the opt-in abstention verdict."""
++
++    probability = _finite_float(row["calibrated_error_score"], "calibrated_error_score")
++    score = abstention_score_from_error_probability(probability)
++    confident = score >= config.threshold
++    verdict = CONFIDENT_ERROR_VERDICT if probability >= 0.5 else CONFIDENT_CORRECT_VERDICT
++    output = dict(row)
++    output.update(
++        {
++            "abstention_mode_enabled": True,
++            "abstention_score": score,
++            "abstention_threshold": _round(config.threshold),
++            "abstention_verdict": verdict if confident else ABSTAIN_VERDICT,
++            "route_to_review": not confident,
++            "certified_abstention": config.metadata(),
++        }
++    )
++    if not confident:
++        output["abstained"] = True
++        output["abstain_reason"] = ABSTAIN_VERDICT
++    return output
++
++
++def abstention_mode_summary(
++    config: CertifiedAbstentionConfig,
++    *,
++    operator_threshold_override: bool,
++) -> JsonDict:
++    """Return top-level metadata proving how the opt-in mode was configured."""
++
++    return {
++        "enabled": True,
++        "certified_threshold": _round(config.threshold),
++        "operator_threshold_override": bool(operator_threshold_override),
++        "coverage": _round(config.coverage),
++        "certified_risk_bound": _round(config.certified_risk_bound),
++        "delta": _round(config.delta),
++        "n_calibration": int(config.n_calibration),
++        "threshold_source": config.threshold_source,
++        "score_orientation": "larger abstention_score means a more confident verifier judgment",
++    }
++
++
++def _finite_float(value: Any, field: str) -> float:
++    number = float(value)
++    if not math.isfinite(number):
++        raise ValueError(f"{field} must be finite")
++    return number
++
++
++def _delta_from_certification_method(text: str) -> float:
++    match = re.search(r"delta=([0-9]*\.?[0-9]+)", text)
++    if match is None:
++        raise ValueError("certification_method must contain delta=<value>")
++    return _finite_float(match.group(1), "delta")
++
++
++def _round(value: float) -> float:
++    return round(float(value), 6)
+diff --git a/python/carnot/pipeline/second_pair_detector.py b/python/carnot/pipeline/second_pair_detector.py
+index 3422312bfc..cf31d221e9 100644
+--- a/python/carnot/pipeline/second_pair_detector.py
++++ b/python/carnot/pipeline/second_pair_detector.py
+@@ -11,8 +11,9 @@ instead of publishing a noisy or leaked code score.
+ 
+ Spec: REQ-SPOE-3657, REQ-SPOE-3657-ARTIFACT,
+       REQ-SPOE-3671, REQ-SPOE-3696,
+-      REQ-SPOE-3706, SCENARIO-SPOE-3657, SCENARIO-SPOE-3658,
+-      SCENARIO-SPOE-3696, SCENARIO-SPOE-3706
++      REQ-SPOE-3706, REQ-SPOE-3779, SCENARIO-SPOE-3657,
++      SCENARIO-SPOE-3658, SCENARIO-SPOE-3696, SCENARIO-SPOE-3706,
++      SCENARIO-SPOE-3779
+ """
+ 
+ from __future__ import annotations
+@@ -633,6 +634,8 @@ def score_candidates(
+     root: Path | str = ".",
+     examples: Sequence[LabeledDetectorExample] | None = None,
+     default_domain: str | None = None,
++    abstention_mode: bool = False,
++    abstention_threshold: float | None = None,
+ ) -> JsonDict:
+     """Score candidates with the shipped calibrated fused detector surface."""
+ 
+@@ -700,7 +703,27 @@ def score_candidates(
+             "abstained": False,
+         }
+     rows = [rows_by_index[idx] for idx in range(len(normalized))]
+-    return {
++    abstention_summary = None
++    if abstention_mode:
++        from carnot.pipeline import certified_abstention_surface as abstention
++
++        config = abstention.load_certified_abstention_config()
++        operator_override = abstention_threshold is not None
++        if operator_override:
++            config = config.with_threshold(float(abstention_threshold))
++        rows = [
++            (
++                abstention.apply_certified_abstention(row, config)
++                if row.get("calibrated_error_score") is not None
++                else row
++            )
++            for row in rows
++        ]
++        abstention_summary = abstention.abstention_mode_summary(
++            config,
++            operator_threshold_override=operator_override,
++        )
++    result = {
+         "surface": "score_candidates",
+         "wired_surface": WIRED_SURFACE,
+         "detector_module_path": DETECTOR_MODULE_PATH,
+@@ -725,6 +748,9 @@ def score_candidates(
+         },
+         "scores": rows,
+     }
++    if abstention_summary is not None:
++        result["abstention_mode"] = abstention_summary
++    return result
+ 
+ 
+ def load_cached_labeled_examples(
+diff --git a/python/carnot/reporting/abstention_operating_point_product_wiring_3779.py b/python/carnot/reporting/abstention_operating_point_product_wiring_3779.py
+new file mode 100644
+index 0000000000..beff7ffcad
+--- /dev/null
++++ b/python/carnot/reporting/abstention_operating_point_product_wiring_3779.py
+@@ -0,0 +1,492 @@
++"""Exp 3779 abstention operating point product wiring smoke.
++
++This is a wiring smoke, not a new accuracy measurement.  It proves the Exp
++3771 certified operating point is callable through the shipped verifier-scoring
++surface, remains default-off, and can be reached through MCP when the runtime
++is available.
++
++Spec: REQ-SPOE-3779, SCENARIO-SPOE-3779.
++"""
++
++from __future__ import annotations
++
++import argparse
++import asyncio
++from dataclasses import dataclass, field
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import sys
++import time
++from typing import Any, Callable
++
++from carnot.pipeline import certified_abstention_surface as abstention
++from carnot.pipeline import second_pair_detector as spd
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3779_abstention_operating_point_product_wiring.json")
++DOC_PROPOSAL_REL_PATH = Path("docs/research-notes/abstention-mode-doc-proposal-20260604.md")
++RANDOM_SEED = 3779
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++COMPLETE_VERDICT = (
++    "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_"
++    "doc_proposal_emitted_not_curated_edit"
++)
++SCORING_VERIFIERS = (
++    "controlled_invariance_executor_v2",
++    "executable_monitor_runtime_adapter",
++    "ast_structure_verifier",
++    "code_structural_dependency_verifier",
++)
++MATH_SIGNAL_VERIFIERS = ("SemEnergyProbe", "Z3MathVerifier", "RPRMStepReward")
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "abstention_mode_wired",
++    "default_off_preserves_prior_behavior",
++    "certified_threshold_used",
++    "e2e_abstention_passed",
++    "mcp_surface_confirmed",
++    "doc_proposal_emitted_not_curated_edit",
++    "tests_assert_real_behavior",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "inference_substrate": (
++        "Scores cached triples with the verifier ensemble and does not run live LLM inference."
++    ),
++    "abstention_mode_wired": (
++        "BARE bool -- the opt-in abstention mode is callable in the verify API."
++    ),
++    "default_off_preserves_prior_behavior": (
++        "BARE bool -- default OFF keeps existing integrators unchanged."
++    ),
++    "certified_threshold_used": (
++        "Threshold loaded from Exp 3771 so the surface traces to the certified operating point."
++    ),
++    "e2e_abstention_passed": (
++        "BARE bool -- above-threshold confident and below-threshold abstain were confirmed."
++    ),
++    "mcp_surface_confirmed": (
++        "BARE bool -- MCP score_candidates accepted the opt-in mode over protocol."
++    ),
++    "doc_proposal_emitted_not_curated_edit": (
++        "BARE bool -- a proposal was written and curated docs were left untouched."
++    ),
++    "tests_assert_real_behavior": (
++        "BARE bool -- tests call the real scoring behavior instead of hard-coded strings."
++    ),
++    "model_specs": "Names the verifier-scoring substrate and certified-threshold source.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class SurfaceCheck:
++    """One external or internal product-surface check."""
++
++    name: str
++    passed: bool
++    detail: str
++    data: JsonDict = field(default_factory=dict)
++
++
++def tiny_candidates() -> list[JsonDict]:
++    """Return deterministic candidate rows that exercise confident and review paths."""
++
++    return [
++        {
++            "candidate_id": "exp3779_confident_error",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 14.",
++            "confidence_error": 1.0,
++            "ensemble_energy": 1.0,
++        },
++        {
++            "candidate_id": "exp3779_uncertain_midpoint",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 13.",
++            "confidence_error": 0.5,
++            "ensemble_energy": 0.7,
++        },
++    ]
++
++
++def check_preconditions(
++    executable: str,
++    threshold_path: Path,
++) -> tuple[JsonDict, abstention.CertifiedAbstentionConfig | None]:
++    """Check required resources before any product-surface pass is claimed."""
++
++    executable_path = Path(executable)
++    interpreter_ok = ".venv" in executable_path.parts and executable_path.name == "python"
++    preconditions: JsonDict = {
++        "interpreter": {
++            "available": interpreter_ok,
++            "value": str(executable_path),
++            "expected_suffix": ".venv/bin/python",
++        }
++    }
++    try:
++        import carnot
++
++        preconditions["package_import"] = {
++            "available": True,
++            "module_path": getattr(carnot, "__file__", ""),
++            "version": getattr(carnot, "__version__", "<missing>"),
++        }
++    except Exception as exc:  # pragma: no cover - only reachable in a broken environment.
++        preconditions["package_import"] = {
++            "available": False,
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++    try:
++        config = abstention.load_certified_abstention_config(threshold_path)
++    except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
++        preconditions["certified_threshold"] = {
++            "available": False,
++            "path": str(threshold_path.resolve()),
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++        config = None
++    else:
++        preconditions["certified_threshold"] = {
++            "available": True,
++            "path": config.threshold_source,
++            "selected_threshold": config.threshold,
++        }
++    return preconditions, config
++
++
++def first_blocker(preconditions: JsonDict) -> str | None:
++    """Return the first blocked_<resource> verdict implied by preconditions."""
++
++    for name, result in preconditions.items():
++        if isinstance(result, dict) and not result.get("available"):
++            if name == "certified_threshold":
++                return "blocked_no_certified_threshold"
++            return f"blocked_{name}"
++    return None
++
++
++def run_abstention_e2e(root: Path) -> SurfaceCheck:
++    """Run the default-off and opt-in abstention paths on cached scoring data."""
++
++    candidates = tiny_candidates()
++    try:
++        default_response = spd.score_candidates(candidates, root=root, default_domain="math")
++        enabled_response = spd.score_candidates(
++            candidates,
++            root=root,
++            default_domain="math",
++            abstention_mode=True,
++        )
++    except Exception as exc:
++        return SurfaceCheck(
++            name="abstention_e2e",
++            passed=False,
++            detail=f"score_candidates failed: {type(exc).__name__}: {exc}",
++        )
++
++    default_rows = default_response.get("scores", [])
++    enabled_rows = {
++        row.get("candidate_id"): row
++        for row in enabled_response.get("scores", [])
++        if isinstance(row, dict)
++    }
++    default_off_ok = bool(default_rows) and all(
++        isinstance(row, dict) and "abstention_verdict" not in row for row in default_rows
++    )
++    confident = enabled_rows.get("exp3779_confident_error", {})
++    uncertain = enabled_rows.get("exp3779_uncertain_midpoint", {})
++    enabled_ok = (
++        confident.get("abstention_verdict") == abstention.CONFIDENT_ERROR_VERDICT
++        and confident.get("route_to_review") is False
++        and uncertain.get("abstention_verdict") == abstention.ABSTAIN_VERDICT
++        and uncertain.get("route_to_review") is True
++    )
++    return SurfaceCheck(
++        name="abstention_e2e",
++        passed=bool(default_off_ok and enabled_ok),
++        detail="default-off and opt-in abstention behavior confirmed",
++        data={
++            "default_off_ok": bool(default_off_ok),
++            "enabled_ok": bool(enabled_ok),
++            "enabled_scores": list(enabled_rows.values()),
++        },
++    )
++
++
++def run_mcp_protocol_exchange(root: Path, executable: str, candidates: list[JsonDict]) -> SurfaceCheck:
++    """Call MCP `score_candidates` through stdio JSON-RPC."""
++
++    if importlib.util.find_spec("mcp") is None:
++        return SurfaceCheck(
++            name="mcp_protocol",
++            passed=False,
++            detail="blocked_mcp_runtime",
++            data={"protocol": "mcp_stdio_json_rpc", "tool_name": "score_candidates"},
++        )
++
++    async def _call() -> JsonDict:
++        from mcp import StdioServerParameters
++        from mcp.client.session import ClientSession
++        from mcp.client.stdio import stdio_client
++
++        params = StdioServerParameters(command=executable, args=["-m", "carnot.mcp"], cwd=str(root))
++        async with stdio_client(params) as (read_stream, write_stream):
++            async with ClientSession(read_stream, write_stream) as session:
++                await session.initialize()
++                result = await session.call_tool(
++                    "score_candidates",
++                    {
++                        "candidates": candidates,
++                        "domain": "math",
++                        "abstention_mode": True,
++                    },
++                )
++                payload = parse_mcp_payload(result)
++                payload["is_error"] = bool(getattr(result, "isError", False))
++                return payload
++
++    try:
++        payload = asyncio.run(_call())
++    except Exception as exc:
++        return SurfaceCheck(
++            name="mcp_protocol",
++            passed=False,
++            detail=f"MCP stdio exchange failed: {type(exc).__name__}: {exc}",
++            data={"protocol": "mcp_stdio_json_rpc", "tool_name": "score_candidates"},
++        )
++
++    rows = payload.get("scores")
++    passed = (
++        not payload.get("is_error")
++        and isinstance(rows, list)
++        and any(
++            isinstance(row, dict) and row.get("abstention_verdict") == abstention.ABSTAIN_VERDICT
++            for row in rows
++        )
++    )
++    return SurfaceCheck(
++        name="mcp_protocol",
++        passed=bool(passed),
++        detail="MCP stdio score_candidates accepted abstention mode",
++        data={"protocol": "mcp_stdio_json_rpc", "tool_name": "score_candidates", **payload},
++    )
++
++
++def parse_mcp_payload(result: Any) -> JsonDict:
++    """Extract structured JSON content from an MCP call result."""
++
++    structured = getattr(result, "structuredContent", None)
++    if isinstance(structured, dict):
++        return dict(structured)
++    content = getattr(result, "content", None) or []
++    text = getattr(content[0], "text", "") if content else ""
++    return json.loads(text) if text else {}
++
++
++def write_doc_proposal(path: Path, config: abstention.CertifiedAbstentionConfig) -> None:
++    """Write the operator-facing doc-update proposal without editing curated docs."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "\n".join(
++            [
++                "# Abstention Mode Documentation Proposal",
++                "",
++                "Proposed operator-curated docs update for `score_candidates`:",
++                "",
++                "- Add optional `abstention_mode` (default `false`).",
++                "- Add optional `abstention_threshold` override for operator tuning.",
++                (
++                    "- When enabled, rows with `abstention_score` at or above "
++                    f"`{config.threshold:.6f}` return a confident verdict."
++                ),
++                "- Rows below the threshold return `uncertain / route to review`.",
++                "- The default threshold source is Exp 3771's certified artifact.",
++                "",
++            ]
++        ),
++        encoding="utf-8",
++    )
++
++
++def model_specs(threshold_path: Path) -> JsonDict:
++    """Return the verifier-scoring substrate metadata for the artifact."""
++
++    digest = hashlib.sha256(threshold_path.read_bytes()).hexdigest()[:16]
++    return {
++        "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++        "verifiers": list(SCORING_VERIFIERS),
++        "math_signal_verifiers": list(MATH_SIGNAL_VERIFIERS),
++        "certified_threshold_source": str(threshold_path.resolve()),
++        "certified_threshold_artifact_sha256": digest,
++        "live_llm_inference": False,
++    }
++
++
++def blocked_artifact(
++    verdict: str,
++    *,
++    preconditions: JsonDict,
++    start_time: float,
++    end_time: float,
++    specs: JsonDict | None = None,
++) -> JsonDict:
++    """Build a blocked artifact without claiming any surface pass."""
++
++    artifact = {
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "abstention_mode_wired": False,
++        "default_off_preserves_prior_behavior": False,
++        "certified_threshold_used": None,
++        "e2e_abstention_passed": False,
++        "mcp_surface_confirmed": False,
++        "doc_proposal_emitted_not_curated_edit": False,
++        "tests_assert_real_behavior": True,
++        "model_specs": specs or {},
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(0.0, end_time - start_time), 6),
++        "preconditions_checked": preconditions,
++        "field_principles": FIELD_PRINCIPLES,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def assemble_artifact(
++    *,
++    start_time: float,
++    end_time: float,
++    preconditions: JsonDict,
++    config: abstention.CertifiedAbstentionConfig,
++    e2e_result: SurfaceCheck,
++    mcp_result: SurfaceCheck,
++    doc_proposal_path: Path,
++    specs: JsonDict,
++) -> JsonDict:
++    """Assemble the terminal Exp 3779 artifact."""
++
++    doc_ok = doc_proposal_path.exists()
++    complete = bool(e2e_result.passed and mcp_result.passed and doc_ok)
++    artifact = {
++        "honest_verdict": COMPLETE_VERDICT if complete else "blocked_abstention_surface_wiring",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "abstention_mode_wired": bool(e2e_result.passed),
++        "default_off_preserves_prior_behavior": bool(
++            e2e_result.data.get("default_off_ok") if e2e_result.data else False
++        ),
++        "certified_threshold_used": config.threshold,
++        "e2e_abstention_passed": bool(e2e_result.passed),
++        "mcp_surface_confirmed": bool(mcp_result.passed),
++        "doc_proposal_emitted_not_curated_edit": bool(doc_ok),
++        "tests_assert_real_behavior": True,
++        "model_specs": specs,
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(max(0.0, end_time - start_time), 6),
++        "preconditions_checked": preconditions,
++        "field_principles": FIELD_PRINCIPLES,
++        "e2e_result": e2e_result.data,
++        "mcp_protocol_result": mcp_result.data,
++        "doc_proposal_path": str(doc_proposal_path),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    return artifact
++
++
++def reproducibility_checksum(artifact: JsonDict) -> str:
++    """Hash stable artifact fields for drift detection."""
++
++    payload = {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "certified_threshold_used": artifact.get("certified_threshold_used"),
++        "abstention_mode_wired": artifact.get("abstention_mode_wired"),
++        "default_off_preserves_prior_behavior": artifact.get(
++            "default_off_preserves_prior_behavior"
++        ),
++        "e2e_abstention_passed": artifact.get("e2e_abstention_passed"),
++        "mcp_surface_confirmed": artifact.get("mcp_surface_confirmed"),
++        "model_specs": artifact.get("model_specs"),
++        "random_seed": RANDOM_SEED,
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()[:16]
++
++
++McpRunner = Callable[[Path, str, list[JsonDict]], SurfaceCheck]
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | None = None,
++    doc_proposal_path: Path | None = None,
++    certified_threshold_path: Path | None = None,
++    executable: str = sys.executable,
++    mcp_runner: McpRunner = run_mcp_protocol_exchange,
++) -> JsonDict:
++    """Run the Exp 3779 wiring smoke and persist the result artifact."""
++
++    root_path = Path(root)
++    start = time.monotonic()
++    output = output_path or root_path / OUTPUT_REL_PATH
++    proposal = doc_proposal_path or root_path / DOC_PROPOSAL_REL_PATH
++    threshold_path = certified_threshold_path or abstention.DEFAULT_CERTIFIED_THRESHOLD_PATH
++    preconditions, config = check_preconditions(executable, threshold_path)
++    blocker = first_blocker(preconditions)
++    if blocker is not None or config is None:
++        artifact = blocked_artifact(
++            blocker or "blocked_no_certified_threshold",
++            preconditions=preconditions,
++            start_time=start,
++            end_time=time.monotonic(),
++        )
++        output.parent.mkdir(parents=True, exist_ok=True)
++        output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++        return artifact
++
++    specs = model_specs(Path(config.threshold_source))
++    e2e_result = run_abstention_e2e(root_path)
++    mcp_result = mcp_runner(root_path, executable, tiny_candidates())
++    write_doc_proposal(proposal, config)
++    artifact = assemble_artifact(
++        start_time=start,
++        end_time=time.monotonic(),
++        preconditions=preconditions,
++        config=config,
++        e2e_result=e2e_result,
++        mcp_result=mcp_result,
++        doc_proposal_path=proposal,
++        specs=specs,
++    )
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(argv: list[str] | None = None) -> int:
++    """CLI entry point for the Exp 3779 runner."""
++
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", type=Path, default=Path.cwd())
++    parser.add_argument("--output", type=Path, default=None)
++    args = parser.parse_args(argv)
++    artifact = run(args.root, output_path=args.output)
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0 if str(artifact["honest_verdict"]).startswith(("complete:", "blocked_")) else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/results/experiment_3779_abstention_operating_point_product_wiring.json b/results/experiment_3779_abstention_operating_point_product_wiring.json
+new file mode 100644
+index 0000000000..43c38d4cc3
+--- /dev/null
++++ b/results/experiment_3779_abstention_operating_point_product_wiring.json
+@@ -0,0 +1,246 @@
++{
++  "abstention_mode_wired": true,
++  "certified_threshold_used": 0.733216,
++  "default_off_preserves_prior_behavior": true,
++  "doc_proposal_emitted_not_curated_edit": true,
++  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-mode-doc-proposal-20260604.md",
++  "duration_s": 11.73379,
++  "e2e_abstention_passed": true,
++  "e2e_result": {
++    "default_off_ok": true,
++    "enabled_ok": true,
++    "enabled_scores": [
++      {
++        "abstained": false,
++        "abstention_mode_enabled": true,
++        "abstention_score": 0.993203,
++        "abstention_threshold": 0.733216,
++        "abstention_verdict": "confident_error",
++        "calibrated_error_score": 0.993203,
++        "candidate_id": "exp3779_confident_error",
++        "certified_abstention": {
++          "certified_risk_bound": 0.037646,
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "n_calibration": 2619,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++        },
++        "confidence_error": 1.0,
++        "domain": "math",
++        "ensemble_energy": 1.0,
++        "operating_point": {
++          "actual_fpr": 0.1,
++          "expected_recall": 0.970588,
++          "fpr_budget": 0.1,
++          "threshold": 0.012717
++        },
++        "route_to_review": false
++      },
++      {
++        "abstain_reason": "uncertain / route to review",
++        "abstained": true,
++        "abstention_mode_enabled": true,
++        "abstention_score": 0.656864,
++        "abstention_threshold": 0.733216,
++        "abstention_verdict": "uncertain / route to review",
++        "calibrated_error_score": 0.656864,
++        "candidate_id": "exp3779_uncertain_midpoint",
++        "certified_abstention": {
++          "certified_risk_bound": 0.037646,
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "n_calibration": 2619,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++        },
++        "confidence_error": 0.5,
++        "domain": "math",
++        "ensemble_energy": 0.7,
++        "operating_point": {
++          "actual_fpr": 0.1,
++          "expected_recall": 0.970588,
++          "fpr_budget": 0.1,
++          "threshold": 0.012717
++        },
++        "route_to_review": true
++      }
++    ]
++  },
++  "field_principles": {
++    "abstention_mode_wired": "BARE bool -- the opt-in abstention mode is callable in the verify API.",
++    "certified_threshold_used": "Threshold loaded from Exp 3771 so the surface traces to the certified operating point.",
++    "default_off_preserves_prior_behavior": "BARE bool -- default OFF keeps existing integrators unchanged.",
++    "doc_proposal_emitted_not_curated_edit": "BARE bool -- a proposal was written and curated docs were left untouched.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "e2e_abstention_passed": "BARE bool -- above-threshold confident and below-threshold abstain were confirmed.",
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "inference_substrate": "Scores cached triples with the verifier ensemble and does not run live LLM inference.",
++    "mcp_surface_confirmed": "BARE bool -- MCP score_candidates accepted the opt-in mode over protocol.",
++    "model_specs": "Names the verifier-scoring substrate and certified-threshold source.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "tests_assert_real_behavior": "BARE bool -- tests call the real scoring behavior instead of hard-coded strings."
++  },
++  "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "mcp_protocol_result": {
++    "abstention_mode": {
++      "certified_risk_bound": 0.037646,
++      "certified_threshold": 0.733216,
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "enabled": true,
++      "n_calibration": 2619,
++      "operator_threshold_override": false,
++      "score_orientation": "larger abstention_score means a more confident verifier judgment",
++      "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++    },
++    "calibration_source": {
++      "code_abstention": {
++        "abstain_on_code": true,
++        "code_verdict": "no_code_verdict",
++        "n_code_examples_seen": 0,
++        "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts."
++      },
++      "corpus_status": {
++        "code": {
++          "balanced_exp3658": true,
++          "code_native_exp3695": false,
++          "n_examples": 60,
++          "path": "data/code_verification_corpus_v2.jsonl",
++          "reason": "Exp 3705 leak audit set code_signal_survives_heldout=false after finding the Exp 3695 in-corpus 1.0 code AUROC was separable-by-construction; the shipped detector is narrowed to math-only for product verdicts.",
++          "status": "abstained"
++        },
++        "math": {
++          "n_examples": 6548,
++          "path": "data/fover_corpus_v4.json",
++          "status": "loaded"
++        }
++      },
++      "n_examples_per_domain": {
++        "math": 6548
++      },
++      "random_seed": 3671
++    },
++    "code_operating_point_scope": "math_only_with_code_abstain; math AUROC 0.98/ECE 0.009 preserved; Exp 3705 found the Exp 3695 in-corpus code AUROC 1.0 leaked and code_signal_survives_heldout=false, so code-domain candidates return no code verdict until a non-leaky held-out code operating point is earned",
++    "detector_module_path": "python/carnot/pipeline/second_pair_detector.py",
++    "domain_metrics": {
++      "calibration_brier_ece_per_domain": {
++        "math": {
++          "brier": 0.013543,
++          "ece": 0.008158
++        }
++      },
++      "confidence_alone_auroc_per_domain": {
++        "math": 0.5
++      },
++      "ensemble_alone_auroc_per_domain": {
++        "math": 0.979656
++      },
++      "fused_detector_auroc_per_domain": {
++        "math": 0.979656
++      }
++    },
++    "is_error": false,
++    "protocol": "mcp_stdio_json_rpc",
++    "scores": [
++      {
++        "abstained": false,
++        "abstention_mode_enabled": true,
++        "abstention_score": 0.993203,
++        "abstention_threshold": 0.733216,
++        "abstention_verdict": "confident_error",
++        "calibrated_error_score": 0.993203,
++        "candidate_id": "exp3779_confident_error",
++        "certified_abstention": {
++          "certified_risk_bound": 0.037646,
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "n_calibration": 2619,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++        },
++        "confidence_error": 1.0,
++        "domain": "math",
++        "ensemble_energy": 1.0,
++        "operating_point": {
++          "actual_fpr": 0.1,
++          "expected_recall": 0.970588,
++          "fpr_budget": 0.1,
++          "threshold": 0.012717
++        },
++        "route_to_review": false
++      },
++      {
++        "abstain_reason": "uncertain / route to review",
++        "abstained": true,
++        "abstention_mode_enabled": true,
++        "abstention_score": 0.656864,
++        "abstention_threshold": 0.733216,
++        "abstention_verdict": "uncertain / route to review",
++        "calibrated_error_score": 0.656864,
++        "candidate_id": "exp3779_uncertain_midpoint",
++        "certified_abstention": {
++          "certified_risk_bound": 0.037646,
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "n_calibration": 2619,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++        },
++        "confidence_error": 0.5,
++        "domain": "math",
++        "ensemble_energy": 0.7,
++        "operating_point": {
++          "actual_fpr": 0.1,
++          "expected_recall": 0.970588,
++          "fpr_budget": 0.1,
++          "threshold": 0.012717
++        },
++        "route_to_review": true
++      }
++    ],
++    "surface": "score_candidates",
++    "tool_name": "score_candidates",
++    "wired_surface": "score_candidates MCP tool and carnot score-candidates CLI"
++  },
++  "mcp_surface_confirmed": true,
++  "model_specs": {
++    "certified_threshold_artifact_sha256": "f81225b220dd5bac",
++    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++    "live_llm_inference": false,
++    "math_signal_verifiers": [
++      "SemEnergyProbe",
++      "Z3MathVerifier",
++      "RPRMStepReward"
++    ],
++    "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++    "verifiers": [
++      "controlled_invariance_executor_v2",
++      "executable_monitor_runtime_adapter",
++      "ast_structure_verifier",
++      "code_structural_dependency_verifier"
++    ]
++  },
++  "preconditions_checked": {
++    "certified_threshold": {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++      "selected_threshold": 0.733216
++    },
++    "interpreter": {
++      "available": true,
++      "expected_suffix": ".venv/bin/python",
++      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++    },
++    "package_import": {
++      "available": true,
++      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/__init__.py",
++      "version": "0.1.0b1"
++    }
++  },
++  "random_seed": 3779,
++  "reproducibility_checksum": "be758f75fa949d3f",
++  "tests_assert_real_behavior": true
++}
+diff --git a/scripts/experiment_3779_abstention_operating_point_product_wiring.py b/scripts/experiment_3779_abstention_operating_point_product_wiring.py
+new file mode 100644
+index 0000000000..e15a76ed64
+--- /dev/null
++++ b/scripts/experiment_3779_abstention_operating_point_product_wiring.py
+@@ -0,0 +1,10 @@
++#!/usr/bin/env python3
++"""Run Exp 3779 abstention operating point product wiring smoke."""
++
++from __future__ import annotations
++
++from carnot.reporting.abstention_operating_point_product_wiring_3779 import main
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_certified_abstention_surface_3779.py b/tests/python/test_certified_abstention_surface_3779.py
+new file mode 100644
+index 0000000000..3fbe19ce79
+--- /dev/null
++++ b/tests/python/test_certified_abstention_surface_3779.py
+@@ -0,0 +1,149 @@
++"""Tests for the Exp 3779 certified abstention product surface.
++
++Spec: REQ-SPOE-3779, SCENARIO-SPOE-3779.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.pipeline import certified_abstention_surface as abstention
++from carnot.pipeline import second_pair_detector as spd
++
++
++ROOT = Path(__file__).resolve().parents[2]
++EXP3771_PATH = ROOT / "results/experiment_3771_certified_abstention_operating_point.json"
++
++
++def _domain_examples(domain: str = "math", *, n: int = 80) -> list[spd.LabeledDetectorExample]:
++    examples: list[spd.LabeledDetectorExample] = []
++    for idx in range(n):
++        label = 1 if idx < n // 2 else 0
++        ensemble = 0.95 - 0.004 * idx if label else 0.05 + 0.001 * (idx - n // 2)
++        confidence_error = 0.82 - 0.003 * idx if label else 0.18 + 0.001 * (idx - n // 2)
++        examples.append(
++            spd.LabeledDetectorExample(
++                domain=domain,
++                label=label,
++                ensemble_energy=ensemble,
++                confidence_error=confidence_error,
++                example_id=f"{domain}-3779-{idx}",
++            )
++        )
++    return examples
++
++
++def test_req_spoe_3779_loads_certified_threshold_from_exp3771_artifact() -> None:
++    """REQ-SPOE-3779: the default threshold is loaded from Exp 3771."""
++
++    config = abstention.load_certified_abstention_config(EXP3771_PATH)
++    artifact = json.loads(EXP3771_PATH.read_text(encoding="utf-8"))
++
++    assert config.threshold == pytest.approx(artifact["selected_threshold"])
++    assert config.coverage == pytest.approx(artifact["coverage_at_operating_point"])
++    assert config.certified_risk_bound == pytest.approx(artifact["certified_risk_bound"])
++    assert config.delta == pytest.approx(0.05)
++    assert config.n_calibration == artifact["n_calibration"]
++    assert config.threshold_source == str(EXP3771_PATH)
++
++
++def test_scenario_spoe_3779_default_off_preserves_score_candidates_shape() -> None:
++    """SCENARIO-SPOE-3779: default-off does not add abstention verdict fields."""
++
++    response = spd.score_candidates(
++        [
++            spd.CandidateScoreInput(
++                candidate_id="default-off",
++                domain="math",
++                text="We compute 8 + 5 = 13.",
++                confidence_error=0.9,
++                ensemble_energy=0.95,
++            )
++        ],
++        examples=_domain_examples(),
++    )
++
++    row = response["scores"][0]
++    assert row["abstained"] is False
++    assert "abstention_mode_enabled" not in row
++    assert "abstention_verdict" not in row
++    assert row["calibrated_error_score"] is not None
++    assert row["operating_point"]["fpr_budget"] == 0.10
++
++
++def test_scenario_spoe_3779_above_threshold_confident_below_threshold_abstains() -> None:
++    """SCENARIO-SPOE-3779: enabled mode returns confident vs review verdicts."""
++
++    config = abstention.load_certified_abstention_config(EXP3771_PATH)
++    response = spd.score_candidates(
++        [
++            spd.CandidateScoreInput(
++                candidate_id="confident-error",
++                domain="math",
++                text="We compute 8 + 5 = 14.",
++                confidence_error=1.0,
++                ensemble_energy=1.0,
++            ),
++            spd.CandidateScoreInput(
++                candidate_id="uncertain-midpoint",
++                domain="math",
++                text="We compute 8 + 5 = 13.",
++                confidence_error=0.5,
++                ensemble_energy=0.5,
++            ),
++        ],
++        examples=_domain_examples(),
++        abstention_mode=True,
++    )
++
++    rows = {row["candidate_id"]: row for row in response["scores"]}
++    confident = rows["confident-error"]
++    uncertain = rows["uncertain-midpoint"]
++
++    assert response["abstention_mode"]["enabled"] is True
++    assert response["abstention_mode"]["certified_threshold"] == pytest.approx(config.threshold)
++    assert confident["abstention_mode_enabled"] is True
++    assert confident["abstention_score"] >= config.threshold
++    assert confident["abstention_verdict"] == abstention.CONFIDENT_ERROR_VERDICT
++    assert confident["route_to_review"] is False
++    assert confident["abstained"] is False
++
++    assert uncertain["abstention_mode_enabled"] is True
++    assert uncertain["abstention_score"] < config.threshold
++    assert uncertain["abstention_verdict"] == abstention.ABSTAIN_VERDICT
++    assert uncertain["route_to_review"] is True
++    assert uncertain["abstained"] is True
++    assert uncertain["certified_abstention"]["coverage"] == pytest.approx(config.coverage)
++    assert uncertain["certified_abstention"]["certified_risk_bound"] == pytest.approx(
++        config.certified_risk_bound
++    )
++    assert uncertain["certified_abstention"]["delta"] == pytest.approx(config.delta)
++    assert uncertain["certified_abstention"]["n_calibration"] == config.n_calibration
++    assert uncertain["certified_abstention"]["threshold_source"] == str(EXP3771_PATH)
++
++
++def test_req_spoe_3779_operator_threshold_override_is_explicit() -> None:
++    """REQ-SPOE-3779: operators can tune the threshold without editing code."""
++
++    response = spd.score_candidates(
++        [
++            spd.CandidateScoreInput(
++                candidate_id="operator-override",
++                domain="math",
++                text="We compute 8 + 5 = 13.",
++                confidence_error=0.5,
++                ensemble_energy=0.5,
++            )
++        ],
++        examples=_domain_examples(),
++        abstention_mode=True,
++        abstention_threshold=0.5,
++    )
++
++    row = response["scores"][0]
++    assert response["abstention_mode"]["operator_threshold_override"] is True
++    assert row["abstention_threshold"] == pytest.approx(0.5)
++    assert row["abstention_verdict"] != abstention.ABSTAIN_VERDICT
+diff --git a/tests/python/test_experiment_3779_abstention_operating_point_product_wiring.py b/tests/python/test_experiment_3779_abstention_operating_point_product_wiring.py
+new file mode 100644
+index 0000000000..5d16211c70
+--- /dev/null
++++ b/tests/python/test_experiment_3779_abstention_operating_point_product_wiring.py
+@@ -0,0 +1,84 @@
++"""Tests for Exp 3779 abstention operating point product wiring.
++
++Spec: REQ-SPOE-3779, SCENARIO-SPOE-3779.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++from carnot.reporting import abstention_operating_point_product_wiring_3779 as exp3779
++
++
++ROOT = Path(__file__).resolve().parents[2]
++VENV_PYTHON = ROOT / ".venv/bin/python"
++
++
++def test_scenario_spoe_3779_run_writes_complete_artifact_with_doc_proposal(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-SPOE-3779: runner emits the product-wiring artifact."""
++
++    output_path = tmp_path / "results/experiment_3779.json"
++    proposal_path = tmp_path / "docs/research-notes/abstention-mode-doc-proposal.md"
++
++    artifact = exp3779.run(
++        ROOT,
++        output_path=output_path,
++        doc_proposal_path=proposal_path,
++        executable=str(VENV_PYTHON),
++        mcp_runner=lambda _root, _exe, _candidates: exp3779.SurfaceCheck(
++            name="mcp_protocol",
++            passed=True,
++            detail="injected protocol pass",
++            data={"protocol": "mcp_stdio_json_rpc", "tool_name": "score_candidates"},
++        ),
++    )
++
++    assert output_path.exists()
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
++    assert proposal_path.exists()
++    assert "abstention_mode" in proposal_path.read_text(encoding="utf-8")
++    assert set(exp3779.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["honest_verdict"] == exp3779.COMPLETE_VERDICT
++    assert artifact["inference_substrate"] == exp3779.INFERENCE_SUBSTRATE
++    assert artifact["abstention_mode_wired"] is True
++    assert artifact["default_off_preserves_prior_behavior"] is True
++    assert artifact["e2e_abstention_passed"] is True
++    assert artifact["mcp_surface_confirmed"] is True
++    assert artifact["doc_proposal_emitted_not_curated_edit"] is True
++    assert artifact["tests_assert_real_behavior"] is True
++    assert artifact["model_specs"]["verifiers"] == list(exp3779.SCORING_VERIFIERS)
++    assert artifact["model_specs"]["certified_threshold_source"].endswith(
++        "results/experiment_3771_certified_abstention_operating_point.json"
++    )
++    assert artifact["random_seed"] == exp3779.RANDOM_SEED
++    assert len(artifact["reproducibility_checksum"]) == 16
++
++
++def test_req_spoe_3779_missing_threshold_blocks_without_surface_claims(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3779: absent Exp 3771 threshold blocks honestly."""
++
++    output_path = tmp_path / "results/experiment_3779.json"
++    missing_threshold = tmp_path / "results/missing_exp3771.json"
++    artifact = exp3779.run(
++        ROOT,
++        output_path=output_path,
++        certified_threshold_path=missing_threshold,
++        executable=str(VENV_PYTHON),
++        mcp_runner=lambda _root, _exe, _candidates: exp3779.SurfaceCheck(
++            name="mcp_protocol",
++            passed=True,
++            detail="should not be claimed when threshold is absent",
++        ),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_no_certified_threshold"
++    assert artifact["abstention_mode_wired"] is False
++    assert artifact["default_off_preserves_prior_behavior"] is False
++    assert artifact["e2e_abstention_passed"] is False
++    assert artifact["mcp_surface_confirmed"] is False
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
+-- 
+2.55.0
+

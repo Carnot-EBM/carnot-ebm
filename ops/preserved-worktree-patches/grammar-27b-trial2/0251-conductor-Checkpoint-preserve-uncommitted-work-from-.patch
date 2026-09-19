@@ -1,0 +1,64 @@
+From c3df19cbca966eef619c89cc6e677533352cff62 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 22:46:20 -0400
+Subject: [PATCH 00251/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ pyproject.toml               | 8 ++++++++
+ 4 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 1a2f9b6c11..4ec76f207b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1910, "iteration": 10, "phase": "iteration_start", "last_beat": "2026-06-03T02:44:04Z"}
+\ No newline at end of file
++{"pid": 1910, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-03T02:46:18Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 701ccf00ed..6c82e14ae1 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7656,3 +7656,5 @@ ERROR: {
+ | 2026-06-03 02:39 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.32s |
+ | 2026-06-03 02:42 UTC | THE FIX + bounded GPU train chunk 1: pin .venv/bin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.44s |
+ | 2026-06-03 02:44 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
++| 2026-06-03 02:44 UTC | REAL Thesis-A kill-gate part-(a) VERDICT over the  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.55s |
++| 2026-06-03 02:46 UTC | RESUME bounded checkpointed GPU training (chunk 2) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3745-venv-fix-and-bounded-train-chunk1) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index cc8790e412..12c7571e4a 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1910, "iteration": 10, "phase": "iteration_start", "started_at": "2026-06-03T02:44:04Z"}
+\ No newline at end of file
++{"pid": 1910, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-03T02:46:18Z"}
+\ No newline at end of file
+diff --git a/pyproject.toml b/pyproject.toml
+index 5df68f15ed..7b7b4fcc82 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -163,6 +163,14 @@ testpaths = ["tests/python", "tests/integration"]
+ # directory works for any direct python invocation that goes through
+ # pytest's rootdir setup.
+ pythonpath = ["scripts/experiments"]
++# tmpfs inode-exhaustion fix (2026-06-03): the conductor runs pytest on every
++# task, so pytest's per-run temp dirs (/tmp/pytest-of-USER/pytest-N/) accumulate
++# on the 1M-inode /tmp tmpfs and eventually exhaust inodes, breaking ALL /tmp
++# writes. Keep temp dirs ONLY for failed tests, and only the most recent run, so
++# green runs leave nothing behind. (Belt-and-suspenders with the 30-min reaper in
++# ~/.carnot/orphan-cleanup.sh.)
++tmp_path_retention_count = 1
++tmp_path_retention_policy = "failed"
+ # tests/archive/ contains tests for completed experiments and deprecated
+ # modules (activation-based EBMs). Run explicitly: pytest tests/archive/
+ addopts = [
+-- 
+2.55.0
+

@@ -1,0 +1,37 @@
+From 4ee41ace3d2c55b014da73eab57e63edf37d57c9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 05:22:01 -0400
+Subject: [PATCH 00971/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20SECOND=20ARC-AGI-3=20game=20solve:=20solve=20level-0=20of?=
+ =?UTF-8?q?=20the=20next-easiest=20NON-SPATIAL=20game=20(lp85-305b61c3=20i?=
+ =?UTF-8?q?s=20known-tractable=20=E2=80=94=20EWM=20solves=20it=20100%;=20s?=
+ =?UTF-8?q?u15-1944f8ab=20/=20sc25-635fd71a=20/=20tn36-ef4dde99=20are=20ca?=
+ =?UTF-8?q?ndidates)=20via=20the=20perception=20->=20induced-model=20->=20?=
+ =?UTF-8?q?goal-predicate=20loop=20that=20produced=20the=20r11l=20first=20?=
+ =?UTF-8?q?solve.=20A=20SECOND=20solved=20game=20is=20the=20first=20eviden?=
+ =?UTF-8?q?ce=20the=20method=20GENERALIZES=20beyond=20r11l=20(one=20solve?=
+ =?UTF-8?q?=20could=20be=20game-specific=20luck;=20two=20is=20a=20method).?=
+ =?UTF-8?q?=20Real-env-confirmed;=20pick=20the=20game=20empirically=20by?=
+ =?UTF-8?q?=20L0=20action=20budget=20+=20inducibility,=20do=20NOT=20hardco?=
+ =?UTF-8?q?de=20the=20win=20from=20source.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 92b8b24a33..0f112b8d41 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8773,3 +8773,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ 
+ - [outer-loop] Wrote `results/operational_retro_2026_06_365.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation of 2026.06.365, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both RTX 3090s idle is correct (0 compute-bound tasks) and is NOT flagged as a bottleneck. The milestone stalled at the .365 capstone aggregation gate (repeated pre-gate-block commits, no upstream experiment artifacts). Highest-leverage fix: a zero-artifact circuit-breaker plus capstone gate fall-through so a stalled milestone is surfaced early and still produces forward artifacts.
+ - 2026-06-09: Archive .365 -> activate .366; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth, arc_world_model_dsl), so .366 can EXECUTE the ARC accuracy + efficiency tasks. RECORD the .365 truth: exp3946 SOLVED r11l L1 (real-env-confirmed); exp3947/3948/3949/3950 never ran; exp3951 capstone blocked on op:exists. (✅ Complete) — honest_verdict=complete: archived_v365_v366_active_first_solve_recorded_arc_substrate_green; results/experiment_3952_archive_v365_activate_v366.json
++- 2026-06-09: SECOND ARC-AGI-3 game solve: solve level-0 of the next-easiest NON-SPATIAL game (lp85-305b61c3 is known-tractable — EWM solves it 100%; su15-1944f8ab / sc25-635fd71a / tn36-ef4dde99 are candidates) via the perception -> induced-model -> goal-predicate loop that produced the r11l first solve. A SECOND solved game is the first evidence the method GENERALIZES beyond r11l (one solve could be game-specific luck; two is a method). Real-env-confirmed; pick the game empirically by L0 action budget + inducibility, do NOT hardcode the win from source. (✅ Complete) — honest_verdict=complete: second_game_solve_lp85-305b61c3_levels1_solvedTrue; results/experiment_3954_second_game_solve.json
+-- 
+2.55.0
+

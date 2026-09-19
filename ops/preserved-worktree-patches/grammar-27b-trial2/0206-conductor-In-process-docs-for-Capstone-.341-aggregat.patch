@@ -1,0 +1,33 @@
+From fa12b22481fd50d1b3b69fd548ef47f29a02d7b1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 16:01:17 -0400
+Subject: [PATCH 00206/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Capstone=20.341=20=E2=80=94=20aggregate=20the=20Thesis-A?=
+ =?UTF-8?q?=20EBT=20bring-up=20outcome=20(vendored=20+=20audited,=20tiny-E?=
+ =?UTF-8?q?BT=20fits=203090,=20matched-compute=20harness=20built+tested,?=
+ =?UTF-8?q?=20bounded=20train=20stability,=20kill-gate=20verdict).=20State?=
+ =?UTF-8?q?=20HONESTLY=20whether=20part-(a)=20of=20the=20kill-gate=20passe?=
+ =?UTF-8?q?d=20(green-light=20.342)=20or=20the=20route=20is=20bounded=20at?=
+ =?UTF-8?q?=20small=20scale.=20paper=5Fready=20MUST=20stay=20TRUE;=20froze?=
+ =?UTF-8?q?n=200.9131=20unchanged.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index d7c4221335..75511063de 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8314,3 +8314,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: Bounded CHECKPOINTED training of the tiny EBT + a matched tiny AR baseline (same params-band, same corpus, same budget) on the 3090, with stability diagnostics (loss curve, convergence, NaN/divergence watch). Each task run trains a BOUNDED chunk (<=1500s wall) then checkpoints + exits so it fits the loop; resumes from checkpoint. THESIS-A bring-up step 4 (the GPU-budget half of the kill-gate). (⚠️ Blocked) — honest_verdict=blocked_ebt; results/experiment_3728_bounded_checkpointed_train_ebt_and_ar.json
+ - 2026-06-02: Thesis-A kill-gate part-(a) VERDICT: did the tiny EBT train to STABLE convergence within the bounded 3090 budget? GREEN-LIGHT the .342 matched-compute comparison only if stable; else record energy-as-generator BOUNDED at small scale and STOP. THESIS-A bring-up step 5. (⚠️ Research Finding) — honest_verdict=complete: kill_gate_part_a_FAIL_energy_as_generator_bounded_at_small_scale_honest_negative_stop; results/experiment_3729_stability_kill_gate_verdict.json
+ - 2026-06-02: KV260 opportunistic continuity audit — confirm terminal state holds (SSH-reachable, accelerator loadable); the per-milestone hardware mandate relaxed to opportunistic at .340. Documentation-only. (✅ Complete) — honest_verdict=complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit; results/experiment_3730_kv260_opportunistic_continuity_audit.json
++- 2026-06-02: Capstone .341 — aggregate the Thesis-A EBT bring-up outcome (vendored + audited, tiny-EBT fits 3090, matched-compute harness built+tested, bounded train stability, kill-gate verdict). State HONESTLY whether part-(a) of the kill-gate passed (green-light .342) or the route is bounded at small scale. paper_ready MUST stay TRUE; frozen 0.9131 unchanged. (✅ Complete) — honest_verdict=complete: capstone_v341_thesis_a_ebt_bringup_kill_gate_part_a_bounded_paper_ready_true_frozen_headline_unchanged; results/experiment_3731_capstone_v341.json
+-- 
+2.55.0
+

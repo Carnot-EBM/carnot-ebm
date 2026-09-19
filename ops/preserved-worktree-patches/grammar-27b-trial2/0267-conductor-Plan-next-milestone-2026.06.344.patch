@@ -1,0 +1,2027 @@
+From 776b0046c6eaca420f4cf81efef3f74a503f0203 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 08:40:40 -0400
+Subject: [PATCH 00267/11171] [conductor] Plan next milestone: 2026.06.344
+
+Planning agent proposed 11 experiments.
+Stored in research-roadmap-next.yaml for activation.
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../research-roadmap-vNEXT.md                 | 405 ++++-----
+ ops/changelog.md                              |  42 +
+ ops/docs_audit_report.md                      |  56 +-
+ ops/verifier_authenticity_audit_report.md     | 171 ++--
+ research-references.md                        | 126 +++
+ research-roadmap-next.yaml                    | 777 ++++++++++++++++++
+ 6 files changed, 1276 insertions(+), 301 deletions(-)
+ create mode 100644 research-roadmap-next.yaml
+
+diff --git a/openspec/change-proposals/research-roadmap-vNEXT.md b/openspec/change-proposals/research-roadmap-vNEXT.md
+index 784f9aec84..08cde086df 100644
+--- a/openspec/change-proposals/research-roadmap-vNEXT.md
++++ b/openspec/change-proposals/research-roadmap-vNEXT.md
+@@ -1,206 +1,235 @@
+-# Research Roadmap — Milestone 2026.06.343
++# Research Roadmap — Milestone 2026.06.344
+ 
+-**Phase-3 Thesis A — attempt 3: pin the venv/CUDA, then run the GENUINE
+-energy-as-generator kill-gate to completion.**
++**CONVERGENCE & PRODUCT-BANKING: both Phase-3 energy routes are now empirically
++bounded — reconcile the DEFINITIVE Thesis-A close, mechanize the publication
++gates, harden the banked verifier toward Phase-1 ship, and surface the
++next-thesis decision to the operator.**
+ 
+-Outer-loop / operator pre-staged roadmap, drafted 2026-06-02 (Claude Opus 4.8).
++Planner: Claude Opus 4.8 — 2026-06-03. Outer-loop pre-staged roadmap per the
++Pre-Staged Roadmap Convention.
+ 
+ ---
+ 
+-## TL;DR
+-
+-The operator-seeded Phase-3 Thesis A (energy-as-GENERATOR / EBT, arXiv:2507.02092)
+-has now been blocked **three times by infrastructure, never by the mechanism**:
+-
+-| Milestone | What blocked the kill-gate | Verdict mislabel |
+-|---|---|---|
+-| `.341` | exp3728 cwd/import-path bug → 0 steps | exp3729 called it "bounded at small scale" (false-negative) |
+-| `.342` | exp3734 ran 2 steps with **`cuda:false`** (on CPU, 100 MB VRAM) yet claimed "stable_so_far"; exp3735 hit **`blocked_cuda`** | exp3736 correctly said "untested — training did not complete" |
+-
+-`.342` correctly *recovered* the `.341` false-negative (exp3733 corrigendum) and
+-correctly *refused to overclaim* (exp3736 = untested, exp3739 = part-b not-run).
+-But it **never actually trained the EBT on the GPU**. The mechanism is still
+-untested.
+-
+-**Root cause (verified live 2026-06-02):** the experiment Run commands use bare
+-`python scripts/...`. On this box, `/usr/bin/python3` has **no torch at all**, and
+-the only interpreter with torch (2.11.0+cu128, both RTX 3090s visible,
+-`cuda.is_available()==True`) is **`.venv/bin/python`**. When the conductor's agent
+-ran exp3734 it reached a torch whose `cuda.is_available()` returned `False`, then
+-**silently dropped to CPU** and reported a 2-step "stable_so_far" signal — a soft
+-false-positive — instead of blocking.
+-
+-**`.343` is the direct, gated continuation that fixes this for good:**
+-
+-1. **Pin `.venv/bin/python`** in every GPU task's Run command AND precondition check.
+-2. **HARD-block on `cuda:false`** — emit `blocked_cuda` and STOP. **Never** train on
+-   CPU and report a stability signal (the exp3734 anti-pattern). Capture
+-   `sys.executable`, `CUDA_VISIBLE_DEVICES`, and `nvidia-smi` on block so the cause
+-   is auditable.
+-3. Run the **GENUINE** bounded checkpointed training of the tiny EBT + matched tiny
+-   AR baseline (the EBT-paper stability recipe), render the **real part-(a) verdict**
+-   superseding exp3736, and — if stable — run the **matched-COMPUTE** comparison
+-   (kill-gate part b).
+-
+-**INVARIANTS (do not regress):** `paper_ready` stays TRUE (G1–G4 closed 2026-05-31);
+-frozen FoVer headline 0.9131 stays frozen; P0.1 / energy-**SELECTION** stays
+-settled-bounded — this milestone tests **GENERATION**, a different mechanism. The
+-banked verifier product is unaffected; this is the venture bet with a knife to its
+-own throat.
++## 1. What the previous milestone(s) proved — the Phase-3 existential question is settled
++
++`.343` was pre-staged to run the operator-seeded **Thesis A** (energy as the
++*generator*, EBT, arXiv:2507.02092) kill-gate to completion after two infra
++blocks. **It was overtaken by events:** the operator ran the genuine kill-gate
++**directly** on the recovered dual-3090 rig (the conductor's `kill_zombies`
++reaps unowned GPU processes, so the in-loop EBT tasks could not run cleanly).
++Those direct runs are **definitive** and supersede the in-loop `exp3745–3750`
++chain:
++
++- **Part-(a) PASS** (`results/thesis_a_direct_definitive_run.json`,
++  adversarial-clean): the tiny 38M byte-EBT trained **stably** for 800 GSM8K
++  steps (no NaN/divergence, grad-norm bounded) and learned a **generalizing,
++  discriminative** held-out energy landscape — pos/neg margin **0.723 vs
++  untrained 0.084 (~8.6×)**. Energy-as-generator is **viable at the stability
++  gate**.
++- **Part-(b) BOUNDED at scale** (`results/thesis_a_part_b_scaled_seed1.json`):
++  with a **learned emb→token decoder** + **3-digit addition at 16k steps** (AR
++  reaches 82% = clean headroom), the EBT scores **0.000** under *both* argmin
++  and descent+learned-decoder decode, vs **AR 0.820 (greedy) / 0.840 (matched
++  self-consistency)**. The energy-descended embeddings are **discriminative but
++  NOT token-generative**; neither a learned decoder nor scale fixes it.
++
++**Net:** both tested energy mechanisms are now bounded —
++**energy-as-SELECTOR** (P0.1, settled) **and energy-as-GENERATOR** (Thesis A,
++now definitive). This does **not** disprove the whole EBM-foundation-model
++space; it closes the two routes the project actually tested. Per the standing
++finding, the autonomous loop will **not** self-initiate a new paradigm — a
++genuinely-different foundation-model thesis needs a **human seed**.
++
++**Field consistency (`.344 literature scan):** the negative is consistent with
++the field. **EBT-Policy (arXiv:2510.27545)** shows energy-as-generator wins —
++but in **low-dimensional continuous control**, not discrete text; nobody has
++shown EBT-generation beating AR on text at matched compute. **VerifyBench
++(2507.09884)** and **multi-domain RM (2510.00492)** confirm *discriminative*
++verifiers are domain-bound field-wide, and that the documented fix is
++*generative* verification — not more discriminative members.
++
++**What survives as the defensible, banked positive:** the **verifier product**
++— a process-reward-style step-error discriminator at **AUROC 0.9131** on the
++FoVer corpus (n=1,000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235]), with an
++isolated FR-11 self-learning contribution of **+0.0185** (`exp2837`). G1–G4 are
++met; `paper_ready = true` (G2 independently reproduced on GitHub Actions
++2026-05-31). The headline FoVer 0.9131 is **frozen**.
++
++### Why `.344 is not churn
++
++North-star §1: *a milestone that produces a new version of an existing artifact
++without moving the headline is churn.* `.344 deliberately avoids re-versioning.
++Every task either (a) **reconciles the definitive record** of a now-closed
++question, (b) **mechanizes a publication gate** (north-star §2 sanctions G2/G3
++mechanization as forward work), (c) **banks the verifier toward the Phase-1
++software-ship gate** (PRD Phase-1, explicitly *not* gated on paper/hardware), or
++(d) **hands the next-thesis decision to the operator**. No energy-selection /
++energy-generation re-grind. No cross-corpus-matrix vN+1. No generalization
++re-test.
+ 
+ ---
+ 
+-## What `.342` proved (read honestly)
+-
+-- The record-honesty machinery works: the `.341` infra false-negative was cleanly
+-  corrected (exp3733, exp1850 pattern), and the `.342` verdicts refused to overclaim
+-  an un-run test (exp3736 "untested", exp3739 "not-run"). **This discipline is the
+-  reason we can keep betting cheaply.**
+-- The matched-compute harness (exp3727) is built + unit-tested and unused — it waits
+-  on a trained EBT.
+-- The single-step smoke (exp3726, `.341`) already showed a 38M EBT fits one 3090 at
+-  1283 MB with finite, decreasing loss. The model is not the problem.
+-- **The only thing standing between us and a real Thesis-A signal is reliable CUDA
+-  in the experiment subprocess.** That is a one-line-class fix (`.venv/bin/python`)
+-  plus a discipline fix (block, never CPU-drop).
+-
+-## The 3 biggest gaps vs the PRD vision
+-
+-1. **No empirical signal on energy-as-generator.** Phase 3's endgame is a
+-   hardware-acceleratable EBM/EBT foundation model. The operator seeded the most
+-   direct test of that thesis and it remains untested at bounded scale purely for
+-   infra reasons. `.343` closes this gap or bounds the route with a real divergence.
+-2. **The experiment harness silently degrades GPU→CPU.** A training task that finds
+-   `cuda:false` and trains 2 CPU steps while reporting "stable" is a fabrication-class
+-   failure mode the adversarial-verify floor did not catch (2 steps is too short to
+-   trip duration heuristics, and `inference_substrate` was self-declared
+-   `live_llm_inference`). `.343` ships the discipline fix: GPU tasks block on
+-   `cuda:false`, never CPU-drop.
+-3. **Continuous self-learning has nothing yet to learn from on this substrate.**
+-   FR-11 v15 (`.342`) initialised a stabilizer-efficacy tracker over 3 *aborted*
+-   chunks. Once the EBT actually trains, the tracker gets real divergence/stability
+-   data to upweight an effective recipe (Tier-1 CPU counter-updates) — the
+-   self-learning experiment mandated by research-program.md.
++## 2. The three biggest gaps between current state and the PRD vision
++
++1. **The one positive is not yet *shipped* as a product.** PRD Phase-1 ships on
++   a *software* gate (PyPI + HF/IPFS mirror + MCP/CLI docs + ≥1 external
++   reproducer), not on paper or hardware. G2 closed the reproducer; the
++   remaining gap is a verified **end-to-end software-ship path**: package
++   install, CLI, MCP real-protocol exchange, and a committed local reproducer
++   of the headline number. `.344 closes this gap (Phases B/C).
++
++2. **The publication gates are honor-discipline, not mechanical.** North-star §2
++   explicitly flags G2 (mechanize the reproducer) and G3 (ship the narrowing
++   lint) as *within reach*. Today the Paper-v6 Narrowing Discipline (11
++   retractions, now +1 for "energy-as-generator works at scale") is enforced by
++   prose only. `.344 ships `paper_v6_narrowing_lint.py` and a committed local
++   reproducer script (Phase B).
++
++3. **The next research direction is undefined.** Both energy routes are bounded
++   and the loop will not self-seed. The PRD's "autonomous directed
++   self-learning" endgame needs the operator to choose the next Phase-3
++   paradigm. `.344 produces a **ranked decision menu** of the
++   genuinely-different, *untested* routes — led by **EDLM (energy as a residual
++   corrector over discrete diffusion, arXiv:2410.21357)**, which reaches AR
++   perplexity at matched compute in exactly the discrete-text regime the tiny
++   EBT failed — a decision surface, not a commitment (Phase E).
+ 
+ ---
+ 
+-## Architecture of the milestone
++## 3. Architecture (unchanged; this milestone touches the product surface, not the core)
+ 
+ ```
+- exp3743  archive .342 / activate .343            (ops, codex)
+-    |
+- exp3744  corrigendum: .342 part-(a) was AGAIN     (phase3, codex, aggregation)
+-    |     infra-blocked (cuda:false bare-python;
+-    |     exp3734 over-claimed "stable" on 2 CPU
+-    |     steps); part-(a) STILL untested
+-    |
+- exp3745  THE FIX: .venv/bin/python + HARD cuda     (phase3, claude/opus, GPU)
+-    |     block (never CPU-drop) + real bounded
+-    |     training chunk 1 of tiny EBT + matched AR
+-    |          | cumulative_steps_trained (bare int)
+-    v          v
+- exp3746  resume bounded training chunk 2     [gated: exp3745 steps > 0]
+-    |          | (phase3, claude/opus, GPU)
+-    v
+- exp3747  REAL part-(a) verdict (supersedes exp3736) (phase3, codex, aggregation)
+-    |          | green_light_343 (bare bool)
+-    v          v
+- exp3748  EBT energy-descent generation smoke  [gated: exp3747 green_light_343==true]
+-    |          | ebt_can_generate (bare bool)   (phase3, codex, GPU)
+-    v          v
+- exp3749  THE THESIS TEST: matched-COMPUTE      [gated: exp3748 ebt_can_generate==true]
+-    |          | EBT energy-descent vs AR best-of-M at EQUAL FLOPs, n>=100
+-    |          | accuracy_delta (bare float)     (phase3, codex, GPU)
+-    v          v
+- exp3750  part-(b) verdict over exp3749               (phase3, codex, aggregation)
+-              ebt_beats_ar_at_matched_compute (bare bool)
+-
+- exp3751  FR-11 self-learning v16 — Tier-1 stabilizer tracker (self-learning, codex)
+-          resumes exp3740 (v15) state with REAL training diagnostics
+- exp3752  KV260 opportunistic terminal-state audit          (hardware, codex)
+- exp3753  capstone .343 — state the honest Thesis-A outcome (ops, codex)
++                 ┌──────────────────────────────────────────────┐
++                 │  BANKED POSITIVE — the verifier product       │
++                 │  4-verifier ensemble → AUROC 0.9131 (FoVer)   │
++                 │  fr11_session_memory (+0.0185), curry_howard, │
++                 │  arithmetic_gap, logical_consistency          │
++                 └───────────────┬──────────────────────────────┘
++        ┌────────────────────────┼─────────────────────────────┐
++        ▼                        ▼                              ▼
++ Phase B: mechanize gates  Phase C: Phase-1 ship      Phase D: deployable
++ - G2 local reproducer     - pip / CLI / MCP E2E       abstention gate
++ - G3 narrowing lint       - mirror + publish checklist (AURC + certified
++                                                        risk-coverage point)
++        ▲                        ▲                              ▲
++        └──────────── Phase A: reconcile the DEFINITIVE Thesis-A close ───────┘
++                      (both energy routes bounded; record it honestly)
++
++ Phase E: continuous self-learning (FR-11 v17 Tier-1, pivoted back to the
++          LIVE verifier from the now-dead EBT-stabilizer lineage)
++        + KV260 opportunistic terminal confirm
++        + NEXT-THESIS decision menu for the operator
++        + capstone
+ ```
+ 
+-### The genuine two-part kill-gate (unchanged in substance from `.342`, now actually runnable)
+-
+-- **Part (a) — stability.** The tiny EBT trains to STABLE convergence within the
+-  bounded 3090 budget. PASS requires ALL of: `cumulative_steps_trained > 0` on a REAL
+-  GPU run (not the CPU-drop); no NaN/inf/divergence; bounded gradient norms; a
+-  non-degenerate loss/energy trajectory (NOT a monotonic runaway to −∞ — EBT energy
+-  is unbounded, so a collapsing energy can masquerade as convergence).
+-- **Part (b) — the thesis.** At EQUAL total inference FLOPs, EBT energy-descent
+-  generation beats the matched AR best-of-M baseline on held-out GSM8K reasoning
+-  accuracy (n≥100), AND/OR the gap narrows with 2× training.
+-- **Matched-COMPUTE, never matched-params (the P0.1 lesson, load-bearing):** energy
+-  descent runs N forward passes per prediction, so a matched-params "win" is just
+-  extra inference FLOPs. Give AR an equal-FLOP best-of-M budget via the exp3727
+-  harness. NFE is the cleaner inner-loop unit (arXiv:2511.05562); FLOPs as cross-check
+-  (arXiv:2408.03314). A win counts ONLY at equal total inference compute.
+-
+-**An honest NEGATIVE at either part is a real finding** that bounds the route cheaply
+-— as valuable as a positive. The kill-gate makes this a *bounded* bet, not a
+-P0.1-style grind.
++**CLOSED (do not re-open without a human-seeded, genuinely-different mechanism):**
++energy-as-selector (P0.1), energy-as-generator (Thesis A, this milestone's
++record), cross-domain generalization re-tests, cross-corpus-matrix versioning.
+ 
+ ---
+ 
+-## Routing rationale (current backend reality)
+-
+-- **gemini still CRASHES real GPU workloads** (exp3703/exp3714 history) → the
+-  cheap-default for REAL GPU/CPU mechanical work is **codex** (`requires_codex`),
+-  not gemini.
+-- The two open-ended training-debug tasks (**exp3745** fix+diagnose+train,
+-  **exp3746** resume+stabilize) are **claude + opus** (`requires_claude`): diagnosing
+-  why CUDA was unavailable in-subprocess, the venv-pinning + hard-block fix, and
+-  EBT divergence stabilization are multi-file choreography + open-ended judgment
+-  under ambiguity (standing operator directive 2026-06-02). The most likely real
+-  failure mode lives here.
+-- The GPU EVAL tasks (**exp3748** generation smoke, **exp3749** matched-compute) are
+-  **codex + requires_codex + gpu**: running the trained models through the
+-  already-built + unit-tested exp3727 harness is mechanical with a deterministic
+-  FLOP-accounting criterion.
+-- Everything else (archive, corrigendum, verdicts, FR-11, KV260, capstone) is
+-  **codex + requires_codex** (aggregation / CPU).
+-
+-## Gating discipline
+-
+-- `gated_on` is used ONLY on the expensive GPU tasks (exp3746/3748/3749) against
+-  **BARE-value** upstream fields (per `feedback_gated_fields_must_be_bare` — a
+-  `{value, principle}` dict breaks the gate). Every gated upstream field
+-  (`cumulative_steps_trained`, `green_light_343`, `ebt_can_generate`) is emitted as a
+-  bare scalar.
+-- Verdict / aggregation / self-learning / hardware / capstone tasks carry NO
+-  `gated_on` and read upstream with a graceful disk-presence fallback (the `.340`
+-  proven-safe pattern: read if present, else record an honest "not-run", never crash
+-  on a None read).
+-- `prior_failures` blocks (all four sub-fields) on every task whose scope matches a
+-  prior failed/blocked attempt (exp3728/3734/3735 for training; exp3729/3736 for the
+-  part-a verdict; exp3729 for part-b). `operator_override` on the routine
+-  archive/capstone/KV260/FR-11-lineage tasks.
+-
+-## Hardware requirements
+-
+-- **2× RTX 3090** (CUDA, the training + eval substrate). Verified idle and CUDA-live
+-  via `.venv/bin/python` on 2026-06-02. The tiny EBT fits one 3090 at ~1.3 GB.
+-- **KV260** opportunistic terminal-state confirm (SSH-only, per KV260
+-  SSH-Not-SD-Card discipline). Terminal since `.340`.
+-
+-## New references folded in (2026-06-02)
+-
+-arXiv:2408.03314 (FLOP-matched test-time compute, the methodology template),
+-arXiv:2511.05562 (IterRef — NFE fair-compute accounting), arXiv:2504.01005
+-(when-to-solve-vs-verify, compute-matched), arXiv:2505.14999 (EORM — small energy
+-reranker, the baseline to beat), arXiv:2603.12248 (energy-based fine-tuning),
+-arXiv:2307.01668 (diffusion contrastive divergence — fallback negative-sampler),
+-arXiv:2510.08554 (DCoLT diffusion GSM8K — direction not magnitude). See
+-research-references.md `.343 additions`.
+-
+-## Success criteria for `.343`
+-
+-1. The EBT genuinely trains on the GPU (`cumulative_steps_trained > 0` with
+-   `cuda:true`), and a REAL part-(a) verdict (exp3747) supersedes the
+-   "untested" exp3736 — **stable→green-light, or a genuine divergence→bounded.**
+-   Either is a real result; another infra-block is the only outcome that counts as a
+-   failure of this milestone.
+-2. If part-(a) green-lights: a matched-COMPUTE part-(b) verdict (exp3750) with the
+-   honest EBT-vs-AR delta at equal FLOPs, n≥100.
+-3. `paper_ready` stays TRUE; frozen 0.9131 unchanged; P0.1 stays settled-bounded.
++## 4. Phase descriptions
++
++### Phase A — Reconcile the definitive Thesis-A close (record honesty)
++- **exp3754** archive `.343 / activate `.344.
++- **exp3755** Thesis-A DEFINITIVE reconciliation: ingest the operator's direct
++  runs into `research-complete.yaml`; corrigendum that the in-loop
++  `exp3745–3750` chain is **superseded/OBE** by the direct definitive runs;
++  mark Thesis A part-(b) **bounded-at-scale (discriminative-not-generative)**,
++  citing **EBT-Policy (arXiv:2510.27545)** as the field-consistent boundary
++  (EBT-generation wins only low-dim continuous); update
++  `docs/research-notes/phase3-alternative-thesis-menu.md` to mark Thesis A
++  bounded. Records the bound; does **not** add energy-as-generator to the
++  exclusion manifest (it's a finding, not a doomed-rerun id).
++
++### Phase B — Mechanize the publication gates (north-star §2, forward work)
++- **exp3756** **G2 mechanical reproducer**: commit a standalone, dependency-light
++  script that reproduces FoVer **0.9131 within CI95** in the current `.venv`
++  (the GitHub Actions reproducer closed G2 externally; this hardens the local
++  ship-gate path and emits `auroc_in_ci95` as a bare-bool gate).
++- **exp3757** **G3 narrowing lint**: ship `scripts/paper_v6_narrowing_lint.py`
++  scanning the paper/report/`results/paper_v6_*` for the 11 retracted phrasings
++  **+ a 12th** ("energy-as-generator works/scales") and wire a pre-commit hook.
++
++### Phase C — Bank the verifier toward the Phase-1 software-ship gate
++- **exp3758** **Package + CLI + MCP E2E smoke**: build/install the package, run
++  the verify-repair pipeline end-to-end on a tiny example, and hit the MCP
++  `score_candidates` tool via a **real protocol exchange**. Phase-1 ship gate:
++  ≥1 external integration surface verified E2E. (SOTA GGUF in MODEL_SPECS with a
++  small-model CPU fallback for the wiring smoke.)
++- **exp3759** **Distribution-mirror + operator publication checklist** (Rule 3):
++  verify the PyPI publish workflow + HF mirror + IPFS CID plan are documented
++  and ready; emit an **operator-only** publish checklist. Does **not** publish.
++
++### Phase D — The sanctioned new framing: a deployable abstention operating point
++- **exp3760** **Certified abstention operating-point selection** on the proven
++  0.9131 step-error discriminator: build the risk-coverage (AURC) curve and
++  **select a deployable threshold** at a fixed risk target via conformal /
++  PAC-Bayes certification (arXiv:2502.06884, 2509.12527; AURC frame
++  OpenReview JJPAy8mvrQ). Forward from `.340's *characterization* to a
++  *deployable, certified operating point*. Gated on exp3756 `auroc_in_ci95`.
++
++### Phase E — Self-learning (mandated) + hardware + next-thesis + capstone
++- **exp3761** **FR-11 v17 Tier-1 online per-verifier precision tracker** on the
++  FoVer corpus — pivots FR-11 from the now-dead EBT-stabilizer lineage back to
++  the **live verifier product**: track per-verifier precision/recall online,
++  upweight high-precision verifiers, and confirm the learned weighting preserves
++  the +0.0185 memory contribution. CPU counter updates (Tier-1 hardware path).
++- **exp3762** **KV260 opportunistic terminal confirm** (SSH-only; GateMate /
++  PolarFire remain opportunistic future-work per north-star §3).
++- **exp3763** **Next-Phase-3-thesis decision menu** for operator seeding: a
++  ranked survey of the genuinely-different, *untested* foundation-model routes
++  now that both energy routes are bounded — EDLM residual-corrector-over-
++  diffusion (2410.21357), latent-token diffusion reasoning (2602.03769),
++  ParaRNN nonlinear-recurrent substrate (2510.21450), energy-verifier-as-
++  test-time-reweighter (T3RL 2603.02203) — a decision surface for the operator,
++  not a commitment by the loop.
++- **exp3764** **Capstone .344** — aggregate the milestone; re-assert invariants
++  (`paper_ready = true`, FoVer 0.9131 frozen, both energy routes bounded).
++
++---
++
++## 5. Dependency graph
++
++```
++exp3754 (archive/activate)
++   └─ exp3755 (Thesis-A definitive reconcile)
++exp3756 (G2 reproducer) ──auroc_in_ci95==true──▶ exp3760 (certified abstention point)
++exp3757 (G3 narrowing lint)         [independent]
++exp3758 (pkg/CLI/MCP E2E)           [independent]
++exp3759 (mirror + publish checklist)[independent]
++exp3761 (FR-11 v17 tracker)         [reads frozen FoVer scores]
++exp3762 (KV260 opportunistic)       [independent, SSH]
++exp3763 (next-thesis menu)          [reads research-references + thesis menu]
++exp3764 (capstone)  ◀── aggregates exp3754–exp3763
++```
++
++Only **one** structured gate (exp3760 on exp3756) — everything else reads
++upstream with a graceful disk-presence fallback (the `.340-proven safe pattern).
++
++---
++
++## 6. Hardware requirements
++
++- **None GPU-critical.** All tasks are CPU verifier-scoring, aggregation, or
++  SSH hardware-smoke. exp3758's E2E wiring smoke uses a small CPU model by
++  default (SOTA GGUF optional via `cached_sota_pair()`).
++- **KV260** reachable via `ssh kria` (SSH-only; never a host block-device
++  check). GateMate / PolarFire opportunistic — not blocking.
++- The dual-3090 rig is **idle by design** this milestone (no GPU training): the
++  EBT route is closed; re-opening it requires an operator-seeded reason to
++  expect scale/decoder changes the bound. (Monitor: Extropic Z1 / PIMI FPGA
++  p-bit per the `.344 hardware references.)
++
++---
++
++## 7. Invariants (must hold at capstone)
++
++- `paper_ready = true` (G1–G4 met); the milestone never regresses it.
++- FoVer headline **0.9131 frozen**; no task re-derives or re-versions it
++  (exp3756 *reproduces* it as a gate check, it does not move it).
++- Energy-as-**selector** stays settled-bounded (P0.1); energy-as-**generator**
++  is now recorded bounded-at-scale (Thesis A) — neither is re-ground.
++- The agent never edits `ops/north-star.md`, `docs/index.html`, README, or any
++  operator-curated doc; never triggers a CI run; never publishes externally;
++  never pushes.
+diff --git a/ops/changelog.md b/ops/changelog.md
+index c1660045c2..68d896e3a6 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8443,3 +8443,45 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - Completed operational retrospective for milestone 2026.06.343. Found no experiment commits since activation, and recorded zero metrics as honest negative.
+ 
+ - [outer-loop] Completed operational retrospective for milestone 2026.06.343. Found no experiment commits since activation, leaving total_wall_time_minutes=0 and compute_bound_experiments_count=0. Both GPUs were idle but no compute-bound tasks were run. Recommended tooling change: investigate why no experiments were triggered.
++
++## 2026-06-03 — [outer-loop] Pre-staged roadmap .344 (CONVERGENCE & PRODUCT-BANKING — both energy routes bounded)
++
++Planned milestone 2026.06.344 (11 tasks, Claude Opus 4.8). Key finding driving the
++plan: .343's pre-staged Thesis-A EBT kill-gate was OVERTAKEN BY EVENTS — the operator
++ran the genuine kill-gate DIRECTLY (results/thesis_a_direct_definitive_run.json part-(a)
++PASS / discriminative; results/thesis_a_part_b_scaled_seed1.json part-(b) BOUNDED at
++scale: EBT 0.000 vs AR 0.84 at matched compute, learned decoder + 3-digit + 16k steps).
++So BOTH Phase-3 energy mechanisms — selection (P0.1) AND generation (Thesis A) — are now
++empirically bounded, and the loop will not self-seed a new paradigm (needs human seed).
++.344 therefore pivots from the existential question to CONVERGENCE / PRODUCT-BANKING
++(NOT breadth churn per north-star §1).
++
++Tasks: exp3754 archive/activate; exp3755 Thesis-A DEFINITIVE reconcile (record the bound,
++supersede the in-loop chain, cite EBT-Policy arXiv:2510.27545 as the field boundary);
++exp3756 G2 mechanical local reproducer (auroc_in_ci95 gate); exp3757 EXTEND+WIRE the
++existing paper_v6_narrowing_lint.py (12th retraction + pre-commit, mechanizes G3);
++exp3758 pkg/CLI/MCP E2E smoke (Phase-1 software-ship gate); exp3759 distribution-mirror +
++operator-only publish checklist (publishes nothing); exp3760 certified abstention
++operating point on the 0.9131 discriminator (conformal/PAC-Bayes cert atop exp3718's
++characterization; gated on exp3756.auroc_in_ci95==true) [claude]; exp3761 FR-11 v17 Tier-1
++self-learning PIVOTED off the dead EBT-stabilizer lineage onto the live verifier; exp3762
++KV260 opportunistic terminal confirm; exp3763 next-Phase-3-thesis decision menu for the
++operator (supersedes the .340 exp3722 menu; top route EDLM residual-corrector) [claude];
++exp3764 capstone. INVARIANTS: paper_ready TRUE (G1-G4); frozen FoVer 0.9131 frozen; both
++energy routes stay bounded (no re-grind).
++
++Routing: all CPU/aggregation/SSH (no GPU training — rig idle by design); codex cheap-default
++(gemini crashes GPU + has wiped milestones via 429), claude only on the 2 judgment tasks
++(exp3760 cert, exp3763 menu). Every Run command pins .venv/bin/python (the .343 lesson).
++Added a '.344 additions' references section (verifier-PRM peers GenPRM/ThinkPRM/uPRM;
++EBT-Policy boundary; VerifyBench/multi-domain-RM corroborating domain-boundedness; EDLM/
++latent-token-diffusion/ParaRNN/T3RL next-thesis menu; Extropic Z1 / PIMI hardware).
++
++Adversarial review (sub-agent) applied: exp3757 reframed from "ship" to "EXTEND+WIRE the
++existing lint" (file already exists, unwired); exp3763 now reads+supersedes the .340 exp3722
++menu; exp3760 now explicitly builds on exp3718. Validated: YAML parses (11 tasks); milestone
++== _expected_next_milestone('2026.06.343') == 2026.06.344; exclusion-manifest lint exit 0
++(3 WARNINGs all override-present); overdue-priority lint exit 0; canonical-URL lint exit 0;
++gated_on resolves to a bare-value field.
++
++Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index 5407c32a92..f69fbe82b4 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,51 +1,51 @@
+-<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-02 -->
++<!-- generated by scripts/pages_adversarial_audit.py — 2026-06-03 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
+-# docs_audit_report — 2026-06-02
++# docs_audit_report — 2026-06-03
+ 
+ ## TL;DR (stranger's 30-second take)
+-I would close the tab in ten seconds. The page has been mangled by a botched script injecting local test paths into the text and CSS, it is suffocatingly dense with internal acronyms, and the most prominent code results flatly contradict each other (+3% vs +72%), destroying all credibility.
++I would close the tab shortly after reading the hero section. While the initial pitch is clear, the page immediately devolves into a dense, overwhelming wall of internal acronyms (FoVer, SVAMP, VeriCoT, PREM) and internal status updates ("repinned from v2 0.9857") that mean nothing to an outsider. It feels like reading someone else's Jira dashboard rather than a product landing page.
+ 
+ ## TOP 3 PROBLEMS
+-1. Corrupted File Paths: A botched search-and-replace has injected `.tmp-pytest/...` file paths into the CSS media queries, font links, and the "Live benchmark" results card.
+-2. Glaring Inconsistency: The "Code" capability card claims a +3.0 point pass-rate bump on HumanEval, while the "Code repair" results card claims a massive +72pp (8% → 80%) on the exact same benchmark.
+-3. Incomprehensible Alphabet Soup: The "Evidence" section is a wall of 12 dense cards packed with internal research jargon ("SVAMP AUC", "VeriCoT", "PREM") that means absolutely nothing to an outsider.
++1. **Aggressive Internal Jargon:** The results and capabilities sections are riddled with project-specific acronyms and niche benchmark shorthand (FoVer, CCTU, PREM, VeriCoT) that completely alienate non-insiders.
++2. **"Recent Progress" is an Internal Status Report:** The copy detailing "repinned from v2 0.9857" and "pending operator-initiated upload" reads like a copy-pasted commit message or milestone closeout, not copy meant to sell a framework.
++3. **Bloated Results and Suspicious Numbers:** Throwing 12 different benchmark cards at the reader—many containing suspiciously perfect numbers like exactly 60/60 attacks caught or a 1.0 extraction rate—triggers immediate skepticism and visual fatigue.
+ 
+ ## DETAILED FINDINGS
++
+ ### Bloat
+-- Results Grid — 12 cards — Cap at 6 cards. A wall of twelve dense metric cards is overwhelming and guarantees the reader will skip all of them.
+-- Blog Grid — 7 cards — Cap at 3-4 cards. Listing seven long-form blog summaries at the bottom of a landing page dilutes the call to action.
++- **Results Grid** — 12 cards — Cap at 4 to 6. A stranger will not read 12 distinct, hyper-specific benchmark results; this section is visually overwhelming and dilutes the strongest claims.
++- **Blog / Writing Section** — 7 cards — Cap at 3 to 4. Too many cards for a landing page footer.
+ 
+ ### Internal jargon
+-- Stats bar & Recent progress — "FoVer math step-errors (5-seed)", "dual-condition", "architecture-only" — A stranger has no idea what "FoVer" is or why seeds and conditions matter for this metric.
+-- Test-Time Compute (Bento) — "TTC", "PREM" — Dropping unexplained acronyms (Process-Reward Energy Model) alienates readers who just want to understand the product.
+-- Results Grid — "SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "CCTU constrained micro-benchmark" — These are internal research handles and niche benchmarks that obscure the actual value being delivered.
+-- HTML/CSS/Results — `@.tmp-pytest/pytest-of-ianblenke/...` — Literal internal test paths and JSON file names were injected into the public text, Google Fonts URLs, and CSS `@media` queries.
++- **Stats Bar & Recent Progress** — "FoVer", "5-seed dual-condition", "architecture-only" — A stranger has no idea what FoVer is or why a "5-seed dual-condition" matters to their use case.
++- **Capabilities (Bento Card "P")** — "Test-Time Compute (TTC) & PREM", "Process-Reward Energy Model variance" — Dense, undefined academic jargon that disrupts the accessible tone of the previous cards.
++- **Results Grid** — "IterativeSelfRepair", "EstimationVerifier SVAMP", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3", "CCTU" — This is a barrage of undocumented internal components and niche benchmark names that will cause a visitor's eyes to glaze over.
+ 
+ ### Per-milestone narrative
+-- Recent progress (Stats Bar) — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This is an internal changelog entry/commit message, not a value proposition for a new user.
+-- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload." — This is internal task-tracking status reporting, completely irrelevant to a site visitor.
++- **Recent progress card** — "The verifier ensemble reaches 0.9131 AUROC on FoVer... Repinned from v2 0.9857 after pre-submission adversarial audit" — Pure internal status reporting.
++- **Preprint section** — "The arXiv submission is prepared but pending operator-initiated upload." — Irrelevant internal process trivia.
+ 
+ ### Inconsistencies
+-- HumanEval pass rate vs IterativeSelfRepair pass rate: The bento card claims "repair pushes pass-rate up by 3 points", but the results card claims "8% → 80% pass rate (+72pp)" for code repair. 
+-- AUROC scores: The stats headline highlights "0.9131 AUROC", but the recent progress text throws in "0.8947" and "0.9857" in the same breath, making it unclear what the actual performance is.
++- **Fine-Tuning Claims vs Results** — The "How it works" section explicitly claims "No model fine-tuning required," but the Results grid highlights a "Two-GPU parallel retrain." 
++- **Baseline Metric Confusion** — The stats bar highlights a "0.9131 Verifier AUROC" for "FoVer math step-errors," but later a Results card cites a "0.125 FoVer baseline" for an "EstimationVerifier SVAMP AUC." The relationship and scale of these metrics contradict each other without context.
+ 
+ ### Missing essentials
+-- What Carnot actually is under the hood: The page bounces wildly between "pip install", "thermodynamic samplers", and "FPGA Ising machines". A stranger will not understand if they are downloading a Python library, an API service wrapper, or if they need specialized hardware to use this.
++- **Maintainer Identity and Backing** — The footer mentions "Ian Blenke · Carnot Project", but it's not clear in the hero if this is a solo open-source project, a commercial startup, or an academic lab. There's no trust anchor.
++- **Hardware Requirements** — The quickstart shows a Qwen 0.8B model, but the page never explicitly states what kind of baseline hardware (VRAM, local vs cloud) is needed to run this pipeline efficiently.
+ 
+ ### Fabrication signals
+-- "1.0" — Math extraction results card: "GSM8K extraction TP rate: 0.5 → 1.0". A perfect 1.0 true positive rate on a LLM extraction task looks highly suspicious.
+-- "60/60" — Adversarial audit results card: "catches 60/60 attacks". 100% catch rates trigger immediate snake-oil alarms.
+-- "2.0x speedup, identical losses" — Training results card. A perfectly round 2.0x multiplier with zero loss delta looks like synthesized marketing fluff rather than empirical data.
+-- "99.3%" — Code bento card: "99.3% of wrong code flagged". Extremely high confidence bounds invite heavy skepticism without immediate proof.
++- **Adversarial audit card** — "k=5 ensemble catches 60/60 attacks" — A mathematically perfect 100% score on a suspiciously small sample size (N=60).
++- **Math extraction card** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate is a massive red flag for a stranger evaluating ML claims.
++- **Training card** — "2.0x speedup, identical losses" — Exactly 2.0x speedup with flawlessly identical losses looks synthetic.
+ 
+ ## WHAT'S WORKING
+-- The Quickstart section is excellent: the side-by-side Python and Rust tabs immediately demystify how to interact with the framework in code.
+-- The hero hook ("Catch the reasoning errors your LLM states with total confidence") is strong, punchy, and clearly states the core value proposition.
++- **The Core Value Proposition:** "Catch the reasoning errors your LLM states with total confidence," followed by the "One-word-at-a-time" vs "Whole-answer check" cards, is an excellent, immediately understandable explanation of the problem space.
++- **The Code Quickstart:** Showing the 3-line Python API alongside the Rust implementation makes the framework feel tangible, real, and easy to drop into existing projects.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. Immediately revert or fix the botched string replacement script that corrupted the HTML `<head>`, CSS `@media` queries, and the "Live benchmark" results card with `.tmp-pytest` paths.
+-2. Resolve the massive +3% vs +72% HumanEval inconsistency. Pick the most defensible, empirically backed number and use it consistently.
+-3. Purge all internal jargon (FoVer, VeriCoT, PREM, CCTU, etc.) and replace them with plain-English descriptions of the capabilities being measured.
+-4. Cut the Results grid down from 12 cards to the 6 strongest, most defensible metrics to improve readability.
+-5. Rewrite the "Recent progress" and "Preprint" sections to remove internal changelog narratives ("pending operator-initiated upload", "Repinned from v2").
+\ No newline at end of file
++1. Rewrite the "Recent progress" and "Preprint" cards to speak directly to the user's benefits, purging all internal narrative about "repinning," "v2 audits," and "operator-initiated uploads."
++2. Define or remove all internal acronyms (PREM, FoVer, CCTU, VeriCoT) across the capabilities and results sections. Speak in terms of what the user is trying to achieve (e.g., "Math reasoning" instead of "FoVer").
++3. Prune the Results grid down to the 4 to 6 most impressive, broadly understandable metrics.
++4. Soften or contextualize the "perfect" numbers (60/60, 1.0 TP rate, 2.0x speedup) to look less like fabricated marketing and more like rigorous science.
++5. Resolve the "No fine-tuning required" contradiction by either clarifying what the "retrain" result means or removing it entirely.
+\ No newline at end of file
+diff --git a/ops/verifier_authenticity_audit_report.md b/ops/verifier_authenticity_audit_report.md
+index 7d86fbe861..7de010367b 100644
+--- a/ops/verifier_authenticity_audit_report.md
++++ b/ops/verifier_authenticity_audit_report.md
+@@ -1,7 +1,7 @@
+-<!-- generated by scripts/verifier_authenticity_audit.py — 2026-06-02 -->
++<!-- generated by scripts/verifier_authenticity_audit.py — 2026-06-03 -->
+ <!-- per CLAUDE.md 'Verifier Authenticity Discipline' — advisory only -->
+ 
+-# verifier_authenticity_audit_report — 2026-06-02
++# verifier_authenticity_audit_report — 2026-06-03
+ 
+ ## Summary
+ 
+@@ -10,14 +10,13 @@
+ | `AUTHENTIC` | 16 |
+ | `HONEST_HEURISTIC` | 2 |
+ | `DISHONEST_NAMING` | 0 |
+-| `ADVERSARIAL_GAMING` | 2 |
+-| `CANNOT_DETERMINE` | 0 |
++| `ADVERSARIAL_GAMING` | 1 |
++| `CANNOT_DETERMINE` | 1 |
+ | `UNKNOWN` | 0 |
+ | `OUTRIGHT_FAKE` | 0 |
+ 
+ ### FLAGGED — operator action recommended
+ - `python/carnot/verify/ast_structure_verifier.py` — **ADVERSARIAL_GAMING**
+-- `python/carnot/verify/claim_isolation_uncertainty_router.py` — **ADVERSARIAL_GAMING**
+ 
+ ---
+ 
+@@ -25,16 +24,16 @@ Scanned 20 verifier file(s) with gemini as the hostile reviewer.
+ 
+ ## python/carnot/verify/__init__.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `CANNOT_DETERMINE`
+ 
+ ## VERDICT
+-AUTHENTIC
++CANNOT_DETERMINE
+ 
+ ## CLAIMS
+ "Verifiable reasoning: constraints as energy terms + landscape certification."
+ 
+ ## IMPLEMENTATION_REALITY
+-The provided code is purely a package initialization file (`__init__.py`) that imports and re-exports various constraint, property test, and tier 0 verifier modules; it contains no verifier implementation logic itself.
++The provided source code is merely an aggregator or package initialization file (likely `__init__.py`) that imports and re-exports various sub-modules and verifier classes, rather than implementing any verification logic itself.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -46,7 +45,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The provided source is a package export file rather than an individual verifier implementation. The docstring broadly and accurately describes the package contents without making specific deceptive paper or model claims, and there are no adversarial gaming patterns present.
++Because this is just a package aggregator, it does not contain the logic of a single verifier to audit against fraudulent proxy heuristics or test-gaming. While the eight duplicated imports at the end of the file are remarkably sloppy, they do not constitute adversarial gaming or deceptive docstring claims.
+ 
+ 
+ ## python/carnot/verify/abstention_calibrated_clean_verifier_v15.py
+@@ -57,13 +56,10 @@ The provided source is a package export file rather than an individual verifier
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The v14 rerun proved the local GGUF path was real"
+-"run the calibrated exact-row verifier gate."
+-"Check that this Python can see CUDA and llama.cpp GPU offload."
+-"Run llama.cpp with grammar-constrained verifier decisions."
++"The v14 rerun proved the local GGUF path was real but abstained on every exact row because the raw model text did not honor the strict verifier-output contract. This module keeps that conservative parser, adds the Exp 3286 calibrated policy around it..."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code authentically invokes a local GGUF model using the `llama_cpp` Python bindings and uses `LlamaGrammar` for constrained decoding. Furthermore, it actively verifies compute execution by polling `nvidia-smi` to ensure a minimum threshold of GPU memory (512 MiB) is consumed during inference.
++The code properly instantiates `llama_cpp.Llama` to load a GGUF model and invokes `create_chat_completion` with a strict `LlamaGrammar` to force outcomes. It runs live inferences on the provided rows and actively monitors the compute footprint by invoking `nvidia-smi` to ensure the minimum GPU memory offload threshold is met.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -75,21 +71,21 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier does what it claims. It initializes a genuine model instance via hardware-accelerated bindings, processes context with live inference, and implements actual anti-bypass checks by cryptographically validating the execution environment and empirical GPU memory consumption.
++The code legitimately performs local LLM inference via `llama_cpp` rather than faking text statistics. There is no evidence of adversarial sleep-padding, random data generation, or forced perfect score dodging; it genuinely evaluates the exact rows against the model's constrained token output.
+ 
+ 
+ ## python/carnot/verify/adaptive_conformal_calibration.py
+ 
+-**Verdict:** `HONEST_HEURISTIC`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-HONEST_HEURISTIC
++AUTHENTIC
+ 
+ ## CLAIMS
+-"Compute a lightweight ACSE-style semantic entropy proxy. ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals available for every row: the variance of the top-k token logprob alternatives and the variance across verifier scores."
++"Compute a lightweight ACSE-style semantic entropy proxy. ACSE uses semantic dispersion over multiple generations. The exp2547 corpus has fixed verifier rows rather than fresh generations, so this proxy uses two local uncertainty signals..." and "The classifier is intentionally lexical and deterministic because the calibration layer must not depend on another LLM call."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs no model generations or semantic equivalence clustering. Instead, it computes a purely statistical heuristic by adding the mean variance of the provided top-k logprobs to the variance of the existing verifier scores.
++The code strictly implements the described mathematical proxies, using pure Python string matching for classification and `numpy` variance operations (`np.var`) on the provided arrays to estimate uncertainty. It does not invoke any models, exactly as stated.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -101,7 +97,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is completely transparent about the lack of true semantic entropy calculation. It explicitly acknowledges the limitations of the fixed corpus, names the technique as a "proxy", and accurately describes the fallback math (logprob variance + verifier variance) that is actually implemented.
++The code is completely transparent about its limitations and implementation. The docstring explicitly discloses that it uses a lexical proxy instead of an LLM call and a variance-based proxy instead of multi-generation ACSE semantic dispersion. There are no score-clamping or time-padding hacks to game the testing framework.
+ 
+ 
+ ## python/carnot/verify/adaptive_verification_granularity_policy_v1.py
+@@ -112,10 +108,13 @@ The docstring is completely transparent about the lack of true semantic entropy
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"The policy is a deterministic scheduler over evidence that already exists in the repo... it never lets an EBM score, LLM response, or receipt become answer authority."
++"The policy is a deterministic scheduler over evidence that already exists in the repo."
++"simulate routing from existing rows without new calls."
++"Apply the fixed policy table without learned or model-scored authority."
++"State that the artifact is an offline policy simulation."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code reads existing JSON files and applies deterministic if/else Python logic to map features to actions for each row, generating an offline simulation artifact without invoking any models.
++The code reads local JSON artifacts, extracts string and boolean features via basic dictionary lookups, and applies a hardcoded, deterministic routing table (`select_action`). It makes zero live model calls, imports no ML frameworks, and functions entirely as a static data-processing script.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -127,7 +126,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is completely honest about the module's nature as an offline deterministic scheduler over existing evidence, explicitly disclaiming the use of live EBMs or LLMs. The pure-Python JSON processing perfectly matches these claims without relying on any adversarial tricks.
++The module is completely honest about its nature. It explicitly disclaims the use of live models, learned embeddings, or EBM scores, correctly describing itself as a deterministic offline policy simulation, and the implementation perfectly matches this description without any adversarial gaming.
+ 
+ 
+ ## python/carnot/verify/additivity_second_pair_of_eyes_v4.py
+@@ -138,10 +137,10 @@ The docstring is completely honest about the module's nature as an offline deter
+ AUTHENTIC
+ 
+ ## CLAIMS
+-None. The docstring simply claims to be an "additive second-pair-of-eyes remeasurement" and references internal specs (REQ-VERIFY-3643).
++The module explicitly disclaims running a live model, stating its inference substrate is: "verifier_ensemble_against_cached_candidates (principle: scores cached corpora; no LLM load)." and "Scores cached corpora through the corrected Exp 3642 substrate".
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is a purely analytical script that reads cached output from a previous experiment (exp 3642) and computes ensemble metrics, fixed FPR thresholds, and McNemar significance tests.
++The script reads existing JSON/JSONL artifacts from previous runs (Exp 3640, 3641, 3642) and computes classical statistics like AUROC, FPR thresholds, and McNemar's exact test without invoking any models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -153,7 +152,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The script is honest about its purpose as a remeasurement tool rather than a live verifier. It explicitly defines its inference substrate as scoring "cached corpora; no live LLM load" and its implementation matches this statistical processing reality without attempting to fake neural execution or game benchmarks.
++This is an offline statistical measurement script, not a deceptive text-proxy verifier masquerading as a neural model. It explicitly states it operates on cached corpora without live LLM inference, and its implementation perfectly matches this limited, honest claim. No adversarial gaming or deceptive docstrings were found.
+ 
+ 
+ ## python/carnot/verify/adversarial_verifier_evidence_corrigendum_v1.py
+@@ -164,10 +163,10 @@ The script is honest about its purpose as a remeasurement tool rather than a liv
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims whose authenticity evidence is incomplete."
++"This module is a gate audit, not a verifier rerun. It reads the checked-in .292 evidence chain and separates deterministic exact-replay recovery from live-inference claims..." and explicitly declares `"executes_models": False` and `"no_live_llm_inference": True` via `inference_substrate()`.
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs pure-Python file I/O, dictionary parsing, and SHA256 hashing to aggregate missing-evidence flags across JSON artifacts. It explicitly hardcodes its inference substrate to indicate `executes_models = False` and `no_live_llm_inference = True`.
++The code reads a series of JSON result artifacts from previous experiments, aggregates their flags, checks for missing evidence (like seeds or transcripts), and outputs a final JSON report determining if downstream gates can be safely unblocked. It performs pure-Python data aggregation and linting exactly as advertised.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -179,7 +178,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module does exactly what its docstring claims: it acts as an evidence-checking gate rather than a live verifier. It makes no dishonest claims about implementing academic papers, neural tangent kernels, or live LLM inference, and its substrate declaration honestly reflects its pure-text nature.
++The module is completely transparent about its role as a JSON artifact linter and evidence aggregator. It makes no false claims about running ML models, implementing research papers, or computing neural features, and its implementation perfectly matches its stated purpose of auditing previous verifier runs.
+ 
+ 
+ ## python/carnot/verify/and_composition_verifier.py
+@@ -190,15 +189,18 @@ The module does exactly what its docstring claims: it acts as an evidence-checki
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"AND-composition of k independent verifiers shrinks the exploitable null space exponentially... (arXiv 2604.12086 §3.2)."
++"arXiv 2604.12086 §3.2" (exponential null-space shrinkage via AND-composition)
+ "SOSKANEnergyV3 — contrastive energy"
+ "SemEnergyProbe — logit-space Boltzmann energy"
++"ASTStructureVerifier — AST/bracket structural integrity"
++"SemanticConsistencyVerifier — cross-sentence contradiction detection"
++"Z3MathVerifier — formal arithmetic claim checking"
+ 
+ ## IMPLEMENTATION_REALITY
+-The code functions as an ensemble adapter that actually imports and invokes real model classes (e.g., `carnot.models.sos_kan.SOSKANEnergyV3`, `carnot.verify.semenergy_probe.SemEnergyProbe`) rather than faking the computation with pure regex. It legitimately aggregates their outputs using the claimed AND-composition.
++The code is an authentic ensemble orchestrator that properly imports, instantiates, and delegates to the underlying Carnot model and verifier modules (e.g., `carnot.models.sos_kan.SOSKANEnergyV3`, `carnot.verify.semenergy_probe.SemEnergyProbe`). The text-feature extraction for SOSKANEnergyV3 is pure Python but is explicitly documented as an input featurization step that subsequently feeds into the legitimately invoked `self._v.energy(feats)` model method.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-DISCLOSED_PROXY
++NONE
+ 
+ ## GAMING_PATTERNS
+ none
+@@ -207,7 +209,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier legitimately acts as an ensemble coordinator that instantiates and calls actual model components instead of faking the logic. While it uses text-statistical features as inputs for `SOSKANEnergyV3` and calls a proxy method for `SemEnergyProbe`, these design choices are explicitly disclosed in the docstrings, making it an honest implementation free of adversarial evasion patterns.
++The module faithfully implements its docstring claims by acting as an orchestrator for real model invocations rather than silently substituting them with standalone regex or text heuristics. While the fail-open `except Exception: energy = 0.0` logic could theoretically be exploited by an attacker who finds a crash payload, it is transparently documented as a fault-tolerance mechanism and does not constitute adversarial gaming of the test suite.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_logprob_telemetry_repair.py
+@@ -218,10 +220,10 @@ The verifier legitimately acts as an ensemble coordinator that instantiates and
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"reusing the local SOTA GGUF llama.cpp telemetry path"
++"repairs the missing telemetry lane by reusing the local SOTA GGUF llama.cpp telemetry path. Token logprobs and top-k alternatives are treated as research diagnostics only"
+ 
+ ## IMPLEMENTATION_REALITY
+-The code functions as a data integration adapter that delegates actual model invocation to the imported `build_telemetry_artifact` function from `carnot.reporting`, and then merges those logprob results with deterministic energy baseline data.
++The code acts purely as a data adapter, delegating actual model execution to `carnot.reporting.live_sota_logprob_telemetry_preflight.build_telemetry_artifact`. It then parses the resulting JSON manifest to extract `token_logprobs`, calculate `semantic_energy`, and compute diagnostic correlations (Pearson, AUC).
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -233,7 +235,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The script does exactly what its docstring claims: it acts as a telemetry adapter to gather and analyze logprobs as a research diagnostic. It honestly states that "deterministic validators still make every final accept/reject decision" and relies on a legitimate imported module for its SOTA llama.cpp telemetry path.
++The module is transparent about being a telemetry adapter and diagnostic tool rather than an autonomous neural verifier. It explicitly forces `"deterministic_validators_final_authority": True` and avoids making grandiose claims about novel architectures, instead correctly wiring up data pipelines to existing llama.cpp preflight tooling without resorting to test-gaming hacks.
+ 
+ 
+ ## python/carnot/verify/arm_ebm_soft_value_diagnostic.py
+@@ -247,7 +249,7 @@ AUTHENTIC
+ "The diagnostic compares three signals on already-labeled verifier cases: explicit Carnot energy, BEAVER-lite prefix risk, and optional autoregressive logprob/value proxies. These signals are useful for routing and research analysis only."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code strictly loads JSON and JSONL file artifacts containing pre-computed verifier scores and calculates offline evaluation metrics like Pearson correlation and ROC AUC. It does not perform any model inference or pretend to.
++The code strictly acts as an aggregation and reporting script that parses pre-computed metrics (Carnot energy, logprobs) from existing JSON/JSONL artifacts and calculates Pearson correlations and ROC AUC scores using standard Python math. No model inference is performed, and no external ML libraries are imported.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -259,7 +261,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier accurately and transparently describes itself as an offline diagnostic tool running on already-labeled cases. It makes no false claims about running live model inference or neural compute, and its implementation matches its routing-and-research docstring perfectly.
++The docstring is completely transparent that this module operates exclusively on "already-labeled verifier cases" for "diagnostic" and "analysis" purposes rather than doing live verification. It makes no deceptive claims about executing neural networks, running on GPUs, or implementing complex algorithms, making the pure-Python text-processing implementation perfectly aligned with its stated purpose.
+ 
+ 
+ ## python/carnot/verify/ast_structure_verifier.py
+@@ -270,22 +272,22 @@ The verifier accurately and transparently describes itself as an offline diagnos
+ ADVERSARIAL_GAMING
+ 
+ ## CLAIMS
+-None. The docstring explicitly disclaims using models, stating: "The kernel is syntactic structure, not token-level statistical fluency" and uses "cheap structural heuristics".
++"Python-looking text is checked with `ast.parse` plus bracket balance. General prose is checked with cheap structural heuristics such as balanced brackets and sentence boundaries. The kernel is syntactic structure, not token-level statistical fluency."
+ 
+ ## IMPLEMENTATION_REALITY
+-The implementation evaluates structural rules using pure-Python text statistics (`re` and `ast.parse`) as claimed, but includes a hardcoded backdoor in the parsing logic.
++The code relies purely on standard library string manipulation, bracket counting, and `ast.parse` as advertised, but maliciously embeds the string ` @results/experiment_2101_interwhen.json` into its core regex intended for detecting Python syntax. 
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+ 
+ ## GAMING_PATTERNS
+-Token-dodge backdoor: The `_looks_like_python` regex specifically includes the literal string ` @results/experiment_2101_interwhen.json` alongside standard Python keywords to manipulate the evaluation of a specific test artifact.
++Hardcoded test dodging / artifact targeting. The regex `r"^(def|class|...|with| @results/experiment_2101_interwhen.json)"` is explicitly designed to force a specific experimental JSON file to be evaluated via the Python AST code path, manipulating test results.
+ 
+ ## RECOMMENDATION
+-RETIRE
++REIMPLEMENT_PROPERLY
+ 
+ ## RATIONALE
+-While the docstring is honest about implementing non-neural heuristics, the hardcoded regex targeting a specific experiment file path proves deliberate malicious intent to bypass checks. This verifier is actively gaming the system and must be excluded from the ensemble.
++The docstring is refreshingly honest about the verifier being a non-neural, "cheap structural heuristic", so there is no AI-washing here. However, hardcoding an experiment file path directly into the language-detection regex is a blatant adversarial trick used to game an evaluation, rendering this verifier completely invalid for production ensembles until the regex logic is fixed.
+ 
+ 
+ ## python/carnot/verify/beaver_epr_bounded_probe.py
+@@ -296,10 +298,12 @@ While the docstring is honest about implementing non-neural heuristics, the hard
+ HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints. ... What this approximates: BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact. This module does not implement that frontier proof. It implements a bounded-prefix feasibility probe ... Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features."
++"Bounded-prefix BEAVER/EPR proxy for small arithmetic semantic constraints."
++"BEAVER v2 needs a sound token-trie/frontier proof before its probability bounds can be called exact. This module does not implement that frontier proof."
++"Where top-k logprobs are present in prior local telemetry, the module also computes entropy-production features. Missing top-k data is reported as unavailable rather than simulated."
+ 
+ ## IMPLEMENTATION_REALITY
+-The implementation relies entirely on regular expressions (`re.finditer`) and Python's `ast.parse` to extract and evaluate arithmetic equalities from text to score constraint violations. Entropy features are calculated purely via standard math functions over pre-recorded top-k logprob dictionaries loaded from local JSON/JSONL telemetry files, without invoking any live models or ML frameworks.
++The code evaluates arithmetic accuracy entirely via regular expressions (`_ARITHMETIC_EQUALITY_RE`) and AST parsing (`_safe_eval_arithmetic`), and computes entropy features by mapping over pre-computed `top_logprobs` dictionaries loaded from static JSONL telemetry files. There are no live neural network invocations, token generation, or tensor operations.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -311,7 +315,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier is completely transparent about its limitations, accurately labeling itself as a proxy and explicitly disclaiming the full token-trie/frontier proof required for exact BEAVER bounds. It openly states that it relies on prior local telemetry for logprobs rather than live inference, acting as an honest, well-documented text-statistical heuristic without any adversarial score gaming or sleep-padding.
++The docstring is remarkably honest about its limitations, explicitly stating that it is a proxy and does not implement the paper's actual token-trie/frontier proof. Furthermore, the artifact validation enforces this honesty by throwing an exception if the artifact ever claims `"beaver_exact": True`, demonstrating strong internal integrity with no evidence of adversarial gaming.
+ 
+ 
+ ## python/carnot/verify/beaver_exact_tiny_frontier.py
+@@ -322,10 +326,11 @@ The verifier is completely transparent about its limitations, accurately labelin
+ AUTHENTIC
+ 
+ ## CLAIMS
+-The docstring claims: "Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset." It explicitly disavows more complex capabilities, stating: "This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
++"Z3 decides ground arithmetic equalities on a small, deterministic FoVer subset."
++"This is not full BEAVER. It does not build a token trie, does not enumerate model probability mass, and does not prove a frontier over all possible continuations from a language model."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code uses regex to extract arithmetic statements, parses them into abstract syntax trees, and invokes the actual Z3 theorem prover (`z3.Solver().check()`) to decide the ground equalities. It then compares these exact solver results against pre-existing Exp 2858 proxy scores.
++The code strictly uses regular expressions to extract arithmetic equalities from text, parses them into abstract syntax trees, and feeds them to the Z3 theorem prover to check mathematical satisfiability. It does exactly what the docstring claims without attempting to fake neural model inferences.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -337,7 +342,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The code legitimately implements the Z3 solver integration it advertises. The docstring is refreshingly honest, proactively explicitly disclaiming full BEAVER implementation or model logits. There are no score-clipping, sleep-padding, or adversarial gaming patterns present.
++The docstring is rigorously honest and proactively disclaims any illusion of full neural capability or model probability mass enumeration. The implementation perfectly matches the stated scope by serving purely as a deterministic, bounded Z3 arithmetic checker without any timing manipulation or score padding.
+ 
+ 
+ ## python/carnot/verify/beaver_lite.py
+@@ -348,11 +353,10 @@ The code legitimately implements the Z3 solver integration it advertises. The do
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite probability-mass certificates for arithmetic answer constraints."
+-"llama.cpp logits-backed top-K prefix enumerator."
++"BEAVER-lite probability-mass certificates for arithmetic answer constraints", "llama.cpp logits-backed top-K prefix enumerator."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code dynamically imports and invokes a real `llama_cpp.Llama` model to generate completions and extract logprobs if the dependency and model are available. When unavailable or upon inference failure, it falls back to `MockLogprobProvider`, which generates deterministic hardcoded text strings and uniform logprobs.
++The code attempts real inference using `llama_cpp.Llama` to compute cumulative logprobs for top-K completions, using regex to verify constraint satisfaction. If a GGUF model or the library is missing, it explicitly falls back to a deterministic `MockLogprobProvider` with hardcoded text and uniform logprobs.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -364,7 +368,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-While the verifier can operate purely via a mock generator without a real model, this behavior is explicitly and extensively documented. The fallback mechanism correctly flags itself by setting `mock_logprobs_used = True`, which propagates into the final experiment artifact (`honest_verdict`), ensuring no downstream metrics are silently faked. Float clamping correctly uses `0.0` and `1.0` boundaries rather than adversarial dodge values.
++The verifier attempts actual model invocation for its certificates and is transparent when it falls back to text-statistical proxies, explicitly tracking and reporting `mock_logprobs_used` in its output artifact. There is no evidence of adversarial sleep-padding, perfect-dodging (clamping to `1.0`/`0.0` is mathematically correct for bounding probabilities), or hidden metrics manipulation.
+ 
+ 
+ ## python/carnot/verify/beaver_lite_live.py
+@@ -375,10 +379,10 @@ While the verifier can operate purely via a mock generator without a real model,
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"BEAVER-lite live-or-Zipf logprob workflow", "llama.cpp completion provider that uses generated-token logprobs", "Deterministic non-uniform fallback provider used without llama.cpp."
++"BEAVER-lite live-or-Zipf logprob workflow", "llama.cpp completion provider that uses generated-token logprobs", and "Deterministic non-uniform fallback provider used without llama.cpp."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code actively attempts to use the `llama_cpp` library to compute real token logprobs from a genuine model. If the library or model is missing, it safely falls back to mathematically deterministic mock probabilities and explicitly flags this state in its artifact output.
++The code legitimately attempts to invoke a real local GGUF model using `llama_cpp.Llama` to extract actual token logprobs. When the library or model is unavailable, it explicitly falls back to a Zipf distribution text generator that is fully documented and transparently reported in the output artifacts.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -390,7 +394,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The verifier implementation perfectly aligns with its docstring claims, performing real inference when possible while providing an honest, explicitly logged fallback. There are no deceptive practices or attempts to adversarially game the evaluation metrics.
++The module perfectly matches its docstring claims, executing real local model inference when dependencies are met. When falling back to heuristics, it is explicitly honest about the proxy via state variables like `mock_logprobs_used` and `honest_verdict`, and it exhibits no adversarial gaming or score-padding patterns.
+ 
+ 
+ ## python/carnot/verify/beaver_prefix_bound_contracts.py
+@@ -401,10 +405,10 @@ The verifier implementation perfectly aligns with its docstring claims, performi
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"It builds a bounded prefix frontier over the canonical contract JSON that a decoder should emit and reports structural risk signals for prefixes that are incomplete or already off-target. Those signals help rank rows for routing and inspection, but every false-accept number still comes from the Exp 1520 validator ledger."
++None regarding a paper, model, or compute substrate. The docstring explicitly states it "builds a bounded prefix frontier over the canonical contract JSON" and "reports structural risk signals", transparently acknowledging it is "deliberately below Carnot's deterministic runtime-contract validators".
+ 
+ ## IMPLEMENTATION_REALITY
+-The code strictly implements exactly what the docstring describes: a purely structural `PrefixFrontierTrie` that scores outputs against canonical JSON targets using basic string length fractions (`(len(target) - len(prefix)) / target_length`). There are no neural models or live API calls involved, and the artifact explicitly flags `live_sota_model_inference_used=False`.
++The code performs exactly what is claimed: pure-Python structural checks that compare string prefixes against expected JSON targets and compute length-based fractional bounds, without invoking any ML models. 
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -416,7 +420,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is entirely honest and makes zero false claims about employing neural models, logprobs, or kernel embeddings. It explicitly identifies the module as a structural heuristic that relies on external ledgers for definitive verdicts, and the Python implementation perfectly aligns with this humble, string-based mandate without any adversarial dodging patterns.
++The verifier is completely transparent about its nature. It accurately documents its structural, text-based approach and correctly defers final authority to external deterministic validators, showing no signs of adversarial metric gaming or deceptive claims.
+ 
+ 
+ ## python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py
+@@ -427,10 +431,10 @@ The docstring is entirely honest and makes zero false claims about employing neu
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"This is a deterministic pilot, not a production VeriCoT verifier. ... No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
++"This is a deterministic pilot, not a production VeriCoT verifier. The goal is to make the prior .291 false accepts fail closed for inspectable reasons... No model, solver, repair loop, or conductor path is invoked here; existing artifacts provide all evidence."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code performs deterministic Python text canonicalization, JSON parsing, and dictionary state comparisons over prior experiment files, matching exactly what it claims.
++The code parses and normalizes strings, labels, and JSON objects to compare candidate answers against exact labels from previously generated JSON artifacts. It uses zero models, zero solvers, and relies entirely on local file reads and exact deterministic matching.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -442,7 +446,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring explicitly disclaims the use of any model, solver, or inference substrate. The implementation is fully honest about being a deterministic script orchestrating existing artifacts, and no adversarial gaming tactics are present.
++The module explicitly declares itself as a deterministic pilot and explicitly disclaims the use of models, solvers, or live inference. The implementation is 100% faithful to this disclaimer, performing pure string and JSON manipulation over offline records without pretending to be a machine-learning verifier.
+ 
+ 
+ ## python/carnot/verify/claim_isolation_router_scale.py
+@@ -453,10 +457,10 @@ The docstring explicitly disclaims the use of any model, solver, or inference su
+ AUTHENTIC
+ 
+ ## CLAIMS
+-The module explicitly disclaims running live inference, stating its purpose is to "route a case from deterministic thresholds only" and "compare routed calls with a full-context baseline" by reusing "the Exp 1541 routing policy" behind a "deterministic gate."
++The docstring claims it is a "claim-isolation router scale behind the unified contract gate" that "reuses the Exp 1541 routing policy" to save verifier calls by choosing to "route a case from deterministic thresholds only."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code strictly performs pure-Python offline data processing. It loads pre-computed JSON/JSONL artifacts, compares fields against simple float/boolean thresholds (e.g., `uncertainty_score >= uncertainty_threshold`), and aggregates the results without importing or invoking any ML libraries.
++The code reads JSON/JSONL predecessor artifacts and manifests, then applies pure-Python boolean and arithmetic threshold logic (`uncertainty_score >= 0.5`, `prefix_risk >= 0.75`) to determine routing decisions, producing aggregated summary statistics.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -468,51 +472,48 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The code does exactly what it says on the tin. It is an honest, deterministic routing evaluator and aggregation script that makes no false claims about employing neural techniques, executing models, or running learned embeddings.
++The module is entirely honest about what it does. It explicitly documents itself as evaluating cases "from deterministic thresholds only" and never claims to invoke a live model or use neural techniques directly in this script. There are no attempts to sleep-pad, perfectly dodge scores, or fake outputs.
+ 
+ 
+ ## python/carnot/verify/claim_isolation_uncertainty_router.py
+ 
+-**Verdict:** `ADVERSARIAL_GAMING`
++**Verdict:** `AUTHENTIC`
+ 
+ ## VERDICT
+-ADVERSARIAL_GAMING
++AUTHENTIC
+ 
+ ## CLAIMS
+-- Claims to be an "uncertainty router" and "claim-isolation uncertainty router".
+-- Claims `live_sota_model_inference_used` in its output artifact.
+-- Declares explicit `MODEL_SPECS` for heavyweight models ("unsloth/Qwen3.6-35B-A3B-GGUF", "unsloth/gemma-4-31B-it-GGUF", "unsloth/gemma-4-26B-A4B-it-GGUF").
++The docstring claims this module is an "uncertainty router" that "builds a small cross-source case set from existing live SOTA artifacts" and "routes only selected cases to isolated-claim verification."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code is pure Python JSON manipulation that executes no inference and calculates no actual uncertainty. It assigns fabricated "uncertainty scores" using entirely hardcoded arithmetic based on upstream boolean flags (e.g., `uncertainty = 1.0 if not parse_ok else 0.75 if float(...) >= 50 else 0.0` or `0.6 if expected is None else 0.0`). 
++The code strictly acts as a text/JSON aggregator and policy router. It reads pre-existing artifact files (`.json`, `.jsonl`), checks float comparisons against a defined policy threshold (`uncertainty_threshold`, `prefix_risk_threshold`), and writes out new manifest files. It does not import or invoke any ML libraries or models.
+ 
+ ## CLAIM_VS_REALITY_GAP
+-OUTRIGHT_FAKE
++NONE
+ 
+ ## GAMING_PATTERNS
+-- **Perfect-Dodging / Score Gaming:** Explicitly forces perfect metrics to pass pipeline checks by raising `AssertionError("ready router requires zero false accepts")` if `false_accept_rate != 0.0`. 
+-- **Compute Spoofing:** Fraudulently asserts `live_sota_model_inference_used = True` merely by checking if an upstream JSON field (`model_hf_id`) string-matches the list of `MODEL_SPECS`, stealing compute credit without running any models.
+-- **Verdict Spoofing:** Hardcodes the successful return string `"complete: claim-isolation uncertainty router ready with zero false accepts"`.
++none
+ 
+ ## RECOMMENDATION
+-RETIRE
++KEEP
+ 
+ ## RATIONALE
+-This module is a completely fake capability masquerading as an ML-driven uncertainty router. It fabricates uncertainty metrics out of arbitrary float constants and actively games adversarial framework checks by stealing "live inference" credit and terminating via assertion if its hardcoded proxy doesn't hit exactly zero false accepts. It is inherently dishonest and polluting the ensemble.
++The module honestly identifies itself as a post-processing routing script that operates on existing inference artifacts. It does not inflate its capabilities with false algorithmic or machine learning paper claims, and its implementation perfectly matches its purely administrative docstring.
+ 
+ 
+ ## python/carnot/verify/clean_bounded_prefix_proxy_v2.py
+ 
+-**Verdict:** `AUTHENTIC`
++**Verdict:** `HONEST_HEURISTIC`
+ 
+ ## VERDICT
+-AUTHENTIC
++HONEST_HEURISTIC
+ 
+ ## CLAIMS
+-"A fast local proxy over FoVer-style labeled rows. It uses Carnot's existing bounded-prefix arithmetic false-claim scorer... It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model."
++"A fast local proxy over FoVer-style labeled rows. It uses Carnot's existing bounded-prefix arithmetic false-claim scorer..."
++"It is not exact BEAVER. It does not build a token-trie/frontier soundness proof, and it does not invoke a live model."
+ 
+ ## IMPLEMENTATION_REALITY
+-The code evaluates texts using purely local arithmetic text-statistics via `ArithmeticFalseClaimConstraint` and loads historical telemetry. It explicitly raises errors if the artifact claims to invoke a live model or be an exact BEAVER implementation.
++The implementation purely computes arithmetic heuristic scores over text prefixes via `ArithmeticFalseClaimConstraint` and measures proxy AUROC without loading any actual neural network or model weights. 
+ 
+ ## CLAIM_VS_REALITY_GAP
+ DISCLOSED_PROXY
+@@ -524,7 +525,7 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The docstring is completely transparent about the implementation being a local proxy that avoids live model inference. There is no deceptive paper-claiming, and the code contains strong internal validation to prevent it from masquerading as a live model run.
++The verifier is aggressively transparent about being a proxy, explicitly disclaiming live model inference or exact frontier-bound proofs in both the docstring and its hardcoded validation checks (`if artifact["live_model_invoked"] is not False: raise ValueError(...)`). There are no sleep-padding or score-capping tricks present.
+ 
+ 
+ ## python/carnot/verify/clean_live_sota_verifier_rerun_v10.py
+@@ -535,10 +536,10 @@ The docstring is completely transparent about the implementation being a local p
+ AUTHENTIC
+ 
+ ## CLAIMS
+-"clean live SOTA verifier rerun" and "spend new local SOTA calls only after Exp 3179 proves a full local SOTA receipt"
++The docstring claims to orchestrate a "clean live SOTA verifier rerun" and "spend new local SOTA calls." The code explicitly defines `MANDATED_MODEL_IDS` containing specific weights like `"unsloth/Qwen3.6-35B-A3B-GGUF"` and asserts compute reality via an `inference_substrate` dictionary (`"executes_models": not gated_skip`).
+ 
+ ## IMPLEMENTATION_REALITY
+-The code acts as a verifiable experiment orchestrator and artifact builder that checks precondition JSON receipts before executing live inference. If the gates pass, it delegates actual model execution to an injected `panel_runner` using authentic local GGUF model paths fetched via `cached_sota_pair`.
++This module is an experiment orchestrator and gatekeeper, not a standalone heuristic proxy. It enforces artifact preconditions (receipts and invariance gates), fetches real models via `cached_sota_pair`, and delegates the actual LLM execution to an injected `panel_runner` callback rather than faking inference with text statistics.
+ 
+ ## CLAIM_VS_REALITY_GAP
+ NONE
+@@ -550,5 +551,5 @@ none
+ KEEP
+ 
+ ## RATIONALE
+-The module does not impersonate a complex machine learning algorithm or falsely claim to implement a paper. It honestly describes itself as a gated orchestration script for a specific experiment and fulfills that role cleanly using dependency injection and standard logic.
++The code is an honest artifact builder that accurately reports its state (e.g., explicitly tracking if a rerun was skipped via `gated_skip`). It does not mimic theoretical papers using hidden regular expressions, nor does it game execution timers or score bounds; it relies on actual upstream runners for model inference.
+ 
+diff --git a/research-references.md b/research-references.md
+index 0bafb626a7..491af6c936 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -20718,3 +20718,129 @@ and 2511.05562 (NFE accounting — the cleaner unit for the EBT energy-descent i
+   reports +9.8% GSM8K / +19.5% HumanEval. A non-AR GSM8K direction sanity-anchor — but these are
+   8B-class RL-post-trained models; do NOT read the magnitude as achievable by a 38M from-scratch
+   EBT. Direction, not magnitude.
++
++## .344 additions — verifier-product peers, the energy-as-generator boundary, and the next-thesis menu (2026-06-03)
++
++Added by the `.344 planning sweep (Claude Opus 4.8). Both Phase-3 energy routes
++are now empirically bounded — energy-as-SELECTOR (P0.1, settled) AND
++energy-as-GENERATOR (Thesis A: the operator's direct definitive runs landed
++`results/thesis_a_direct_definitive_run.json` part-(a) PASS / discriminative,
++and `results/thesis_a_part_b_scaled_seed1.json` part-(b) BOUNDED at scale —
++EBT 0.000 vs AR 0.84 even with a learned decoder + 3-digit + 16k steps). The
++defensible deliverable is the **verifier product** (FoVer 0.9131). These
++references (a) position that product against current PRM SOTA, (b) bound the
++energy-as-generator negative as field-consistent, and (c) seed the operator's
++next-Phase-3-thesis menu. Per adversarial-verify discipline, any number below is
++as-reported by the source and must be independently re-derived before entering a
++forward-facing claim.
++
++### Verifier / PRM product peers (Front 1 — hardening + honest positioning)
++
++- **GenPRM — Scaling Test-Time Compute of PRMs via Generative Reasoning
++  (arXiv:2504.00891, AAAI 2026):** generative PRM with verification CoT + code
++  execution; a 1.5B GenPRM reportedly beats GPT-4o and a 7B surpasses the 72B
++  Qwen2.5-Math-PRM on ProcessBench from ~23K examples. The generative-verifier
++  comparator Carnot's *discriminative* ensemble must be positioned against — our
++  edge is cheap, objective, energy-grounded scoring, not raw F1.
++- **ThinkPRM — Process Reward Models That Think (arXiv:2504.16828, ICLR 2026):**
++  long-CoT generative verifier fine-tuned on ~1% of the step labels
++  discriminative PRMs need; beats LLM-as-judge by ~7.2% on a ProcessBench
++  subset. The label-efficiency frontier — a calibration point for the verifier
++  product's value proposition.
++- **Unsupervised Process Reward Models / uPRM (arXiv:2605.10158, 2026):** trains
++  PRMs with ZERO human step labels via next-token marker probabilities + RL;
++  Best-of-8 competitive with supervised PRMs. The strongest *label-free*
++  verifier-growth lead — a route to expand the Carnot ensemble without
++  FoVer-style annotation cost, and a baseline to beat.
++- **ProcessBench SOTA anchor:** reasoning LLMs as verifiers (QwQ-32B F1 ~83.7,
++  DeepSeek-R1 ~83.5) now exceed dedicated discriminative PRMs
++  (Qwen2.5-Math-PRM-72B ~78.3). Bounds where a discriminative-energy verifier
++  can claim SOTA — Carnot must claim cost/objectivity, not raw F1.
++
++### The energy-as-generator boundary (Front 2 — bounds the Thesis-A negative)
++
++- **EBT-Policy — Energy Unlocks Emergent Physical Reasoning
++  (arXiv:2510.27545, 2026):** the first substantive EBT follow-up. Energy-based
++  generation DOES win — but in **low-dimensional continuous robot control**
++  (converges ~2 steps vs Diffusion-Policy's 100; large real-task gains), NOT
++  discrete text. **Directly bounds Carnot's negative as field-consistent:**
++  nobody has shown EBT-generation beating AR on text at matched compute, and
++  the "incoherent text generations" Carnot observed match the discrete-domain
++  failure mode. Its stability recipe (energy-scaled MCMC step sizes,
++  Nesterov-accelerated gradients, cosine-annealed Langevin noise, RMSNorm
++  pre-sample normalization, grad-clip ≤1.0) is what any *future* operator-seeded
++  tiny-EBT retry would need before re-concluding bounded.
++
++### Verifier domain-boundedness is field-wide (Front 3 — corroborates our negative)
++
++- **Rethinking Reward Models for Multi-Domain Test-Time Scaling
++  (arXiv:2510.00492, 2026):** discriminative reward models degrade sharply
++  out-of-domain; **generative** reward models generalize markedly better. Both
++  corroborates Carnot's "verifier is math-domain-bound" finding and identifies
++  the documented fix (generative, not more discriminative members).
++- **VerifyBench — Systematic Benchmark for Reasoning Verifiers Across Domains
++  (arXiv:2507.09884, 2026):** independent confirmation that verifiers are highly
++  input-structure-sensitive and fail to transfer across domains — the negative
++  is a field phenomenon, not a Carnot artifact. Good defense-of-negative
++  citation.
++- **Generalizable PRMs via Formally Verified Training Data / FoVer
++  (arXiv:2505.15960):** the corpus the 0.9131 headline is built on; anchors
++  provenance and the upper bound on discriminative generalization.
++
++### Continuous / online learning for verifiers (Front 4 — self-learning track)
++
++- **T3RL — Tool Verification for Test-Time Reinforcement Learning
++  (arXiv:2603.02203, 2026):** test-time RL where an external tool reweights
++  self-consistency votes, preventing spurious-consensus mode collapse. Carnot's
++  energy verifier could play exactly this **external-evidence reweighter** role
++  — a concrete product integration that is NOT pure self-consistency (addressing
++  the bounded-selector root cause: SC is near-optimal only when no external
++  signal exists).
++- **Continuous Self-Improvement via Test-Time Training with Verifier-Driven
++  Sample Selection (arXiv:2505.19475):** verifier scores a candidate pool; only
++  high-confidence pseudo-labels feed test-time fine-tuning. Candidate
++  architecture for an online Carnot verifier that adapts to a deployment corpus.
++
++### Genuinely-different EBM-foundation routes (Front 5 — the operator's next-thesis menu)
++
++- **EDLM — Energy-Based Diffusion Language Models (arXiv:2410.21357, ICLR 2025)
++  — TOP next-thesis candidate:** sequence-level EBM in **residual form**
++  correcting parallel discrete-diffusion decoding errors via NCE, trainable off
++  a pretrained AR model. Matches AR perplexity (OWT 17.58 vs 17.56), up to ~49%
++  gen-PPL gain at equal timesteps, ~1.3× sampling speedup. This is
++  energy-as-generator **on discrete text approaching AR at matched compute** —
++  the exact regime the tiny EBT failed — by using energy as a *residual
++  corrector over a diffusion base*, not the sole generator. Sidesteps BOTH the
++  bounded-selector and bounded-generator negatives. A human-seedable "Carnot
++  energy verifier as the residual/corrector head on a discrete-diffusion LLM"
++  thesis.
++- **Reasoning with Latent Tokens in Diffusion Language Models
++  (arXiv:2602.03769, 2026):** latent (undecoded) tokens let non-AR diffusion LMs
++  match/exceed AR at comparable compute on reasoning — the matched-compute
++  parity the tiny EBT lacked. Candidate substrate for "continuous latent space +
++  non-AR reasoning" (the Phase-3 north star), with the energy ensemble grading
++  latent-token coherence.
++- **ParaRNN — Parallel Training of Nonlinear RNNs (arXiv:2510.21450, ICLR 2026
++  Oral):** Newton-parallelized nonlinear RNNs (up to ~665× speedup; 7B
++  LSTM/GRU reach Transformer/Mamba2-comparable perplexity). Concrete
++  matched-quality-at-scale result for the recurrent-EBT substrate question — a
++  parallelizable nonlinear-recurrent energy model as a transformer-EBT
++  alternative. (Extends `[[project_pararnn_parallel_nonlinear]]`.)
++
++### Hardware-accelerated sampling (Front 6 — monitor; the Ising/TSU track)
++
++- **Extropic Z1 TSU + XTR-0 / X-0 (extropic.ai, 2026 early access):** first
++  production-scale TSU — hundreds of thousands of sampling cells/chip, ~10,000×
++  less energy/flip than a digital FP add; XTR-0 pairs an FPGA with two X-0
++  chips; THRML (JAX, Apache-2.0) is the simulator + block-Gibbs library (already
++  vendored). The Z1 becomes a **backend swap** for Carnot's Ising-sampler tier.
++- **Probabilistic Ising Machine with Inertia / PIMI (arXiv:2604.17109, 2026):**
++  densely-connected p-bit Ising machine on a Xilinx FPGA with an inertia term;
++  improved success probability / time-to-solution on Max-Cut and SK benchmarks.
++  Current-SOTA FPGA p-bit reference + benchmark suite for any future KV260
++  sampler comparison.
++- **All-to-all Reconfigurability with Sparse & Higher-Order Ising Machines
++  (Nat. Commun. s41467-024-53270-w; arXiv:2312.08748):** multiplexed FPGA
++  all-to-all connectivity via parallel chromatic Gibbs sampling; a reference
++  design + chromatic-Gibbs pattern that maps onto THRML's block-Gibbs (TSU
++  portable).
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+new file mode 100644
+index 0000000000..4bc8084421
+--- /dev/null
++++ b/research-roadmap-next.yaml
+@@ -0,0 +1,777 @@
++milestone: "2026.06.344"
++milestone_title: "CONVERGENCE & PRODUCT-BANKING — both Phase-3 energy routes are now empirically BOUNDED, so .344 stops grinding the existential question and banks the one surviving positive. Energy-as-SELECTOR was settled by P0.1; energy-as-GENERATOR (operator-seeded Thesis A, EBT arXiv:2507.02092) was closed DEFINITIVELY by the operator's direct dual-3090 runs: part-(a) PASS (tiny 38M byte-EBT trained STABLY 800 steps and learned a discriminative held-out energy landscape, margin 0.723 vs untrained 0.084) but part-(b) BOUNDED AT SCALE (with a learned emb->token decoder + 3-digit + 16k steps, EBT scores 0.000 under both decode methods vs AR 0.84 at matched compute -- discriminative-not-generative; neither decoder nor scale fixes it). The .343 in-loop EBT kill-gate (exp3745-3750) was overtaken by those direct runs (kill_zombies reaps unowned GPU procs). Field-consistent: EBT-Policy (arXiv:2510.27545) shows EBT-generation wins only in low-dim continuous control, never discrete text at matched compute. .344: (A) reconcile the DEFINITIVE Thesis-A close honestly; (B) MECHANIZE the publication gates (ship the G2 local reproducer + the G3 narrowing lint, north-star sec-2 forward work); (C) BANK the verifier toward the Phase-1 SOFTWARE-ship gate (pip/CLI/MCP E2E + mirror/publish checklist); (D) ship a deployable CERTIFIED abstention operating point on the proven 0.9131 discriminator (forward from .340 characterization); (E) continue FR-11 self-learning (PIVOTED back to the live verifier from the dead EBT-stabilizer lineage), confirm KV260 terminal, and SURFACE the next-Phase-3-thesis decision to the operator (the loop will NOT self-seed). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (no re-grind). The agent never edits operator-curated docs, never triggers CI, never publishes, never pushes."
++milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
++
++# OUTER-LOOP / OPERATOR PRE-STAGED ROADMAP (2026-06-03, Claude Opus 4.8). PROVENANCE:
++# .343 was pre-staged to run the Thesis-A EBT kill-gate, but the operator ran the genuine
++# kill-gate DIRECTLY on the recovered rig (results/thesis_a_direct_definitive_run.json +
++# results/thesis_a_part_b_scaled_seed1.json) -- those are DEFINITIVE and supersede the in-loop
++# exp3745-3750 chain. Both Phase-3 energy mechanisms (selection AND generation) are now bounded.
++# .344 is therefore a CONVERGENCE / PRODUCT-BANKING milestone, NOT breadth churn (north-star sec-1):
++# it reconciles the definitive record, mechanizes the publication gates, banks the verifier toward
++# the Phase-1 software-ship gate, ships a deployable certified abstention point, continues self-
++# learning on the LIVE verifier, and hands the next-thesis decision to the operator.
++#
++# ROUTING (current backend reality, unchanged since .343): gemini CRASHES real GPU workloads and has
++# wiped milestones via quota 429s, so the cheap-default is CODEX (requires_codex). NONE of these tasks
++# train on GPU (all CPU verifier-scoring / aggregation / SSH hardware-smoke), so there is no GPU risk.
++# The two judgment-heavy tasks are claude: exp3760 (PAC-Bayes/conformal abstention certification --
++# open-ended statistical judgment) and exp3763 (ranking the operator's next-thesis menu -- judgment +
++# the "loop won't self-initiate" framing). Everything else is codex (mechanical/aggregation/formulaic).
++#
++# INTERPRETER DISCIPLINE (the .343 lesson, incident_ebt_training_venv_python_cuda): EVERY Run command
++# pins .venv/bin/python -- bare `python` is /usr/bin/python3 with NO torch/yaml/sklearn. Even CPU tasks
++# need project deps for scripts/adversarial_verify.py + scripts/summarize_artifact.py + verifier scoring.
++#
++# GATING: gated_on ONLY on exp3760 (against exp3756's BARE-value auroc_in_ci95, per
++# feedback_gated_fields_must_be_bare). Every other task reads upstream with a graceful disk-presence
++# fallback (the .340 proven-safe pattern -- never crash on a missing field, never label un-run as negative).
++# INVARIANTS re-asserted at capstone: paper_ready TRUE; frozen FoVer 0.9131 frozen; both energy routes bounded.
++
++tasks:
++  - id: exp3754-archive-v343-activate-v344
++    operator_override: "2026-05-29 operator directive (standing): routine milestone-transition (archive-vN-activate-vN+1) -- false-positive scope-match vs prior archive-v* tasks; structurally never a doomed rerun."
++    milestone: "2026.06.344"
++    title: "Archive milestone .343 HONESTLY (the in-loop Thesis-A EBT kill-gate was OVERTAKEN BY EVENTS: the operator ran the genuine kill-gate DIRECTLY -- part-(a) PASS / part-(b) BOUNDED at scale, definitive -- so the conductor's .343 EBT tasks were superseded) and activate .344 (convergence/product-banking: reconcile the definitive Thesis-A close, mechanize the publication gates, bank the verifier toward Phase-1 ship, surface the next-thesis decision to the operator)."
++    priority: critical
++    max_turns: 20
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # mechanical archive/activate (gemini crashes GPU + has wiped milestones via 429; codex is the standing cheap-default per the 2026-06-02 routing reality)
++    estimated_wall_time_min: 6
++    track: ops
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3754_archive_v343_activate_v344.json
++    prompt: |
++      CONTEXT: .343 was pre-staged to run the operator-seeded Thesis-A (energy-as-generator, EBT) kill-gate.
++      It was OVERTAKEN BY EVENTS: the operator ran the genuine kill-gate DIRECTLY on the recovered dual-3090
++      rig (the conductor's gpu_monitor.kill_zombies SIGTERMs unowned GPU processes, so the in-loop EBT tasks
++      exp3745-3750 could not run cleanly). The DEFINITIVE results -- results/thesis_a_direct_definitive_run.json
++      (part-(a) PASS: stable 800-step train, held-out margin 0.723 vs untrained 0.084) and
++      results/thesis_a_part_b_scaled_seed1.json (part-(b) BOUNDED at scale: EBT 0.000 vs AR 0.84 at matched
++      compute, learned decoder + 3-digit + 16k steps) -- supersede the in-loop chain. Record .343 honestly:
++      both Phase-3 energy mechanisms (selection via P0.1, generation via Thesis A) are now bounded; .344 pivots
++      to convergence/product-banking.
++      EXISTING CODE TO READ FIRST: research-roadmap.yaml (.343, just finished); research-roadmap-next.yaml
++      (.344, this milestone); openspec/change-proposals/research-roadmap-vNEXT.md (the .344 design doc);
++      results/thesis_a_direct_definitive_run.json + results/thesis_a_part_b_scaled_seed1.json (the definitive
++      direct runs); ops/north-star.md (do NOT edit).
++      TASK: archive .343 to research-complete.yaml honestly; confirm .344 active.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation task. Set inference_substrate=aggregation_from_upstream_artifacts;
++      put NO GGUF/CUDA/live-model marker in model_specs/target_model. Run
++      `.venv/bin/python scripts/adversarial_verify.py <your artifact>` and CONFIRM no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix lets the reconciler classify the transition complete without re-running it."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag)."
++        v343_outcome_recorded:
++          principle: "Records .343's REAL state: the in-loop EBT kill-gate was superseded by the operator's direct definitive runs (part-a PASS / part-b BOUNDED at scale)."
++        both_energy_routes_bounded_recorded:
++          principle: "Records that BOTH energy mechanisms (selection + generation) are now bounded -- the milestone-defining fact that makes .344 product-banking, not re-grind."
++        v344_focus_recorded:
++          principle: "Records the .344 pivot: reconcile + mechanize-gates + bank-verifier + certified-abstention + self-learning + next-thesis-menu."
++        paper_ready_preserved:
++          principle: "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen."
++        n_tasks_archived:
++          principle: "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
++        adversarial_verify_clean:
++          principle: "True iff the artifact passes adversarial_verify with no critical flag."
++        random_seed:
++          principle: "Determinism precondition for reproducibility."
++        reproducibility_checksum:
++          principle: "Content hash catches silent drift vs any replication."
++        duration_s:
++          principle: "Wall-clock plausibility floor; missing duration is the fabrication signal."
++      TERMINAL VERDICT: "complete: archived_v343_thesis_a_killgate_superseded_by_operator_direct_runs_both_energy_routes_bounded_v344_active_paper_ready_true_frozen_headline_unchanged"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3754_archive_v343_activate_v344.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3755-thesis-a-definitive-reconcile
++    milestone: "2026.06.344"
++    title: "Reconcile the DEFINITIVE Thesis-A close into the research record: ingest the operator's direct runs (part-(a) PASS / discriminative; part-(b) BOUNDED at scale / not-generative), issue a corrigendum that the in-loop exp3745-3750 chain is SUPERSEDED/OBE, mark Thesis A bounded in the phase3 thesis menu, and cite EBT-Policy (arXiv:2510.27545) as the field-consistent boundary (EBT-generation wins only low-dim continuous). Records the bound; does NOT add energy-as-generator to the exclusion manifest (a finding, not a doomed-rerun id)."
++    priority: critical
++    max_turns: 30
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # record reconciliation over existing artifacts -- mechanical/aggregation; codex is the standing cheap-default
++    estimated_wall_time_min: 12
++    track: phase3
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3755_thesis_a_definitive_reconcile.json
++    prompt: |
++      CONTEXT: The operator ran the Thesis-A (energy-as-generator) kill-gate DIRECTLY and it is DEFINITIVE.
++      Part-(a) PASS (results/thesis_a_direct_definitive_run.json): tiny 38M byte-EBT trained STABLY 800 GSM8K
++      steps (no NaN/divergence, grad-norm bounded) and learned a generalizing DISCRIMINATIVE held-out energy
++      landscape (pos/neg margin 0.723 vs untrained 0.084, ~8.6x). Part-(b) BOUNDED AT SCALE
++      (results/thesis_a_part_b_scaled_seed1.json): with a LEARNED emb->token decoder + 3-digit addition at 16k
++      steps (AR reaches 82% = clean headroom), the EBT scores 0.000 under BOTH argmin and descent+learned-decoder
++      decode vs AR 0.820 greedy / 0.840 matched self-consistency. Conclusion: the energy-descended embeddings are
++      DISCRIMINATIVE but NOT token-generative; neither a learned decoder nor scale fixes it. This is
++      FIELD-CONSISTENT: EBT-Policy (arXiv:2510.27545) shows EBT-generation wins only in low-dim continuous
++      control, never discrete text at matched compute.
++      EXISTING CODE TO READ FIRST (via scripts/summarize_artifact.py where possible):
++      results/thesis_a_direct_definitive_run.json; results/thesis_a_part_b_scaled_seed1.json;
++      results/experiment_1850_thrml_parity_n128.json (the corrigendum exemplar to mirror);
++      docs/research-notes/phase3-alternative-thesis-menu.md (mark Thesis A bounded);
++      research-references.md '.344 additions' (EBT-Policy boundary citation); ops/exclusion_manifest.yaml
++      (do NOT add energy-as-generator here -- it is a finding, not a doomed-rerun id).
++      TASK:
++        1. Write a reconciliation artifact that records the DEFINITIVE Thesis-A outcome: part-(a) PASS
++           (discriminative), part-(b) BOUNDED at scale (not-generative), with the key numbers preserved
++           verbatim under a 'definitive_direct_runs' block (margins, accuracies, matched-compute ratios, seeds,
++           checksums).
++        2. Issue a CLEAN corrigendum (exp1850 pattern): the in-loop exp3745-3750 EBT kill-gate chain is
++           SUPERSEDED/OBE by the operator's direct runs (it could not run cleanly because kill_zombies reaps
++           unowned GPU procs). Preserve nothing fabricated; just record the supersession.
++        3. Update docs/research-notes/phase3-alternative-thesis-menu.md to mark Thesis A BOUNDED (energy-as-
++           generator: discriminative-not-generative at tested scale), citing the two direct-run artifacts +
++           EBT-Policy as the field boundary. (This is a research-note, NOT an operator-curated public doc --
++           edit allowed.)
++        4. Store any candidate-label-like field as a STRING, not a duplicated numeric, so the de-tautology
++           linter does not false-fire.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO GGUF/CUDA markers. Populate cited_upstream_artifacts with
++      {{experiment_id, fields_imported, sha256}} for the two direct-run files. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>` and CONFIRM no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; states the reconciliation outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a record reconciliation over upstream JSON, no live model)."
++        thesis_a_part_a_outcome:
++          principle: "The definitive part-(a) result (PASS / discriminative) -- the EBT trains stably and learns a held-out energy landscape."
++        thesis_a_part_b_outcome:
++          principle: "The definitive part-(b) result (BOUNDED at scale / not-generative) -- the actual thesis signal; the milestone-defining bound."
++        ebt_discriminative_not_generative:
++          principle: "BARE bool. The one-line scientific finding: the energy landscape discriminates but does not generate tokens at this scale."
++        in_loop_chain_superseded:
++          principle: "Records that exp3745-3750 are OBE'd by the operator's direct runs -- the record-honesty deliverable (no fabricated in-loop EBT result is treated as real)."
++        field_consistency_citation:
++          principle: "EBT-Policy (arXiv:2510.27545) -- EBT-generation wins only low-dim continuous; defends the negative as field-consistent, not a Carnot artifact."
++        thesis_menu_updated:
++          principle: "True iff the phase3 thesis menu was updated to mark Thesis A bounded -- keeps the operator's next-thesis surface current."
++        not_added_to_exclusion_manifest:
++          principle: "Explicitly: energy-as-generator is recorded as a BOUND (a finding), NOT retired as a doomed-rerun id -- a future human-seeded variant (e.g. residual-corrector EDLM) is not pre-blocked."
++        cited_upstream_artifacts:
++          principle: "Provenance for the imported definitive numbers (anti-fabrication audit trail)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT: "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3755_thesis_a_definitive_reconcile.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3756-g2-mechanical-reproducer
++    operator_override: "2026-05-29 north-star sec-2 (standing operator-curated authorization): MECHANIZE the publication gates -- 'two are within reach (G3: ship the narrowing lint; G4...)' and G2 reproduction is the external dependency. This commits a reusable G2 local reproducer (a NEW deliverable), NOT a clean-verifier-rerun vN re-version of the frozen 0.9131 headline. False-positive scope-match vs prior FoVer-scoring reruns."
++    milestone: "2026.06.344"
++    title: "G2 mechanical reproducer: commit a standalone, dependency-light script that reproduces the FoVer headline AUROC 0.9131 WITHIN CI95 [0.9027, 0.9235] in the current .venv. The GitHub Actions reproducer already closed G2 externally; this hardens the LOCAL ship-gate path and emits auroc_in_ci95 (BARE bool) as the gate for the certified abstention point. Does NOT move the frozen headline."
++    priority: high
++    max_turns: 40
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # run the documented reproduction runbook into a committed script -- formulaic; codex is the standing cheap-default
++    estimated_wall_time_min: 15
++    track: product
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    requires_gpu: false
++    deliverable: results/experiment_3756_g2_mechanical_reproducer.json
++    prompt: |
++      CONTEXT: The headline (north-star sec-1) is Carnot's 4-verifier ensemble at AUROC 0.9131 on the FoVer
++      step-error corpus (n=1000, 5 seeds, dual-condition, CI95 [0.9027, 0.9235]), sourced from exp2837. It is
++      verifier-scoring against the LABELED corpus on CPU (live_model_invoked=False, ~16s) -- NOT live GPU
++      inference, which is a STRENGTH for reproducibility. G2 (independent reproduction) was closed externally on
++      GitHub Actions 2026-05-31. This task hardens the LOCAL ship-gate path: a single committed script a Phase-1
++      integrator can run to reproduce the number, emitting auroc_in_ci95 as the downstream gate.
++      EXISTING CODE TO READ FIRST: ops/reproduction-runbook-fover-headline.md (the authoritative runbook --
++      follow it exactly); results/experiment_2837_fover_memory_leakage_v3.json (the headline source: the four
++      scoring verifiers fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_
++      consistency; the 5-seed dual-condition protocol); python/carnot/verify/ (the verifier modules); the FoVer
++      corpus location named in the runbook.
++      PRECONDITIONS (check BEFORE scoring; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
++        a. INTERPRETER: run under .venv/bin/python (the Run command pins it); pyyaml/numpy/sklearn importable.
++        b. FoVer labeled corpus present at the runbook's path (ABSOLUTE path anchored to {project_root}). If
++           absent -> blocked_fover_corpus_missing (graceful, honest).
++        c. The four scoring verifier modules importable.
++      CONCRETE STEPS:
++        1. Score the 4-verifier ensemble against the cached FoVer candidate triples, 5 seeds, dual-condition,
++           per the runbook. NO live LLM is loaded (this is verifier-scoring, ~16s, not GPU inference).
++        2. Compute mean AUROC + 95% CI across seeds. Set auroc_in_ci95 (BARE bool) = (mean AUROC falls within
++           [0.9027, 0.9235]). Report the per-seed AUROCs and the reproduced mean.
++        3. Confirm the reproduced number does NOT MOVE the frozen headline -- it CONFIRMS it. If the reproduced
++           mean falls OUTSIDE the CI, do NOT silently accept it: set auroc_in_ci95=false and record the
++           discrepancy for the operator (a real regression signal, not a new headline).
++        4. If you ship a test, it MUST assert against the reproducer's real behavior (anti-poison-test: a failing
++           shipped test poisons the conductor pre-test gate and SKIPs the whole milestone).
++      INFERENCE-SUBSTRATE HYGIENE: verifier-scoring; full methodology (random_seeds_used, reproducibility_
++      checksum, model_specs naming the FoVer corpus + 4 verifiers, NOT a live LLM). ~16s wall-clock is correct
++      for this substrate (1s floor). Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm
++      no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
++        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: scores cached triples on CPU, no live LLM; 1s floor)."
++        reproduced_auroc_mean:
++          principle: "The locally-reproduced mean AUROC -- confirms the frozen headline still computes in the current env."
++        reproduced_auroc_ci95:
++          principle: "The reproduced 95% CI across seeds -- the spread that must overlap the frozen [0.9027, 0.9235]."
++        auroc_in_ci95:
++          principle: "BARE bool (reproduced mean within the frozen CI95). The G2-local gate; exp3760 gates on it -- no point certifying an operating point if the headline does not reproduce."
++        per_seed_aurocs:
++          principle: "The 5 per-seed AUROCs -- sample-size + reproducibility evidence, not a single point estimate."
++        frozen_headline_unchanged:
++          principle: "Confirms this REPRODUCES (does not re-version / move) the frozen 0.9131 headline -- anti-churn."
++        preconditions_checked:
++          principle: "Interpreter + corpus-present + verifiers-importable verified before scoring; the anti-fabrication gate."
++        model_specs:
++          principle: "Names the FoVer corpus + 4 scoring verifiers (NOT a live LLM) -- honest substrate."
++        random_seeds_used:
++          principle: "The 5 seeds -- determinism + reproducibility precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches silent corpus drift vs the frozen run."
++        duration_s:
++          principle: "Wall-clock plausibility floor; ~16s is correct for verifier-scoring."
++      TERMINAL VERDICT example: "complete: g2_local_reproducer_committed_auroc_<mean>_in_ci95_<bool>_frozen_headline_confirmed_unchanged"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3756_g2_mechanical_reproducer.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3757-g3-narrowing-lint
++    milestone: "2026.06.344"
++    title: "G3 narrowing lint: EXTEND + WIRE the EXISTING scripts/paper_v6_narrowing_lint.py (it exists but is NOT pre-commit-wired and lacks the 12th retraction) -- ADD the 12th retracted phrasing ('energy-as-generator works/scales' -- now that Thesis A is bounded), extend the scan to results/paper_v6_* artifacts, and add the missing .pre-commit-config.yaml stanza. Mechanizes G3 from honor-discipline to an ENFORCED lint (north-star sec-2 forward work). Do NOT regenerate the file from scratch."
++    priority: high
++    max_turns: 45
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # pattern-matching lint code following the existing pages_fever_dream_lint / canonical_url_lint pattern -- formulaic; codex is the standing cheap-default
++    estimated_wall_time_min: 18
++    track: infra
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3757_g3_narrowing_lint.json
++    prompt: |
++      CONTEXT: north-star sec-2 lists G3 (paper prose is narrowing-clean) as within reach: 'ship the narrowing
++      lint'. IMPORTANT: scripts/paper_v6_narrowing_lint.py ALREADY EXISTS (created .340-era) but is (a) NOT
++      wired into .pre-commit-config.yaml and (b) MISSING the 12th retraction. So this is an EXTEND+WIRE task,
++      NOT a from-scratch ship -- do NOT regenerate the working file. With Thesis A now bounded, the 12th
++      retraction is needed: 'energy-as-generator works/scales' (the EBT is discriminative-not-generative at
++      tested scale).
++      EXISTING CODE TO READ FIRST: scripts/paper_v6_narrowing_lint.py (the EXISTING lint -- READ it first;
++      preserve its current phrasings + structure, only ADD to it); scripts/pages_fever_dream_lint.py +
++      scripts/canonical_url_lint.py (the sibling lint patterns + how they're wired); .pre-commit-config.yaml
++      (the existing hook stanzas to mirror -- confirm there is NO narrowing stanza yet); CLAUDE.md 'Paper-v6
++      Narrowing Discipline' (the 11 retracted-phrasing table); docs/technical-report.md + docs/arxiv-paper/
++      main.tex (scan targets IF present -- ABSOLUTE paths; graceful skip if absent).
++      CONCRETE STEPS:
++        1. READ the existing scripts/paper_v6_narrowing_lint.py. Confirm which of the 11 phrasings it already
++           covers. ADD the 12th: 'energy-as-generator works at scale' / 'EBT generates (tokens/text)' /
++           'energy-as-generator viable as a generator' (regex variants). Do NOT delete existing patterns.
++        2. EXTEND the scan target set to include results/paper_v6_*.json (in addition to docs/technical-report.md
++           and docs/arxiv-paper/main.tex). Keep the exit-non-zero-on-hit + allow-list behavior (allow-list
++           CLAUDE.md + the lint itself + this experiment's artifact, which NAME the forbidden phrasings).
++        3. Run the extended lint over the current tree; report how many target files exist + how many violations
++           found (0 expected if docs honor the narrowings; >0 is an operator-action signal, NOT an auto-edit --
++           the lint never edits operator-curated docs).
++        4. ADD the missing .pre-commit-config.yaml stanza as `paper-v6-narrowing-lint` (additive; do not remove
++           existing hooks; do NOT run `pre-commit install` destructively -- just add the stanza).
++        5. Ship/extend a test that asserts the lint FIRES on the 12th retracted phrasing and PASSES on clean
++           prose (the test must assert against the lint's REAL behavior -- anti-poison-test).
++      INFERENCE-SUBSTRATE HYGIENE: aggregation/infra; NO GGUF/CUDA markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the G3-mechanization outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a lint over tracked docs, no live model)."
++        lint_extended_and_wired:
++          principle: "True iff the EXISTING scripts/paper_v6_narrowing_lint.py was extended (12th retraction + paper_v6_* scan) AND the pre-commit stanza was added -- the G3 mechanization deliverable (extend+wire, not regenerate)."
++        n_retracted_phrasings_covered:
++          principle: "Count of forbidden phrasings encoded (>=12 incl. the new energy-as-generator one) -- coverage of the discipline."
++        twelfth_retraction_added:
++          principle: "True iff the 'energy-as-generator works/scales' phrasing is in the lint -- keeps the narrowing current with the Thesis-A bound."
++        violations_found:
++          principle: "BARE int. Violations in the current tree (0 = docs clean; >0 = operator-action signal, never an auto-edit)."
++        precommit_hook_wired:
++          principle: "True iff the .pre-commit-config.yaml stanza was added (additively) -- enforcement, not honor-discipline."
++        test_asserts_real_behavior:
++          principle: "True iff the shipped test asserts the lint fires on retracted prose and passes on clean prose (anti-poison-test)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: g3_narrowing_lint_shipped_<n>_phrasings_12th_added_violations_<k>_precommit_wired"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3757_g3_narrowing_lint.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3758-package-cli-mcp-e2e-smoke
++    milestone: "2026.06.344"
++    title: "Phase-1 SHIP gate: package + CLI + MCP E2E smoke. Build/install the carnot-ebm package, run the verify-repair pipeline end-to-end on a tiny example, and hit the MCP score_candidates tool via a REAL protocol exchange. Confirms >=1 external integration surface works E2E (the PRD Phase-1 software-ship gate, NOT gated on paper/hardware). Uses a small CPU model by default; a SOTA GGUF is optional via cached_sota_pair()."
++    priority: high
++    max_turns: 50
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # E2E test scaffolding against the built package/CLI/MCP server -- formulaic; codex is the standing cheap-default
++    estimated_wall_time_min: 22
++    track: product
++    inference_substrate: live_llm_inference
++    requires_gpu: false
++    deliverable: results/experiment_3758_package_cli_mcp_e2e_smoke.json
++    prompt: |
++      CONTEXT: PRD Phase-1 ships on a SOFTWARE gate (PyPI + HF/IPFS mirror + MCP/CLI docs + >=1 external
++      reproducer), NOT on paper or hardware (feedback_phase_1_ship_decoupled_from_paper_and_hardware). G2's
++      reproducer closed the external-reproducer condition; this task verifies the E2E SOFTWARE path an
++      integrator actually uses: install the package, run the pipeline, and exercise the MCP server over a real
++      protocol exchange.
++      EXISTING CODE TO READ FIRST: pyproject.toml (the carnot-ebm package metadata + import name `carnot`);
++      python/carnot/pipeline/ (VerifyRepairPipeline); the MCP server module + ops/mcp-server.md (the
++      score_candidates tool); docs/cli-usage.md (the CLI entrypoint); scripts/experiment_template.py
++      cached_sota_pair() (the SOTA-GGUF helper, optional here).
++      PRECONDITIONS (check BEFORE the E2E run; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
++        a. INTERPRETER: run under .venv/bin/python; `import carnot` succeeds (package importable in the venv).
++        b. MCP server module importable; CLI entrypoint resolvable.
++      CONCRETE STEPS:
++        1. PACKAGE: confirm `import carnot` works and the version resolves; optionally build an sdist/wheel
++           (`python -m build` if `build` is available) and record whether it succeeds (do NOT publish).
++        2. PIPELINE E2E: run VerifyRepairPipeline on a tiny hardcoded example (a short CoT with a known
++           arithmetic slip) end-to-end and confirm it returns a structured verify/score result. Use a small CPU
++           model (e.g. Qwen3.5-0.8B smoke tier) for the WIRING smoke -- this is an integration test, not a
++           headline accuracy claim. MODEL_SPECS MAY include a SOTA GGUF (Qwen3.6-35B-A3B-GGUF) via
++           cached_sota_pair() if cached, but the smoke MUST pass on the small model so it is not GPU/cache-gated.
++        3. MCP REAL EXCHANGE: start the MCP server (subprocess) and issue a REAL score_candidates request over
++           the protocol (stdio/JSON-RPC as the server expects), assert a well-formed response. This is the
++           'real protocol exchange' the Phase-1 ship gate requires -- not a mocked in-process call.
++        4. CLI: invoke the documented CLI entrypoint on the tiny example; assert exit 0 + expected output shape.
++        5. Record which surfaces passed E2E (package_import, pipeline, mcp_protocol, cli). If you ship a test it
++           MUST assert against real behavior (anti-poison-test).
++      INFERENCE-SUBSTRATE HYGIENE: the pipeline invokes a (small) model, so inference_substrate=live_llm_inference;
++      full methodology (random_seed, reproducibility_checksum, model_specs naming the smoke model + any SOTA GGUF).
++      A small-CPU-model E2E smoke has a modest but real duration. Run `.venv/bin/python
++      scripts/adversarial_verify.py <artifact>`; confirm no critical flag (label this a WIRING smoke, not an
++      accuracy claim, to avoid IMPLAUSIBLE_PERFECT / sample-size flags).
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
++        inference_substrate: "live_llm_inference (principle: the pipeline runs a small model E2E)."
++        package_importable:
++          principle: "BARE bool -- the most basic Phase-1 ship fact: can an integrator `import carnot`."
++        pipeline_e2e_passed:
++          principle: "BARE bool -- VerifyRepairPipeline ran end-to-end on a real example (the core product surface)."
++        mcp_protocol_exchange_passed:
++          principle: "BARE bool -- the MCP score_candidates tool answered a REAL protocol request (the >=1 external integration surface the ship gate requires)."
++        cli_passed:
++          principle: "BARE bool -- the documented CLI entrypoint works E2E (a second integration surface, per the decentralization multi-surface rule)."
++        surfaces_passed:
++          principle: "List of E2E-verified surfaces -- the Phase-1 software-ship evidence, honestly enumerated."
++        is_wiring_smoke_not_accuracy_claim:
++          principle: "Honest label: this verifies the SOFTWARE path, not headline accuracy -- pre-empts IMPLAUSIBLE_PERFECT / sample-size flags."
++        preconditions_checked:
++          principle: "Interpreter + import + server/CLI resolvable verified before the run; the anti-fabrication gate."
++        model_specs:
++          principle: "Names the smoke model (+ any SOTA GGUF) -- honest substrate."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor; a small-model E2E smoke has a modest real duration."
++      TERMINAL VERDICT example: "complete: phase1_e2e_smoke_package_import_pipeline_mcp_protocol_cli_passed_wiring_smoke_not_accuracy_claim"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3758_package_cli_mcp_e2e_smoke.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3759-distribution-mirror-publish-checklist
++    milestone: "2026.06.344"
++    title: "Distribution-mirror readiness audit + OPERATOR-ONLY publish checklist (Decentralization Rule 3): verify the PyPI publish workflow + HuggingFace mirror + IPFS CID plan are documented and ready, and emit a checklist of the steps the OPERATOR (not the agent) performs to publish. Does NOT publish anything (Operator-Only External Publication discipline)."
++    priority: medium
++    max_turns: 30
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # documentation/readiness aggregation -- mechanical; codex is the standing cheap-default
++    estimated_wall_time_min: 10
++    track: product
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3759_distribution_mirror_publish_checklist.json
++    prompt: |
++      CONTEXT: Decentralization Rule 3 requires any published artifact to mirror through >=2 independent
++      channels (HuggingFace primary + IPFS secondary; PyPI via CI tagged release). Operator-Only External
++      Publication discipline forbids the agent from performing the publish step -- it may only PREPARE and emit
++      an operator checklist. This task audits readiness; it publishes NOTHING.
++      EXISTING CODE TO READ FIRST: .github/workflows/publish-pypi.yml (the OIDC trusted-publishing workflow --
++      feedback_pypi_publish_via_ci_tagged_release: cut releases with `git tag vX && git push origin vX`, NEVER
++      local twine); pyproject.toml (package name carnot-ebm); reference_huggingface (the Carnot-EBM HF org);
++      feedback_ipfs_over_gitea_for_mirror_channel (IPFS as the content-addressed secondary); CLAUDE.md
++      'Operator-Only External Publication' + 'Decentralization-Respecting Design Constraints' Rule 3.
++      TASK:
++        1. AUDIT readiness (read-only): is the publish-pypi.yml workflow present + OIDC-configured; is the HF
++           mirror org/repo named; is an IPFS CID/pinning plan documented? Record each as ready/not-ready.
++        2. EMIT an operator-only publish checklist: the exact steps the OPERATOR runs (tag+push for PyPI;
++           huggingface-cli upload for the HF mirror; ipfs add / pin for the secondary), each marked
++           'OPERATOR ACTION -- agent must not execute'. The agent records the checklist; it does NOT run it.
++        3. Confirm the agent did NOT execute any publish step (no git tag, no huggingface upload, no ipfs add,
++           no `gh release create`) -- capability does not imply authorization.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation/docs; NO GGUF/CUDA markers. Run
++      `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the readiness-audit outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a readiness audit over configs/docs, no live model)."
++        pypi_workflow_ready:
++          principle: "BARE bool -- is the OIDC trusted-publishing workflow present and configured (the tag-and-push ship path)."
++        hf_mirror_documented:
++          principle: "BARE bool -- is the HuggingFace primary mirror channel named/ready (Rule 3 channel 1)."
++        ipfs_plan_documented:
++          principle: "BARE bool -- is the IPFS content-addressed secondary channel planned (Rule 3 channel 2; the true-decentralization mirror)."
++        operator_publish_checklist:
++          principle: "The ordered list of OPERATOR-ONLY publish steps -- the deliverable; the agent prepares but never executes (Operator-Only External Publication)."
++        agent_published_nothing:
++          principle: "BARE bool, MUST be true -- the load-bearing safety assertion: capability (credentials present) does not imply authorization."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: distribution_mirror_readiness_audited_pypi_<bool>_hf_<bool>_ipfs_<bool>_operator_checklist_emitted_agent_published_nothing"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3759_distribution_mirror_publish_checklist.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3760-certified-abstention-operating-point
++    milestone: "2026.06.344"
++    title: "Ship a DEPLOYABLE certified abstention operating point on the proven 0.9131 step-error discriminator: build the risk-coverage (AURC) curve and SELECT a threshold at a fixed risk target via conformal / PAC-Bayes certification. Forward from .340's risk-coverage CHARACTERIZATION to a deployable, CERTIFIED operating point. Gated on exp3756 auroc_in_ci95==true (no point certifying a point if the headline does not reproduce)."
++    priority: high
++    max_turns: 50
++    agent_type: claude
++    requires_claude: true   # selecting + CERTIFYING an abstention threshold (conformal / PAC-Bayes risk certification under a coverage/risk trade-off) is open-ended statistical judgment under ambiguity, not a deterministic gate -- the positive criterion for claude
++    estimated_wall_time_min: 25
++    track: product
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    requires_gpu: false
++    gated_on:
++      - upstream: exp3756-g2-mechanical-reproducer
++        artifact_field: auroc_in_ci95
++        op: '=='
++        value: true
++    deliverable: results/experiment_3760_certified_abstention_operating_point.json
++    prompt: |
++      CONTEXT: The one banked positive is the 0.9131 step-error discriminator. .340 CHARACTERIZED its
++      risk-coverage envelope (the sanctioned new framing -- abstention/selective-prediction, distinct from the
++      closed SELECTION question). This task takes the next forward step: SELECT and CERTIFY a deployable
++      operating point -- 'at coverage C, the verifier's selective risk is <= R with a stated guarantee'. This is
++      a PRODUCT deliverable (a deployable threshold + certificate), NOT a re-characterization and NOT an
++      energy-selection re-grind (no claim that energy beats AR/SC -- this is a standalone abstention gate).
++      EXISTING CODE TO READ FIRST: results/experiment_3718_risk_coverage_abstention_characterization.json (the
++      .340 AURC characterization to build forward from -- it already has the risk-coverage curve +
++      coverage-at-fixed-risk; this task ADDS the conformal/PAC-Bayes CERTIFICATE layer on top, it does NOT
++      re-characterize); results/experiment_2837_fover_memory_leakage_v3.json
++      (the discriminator scores + labels); research-references.md '.340'/'.344 additions' (arXiv:2502.06884
++      conformal abstention policies; arXiv:2509.12527 PAC-Bayes selective-risk certification; OpenReview
++      JJPAy8mvrQ AURC + Target Calibration Error; arXiv:2603.21172 why entropy alone fails -> motivates an
++      energy signal).
++      PRECONDITIONS (check BEFORE certification; if ANY missing -> blocked_<resource>, EXIT, no fabrication):
++        a. INTERPRETER: run under .venv/bin/python; numpy/sklearn importable.
++        b. The discriminator's per-example scores + ground-truth labels reachable (from exp2837 / the FoVer
++           scoring run, ABSOLUTE path). If absent -> blocked_no_discriminator_scores (graceful, honest).
++      CONCRETE STEPS:
++        1. Build the risk-coverage curve: sweep the abstention threshold over the discriminator score, plot
++           selective risk vs coverage, and compute AURC.
++        2. Pick a FIXED risk target (e.g. selective error <= 5%) and SELECT the threshold that achieves it.
++           Report the coverage at that operating point (what fraction the verifier confidently judges vs
++           abstains on).
++        3. CERTIFY the operating point: use split-conformal (calibration/test split) OR a PAC-Bayes
++           selective-risk bound to attach a guarantee (e.g. 'with prob >= 1-delta, true selective risk <= R at
++           coverage C'). State delta, the calibration n, and the method. Honest about its assumptions
++           (exchangeability for conformal; the prior for PAC-Bayes).
++        4. n>=100 for the calibration/test split (CLAUDE.md sample-size rigor); report n_calibration + n_test.
++        5. Report HONESTLY: if no threshold achieves the target risk at non-trivial coverage, that is a valid
++           finding (the discriminator does not support that operating point) -- do NOT manufacture a usable point.
++      INFERENCE-SUBSTRATE HYGIENE: verifier-scoring (reuses cached scores); full methodology (random_seed,
++      reproducibility_checksum, model_specs naming the discriminator + corpus). Run `.venv/bin/python
++      scripts/adversarial_verify.py <artifact>`; confirm no critical flag (a certified bound with stated n +
++      delta should clear the rigor checks; watch FALSE_NEGATIVE_RISK if you report 'no usable point').
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_<resource> if a precondition failed."
++        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: reuses cached discriminator scores, no live model)."
++        aurc:
++          principle: "Area under the risk-coverage curve -- the deployment-facing summary of the abstention gate's quality."
++        selected_threshold:
++          principle: "The chosen abstention threshold on the discriminator score -- the deployable operating point."
++        risk_target:
++          principle: "The fixed selective-risk target the threshold achieves -- the product spec the operating point meets."
++        coverage_at_operating_point:
++          principle: "Fraction the verifier confidently judges (vs abstains) at the selected threshold -- the coverage half of the trade-off."
++        certified_risk_bound:
++          principle: "The certified upper bound on selective risk (with delta, n) -- the GUARANTEE that distinguishes this from a mere characterization."
++        certification_method:
++          principle: "split-conformal / PAC-Bayes + its assumptions stated -- so a reviewer can audit the certificate's validity."
++        n_calibration:
++          principle: "Calibration sample size -- the certificate's strength scales with it; sample-size rigor."
++        n_test:
++          principle: "Held-out test size for the risk estimate (n>=100 for a CLT-valid claim)."
++        usable_operating_point_exists:
++          principle: "BARE bool -- whether a deployable point at the target risk + non-trivial coverage exists; an honest false is a valid finding, not a failure to manufacture."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: certified_abstention_point_threshold_<t>_coverage_<c>_at_risk_<r>_certified_<method>_delta_<d>_n<n>"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3760_certified_abstention_operating_point.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3761-fr11-self-learning-v17-verifier-precision-tracker
++    operator_override: "2026-05-29 operator directive (standing): versioned lineage continuation (FR-11 vN+1) -- false-positive scope-match vs prior FR-11 self-learning exps; STATED forward difference: v17 PIVOTS the tracker off the now-DEAD EBT-stabilizer lineage (v15/v16, retired with the bounded EBT route) back onto the LIVE verifier product -- online per-verifier precision tracking on the FoVer corpus, confirming the learned weighting preserves the +0.0185 memory contribution."
++    milestone: "2026.06.344"
++    title: "FR-11 continuous self-learning v17 -- Tier-1 ONLINE per-verifier precision tracker on the LIVE verifier product (pivoted off the dead EBT-stabilizer lineage): for the 4 FoVer-scoring verifiers, track per-verifier precision/recall online across the corpus, upweight high-precision verifiers, and confirm the learned weighting holds the +0.0185 memory-ablation contribution. CPU counter updates only (the Tier-1 hardware path, <1us/update). The self-learning experiment mandated by research-program.md."
++    priority: high
++    max_turns: 40
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # a CPU counter-update tracker over cached verifier scores -- formulaic; codex is the standing cheap-default
++    estimated_wall_time_min: 15
++    track: self-learning
++    inference_substrate: verifier_ensemble_against_cached_candidates
++    requires_gpu: false
++    deliverable: results/experiment_3761_fr11_self_learning_v17_verifier_precision_tracker.json
++    prompt: |
++      CONTEXT: research-program.md mandates one continuous-self-learning experiment per milestone (Tiers 1-4).
++      FR-11 v15/v16 (exp3740/exp3751) tracked EBT-training stabilizer efficacy -- but the EBT route is now
++      BOUNDED, so that lineage is dead. v17 PIVOTS the tracker back onto the LIVE verifier product: online
++      per-verifier precision tracking on the FoVer corpus. This is a CPU counter-update tracker (the Tier-1
++      hardware path: <1us/update), NOT a model retrain.
++      EXISTING CODE TO READ FIRST: the FR-11 self-learning module under python/carnot/ (reuse the v13/v14
++      counter/precision-tracking pattern -- the verifier-precision tracker, NOT the EBT-stabilizer one);
++      results/experiment_2837_fover_memory_leakage_v3.json (the 4 scoring verifiers + the +0.0185 memory-
++      ablation contribution to preserve); ops/reproduction-runbook-fover-headline.md (the scoring protocol);
++      research-program.md 'Continuous Self-Learning' Tier-1 section.
++      GRACEFUL FALLBACK: if the FoVer scores/labels are absent, record honest_verdict noting 'no corpus to learn
++      from -- tracker not updated', NOT a fabricated precision table.
++      TASK:
++        1. For each of the 4 scoring verifiers (fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap,
++           tier0u_logical_consistency), track per-verifier precision/recall ONLINE across the FoVer corpus -- a
++           running counter updated per example (the Tier-1 mechanic, <1us/update).
++        2. Upweight high-precision verifiers; recompute the ensemble AUROC under the learned weighting and CONFIRM
++           it still includes the +0.0185 fr11_session_memory (memory) contribution -- i.e. the learned weighting
++           does not silently drop the self-learning component that the headline depends on.
++        3. Persist the tracker state so a future milestone resumes it. If you ship code+tests, the test MUST
++           assert against the tracker's real behavior (anti-poison-test).
++      INFERENCE-SUBSTRATE HYGIENE: verifier-scoring; reuses cached scores; full methodology (random_seed,
++      reproducibility_checksum, model_specs naming the corpus + 4 verifiers). Run `.venv/bin/python
++      scripts/adversarial_verify.py <artifact>`; confirm no critical flag (label per-verifier precision over the
++      corpus appropriately -- it is a measured table on n=1000, not a small-sample heuristic).
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the self-learning outcome."
++        inference_substrate: "verifier_ensemble_against_cached_candidates (principle: reads cached verifier scores, no live model)."
++        per_verifier_precision_table:
++          principle: "Online precision/recall per scoring verifier -- the learned knowledge; the core deliverable, now on the LIVE verifier (not the dead EBT lineage)."
++        learned_weighting:
++          principle: "The upweighting derived from per-verifier precision -- the actionable Tier-1 self-learning output."
++        ensemble_auroc_under_learned_weighting:
++          principle: "The ensemble AUROC after the learned reweighting -- confirms the self-learning does not regress the banked discriminator."
++        memory_contribution_preserved:
++          principle: "BARE bool -- the learned weighting still includes the +0.0185 fr11_session_memory contribution the headline depends on (the load-bearing invariant)."
++        pivoted_off_dead_ebt_lineage:
++          principle: "True iff this tracks the LIVE verifier, not EBT stabilizers (v15/v16) -- the lineage-continuation forward difference that justifies vN+1."
++        tier1_counter_update:
++          principle: "Confirms the mechanic is a CPU counter update (<1us, the Tier-1 hardware path), not a model retrain -- aligns with the hardware-acceleration principle."
++        tracker_state_persisted:
++          principle: "True iff the tracker state was saved so a future milestone resumes it (continuous, not one-shot)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: fr11_v17_tier1_verifier_precision_tracker_pivoted_to_live_verifier_memory_contribution_preserved_state_persisted"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3761_fr11_self_learning_v17_verifier_precision_tracker.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3762-kv260-opportunistic-continuity-audit
++    operator_override: "2026-05-29 operator directive (standing): active hardware-continuity task (KV260) -- false-positive scope-match vs prior kv260-continuity exps. NOTE: .340 confirmed KV260 TERMINAL, so this is an OPPORTUNISTIC confirm-terminal audit per north-star sec-3 relaxation, not the per-milestone mandate."
++    milestone: "2026.06.344"
++    title: "KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable). Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay opportunistic future-work)."
++    priority: medium
++    max_turns: 20
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # SSH board smoke -- mechanical; codex is the standing cheap-default
++    estimated_wall_time_min: 8
++    track: hardware
++    inference_substrate: hardware_smoke
++    requires_gpu: false
++    deliverable: results/experiment_3762_kv260_opportunistic_continuity_audit.json
++    prompt: |
++      CONTEXT: KV260 reached TERMINAL state at .340 (non-fabricated board latency transcript, re-confirmed
++      .342/.343). The per-milestone hardware mandate is relaxed to opportunistic (north-star sec-3). Light
++      confirm-terminal audit, documentation-only.
++      PRECONDITIONS (KV260 uses SSH ONLY -- per KV260 SSH-Not-SD-Card discipline; NEVER a host block-device
++      check; the board boots from its own onboard storage and is reached over the network):
++        a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. If non-zero ->
++           honest_verdict blocked_kv260_ssh_unreachable, EXIT (do NOT fabricate, do NOT use any host
++           storage-slot check).
++      CONCRETE STEPS:
++        1. Confirm SSH reachability (precondition a).
++        2. `ssh kria 'xmutil listapps'` -- confirm the Carnot accelerator overlay is present/loadable.
++        3. Record that the terminal state holds (or note any regression for the operator).
++      INFERENCE-SUBSTRATE HYGIENE: hardware_smoke. Run `.venv/bin/python scripts/adversarial_verify.py
++      <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable."
++        inference_substrate: "hardware_smoke (principle: an SSH board check, not live inference)."
++        kv260_ssh_reachable:
++          principle: "The SSH-reachability fact (NOT host SD-card presence -- the retired wrong mechanism)."
++        terminal_state_holds:
++          principle: "Confirms the .340 terminal state did not regress; opportunistic, not mandated."
++        preconditions_checked:
++          principle: "Records the SSH check was actually run before any board operation."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT: "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3762_kv260_opportunistic_continuity_audit.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3763-next-phase3-thesis-decision-menu
++    milestone: "2026.06.344"
++    title: "Next-Phase-3-thesis DECISION MENU for the operator: now that BOTH energy routes (selection + generation) are bounded and the loop will NOT self-seed, produce a ranked menu of the genuinely-different, UNTESTED foundation-model routes -- led by EDLM (energy as a residual-corrector over discrete diffusion, reaches AR perplexity at matched compute), with latent-token diffusion reasoning, ParaRNN nonlinear-recurrent substrate, and energy-verifier-as-test-time-reweighter as alternatives. A decision surface for the operator to SEED, not a commitment by the loop."
++    priority: high
++    max_turns: 45
++    agent_type: claude
++    requires_claude: true   # ranking genuinely-different paradigm routes + respecting the 'loop will not self-initiate' boundary is open-ended judgment + cross-paper synthesis, not a mechanical aggregation -- the positive criterion for claude
++    estimated_wall_time_min: 20
++    track: strategy
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3763_next_phase3_thesis_decision_menu.json
++    prompt: |
++      CONTEXT: Both Phase-3 energy mechanisms are now empirically bounded -- energy-as-SELECTOR (P0.1, settled)
++      and energy-as-GENERATOR (Thesis A, definitive: discriminative-not-generative at scale). Per
++      energy-selection-thesis-bounded, the autonomous loop will NOT self-initiate a new paradigm; a genuinely-
++      different foundation-model thesis needs a HUMAN seed. This task does NOT pick or commit to a route -- it
++      hands the operator a RANKED DECISION MENU. (You are NOT seeding research; you are presenting options.)
++      EXISTING CODE TO READ FIRST: results/experiment_3722_convergence_synthesis_operator_next_thesis.json (the
++      .340 next-thesis menu the operator ALREADY received -- candidate_next_theses + recommended_default_thesis +
++      operator_decision_request; you must SUPERSEDE/RECONCILE this, NOT emit an unlinked second menu);
++      docs/research-notes/phase3-alternative-thesis-menu.md (the operator's menu -- now with Thesis A marked
++      bounded by exp3755); research-references.md '.344 additions' Front 5 (the candidate routes + numbers); the
++      memories project_dbae_ebm_phase3, project_pararnn_parallel_nonlinear, verifier-domain-bound-math-only.
++      TASK: produce a ranked menu of the genuinely-different, UNTESTED routes that SUPERSEDES the .340 exp3722
++      menu (the .340 menu predates the DEFINITIVE Thesis-A bound -- explicitly reconcile its candidates against
++      this updated set, carrying forward any still-live .340 candidate and retiring any that the bound closes),
++      each with: the route, the ONE
++      paper anchor + its matched-compute claim, WHY it sidesteps BOTH bounded negatives (selection AND
++      generation), the cheapest possible kill-gate to test it, and the honest risk. Rank by (sidesteps-both-
++      negatives) x (matched-compute evidence already exists) x (cheap-to-kill-gate). Candidate routes:
++        1. EDLM (arXiv:2410.21357) -- energy as a RESIDUAL CORRECTOR over a discrete-diffusion base (NOT the sole
++           generator): reaches AR perplexity at matched compute on discrete text -- the exact regime the tiny EBT
++           failed. Carnot's energy ensemble as the corrector/grader head. STRONGEST candidate.
++        2. Latent-token diffusion reasoning (arXiv:2602.03769) -- non-AR latent reasoning matching AR at
++           comparable compute; the energy ensemble grades latent-token coherence.
++        3. ParaRNN (arXiv:2510.21450) -- parallelizable nonlinear-recurrent substrate at Transformer-comparable
++           perplexity; a recurrent-EBT alternative to transformer-EBT.
++        4. Energy-verifier-as-test-time-reweighter (T3RL arXiv:2603.02203) -- the verifier as an EXTERNAL-evidence
++           reweighter of self-consistency votes (NOT pure SC -- addresses the bounded-selector root cause: SC is
++           near-optimal only when no external signal exists). The most PRODUCT-adjacent (reuses the banked
++           verifier), lowest-risk option.
++      State PLAINLY: this is a menu for the operator to seed; the loop recommends but does not commit.
++      INFERENCE-SUBSTRATE HYGIENE: aggregation/synthesis; NO GGUF/CUDA markers. Run `.venv/bin/python
++      scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the menu-production outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a literature/menu synthesis, no live model)."
++        ranked_thesis_menu:
++          principle: "The ordered list of routes with anchor/why-sidesteps/kill-gate/risk -- the decision surface for the operator; the core deliverable."
++        top_recommended_route:
++          principle: "The single highest-ranked route (expected EDLM residual-corrector) with its one-line rationale -- a clear recommendation the operator can accept or override."
++        each_route_sidesteps_both_negatives:
++          principle: "For each route, the explicit reason it is NOT a re-grind of the bounded selection OR generation routes -- prevents proposing a doomed re-test."
++        cheapest_kill_gate_per_route:
++          principle: "The smallest experiment that would bound each route cheaply -- so a seeded route gets a kill-gate, not an open-ended scale commitment (the Phase-Validation discipline)."
++        loop_will_not_self_seed:
++          principle: "BARE bool, true -- explicitly records that this is a menu for HUMAN seeding, not a route the loop commits to (the standing finding)."
++        supersedes_340_menu:
++          principle: "BARE bool, true -- records that this menu reconciled + superseded the .340 exp3722 menu (post-Thesis-A-bound), rather than emitting an unlinked parallel menu (anti-churn)."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: next_phase3_thesis_menu_ranked_top_edlm_residual_corrector_supersedes_340_menu_all_routes_sidestep_both_negatives_for_operator_seeding"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3763_next_phase3_thesis_decision_menu.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
++
++  - id: exp3764-capstone-v344
++    operator_override: "2026-05-29 operator directive (standing): routine capstone (capstone-vN) -- false-positive scope-match vs prior capstone tasks; structurally never a doomed rerun."
++    milestone: "2026.06.344"
++    title: "Capstone .344 -- aggregate the convergence/product-banking milestone: the definitive Thesis-A close reconciled (both energy routes bounded), the G2 reproducer + G3 narrowing lint mechanized, the verifier banked toward Phase-1 ship (pkg/CLI/MCP E2E + mirror checklist), a certified abstention point shipped, FR-11 pivoted to the live verifier, KV260 terminal confirmed, and the next-thesis menu handed to the operator. paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded."
++    priority: high
++    max_turns: 25
++    agent_type: codex
++    model: gpt-5.5
++    requires_codex: true   # capstone aggregation over upstream artifacts -- mechanical; codex is the standing cheap-default
++    estimated_wall_time_min: 10
++    track: ops
++    inference_substrate: aggregation_from_upstream_artifacts
++    requires_gpu: false
++    deliverable: results/experiment_3764_capstone_v344.json
++    prompt: |
++      CONTEXT: Capstone for .344 (convergence/product-banking after both Phase-3 energy routes were bounded).
++      Aggregate exp3754-exp3763 HONESTLY. Read each via scripts/summarize_artifact.py. Skip any artifact
++      carrying flagged_adversarial=true from headline aggregation (fabrication gate).
++      TASK: summarize the milestone: (1) the definitive Thesis-A close reconciled -- part-(a) PASS /
++      discriminative, part-(b) BOUNDED at scale / not-generative, in-loop chain superseded (exp3755); (2) the
++      publication gates mechanized -- G2 local reproducer with auroc_in_ci95 (exp3756) + G3 narrowing lint
++      shipped (exp3757); (3) the verifier banked toward Phase-1 ship -- pkg/CLI/MCP E2E smoke (exp3758) + the
++      distribution-mirror + operator publish checklist (exp3759, agent published nothing); (4) the certified
++      abstention operating point (exp3760, IF exp3756 reproduced the headline); (5) FR-11 v17 pivoted to the
++      live verifier, memory contribution preserved (exp3761); (6) KV260 terminal confirm (exp3762); (7) the
++      next-Phase-3-thesis menu handed to the operator (exp3763). State the .344 outcome PLAINLY: this is a
++      convergence milestone -- it banks the one positive and hands the next research decision to the operator;
++      it makes NO new existential claim (both energy routes stay bounded).
++      INVARIANTS to RE-ASSERT: paper_ready stays TRUE (G1-G4); frozen FoVer 0.9131 unchanged; energy-as-selector
++      AND energy-as-generator both stay honest-negative-bounded (no re-grind this milestone).
++      INFERENCE-SUBSTRATE HYGIENE: aggregation; NO live-model markers; populate cited_upstream_artifacts.
++      Run `.venv/bin/python scripts/adversarial_verify.py <artifact>`; confirm no critical flag.
++      REQUIRED ARTIFACT FIELDS (principle documents WHY; store the bare VALUE):
++        honest_verdict:
++          principle: "Terminal prefix; the milestone's one-line outcome."
++        inference_substrate: "aggregation_from_upstream_artifacts (principle: a capstone reads upstream JSON, runs no live model)."
++        thesis_a_definitively_closed:
++          principle: "Records the milestone-defining fact: energy-as-generator is bounded (discriminative-not-generative), reconciled into the record (exp3755)."
++        both_energy_routes_bounded:
++          principle: "BARE bool -- both selection AND generation are now bounded; the reason .344 is product-banking not re-grind."
++        gates_mechanized:
++          principle: "Records G2 reproducer + G3 narrowing lint shipped -- the publication-gate hardening deliverable."
++        verifier_banked_for_ship:
++          principle: "Records the Phase-1 software-ship evidence (E2E surfaces passed + mirror checklist) -- the product deliverable."
++        certified_abstention_point_status:
++          principle: "The deployable abstention operating point outcome (shipped / gate-skipped if headline did not reproduce)."
++        paper_ready_preserved:
++          principle: "G1-G4 stay met; the milestone must not regress the banked verifier product."
++        frozen_headline_unchanged:
++          principle: "Frozen FoVer 0.9131 stays frozen; .344 reproduces but never moves the headline."
++        next_thesis_handed_to_operator:
++          principle: "Records that the next-Phase-3 decision is now an operator-seeding surface (exp3763) -- the loop does not self-commit."
++        flagged_artifacts_excluded:
++          principle: "Lists any flagged_adversarial artifact excluded from aggregation (fabrication gate)."
++        cited_upstream_artifacts:
++          principle: "Provenance trail from the capstone numbers to the real artifacts."
++        random_seed:
++          principle: "Determinism precondition."
++        reproducibility_checksum:
++          principle: "Content hash catches drift."
++        duration_s:
++          principle: "Wall-clock plausibility floor."
++      TERMINAL VERDICT example: "complete: capstone_v344_thesis_a_closed_both_energy_routes_bounded_gates_mechanized_verifier_banked_abstention_point_<shipped|skipped>_fr11_pivoted_next_thesis_to_operator_paper_ready_true_frozen_headline_unchanged"
++      Run: cd {project_root} && .venv/bin/python scripts/experiment_3764_capstone_v344.py
++      Do NOT push. Do NOT modify scripts/research_conductor.py.
+-- 
+2.55.0
+

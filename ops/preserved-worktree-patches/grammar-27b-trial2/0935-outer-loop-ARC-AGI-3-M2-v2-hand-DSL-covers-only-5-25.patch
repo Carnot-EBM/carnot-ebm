@@ -1,0 +1,888 @@
+From 43ad64f3b0e0cec6522b8b9c76c30072243762ee Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 20:22:46 -0400
+Subject: [PATCH 00935/11171] [outer-loop] ARC-AGI-3 M2-v2: hand-DSL covers
+ only 5/25 games -> inducer must escalate to LLM synthesis
+
+ObjectDeltaModel (python/carnot/agentic/arc_world_model_dsl.py): per-action
+object-level translate/recolor rules, MDL-selected. Refactored arc_world_model_synth
+to a shared grade_predictions() so the DSL and the v1a naive template are scored on
+the IDENTICAL grid-grounded verifier (no oracle). 4 DSL tests + 5 synth tests pass.
+
+results/arc3_m2_dsl.json (all 25 games, offline, no LLM/GPU, 74s, adversarial_verify
+clean): the object-DSL helps only 5/25 games (wa30 1.0->0.36, m0r0 1.0->0.56,
+ar25 0.93->0.67, tu93, ls20 - all movement-dominant, mostly hidden-state), does NOT
+move the Markov-game average (0.958->0.958), and regresses where it commits to a
+confidently-wrong rule (sb26 -0.21). Best-fit energies still 0.81-0.95 (dynamics
+accuracy 5-19%) - too poor to plan on.
+
+REFRAMING: "modellable by a rule-class" is ORTHOGONAL to "grid-Markov" (m0r0 hidden
+but DSL-modellable; vc33 Markov but not). The determinism label was necessary-not-
+sufficient; the per-game consistency energy is the RIGHT model-class-relative
+trustworthiness signal, and it WORKS (no oracle).
+
+CONCLUSION (chain M1->M1b->probe->M2v1a->M2v2): a fixed small hand-DSL cannot express
+the diverse ARC dynamics. The VERIFIER (consistency energy) is the constant load-bearing
+component; the INDUCER must ESCALATE to expressive per-game LLM/codex program synthesis
+(Family-B SOTA arXiv:2605.05138 = the Carnot thesis), with the energy as the oracle-free
+cascade-router + program selector/pruner. That is M2-v3 and is where the Carnot verifier
+is load-bearing by construction.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ ops/changelog.md                              |   1 +
+ python/carnot/agentic/arc_world_model_dsl.py  | 195 ++++++++++++
+ .../carnot/agentic/arc_world_model_synth.py   |  92 +++---
+ results/arc3_m2_dsl.json                      | 297 ++++++++++++++++++
+ scripts/experiments/arc3_m2_dsl.py            | 126 ++++++++
+ tests/python/test_arc_world_model_dsl.py      |  69 ++++
+ 6 files changed, 736 insertions(+), 44 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_world_model_dsl.py
+ create mode 100644 results/arc3_m2_dsl.json
+ create mode 100644 scripts/experiments/arc3_m2_dsl.py
+ create mode 100644 tests/python/test_arc_world_model_dsl.py
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 70be25dddb..464f059b56 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -12,6 +12,7 @@
+ - **M1b (goal-prior de-risk):** `scripts/experiments/arc3_goal_prior_explore.py` — grafts a local multimodal Gemma-4 goal hypothesis (GENERATOR proposes ranked goal-directed actions, cached per frame-hash, capped per game) onto the SAME GameGraph (VERIFIER prunes deadly/no-effect/seen — the Carnot division of labor). Isolates whether the blocker is the GOAL (no signal to aim at) vs the DYNAMICS (multi-step planning). **Result (`results/arc3_goal_prior_E2B.json`, 6 games matched to the floor, 1136 LLM calls @0.566s, 653s, non-fabrication-verified):** goal-prior scored **1 level vs the Family-A floor's 2** on the same 6 games — a lateral move, NOT a lift. It newly solved vc33 (whose win IS a single goal-directed click, "select the red block" — the LLM named the goal correctly and the click followed) but REGRESSED on m0r0 + r11l (multi-step wins where a confident single click crowded out the lucky exploration that previously stumbled into the sequence). The auto verdict's `beats_floor=True` only means ">0 levels"; it did NOT beat the floor. **Verdict: the vision LLM identifies the GOAL fine; the blocker is multi-step DYNAMICS PLANNING — you cannot reach a correctly-named goal without a model of how actions move things.** → escalate to M2 (Family-B deterministic-delta world-model synthesizer), where the Carnot consistency-ENERGY verifier becomes the load-bearing centerpiece (score/prune candidate world-models; stop-on-divergence = Meta-EBM cascade router). This is the de-risk paying off: it proves the energy verifier is NECESSARY, not optional.
+ - **Determinism probe (`scripts/experiments/arc3_determinism_probe.py`, `results/arc3_determinism_probe.json`; all 25 games; offline, no LLM/GPU):** answers "would building a trained ARC-energy FIRST improve odds?" Measures grid-Markov vs hidden-state via the plan's own detector (same `(frame_hash, action)` → >1 distinct next frame_hash among revisited keys) + replay-determinism-from-reset. **Result: all 25 deterministic-from-reset (no RNG); but 11/25 are HIDDEN-STATE** (macro nondeterminism 0.218; dc22 0.82, g50t 0.74, m0r0 0.72, cn04 0.71, ka59 0.61, cd82 0.59, wa30 0.54, sk48 0.50, re86 0.17, sc25 0.03, ar25 0.02) **and 14/25 are grid-Markov** (≈0: vc33, r11l, ft09, lf52, lp85, ls20, s5i5, sb26, sp80, su15, tn36, tr87, tu93, bp35). The visible grid under-determines dynamics on 44% of games → unobservable internal state (counter/inventory/flag); dynamics are a function of full history, not of the visible grid. IMPLICATION (answers the operator's ARC-energy-first question): a trained soft ARC-energy is NOT the right FIRST build. For the 14 Markov games, exact-match M2 induction suffices and the deterministic consistency check is the verifier's first honest load-bearing role on REAL games. For the 11 hidden-state games, the first lever is latent-register augmentation (boolean registers / object tracking), with the trained soft EBM reserved for where that demonstrably fails — there it is load-bearing by necessity, not decorative. The soft energy is the M3/hidden-state tool, not the first move.
+ - **M2-v1a (induced world-model + GRID-GROUNDED consistency-energy verifier):** `python/carnot/agentic/arc_world_model_synth.py` + `scripts/experiments/arc3_m2_world_model.py` + `results/arc3_m2_world_model.json` + `tests/python/test_arc_world_model_synth.py` (5 tests pass). The verifier's FIRST honest, non-tautological test on real ARC games — and the explicit contrast/fix to the flagged exp3929 tautology: it predicts a HELD-OUT real transition it never trained on and grades against the OBSERVED next grid, **no oracle** (a wrong prediction is fully possible). `InducedWorldModel` = exact (frame_hash,action)→next-grid table + a per-action color-keyed relative-delta template generalizer; `consistency_energy` = held-out dynamics-region (changed-cell) misprediction rate. Two regimes across all 25 games (offline, no LLM/GPU, 47s): **(1) MEMORIZATION (random split) — the verifier recovers the Markov-vs-hidden split at AUROC 0.84** (mean energy Markov 0.75 < hidden 0.88, separation acc 0.80), confirming the consistency energy is a real trustworthiness signal (machinery is honest). **(2) GENERALIZATION (key-disjoint split) — the naive template inducer CANNOT generalize** to unseen clicks even on deterministic games (AUROC 0.49 ≈ chance; energy ≈0.95 on both classes). HONEST caveats: n=25 games (modest); AUROC-0.84 is a noisy RECOVERY of the determinism-probe signal (energy is confounded by inducer weakness, so the direct determinism/multiplicity check remains the CLEANER cascade gate); ft09 misclassifies (Markov but only 7 changing transitions → noisy energy); and the verifier's load-bearing PAYOFF (does trusting low-energy games improve solving/efficiency) is still UNPROVEN. UPSHOT: the naive inducer is empirically ruled out → the real M2 (M2-v2) is DSL program synthesis over the deterministic-delta grammar (the plan's actual M2 inducer), which is the prerequisite before the energy verifier earns its keep on the prediction/planning axis.
++- **M2-v2 (object-level delta-DSL inducer vs naive baseline):** `python/carnot/agentic/arc_world_model_dsl.py` (ObjectDeltaModel: per-action object-level translate/recolor rules, MDL-selected) + `scripts/experiments/arc3_m2_dsl.py` + `results/arc3_m2_dsl.json` + `tests/python/test_arc_world_model_dsl.py` (4 tests pass); refactored `arc_world_model_synth.py` to a shared `grade_predictions()` so both inducers are scored on the identical grid-grounded verifier. Ran both on all 25 games (offline, no LLM/GPU, 74s, adversarial_verify clean). **Honest result: the object-DSL helps only 5/25 games (wa30 1.0→0.36, m0r0 1.0→0.56, ar25 0.93→0.67, tu93, ls20 — all movement-dominant, mostly hidden-state), does NOT move the Markov-game average (0.958→0.958), and even regresses where it commits to a confidently-wrong rule (sb26 −0.21). Best-fit energies still 0.81–0.95 (dynamics accuracy 5–19%) — far too poor to plan on.** KEY REFRAMING: "modellable by a given rule-class" is ORTHOGONAL to "grid-Markov" — m0r0 is hidden-state yet its dominant visible dynamics ARE object movement the DSL captures; vc33 is Markov yet its click effect is not a clean component recolor. The determinism label was necessary-not-sufficient; the per-game consistency energy is the RIGHT, model-class-relative trustworthiness signal — and it WORKS (correctly certifies which games the DSL fits, no oracle). CONCLUSION (well-supported by the full chain M1→M1b→probe→M2v1a→M2v2): a FIXED small hand-DSL cannot express the diverse ARC dynamics. The VERIFIER (consistency energy) is the constant load-bearing component; the INDUCER must ESCALATE from cheap (template/DSL) to EXPRESSIVE per-game LLM/codex program synthesis (Family-B SOTA, arXiv:2605.05138 = the Carnot thesis), with the consistency energy as the oracle-free cascade-router + program-selector/pruner. That escalation — codex writes a bespoke transition program per game, the energy verifier prunes wrong ones — is M2-v3 and is exactly where the Carnot verifier is load-bearing by construction.
+ 
+ ## 2026-06-07 (Milestone 2026.06.361 Operational Retrospective)
+ 
+diff --git a/python/carnot/agentic/arc_world_model_dsl.py b/python/carnot/agentic/arc_world_model_dsl.py
+new file mode 100644
+index 0000000000..e203b96847
+--- /dev/null
++++ b/python/carnot/agentic/arc_world_model_dsl.py
+@@ -0,0 +1,195 @@
++"""M2-v2: object-level delta-DSL world-model inducer for ARC-AGI-3.
++
++Plan: docs/research-notes/arc-agi3-agent-research-plan.md (M2). M2-v1a
++(results/arc3_m2_world_model.json) ruled out the naive per-pixel template inducer: it could not
++generalize to unseen clicks even on deterministic games (generalization AUROC 0.49, energy ~0.95).
++The diagnosis: a RELATIVE-PIXEL template can't capture position-independent OBJECT mechanics. This
++module induces rules at the OBJECT level, which generalize across positions:
++
++  - keyboard action a -> ('translate', color, dy, dx): all cells of `color` move by (dy, dx)
++    (the classic agent/cursor move), or ('recolor_all', c_from, c_to), or ('noop',).
++  - click on a cell of color C -> ('recolor_clicked', c_to): the clicked connected component
++    recolors to c_to (selection / toggle / paint), or ('noop',). Keyed by the CLICKED color so it
++    generalizes to unseen click locations.
++
++Induction is MDL-flavored: for each action family, enumerate candidate rules from the observed deltas
++and keep the one with the highest grid-grounded dynamics accuracy on the training transitions (the
++simplest rule that best reproduces reality). The SAME grade_predictions() verifier from
++arc_world_model_synth scores held-out generalization, so M2-v2 is measured against the M2-v1a naive
++baseline on the identical metric. Generator (this inducer) proposes the program; the consistency
++energy (verifier) prunes/certifies it. Deterministic numpy; no LLM, no GPU, no oracle.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from typing import Optional
++
++import numpy as np
++
++from .arc_agi3_world_model import frame_hash
++from .arc_world_model_synth import grade_predictions, _click_xy
++
++
++def _background(grid: np.ndarray) -> int:
++    vals, counts = np.unique(grid, return_counts=True)
++    return int(vals[counts.argmax()])
++
++
++def _connected_component(grid: np.ndarray, y: int, x: int) -> list[tuple[int, int]]:
++    """Cells of the same color 4-connected to (y, x)."""
++    h, w = grid.shape
++    if not (0 <= y < h and 0 <= x < w):
++        return []
++    color = grid[y, x]
++    seen = {(y, x)}
++    stack = [(y, x)]
++    out = []
++    while stack:
++        cy, cx = stack.pop()
++        out.append((cy, cx))
++        for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
++            ny, nx = cy + dy, cx + dx
++            if 0 <= ny < h and 0 <= nx < w and grid[ny, nx] == color and (ny, nx) not in seen:
++                seen.add((ny, nx)); stack.append((ny, nx))
++    return out
++
++
++def _detect_translation(s: np.ndarray, s2: np.ndarray, color: int) -> Optional[tuple[int, int]]:
++    """If every cell of `color` in s moved by a single consistent (dy, dx) to form s2's `color` set,
++    return (dy, dx); else None. (0, 0) is returned as None (no move)."""
++    cs = list(zip(*np.where(s == color)))
++    cs2 = set(zip(*np.where(s2 == color)))
++    if not cs or len(cs) != len(cs2):
++        return None
++    miny_s = min(y for y, _ in cs); minx_s = min(x for _, x in cs)
++    miny_2 = min(y for y, _ in cs2); minx_2 = min(x for _, x in cs2)
++    dy, dx = miny_2 - miny_s, minx_2 - minx_s
++    if dy == 0 and dx == 0:
++        return None
++    if {(y + dy, x + dx) for y, x in cs} == cs2:
++        return (int(dy), int(dx))
++    return None
++
++
++class ObjectDeltaModel:
++    """Object-level delta-DSL world-model: induces per-action translate/recolor rules + an exact table
++    for memorized transitions, with the shared grid-grounded consistency-energy verifier."""
++
++    def __init__(self, game_id: str = "?"):
++        self.game_id = game_id
++        self._exact: dict[tuple, Counter] = defaultdict(Counter)
++        self._exact_grid: dict[bytes, np.ndarray] = {}
++        self.kbd_rules: dict[int, tuple] = {}        # action_int -> rule
++        self.click_rules: dict[int, tuple] = {}      # clicked_color -> rule
++        self.bg = 0
++
++    # ---- rule application ----
++    def _apply(self, s: np.ndarray, rule: tuple) -> np.ndarray:
++        kind = rule[0]
++        if kind == "translate":
++            _, color, dy, dx = rule
++            out = s.copy()
++            mask = (s == color)
++            out[mask] = self.bg
++            ys, xs = np.where(mask)
++            for y, x in zip(ys, xs):
++                ny, nx = y + dy, x + dx
++                if 0 <= ny < s.shape[0] and 0 <= nx < s.shape[1]:
++                    out[ny, nx] = color
++            return out
++        if kind == "recolor_all":
++            _, c_from, c_to = rule
++            out = s.copy(); out[s == c_from] = c_to
++            return out
++        return s.copy()                               # noop
++
++    def _apply_click(self, s: np.ndarray, x: int, y: int, rule: tuple) -> np.ndarray:
++        if rule[0] == "recolor_clicked":
++            out = s.copy()
++            for (cy, cx) in _connected_component(s, y, x):
++                out[cy, cx] = rule[1]
++            return out
++        return s.copy()
++
++    def _dyn_acc(self, pred: np.ndarray, s: np.ndarray, s2: np.ndarray) -> float:
++        real = (s != s2)
++        if not real.any():
++            return 1.0 if np.array_equal(pred, s2) else 0.0
++        union = real | (s != pred)
++        return float(((pred == s2) & union).sum() / union.sum())
++
++    # ---- induction ----
++    def fit(self, transitions) -> "ObjectDeltaModel":
++        kbd: dict[int, list] = defaultdict(list)
++        clk: list = []
++        bgs = Counter()
++        for s, akey, s2 in transitions:
++            s = np.asarray(s, dtype=np.int16); s2 = np.asarray(s2, dtype=np.int16)
++            akey = tuple(akey)
++            bgs[_background(s)] += 1
++            fh = frame_hash(s)
++            b2 = s2.astype(np.uint8).tobytes()
++            self._exact[(fh, akey)][b2] += 1
++            self._exact_grid[b2] = s2
++            if _click_xy(akey) is not None:
++                clk.append((s, akey, s2))
++            else:
++                kbd[akey[0]].append((s, s2))
++        self.bg = bgs.most_common(1)[0][0] if bgs else 0
++
++        # keyboard rules: pick the candidate maximizing mean dynamics accuracy over that action
++        for a, pairs in kbd.items():
++            cands = {("noop",)}
++            for s, s2 in pairs:
++                for color in np.unique(s):
++                    if int(color) == self.bg:
++                        continue
++                    t = _detect_translation(s, s2, int(color))
++                    if t:
++                        cands.add(("translate", int(color), t[0], t[1]))
++                # a global recolor candidate (c_from -> c_to) if exactly one color remapped
++                diff_colors = set(zip(s[s != s2].tolist(), s2[s != s2].tolist()))
++                if len(diff_colors) == 1:
++                    cf, ct = next(iter(diff_colors))
++                    cands.add(("recolor_all", int(cf), int(ct)))
++            best, best_acc = ("noop",), -1.0
++            for r in cands:
++                acc = np.mean([self._dyn_acc(self._apply(s, r), s, s2) for s, s2 in pairs])
++                # tie-break toward simpler rules (noop < recolor < translate already by acc); prefer higher acc
++                if acc > best_acc:
++                    best_acc, best = acc, r
++            self.kbd_rules[a] = best
++
++        # click rules: per clicked color, modal recolor target of the clicked component
++        by_color: dict[int, Counter] = defaultdict(Counter)
++        for s, akey, s2 in clk:
++            x, y = akey[1], akey[2]
++            if not (0 <= y < s.shape[0] and 0 <= x < s.shape[1]):
++                continue
++            c = int(s[y, x])
++            comp = _connected_component(s, y, x)
++            targets = {int(s2[cy, cx]) for cy, cx in comp}
++            cand = ("recolor_clicked", targets.pop()) if len(targets) == 1 else ("noop",)
++            by_color[c][cand] += 1
++        for c, counter in by_color.items():
++            self.click_rules[c] = counter.most_common(1)[0][0]
++        return self
++
++    def predict(self, s_grid, akey: tuple) -> np.ndarray:
++        s = np.asarray(s_grid, dtype=np.int16)
++        akey = tuple(akey)
++        ex = self._exact.get((frame_hash(s), akey))
++        if ex:                                        # memorized seen transition
++            return self._exact_grid[ex.most_common(1)[0][0]].copy()
++        xy = _click_xy(akey)
++        if xy is not None:
++            x, y = xy
++            if 0 <= y < s.shape[0] and 0 <= x < s.shape[1]:
++                rule = self.click_rules.get(int(s[y, x]), ("noop",))
++                return self._apply_click(s, x, y, rule)
++            return s.copy()
++        return self._apply(s, self.kbd_rules.get(akey[0], ("noop",)))
++
++    def consistency_energy(self, held_out) -> dict:
++        return grade_predictions(self.predict, held_out)
+diff --git a/python/carnot/agentic/arc_world_model_synth.py b/python/carnot/agentic/arc_world_model_synth.py
+index 05f4db09b3..89e1f2fa73 100644
+--- a/python/carnot/agentic/arc_world_model_synth.py
++++ b/python/carnot/agentic/arc_world_model_synth.py
+@@ -39,6 +39,47 @@ def _click_xy(akey: tuple) -> Optional[tuple[int, int]]:
+     return (akey[1], akey[2]) if len(akey) == 3 and akey[0] == 6 else None
+ 
+ 
++def grade_predictions(predict_fn, held_out) -> dict:
++    """Shared GRID-GROUNDED grader so any world-model can be scored on the identical metric (fair
++    cross-model comparison). predict_fn(s_grid, akey) -> predicted next grid; graded against the
++    OBSERVED next grid (no oracle). The static background dominates a 64x64 grid, so the load-bearing
++    signal is over the CHANGED region (the dynamics):
++      energy = 1 - dynamics_accuracy, where dynamics_accuracy is, over transitions that ACTUALLY
++      changed, the fraction of the changed region (reality's delta UNION the prediction's delta) the
++      model gets right. 0 = captures the dynamics; high = cannot (untrustworthy)."""
++    n = 0
++    exact_hit = 0
++    cell_acc_sum = 0.0
++    dyn_acc_sum = 0.0
++    n_changed = 0
++    for s, akey, s2 in held_out:
++        s = np.asarray(s, dtype=np.int16); s2 = np.asarray(s2, dtype=np.int16)
++        pred = np.asarray(predict_fn(s, tuple(akey)), dtype=np.int16)
++        n += 1
++        if pred.shape != s2.shape:
++            n_changed += 1
++            continue
++        exact_hit += int(np.array_equal(pred, s2))
++        cell_acc_sum += float((pred == s2).mean())
++        real_changed = (s != s2)
++        if real_changed.any():
++            n_changed += 1
++            union = real_changed | (s != pred)
++            dyn_acc_sum += float(((pred == s2) & union).sum() / union.sum())
++    if n == 0:
++        return {"energy": None, "n_heldout": 0}
++    dynamics_accuracy = round(dyn_acc_sum / n_changed, 4) if n_changed else None
++    return {
++        "energy": round(1.0 - dynamics_accuracy, 4) if dynamics_accuracy is not None else None,
++        "dynamics_accuracy": dynamics_accuracy,
++        "n_changed_transitions": n_changed,
++        "energy_exact": round(1.0 - exact_hit / n, 4),
++        "transition_exact_rate": round(exact_hit / n, 4),
++        "cell_accuracy": round(cell_acc_sum / n, 4),
++        "n_heldout": n,
++    }
++
++
+ def _relative_template(s: np.ndarray, s2: np.ndarray, x: int, y: int) -> tuple:
+     """Express the (s -> s2) change as offsets RELATIVE to the click (x, y): a sorted tuple of
+     (dy, dx, new_color). This is the click's local effect, position-independent, so it can be applied
+@@ -125,25 +166,12 @@ class InducedWorldModel:
+         return s.copy()                                 # nothing learned -> no-op
+ 
+     def consistency_energy(self, held_out) -> dict:
+-        """GRID-GROUNDED verifier: predict each held-out transition, grade against the OBSERVED next
+-        grid. The static background dominates a 64x64 grid, so whole-grid exact-match is too brittle
+-        and cell-accuracy is trivially ~1.0; the load-bearing signal is over the CHANGED region (the
+-        dynamics). We report:
+-          - energy_exact   : 1 - whole-grid exact-match rate (reference; brittle)
+-          - cell_accuracy  : mean per-cell match (reference; background-dominated)
+-          - dynamics_accuracy : on transitions that ACTUALLY changed in reality, the fraction of the
+-                changed-region (reality's delta UNION the model's predicted delta) the model gets right.
+-                A model that mispredicts the change, or predicts no-op when reality changed, scores low.
+-          - energy = 1 - dynamics_accuracy  : THE headline. 0 = the model captures the dynamics
+-                (trustworthy -> plan on it); high = it cannot (untrustworthy -> escalate)."""
+-        n = 0
+-        exact_hit = 0
+-        cell_acc_sum = 0.0
+-        dyn_acc_sum = 0.0
+-        n_changed = 0
++        """GRID-GROUNDED verifier (delegates the metric to the shared grade_predictions so any model is
++        scored identically), plus this model's prediction-path coverage diagnostics."""
++        base = grade_predictions(self.predict, held_out)
+         by_path = Counter()
+-        for s, akey, s2 in held_out:
+-            s = np.asarray(s, dtype=np.int16); s2 = np.asarray(s2, dtype=np.int16)
++        for s, akey, _ in held_out:
++            s = np.asarray(s, dtype=np.int16)
+             akey = tuple(akey)
+             fh = frame_hash(s)
+             if self._exact.get((fh, akey)):
+@@ -155,32 +183,8 @@ class InducedWorldModel:
+                 by_path["kbd_template"] += 1
+             else:
+                 by_path["noop_fallback"] += 1
+-            pred = self.predict(s, akey)
+-            n += 1
+-            if pred.shape != s2.shape:
+-                n_changed += 1  # shape mismatch = a real change the model failed to predict
+-                continue
+-            exact_hit += int(np.array_equal(pred, s2))
+-            cell_acc_sum += float((pred == s2).mean())
+-            real_changed = (s != s2)
+-            if real_changed.any():                       # only score transitions that actually changed
+-                n_changed += 1
+-                pred_changed = (s != pred)
+-                union = real_changed | pred_changed       # cells either side thinks changed
+-                dyn_acc_sum += float(((pred == s2) & union).sum() / union.sum())
+-        if n == 0:
+-            return {"energy": None, "n_heldout": 0}
+-        dynamics_accuracy = round(dyn_acc_sum / n_changed, 4) if n_changed else None
+-        return {
+-            "energy": round(1.0 - dynamics_accuracy, 4) if dynamics_accuracy is not None else None,
+-            "dynamics_accuracy": dynamics_accuracy,
+-            "n_changed_transitions": n_changed,
+-            "energy_exact": round(1.0 - exact_hit / n, 4),
+-            "transition_exact_rate": round(exact_hit / n, 4),
+-            "cell_accuracy": round(cell_acc_sum / n, 4),
+-            "n_heldout": n,
+-            "prediction_paths": dict(by_path),
+-        }
++        base["prediction_paths"] = dict(by_path)
++        return base
+ 
+     def is_trustworthy(self, held_out, energy_threshold: float = 0.2) -> bool:
+         """The Meta-EBM cascade gate: trust the model for planning only if held-out (dynamics) energy
+diff --git a/results/arc3_m2_dsl.json b/results/arc3_m2_dsl.json
+new file mode 100644
+index 0000000000..0cbea7a63a
+--- /dev/null
++++ b/results/arc3_m2_dsl.json
+@@ -0,0 +1,297 @@
++{
++  "best_modelled_markov_games_dsl": [
++    {
++      "energy": 0.8103,
++      "game": "tr87"
++    },
++    {
++      "energy": 0.826,
++      "game": "tu93"
++    },
++    {
++      "energy": 0.8577,
++      "game": "ls20"
++    },
++    {
++      "energy": 0.9515,
++      "game": "sp80"
++    },
++    {
++      "energy": 0.9753,
++      "game": "bp35"
++    }
++  ],
++  "budget_per_game": 1200,
++  "claim": "Object-level delta-DSL inducer vs the M2-v1a naive pixel template, on identical transitions/split/verifier. Win = DSL lowers GENERALIZATION energy on Markov games and the consistency energy separates Markov (trustworthy) from hidden (not).",
++  "duration_s": 74.5,
++  "episodes_per_game": 35,
++  "experiment": "arc3_m2_dsl",
++  "generalization_auroc_dsl": 0.3766,
++  "generalization_auroc_naive": 0.4643,
++  "honest_verdict": "complete: m2v2_dsl_inducer_genAUROC_naive0.4643_dsl0.3766_markovGenE_naive0.9584_dsl0.9576_hiddenGenE_dsl0.8599_n_improved5of25",
++  "inference_substrate": "offline_arc_agi3_world_model_consistency_energy",
++  "mean_gen_energy_hidden_dsl": 0.8599,
++  "mean_gen_energy_hidden_naive": 0.9639,
++  "mean_gen_energy_markov_dsl": 0.9576,
++  "mean_gen_energy_markov_naive": 0.9584,
++  "n_games": 25,
++  "n_games_dsl_improved_gt_0.05": 5,
++  "no_gpu_used": true,
++  "no_llm_used": true,
++  "note": "M2-v2 inducer upgrade. If DSL gen-energy on Markov games << naive (~0.95) AND the energy now separates Markov from hidden (AUROC up), the verifier can certify trustworthy models -> M2-v2b plans on the low-energy (trusted) games for first solves. If the DSL also cannot generalize, the games need richer (object-relational / latent) modeling -> honest finding caught before building the planner.",
++  "per_game": [
++    {
++      "dyn_acc_dsl": 0.3339,
++      "dyn_acc_naive": 0.0705,
++      "energy_gen_dsl": 0.6661,
++      "energy_gen_naive": 0.9295,
++      "game": "ar25",
++      "improvement": 0.2634,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0247,
++      "dyn_acc_naive": 0.0316,
++      "energy_gen_dsl": 0.9753,
++      "energy_gen_naive": 0.9684,
++      "game": "bp35",
++      "improvement": -0.0069,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0025,
++      "dyn_acc_naive": 0.0201,
++      "energy_gen_dsl": 0.9975,
++      "energy_gen_naive": 0.9799,
++      "game": "cd82",
++      "improvement": -0.0176,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0454,
++      "dyn_acc_naive": 0.0254,
++      "energy_gen_dsl": 0.9546,
++      "energy_gen_naive": 0.9746,
++      "game": "cn04",
++      "improvement": 0.02,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0186,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 0.9814,
++      "energy_gen_naive": 1.0,
++      "game": "dc22",
++      "improvement": 0.0186,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 1.0,
++      "game": "ft09",
++      "improvement": 0.0,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0956,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 0.9044,
++      "game": "g50t",
++      "improvement": -0.0956,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0049,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 0.9951,
++      "game": "ka59",
++      "improvement": -0.0049,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0001,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 0.9999,
++      "energy_gen_naive": 1.0,
++      "game": "lf52",
++      "improvement": 0.0001,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.004,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 0.996,
++      "game": "lp85",
++      "improvement": -0.004,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.1423,
++      "dyn_acc_naive": 0.0286,
++      "energy_gen_dsl": 0.8577,
++      "energy_gen_naive": 0.9714,
++      "game": "ls20",
++      "improvement": 0.1137,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.4419,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 0.5581,
++      "energy_gen_naive": 1.0,
++      "game": "m0r0",
++      "improvement": 0.4419,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0033,
++      "dyn_acc_naive": 0.0966,
++      "energy_gen_dsl": 0.9967,
++      "energy_gen_naive": 0.9034,
++      "game": "r11l",
++      "improvement": -0.0933,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0531,
++      "dyn_acc_naive": 0.0518,
++      "energy_gen_dsl": 0.9469,
++      "energy_gen_naive": 0.9482,
++      "game": "re86",
++      "improvement": 0.0013,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0083,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 0.9917,
++      "game": "s5i5",
++      "improvement": -0.0083,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0107,
++      "dyn_acc_naive": 0.2197,
++      "energy_gen_dsl": 0.9893,
++      "energy_gen_naive": 0.7803,
++      "game": "sb26",
++      "improvement": -0.209,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0093,
++      "dyn_acc_naive": 0.1119,
++      "energy_gen_dsl": 0.9907,
++      "energy_gen_naive": 0.8881,
++      "game": "sc25",
++      "improvement": -0.1026,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0167,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 0.9833,
++      "game": "sk48",
++      "improvement": -0.0167,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0485,
++      "dyn_acc_naive": 0.0367,
++      "energy_gen_dsl": 0.9515,
++      "energy_gen_naive": 0.9633,
++      "game": "sp80",
++      "improvement": 0.0118,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1050
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 1.0,
++      "game": "su15",
++      "improvement": 0.0,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 1.0,
++      "game": "tn36",
++      "improvement": 0.0,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.1897,
++      "dyn_acc_naive": 0.1434,
++      "energy_gen_dsl": 0.8103,
++      "energy_gen_naive": 0.8566,
++      "game": "tr87",
++      "improvement": 0.0463,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.174,
++      "dyn_acc_naive": 0.0136,
++      "energy_gen_dsl": 0.826,
++      "energy_gen_naive": 0.9864,
++      "game": "tu93",
++      "improvement": 0.1604,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1200
++    },
++    {
++      "dyn_acc_dsl": 0.0,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 1.0,
++      "energy_gen_naive": 1.0,
++      "game": "vc33",
++      "improvement": 0.0,
++      "is_hidden_state_truth": false,
++      "n_transitions": 1199
++    },
++    {
++      "dyn_acc_dsl": 0.6361,
++      "dyn_acc_naive": 0.0,
++      "energy_gen_dsl": 0.3639,
++      "energy_gen_naive": 1.0,
++      "game": "wa30",
++      "improvement": 0.6361,
++      "is_hidden_state_truth": true,
++      "n_transitions": 1200
++    }
++  ],
++  "random_seed": 0,
++  "submitted_to_leaderboard": false,
++  "title": "arc3_m2v2_object_dsl_vs_naive_inducer"
++}
+diff --git a/scripts/experiments/arc3_m2_dsl.py b/scripts/experiments/arc3_m2_dsl.py
+new file mode 100644
+index 0000000000..10b2445558
+--- /dev/null
++++ b/scripts/experiments/arc3_m2_dsl.py
+@@ -0,0 +1,126 @@
++"""M2-v2: does the object-level delta-DSL inducer fix the generalization bottleneck M2-v1a found?
++
++Plan: docs/research-notes/arc-agi3-agent-research-plan.md (M2). M2-v1a showed the naive per-pixel
++template inducer cannot generalize to unseen (state, action) even on deterministic games
++(generalization energy ~0.95 on both Markov and hidden). This experiment runs BOTH inducers on the
++identical collected transitions + identical key-disjoint split + identical grade_predictions verifier,
++so the comparison is clean:
++
++  - naive  = InducedWorldModel    (per-color relative-pixel template; the M2-v1a baseline)
++  - dsl    = ObjectDeltaModel     (object-level translate/recolor rules; the M2-v2 inducer)
++
++The win condition: the DSL's GENERALIZATION energy drops on the 14 grid-Markov games (object rules
++generalize across positions where pixel templates can't), AND the consistency energy now SEPARATES
++Markov (low = trustworthy model) from hidden-state (high = untrustworthy) using a model that actually
++generalizes. That makes the energy verifier load-bearing: it certifies which induced world-models can
++be trusted for planning. Offline, no LLM/GPU, no oracle.
++
++  .venv/bin/python scripts/experiments/arc3_m2_dsl.py --budget 1200 --episodes 35
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import sys
++import time
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "python"))
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++from carnot.agentic.arc_world_model_synth import InducedWorldModel, grade_predictions  # noqa: E402
++from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel  # noqa: E402
++from arc3_m2_world_model import _collect, _key_disjoint_split, _random_split, _auroc  # noqa: E402
++
++
++def run(games=None, budget=1200, episodes=35, seed=0, write=True):
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++    from arcengine.enums import GameAction, GameState
++    started = time.time()
++    rng = random.Random(seed)
++    arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE,
++                 environments_dir=str(REPO / "environment_files"))
++    all_ids = sorted(getattr(e, "game_id", None) for e in arc.get_environments())
++    sel = [g for g in all_ids if (not games or g.split("-")[0] in set(games))]
++    probe = REPO / "results" / "arc3_determinism_probe.json"
++    hidden = set(json.loads(probe.read_text()).get("hidden_state_games", [])) if probe.exists() else set()
++
++    per_game = []
++    for game in sel:
++        short = game.split("-")[0]
++        trans = _collect(arc, game, budget, episodes, rng, GameAction, GameState)
++        tr_k, hd_k = _key_disjoint_split(trans, rng, frac=0.25)
++        e_naive = grade_predictions(InducedWorldModel(short).fit(tr_k).predict, hd_k)
++        e_dsl = grade_predictions(ObjectDeltaModel(short).fit(tr_k).predict, hd_k)
++        is_hidden = short in hidden
++        en, ed = e_naive["energy"], e_dsl["energy"]
++        per_game.append({
++            "game": short, "is_hidden_state_truth": is_hidden, "n_transitions": len(trans),
++            "energy_gen_naive": en, "energy_gen_dsl": ed,
++            "dyn_acc_naive": e_naive.get("dynamics_accuracy"), "dyn_acc_dsl": e_dsl.get("dynamics_accuracy"),
++            "improvement": (round(en - ed, 4) if (en is not None and ed is not None) else None),
++        })
++        print(f"  {short:6s} naive={en} dsl={ed} improve={per_game[-1]['improvement']} hidden={is_hidden}",
++              flush=True)
++
++    rated = [g for g in per_game if g["energy_gen_dsl"] is not None and g["energy_gen_naive"] is not None]
++    labels = [1 if g["is_hidden_state_truth"] else 0 for g in rated]
++    auroc_naive = _auroc([g["energy_gen_naive"] for g in rated], labels)
++    auroc_dsl = _auroc([g["energy_gen_dsl"] for g in rated], labels)
++    markov = [g for g in rated if not g["is_hidden_state_truth"]]
++    hid = [g for g in rated if g["is_hidden_state_truth"]]
++
++    def _mean(gs, k):
++        return round(sum(g[k] for g in gs) / len(gs), 4) if gs else None
++    mk_naive, mk_dsl = _mean(markov, "energy_gen_naive"), _mean(markov, "energy_gen_dsl")
++    hd_naive, hd_dsl = _mean(hid, "energy_gen_naive"), _mean(hid, "energy_gen_dsl")
++    n_improved = sum(1 for g in rated if g["improvement"] and g["improvement"] > 0.05)
++    best_dsl = sorted(markov, key=lambda g: g["energy_gen_dsl"])[:5]
++
++    verdict = (f"complete: m2v2_dsl_inducer_genAUROC_naive{auroc_naive}_dsl{auroc_dsl}"
++               f"_markovGenE_naive{mk_naive}_dsl{mk_dsl}_hiddenGenE_dsl{hd_dsl}"
++               f"_n_improved{n_improved}of{len(rated)}")
++    art = {
++        "experiment": "arc3_m2_dsl", "title": "arc3_m2v2_object_dsl_vs_naive_inducer",
++        "honest_verdict": verdict,
++        "inference_substrate": "offline_arc_agi3_world_model_consistency_energy",
++        "claim": ("Object-level delta-DSL inducer vs the M2-v1a naive pixel template, on identical "
++                  "transitions/split/verifier. Win = DSL lowers GENERALIZATION energy on Markov games "
++                  "and the consistency energy separates Markov (trustworthy) from hidden (not)."),
++        "n_games": len(per_game),
++        "generalization_auroc_naive": auroc_naive, "generalization_auroc_dsl": auroc_dsl,
++        "mean_gen_energy_markov_naive": mk_naive, "mean_gen_energy_markov_dsl": mk_dsl,
++        "mean_gen_energy_hidden_naive": hd_naive, "mean_gen_energy_hidden_dsl": hd_dsl,
++        "n_games_dsl_improved_gt_0.05": n_improved,
++        "best_modelled_markov_games_dsl": [{"game": g["game"], "energy": g["energy_gen_dsl"]} for g in best_dsl],
++        "budget_per_game": budget, "episodes_per_game": episodes, "random_seed": seed,
++        "no_llm_used": True, "no_gpu_used": True, "submitted_to_leaderboard": False,
++        "duration_s": round(time.time() - started, 1), "per_game": per_game,
++        "note": ("M2-v2 inducer upgrade. If DSL gen-energy on Markov games << naive (~0.95) AND the "
++                 "energy now separates Markov from hidden (AUROC up), the verifier can certify "
++                 "trustworthy models -> M2-v2b plans on the low-energy (trusted) games for first solves. "
++                 "If the DSL also cannot generalize, the games need richer (object-relational / latent) "
++                 "modeling -> honest finding caught before building the planner."),
++    }
++    if write:
++        (REPO / "results" / "arc3_m2_dsl.json").write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
++    print(f"\n-> {verdict}")
++    print(f"   GENERALIZATION energy on MARKOV games: naive={mk_naive} -> dsl={mk_dsl} "
++          f"(lower=better) | hidden dsl={hd_dsl}")
++    print(f"   separation AUROC(gen energy -> hidden): naive={auroc_naive} -> dsl={auroc_dsl} | "
++          f"DSL improved {n_improved}/{len(rated)} games")
++    return art
++
++
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser(description=__doc__)
++    ap.add_argument("--games", default="", help="comma-separated short ids; empty = all 25")
++    ap.add_argument("--budget", type=int, default=1200)
++    ap.add_argument("--episodes", type=int, default=35)
++    ap.add_argument("--seed", type=int, default=0)
++    args = ap.parse_args()
++    gl = [g.strip() for g in args.games.split(",") if g.strip()] or None
++    run(games=gl, budget=args.budget, episodes=args.episodes, seed=args.seed)
+diff --git a/tests/python/test_arc_world_model_dsl.py b/tests/python/test_arc_world_model_dsl.py
+new file mode 100644
+index 0000000000..20237f42db
+--- /dev/null
++++ b/tests/python/test_arc_world_model_dsl.py
+@@ -0,0 +1,69 @@
++"""Tests for the M2-v2 ObjectDeltaModel (object-level delta-DSL inducer).
++
++Plan: docs/research-notes/arc-agi3-agent-research-plan.md (M2). Asserts the load-bearing upgrade over
++the M2-v1a naive template: object-level rules GENERALIZE across positions. A keyboard-translate rule
++learned at a few agent positions predicts an UNSEEN position; a click-recolor rule learned on a few
++objects predicts an UNSEEN object. Every test asserts (no skips) per CLAUDE.md "Tests Must Run and
++Assert".
++"""
++
++import numpy as np
++
++from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
++
++
++def _agent(pos, agent=3, h=6, w=6):
++    s = np.zeros((h, w), dtype=np.int16); s[pos] = agent
++    return s
++
++
++def test_translate_rule_generalizes_to_unseen_position():
++    # ACTION1 moves the color-3 agent up by one row; learn at three positions...
++    train = []
++    for (y, x) in [(2, 1), (3, 2), (2, 3)]:
++        train.append((_agent((y, x)), (1,), _agent((y - 1, x))))
++    m = ObjectDeltaModel("t").fit(train)
++    assert m.kbd_rules[1] == ("translate", 3, -1, 0)
++    pred = m.predict(_agent((4, 4)), (1,))            # unseen start position
++    assert np.array_equal(pred, _agent((3, 4)))       # agent moved up, generalized
++
++
++def test_recolor_click_generalizes_to_unseen_object():
++    # clicking a color-2 object recolors it to 5; learn on two objects...
++    def obj(cells, color=2, h=6, w=6):
++        s = np.zeros((h, w), dtype=np.int16)
++        for (y, x) in cells:
++            s[y, x] = color
++        return s
++    train = []
++    for cells in [[(1, 1), (1, 2)], [(4, 4), (4, 5)]]:
++        s = obj(cells)
++        s2 = s.copy()
++        for (y, x) in cells:
++            s2[y, x] = 5
++        train.append((s, (6, cells[0][1], cells[0][0]), s2))   # click first cell (x, y)
++    m = ObjectDeltaModel("t").fit(train)
++    assert m.click_rules[2] == ("recolor_clicked", 5)
++    # unseen object at a new location
++    s3 = obj([(2, 0), (3, 0)])                         # vertical 2-cell color-2 object
++    pred = m.predict(s3, (6, 0, 2))                    # click (x=0, y=2)
++    expect = s3.copy(); expect[2, 0] = 5; expect[3, 0] = 5
++    assert np.array_equal(pred, expect)
++
++
++def test_consistency_energy_low_on_generalized_dynamics():
++    train = [(_agent((y, x)), (1,), _agent((y - 1, x))) for (y, x) in [(2, 1), (3, 2), (2, 3), (4, 1)]]
++    m = ObjectDeltaModel("t").fit(train)
++    held = [(_agent((5, 5)), (1,), _agent((4, 5)))]    # unseen position, same rule
++    ce = m.consistency_energy(held)
++    assert ce["energy"] == 0.0                          # generalized -> trustworthy
++    assert ce["dynamics_accuracy"] == 1.0
++
++
++def test_noop_rule_when_action_has_no_consistent_effect():
++    # ACTION2 does nothing in training -> noop rule -> predicts unchanged
++    train = [(_agent((2, 2)), (2,), _agent((2, 2)))]
++    m = ObjectDeltaModel("t").fit(train)
++    assert m.kbd_rules[2] == ("noop",)
++    s = _agent((1, 1))
++    assert np.array_equal(m.predict(s, (2,)), s)
+-- 
+2.55.0
+

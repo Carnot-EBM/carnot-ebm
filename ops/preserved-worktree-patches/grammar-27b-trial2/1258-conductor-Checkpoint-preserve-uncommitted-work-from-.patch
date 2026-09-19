@@ -1,0 +1,620 @@
+From cba33f8b37f6b8fb76eefee37c0ea5751f6ce9fb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 08:36:18 -0400
+Subject: [PATCH 01258/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../change-proposals/research-roadmap-v374.md | 165 ++++++++++++++++++
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   2 +
+ ops/conductor-state.json                      |   2 +-
+ ops/docs_audit_report.md                      |  91 +++++-----
+ research-references.md                        | 105 +++++++++++
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ...riment_4031_offarc_transfer_smoke_raw.json |  13 +-
+ ...032_offarc_exec_verifier_transfer_raw.json |  33 +++-
+ ..._decentralization_stronger_base_smoke.json |  23 ++-
+ 12 files changed, 417 insertions(+), 52 deletions(-)
+ create mode 100644 openspec/change-proposals/research-roadmap-v374.md
+
+diff --git a/openspec/change-proposals/research-roadmap-v374.md b/openspec/change-proposals/research-roadmap-v374.md
+new file mode 100644
+index 0000000000..b26d323163
+--- /dev/null
++++ b/openspec/change-proposals/research-roadmap-v374.md
+@@ -0,0 +1,165 @@
++# Research Roadmap v374 — PROVE the off-ARC verifier transfer (close the CI), and replace open-loop WM search with closed-loop grounding
++
++**Milestone:** 2026.06.374
++**Planned:** 2026-06-11 (Claude Opus 4.8 planning agent, post-.373 close)
++**Prior milestone doc:** `openspec/change-proposals/research-roadmap-v373.md`
++**North star:** `ops/north-star.md` — solve ARC-AGI-3 accurately AND efficiently; the energy
++ensemble is the VERIFICATION layer (router / pruner / scorer), never the generator.
++
++---
++
++## 1. What .373 measured (the honest read, from the artifacts not the prose)
++
++.373's job was to convert THREE open arguments into measurements. It did — and the measurements
++are more informative than a clean win would have been. Capstone exp4041
++(`complete: capstone_v373_arguments_measured_G1_directional_underpowered_ci_touches_zero_G2_no_generalization_G3_absent_games7_arcmemo_win_flagged_skipped1`):
++
++| Track | Result | Honest status |
++|---|---|---|
++| **G1 — verifier OFF-ARC** (exp4032, operator TOP PRIORITY) | The SAME GAP-4 execution primitive (induce program from demos → restricted exec → exact-output-match) on MBPP code: Arm B demo-fit beat Arm A vote by **+5.0pp**, same sign as ARC-1 (+16pp); positive control PASSES (oracle headroom present). | **DIRECTIONAL but UNDERPOWERED** — n=40, bootstrap CI95 **[0.0, 12.5] touches zero**. The artifact's own recommendation: scale to full HumanEval (164) / MBPP (~500). New gap logged: **GAP-CODE-EXEC-DEMOFIT** (visible tests under-determine hidden semantics). |
++| **G2 — search past r11l** (exp4034 + exp4035) | exp4034 induced vc33 `is_goal(state)` at held-out precision/recall **1.0** (solid). exp4035 ran a REAL non-bespoke search (169 nodes, general coded heuristic, subgoals — NOT r11l hardcoded macros) and **found a plan in the verified WM**. | **NO generalization, NEW wall.** The "plan" was DEGENERATE — `[6,38,28]` repeated 70× — that satisfied `is_goal` *inside* the 99%-accurate WM but **failed real-env confirmation** (`levels_completed=0`). Textbook **planner-exploits-world-model-error** (MuZero arXiv:2306.00840): open-loop search exploited a WM defect off the data-collection distribution. |
++| **G3 — decentralization** (exp4036 + exp4037) | exp4036 launched gemma-4-31B-it best-of-N backgrounded. | **INCONCLUSIVE — throughput failure, not a clean answer.** exp4037 collected **0 scored tasks** in budget (31B dense too slow for 30×k=8). coverage=0.0 is a non-measurement; latent-vs-absent is still open. |
++| **Accuracy** (exp4038) | 7th game solved (dc22-fdcac232), action 20 vs baseline 59, real-env-confirmed | +1 monotonic, CLEAN |
++| **Self-learning** (exp4039) | ArcMemo v6 concept-library: 59→18 actions, **0** induction calls | CLEAN win (modest) |
++| **Hardware** (exp4040) | KV260 reachable, overlay LOADED, latency-transcript step BLOCKED; GateMate unreachable; PolarFire reachable | not yet terminal |
++| **Flagged** (exp4031) | build-half of G1 flagged DURATION_TOO_SHORT (known false-positive: build+launch backgrounds the real run) | skipped by capstone; collect-half exp4032 clean |
++
++**The three things .373 leaves for .374:**
++
++1. **G1 is one power-bump away from the operator's headline.** The verifier's code transfer is
++   directionally real (+5pp, right sign, real headroom) but n=40 cannot exclude zero. This is the
++   single highest-leverage experiment in the project: convert "directional" → "measured" by
++   scaling N **and** adding a stronger discriminator (the +5pp came from naive demo-fit; the
++   literature's symbolic-equivalence partition and leave-one-out test-consistency should lift it).
++2. **G2's open-loop search is the wrong architecture; the fix is named and cheap.** The vc33
++   degenerate plan is not a vc33 quirk — it is the generic failure of planning over a model
++   validated only on its data-collection distribution. The remedy is closed-loop: re-observe the
++   REAL env after each action, trust the WM only one step ahead, and detect WM↔real divergence.
++3. **G3 never got a clean number.** Two attempts (exp4022 flagged, exp4037 0-tasks) failed to
++   *measure*. .374 must use a TRACTABLE substrate (a MoE with ~3B active params) so the
++   latent-vs-absent question actually resolves — or the lineage retires with an honest bound.
++
++## 2. The three biggest gaps (current state → north-star vision)
++
++| # | Gap | Why it is load-bearing | .374 attack |
++|---|---|---|---|
++| **G1** | **The verifier's off-ARC generality is directional, not yet significant** (operator TOP PRIORITY) | The verifier IS the project's entire value-add (north-star §5). A +5pp/CI-touches-0 result is not yet publishable or decision-grade. ARC-AGI-3's new domains AND the publication claim need a *significant* cross-domain transfer. | Scale the SAME GAP-4 primitive to **full HumanEval (164) + an MBPP slice**, ADD stronger arms (symbolic-equivalence partition arXiv:2604.06485, ACES leave-one-out arXiv:2604.03922), 10k-resample task-level bootstrap. Does the CI now **EXCLUDE zero**? (Phase 1) |
++| **G2** | **Open-loop search over a verified WM exploits model error and fails in the real env** | The .372 r11l win was open-loop-lucky; vc33 proves open-loop search over a data-collection-validated WM does not transfer. If the verified-WM-as-simulator approach can't be made to plan robustly, the whole search-layer pivot is in question. | Replace open-loop search with **closed-loop per-step replanning** (re-observe the REAL env each step; MuZero arXiv:2306.00840, GC-IDM arXiv:2605.08732, World-in-World arXiv:2510.18135) + a **WM-trust/divergence gate** (arXiv:2508.06096) that detects WM↔real divergence and refuses degenerate WM-exploiting plans. Does closed-loop grounding break vc33's wall where open-loop failed? (Phase 2) |
++| **G3** | **The sovereign-generator latent-vs-absent question is unmeasured (two failed attempts)** | Decentralization rule 1 (local-first using open models) requires a local generator that can induce ARC rules. gemma-4-12B can't (0.2581, no lift). We still don't know if a stronger LOCAL base can — because the measurement never completed. | TRACTABLE rerun on **Qwen3.6-35B-A3B (MoE, ~3B active)** with batched generation + RoBoN-style early-stop (arXiv:2512.05542), same 30-task ARC-1 pool as exp4012, positive control mandatory. Does coverage rise above 0.2581 (latent → distillation viable, RL vs Distillation arXiv:2505.14216) or stay flat (absent → leash holds)? `retire_if_same_verdict`. (Phase 3) |
++
++These map 1:1 onto the north-star §0 sequence: (1) offline verifier proof / domain expansion (G1),
++(2) the path toward the ARC harness via robust planning (G2), (3) the sovereign substrate (G3).
++**G1 remains the operator's literal TOP PRIORITY**; .373 brought it within one power-bump of the
++CI-excludes-0 gate.
++
++## 3. Architecture — where each .374 experiment sits
++
++```
++                         ARC-AGI-3 NORTH STAR (accurate + efficient)
++                                          │
++        ┌─────────────────────────────────┼─────────────────────────────────┐
++        │                                  │                                   │
++   G1 VERIFIER GENERALITY            G2 ROBUST PLANNING                  G3 SOVEREIGN BASE
++   (operator TOP PRIORITY)           (the search-layer's real test)     (local-first rule 1)
++        │                                  │                                   │
++  exp4044 BUILD+LAUNCH               exp4046 closed-loop replan +        exp4047 BUILD+LAUNCH
++  full HumanEval+MBPP, k=8,          WM-trust/divergence gate over       Qwen3.6-35B-A3B MoE
++  arms: vote / ACES-LOO /            the vc33 verified WM (re-observe     best-of-N, batched,
++  demo-fit / symbolic-partition      REAL env per step; reject           early-stop, SAME pool
++  + oracle positive control          WM-exploiting degenerate plans)     as exp4012 (0.2581)
++        │                                  │                                   │
++  exp4045 COLLECT+VALIDATE           real-env-confirm; honest            exp4048 COLLECT+VALIDATE
++  bootstrap CI95 — EXCLUDES 0?       no-solve is COMPLETE; diagnose      coverage vs 0.2581 +
++  which arm wins? GAP-CODE-          sim2real-ceiling vs                 positive control →
++  EXEC-DEMOFIT residual logged       solvable-with-grounding            latent | absent | retire
++        │                                  │                                   │
++        └──────────────── feeds ───────────┴──────────── feeds ───────────────┘
++                                          │
++        ┌──────────────────┬──────────────┼──────────────┬─────────────────────┐
++   ACCURACY            SELF-LEARNING     INFRA          HARDWARE              CAPSTONE
++   exp4049 8th game     exp4050 ArcMemo   exp4051        exp4052 KV260         exp4053
++   explore-first +1     v7 CROSS-GAME     registry+gaps  drive-to-terminal     aggregate, skip
++   (monotonic)          library transfer  hygiene        (latency transcript)  flagged, sha256
++```
++
++**Provenance / reuse (no rebuild):**
++- G1 reuses the model-free demo-fit primitives (`python/carnot/agentic/arc_gap4_execution_verifier.py`),
++  the restricted executor (`python/carnot/verify/sandbox.py`), and the exp4032 runner shape.
++- G2 reuses the vc33 verified WM (`results/arc3_vc33_world_model_program.py`) and exp4034's induced
++  goal predicate (held-out precision 1.0); the NEW part is the closed-loop harness + divergence gate.
++- G3 reuses the exact exp4012 30-task ARC-1 pool + model-free verifier; the NEW part is the MoE
++  inducer + batched/early-stop throughput so the run actually completes.
++
++## 4. Phases & dependency graph
++
++- **Phase 0 — hygiene (exp4042 archive/activate, exp4043 SOTA-ingestion).** exp4042 is claude/opus
++  + `requires_claude_verified` (the milestone-transition lesson); keeps the hardened green-gate +
++  poison-test quarantine. exp4043 is the MANDATORY SOTA-ingestion slot (.374 headline is a
++  bleeding-edge track: off-ARC verifier proof + closed-loop WM planning).
++- **Phase 1 — G1 (exp4044 BUILD+LAUNCH → exp4045 COLLECT+VALIDATE).** Split-long-codex pair; the
++  full-corpus generation is backgrounded so no agent is held past the 80-min cap. exp4045 `gated_on`
++  exp4044 `runner_ready == true`.
++- **Phase 2 — G2 (exp4046 closed-loop replanning).** Single task; the search runs offline over the
++  verified WM but executes/confirms in the REAL env. `prior_failures:` cites exp4035.
++- **Phase 3 — G3 (exp4047 BUILD+LAUNCH → exp4048 COLLECT+VALIDATE).** Split-long-codex pair;
++  `prior_failures:` cites exp4022 + exp4037; `retire_if_same_verdict: true`. exp4048 `gated_on`
++  exp4047 `runner_ready == true`.
++- **Phase 4 — proven tracks + self-learning + infra + hardware + capstone (exp4049–exp4053).**
++  exp4049 8th game (+1 monotonic). exp4050 ArcMemo v7 cross-game transfer (reads exp4049). exp4051
++  registry/gaps hygiene (reserved infra slot; logs the G1 off-ARC outcome + closed-loop outcome).
++  exp4052 KV260 drive-to-terminal. exp4053 capstone (UNGATED; skips flagged; cites sha256).
++
++**Dependency edges:** exp4045←exp4044 (runner_ready); exp4048←exp4047 (runner_ready); exp4046 reads
++exp4034 goal predicate; exp4050 reads exp4049 solve trace; exp4053 aggregates exp4044–exp4052.
++
++## 5. Hardware requirements
++
++- **Phase 1/3 GGUF inference:** single RTX 3090 sufficient; gemma-4-12B-it-GGUF (G1, fast) and
++  Qwen3.6-35B-A3B-GGUF (G3, MoE ~3B active for throughput) via llama.cpp. PRECONDITIONS gate each.
++- **Phase 2:** CPU-only (search over a Python WM program + live ARC env over the SDK anonymous key).
++- **Phase 4 hardware (exp4052):** KV260 over SSH (`ssh kria`), GateMate (`openFPGALoader --detect`),
++  PolarFire (`ssh polarfire`) — SSH/USB preconditions only; NEVER a host SD-card block device
++  (KV260 SSH-Not-SD-Card Discipline). Distinct wall-clock timers per board.
++
++## 6. Routing & discipline
++
++- **Codex-Default v2 (gemini BANNED):** every experiment task is `agent_type: codex` /
++  `model: gpt-5.5`. Only exp4042 (archive/activate) is `claude` / `opus` / `requires_claude_verified`.
++- **Split-long-codex:** the two many-GGUF-call experiments (G1 exp4044/4045, G3 exp4047/4048) are
++  each split into a fast BUILD+LAUNCH (backgrounds the real run) + a COLLECT+poll task.
++- **Failed-Experiment Rerun Discipline:** exp4046 (`prior_failures: exp4035`), exp4047/exp4048
++  (`prior_failures: exp4022 + exp4037`, `retire_if_same_verdict: true`). G1 (exp4044/4045) carries
++  `operator_override` — it is the operator's standing TOP PRIORITY forward scale-up of a
++  directional positive (exp4032), with a STATED difference (full N + stronger discriminator arms).
++- **Incremental-Progress (ARC):** exp4049 targets +1 game, never "solve all."
++- **Reserved infra slots (≥2 for a ≥10-task milestone):** exp4042 (archive/activate) + exp4051
++  (registry/gaps). **SOTA-ingestion slot:** exp4043. **Self-learning mandate:** exp4050.
++- **Adversarial-verify / Reading-Results:** every compute artifact carries `inference_substrate`,
++  `model_specs`, `random_seed`, `reproducibility_checksum`; the capstone reads each upstream via
++  `summarize_artifact.py`, SKIPS any `flagged_adversarial`, and cites sha256.
++
++## 7. Acceptance — what makes .374 a win
++
++.374 is a win if it answers the three questions, positive OR honest-negative:
++
++1. **G1:** does the off-ARC demo-fit transfer's bootstrap CI95 EXCLUDE zero at full HumanEval(+MBPP)
++   scale, and/or does a stronger discriminator lift the delta materially? (Either a measured
++   positive — the headline — or an honest "the verifier's code-transfer magnitude is small and
++   needs a richer discriminator," with the GAP-CODE-EXEC-DEMOFIT residual characterized.)
++2. **G2:** does closed-loop per-step grounding + a WM-trust gate break vc33's wall where open-loop
++   failed? (Either a real-env-confirmed solve — the search layer generalizes when grounded — or an
++   honest "verified-WM-as-simulator has a sim2real ceiling on vc33," with the divergence quantified.)
++3. **G3:** does a tractable MoE base's best-of-N coverage rise above 0.2581 (latent) or stay flat
++   (absent)? (A clean number either way; if it again fails to *measure*, the stronger-base lineage
++   retires per `retire_if_same_verdict`.)
++
++Plus: monotonic accuracy (8th game), a self-learning cross-game transfer datum, registry/gaps kept
++honest, and KV260 moved toward terminal.
++
++## 8. Cross-references
++- `ops/north-star.md` §0/§5 (the destination + the verifier-is-the-value-add reframe)
++- `ops/verifier_gaps.md` (GAP-4 positive, GAP-3 retired-negative, GAP-5 + GAP-CODE-EXEC-DEMOFIT open)
++- `results/experiment_4041_capstone_v373.json` (the .373 scorecard this milestone builds on)
++- `research-references.md` "2026-06-11 Post-.373 Planning Sweep" (the verified .374 citations)
++- `results/experiment_4030_sota_ingestion_receipt.json` (`flagged_for_v374`: off-ARC vs ACES/DOCE,
++  vc33 search with re-rooting fallback, symbolic-partition for code — all addressed here)
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index b94c908d82..ee0706f66b 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 70, "phase": "iteration_start", "last_beat": "2026-06-11T11:44:00Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 72, "phase": "iteration_start", "last_beat": "2026-06-11T12:36:16Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ade320b96b..31527c6945 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8252,3 +8252,5 @@ c |
+ | 2026-06-11 11:09 UTC | ArcMemo v6: concept-LIBRARY learning (self-learnin | OK | 91 passed in 4.93s |
+ | 2026-06-11 11:25 UTC | Hardware continuity (consolidated; KV260 drive-tow | OK | 89 passed in 4.34s |
+ | 2026-06-11 11:42 UTC | Capstone .373 (UNGATED): the milestone's headline  | OK | 87 passed in 5.06s |
++| 2026-06-11 12:32 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
++| 2026-06-11 12:34 UTC | Milestone 2026.06.374 activated | OK | 12 tasks queued |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index d3b19d7306..0c97ecb113 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 70, "phase": "iteration_start", "started_at": "2026-06-11T11:44:00Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 72, "phase": "iteration_start", "started_at": "2026-06-11T12:36:16Z"}
+\ No newline at end of file
+diff --git a/ops/docs_audit_report.md b/ops/docs_audit_report.md
+index ea64a1fabd..6683af3867 100644
+--- a/ops/docs_audit_report.md
++++ b/ops/docs_audit_report.md
+@@ -1,66 +1,75 @@
+ <!-- generated by scripts/pages_adversarial_audit.py — 2026-06-11 -->
+ <!-- per CLAUDE.md 'Adversarial Landing-Page Discipline' — this report is advisory; operator decides what to act on -->
+ 
++I've read the on-disk file and confirmed it matches the content under review. Here is my hostile adversarial review.
++
++---
++
+ # docs_audit_report — 2026-06-11
+ 
+ ## TL;DR (stranger's 30-second take)
+-The hero is genuinely good — I understand what Carnot does in one sentence and I see `pip install carnot-ebm`. But the moment my eye drops to the stats bar I hit "382 Completed milestones," a "Repinned from v2 0.9857" retraction story, and a wall of 12 acronym-tagged result cards (FoVer, CCTU, SVAMP, VeriCoT, PRM-BiasBench, HalluGuard) — plus a "SOTA 35B scores 0% on HumanEval" claim that makes me distrust the numbers. A skeptical stranger keeps the hero, skims nothing in Results, and half-closes the tab on credibility doubt.
++The hero is genuinely good — I understand what Carnot does in one sentence and how to install it. But the moment I scroll, the page turns on itself: the first screen already shows me a walked-back number ("Repinned from v2 0.9857"), the "Evidence" grid contradicts its own HumanEval numbers and posts implausible perfect/zero scores, and the blog is a wall of "we caught ourselves cheating/retracting." A skeptical ML person from a conference would keep reading the hero, then bounce at the Evidence section thinking "these numbers don't add up and they keep retracting their own claims."
+ 
+ ## TOP 3 PROBLEMS
+-1. **Suspicious benchmark numbers undercut the whole "Evidence" section** — "SOTA 35B (Qwen3.6-35B-A3B): HumanEval pass@1 0% → 36%" (a real 35B SOTA model does NOT score 0%), plus perfect "0.5 → 1.0" and "60/60" scores on small samples. A stranger reads these as broken-harness or cherry-picked, not as proof.
+-2. **The Results section is a 12-card wall of undefined acronyms** — FoVer, CCTU, SVAMP, VeriCoT, GSM8K, PRM-BiasBench, HalluGuard, IterativeSelfRepair, "TP rate," "pass@1," "publication gate." A stranger skims none of them and learns nothing.
+-3. **The stats bar + "Recent progress" card lead with internal project-management vocabulary** — "382 Completed milestones," "3,341 Experiment runs," "0.9131 AUROC — FoVer (5-seed)," "Repinned from v2 0.9857 after pre-submission adversarial audit." This is a CI dashboard, not a value proposition, and foregrounding a retracted number to a stranger reads as "we previously over-claimed."
++1. **Self-contradicting, sometimes-implausible Evidence grid** — three different HumanEval deltas (+3.0 pts / 0%→36% / 8%→80%) with no reconciliation, plus "0% → 36% on a 35B model" (no real 35B scores 0% on HumanEval) and several too-perfect scores (1.0, 60/60, 0.0pp). The one section meant to build trust destroys it.
++2. **Hero's first screen leaks internal accounting** — "382 Completed milestones" (vanity/insider stat) and the "Recent progress" card's "Repinned from v2 0.9857 after pre-submission adversarial audit" plant doubt before the value prop has landed.
++3. **Blog section reads as self-incrimination** — 4 of 7 posts are about catching fabrication / fake verifiers / retractions ("Two Retractions and a Rescue", "Regex in an NTK Costume", "Caught Cheating", "Why We Report Two AUROCs Now"). A cold stranger concludes the project can't trust its own outputs.
+ 
+ ## DETAILED FINDINGS
+ 
+ ### Bloat
+-- **Nav bar** — 12 text links (Get Started, Tutorial, Concepts, API, Problem, Capabilities, Results, Quick Start, Report, Paper, Writing, Roadmap) + 2 buttons = 14 clickable items — cap at ~5-6. Decision paralysis; "Tutorial," "Get Started," "Concepts," "Report," "Paper," "Writing," "Roadmap" are too many doorways at once.
+-- **Results grid** — 12 cards, each with a long jargon tag — under the 20-card cap on count, but the cumulative jargon density means a stranger skims zero. Cut to the ~5 strongest, plain-labeled.
+-- **"Recent progress" card** (~55 words) — under the 60-word r-card cap, but it is structurally jammed *inside* the 4-stat numeric flex row (`.stats-bar`), so it renders as a big text block crammed among the stat numbers — visually awkward, looks like a layout bug.
+-- Individual bento/result card bodies are within caps (largest bento ~73 words). Bloat here is breadth-of-cards and nav, not per-card length.
++- **Nav bar** (lines 264–277) — 12 text links + 2 buttons (14 items) — cut to ~5. A stranger sees a menu wall: Get Started / Tutorial / Concepts / API / Problem / Capabilities / Results / Quick Start / Report / Paper / Writing / Roadmap. "Report" + "Paper" + "Writing" + "Roadmap" + "Concepts" + "API" are redundant entry points to the same docs.
++- **Hero "Recent progress" r-card** (line 312) — ~55 words and jammed into the stats bar — should not be a result card in the hero at all (cap 60 words, but the real problem is placement). It spends prime real estate on AUROC version-history.
++- **Results section** (lines 517–578) — **12 result cards** — trim to the ~5 strongest. Combined with the 7 feature cards immediately above (lines 422–501), a stranger faces ~19 dense cards back-to-back and skims none.
++- **Results section-desc** (lines 510–516) — ~50 words of provenance disclaimer ("infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are labeled by provenance… not model-generation headline claims") — reads like an internal caveat, not landing-page copy.
+ 
+ ### Internal jargon
+-- **Stats bar** — "382 Completed milestones," "3,341 Experiment runs" — internal process counters; a stranger doesn't care how many experiments you ran. "FoVer ... (5-seed)" — FoVer is undefined; "5-seed" is methodology shorthand.
+-- **"Recent progress" card** — "5-seed dual-condition; architecture-only 0.8947," "Repinned from v2 0.9857" — version/methodology jargon ("dual-condition," "architecture-only," "v2") that means nothing to an outsider.
+-- **Test-Time Compute (TTC) & PREM card** — "dynamic budget controller that scales Test-Time Compute based on Process-Reward Energy Model (PREM) variance ... intrinsic motivation for continuous self-learning" — pure jargon + vague hype; a stranger bounces off this card entirely.
+-- **Results card tags** — "CCTU" (×2, undefined), "SVAMP," "VeriCoT," "GSM8K," "PRM-BiasBench," "HalluGuard v3," "IterativeSelfRepair," "EstimationVerifier," "execute-feedback-retry," "TP rate," "pass@1," "0.91 AUROC (publication gate)" — "publication gate" is internal terminology; none of these are glossed.
+-- **Feature cards** — "AND-composed" (Multi-step reasoning), "adversarial-verify pass," "methodology-incomplete artifacts," "headline claims" (Research operations) — internal-process language; `VerdictRecord` / `SessionMemory` are borderline (acceptable as named API objects, but stack up).
+-- **Flag-style syntax** — "0.0pp accuracy delta," "+72pp," "architecture-only 0.8947" read like log lines, not landing-page copy.
++- **Hero stats** (line 306) — "382 Completed milestones" — a stranger has no idea what a project "milestone" is here; it reads like internal sprint-counting and signals over-process, not capability.
++- **Hero "Recent progress" card** (line 312) — "Repinned from v2 0.9857", "architecture-only 0.8947", "5-seed dual-condition", "FoVer" — insider version/condition tokens in the first screen.
++- **Typed constraints card** (line 451) — "CCTU constrained tool-use micro-benchmark" — undefined acronym; "micro-benchmark" undersells.
++- **Multi-step reasoning card** (line 463) — "AND-composed" — jargon.
++- **Research operations card** (lines 470–477) — "planner / inner agent / adversarial-verify pass / methodology-incomplete artifacts" — describes Carnot's *own dev loop*, meaningless to a user evaluating the tool.
++- **TTC & PREM card** (lines 497–499) — "Test-Time Compute (TTC)", "Process-Reward Energy Model (PREM)", "intrinsic motivation for continuous self-learning" — the single most jargon-dense card; reads like a paper-abstract fragment.
++- **Results cards** (lines 543–576) — "IterativeSelfRepair", "execute-feedback-retry", "EstimationVerifier", "SVAMP", "VeriCoT", "CoT", "TP rate", "PRM-BiasBench", "k=5 ensemble", "HalluGuard v3", "KV260", "+72pp", "publication gate", "0.125 FoVer baseline" — a stranger can't parse any of these benchmark/verifier names.
++- **Preprint heading** (line 584) — "(paper-v6)" — internal version number in a public heading; "operator-initiated upload" (line 590) is internal-process language.
+ 
+ ### Per-milestone narrative
+-- **Stats bar** "382 Completed milestones" — exposes the internal milestone counter as a headline number.
+-- **"Recent progress" card** — "Repinned from v2 0.9857 after pre-submission adversarial audit" is retrospective/changelog narrative, not landing-page copy.
+-- (Note: no raw ".NNN" milestone IDs in prose — that class of drift looks cleaned up. The residue is the milestone *count* and the version-repin story.)
++- The page mostly avoids explicit ".NNN" milestone strings (good). The residual narrative leakage is the **"Repinned from v2 0.9857 after pre-submission adversarial audit"** thread (hero card line 312 + blog "Why We Report Two AUROCs Now" lines 715–722) — this is a retrospective/changelog story surfaced as public copy. The **"382 Completed milestones"** stat is the milestone-counting vestige.
+ 
+ ### Inconsistencies
+-- **"FoVer" used two incompatible ways** — hero stat "0.9131 AUROC — FoVer" (headline-good) vs results card "0.90 AUC (vs **0.125 FoVer baseline**)." A stranger sees FoVer at 0.9131 and at 0.125 and cannot reconcile them.
+-- **Three different HumanEval deltas** — "+3.0 points" (Code result card + Code feature), "8% → 80% (+72pp)" (IterativeSelfRepair card), "0% → 36%" (SOTA 35B card). Same benchmark name, wildly different numbers, no explanation of why — reads as inconsistent.
+-- **Multiple floating AUROC/AUC numbers** — 0.9131, 0.8947, 0.9857 (retracted), 0.91 (prompt-injection), 0.90 (SVAMP). A stranger can't tell which is "the" headline accuracy.
+-- **Result meter bars don't track the numbers** — e.g. "+3.0 points" → 14.6% bar; "+4.9 points" → 66.7% bar; "0.0pp delta" → 95.6% bar. The visual lengths look arbitrary/decorative, which erodes trust in the chart.
+-
+-### Missing essentials
+-- **Who maintains it / how big is the team?** — only "© 2026 Ian Blenke" in the footer. With "382 milestones / 3,341 experiments / 30,658 tests" on display, a stranger wonders if this is one person + an automated loop; the scale stats vs single name is an unaddressed credibility gap.
+-- **Why trust the numbers?** — "backed by a checked-in experiment artifact" is asserted, but the suspicious perfect/zero scores (below) actively work against it; there's no independent-reproduction or third-party anchor visible.
+-- (Present and good: one-sentence "what it does," install command, Apache 2.0 license.)
++- **HumanEval reported three different ways, unreconciled:** "+3.0 points on pass-rate" (line 520) vs "8% → 80% (+72pp)" (line 545, HumanEval-50) vs "0% → 36%" (line 555, 35B). Same benchmark name, wildly different magnitudes, no explanation of why — looks like cherry-picking the most dramatic framing per card.
++- **The "47 + 28" example contradicts itself:** problem card says the LLM committed to **"47 + 28 = 7"** (line 338), while hero/intro/quickstart all use **"= 76"** (lines 329, 343, 622) with correct answer **75**. Three numbers (7 / 76 / 75) in play; the "= 7" looks like a typo to a skimmer.
++- **"Seven capabilities… What you can check" mismatch** (lines 415–416): two of the seven cards are not things a user checks — "Research operations" (internal dev loop, lines 469–478) and "APIs & portable memory" (integration surfaces, lines 482–492). The section label over-promises.
++- **"Preprint" label vs reality** (lines 583, 589–590): titled "Preprint" but states the arXiv submission is "pending… upload" — it is a PDF on the site, not a preprint anywhere. Mildly misleading.
++- **~0.9 numbers blur together:** hero "0.9131 AUROC" (FoVer math), results "0.91 AUROC" (prompt-injection, line 530), "0.90 AUC" (SVAMP, line 550) — three different tasks, three near-identical numbers; a skimmer reads "everything is 0.9."
+ 
+ ### Fabrication signals
+-- **"SOTA 35B ... HumanEval pass@1: 0% → 36%"** (results card) — a 0% baseline for a state-of-the-art 35B model on HumanEval is implausible (real scores are 60-90%); signals a broken baseline or cherry-pick. Biggest single credibility red flag on the page.
+-- **"GSM8K extraction TP rate: 0.5 → 1.0"** — a perfect 1.0 with no sample size or anchor.
+-- **"k=5 ensemble catches 60/60 attacks"** — perfect score on a small (60) sample, no FPR shown.
+-- **"2.0× speedup, identical losses"** — "identical" is suspiciously clean (plausible for deterministic retrain, but stated without tolerance).
+-- **"99.3% of wrong code flagged"** — high but at least anchored to the 164-problem HumanEval set (the better-anchored of the bunch).
++- **"HumanEval pass@1: 0% → 36%" on "SOTA 35B (Qwen3.6-35B-A3B)"** (lines 554–555) — biggest credibility killer: no real 35B model scores **0%** on HumanEval pass@1. A 0% base implies a broken harness, not a Carnot win; an ML-literate stranger distrusts the whole grid on sight.
++- **"GSM8K extraction TP rate: 0.5 → 1.0"** (line 560) — a perfect 1.0 with no sample size or CI.
++- **"k=5 ensemble catches 60/60 attacks"** (line 565) — 100% on n=60, no anchor.
++- **"0.90 AUC (vs 0.125 FoVer baseline)"** (line 550) — a 0.125 AUC is *worse than random (0.5)*; touting your method against a sub-chance baseline reads as a broken or cherry-picked comparator.
++- **"Zero false positives"** (blog, line 737) — perfect claim, no denominator.
++- **"0.0pp accuracy delta with 4.4% cost savings"** (line 570) — touting *zero* accuracy change + a trivial 4.4% saving as headline "evidence" is a weak result dressed up.
++
++### Missing essentials
++- **Why should I trust the numbers?** Undercut rather than supported — the perfect/implausible scores above and the lack of any *independent/third-party* validation on the page (everything is "checked-in artifact," i.e. self-reported).
++- **Who maintains it?** Only "Ian Blenke" in the footer (line 762). Against "3,360 experiment runs / 382 milestones / 30,658 tests," a single name reads as either a suspiciously superhuman solo effort or undisclosed automation — a stranger wants a one-line "who/what is behind this."
++- **Visual/structural risk:** the "Recent progress" r-card is nested inside `.stats-bar` (a flex row of stat blocks, lines 304–314) with a stray `</div>`, and the **TTC & PREM card sits *outside* the `.bento-grid`** (the grid closes at line 494 before the card opens at line 495) — both likely render misaligned. Not copy, but a stranger sees a broken-looking layout.
+ 
+ ## WHAT'S WORKING
+-- **The hero nails the one-sentence pitch.** "Checks whether an answer is internally consistent — and suggests a fix when it isn't," with the `47 + 28 = 76` example and "second pair of eyes" framing — a non-expert gets it immediately. Install command, license badge, and "works with any LLM you can call" are all right where they should be.
+-- **"How it works" (Extract → Check → Repair) and the "Why Energy-Based?" card** explain the mechanism in plain language without drowning in math — genuinely good landing-page copy.
++- **Hero + Quick Start are excellent.** The one-sentence value prop (lines 293–298), the concrete 47+28 framing, and the 5-line Python example (lines 618–630) are clear, honest, and exactly what a stranger needs. License (Apache 2.0) and install (`pip install carnot-ebm`) are unmissable.
++- **The "How it works" Extract→Check→Repair section** (lines 351–409) is well-pitched for a non-specialist and stays under length caps.
+ 
+ ## RECOMMENDED OPERATOR ACTIONS
+-1. **Fix or pull the "SOTA 35B 0% → 36%" card.** A SOTA model at 0% baseline reads as a broken harness; either explain the 0% (was generation truncated/unparsed?) or remove it — it poisons trust in the whole Evidence section.
+-2. **Collapse the Results grid from 12 jargon-tagged cards to ~4-5 plain-language ones** (e.g. "Catches 99% of wrong code on HumanEval," "+4.9 pts on structured-output compliance," "0.91 AUROC catching prompt injection"). Drop or gloss FoVer/CCTU/SVAMP/VeriCoT/PRM-BiasBench/HalluGuard; move the rest to the technical report.
+-3. **De-jargon the stats bar.** Replace "382 Completed milestones" / "3,341 Experiment runs" with stranger-meaningful signals (e.g. "30,658 automated tests," "Apache 2.0," "7 verification capabilities"). Keep one clean headline accuracy number, glossed ("0.91 AUROC catching math step-errors").
+-4. **Move the "Repinned from v2 0.9857" retraction out of the hero.** It's an honesty story that belongs in the linked blog post, not the first thing a stranger reads; and fix the r-card that's structurally nested inside the numeric `.stats-bar` flex row.
+-5. **Resolve the FoVer 0.9131-vs-0.125 and the three HumanEval deltas (+3 / +72pp / +36pp)** so no two cards appear to contradict each other; make meter-bar widths track the stated numbers or make them obviously decorative.
+-6. **Trim the nav from 12 links to ~5** (Get Started, Results, Paper, GitHub, HuggingFace) to cut decision paralysis.
+-7. **Add a one-line "who/where" credibility anchor** near the footer or hero (maintainer + that development runs through an audited autonomous loop) so the scale stats don't read as inflated.
++1. **Fix or pull the "0% → 36% on 35B" card** (lines 553–556) — either explain the 0% base honestly or remove it; as written it discredits the whole Evidence grid.
++2. **Reconcile the three HumanEval numbers** (lines 520, 545, 555) — pick one headline framing, or label base model/subset so they don't look contradictory.
++3. **Cut the Evidence grid from 12 → ~5 cards**, dropping the weak/too-perfect ones (HalluGuard 0.0pp, GSM8K 1.0, 60/60, the sub-chance 0.125 baseline). Keep live-GPU, anchored results only.
++4. **Move the "Repinned from v2 0.9857" thread out of the hero** (line 312) — the two-AUROCs nuance belongs in the blog, not the first screen. Replace the hero card with a plain "installable today" CTA.
++5. **Drop "382 Completed milestones"** from the stats bar (line 306); replace with a stranger-legible metric (stars, downloads, or contributors) or remove.
++6. **Rename the features section** so "Research operations" and "APIs & portable memory" aren't sold as "what you can check" (lines 415–416), or move them to a separate "How it's built / Integrations" block.
++7. **De-jargon the remaining cards** — gloss or remove CCTU, SVAMP, VeriCoT, PREM/TTC, HalluGuard, EstimationVerifier, "publication gate", "paper-v6".
++8. **Reduce the blog teaser to 2–3 posts** and lead with capability/theory ("Verifier Accuracy Paradox"), not the four self-incrimination posts — keep them available under "See all posts."
++9. **Fix the "47 + 28 = 7" typo** (line 338) and trim the nav to ~5 links.
++10. **Verify the two layout bugs** (r-card inside `.stats-bar`; TTC card outside `.bento-grid`) render correctly.
+ 
+-— Advisory only; no edits made to docs/index.html (operator-curated per Public Documentation Discipline).
+\ No newline at end of file
++*Advisory only — no edits made. Per Public Documentation Discipline, docs/index.html is operator-curated.*
+\ No newline at end of file
+diff --git a/research-references.md b/research-references.md
+index 1d6ec4ce5d..faa294f7bb 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -1,3 +1,108 @@
++## 2026-06-11 Post-.373 Planning Sweep (Milestone 2026.06.374)
++
++`.373` converted three open arguments into measurements (capstone exp4041). The honest read,
++straight from the artifacts (not the prose):
++
++- **G1 — verifier off-ARC transfer (operator TOP PRIORITY): DIRECTIONAL but UNDERPOWERED.**
++  exp4032 ran the SAME GAP-4 execution primitive (induce program from demos → restricted exec
++  → exact-output-match) on MBPP code: Arm B (demo-fit) beat Arm A (vote) by **+5.0pp**, SAME
++  SIGN as the ARC-1 +16pp, positive control PASSES (oracle headroom present, informative null).
++  BUT **n=40, bootstrap CI95 [0.0, 12.5] touches zero** → not yet significant. The artifact's own
++  recommendation: scale to full HumanEval (164) / MBPP (~500). A new gap was logged:
++  **GAP-CODE-EXEC-DEMOFIT** — visible example tests under-determine hidden semantics (the code
++  analog of GAP-5 demo-underdetermination).
++- **G2 — search generalization to a SECOND game (vc33): NO generalization, NEW wall identified.**
++  exp4034 induced vc33's `is_goal(state)` at held-out precision/recall **1.0** (solid). exp4035
++  ran a REAL non-bespoke search (169 nodes expanded, general coded heuristic, subgoal decomposition,
++  NOT r11l-style hardcoded macros) and **found a plan in the verified WM** — but the plan was
++  DEGENERATE (the action `[6,38,28]` repeated 70×) that satisfied `is_goal` *inside the 99%-accurate
++  WM* yet **failed real-env confirmation** (`levels_completed=0`). This is textbook
++  **planner-exploits-world-model-error**: the planner searched OUT-OF-DISTRIBUTION and exploited a
++  WM defect. The .372 r11l win was open-loop-lucky; vc33 exposes that open-loop search over a
++  WM validated only on the data-collection distribution does not transfer to the real env.
++- **G3 — decentralization stronger base: INCONCLUSIVE (throughput failure, not a clean answer).**
++  exp4036 launched gemma-4-31B-it best-of-N backgrounded; exp4037 collected **0 scored tasks** in
++  budget (31B dense too slow for 30 tasks × k=8). coverage=0.0 is a non-measurement, not "absent."
++  The latent-vs-absent question is still open and needs a TRACTABLE substrate (MoE ~3B-active for
++  throughput, batched, proper budget).
++- **Accuracy:** 7th game solved (dc22-fdcac232, action 20 vs baseline 59, real-env-confirmed). +1.
++- **Self-learning:** ArcMemo v6 concept-library won (59→18 actions, **0** induction calls). Clean.
++- **Hardware:** KV260 overlay loaded, but the latency-transcript step stayed BLOCKED (not terminal).
++
++**Net-new references for the .374 tracks (verified by WebSearch/WebFetch June 2026 — every arXiv ID
++below was fetched and confirmed to resolve; the few snippet-only items are flagged).**
++
++TRACK 1 — execution-based / test-consistency code selection (G1 full-corpus scale-up):
++- **★ Inference-Time Code Selection via Symbolic Equivalence Partitioning** (arXiv:2604.06485).
++  Filter by public tests → partition survivors into functional-equivalence classes via symbolic
++  execution → pick the dominant class. Concrete deltas at N=10: **HumanEval+ 0.754→0.826**,
++  LiveCodeBench 0.565→0.647. The strong, training-free baseline the Carnot demo-fit verifier must
++  match/beat in .374. Pitfall it names: **consensus ≠ correctness** (correlated wrong solutions) —
++  exactly where the Carnot verifier must earn its edge.
++- **★ Scaling Agentic Verifier for Competitive Coding** (arXiv:2602.04254). An execution-based
++  verifier that actively SEARCHES for discriminating test inputs (targeted counterexamples), not
++  passive test-pass counting; **+10–15% absolute Best@K**. The right *direction* for the Carnot
++  code verifier (generate discriminating evidence) but heavy (trained agentic verifier) — a .375+
++  direction, not a .374 drop-in.
++- **CodeT — dual execution agreement** (arXiv:2207.10397). Canonical execution-reranking baseline
++  with published MBPP/HumanEval deltas (HumanEval 47.0→65.8, MBPP 58.1→67.7 on code-davinci-002).
++  Use as the comparable reference number. (Effect sizes from search snippet; ID resolves, PDF not
++  re-fetched this pass.)
++- **ACES — leave-one-out test consistency** (arXiv:2604.03922, already held): a STRONGER baseline
++  than plain vote; an Arm A++ for the .374 measurement.
++- **Efficient Prediction of Pass@k Scaling** (arXiv:2510.05197). Extrapolates pass@k from few
++  samples with uncertainty — use to PRE-BUDGET how many N×k generations are needed before burning
++  GGUF wall-clock. **Sizing rule (load-bearing): a ~5pp lift will NOT clear a bootstrap CI on n=30;
++  budget n≈164 (full HumanEval) with 10,000-resample task-level bootstrap CIs.**
++
++TRACK 2 — closed-loop planning with verified world models + the model-error/sim2real gap (G2, THE
++important track):
++- **★ What model does MuZero learn?** (arXiv:2306.00840). Names the exact .373/G2 failure: a
++  value/transition model is accurate on the DATA-COLLECTION policy but **cannot evaluate
++  out-of-distribution policies**, prediction error **grows with horizon**, and the **policy prior is
++  what restricts how much model error enters the search**. The vc33 degenerate plan IS this. Implies
++  the fix: constrain the search so it only proposes actions where the WM is trustworthy.
++- **★ World-in-World: World Models in a Closed-Loop World** (arXiv:2510.18135). Scores WMs by
++  CLOSED-LOOP task success (propose→simulate→revise→execute→**replan on new observation**), and
++  finds **high model fidelity ≠ task success**. Licenses the .374 remedy: stop targeting WM
++  "accuracy," target real-env-confirmed closed-loop success with per-step replanning.
++- **★ Latent Geometry Beyond Search (GC-IDM)** (arXiv:2605.08732). Replaces open-loop multi-step
++  planning with **closed-loop single-step replanning + fresh observation re-encoding every step**,
++  bounding error by per-step (not multi-step-integrated) divergence — the minimal-cost remedy for
++  the compounding-error failure. Pitfall: degrades on long forced action chains (may need short
++  multi-step lookahead, not pure single-step).
++- **Bounding Distributional Shifts via Novelty Detection** (arXiv:2508.06096). A novelty detector
++  INSIDE the MPC loop: when the predicted state is OOD, reduce reliance on the WM ("when to trust
++  the model"). The Carnot energy verifier is a natural WM-trust signal source. Single-point-of-
++  failure caveat (the detector itself).
++- **R-WoM: Retrieval-augmented World Model** (arXiv:2510.11892). WM does k-step lookahead per
++  candidate action and PRUNES before execution; retrieval-grounding ↔ Carnot execution-grounding.
++  Errors still compound — keep k short.
++
++TRACK 3 — base-model ceilings for best-of-N + efficient BoN (G3 decisiveness):
++- **The Invisible Leash** (arXiv:2507.14843, already the anchor): RLVR cannot exceed the base
++  model's pass@k in the limit; BoN surfaces only LATENT support.
++- **Does RL Really Incentivize Reasoning Beyond the Base Model?** (arXiv:2504.13837). Independent
++  corroboration: base model wins at large k; reasoning bounded by the base.
++- **★ RL vs. Distillation: Accuracy and Capability** (arXiv:2505.14216). The sharpest fork: RLVR
++  lifts pass@1 (60.6→74.2 on a 1.5B math model) but **pass@256 stays flat (97.2→97.0)**; only
++  knowledge-infusing DISTILLATION (external traces) expands coverage. To raise the CEILING you need
++  new knowledge (a stronger base or external-trace distillation), NOT RLVR self-improvement —
++  corroborates the project's RFT-verifier<SC null. The sovereignty-respecting way to inject new
++  knowledge is a stronger LOCAL base.
++- **RoBoN: Routed Online Best-of-N** (arXiv:2512.05542): routing + early-stopping to cut full
++  generations — efficient BoN so a 35B MoE can score ~30 tasks × k=8 affordably. With an EXECUTION
++  verifier the reward-hacking risk is mitigated (objective energy).
++
++**Bottom line for the .374 roadmap.** G1: scale the off-ARC demo-fit transfer to full HumanEval
++(164) + an MBPP slice, ADD symbolic-equivalence-partition (2604.06485) and ACES leave-one-out
++(2604.03922) as stronger arms, 10k-resample task-level bootstrap → does the CI now EXCLUDE zero?
++G2 (most important): replace open-loop search with **closed-loop per-step replanning + a
++WM-trust/divergence gate** (MuZero 2306.00840 + GC-IDM 2605.08732 + World-in-World 2510.18135 +
++novelty-MPC 2508.06096) — the planner must not be allowed to exploit OOD WM error. G3: rerun on a
++TRACTABLE MoE base (Qwen3.6-35B-A3B, ~3B active) with RoBoN-style early-stop, positive control
++mandatory (FALSE_NEGATIVE_RISK).
++
+ ## 2026-06-10 Post-.369 Planning Sweep (Milestone 2026.06.370)
+ 
+ `.369` was DESIGNED to turn the GAP-4 program-induction execution verifier from a
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index d459cb19a5..f708382ee4 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,5 +34,14 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112
++  "gradient_stability_ratio": 0.9999999989757112,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index 7f16fcaa5d..bc357ba5bb 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,5 +3,14 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 96d73c977f..ceeaae2ebf 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,14 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.009923934936523438
++  "duration_s": 0.009923934936523438,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4031_offarc_transfer_smoke_raw.json b/results/experiment_4031_offarc_transfer_smoke_raw.json
+index a8db3c500f..8cac5c3670 100644
+--- a/results/experiment_4031_offarc_transfer_smoke_raw.json
++++ b/results/experiment_4031_offarc_transfer_smoke_raw.json
+@@ -155,5 +155,14 @@
+   "random_seed": 4032,
+   "reproducibility_checksum": "a316f79d7a9237e24eb768f702680442a1e1cdd9baf13d6661126df7ab178112",
+   "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
+-  "truncation_rate": 0.0
+-}
++  "truncation_rate": 0.0,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=11.03 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4032_offarc_exec_verifier_transfer_raw.json b/results/experiment_4032_offarc_exec_verifier_transfer_raw.json
+index e85b72b0d5..5b67e8b362 100644
+--- a/results/experiment_4032_offarc_exec_verifier_transfer_raw.json
++++ b/results/experiment_4032_offarc_exec_verifier_transfer_raw.json
+@@ -6351,5 +6351,34 @@
+   "random_seed": 4032,
+   "reproducibility_checksum": "91b6c279bf19b873c0dc5b417a8a1d8744420b7159de86d81e36788525e35fd4",
+   "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
+-  "truncation_rate": 0.034375
+-}
++  "truncation_rate": 0.034375,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "armA_vote_pass2=0.85 and armA_vote_passrate=0.85 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "armAplusplus_aces_pass2=0.925 and armB_demofit_pass2=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "armAplusplus_aces_pass2=0.925 and oracle_passrate=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "armAplusplus_aces_passrate=0.9 and armB_demofit_passrate=0.9 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "armB_demofit_pass2=0.925 and oracle_passrate=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+diff --git a/results/experiment_4037_decentralization_stronger_base_smoke.json b/results/experiment_4037_decentralization_stronger_base_smoke.json
+index 8884e83bc3..64e0858162 100644
+--- a/results/experiment_4037_decentralization_stronger_base_smoke.json
++++ b/results/experiment_4037_decentralization_stronger_base_smoke.json
+@@ -198,5 +198,24 @@
+   "total_local_samples": 2,
+   "total_local_seconds": 40.02,
+   "verifier_side_unchanged": true,
+-  "vote_wins_lost_tasks": []
+-}
++  "vote_wins_lost_tasks": [],
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "best_of_n_coverage=0.5 and local_demo_perfect_coverage_bestofn=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "local_seconds=40.02 and total_local_seconds=40.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=40.25 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ],
++  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++}
+\ No newline at end of file
+-- 
+2.55.0
+

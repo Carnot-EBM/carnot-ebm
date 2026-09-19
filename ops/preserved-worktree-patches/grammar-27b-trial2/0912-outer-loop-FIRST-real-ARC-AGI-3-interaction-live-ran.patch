@@ -1,0 +1,248 @@
+From 2b544d319440490d43c365d9a84cf1e204a1859c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 8 Jun 2026 03:21:25 -0400
+Subject: [PATCH 00912/11171] [outer-loop] FIRST real ARC-AGI-3 interaction:
+ live random-agent baseline smoke
+
+Stage-3 grounding on the LIVE benchmark (anonymous key, 5 games). Confirms the real env
+loop end-to-end (Arcade.make -> reset -> step -> state/levels_completed) and sets the
+RANDOM FLOOR: random agent solved 0 levels in 40 actions/game across ft09/sc25/cd82/
+tu93/sk48 (baseline L0 actions 19-61). 3.1s for 200 live steps. NOT submitted
+(operator-only). First NON-synthetic ARC-AGI-3 result (exp1165/3919/3929 were synthetic).
+
+This is the floor the Carnot verifier-routed / action-pruner harness must beat:
+ACCURACY = more levels, EFFICIENCY = fewer actions vs baseline_actions[level].
+NOTE: a fair next baseline needs budget >= max baseline_L0 (some games need >40 to clear
+level 0); 40 was a smoke cap.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/arc_agi3_random_baseline_smoke.json   |  81 +++++++++++
+ .../arc_agi3_random_baseline_smoke.py         | 127 ++++++++++++++++++
+ 2 files changed, 208 insertions(+)
+ create mode 100644 results/arc_agi3_random_baseline_smoke.json
+ create mode 100644 scripts/experiments/arc_agi3_random_baseline_smoke.py
+
+diff --git a/results/arc_agi3_random_baseline_smoke.json b/results/arc_agi3_random_baseline_smoke.json
+new file mode 100644
+index 0000000000..cf83641704
+--- /dev/null
++++ b/results/arc_agi3_random_baseline_smoke.json
+@@ -0,0 +1,81 @@
++{
++  "duration_s": 3.1,
++  "experiment": "arc_agi3_random_baseline_smoke",
++  "honest_verdict": "complete: arc_agi3_random_baseline_ENV_LOOP_OK_games5_randomlevels0_floor_established",
++  "inference_substrate": "live_arc_agi3_remote_api_random_agent",
++  "interpretation": "Grounds the live env loop + sets the RANDOM FLOOR. Random agent levels_solved (expected ~0) and action cost are the baseline the Carnot verifier-routed / action-pruner harness must beat: ACCURACY = more levels, EFFICIENCY = fewer actions vs baseline_actions. This is the first REAL (non-synthetic) ARC-AGI-3 interaction; prior exp1165/3919/3929 were synthetic.",
++  "n_games_attempted": 5,
++  "n_games_played": 5,
++  "no_llm_used": true,
++  "no_verifier_used": true,
++  "per_game": [
++    {
++      "action_budget": 40,
++      "actions_used": 40,
++      "baseline_actions_level0": 43,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "ft09-0d8bbf25",
++      "max_levels_completed": 0,
++      "n_levels": 6,
++      "tags": [],
++      "win_levels": null
++    },
++    {
++      "action_budget": 40,
++      "actions_used": 40,
++      "baseline_actions_level0": 36,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "sc25-635fd71a",
++      "max_levels_completed": 0,
++      "n_levels": 6,
++      "tags": [
++        "keyboard_click"
++      ],
++      "win_levels": null
++    },
++    {
++      "action_budget": 40,
++      "actions_used": 40,
++      "baseline_actions_level0": 55,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "cd82-fb555c5d",
++      "max_levels_completed": 0,
++      "n_levels": 6,
++      "tags": [
++        "keyboard_click"
++      ],
++      "win_levels": null
++    },
++    {
++      "action_budget": 40,
++      "actions_used": 40,
++      "baseline_actions_level0": 19,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "tu93-0768757b",
++      "max_levels_completed": 0,
++      "n_levels": 9,
++      "tags": [
++        "keyboard_click"
++      ],
++      "win_levels": null
++    },
++    {
++      "action_budget": 40,
++      "actions_used": 40,
++      "baseline_actions_level0": 61,
++      "final_state": "GameState.NOT_FINISHED",
++      "game_id": "sk48-d8078629",
++      "max_levels_completed": 0,
++      "n_levels": 8,
++      "tags": [
++        "keyboard_click"
++      ],
++      "win_levels": null
++    }
++  ],
++  "random_seed": 0,
++  "run_date": "2026-06-08",
++  "submitted_to_leaderboard": false,
++  "title": "arc_agi3_live_random_agent_floor",
++  "total_levels_solved_random": 0
++}
+diff --git a/scripts/experiments/arc_agi3_random_baseline_smoke.py b/scripts/experiments/arc_agi3_random_baseline_smoke.py
+new file mode 100644
+index 0000000000..0615eb42a2
+--- /dev/null
++++ b/scripts/experiments/arc_agi3_random_baseline_smoke.py
+@@ -0,0 +1,127 @@
++"""SMOKE (north-star stage-3 grounding): random-agent baseline on LIVE ARC-AGI-3.
++
++Confirms the real env loop works end-to-end (Arcade.make -> reset -> step -> state/
++levels) against the live anonymous-key API, and establishes the RANDOM FLOOR: how many
++levels a random agent solves and at what action cost. This is the floor the Carnot
++verifier-routed / action-pruner harness must beat on BOTH north-star axes:
++  ACCURACY   = levels_completed (random ~0 expected)
++  EFFICIENCY = actions used vs EnvironmentInfo.baseline_actions[level] (reference count)
++
++NOT a submission (operator-only) — anonymous play + local scoring only.
++
++  .venv/bin/python scripts/experiments/arc_agi3_random_baseline_smoke.py --games 5 --budget 40
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import time
++from pathlib import Path
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUT = REPO_ROOT / "results" / "arc_agi3_random_baseline_smoke.json"
++
++
++def _play_random(env, info, *, budget, rng):
++    from arcengine.enums import GameAction, GameState
++    f = env.reset()
++    by_id = {a.value: a for a in GameAction}
++    actions = 0
++    max_levels = int(getattr(f, "levels_completed", 0) or 0)
++    state = str(getattr(f, "state", "?"))
++    while f is not None and actions < budget:
++        st = getattr(f, "state", None)
++        if st in (GameState.WIN, GameState.GAME_OVER):
++            state = str(st)
++            break
++        avail = list(getattr(f, "available_actions", []) or [])
++        if not avail:
++            break
++        a_int = rng.choice(avail)
++        action = by_id.get(a_int, GameAction.ACTION1)
++        # click-type actions (ACTION6) need grid coords; others take no data.
++        data = {"x": rng.randrange(64), "y": rng.randrange(64)} if a_int == 6 else None
++        f = env.step(action, data=data)
++        actions += 1
++        if f is not None:
++            max_levels = max(max_levels, int(getattr(f, "levels_completed", 0) or 0))
++            state = str(getattr(f, "state", state))
++    return {"actions_used": actions, "max_levels_completed": max_levels, "final_state": state}
++
++
++def run(n_games=5, budget=40, seed=0, write=True):
++    from arc_agi import Arcade
++    started = time.time()
++    rng = random.Random(seed)
++    arc = Arcade(arc_api_key="")
++    envs = arc.get_environments()
++    infos = {getattr(e, "game_id", None): e for e in envs}
++    picks = list(infos)[:n_games]
++
++    per_game = []
++    for gid in picks:
++        info = infos[gid]
++        base = getattr(info, "baseline_actions", None) or []
++        env = arc.make(gid, seed=seed)
++        if env is None:
++            per_game.append({"game_id": gid, "error": "make_returned_none"})
++            continue
++        try:
++            r = _play_random(env, info, budget=budget, rng=rng)
++        except Exception as e:  # live API hiccup on one game shouldn't kill the smoke
++            per_game.append({"game_id": gid, "error": f"{type(e).__name__}: {e}"})
++            continue
++        r.update({"game_id": gid, "tags": getattr(info, "tags", None),
++                  "win_levels": getattr(info, "win_levels", None),
++                  "n_levels": len(base), "baseline_actions_level0": base[0] if base else None,
++                  "action_budget": budget})
++        per_game.append(r)
++        print(f"[{gid}] levels={r['max_levels_completed']} actions={r['actions_used']}/{budget} "
++              f"state={r['final_state']} baseline_L0={base[0] if base else '?'}", flush=True)
++
++    played = [g for g in per_game if "error" not in g]
++    total_levels = sum(g["max_levels_completed"] for g in played)
++    env_ok = len(played) > 0
++    verdict = (f"complete: arc_agi3_random_baseline_{'ENV_LOOP_OK' if env_ok else 'ENV_LOOP_FAILED'}"
++               f"_games{len(played)}_randomlevels{total_levels}_floor_established")
++    art = {
++        "experiment": "arc_agi3_random_baseline_smoke",
++        "title": "arc_agi3_live_random_agent_floor",
++        "honest_verdict": verdict,
++        "inference_substrate": "live_arc_agi3_remote_api_random_agent",
++        "run_date": "2026-06-08", "random_seed": seed,
++        "n_games_attempted": len(picks), "n_games_played": len(played),
++        "total_levels_solved_random": total_levels,
++        "per_game": per_game,
++        "no_llm_used": True, "no_verifier_used": True, "submitted_to_leaderboard": False,
++        "duration_s": round(time.time() - started, 1),
++        "interpretation": (
++            "Grounds the live env loop + sets the RANDOM FLOOR. Random agent levels_solved "
++            "(expected ~0) and action cost are the baseline the Carnot verifier-routed / "
++            "action-pruner harness must beat: ACCURACY = more levels, EFFICIENCY = fewer "
++            "actions vs baseline_actions. This is the first REAL (non-synthetic) ARC-AGI-3 "
++            "interaction; prior exp1165/3919/3929 were synthetic."
++        ),
++    }
++    if write:
++        OUT.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
++    return art
++
++
++def main():
++    ap = argparse.ArgumentParser(description=__doc__)
++    ap.add_argument("--games", type=int, default=5)
++    ap.add_argument("--budget", type=int, default=40)
++    ap.add_argument("--seed", type=int, default=0)
++    args = ap.parse_args()
++    art = run(n_games=args.games, budget=args.budget, seed=args.seed)
++    print(f"\n-> {art['honest_verdict']}")
++    print(f"   games_played={art['n_games_played']} random_levels_solved={art['total_levels_solved_random']} "
++          f"dur={art['duration_s']}s")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+-- 
+2.55.0
+

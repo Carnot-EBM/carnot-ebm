@@ -1,0 +1,43 @@
+From 54c4e67886b045452c28320c13f8297b7ea3e75b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 18:54:47 -0400
+Subject: [PATCH 00034/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 2eca25748a..346a49cbbb 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 180, "phase": "iteration_start", "last_beat": "2026-06-01T22:42:28Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 181, "phase": "iteration_start", "last_beat": "2026-06-01T22:54:46Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index be371fcd4c..be948f38d5 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7553,3 +7553,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-01 22:05 UTC | Capstone v336 + G1-G4 gate synthesis — did the dep | OK | 86 passed in 5.40s |
+ | 2026-06-01 22:38 UTC | Plan milestone 2026.06.337 | OK | 12 tasks proposed |
+ | 2026-06-01 22:40 UTC | Milestone 2026.06.337 activated | OK | 12 tasks queued |
++| 2026-06-01 22:52 UTC | Archive milestone .336 honestly (the first-headlin | OK | 86 passed in 4.00s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 60c6a3df43..efec7a7af2 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 180, "phase": "iteration_start", "started_at": "2026-06-01T22:42:28Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 181, "phase": "iteration_start", "started_at": "2026-06-01T22:54:46Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

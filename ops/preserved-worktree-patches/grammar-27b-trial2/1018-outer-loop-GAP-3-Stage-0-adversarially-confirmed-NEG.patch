@@ -1,0 +1,202 @@
+From f95a0ee4ee81c22bf14dcb15b29df3da19e52a64 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 14:04:15 -0400
+Subject: [PATCH 01018/11171] [outer-loop] GAP-3 Stage 0 adversarially
+ confirmed NEGATIVE -> Stage 1 GO
+
+5-reviewer adversarial-verify round (GAP-3 design Section 4) over the Stage-0
+q_halt negative: unanimous NEGATIVE_CONFIRMED, worst severity cosmetic, Stage1=GO.
+Reviewers independently re-derived every number from the 8041-candidate table (no
+torch); none found a de-confounded q ranker that beats vote. Decisive fact:
+headroom_capture_fraction=0 -- on the 4 tasks where gold is present but vote misses
+top-2, q_mean recovers ZERO (scalar redundant with vote exactly where it must add
+value). Positive control holds (oracle 0.613 > vote 0.452). No leak.
+
+- results/arc3_gap3_stage0_adversarial_verify.json: the persisted verdict + reviews.
+- Applied the one cosmetic fix: Q_MAX 'best_deconfounded' ties vote with ZERO
+  orthogonal lift (hit set byte-identical to vote) -- now annotated honestly.
+- ops/verifier_gaps.md GAP-3 build log + design doc Stage-0 marked DONE/NEGATIVE.
+
+Next: Stage 1 (TRM penultimate-activation latent) -- needs a GPU activation-dump
+re-run (conductor/timer pause). The 0.86 within-task soft-AUROC is the leading
+indicator the full latent carries sharper vote-orthogonal signal.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../gap3-learned-arc-energy-design.md         | 10 ++-
+ ops/verifier_gaps.md                          | 21 ++++++
+ .../arc3_gap3_stage0_adversarial_verify.json  | 66 +++++++++++++++++++
+ results/arc3_gap3_stage0_qhalt_energy.json    |  4 +-
+ .../arc3_gap3_stage0_qhalt_energy.py          |  7 ++
+ 5 files changed, 106 insertions(+), 2 deletions(-)
+ create mode 100644 results/arc3_gap3_stage0_adversarial_verify.json
+
+diff --git a/docs/research-notes/gap3-learned-arc-energy-design.md b/docs/research-notes/gap3-learned-arc-energy-design.md
+index cc6159de44..1d4aab13b6 100644
+--- a/docs/research-notes/gap3-learned-arc-energy-design.md
++++ b/docs/research-notes/gap3-learned-arc-energy-design.md
+@@ -69,7 +69,15 @@ makes the coverage win explicit and measurable.
+ Staged deliberately so the cheapest stage runs on data we ALREADY have, and each stage's result decides
+ whether the next is worth its compute.
+ 
+-### Stage 0 — TRM-native halting-confidence energy (NO new GPU; data already dumped)
++### Stage 0 — TRM-native halting-confidence energy (NO new GPU; data already dumped) — DONE: NEGATIVE (2026-06-09)
++
++> **RESULT (2026-06-09): NEGATIVE, adversarially confirmed → advance to Stage 1.**
++> `results/arc3_gap3_stage0_qhalt_energy.json` + `..._adversarial_verify.json`. Scalar q_halt does NOT
++> beat frequency vote (Q_MEAN pass@2 0.290 < vote 0.452; vote-residual collapses to 0.097; bootstrap
++> CI entirely <0; `headroom_capture_fraction=0`). 5-reviewer round = unanimous NEGATIVE_CONFIRMED. The
++> 0.86 within-task soft-AUROC says the signal EXISTS in TRM's confidence but the 1-D scalar projects it
++> away → Stage 1 (full latent) is the GO. Original design text follows.
++
+ 
+ The TRM eval dump (`eval_out/arc_v1/step_0_all_preds.*`) already contains `q_halt_logits` (shape
+ `(25600,)`, float32): TRM's own per-augmentation halting confidence. This is a *model-native* scalar we
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index 74dd2a8956..fc86a7f7fe 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -115,6 +115,27 @@ model-native ARC energy) is the CONFIRMED only path** to the proven ~13pp oracle
+ direction is strong and triply-confirmed but re-confirm at full 400-task scale before any irreversible
+ strategy commitment.
+ 
++## GAP-3 build log (2026-06-09)
++
++**Stage 0 — TRM-native q_halt energy: NEGATIVE, adversarially confirmed → advance to Stage 1.**
++`results/arc3_gap3_stage0_qhalt_energy.json`: TRM's own halting confidence (scalar q_halt, already in
++the dump, zero GPU) does NOT beat its frequency vote as a model-native PRIMARY selection signal on the
++real pool (n=31). Q_MEAN pass@2 0.290 < vote 0.452; the vote-residual ranker collapses to 0.097;
++bootstrap of (Q_MEAN−vote) is [−0.290, −0.032], entirely below zero. The A0 vote-mimicry control caught
++that the only "wins" (HYBRID/Q_LSE, +1 task) are vote-primary tie-break / vote-confounded, not
++model-native. Nuance: q_mean has real SOFT within-task discrimination (AUROC 0.86 — gold beats most
++non-golds) but the lossy 1-D scalar is neither sharp enough for top-2 nor vote-orthogonal.
++
++**Adversarial-verify round** (`results/arc3_gap3_stage0_adversarial_verify.json`, GAP-3 design §4):
++5 independent reviewers re-derived every number from the 8041-candidate table (no torch) and tried to
++refute. Unanimous **NEGATIVE_CONFIRMED**, worst severity cosmetic. No reviewer found a de-confounded q
++ranker that beats vote; the decisive fact — `headroom_capture_fraction=0` — is that on the 4 tasks where
++gold is present but vote misses top-2, q_mean recovers ZERO (the scalar is redundant with vote exactly
++where it would need to add value). Positive control holds (oracle 0.613 > vote 0.452, ~16pp real
++headroom), so this is an honest negative. **Recommendation: GO for Stage 1** — the full
++penultimate-activation latent (not collapsed to a scalar, not vote-redundant); the 0.86 soft-AUROC is a
++leading indicator the latent carries sharper, vote-orthogonal signal. (Caveat: n=31; re-confirm at 400.)
++
+ ## Open gaps
+ 
+ ### GAP-1: transpose / orientation discrimination
+diff --git a/results/arc3_gap3_stage0_adversarial_verify.json b/results/arc3_gap3_stage0_adversarial_verify.json
+new file mode 100644
+index 0000000000..1464850cc1
+--- /dev/null
++++ b/results/arc3_gap3_stage0_adversarial_verify.json
+@@ -0,0 +1,66 @@
++{
++  "cited_upstream_artifacts": [
++    "arc3_gap3_stage0_qhalt_energy.json",
++    "arc3_gap3_stage0_candidate_table.json"
++  ],
++  "experiment": "arc3_gap3_stage0_adversarial_verify",
++  "honest_verdict": "complete: gap3_stage0_negative_adversarially_negative_confirmed_stage1_go",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "method": "5 perspective-diverse independent reviewers (re-derivation, alt-deconfounded-rankers, metric-interpretation, leak-validity, steelman-opposite) re-derived from the 8041-candidate table (no torch) + 1 synthesis. Workflow gap3-stage0-adversarial-verify.",
++  "no_gpu_used": true,
++  "reviewer_verdicts": [
++    {
++      "best_alt_ranker_found": "None beats vote on a de-confounded basis. Q_MAX ties vote at pass@2=0.4516 (14/31) but its 14 hits are EXACTLY the 14 vote hits (overlap=14, zero unique gains, zero unique losses) \u2014 it is frequency-in-disguise, not a vote-orthogonal signal. Every truly de-confounded ranker I tried collapses far below vote: within-task residual p@2=0.0645, global q_mean-residual 0.0968, rank-residual (qrank-voterank) 0.1290, q_max global-residual 0.0323. The only two rankers >vote (HYBRID 0.4839, Q_LSE 0.4839) beat it by exactly +1 task and are vote-primary or vote-confounded: I independently confirmed Pearson(q_lse,votes)=0.476, so Q_LSE's edge is mechanically driven by sample count (logsumexp over `votes` samples), not model-native confidence.",
++      "deconfounded_ranker_beats_vote": false,
++      "lens": "RE-DERIVATION lens: independently recomputed every ranker's pass@1/pass@2 from t",
++      "severity": "none",
++      "stage1": "GO",
++      "verdict": "CONFIRMS_NEGATIVE"
++    },
++    {
++      "best_alt_ranker_found": "top-3-vote-shortlist-then-q_mean = 0.5161 (16/31), beats vote by +2 tasks BUT is vote-confounded by construction (vote builds the shortlist), NOT a primary signal. It is a single-K spike (K=2->0.452, K=3->0.516, K=4->0.484, K>=5->0.452, all collapse back), bootstrap CI [0.0000, 0.1613] touches zero with 12.5% of resamples <=0, and rescues 2 tasks purely by tie-breaking a vote-rank-3 gold upward. This is the HYBRID/deployment-refinement category the artifact already flags, not model-native PRIMARY signal. The best TRULY vote-orthogonal PRIMARY ranker is q_max = 0.4516 (ties vote, does not beat it); pure q_mean = 0.2903.",
++      "deconfounded_ranker_beats_vote": false,
++      "lens": "ALT-DECONFOUNDED-RANKERS",
++      "severity": "none",
++      "stage1": "GO",
++      "verdict": "CONFIRMS_NEGATIVE"
++    },
++    {
++      "best_alt_ranker_found": "None beats vote on the merits. The only rankers reaching 0.4839 (Q_LSE, HYBRID vote->qmean, and additive blends at small q-weight w<=0.05) are all vote-PRIMARY with q as a tie-breaker only; the +1-task gain (1/31 = 0.032, inside the bootstrap noise band) is the deployment nicety the artifact already flags. Every genuinely vote-orthogonal/deconfounded q ranker is WORSE than vote: Q_MEAN 0.2903, Q_MAX 0.4516 (ties, not beats), within-task z-scored q_mean 0.2903, q_mean residual-over-vote 0.0968, q_lse residual-over-vote 0.1613. q-PRIMARY (qmean-then-vote) = 0.2903. No w in the additive blend sweep ever exceeds 0.4839, and 0.4839 only holds while vote dominates.",
++      "deconfounded_ranker_beats_vote": false,
++      "lens": "METRIC-INTERPRETATION lens: honesty of within-task AUROC 0.86, justification of ",
++      "severity": "minor",
++      "stage1": "GO",
++      "verdict": "CONFIRMS_NEGATIVE"
++    },
++    {
++      "best_alt_ranker_found": "No vote-orthogonal q ranker BEATS vote. The best de-confounded q ranker is Q_MAX at pass@2=0.4516, which exactly TIES vote (14/31). I verified Q_MAX is genuinely vote-orthogonal: pure Q_MAX with no vote tie-break = 0.4516, and even anti-vote tie-break (prefer fewer votes on q_max ties) = 0.4516, with zero top-2 q_max ties across all 31 tasks \u2014 so the 0.4516 is real q_max signal, but it only reaches parity, never exceeds vote. Additional vote-orthogonal aggregations I tried that the experiment did NOT (vote-normalized log-mean-exp = q_lse - log(votes) = 0.2903; q_mean*q_max = 0.3226; q_max-q_mean spread = 0.0645-0.1935) all fail to beat vote. The two rankers that DO beat vote (Q_LSE 0.4839, HYBRID 0.4839) are exactly the confounded ones: I measured within-task spearman(q_lse,votes)=0.7496 (vs q_mean's 0.4448), confirming Q_LSE is frequency in disguise, and HYBRID's win is a vote-primary tie-break (+1 task).",
++      "deconfounded_ranker_beats_vote": false,
++      "lens": "LEAK-AND-VALIDITY",
++      "severity": "none",
++      "stage1": "GO",
++      "verdict": "CONFIRMS_NEGATIVE"
++    },
++    {
++      "best_alt_ranker_found": "None beats vote on a de-confounded basis. The only q rankers reaching 0.4839 are HYBRID(vote-primary, q_mean tiebreak) and PRIMARY q_lse \u2014 both vote-confounded. q_lse is logsumexp over per-candidate q, structurally monotone in candidate count (=votes), so it is vote-confounded by construction, not model-native. Every genuinely vote-orthogonal q primary ranker is WORSE than vote@2 (0.4516): q_mean 0.2903, q_max 0.4516 (ties, no gain), min_defined 0.3871, union_max 0.1935, q_mean-residual-over-vote 0.0968. A confidence GATE (accept vote-top1 if q_mean>=0.99) reaches 5/19 at 100% accuracy but adds zero new correct answers and is a tiny-n precision/coverage tradeoff, not a selection win.",
++      "deconfounded_ranker_beats_vote": false,
++      "lens": "STEELMAN-THE-OPPOSITE: I tried as hard as possible to show q_halt has real deplo",
++      "severity": "none",
++      "stage1": "GO",
++      "verdict": "CONFIRMS_NEGATIVE"
++    }
++  ],
++  "submitted_to_leaderboard": false,
++  "synthesis": {
++    "any_deconfounded_ranker_beat_vote": false,
++    "final_verdict": "NEGATIVE_CONFIRMED",
++    "required_fixes": [
++      "Cosmetic only (non-blocking): the prompt brief slightly misstates which ranker is the de-confounded headline. The committed artifact names Q_MAX (0.4516, which TIES vote) as best_deconfounded, while the brief frames Q_MEAN (0.2903). Neither beats vote, so the conclusion is unaffected, but align the brief's wording with the artifact for the record.",
++      "Cosmetic only (non-blocking): Q_MAX is labeled 'best_deconfounded_q_ranker' yet provides ZERO orthogonal lift (its 14-hit set is byte-identical to vote's). The artifact's prose is honest (model_native_signal_real=false), but consider renaming to 'best_q_ranker_at_parity' to avoid implying Q_MAX adds selection value it does not."
++    ],
++    "stage1_recommendation": "GO",
++    "summary": "The Stage-0 negative is CONFIRMED on the merits. I independently re-derived every headline number from the raw 8041-candidate table with system python3 (no torch): VOTE pass@2=0.4516, Q_MEAN=0.2903 (worse), Q_MAX=0.4516 (ties, zero orthogonal lift \u2014 its hit set is byte-identical to vote's), Q_LSE=0.4839 and HYBRID=0.4839 (both +1 task, both vote-confounded), Q_MEAN_residual_over_vote=0.0968, oracle=0.6129, bootstrap point -0.1613 CI95 [-0.290,-0.032] with 99.3% of resamples negative, within-task AUROC 0.856 vs between-task-inflated pooled 0.966 \u2014 all match the committed artifact. No reviewer found a de-confounded q ranker that beats vote, and I confirmed this against extra orthogonal constructions: the one alt-ranker that superficially beat vote (q_lse-log(votes+1)=0.516, +2 tasks) remains vote-correlated within-task (spearman 0.58), collapses to 0.161 when residualized over votes, and its bootstrap CI [0.000,0.161] touches zero (12.5% of resamples \u22640), driven by the same lucky-tiebreak tasks the steelman exposed (HYBRID's +1 win on c3202e5a is a coin-flip on a 15-vote tie, P(random tiebreak achieves it)\u22480.5). Decisively, headroom_capture_fraction=0: of the 4 tasks where gold is present but vote misses top-2, q_mean recovers exactly zero \u2014 the soft scalar signal is entirely redundant with vote where it would need to add value. The positive control holds (oracle 0.613 > vote 0.452 = ~16pp real selectable headroom), so this is an honest negative, not a degenerate no-headroom test. No leak (gold label used only in scoring/AUROC, never in a sort key). Worst issue found is cosmetic naming generosity around Q_MAX. The scalar q_halt collapse to a 1-D projection justifies advancing to Stage 1 (full penultimate latent). GO.",
++    "worst_severity": "minor"
++  },
++  "title": "Adversarial-verify round over GAP-3 Stage-0 q_halt negative (GAP-3 design Section 4)"
++}
+\ No newline at end of file
+diff --git a/results/arc3_gap3_stage0_qhalt_energy.json b/results/arc3_gap3_stage0_qhalt_energy.json
+index 681018878e..9c86388bec 100644
+--- a/results/arc3_gap3_stage0_qhalt_energy.json
++++ b/results/arc3_gap3_stage0_qhalt_energy.json
+@@ -8,6 +8,8 @@
+     "within_task_spearman_qmean_vote": 0.4448
+   },
+   "best_deconfounded_q_ranker": "Q_MAX",
++  "best_deconfounded_q_ranker_beats_vote": false,
++  "best_deconfounded_q_ranker_note": "'best' = highest pass@2 among the DE-CONFOUNDED q rankers; it does NOT mean it beats vote. Here best_deconf=Q_MAX TIES vote at 0.4516 with ZERO orthogonal lift (its hit set is byte-identical to vote's 14 hits \u2014 confirmed by the adversarial-verify round); it is parity, not a win. The headline (model_native_signal_real=False) is unaffected.",
+   "bootstrap_pass2_delta_vs_vote": {
+     "B": 1000,
+     "ci95_over_tasks": [
+@@ -17,7 +19,7 @@
+     "note": "Bootstrap resamples TASKS with replacement (n tiny -> CI is wide; do not over-claim).",
+     "point": -0.1613
+   },
+-  "duration_s": 6.7,
++  "duration_s": 6.6,
+   "experiment": "arc3_gap3_stage0_qhalt_energy",
+   "gates": {
+     "coverage_ge_0p80": true,
+diff --git a/scripts/experiments/arc3_gap3_stage0_qhalt_energy.py b/scripts/experiments/arc3_gap3_stage0_qhalt_energy.py
+index 979c46a862..7e0cf15184 100644
+--- a/scripts/experiments/arc3_gap3_stage0_qhalt_energy.py
++++ b/scripts/experiments/arc3_gap3_stage0_qhalt_energy.py
+@@ -317,6 +317,13 @@ def run(write=True):
+         "oracle_pass2_ceiling": oracle2,
+         "rankers": res,
+         "best_deconfounded_q_ranker": best_deconf,
++        "best_deconfounded_q_ranker_beats_vote": bool(sel_pass),
++        "best_deconfounded_q_ranker_note": (
++            "'best' = highest pass@2 among the DE-CONFOUNDED q rankers; it does NOT mean it beats vote. "
++            "Here best_deconf=Q_MAX TIES vote at 0.4516 with ZERO orthogonal lift (its hit set is "
++            "byte-identical to vote's 14 hits — confirmed by the adversarial-verify round); it is parity, "
++            "not a win. The headline (model_native_signal_real=False) is unaffected."
++        ),
+         "hybrid_tiebreak_gain_vs_vote_DEPLOYMENT_ONLY": hybrid_tiebreak_gain,
+         "a0_vote_mimicry_control": {
+             "within_task_spearman_qmean_vote": spearman_qmean_vote,
+-- 
+2.55.0
+

@@ -1,0 +1,1482 @@
+From f2727946afa1b5c8471e2e866b1bc7d186f3df7f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 01:32:26 -0400
+Subject: [PATCH 00371/11171] [conductor] BUILD the P3 Anomaly-Escalation
+ process upgrade (the cheap endorsed upgrade from the 2026-06-03 Deep Think
+ round): a STANDALONE classifier (scripts/anomaly_escalation_classifier.py) +
+ a change-proposal that distinguishes a CLEAN bounded negative
+ (auto-reconcile, as today) from a FRAME-VIOLATING anomaly (halt pruning,
+ escalate to human). Prototype + spec ONLY -- it NEVER auto-relaxes
+ verification (that conflicts with the anti-fabrication discipline;
+ valley-funding stays human-gated). Does NOT modify
+ scripts/research_conductor.py.
+
+Automated research step by research conductor.
+Task ID: exp3780-anomaly-escalation-classifier-prototype
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/autoresearch/spec.md    |  38 ++
+ .../anomaly-escalation-conductor-hook.md      |  56 +++
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...omaly_escalation_classifier_prototype.json |  73 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ scripts/anomaly_escalation_classifier.py      | 302 ++++++++++++++++
+ ...anomaly_escalation_classifier_prototype.py | 341 ++++++++++++++++++
+ .../test_anomaly_escalation_classifier.py     | 251 +++++++++++++
+ ...anomaly_escalation_classifier_prototype.py | 175 +++++++++
+ 16 files changed, 1261 insertions(+), 20 deletions(-)
+ create mode 100644 openspec/change-proposals/anomaly-escalation-conductor-hook.md
+ create mode 100644 results/experiment_3780_anomaly_escalation_classifier_prototype.json
+ create mode 100644 scripts/anomaly_escalation_classifier.py
+ create mode 100644 scripts/experiment_3780_anomaly_escalation_classifier_prototype.py
+ create mode 100644 tests/python/test_anomaly_escalation_classifier.py
+ create mode 100644 tests/python/test_experiment_3780_anomaly_escalation_classifier_prototype.py
+
+diff --git a/openspec/capabilities/autoresearch/spec.md b/openspec/capabilities/autoresearch/spec.md
+index 0fadf716b9..8dd4f9aeed 100644
+--- a/openspec/capabilities/autoresearch/spec.md
++++ b/openspec/capabilities/autoresearch/spec.md
+@@ -3470,3 +3470,41 @@ without hard-coding a success verdict
+ **And** success requires drift detection, transient reset, SHA256 persistence
+ round-trip, no deploy collapse, distinct pass-rate and true-accuracy arrays,
+ and maintained ensemble quality.
++
++### REQ-AUTO-015: Advisory Anomaly-Escalation Classifier
++
++The autoresearch system SHALL provide a standalone, deterministic classifier
++(`scripts/anomaly_escalation_classifier.py`) that reads an experiment artifact's
++`honest_verdict` and optional prior-expectation / kill-gate metadata and returns
++one of:
++
++- `clean_bounded_negative`
++- `frame_violating_anomaly`
++- `clean_positive`
++
++The classifier SHALL treat a negative as `clean_bounded_negative` only when it
++matches a declared expected kill-gate, expected negative verdict, or known
++bounded lineage. It SHALL treat a result as `frame_violating_anomaly` when a
++load-bearing positive control fails, a stated assumption is contradicted, or an
++observed direction/magnitude falls materially outside the experiment's declared
++prediction envelope. The classifier SHALL emit only an advisory recommendation
++and rationale; it MUST NOT prune, edit artifacts, modify the conductor, or
++recommend relaxing verification. Any anomaly recommendation SHALL be "pause
++pruning and ask a human," preserving human-gated valley funding.
++
++#### SCENARIO-AUTO-012: Anomaly Classifier Separates Bounded Negatives From Frame Violations
++
++**Given** a planned kill-gate artifact whose negative `honest_verdict` matches
++its expected bounded-negative metadata
++**When** the anomaly-escalation classifier evaluates it
++**Then** it classifies the artifact as `clean_bounded_negative` and recommends
++standard auto-reconciliation.
++
++**Given** an inconclusive artifact with a load-bearing positive-control failure
++**When** the anomaly-escalation classifier evaluates it
++**Then** it classifies the artifact as `frame_violating_anomaly` and recommends
++halting pruning for human review without relaxing verification.
++
++**Given** a terminal positive artifact with no anomaly signals
++**When** the anomaly-escalation classifier evaluates it
++**Then** it classifies the artifact as `clean_positive`.
+diff --git a/openspec/change-proposals/anomaly-escalation-conductor-hook.md b/openspec/change-proposals/anomaly-escalation-conductor-hook.md
+new file mode 100644
+index 0000000000..a5f7eefc64
+--- /dev/null
++++ b/openspec/change-proposals/anomaly-escalation-conductor-hook.md
+@@ -0,0 +1,56 @@
++# Anomaly-Escalation Conductor Hook Proposal
++
++**Status:** Proposed advisory hook only.
++
++## Purpose
++
++The 2026-06-03 Deep Think P3 review identified the Verification Trap: a nascent
++paradigm can begin in a valley of disappointment, where a strict verifier reads
++"higher error" as a dead-end and the autonomous loop auto-reconciles it away.
++The requested upgrade is not verifier relaxation. It is an advisory distinction
++between:
++
++- `clean_bounded_negative`: an expected negative from a declared kill-gate or
++  known bounded lineage.
++- `frame_violating_anomaly`: an unexpected result that breaks the experiment
++  frame, such as a failed load-bearing positive control, a contradicted
++  assumption, or a measurement outside its declared prediction envelope.
++- `clean_positive`: a positive terminal result with no anomaly signal.
++
++## Proposed Operator Wiring
++
++Add `scripts/anomaly_escalation_classifier.py` as an advisory hook in the
++operator-controlled reconciliation path after an experiment artifact exists and
++after the existing adversarial verification pass has preserved fabrication
++discipline.
++
++Recommended conductor-side behavior for the operator to implement:
++
++1. Load the experiment artifact and any task metadata that declares prior
++   expectations, kill-gates, positive controls, assumptions, or prediction
++   envelopes.
++2. Call the classifier and record its recommendation in the reconciliation log.
++3. If the classifier returns `clean_bounded_negative`, continue the existing
++   auto-reconciliation path.
++4. If the classifier returns `clean_positive`, continue the existing positive
++   reconciliation path.
++5. If the classifier returns `frame_violating_anomaly`, pause pruning for that
++   line and escalate to a human reviewer with the classifier rationale.
++
++## Non-Negotiable Anti-Fabrication Caveat
++
++The hook MUST NOT auto-relax verification, suspend verifiers, lower acceptance
++thresholds, incubate a paradigm automatically, edit artifacts, or prune research
++state. Valley funding remains human-gated. The only anomaly action is:
++
++`pause pruning + ask a human`
++
++The classifier is therefore complementary to `scripts/adversarial_verify.py`.
++The existing verifier detects fabrication and methodology risk; this proposal
++adds a frame-audit signal over honest verdict plus prior expectation metadata.
++
++## Conductor Scope
++
++This proposal does not modify `scripts/research_conductor.py`. It describes the
++operator wiring point for a future change. Exp 3780 ships only the standalone
++prototype classifier and this proposal.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 52ad3f7fa4..3d49b21c69 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 144,
+   "code_violations": 0,
+-  "experiments_checked": 2883,
++  "experiments_checked": 2884,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 9a69367721..b39512c58e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T03:59:50.429609Z",
+-  "duration_s": 0.010454893112182617,
++  "run_date": "2026-06-04T05:31:02.587309Z",
++  "duration_s": 0.007822275161743164,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ddab80fb95a758aa7806dd131dc92516288829b68d1f27e10b67f167b1ec2aee",
++  "reproducibility_checksum": "0e977e839c214427ca9f4e1c87eabfc1fa7dc142e46b468f21d057e372512958",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "b1fdf584508e368d19a8b4945a9697db03a719f7"
++    "adversarial_verify_version": "31a7db4339d1540d8ae4dd0b4547c0afba657496"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 9f8eecda25..32238bac94 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T03:59:50.442181Z",
+-  "duration_s": 0.009233236312866211,
++  "run_date": "2026-06-04T05:31:02.598928Z",
++  "duration_s": 0.008865594863891602,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "37ca8b18e7940037dfb6cbdcc6aab57fc239d3b3b9dddf181b6f8d087af5ad48",
++  "reproducibility_checksum": "29d3d5314de7a65a20bec9752e64e5abeafc2ae859a9dcacf58f5f584a864b38",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "b1fdf584508e368d19a8b4945a9697db03a719f7"
++    "adversarial_verify_version": "31a7db4339d1540d8ae4dd0b4547c0afba657496"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 08fed66ef8..a4d4b74b14 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1123886108398438,
++  "efficiency_gains_ms": 2.1080970764160156,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 826aaff1a1..02b6a6a03c 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.160900087095797e-05,
++  "duration_s": 2.8923997888341546e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3780_anomaly_escalation_classifier_prototype.json b/results/experiment_3780_anomaly_escalation_classifier_prototype.json
+new file mode 100644
+index 0000000000..62735b3e11
+--- /dev/null
++++ b/results/experiment_3780_anomaly_escalation_classifier_prototype.json
+@@ -0,0 +1,73 @@
++{
++  "change_proposal_written": true,
++  "classified_examples": [
++    {
++      "classification": "clean_bounded_negative",
++      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
++      "rationale": "verdict matches expected negative metadata for Thesis-A-bounded",
++      "recommendation": "standard_auto_reconcile",
++      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json",
++      "verification_relaxation_recommended": false
++    },
++    {
++      "classification": "frame_violating_anomaly",
++      "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
++      "rationale": "load-bearing positive control failed: AR positive control; pause pruning and ask a human without relaxing verification.",
++      "recommendation": "halt_pruning_escalate_to_human",
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md#p1-v2",
++      "verification_relaxation_recommended": false
++    },
++    {
++      "classification": "clean_positive",
++      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
++      "rationale": "terminal positive verdict with no frame-violation signals",
++      "recommendation": "standard_positive_reconcile",
++      "source": "results/experiment_3779_abstention_operating_point_product_wiring.json",
++      "verification_relaxation_recommended": false
++    }
++  ],
++  "classifier_only_recommends": true,
++  "classifier_shipped": true,
++  "clean_vs_anomaly_examples": {
++    "clean_bounded_negative": {
++      "honest_verdict": "complete: thesis_a_definitive_reconciled_part_a_PASS_discriminative_part_b_BOUNDED_not_generative_in_loop_chain_superseded_menu_updated_not_retired",
++      "rationale": "verdict matches expected negative metadata for Thesis-A-bounded",
++      "recommendation": "standard_auto_reconcile",
++      "source": "results/experiment_3766_thesis_a_definitive_reconcile.json"
++    },
++    "clean_positive": {
++      "honest_verdict": "complete: abstention_mode_wired_into_verify_api_default_off_e2e_passed_doc_proposal_emitted_not_curated_edit",
++      "rationale": "terminal positive verdict with no frame-violation signals",
++      "recommendation": "standard_positive_reconcile",
++      "source": "results/experiment_3779_abstention_operating_point_product_wiring.json"
++    },
++    "frame_violating_anomaly": {
++      "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
++      "rationale": "load-bearing positive control failed: AR positive control; pause pruning and ask a human without relaxing verification.",
++      "recommendation": "halt_pruning_escalate_to_human",
++      "source": "openspec/change-proposals/research-roadmap-vNEXT.md#p1-v2"
++    }
++  },
++  "duration_s": 0.000553,
++  "field_principles": {
++    "change_proposal_written": "BARE bool -- true means the operator-wiring change proposal exists and the conductor was not modified.",
++    "classifier_only_recommends": "BARE bool -- true means the classifier recommends pause+escalate and never prunes, edits, or relaxes verification.",
++    "classifier_shipped": "BARE bool -- scripts/anomaly_escalation_classifier.py exists and runs.",
++    "clean_vs_anomaly_examples": "Example classifications showing at least one clean bounded negative and one frame-violating anomaly.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the prototype outcome.",
++    "inference_substrate": "A classifier over artifact metadata, no live model; prevents confusing this prototype with a compute-bound experiment.",
++    "n_test_artifacts_classified": "Count of example artifacts run through the classifier; sample evidence that the prototype executes on concrete artifact metadata.",
++    "never_relaxes_verification": "BARE bool -- true means design and proposal forbid auto-relaxing verification; valley funding stays human-gated.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "tests_assert_real_behavior": "BARE bool -- true means shipped tests assert the real classifier behavior rather than a poisoned placeholder."
++  },
++  "honest_verdict": "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_proposal_written_never_relaxes_verification_conductor_unmodified",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_test_artifacts_classified": 3,
++  "never_relaxes_verification": true,
++  "random_seed": 3780,
++  "reproducibility_checksum": "cd58f5d9682f50af5752f365c7fabfedbccfe1a1e57c54e3205509b1c9bd8d83",
++  "tests_assert_real_behavior": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 46f0e83194..bb4c665e88 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T04:21:14Z",
+-  "finished_at": "2026-06-04T04:21:14Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-04T05:30:54Z",
++  "finished_at": "2026-06-04T05:30:54Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 840ebf5967..7396d04727 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T04:21:14Z",
+-  "finished_at": "2026-06-04T04:21:14Z",
++  "started_at": "2026-06-04T05:30:54Z",
++  "finished_at": "2026-06-04T05:30:54Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index f77965de72..2f0b8bfefb 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T04:21:14Z",
+-  "finished_at": "2026-06-04T04:21:14Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-04T05:30:54Z",
++  "finished_at": "2026-06-04T05:30:54Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/anomaly_escalation_classifier.py b/scripts/anomaly_escalation_classifier.py
+new file mode 100644
+index 0000000000..b7898b290d
+--- /dev/null
++++ b/scripts/anomaly_escalation_classifier.py
+@@ -0,0 +1,302 @@
++#!/usr/bin/env python3
++"""Advisory classifier for bounded negatives versus frame violations.
++
++The autonomous loop already has a strict adversarial verifier for fabrication
++patterns. This script answers a different question: when an honest experiment
++artifact is negative or inconclusive, is that the expected outcome of a planned
++bounded kill-gate, or did the result violate the frame that made the kill-gate
++meaningful? The answer is advisory only. A frame-violating anomaly recommends
++pausing pruning and asking a human; it never lowers verification standards.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import math
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any
++
++
++CLASS_CLEAN_BOUNDED_NEGATIVE = "clean_bounded_negative"
++CLASS_FRAME_VIOLATING_ANOMALY = "frame_violating_anomaly"
++CLASS_CLEAN_POSITIVE = "clean_positive"
++
++RECOMMEND_AUTO_RECONCILE = "standard_auto_reconcile"
++RECOMMEND_HUMAN_REVIEW = "halt_pruning_escalate_to_human"
++RECOMMEND_POSITIVE_RECONCILE = "standard_positive_reconcile"
++
++NEGATIVE_TOKENS = (
++    "blocked",
++    "below",
++    "bounded",
++    "collapsed",
++    "failed",
++    "flat",
++    "inconclusive",
++    "insufficient",
++    "negative",
++    "no_delta",
++    "no_gain",
++    "no_improvement",
++    "not_viable",
++    "partial",
++    "plateau",
++    "regression",
++    "still_wrong",
++)
++
++POSITIVE_TOKENS = (
++    "complete:",
++    "complete_",
++    "passed:",
++    "passed_",
++    "shipped:",
++    "shipped_",
++    "success:",
++    "success_",
++)
++
++
++@dataclass(frozen=True)
++class ClassificationResult:
++    """One advisory classification plus the reason an operator can inspect."""
++
++    classification: str
++    recommendation: str
++    rationale: str
++    verification_relaxation_recommended: bool = False
++
++    def to_dict(self) -> dict[str, object]:
++        return {
++            "classification": self.classification,
++            "recommendation": self.recommendation,
++            "rationale": self.rationale,
++            "verification_relaxation_recommended": self.verification_relaxation_recommended,
++        }
++
++
++def _walk(value: Any, path: str = "") -> list[tuple[str, Any]]:
++    items = [(path, value)]
++    if isinstance(value, dict):
++        for key, child in value.items():
++            child_path = f"{path}.{key}" if path else str(key)
++            items.extend(_walk(child, child_path))
++    elif isinstance(value, list):
++        for index, child in enumerate(value):
++            items.extend(_walk(child, f"{path}[{index}]"))
++    return items
++
++
++def _text(value: Any) -> str:
++    if isinstance(value, str):
++        return value.lower()
++    if isinstance(value, bool) or value is None:
++        return ""
++    return str(value).lower()
++
++
++def _honest_verdict(artifact: dict[str, Any]) -> str:
++    verdict = artifact.get("honest_verdict")
++    return verdict if isinstance(verdict, str) else ""
++
++
++def _contains_token(text: str, tokens: tuple[str, ...] | list[str]) -> bool:
++    lowered = text.lower()
++    return any(token.lower() in lowered for token in tokens)
++
++
++def _is_negative_verdict(verdict: str) -> bool:
++    return _contains_token(verdict, NEGATIVE_TOKENS)
++
++
++def _is_terminal_positive_verdict(verdict: str) -> bool:
++    lowered = verdict.lower()
++    return lowered.startswith(POSITIVE_TOKENS) and not _is_negative_verdict(verdict)
++
++
++def _positive_control_failure_reason(artifact: dict[str, Any]) -> str | None:
++    for path, value in _walk(artifact):
++        lowered_path = path.lower()
++        if "positive_control" not in lowered_path:
++            continue
++        if isinstance(value, dict):
++            passed = value.get("passed")
++            load_bearing = value.get("load_bearing", value.get("required", True))
++            if passed is False and load_bearing is not False:
++                name = value.get("name") or path
++                return f"load-bearing positive control failed: {name}"
++        if isinstance(value, bool) and value is False:
++            if any(token in lowered_path for token in ("passed", "valid", "succeeded", "gate")):
++                return f"load-bearing positive control failed at {path}"
++        if isinstance(value, bool) and value is True:
++            if any(token in lowered_path for token in ("failed", "failure")):
++                return f"load-bearing positive control failure flag set at {path}"
++    return None
++
++
++def _assumption_contradiction_reason(artifact: dict[str, Any]) -> str | None:
++    for path, value in _walk(artifact):
++        lowered_path = path.lower()
++        lowered_value = _text(value)
++        if isinstance(value, bool) and value is True:
++            if "assumption" in lowered_path and any(
++                token in lowered_path for token in ("contradict", "violat", "broken")
++            ):
++                return f"stated assumption contradicted at {path}"
++        if "assumption" in lowered_path and _contains_token(
++            lowered_value, ("contradicted", "violated", "broken", "invalidated")
++        ):
++            return f"stated assumption contradicted at {path}"
++    return None
++
++
++def _finite_number(value: Any) -> float | None:
++    if isinstance(value, bool):
++        return None
++    if isinstance(value, (int, float)) and math.isfinite(float(value)):
++        return float(value)
++    return None
++
++
++def _envelope_reason(artifact: dict[str, Any]) -> str | None:
++    envelope = artifact.get("predicted_envelope") or artifact.get("expected_envelope")
++    if not isinstance(envelope, dict):
++        return None
++
++    metric = envelope.get("metric")
++    if not isinstance(metric, str):
++        return None
++
++    observed = _finite_number(artifact.get(metric))
++    low = _finite_number(envelope.get("min"))
++    high = _finite_number(envelope.get("max"))
++    if observed is None or low is None or high is None:
++        return None
++
++    width = max(high - low, 0.0)
++    tolerance = max(width * 0.10, 1e-12)
++    if observed < low - tolerance or observed > high + tolerance:
++        return (
++            f"{metric}={observed} is outside predicted envelope "
++            f"[{low}, {high}] with tolerance {tolerance}"
++        )
++    return None
++
++
++def _expected_negative_reason(artifact: dict[str, Any], verdict: str) -> str | None:
++    verdict_lower = verdict.lower()
++    expected_tokens: list[str] = []
++    expected_flag = False
++    lineage: str | None = None
++
++    for path, value in _walk(artifact):
++        lowered_path = path.lower()
++        lowered_value = _text(value)
++        if isinstance(value, bool) and value is True and any(
++            token in lowered_path
++            for token in ("expected_negative", "kill_gate_expected", "bounded_negative")
++        ):
++            expected_flag = True
++            expected_tokens.append("expected negative")
++        if any(token in lowered_path for token in ("expected_negative_tokens", "kill_gate")):
++            if isinstance(value, str):
++                expected_tokens.append(value)
++            elif isinstance(value, list):
++                expected_tokens.extend(str(item) for item in value)
++        if "known_bounded_lineage" in lowered_path and isinstance(value, str):
++            lineage = value
++        if "lineage" in lowered_path and _contains_token(lowered_value, ("bounded", "retired")):
++            lineage = str(value)
++
++    token_match = any(token.lower() in verdict_lower for token in expected_tokens)
++    if token_match and lineage:
++        return f"verdict matches expected negative metadata for {lineage}"
++    if token_match:
++        return "verdict matches declared expected negative metadata"
++    if expected_flag:
++        return "verdict is negative and artifact declares expected negative metadata"
++    if lineage and _contains_token(verdict, ("bounded", "no_improvement", "no_delta", "negative")):
++        return f"verdict matches known bounded lineage {lineage}"
++    return None
++
++
++def classify_artifact(artifact: dict[str, Any]) -> ClassificationResult:
++    """Classify an experiment artifact without mutating it.
++
++    The ordering is deliberate: explicit frame-violation signals override both
++    terminal-positive wording and expected-negative metadata, because a failed
++    control or broken assumption means the experiment frame needs a human read.
++    """
++
++    verdict = _honest_verdict(artifact)
++    if reason := _positive_control_failure_reason(artifact):
++        return ClassificationResult(
++            classification=CLASS_FRAME_VIOLATING_ANOMALY,
++            recommendation=RECOMMEND_HUMAN_REVIEW,
++            rationale=f"{reason}; pause pruning and ask a human without relaxing verification.",
++        )
++    if reason := _assumption_contradiction_reason(artifact):
++        return ClassificationResult(
++            classification=CLASS_FRAME_VIOLATING_ANOMALY,
++            recommendation=RECOMMEND_HUMAN_REVIEW,
++            rationale=f"{reason}; pause pruning and ask a human without relaxing verification.",
++        )
++    if reason := _envelope_reason(artifact):
++        return ClassificationResult(
++            classification=CLASS_FRAME_VIOLATING_ANOMALY,
++            recommendation=RECOMMEND_HUMAN_REVIEW,
++            rationale=f"{reason}; pause pruning and ask a human without relaxing verification.",
++        )
++
++    if _is_terminal_positive_verdict(verdict):
++        return ClassificationResult(
++            classification=CLASS_CLEAN_POSITIVE,
++            recommendation=RECOMMEND_POSITIVE_RECONCILE,
++            rationale="terminal positive verdict with no frame-violation signals",
++        )
++
++    if _is_negative_verdict(verdict):
++        if reason := _expected_negative_reason(artifact, verdict):
++            return ClassificationResult(
++                classification=CLASS_CLEAN_BOUNDED_NEGATIVE,
++                recommendation=RECOMMEND_AUTO_RECONCILE,
++                rationale=reason,
++            )
++        return ClassificationResult(
++            classification=CLASS_FRAME_VIOLATING_ANOMALY,
++            recommendation=RECOMMEND_HUMAN_REVIEW,
++            rationale=(
++                "negative or inconclusive verdict lacks expected kill-gate or "
++                "bounded-lineage metadata; pause pruning and ask a human without "
++                "relaxing verification."
++            ),
++        )
++
++    return ClassificationResult(
++        classification=CLASS_CLEAN_POSITIVE,
++        recommendation=RECOMMEND_POSITIVE_RECONCILE,
++        rationale="non-negative artifact with no frame-violation signals",
++    )
++
++
++def classify_file(path: Path) -> ClassificationResult:
++    artifact = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(artifact, dict):
++        raise ValueError(f"{path} must contain a JSON object artifact")
++    return classify_artifact(artifact)
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("artifact", type=Path)
++    args = parser.parse_args(argv)
++
++    result = classify_file(args.artifact)
++    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/scripts/experiment_3780_anomaly_escalation_classifier_prototype.py b/scripts/experiment_3780_anomaly_escalation_classifier_prototype.py
+new file mode 100644
+index 0000000000..42aed6bd67
+--- /dev/null
++++ b/scripts/experiment_3780_anomaly_escalation_classifier_prototype.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Run Exp 3780: anomaly-escalation classifier prototype artifact."""
++
++from __future__ import annotations
++
++import hashlib
++import json
++import sys
++import time
++from copy import deepcopy
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script import guard
++    sys.path.insert(0, str(REPO_ROOT))
++
++from scripts import anomaly_escalation_classifier as classifier  # noqa: E402
++
++
++RANDOM_SEED = 3780
++OUTPUT_REL_PATH = Path("results/experiment_3780_anomaly_escalation_classifier_prototype.json")
++PROPOSAL_REL_PATH = Path("openspec/change-proposals/anomaly-escalation-conductor-hook.md")
++CONDUCTOR_REL_PATH = Path("scripts/research_conductor.py")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_VERDICT = (
++    "complete: anomaly_escalation_classifier_prototyped_recommend_only_change_"
++    "proposal_written_never_relaxes_verification_conductor_unmodified"
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "classifier_shipped",
++    "classifier_only_recommends",
++    "n_test_artifacts_classified",
++    "clean_vs_anomaly_examples",
++    "change_proposal_written",
++    "never_relaxes_verification",
++    "tests_assert_real_behavior",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the prototype outcome.",
++    "inference_substrate": (
++        "A classifier over artifact metadata, no live model; prevents confusing "
++        "this prototype with a compute-bound experiment."
++    ),
++    "classifier_shipped": (
++        "BARE bool -- scripts/anomaly_escalation_classifier.py exists and runs."
++    ),
++    "classifier_only_recommends": (
++        "BARE bool -- true means the classifier recommends pause+escalate and "
++        "never prunes, edits, or relaxes verification."
++    ),
++    "n_test_artifacts_classified": (
++        "Count of example artifacts run through the classifier; sample evidence "
++        "that the prototype executes on concrete artifact metadata."
++    ),
++    "clean_vs_anomaly_examples": (
++        "Example classifications showing at least one clean bounded negative and "
++        "one frame-violating anomaly."
++    ),
++    "change_proposal_written": (
++        "BARE bool -- true means the operator-wiring change proposal exists and "
++        "the conductor was not modified."
++    ),
++    "never_relaxes_verification": (
++        "BARE bool -- true means design and proposal forbid auto-relaxing "
++        "verification; valley funding stays human-gated."
++    ),
++    "tests_assert_real_behavior": (
++        "BARE bool -- true means shipped tests assert the real classifier "
++        "behavior rather than a poisoned placeholder."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++PROPOSAL_TEXT = """# Anomaly-Escalation Conductor Hook Proposal
++
++**Status:** Proposed advisory hook only.
++
++## Purpose
++
++The 2026-06-03 Deep Think P3 review identified the Verification Trap: a nascent
++paradigm can begin in a valley of disappointment, where a strict verifier reads
++"higher error" as a dead-end and the autonomous loop auto-reconciles it away.
++The requested upgrade is not verifier relaxation. It is an advisory distinction
++between:
++
++- `clean_bounded_negative`: an expected negative from a declared kill-gate or
++  known bounded lineage.
++- `frame_violating_anomaly`: an unexpected result that breaks the experiment
++  frame, such as a failed load-bearing positive control, a contradicted
++  assumption, or a measurement outside its declared prediction envelope.
++- `clean_positive`: a positive terminal result with no anomaly signal.
++
++## Proposed Operator Wiring
++
++Add `scripts/anomaly_escalation_classifier.py` as an advisory hook in the
++operator-controlled reconciliation path after an experiment artifact exists and
++after the existing adversarial verification pass has preserved fabrication
++discipline.
++
++Recommended conductor-side behavior for the operator to implement:
++
++1. Load the experiment artifact and any task metadata that declares prior
++   expectations, kill-gates, positive controls, assumptions, or prediction
++   envelopes.
++2. Call the classifier and record its recommendation in the reconciliation log.
++3. If the classifier returns `clean_bounded_negative`, continue the existing
++   auto-reconciliation path.
++4. If the classifier returns `clean_positive`, continue the existing positive
++   reconciliation path.
++5. If the classifier returns `frame_violating_anomaly`, pause pruning for that
++   line and escalate to a human reviewer with the classifier rationale.
++
++## Non-Negotiable Anti-Fabrication Caveat
++
++The hook MUST NOT auto-relax verification, suspend verifiers, lower acceptance
++thresholds, incubate a paradigm automatically, edit artifacts, or prune research
++state. Valley funding remains human-gated. The only anomaly action is:
++
++`pause pruning + ask a human`
++
++The classifier is therefore complementary to `scripts/adversarial_verify.py`.
++The existing verifier detects fabrication and methodology risk; this proposal
++adds a frame-audit signal over honest verdict plus prior expectation metadata.
++
++## Conductor Scope
++
++This proposal does not modify `scripts/research_conductor.py`. It describes the
++operator wiring point for a future change. Exp 3780 ships only the standalone
++prototype classifier and this proposal.
++"""
++
++
++def _read_json(path: Path) -> dict[str, Any]:
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    if not isinstance(payload, dict):
++        raise ValueError(f"{path} must contain a JSON object")
++    return payload
++
++
++def _artifact_summary(payload: dict[str, Any]) -> dict[str, Any]:
++    return {"honest_verdict": payload.get("honest_verdict", "")}
++
++
++def _example_artifacts(root: Path) -> list[dict[str, Any]]:
++    bounded_source = root / "results/experiment_3766_thesis_a_definitive_reconcile.json"
++    positive_source = root / "results/experiment_3779_abstention_operating_point_product_wiring.json"
++
++    bounded = _artifact_summary(_read_json(bounded_source))
++    bounded.update(
++        {
++            "source": bounded_source.relative_to(root).as_posix(),
++            "prior_expectation": {
++                "expected_negative": True,
++                "expected_negative_tokens": ["BOUNDED", "not_generative"],
++                "known_bounded_lineage": "Thesis-A-bounded",
++            },
++        }
++    )
++
++    p1_v2 = {
++        "source": "openspec/change-proposals/research-roadmap-vNEXT.md#p1-v2",
++        "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
++        "positive_control": {
++            "name": "AR positive control",
++            "load_bearing": True,
++            "passed": False,
++            "threshold": "ar_best >= 0.3",
++        },
++        "prior_expectation": {
++            "assumptions": ["AR positive control must pass before judging energy landscape"],
++        },
++    }
++
++    positive = _artifact_summary(_read_json(positive_source))
++    positive["source"] = positive_source.relative_to(root).as_posix()
++
++    return [bounded, p1_v2, positive]
++
++
++def classify_examples(root: Path) -> list[dict[str, Any]]:
++    rows: list[dict[str, Any]] = []
++    for artifact in _example_artifacts(root):
++        result = classifier.classify_artifact(artifact)
++        rows.append(
++            {
++                "source": artifact["source"],
++                "honest_verdict": artifact["honest_verdict"],
++                **result.to_dict(),
++            }
++        )
++    return rows
++
++
++def _example_index(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
++    indexed: dict[str, dict[str, Any]] = {}
++    for row in rows:
++        classification = str(row["classification"])
++        indexed.setdefault(
++            classification,
++            {
++                "source": row["source"],
++                "honest_verdict": row["honest_verdict"],
++                "recommendation": row["recommendation"],
++                "rationale": row["rationale"],
++            },
++        )
++    return indexed
++
++
++def payload_checksum(payload: dict[str, Any]) -> str:
++    normalized = deepcopy(payload)
++    normalized.pop("reproducibility_checksum", None)
++    encoded = json.dumps(normalized, sort_keys=True, separators=(",", ":"))
++    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
++
++
++def write_change_proposal(path: Path) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(PROPOSAL_TEXT, encoding="utf-8")
++    return path
++
++
++def build_artifact(
++    *,
++    root: Path,
++    proposal_path: Path,
++    started_s: float,
++    now_s: float,
++) -> dict[str, Any]:
++    rows = classify_examples(root)
++    duration_s = round(max(now_s - started_s, 0.0001), 6)
++    artifact: dict[str, Any] = {
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "classifier_shipped": (root / "scripts/anomaly_escalation_classifier.py").exists(),
++        "classifier_only_recommends": True,
++        "n_test_artifacts_classified": len(rows),
++        "clean_vs_anomaly_examples": _example_index(rows),
++        "change_proposal_written": proposal_path.exists(),
++        "never_relaxes_verification": True,
++        "tests_assert_real_behavior": True,
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "field_principles": FIELD_PRINCIPLES,
++        "classified_examples": rows,
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact["honest_verdict"] != TERMINAL_VERDICT:
++        raise ValueError("honest_verdict does not match terminal verdict")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    for flag in (
++        "classifier_shipped",
++        "classifier_only_recommends",
++        "change_proposal_written",
++        "never_relaxes_verification",
++        "tests_assert_real_behavior",
++    ):
++        if artifact.get(flag) is not True:
++            raise ValueError(f"{flag} must be true")
++    examples = artifact.get("clean_vs_anomaly_examples")
++    if not isinstance(examples, dict):
++        raise ValueError("clean_vs_anomaly_examples must be an object")
++    for required in ("clean_bounded_negative", "frame_violating_anomaly"):
++        if required not in examples:
++            raise ValueError(f"clean_vs_anomaly_examples missing {required}")
++    if "GGUF" in json.dumps(artifact) or "CUDA" in json.dumps(artifact):
++        raise ValueError("artifact must not include live-compute markers")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    output_path: Path | None = None,
++    proposal_path: Path | None = None,
++    conductor_path: Path | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> dict[str, Any]:
++    root = root.resolve()
++    output_path = output_path or root / OUTPUT_REL_PATH
++    proposal_path = proposal_path or root / PROPOSAL_REL_PATH
++    conductor_path = conductor_path or root / CONDUCTOR_REL_PATH
++    started = time.perf_counter() if started_s is None else started_s
++    before_conductor = (
++        conductor_path.read_text(encoding="utf-8") if conductor_path.exists() else None
++    )
++
++    write_change_proposal(proposal_path)
++
++    now = time.perf_counter() if now_s is None else now_s
++    artifact = build_artifact(
++        root=root,
++        proposal_path=proposal_path,
++        started_s=started,
++        now_s=now,
++    )
++    validate_artifact(artifact)
++
++    after_conductor = (
++        conductor_path.read_text(encoding="utf-8") if conductor_path.exists() else None
++    )
++    if before_conductor != after_conductor:
++        raise RuntimeError("scripts/research_conductor.py changed during Exp 3780 run")
++
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++    return artifact
++
++
++def main() -> int:
++    artifact = run()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_anomaly_escalation_classifier.py b/tests/python/test_anomaly_escalation_classifier.py
+new file mode 100644
+index 0000000000..111387aaee
+--- /dev/null
++++ b/tests/python/test_anomaly_escalation_classifier.py
+@@ -0,0 +1,251 @@
++"""Tests for the advisory anomaly-escalation classifier.
++
++Spec refs: REQ-AUTO-015, SCENARIO-AUTO-012.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from scripts import anomaly_escalation_classifier as classifier
++
++
++SPEC_PATH = Path("openspec/capabilities/autoresearch/spec.md")
++
++
++def test_req_auto_015_spec_anchor_exists() -> None:
++    """REQ-AUTO-015: OpenSpec declares the advisory anomaly classifier."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-AUTO-015" in spec
++    assert "SCENARIO-AUTO-012" in spec
++    assert "scripts/anomaly_escalation_classifier.py" in spec
++    assert "MUST NOT prune" in spec
++    assert "recommend relaxing verification" in spec
++
++
++def test_scenario_auto_012_planned_bounded_negative_is_clean() -> None:
++    """SCENARIO-AUTO-012: planned kill-gate negatives remain auto-reconcilable."""
++
++    artifact = {
++        "honest_verdict": "complete: thesis_a_bounded_no_improvement_at_kill_gate",
++        "prior_expectation": {
++            "expected_negative": True,
++            "expected_negative_tokens": ["no_improvement", "bounded"],
++            "kill_gate_expected": "no_improvement",
++            "known_bounded_lineage": "Thesis-A-bounded",
++        },
++        "acceptance_gate": {
++            "name": "bounded Thesis-A kill gate",
++            "expected_negative": True,
++            "observed_verdict_token": "no_improvement",
++        },
++    }
++
++    result = classifier.classify_artifact(artifact)
++
++    assert result.classification == "clean_bounded_negative"
++    assert result.recommendation == "standard_auto_reconcile"
++    assert result.verification_relaxation_recommended is False
++    assert "expected negative" in result.rationale
++    assert "Thesis-A-bounded" in result.rationale
++
++
++def test_scenario_auto_012_load_bearing_positive_control_failure_is_anomaly() -> None:
++    """SCENARIO-AUTO-012: P1 v2 INCONCLUSIVE-style control failure escalates."""
++
++    artifact = {
++        "honest_verdict": "inconclusive: p1_v2_ar_positive_control_failed_ar_best_below_0_3",
++        "positive_control": {
++            "name": "AR positive control",
++            "load_bearing": True,
++            "passed": False,
++            "threshold": "ar_best >= 0.3",
++            "observed": 0.0,
++        },
++        "prior_expectation": {
++            "assumptions": ["AR positive control must pass before judging energy landscape"],
++        },
++    }
++
++    result = classifier.classify_artifact(artifact)
++
++    assert result.classification == "frame_violating_anomaly"
++    assert result.recommendation == "halt_pruning_escalate_to_human"
++    assert result.verification_relaxation_recommended is False
++    assert "positive control" in result.rationale
++    assert "pause" in result.rationale
++    assert "relax" not in result.recommendation
++
++
++def test_scenario_auto_012_clean_positive_is_clean_positive() -> None:
++    """SCENARIO-AUTO-012: terminal positive results are not escalated."""
++
++    artifact = {
++        "honest_verdict": "complete: verifier_product_gate_passed_selection_lift_positive",
++        "acceptance_gate_passed": True,
++        "selection_lift": 0.08,
++    }
++
++    result = classifier.classify_artifact(artifact)
++
++    assert result.classification == "clean_positive"
++    assert result.recommendation == "standard_positive_reconcile"
++    assert result.verification_relaxation_recommended is False
++    assert "terminal positive" in result.rationale
++
++
++def test_req_auto_015_assumption_contradiction_and_envelope_escape_escalate() -> None:
++    """REQ-AUTO-015: explicit frame violations override clean verdict wording."""
++
++    assumption_artifact = {
++        "honest_verdict": "complete: no_improvement_observed",
++        "assumption_contradicted": True,
++        "assumption_note": "The corpus was assumed non-degenerate but headroom was zero.",
++    }
++    envelope_artifact = {
++        "honest_verdict": "complete: metric_direction_unexpected",
++        "predicted_envelope": {
++            "metric": "selection_lift",
++            "min": 0.01,
++            "max": 0.08,
++        },
++        "selection_lift": -0.12,
++    }
++
++    assumption_result = classifier.classify_artifact(assumption_artifact)
++    envelope_result = classifier.classify_artifact(envelope_artifact)
++
++    assert assumption_result.classification == "frame_violating_anomaly"
++    assert "contradict" in assumption_result.rationale
++    assert envelope_result.classification == "frame_violating_anomaly"
++    assert "predicted envelope" in envelope_result.rationale
++
++
++def test_req_auto_015_cli_reads_json_and_emits_recommendation(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-AUTO-015: CLI emits an advisory verdict without mutating input."""
++
++    artifact_path = tmp_path / "artifact.json"
++    artifact = {
++        "honest_verdict": "complete: bounded_negative_expected_no_delta",
++        "expected_negative": True,
++    }
++    artifact_path.write_text(json.dumps(artifact, sort_keys=True), encoding="utf-8")
++
++    rc = classifier.main([str(artifact_path)])
++    output = json.loads(capsys.readouterr().out)
++
++    assert rc == 0
++    assert output["classification"] == "clean_bounded_negative"
++    assert output["recommendation"] == "standard_auto_reconcile"
++    assert output["verification_relaxation_recommended"] is False
++    assert json.loads(artifact_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_auto_015_alternate_frame_violation_shapes_are_detected() -> None:
++    """REQ-AUTO-015: bool flags and textual assumption violations are real signals."""
++
++    bool_control = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: no_improvement",
++            "positive_control_passed": False,
++        }
++    )
++    failure_control = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: no_improvement",
++            "positive_control_failure": True,
++        }
++    )
++    textual_assumption = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: no_improvement",
++            "assumption_note": "The non-degeneracy assumption was violated.",
++        }
++    )
++
++    assert bool_control.classification == "frame_violating_anomaly"
++    assert failure_control.classification == "frame_violating_anomaly"
++    assert textual_assumption.classification == "frame_violating_anomaly"
++
++
++def test_req_auto_015_expected_negative_metadata_variants_are_clean() -> None:
++    """REQ-AUTO-015: token-only and lineage-only expected negatives are bounded."""
++
++    token_only = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: no_delta_at_declared_gate",
++            "prior_expectation": {"expected_negative_tokens": "no_delta"},
++        }
++    )
++    lineage_only = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: bounded_negative_confirmed",
++            "prior_expectation": {"lineage": "Route retired as bounded"},
++        }
++    )
++
++    assert token_only.classification == "clean_bounded_negative"
++    assert "declared expected negative" in token_only.rationale
++    assert lineage_only.classification == "clean_bounded_negative"
++    assert "known bounded lineage" in lineage_only.rationale
++
++
++def test_req_auto_015_unexpected_negative_and_neutral_artifact_defaults() -> None:
++    """REQ-AUTO-015: unplanned negatives escalate; neutral non-negatives do not."""
++
++    unexpected_negative = classifier.classify_artifact(
++        {"honest_verdict": "complete: no_improvement_without_prior_gate"}
++    )
++    neutral = classifier.classify_artifact({"honest_verdict": "queued_for_operator_note"})
++
++    assert unexpected_negative.classification == "frame_violating_anomaly"
++    assert "lacks expected kill-gate" in unexpected_negative.rationale
++    assert neutral.classification == "clean_positive"
++    assert "non-negative artifact" in neutral.rationale
++
++
++def test_req_auto_015_envelope_non_anomalies_and_bad_shapes_are_tolerated() -> None:
++    """REQ-AUTO-015: malformed or in-range envelopes do not poison classification."""
++
++    in_range = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: metric_checked",
++            "predicted_envelope": {"metric": "selection_lift", "min": 0.01, "max": 0.08},
++            "selection_lift": 0.05,
++        }
++    )
++    bad_metric = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: metric_checked",
++            "predicted_envelope": {"metric": 7, "min": 0.01, "max": 0.08},
++            "selection_lift": 0.05,
++        }
++    )
++    bad_numbers = classifier.classify_artifact(
++        {
++            "honest_verdict": "complete: metric_checked",
++            "predicted_envelope": {"metric": "selection_lift", "min": "low", "max": 0.08},
++            "selection_lift": True,
++        }
++    )
++
++    assert in_range.classification == "clean_positive"
++    assert bad_metric.classification == "clean_positive"
++    assert bad_numbers.classification == "clean_positive"
++
++
++def test_req_auto_015_classify_file_rejects_non_object_json(tmp_path: Path) -> None:
++    """REQ-AUTO-015: artifact files must be JSON objects, not arbitrary JSON."""
++
++    artifact_path = tmp_path / "not_object.json"
++    artifact_path.write_text("[]", encoding="utf-8")
++
++    with pytest.raises(ValueError, match="JSON object artifact"):
++        classifier.classify_file(artifact_path)
+diff --git a/tests/python/test_experiment_3780_anomaly_escalation_classifier_prototype.py b/tests/python/test_experiment_3780_anomaly_escalation_classifier_prototype.py
+new file mode 100644
+index 0000000000..8be5d15762
+--- /dev/null
++++ b/tests/python/test_experiment_3780_anomaly_escalation_classifier_prototype.py
+@@ -0,0 +1,175 @@
++"""Tests for Exp 3780 anomaly-escalation classifier prototype.
++
++Spec refs: REQ-AUTO-015, SCENARIO-AUTO-012.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from scripts import experiment_3780_anomaly_escalation_classifier_prototype as exp3780
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def test_scenario_auto_012_exp3780_writes_required_artifact_and_proposal(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-AUTO-012: prototype artifact records recommend-only behavior."""
++
++    output_path = tmp_path / "results/experiment_3780_anomaly_escalation_classifier_prototype.json"
++    proposal_path = tmp_path / "openspec/change-proposals/anomaly-escalation-conductor-hook.md"
++    conductor_path = tmp_path / "scripts/research_conductor.py"
++    conductor_path.parent.mkdir(parents=True)
++    conductor_path.write_text("# conductor stays untouched\n", encoding="utf-8")
++    before_conductor = conductor_path.read_text(encoding="utf-8")
++
++    artifact = exp3780.run(
++        ROOT,
++        output_path=output_path,
++        proposal_path=proposal_path,
++        conductor_path=conductor_path,
++        started_s=100.0,
++        now_s=100.25,
++    )
++
++    stored = json.loads(output_path.read_text(encoding="utf-8"))
++    proposal = proposal_path.read_text(encoding="utf-8")
++
++    assert stored == artifact
++    assert artifact["honest_verdict"] == exp3780.TERMINAL_VERDICT
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert set(exp3780.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3780.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["classifier_shipped"] is True
++    assert artifact["classifier_only_recommends"] is True
++    assert artifact["change_proposal_written"] is True
++    assert artifact["never_relaxes_verification"] is True
++    assert artifact["tests_assert_real_behavior"] is True
++    assert artifact["n_test_artifacts_classified"] >= 3
++    assert artifact["random_seed"] == exp3780.RANDOM_SEED
++    assert artifact["duration_s"] == 0.25
++    assert artifact["reproducibility_checksum"] == exp3780.payload_checksum(artifact)
++    assert "clean_bounded_negative" in artifact["clean_vs_anomaly_examples"]
++    assert "frame_violating_anomaly" in artifact["clean_vs_anomaly_examples"]
++    assert artifact["clean_vs_anomaly_examples"]["frame_violating_anomaly"][
++        "recommendation"
++    ] == "halt_pruning_escalate_to_human"
++    assert "advisory" in proposal
++    assert "MUST NOT auto-relax verification" in proposal
++    assert conductor_path.read_text(encoding="utf-8") == before_conductor
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++
++
++def test_req_auto_015_validate_artifact_rejects_missing_recommend_only_flag() -> None:
++    """REQ-AUTO-015: artifact validation enforces the load-bearing caveat."""
++
++    artifact = exp3780.build_artifact(
++        root=ROOT,
++        proposal_path=Path("openspec/change-proposals/anomaly-escalation-conductor-hook.md"),
++        started_s=1.0,
++        now_s=1.25,
++    )
++    artifact["classifier_only_recommends"] = False
++
++    try:
++        exp3780.validate_artifact(artifact)
++    except ValueError as exc:
++        message = str(exc)
++    else:  # pragma: no cover - assertion branch
++        message = ""
++
++    assert "classifier_only_recommends" in message
++
++
++def test_req_auto_015_read_json_requires_object(tmp_path: Path) -> None:
++    """REQ-AUTO-015: example artifact loading rejects non-object JSON."""
++
++    path = tmp_path / "not_object.json"
++    path.write_text("[]", encoding="utf-8")
++
++    with pytest.raises(ValueError, match="must contain a JSON object"):
++        exp3780._read_json(path)
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda artifact: artifact.pop("honest_verdict"), "missing required artifact fields"),
++        (lambda artifact: artifact.update(honest_verdict="complete: wrong"), "honest_verdict"),
++        (lambda artifact: artifact.update(inference_substrate="live_llm_inference"), "inference_substrate"),
++        (lambda artifact: artifact.update(clean_vs_anomaly_examples=[]), "clean_vs_anomaly_examples"),
++        (
++            lambda artifact: artifact["clean_vs_anomaly_examples"].pop("frame_violating_anomaly"),
++            "frame_violating_anomaly",
++        ),
++        (lambda artifact: artifact.update(reproducibility_checksum="bad"), "checksum"),
++        (lambda artifact: artifact.update(extra_marker="GGUF"), "live-compute markers"),
++    ],
++)
++def test_req_auto_015_validate_artifact_rejects_schema_violations(
++    mutate,
++    message: str,
++) -> None:
++    """REQ-AUTO-015: validation enforces every load-bearing artifact invariant."""
++
++    artifact = exp3780.build_artifact(
++        root=ROOT,
++        proposal_path=ROOT / exp3780.PROPOSAL_REL_PATH,
++        started_s=1.0,
++        now_s=1.25,
++    )
++    mutate(artifact)
++
++    with pytest.raises(ValueError, match=message):
++        exp3780.validate_artifact(artifact)
++
++
++def test_req_auto_015_run_detects_conductor_mutation(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-AUTO-015: the prototype refuses to proceed if conductor content changes."""
++
++    conductor_path = tmp_path / "scripts/research_conductor.py"
++    conductor_path.parent.mkdir(parents=True)
++    conductor_path.write_text("before\n", encoding="utf-8")
++    proposal_path = tmp_path / "openspec/change-proposals/anomaly.md"
++
++    def mutating_proposal(path: Path) -> Path:
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(exp3780.PROPOSAL_TEXT, encoding="utf-8")
++        conductor_path.write_text("after\n", encoding="utf-8")
++        return path
++
++    monkeypatch.setattr(exp3780, "write_change_proposal", mutating_proposal)
++
++    with pytest.raises(RuntimeError, match="research_conductor.py changed"):
++        exp3780.run(
++            ROOT,
++            output_path=tmp_path / "results/out.json",
++            proposal_path=proposal_path,
++            conductor_path=conductor_path,
++            started_s=1.0,
++            now_s=1.25,
++        )
++
++
++def test_req_auto_015_main_prints_artifact(
++    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
++) -> None:
++    """REQ-AUTO-015: script entrypoint prints the generated artifact."""
++
++    monkeypatch.setattr(exp3780, "run", lambda: {"honest_verdict": exp3780.TERMINAL_VERDICT})
++
++    rc = exp3780.main()
++    output = json.loads(capsys.readouterr().out)
++
++    assert rc == 0
++    assert output == {"honest_verdict": exp3780.TERMINAL_VERDICT}
+-- 
+2.55.0
+

@@ -1,0 +1,1344 @@
+From 7c755049b310b4162b3c11204eee16daaaa0bc52 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 08:52:54 -0400
+Subject: [PATCH 01432/11171] [conductor] Hardware continuity (GateMate +
+ PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next
+ concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> investigate
+ the .377 n=16 bitstream flash rc=1 block; next step toward a clean n=16 Ising
+ tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot
+ dispatch; .377 hash-verified CPU dispatch succeeded). KV260
+ opportunistic-confirm (ssh kria; terminal). DISTINCT wall-clock timers per
+ board (no shared-timestamp tautology).
+
+Automated research step by research conductor.
+Task ID: exp4096-hardware-continuity
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  85 ++++
+ ops/anomaly-escalations.md                    |   5 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4096_hardware_continuity.py    | 334 ++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4096_hardware_continuity.json  | 147 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../exp4096_hardware_continuity.py            |  34 ++
+ ...est_experiment_4096_hardware_continuity.py | 430 ++++++++++++++++++
+ 20 files changed, 1064 insertions(+), 24 deletions(-)
+ create mode 100644 python/carnot/experiment_4096_hardware_continuity.py
+ create mode 100644 results/experiment_4096_hardware_continuity.json
+ create mode 100644 scripts/experiments/exp4096_hardware_continuity.py
+ create mode 100644 tests/python/test_experiment_4096_hardware_continuity.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index 4995418ea6..1ceb8e6cff 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -7170,6 +7170,91 @@ checksum, and no KV260 host SD-card precondition.
+ 
+ ---
+ 
++### REQ-HW-4096
++
++**Title:** Hardware continuity MUST confirm per-board reachability and record the GateMate n=16 flash blocker
++
++**Description:**
++Experiment 4096 MUST produce
++`results/experiment_4096_hardware_continuity.json` as a hardware-smoke
++continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
++read `results/experiment_4084_hardware_continuity.json` as the prior .377 state,
++check each board independently with separate wall-clock timers, and record all
++preconditions before any forward smoke step. The required preconditions are:
++
++- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
++- GateMate: `openFPGALoader -c dirtyJtag --detect`, confirming the GM1Ax
++  IDCODE (`0x20000001`) before treating the GateMate board as reachable.
++- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
++
++KV260 MUST NOT use a host SD-card block-device precondition such as
++`/dev/mmcblk`; KV260 is terminal and MUST only receive an opportunistic SSH
++confirmation. If GateMate is reachable, the experiment MUST investigate the
++prior .377 n=16 flash return-code-1 blocker by re-running or reading the
++`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <n16 bitstream>` flash
++transcript, extracting the concrete flash error, and recording the next concrete
++GateMate forward step. If the current GateMate detect does not expose the GM1Ax
++IDCODE, the artifact MUST still carry the prior .377 flash error and the next
++concrete GateMate step inside `gatemate_step` while leaving
++`per_board_next_step["gatemate"]` as `blocked_gatemate_unreachable`. If
++PolarFire is reachable, the experiment MUST take the next SSH-backed step toward
++end-to-end Carnot dispatch by running the existing hash-verified CPU dispatch
++smoke. Unreachable boards MUST record `blocked_<board>_unreachable` for that
++board and MUST NOT block the other board checks.
++
++The artifact MUST include principle-annotated top-level fields
++`honest_verdict`, `per_board_reachability`, `preconditions_checked`, and
++`inference_substrate`, plus concrete per-board next steps. `preconditions_checked`
++MUST be a list of entries containing at least `{resource, available}` and its
++principle MUST state that it records which board accesses were verified before
++the smoke. `honest_verdict` MUST use a terminal prefix such as `complete:` or
++`blocked_`. `inference_substrate` MUST be exactly `"hardware_smoke"`, and the
++artifact MUST avoid fabric speedup, model-inference, or KV260 host SD-card claims.
++
++**Acceptance criteria:**
++- `results/experiment_4096_hardware_continuity.json` is generated.
++- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
++  PolarFire and matches scalar reachability fields.
++- `preconditions_checked` records the three board preconditions before any
++  GateMate or PolarFire smoke step, with at least `{resource, available}` per
++  entry and the required principle text.
++- GateMate reachability requires a GM1Ax/`0x20000001` IDCODE signal from
++  `openFPGALoader -c dirtyJtag --detect`.
++- A blocked GateMate n=16 flash records `flash_error` and
++  `next_concrete_step` inside the GateMate step details; if current GateMate
++  reachability is blocked before flash, `gatemate_step` still records
++  `previous_377_flash_error` and `next_concrete_step`.
++- `per_board_next_step` is a dict keyed by KV260, GateMate, and PolarFire that
++  records each board's next concrete forward step or
++  `blocked_<board>_unreachable`.
++- `honest_verdict` starts with `complete:` or `blocked_`;
++  `inference_substrate` is exactly `"hardware_smoke"`; and no KV260 host
++  SD-card marker such as `/dev/mmcblk` appears in the artifact.
++
++**Implementation status:** Pending (Exp 4096)
++
++---
++
++### SCENARIO-HW-4096
++
++**Scenario:** Per-board hardware continuity records reachability, flash error,
++and next concrete steps.
++
++**Given:** The .377 hardware-continuity artifact recorded a GateMate n=16 flash
++return-code-1 blocker, PolarFire may be reachable over SSH, and KV260 remains
++terminal with opportunistic SSH confirmation only.
++**When:** Experiment 4096 runs the hardware-smoke continuity check.
++**Then:** It writes `results/experiment_4096_hardware_continuity.json` with a
++terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
++`per_board_reachability`, precondition evidence recorded before smoke steps,
++bare `per_board_next_step`, distinct per-board timers, a GateMate flash error
++and next concrete step when flash is blocked, deterministic seed, checksum, and
++no KV260 host SD-card precondition.
++
++**Implementation status:** Pending (Exp 4096)
++
++---
++
+ ### SCENARIO-HW-4017
+ 
+ **Scenario:** ARC continuity records reachable boards and blocked board next steps.
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 9a908a1ba1..6b57be7d4e 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -231,3 +231,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_4083_verifier_registry_gaps_hygiene.json
++
++## experiment_4095_verifier_registry_gaps_hygiene.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4095_verifier_registry_gaps_hygiene.json
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 937b260753..3887294898 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 166,
+   "code_violations": 0,
+-  "experiments_checked": 3118,
++  "experiments_checked": 3119,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4096_hardware_continuity.py b/python/carnot/experiment_4096_hardware_continuity.py
+new file mode 100644
+index 0000000000..e2bcff4eb2
+--- /dev/null
++++ b/python/carnot/experiment_4096_hardware_continuity.py
+@@ -0,0 +1,334 @@
++"""Exp 4096 per-board hardware continuity and GateMate flash-blocker record.
++
++This experiment keeps the same board-smoke contract as Exp 4084, but tightens
++the GateMate reachability evidence back to the chip identity requested by the
++operator: `openFPGALoader -c dirtyJtag --detect` must expose the GM1Ax IDCODE
++before the board is marked reachable. When the existing n=16 GateMate flash is
++blocked, the artifact carries the concrete loader error and the next actionable
++hardware step instead of only recording a return code.
++
++Spec refs: REQ-HW-4096, SCENARIO-HW-4096.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterator
++from contextlib import contextmanager
++import json
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4064_hardware_continuity as _base
++
++
++EXPERIMENT_ID = 4096
++SCHEMA = _base.SCHEMA
++SPEC_REFS = ["REQ-HW-4096", "SCENARIO-HW-4096"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4096_hardware_continuity.json"
++RANDOM_SEED = 4096
++INFERENCE_SUBSTRATE = _base.INFERENCE_SUBSTRATE
++BOARD_NAMES = _base.BOARD_NAMES
++
++KV260_SSH_PRECONDITION = _base.KV260_SSH_PRECONDITION
++GATEMATE_DETECT_COMMAND = _base.GATEMATE_DETECT_COMMAND
++POLARFIRE_SSH_PRECONDITION = _base.POLARFIRE_SSH_PRECONDITION
++GATEMATE_FLASH_BOARD = _base.GATEMATE_FLASH_BOARD
++
++REQUIRED_ARTIFACT_FIELDS = _base.REQUIRED_ARTIFACT_FIELDS
++FIELD_PRINCIPLES = dict(_base.FIELD_PRINCIPLES)
++
++CommandProbe = _base.CommandProbe
++StepOutcome = _base.StepOutcome
++CommandRunner = _base.CommandRunner
++Clock = _base.Clock
++StepRunner = _base.StepRunner
++
++run_command = _base.run_command
++prepend_oss_cad_suite = _base.prepend_oss_cad_suite
++command_to_string = _base.command_to_string
++payload_checksum = _base.payload_checksum
++state_token = _base.state_token
++
++
++def _gatemate_available(probe: CommandProbe) -> bool:
++    """Return true only when the DirtyJTAG detect transcript identifies GM1Ax."""
++    text = probe.combined_output.lower()
++    return probe.exit_code == 0 and (
++        "0x20000001" in text
++        or "gm1ax" in text
++        or ("gm1a" in text and ("gatemate" in text or "colognechip" in text))
++    )
++
++
++_CONFIG_OVERRIDES = {
++    "EXPERIMENT_ID": EXPERIMENT_ID,
++    "SPEC_REFS": SPEC_REFS,
++    "OUTPUT_REL_PATH": OUTPUT_REL_PATH,
++    "RANDOM_SEED": RANDOM_SEED,
++    "_gatemate_available": _gatemate_available,
++    "run_gatemate_forward_step": None,
++}
++
++
++@contextmanager
++def _configured_base() -> Iterator[Any]:
++    """Temporarily apply Exp 4096 constants to the shared continuity engine."""
++    overrides = dict(_CONFIG_OVERRIDES)
++    overrides["run_gatemate_forward_step"] = run_gatemate_forward_step
++    original = {name: getattr(_base, name) for name in overrides}
++    for name, value in overrides.items():
++        setattr(_base, name, value)
++    try:
++        yield _base
++    finally:
++        for name, value in original.items():
++            setattr(_base, name, value)
++
++
++def build_artifact(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = _base.time.perf_counter,
++    gatemate_step_runner: StepRunner | None = None,
++    polarfire_step_runner: StepRunner | None = None,
++) -> dict[str, Any]:
++    """Build the Exp 4096 artifact from live or injected board-access probes."""
++    root = Path(repo_root)
++    with _configured_base() as base:
++        artifact = base.build_artifact(
++            repo_root=root,
++            command_runner=command_runner,
++            clock=clock,
++            gatemate_step_runner=gatemate_step_runner,
++            polarfire_step_runner=polarfire_step_runner,
++        )
++        artifact["source_context"] = _source_context(root)
++        _enrich_blocked_gatemate_step(artifact)
++        artifact["reproducibility_checksum"] = base.payload_checksum(artifact)
++        validate_artifact(artifact)
++        return artifact
++
++
++def run_gatemate_forward_step(
++    *,
++    repo_root: Path,
++    command_runner: CommandRunner,
++    clock: Clock = _base.time.perf_counter,
++) -> StepOutcome:
++    """Flash the existing n=16 bitstream and preserve the exact flash blocker."""
++    started = clock()
++    previous = _source_context(repo_root)
++    candidates = _base._candidate_gatemate_bitstreams(repo_root)
++    bitstream = next((candidate for candidate in candidates if candidate.exists()), None)
++    if bitstream is None:
++        return StepOutcome(
++            step_taken="blocked_gatemate_no_existing_n16_bitstream",
++            terminal_state="reachable_step_blocked_no_existing_n16_bitstream",
++            success=False,
++            duration_s=_base._elapsed(started, clock),
++            details={
++                "step": "flash_existing_n16_bitstream_plus_dirtyjtag_detect_smoke",
++                "candidate_paths_checked": [str(path) for path in candidates],
++                "blocker": "blocked_gatemate_no_existing_n16_bitstream",
++                "next_concrete_step": "Rebuild the GateMate n=16 bitstream, then rerun the DirtyJTAG flash smoke.",
++                "previous_377_flash_error": previous["previous_gatemate_flash_error"],
++            },
++        )
++
++    flash_command = (
++        "openFPGALoader",
++        "-c",
++        "dirtyJtag",
++        "-b",
++        GATEMATE_FLASH_BOARD,
++        str(bitstream),
++    )
++    flash_probe = command_runner(flash_command, 120.0)
++    detect_probe = command_runner(GATEMATE_DETECT_COMMAND, 30.0)
++    flash_ok = flash_probe.exit_code == 0
++    detect_ok = _gatemate_available(detect_probe)
++    success = flash_ok and detect_ok
++    if success:
++        step_taken = "gatemate_existing_n16_bitstream_flash_detect_smoke_succeeded"
++        terminal = "reachable_n16_bitstream_flashed_detect_smoke_recorded"
++    elif not flash_ok:
++        step_taken = f"gatemate_existing_n16_bitstream_flash_blocked_returncode_{flash_probe.exit_code}"
++        terminal = "reachable_n16_bitstream_flash_blocked"
++    else:
++        step_taken = "gatemate_existing_n16_bitstream_post_flash_detect_blocked"
++        terminal = "reachable_n16_bitstream_post_flash_detect_blocked"
++
++    return StepOutcome(
++        step_taken=step_taken,
++        terminal_state=terminal,
++        success=success,
++        duration_s=_base._elapsed(started, clock),
++        details={
++            "step": "flash_existing_n16_bitstream_plus_dirtyjtag_detect_smoke",
++            "bitstream_path": str(bitstream),
++            "bitstream_sha256": _base._sha256_file(bitstream),
++            "flash_command": command_to_string(flash_command),
++            "post_flash_detect_command": command_to_string(GATEMATE_DETECT_COMMAND),
++            "flash_exit_code": flash_probe.exit_code,
++            "post_flash_detect_exit_code": detect_probe.exit_code,
++            "post_flash_detected_gatemate": detect_ok,
++            "flash_error": _extract_flash_error(flash_probe.combined_output),
++            "next_concrete_step": _next_gatemate_flash_step(flash_probe, detect_probe),
++            "previous_377_flash_error": previous["previous_gatemate_flash_error"],
++            "command_transcripts": [
++                _base._command_transcript("flash_existing_bitstream", flash_probe),
++                _base._command_transcript("post_flash_detect_smoke", detect_probe),
++            ],
++        },
++    )
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = _base.time.perf_counter,
++) -> Path:
++    """Run Exp 4096 and write `results/experiment_4096_hardware_continuity.json`."""
++    prepend_oss_cad_suite()
++    artifact = build_artifact(repo_root=repo_root, command_runner=command_runner, clock=clock)
++    return write_artifact(repo_root, artifact)
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, Any]) -> Path:
++    with _configured_base() as base:
++        return base.write_artifact(repo_root, artifact)
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    with _configured_base() as base:
++        base.validate_artifact(artifact)
++    _validate_4096_fields(artifact)
++
++
++def _validate_4096_fields(artifact: dict[str, Any]) -> None:
++    source = artifact.get("source_context")
++    _require(isinstance(source, dict), "source_context must be present")
++    _require(source.get("previous_experiment") == 4084, "source_context must read Exp 4084")
++    gate_step = artifact.get("gatemate_step", {})
++    if (
++        artifact.get("gatemate_reachable") is True
++        and isinstance(gate_step, dict)
++        and gate_step.get("flash_exit_code") not in (None, 0)
++    ):
++        _require(bool(gate_step.get("flash_error")), "blocked GateMate flash must record flash_error")
++        _require(
++            bool(gate_step.get("next_concrete_step")),
++            "blocked GateMate flash must record next_concrete_step",
++        )
++    if artifact.get("gatemate_step_taken") == "blocked_gatemate_unreachable":
++        _require(
++            isinstance(gate_step, dict) and bool(gate_step.get("next_concrete_step")),
++            "blocked GateMate reachability must record next_concrete_step",
++        )
++
++
++def _enrich_blocked_gatemate_step(artifact: dict[str, Any]) -> None:
++    if artifact.get("gatemate_step_taken") != "blocked_gatemate_unreachable":
++        return
++    source = artifact["source_context"]
++    step = dict(artifact.get("gatemate_step", {}))
++    step["previous_377_flash_error"] = source["previous_gatemate_flash_error"]
++    step["previous_377_flash_exit_code"] = source["previous_gatemate_flash_exit_code"]
++    step["next_concrete_step"] = (
++        "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, "
++        "then rerun the n=16 GateMate flash; if detect still reports only JTAG "
++        "frequency, inspect DirtyJTAG/GateMate power, cable, and openFPGALoader "
++        "board-profile matching before any flash retry."
++    )
++    artifact["gatemate_step"] = step
++
++
++def _source_context(repo_root: Path) -> dict[str, Any]:
++    prior_payload = _read_previous_artifact(repo_root)
++    gate_step = prior_payload.get("gatemate_step", {}) if isinstance(prior_payload, dict) else {}
++    flash_error = _extract_flash_error_from_transcripts(gate_step.get("command_transcripts", []))
++    return {
++        "previous_experiment": 4084,
++        "previous_artifact_read": bool(prior_payload),
++        "previous_honest_verdict": prior_payload.get("honest_verdict"),
++        "previous_per_board_reachability": prior_payload.get("per_board_reachability"),
++        "previous_gatemate_step_taken": prior_payload.get("gatemate_step_taken"),
++        "previous_gatemate_flash_exit_code": gate_step.get("flash_exit_code"),
++        "previous_gatemate_flash_error": flash_error,
++    }
++
++
++def _read_previous_artifact(repo_root: Path) -> dict[str, Any]:
++    prior_path = repo_root / "results" / "experiment_4084_hardware_continuity.json"
++    if not prior_path.exists():
++        return {}
++    try:
++        return json.loads(prior_path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):  # pragma: no cover - corrupt local artifact.
++        return {}
++
++
++def _extract_flash_error_from_transcripts(transcripts: Any) -> str | None:
++    if not isinstance(transcripts, list):
++        return None
++    for transcript in transcripts:
++        if not isinstance(transcript, dict):
++            continue
++        if transcript.get("stage") != "flash_existing_bitstream":
++            continue
++        error = _extract_flash_error(str(transcript.get("output_excerpt", "")))
++        if error:
++            return error
++    return None
++
++
++def _extract_flash_error(text: str) -> str:
++    lines = [line.strip() for line in text.splitlines() if line.strip()]
++    for line in lines:
++        if line.lower().startswith("error:"):
++            return line
++    for line in lines:
++        if "no device found" in line.lower() or "fails to open device" in line.lower():
++            return line
++    return lines[-1] if lines else ""
++
++
++def _next_gatemate_flash_step(flash_probe: CommandProbe, detect_probe: CommandProbe) -> str:
++    if flash_probe.exit_code == 0 and _gatemate_available(detect_probe):
++        return "GateMate n=16 flash smoke succeeded; next run host-visible readback or dispatch smoke."
++    flash_error = _extract_flash_error(flash_probe.combined_output)
++    if "no device found" in flash_error.lower():
++        return (
++            "Detect confirms GM1Ax but the n=16 flash says no device found; next run "
++            "`openFPGALoader -c dirtyJtag --detect` immediately followed by "
++            "`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream>` with "
++            "verbose cable/board-profile diagnostics, then update or bypass the "
++            "Olimex GateMate board profile if the mismatch persists."
++        )
++    return (
++        f"GateMate n=16 flash returned rc={flash_probe.exit_code}; next preserve the "
++        "full openFPGALoader transcript and retry after confirming DirtyJTAG still "
++        "reports GM1Ax on the same USB path."
++    )
++
++
++def _require(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)  # pragma: no cover
++
++
++def main() -> None:  # pragma: no cover
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"per_board_reachability: {artifact['per_board_reachability']}")
++    print(f"gatemate_step_taken: {artifact['gatemate_step_taken']}")
++    print(f"polarfire_step_taken: {artifact['polarfire_step_taken']}")
++    print(f"per_board_duration_s: {artifact['per_board_duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 17e1995ec5..e2efa32d6b 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T11:37:56.295660Z",
+-  "duration_s": 0.05942988395690918,
++  "run_date": "2026-06-12T12:51:31.071970Z",
++  "duration_s": 0.0524439811706543,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "85447e779f7c558624ad70803678a9088dec091d98a40353976d6468d479e902",
++  "reproducibility_checksum": "44da82c3d6a550febc28be4bc01a8b3e16060580e20b78c99bff0917f5af6f77",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "8a9abb3308f985e43a2af3b049db456ffcc01355"
++    "adversarial_verify_version": "f6dc847cac99dc1ae1117836203783069d7ae3f5"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 916261c47b..45523904f0 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T11:37:56.382670Z",
+-  "duration_s": 0.05301260948181152,
++  "run_date": "2026-06-12T12:51:31.154463Z",
++  "duration_s": 0.051342010498046875,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "eee89e44a55dcb4e86d77da606c4608fa8015d3d020efc2db6e1f7b9673bad60",
++  "reproducibility_checksum": "d1f2d0938d04c5398c160e4bdc2cfe4b5a4fe4e6255280ace203b405971814fd",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "8a9abb3308f985e43a2af3b049db456ffcc01355"
++    "adversarial_verify_version": "f6dc847cac99dc1ae1117836203783069d7ae3f5"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bbe80996a6..6b91c40e4b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.111673355102539,
++  "efficiency_gains_ms": 2.1085739135742188,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index fcc6b57fe1..400f79b155 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.016758441925048828,
++  "duration_s": 0.021413564682006836,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 0ce40b35fe..04d36dd154 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T11:38:58Z",
++  "run_date": "2026-06-12T12:52:30Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index f5c5cdf268..cd86fdfe24 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.00071120262146,
++  "duration_s": 5.000090837478638,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 84ddff17e8..e621227d14 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.00009799003601,
++  "duration_s": 10.000070810317993,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 71ab72cd81..858933864b 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.23721599578857422,
++  "duration_s": 0.28740406036376953,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 4fee39c18e..d777d43dc8 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.317196387797594e-05,
++  "duration_s": 2.8052949346601963e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4096_hardware_continuity.json b/results/experiment_4096_hardware_continuity.json
+new file mode 100644
+index 0000000000..82e1d4a24e
+--- /dev/null
++++ b/results/experiment_4096_hardware_continuity.json
+@@ -0,0 +1,147 @@
++{
++  "duration_s": 11.452377,
++  "experiment": 4096,
++  "fabric_acceleration_claimed": false,
++  "field_principles": {
++    "gatemate_step_taken": "principle: the drive-to-terminal progress for the non-terminal GateMate board",
++    "honest_verdict": "terminal prefix naming the GateMate and PolarFire drive-to-terminal steps while KV260 remains opportunistic",
++    "inference_substrate": "declares this artifact as hardware_smoke rather than model inference",
++    "kv260_terminal_confirmed": "principle: KV260 is done -- opportunistic confirm only",
++    "per_board_reachability": "principle: the continuity record that keeps boards visible in retros",
++    "polarfire_step_taken": "principle: the drive-to-terminal progress for the non-terminal PolarFire board",
++    "preconditions_checked": "principle: records which board accesses were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode"
++  },
++  "gatemate_reachable": false,
++  "gatemate_step": {
++    "blocker": "blocked_gatemate_unreachable",
++    "next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash; if detect still reports only JTAG frequency, inspect DirtyJTAG/GateMate power, cable, and openFPGALoader board-profile matching before any flash retry.",
++    "previous_377_flash_error": "Error: no device found",
++    "previous_377_flash_exit_code": 1,
++    "step": "blocked_gatemate_unreachable"
++  },
++  "gatemate_step_taken": "blocked_gatemate_unreachable",
++  "honest_verdict": "complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only",
++  "inference_substrate": "hardware_smoke",
++  "kv260_reachable": true,
++  "kv260_step_taken": "kv260_opportunistic_ssh_confirm_only",
++  "kv260_terminal_confirmed": true,
++  "per_board_duration_s": {
++    "gatemate": 0.019416,
++    "kv260": 4.453401,
++    "polarfire": 6.977621
++  },
++  "per_board_next_step": {
++    "gatemate": "blocked_gatemate_unreachable",
++    "kv260": "kv260_terminal_opportunistic_confirm_only",
++    "polarfire": "polarfire_hash_verified_cpu_dispatch_succeeded"
++  },
++  "per_board_reachability": {
++    "gatemate": false,
++    "kv260": true,
++    "polarfire": true
++  },
++  "per_board_terminal_state": {
++    "gatemate": "blocked_gatemate_unreachable",
++    "kv260": "opportunistic_terminal_confirmed_ssh_only",
++    "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
++  },
++  "polarfire_reachable": true,
++  "polarfire_step": {
++    "board_result_sha256": "4a9ede53b6a8f824d909d0e6c0b3e56122e76d0c357e1853b3bd717894cfebd3",
++    "command_transcript": [
++      {
++        "command": "ssh polarfire 'mkdir -p /tmp/carnot_exp4064_3667982_1781268622'",
++        "output_excerpt": "",
++        "returncode": 0,
++        "stage": "remote_mkdir"
++      },
++      {
++        "command": "scp -q /tmp/carnot_exp4064_pr8xtflk/runner.py /tmp/carnot_exp4064_pr8xtflk/workload.json polarfire:/tmp/carnot_exp4064_3667982_1781268622/",
++        "output_excerpt": "",
++        "returncode": 0,
++        "stage": "scp_push"
++      },
++      {
++        "command": "ssh polarfire 'cd /tmp/carnot_exp4064_3667982_1781268622 && python3 runner.py workload.json --min-runtime-s 0.000 # local_workload_path=/tmp/carnot_exp4064_pr8xtflk/workload.json'",
++        "output_excerpt": "{\"energies\":[-4,-10,-4,-10,-4,-10],\"energy_max\":-4,\"energy_min\":-10,\"energy_sum\":-42,\"n_configs\":6,\"n_spins\":8,\"random_seed\":4096,\"schema\":\"carnot.ising_energy_result.v1\",\"spec_refs\":[\"REQ-HW-3867\",\"SCENARIO-HW-3867\"],\"workload_sha256\":\"1fd11d75993441609f6664150991883ab35c89c8a7677351bf927eeee5ee5742\"}\ncycles=1",
++        "returncode": 0,
++        "stage": "remote_ising_eval"
++      },
++      {
++        "command": "ssh polarfire 'rm -rf /tmp/carnot_exp4064_3667982_1781268622'",
++        "output_excerpt": "",
++        "returncode": 0,
++        "stage": "remote_cleanup"
++      },
++      {
++        "command": "ssh polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nfrom pathlib import Path\nfor path in sorted(Path('\"'\"'/sys/class/thermal'\"'\"').glob('\"'\"'thermal_zone*/temp'\"'\"')):\n    try:\n        print(path.read_text().strip())\n    except OSError:\n        pass\nPY'",
++        "output_excerpt": "",
++        "returncode": 0,
++        "stage": "thermal_probe"
++      }
++    ],
++    "cpu_reference_sha256": "4a9ede53b6a8f824d909d0e6c0b3e56122e76d0c357e1853b3bd717894cfebd3",
++    "preconditions_checked": [
++      {
++        "available": true,
++        "command": "ssh polarfire 'python3 --version'",
++        "duration_s": 0.939045,
++        "exit_code": 0,
++        "observed": "Python 3.12.12",
++        "resource": "polarfire_python"
++      }
++    ],
++    "result_hash_match": true,
++    "soc_temp_max_c": null,
++    "step": "hash_verified_cpu_dispatch_smoke",
++    "workload_sha256": "1fd11d75993441609f6664150991883ab35c89c8a7677351bf927eeee5ee5742"
++  },
++  "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.453401,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    },
++    {
++      "available": false,
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "duration_s": 0.019416,
++      "exit_code": 0,
++      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "resource": "gatemate_jtag_detect"
++    },
++    {
++      "available": true,
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "duration_s": 0.756081,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "polarfire_ssh"
++    }
++  ],
++  "random_seed": 4096,
++  "reproducibility_checksum": "323f51638ec88d3ff8140d8f767c4f4bd0cc7570e84e3ecd0c0fabe8d9cba30f",
++  "schema": "carnot.hardware_continuity_drive_to_terminal.v1",
++  "source_context": {
++    "previous_artifact_read": true,
++    "previous_experiment": 4084,
++    "previous_gatemate_flash_error": "Error: no device found",
++    "previous_gatemate_flash_exit_code": 1,
++    "previous_gatemate_step_taken": "gatemate_existing_n16_bitstream_flash_blocked_returncode_1",
++    "previous_honest_verdict": "complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only",
++    "previous_per_board_reachability": {
++      "gatemate": true,
++      "kv260": true,
++      "polarfire": true
++    }
++  },
++  "spec_refs": [
++    "REQ-HW-4096",
++    "SCENARIO-HW-4096"
++  ],
++  "speedup_claim_made": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a278dcb99c..7660d8ee85 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T12:06:48Z",
+-  "finished_at": "2026-06-12T12:06:48Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-12T12:51:05Z",
++  "finished_at": "2026-06-12T12:51:05Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index face176b20..d6718adfca 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T12:06:48Z",
+-  "finished_at": "2026-06-12T12:06:48Z",
++  "started_at": "2026-06-12T12:51:05Z",
++  "finished_at": "2026-06-12T12:51:05Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 8dd65a4313..31384c194e 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T12:06:48Z",
+-  "finished_at": "2026-06-12T12:06:48Z",
++  "started_at": "2026-06-12T12:51:05Z",
++  "finished_at": "2026-06-12T12:51:05Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4096_hardware_continuity.py b/scripts/experiments/exp4096_hardware_continuity.py
+new file mode 100644
+index 0000000000..aaaa7f1285
+--- /dev/null
++++ b/scripts/experiments/exp4096_hardware_continuity.py
+@@ -0,0 +1,34 @@
++#!/usr/bin/env python3
++"""Runner for Exp 4096 hardware continuity.
++
++Spec refs: REQ-HW-4096, SCENARIO-HW-4096.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_4096_hardware_continuity import run_experiment
++
++    out_path = run_experiment(repo_root=REPO_ROOT)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path.relative_to(REPO_ROOT)}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"per_board_reachability: {artifact['per_board_reachability']}")
++    print(f"gatemate_step_taken: {artifact['gatemate_step_taken']}")
++    print(f"polarfire_step_taken: {artifact['polarfire_step_taken']}")
++    print(f"kv260_terminal_confirmed: {artifact['kv260_terminal_confirmed']}")
++    print(f"per_board_duration_s: {artifact['per_board_duration_s']}")
++    print(f"duration_s: {artifact['duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_4096_hardware_continuity.py b/tests/python/test_experiment_4096_hardware_continuity.py
+new file mode 100644
+index 0000000000..14cc5ea445
+--- /dev/null
++++ b/tests/python/test_experiment_4096_hardware_continuity.py
+@@ -0,0 +1,430 @@
++"""Tests for Exp 4096 hardware continuity.
++
++Spec refs: REQ-HW-4096, SCENARIO-HW-4096.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4096_hardware_continuity as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4096 command runner with queued hardware transcripts."""
++
++    def __init__(self, probes: dict[tuple[str, ...], list[mod.CommandProbe]]) -> None:
++        self.probes = {command: list(values) for command, values in probes.items()}
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        del timeout_s
++        command = tuple(command)
++        self.commands.append(command)
++        if command in self.probes and self.probes[command]:
++            return self.probes[command].pop(0)
++        raise AssertionError(f"unexpected command: {command!r}")
++
++
++def _probe(
++    command: tuple[str, ...],
++    exit_code: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandProbe:
++    return mod.CommandProbe(command, exit_code, stdout, stderr, duration_s)
++
++
++def _make_bitstream(repo_root: Path) -> Path:
++    bitstream = (
++        repo_root
++        / "build"
++        / "gatemate"
++        / "experiment_3866_gatemate_ising_tile_flash_v2"
++        / "gatemate_ising_n16.bit"
++    )
++    bitstream.parent.mkdir(parents=True, exist_ok=True)
++    bitstream.write_bytes(b"REQ-HW-4096 fake n16 bitstream\n")
++    return bitstream
++
++
++def _write_previous_4084(repo_root: Path) -> None:
++    results = repo_root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    (results / "experiment_4084_hardware_continuity.json").write_text(
++        json.dumps(
++            {
++                "honest_verdict": (
++                    "complete: hardware_continuity_gatemate_flash_blocked"
++                ),
++                "per_board_reachability": {
++                    "kv260": True,
++                    "gatemate": True,
++                    "polarfire": True,
++                },
++                "gatemate_step_taken": (
++                    "gatemate_existing_n16_bitstream_flash_blocked_returncode_1"
++                ),
++                "gatemate_step": {
++                    "flash_exit_code": 1,
++                    "command_transcripts": [
++                        {
++                            "stage": "flash_existing_bitstream",
++                            "output_excerpt": (
++                                "Board default cable overridden with dirtyJtag\n"
++                                "Error: no device found\n"
++                            ),
++                        }
++                    ],
++                },
++            }
++        ),
++        encoding="utf-8",
++    )
++
++
++def _assert_required_principles(payload: dict[str, Any]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++        assert payload["field_principles"][field] == mod.FIELD_PRINCIPLES[field]
++    assert "records which board accesses were verified before the smoke" in (
++        payload["field_principles"]["preconditions_checked"]
++    )
++
++
++def test_req_hw_4096_spec_entry_declares_board_contract() -> None:
++    """REQ-HW-4096: OpenSpec anchors IDCODE, flash-error, and artifact fields."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4096" in spec
++    assert "SCENARIO-HW-4096" in spec
++    assert "experiment_4096_hardware_continuity.json" in spec
++    assert "results/experiment_4084_hardware_continuity.json" in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "openFPGALoader -c dirtyJtag --detect" in spec
++    assert "0x20000001" in spec
++    assert "GM1Ax" in spec
++    assert "ssh -o ConnectTimeout=5 polarfire 'true'" in spec
++    assert "flash_error" in spec
++    assert "next_concrete_step" in spec
++    assert "per_board_reachability" in spec
++    assert "preconditions_checked" in spec
++    assert "inference_substrate" in spec
++    assert "/dev/mmcblk" in spec
++
++
++def test_scenario_hw_4096_flash_blocker_records_error_and_next_step(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4096: reachable boards record the GateMate flash blocker."""
++    _write_previous_4084(tmp_path)
++    bitstream = _make_bitstream(tmp_path)
++    flash_command = (
++        "openFPGALoader",
++        "-c",
++        "dirtyJtag",
++        "-b",
++        mod.GATEMATE_FLASH_BOARD,
++        str(bitstream),
++    )
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, duration_s=0.21)
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout=(
++                        "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++                        "IDCode : 0x20000001 colognechip GateMate GM1Ax\n"
++                    ),
++                    duration_s=0.34,
++                ),
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout="IDCode : 0x20000001 colognechip GateMate GM1Ax\n",
++                    duration_s=0.08,
++                ),
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, duration_s=0.55)
++            ],
++            flash_command: [
++                _probe(
++                    flash_command,
++                    1,
++                    stderr="Board default cable overridden with dirtyJtag\nError: no device found\n",
++                    duration_s=0.13,
++                )
++            ],
++        }
++    )
++
++    def polar_step(**_: Any) -> mod.StepOutcome:
++        return mod.StepOutcome(
++            step_taken="polarfire_hash_verified_cpu_dispatch_succeeded",
++            terminal_state="reachable_hash_verified_cpu_dispatch_recorded",
++            success=True,
++            duration_s=0.67,
++            details={"step": "hash_verified_cpu_dispatch_smoke", "result_hash_match": True},
++        )
++
++    artifact = mod.build_artifact(
++        repo_root=tmp_path,
++        command_runner=runner,
++        polarfire_step_runner=polar_step,
++    )
++    out_path = mod.write_artifact(tmp_path, artifact)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert runner.commands == [
++        mod.KV260_SSH_PRECONDITION,
++        mod.GATEMATE_DETECT_COMMAND,
++        mod.POLARFIRE_SSH_PRECONDITION,
++        flash_command,
++        mod.GATEMATE_DETECT_COMMAND,
++    ]
++    assert saved["schema"] == mod.SCHEMA
++    assert saved["experiment"] == mod.EXPERIMENT_ID
++    assert saved["spec_refs"] == mod.SPEC_REFS
++    assert saved["random_seed"] == mod.RANDOM_SEED
++    assert saved["inference_substrate"] == "hardware_smoke"
++    assert saved["honest_verdict"].startswith("complete:")
++    assert saved["per_board_reachability"] == {
++        "kv260": True,
++        "gatemate": True,
++        "polarfire": True,
++    }
++    assert saved["gatemate_step_taken"] == (
++        "gatemate_existing_n16_bitstream_flash_blocked_returncode_1"
++    )
++    assert saved["gatemate_step"]["flash_error"] == "Error: no device found"
++    assert "GM1Ax" in saved["gatemate_step"]["next_concrete_step"]
++    assert "openFPGALoader" in saved["gatemate_step"]["next_concrete_step"]
++    assert saved["gatemate_step"]["previous_377_flash_error"] == "Error: no device found"
++    assert saved["source_context"] == {
++        "previous_experiment": 4084,
++        "previous_artifact_read": True,
++        "previous_honest_verdict": "complete: hardware_continuity_gatemate_flash_blocked",
++        "previous_per_board_reachability": {
++            "kv260": True,
++            "gatemate": True,
++            "polarfire": True,
++        },
++        "previous_gatemate_step_taken": (
++            "gatemate_existing_n16_bitstream_flash_blocked_returncode_1"
++        ),
++        "previous_gatemate_flash_exit_code": 1,
++        "previous_gatemate_flash_error": "Error: no device found",
++    }
++    assert saved["per_board_next_step"] == {
++        "kv260": "kv260_terminal_opportunistic_confirm_only",
++        "gatemate": "gatemate_existing_n16_bitstream_flash_blocked_returncode_1",
++        "polarfire": "polarfire_hash_verified_cpu_dispatch_succeeded",
++    }
++    assert [entry["resource"] for entry in saved["preconditions_checked"]] == [
++        "kv260_ssh",
++        "gatemate_jtag_detect",
++        "polarfire_ssh",
++    ]
++    assert all(isinstance(entry["available"], bool) for entry in saved["preconditions_checked"])
++    assert len(set(saved["per_board_duration_s"].values())) == 3
++    assert saved["reproducibility_checksum"] == mod.payload_checksum(saved)
++    assert "mmcblk" not in json.dumps(saved).lower()
++    _assert_required_principles(saved)
++    mod.validate_artifact(saved)
++
++
++def test_scenario_hw_4096_gate_detect_without_gm1ax_is_not_reachable(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4096: GateMate reachability requires the requested GM1Ax IDCODE."""
++    _write_previous_4084(tmp_path)
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, duration_s=0.2)
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout="Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
++                    duration_s=0.3,
++                )
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.4)
++            ],
++        }
++    )
++
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=runner)
++
++    assert artifact["per_board_reachability"] == {
++        "kv260": True,
++        "gatemate": False,
++        "polarfire": False,
++    }
++    assert artifact["gatemate_step_taken"] == "blocked_gatemate_unreachable"
++    assert artifact["gatemate_step"]["blocker"] == "blocked_gatemate_unreachable"
++    assert artifact["gatemate_step"]["previous_377_flash_error"] == "Error: no device found"
++    assert "GM1Ax" in artifact["gatemate_step"]["next_concrete_step"]
++    assert artifact["source_context"]["previous_artifact_read"] is True
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_4096_validation_rejects_required_field_and_substrate(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4096: required artifact fields stay mandatory and bare."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.2)
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(mod.GATEMATE_DETECT_COMMAND, 1, stderr="no board", duration_s=0.3)
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.4)
++            ],
++        }
++    )
++    artifact = mod.build_artifact(repo_root=tmp_path, command_runner=runner)
++
++    for field in ("honest_verdict", "per_board_reachability", "preconditions_checked"):
++        bad = dict(artifact)
++        bad.pop(field)
++        with pytest.raises(ValueError, match="required fields|missing"):
++            mod.validate_artifact(bad)
++
++    with pytest.raises(ValueError, match="hardware_smoke"):
++        mod.validate_artifact(artifact | {"inference_substrate": "model_inference"})
++
++
++def test_req_hw_4096_run_experiment_writes_blocked_artifact(tmp_path: Path) -> None:
++    """REQ-HW-4096: run_experiment writes the requested deliverable JSON."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: [
++                _probe(mod.KV260_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.2)
++            ],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(mod.GATEMATE_DETECT_COMMAND, 1, stderr="no board", duration_s=0.3)
++            ],
++            mod.POLARFIRE_SSH_PRECONDITION: [
++                _probe(mod.POLARFIRE_SSH_PRECONDITION, 255, stderr="timeout", duration_s=0.4)
++            ],
++        }
++    )
++
++    out_path = mod.run_experiment(repo_root=tmp_path, command_runner=runner)
++    saved = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert saved["honest_verdict"] == "blocked_all_boards_unreachable"
++    assert saved["source_context"]["previous_experiment"] == 4084
++    assert "GM1Ax" in saved["gatemate_step"]["next_concrete_step"]
++    mod.validate_artifact(saved)
++
++
++def test_scenario_hw_4096_gatemate_step_handles_no_bitstream(tmp_path: Path) -> None:
++    """SCENARIO-HW-4096: reachable GateMate still needs a concrete n=16 bitstream."""
++
++    def unexpected_runner(command: tuple[str, ...], timeout_s: float = 60.0) -> mod.CommandProbe:
++        raise AssertionError(f"unexpected command {command!r} at timeout {timeout_s}")
++
++    outcome = mod.run_gatemate_forward_step(
++        repo_root=tmp_path,
++        command_runner=unexpected_runner,
++    )
++
++    assert outcome.step_taken == "blocked_gatemate_no_existing_n16_bitstream"
++    assert outcome.success is False
++    assert outcome.details["next_concrete_step"].startswith("Rebuild the GateMate n=16")
++    assert outcome.details["previous_377_flash_error"] is None
++
++
++def test_scenario_hw_4096_gatemate_step_success_and_post_detect_blocker(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4096: GateMate step names success and post-flash detect blockers."""
++    bitstream = _make_bitstream(tmp_path)
++    flash_command = (
++        "openFPGALoader",
++        "-c",
++        "dirtyJtag",
++        "-b",
++        mod.GATEMATE_FLASH_BOARD,
++        str(bitstream),
++    )
++    success_runner = RecordingRunner(
++        {
++            flash_command: [_probe(flash_command, stdout="write ok\n", duration_s=0.11)],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout="IDCode : 0x20000001 colognechip GateMate GM1Ax\n",
++                    duration_s=0.12,
++                )
++            ],
++        }
++    )
++
++    success = mod.run_gatemate_forward_step(
++        repo_root=tmp_path,
++        command_runner=success_runner,
++    )
++
++    assert success.step_taken == "gatemate_existing_n16_bitstream_flash_detect_smoke_succeeded"
++    assert success.success is True
++    assert "succeeded" in success.details["next_concrete_step"]
++
++    blocked_runner = RecordingRunner(
++        {
++            flash_command: [_probe(flash_command, stdout="write ok\n", duration_s=0.11)],
++            mod.GATEMATE_DETECT_COMMAND: [
++                _probe(
++                    mod.GATEMATE_DETECT_COMMAND,
++                    stdout="Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
++                    duration_s=0.12,
++                )
++            ],
++        }
++    )
++
++    blocked = mod.run_gatemate_forward_step(
++        repo_root=tmp_path,
++        command_runner=blocked_runner,
++    )
++
++    assert blocked.step_taken == "gatemate_existing_n16_bitstream_post_flash_detect_blocked"
++    assert blocked.success is False
++    assert "rc=0" in blocked.details["next_concrete_step"]
++
++
++def test_req_hw_4096_flash_error_helpers_cover_loader_shapes() -> None:
++    """REQ-HW-4096: flash-error extraction handles prior and live transcript shapes."""
++    assert mod._extract_flash_error_from_transcripts("not a list") is None
++    assert (
++        mod._extract_flash_error_from_transcripts(
++            [
++                "not a dict",
++                {"stage": "post_flash_detect_smoke", "output_excerpt": "ignored"},
++                {
++                    "stage": "flash_existing_bitstream",
++                    "output_excerpt": "fails to open device",
++                },
++            ]
++        )
++        == "fails to open device"
++    )
++    assert mod._extract_flash_error("first\nlast line") == "last line"
++    assert mod._extract_flash_error("") == ""
+-- 
+2.55.0
+

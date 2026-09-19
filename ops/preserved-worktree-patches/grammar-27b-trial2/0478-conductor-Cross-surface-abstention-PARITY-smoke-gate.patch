@@ -1,0 +1,2052 @@
+From 283f7d6cee63cbfdf02c727543510c63d2f2b179 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 12:44:38 -0400
+Subject: [PATCH 00478/11171] [conductor] Cross-surface abstention PARITY smoke
+ (gated on exp3810 landing the HTTP surface): confirm the same cached FoVer
+ candidate yields the SAME confident/abstain verdict + the same
+ coverage/risk/delta metadata across the verify-API, the CLI, and the
+ HTTP/REST surface -- so no integration surface drifts ahead of the others
+ (Decentralization Rule 4: none allowed to become the only well-trodden path).
+ If exp3810 did not land the HTTP surface, the gate does not fire and the
+ milestone proceeds without this check (graceful). Verifier-scoring; no live
+ LLM; a wiring smoke, no accuracy claim.
+
+Automated research step by research conductor.
+Task ID: exp3811-abstention-cross-surface-parity-smoke
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/pipeline/spec.md        |  42 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...tention_cross_surface_parity_smoke_3811.py | 754 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...abstention_cross_surface_parity_smoke.json | 484 +++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...1_abstention_cross_surface_parity_smoke.py |  35 +
+ ...1_abstention_cross_surface_parity_smoke.py | 383 +++++++++
+ 22 files changed, 1729 insertions(+), 31 deletions(-)
+ create mode 100644 python/carnot/reporting/abstention_cross_surface_parity_smoke_3811.py
+ create mode 100644 results/experiment_3811_abstention_cross_surface_parity_smoke.json
+ create mode 100644 scripts/experiment_3811_abstention_cross_surface_parity_smoke.py
+ create mode 100644 tests/python/test_experiment_3811_abstention_cross_surface_parity_smoke.py
+
+diff --git a/openspec/capabilities/pipeline/spec.md b/openspec/capabilities/pipeline/spec.md
+index 695dbcc361..f517790d0f 100644
+--- a/openspec/capabilities/pipeline/spec.md
++++ b/openspec/capabilities/pipeline/spec.md
+@@ -615,6 +615,34 @@ The Exp 3810 runner MUST write
+ `doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
+ `model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+ 
++### REQ-SPOE-3811: Abstention Cross-Surface Parity Smoke
++
++The pipeline MUST provide an Exp 3811 no-live-LLM parity smoke that compares
++the certified Exp 3771 abstention operating point across the verify API,
++CLI/batch, and HTTP/REST surfaces.  The smoke MUST first confirm that the
++`.venv/bin/python` interpreter imports `carnot`, the Exp 3810 artifact reports
++`http_rest_surface_added=true`, all three surfaces are invokable, and cached
++FoVer verifier-scoring examples are reachable by absolute path.  If any
++precondition is missing, it MUST write an honest `blocked_<resource>` artifact
++without fabricating parity evidence.
++
++When runnable, the smoke MUST choose a deterministic fixed sample of at least
++10 cached FoVer-style verifier-scoring candidates spanning both scores at or
++above the certified threshold and scores below it.  It MUST call the verify
++API, the CLI batch path, and the HTTP/REST endpoint with the same certified
++threshold loaded from Exp 3771 and compare each candidate's
++confident-or-abstain verdict plus coverage, risk, delta, and threshold
++metadata within float tolerance.  A mismatch MUST be reported as drift in the
++artifact rather than hidden.
++
++The Exp 3811 runner MUST write
++`results/experiment_3811_abstention_cross_surface_parity_smoke.json` and
++include `honest_verdict`, `inference_substrate`, `surfaces_compared`,
++`all_surfaces_agree`, `n_candidates_compared`, `mismatches`,
++`certified_threshold_used`, `tests_assert_real_behavior`,
++`cited_upstream_artifacts`, `model_specs`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`.
++
+ ## Scenarios
+ 
+ ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
+@@ -894,6 +922,20 @@ when the flag is omitted.
+ 
+ **Spec traces:** REQ-SPOE-3810
+ 
++### SCENARIO-SPOE-3811: Verify API CLI And HTTP Abstention Metadata Match
++
++**Given** Exp 3771, Exp 3779, Exp 3789, and Exp 3810 artifacts are readable,
++Exp 3810 reports `http_rest_surface_added=true`, and cached FoVer-style
++verifier-scoring candidates are reachable
++**When** the Exp 3811 smoke scores the fixed candidate sample through verify
++API, CLI/batch, and HTTP/REST with abstention mode enabled
++**Then** every candidate has the same `confident` or `abstain` verdict across
++all three surfaces, the certified coverage, risk, delta, and threshold metadata
++match within float tolerance, at least one confident and one abstain candidate
++are exercised, and any mismatch is recorded in the artifact as drift.
++
++**Spec traces:** REQ-SPOE-3811
++
+ ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
+ 
+ `SparseIsingEBM` MUST implement a K-regular sparse connectivity graph where each spin
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a6fba309e9..9f77c80db0 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 147,
+   "code_violations": 0,
+-  "experiments_checked": 2912,
++  "experiments_checked": 2913,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/abstention_cross_surface_parity_smoke_3811.py b/python/carnot/reporting/abstention_cross_surface_parity_smoke_3811.py
+new file mode 100644
+index 0000000000..b501c91790
+--- /dev/null
++++ b/python/carnot/reporting/abstention_cross_surface_parity_smoke_3811.py
+@@ -0,0 +1,754 @@
++"""Exp 3811 abstention cross-surface parity smoke.
++
++This is a wiring smoke, not an accuracy claim.  It compares the certified
++Exp 3771 abstention operating point across verify API, CLI/batch, and HTTP/REST
++surfaces using cached FoVer-style verifier-scoring candidates.
++
++Spec: REQ-SPOE-3811, SCENARIO-SPOE-3811.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Mapping, Sequence
++import hashlib
++import http.client
++import json
++from pathlib import Path
++import subprocess
++import tempfile
++import threading
++import time
++from typing import Any
++
++from carnot.pipeline import abstention_http_rest as rest
++from carnot.pipeline import certified_abstention_surface as abstention
++from carnot.pipeline import second_pair_detector as spd
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_REL_PATH = Path("results/experiment_3811_abstention_cross_surface_parity_smoke.json")
++CERTIFIED_THRESHOLD_REL_PATH = Path(
++    "results/experiment_3771_certified_abstention_operating_point.json"
++)
++EXP3779_REL_PATH = Path("results/experiment_3779_abstention_operating_point_product_wiring.json")
++EXP3789_REL_PATH = Path("results/experiment_3789_abstention_cli_batch_surface.json")
++EXP3810_REL_PATH = Path("results/experiment_3810_abstention_http_rest_surface_v2.json")
++FOVER_CORPUS_REL_PATH = Path("data/fover_corpus_v4.json")
++RANDOM_SEED = 3811
++SURFACES = ("verify_api", "cli", "http_rest")
++FLOAT_TOLERANCE = 1e-6
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates "
++    "(principle: scores cached triples across three surfaces, no live LLM)."
++)
++SCORING_VERIFIERS = (
++    "controlled_invariance_executor_v2",
++    "executable_monitor_runtime_adapter",
++    "ast_structure_verifier",
++    "code_structural_dependency_verifier",
++)
++COMPLETE_VERDICT_TEMPLATE = (
++    "complete: abstention_cross_surface_parity_smoke_all_surfaces_agree_"
++    "{agree}_n{n}_verify_api_cli_http_rest_no_surface_drift"
++)
++FIXED_CONFIDENT_EXAMPLE_IDS = (
++    "math-156-0",
++    "math-159-1",
++    "math-160-2",
++    "math-161-3",
++    "math-164-4",
++)
++FIXED_ABSTAIN_EXAMPLE_IDS = (
++    "math-math_v3_1422-200",
++    "math-math_85-29",
++    "math-math_192-51",
++    "math-math_432-83",
++    "math-math_v3_792-133",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "surfaces_compared",
++    "all_surfaces_agree",
++    "n_candidates_compared",
++    "mismatches",
++    "certified_threshold_used",
++    "tests_assert_real_behavior",
++    "cited_upstream_artifacts",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal prefix; the parity outcome; blocked_<resource> if a precondition failed."
++    ),
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates "
++        "(principle: scores cached triples across three surfaces, no live LLM)."
++    ),
++    "surfaces_compared": (
++        "BARE list -- the three surfaces compared (verify_api, cli, http_rest); "
++        "records the Rule-4 coverage."
++    ),
++    "all_surfaces_agree": (
++        "BARE bool -- every candidate's verdict + metadata matched across all "
++        "three surfaces."
++    ),
++    "n_candidates_compared": (
++        "BARE int, >=10 -- sample-size hygiene spanning confident + abstain."
++    ),
++    "mismatches": (
++        "BARE list -- any per-candidate cross-surface mismatch; a drift finding "
++        "surfaced honestly."
++    ),
++    "certified_threshold_used": (
++        "The shared threshold from Exp 3771 that all three surfaces loaded."
++    ),
++    "tests_assert_real_behavior": (
++        "BARE bool, true -- shipped tests assert the real parity behavior."
++    ),
++    "cited_upstream_artifacts": (
++        "Provenance for the three surfaces + the threshold."
++    ),
++    "model_specs": (
++        "Names the 4 verifiers + the certified-threshold source -- honest substrate."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++def select_cached_fover_candidates(root: Path | str, n_candidates: int = 10) -> list[JsonDict]:
++    """Return a fixed cached FoVer candidate sample spanning both verdicts."""
++
++    root_path = Path(root)
++    examples, status = spd.load_cached_labeled_examples(
++        root_path,
++        use_balanced_code_corpus=True,
++    )
++    math_status = status.get("math", {})
++    corpus_path = root_path / FOVER_CORPUS_REL_PATH
++    if math_status.get("status") != "loaded" or not corpus_path.exists():
++        raise FileNotFoundError(str(corpus_path.resolve()))
++
++    by_id = {example.example_id: example for example in examples if example.domain == "math"}
++    wanted = list(FIXED_CONFIDENT_EXAMPLE_IDS + FIXED_ABSTAIN_EXAMPLE_IDS)
++    if n_candidates > len(wanted):
++        extras = [
++            example_id
++            for example_id in sorted(by_id)
++            if example_id not in set(wanted)
++        ]
++        wanted.extend(extras[: n_candidates - len(wanted)])
++    wanted = wanted[:n_candidates]
++
++    missing = [example_id for example_id in wanted if example_id not in by_id]
++    if missing:
++        raise FileNotFoundError(f"cached FoVer examples missing: {missing}")
++
++    candidates: list[JsonDict] = []
++    abstain_ids = set(FIXED_ABSTAIN_EXAMPLE_IDS)
++    for example_id in wanted:
++        example = by_id[example_id]
++        candidates.append(
++            {
++                "candidate_id": example.example_id,
++                "domain": "math",
++                "text": f"cached FoVer verifier-scoring candidate {example.example_id}",
++                "confidence_error": round(float(example.confidence_error), 6),
++                "ensemble_energy": round(float(example.ensemble_energy), 6),
++                "source_corpus_path": str(corpus_path.resolve()),
++                "expected_verdict": "abstain" if example_id in abstain_ids else "confident",
++            }
++        )
++    return candidates
++
++
++def compare_surfaces(
++    root: Path | str,
++    candidates: Sequence[Mapping[str, Any]],
++    *,
++    executable: str,
++    certified_threshold_path: Path | str,
++) -> JsonDict:
++    """Call verify API, CLI, and HTTP surfaces and compare normalized rows."""
++
++    root_path = Path(root)
++    threshold_path = Path(certified_threshold_path).resolve()
++    surface_rows = {
++        "verify_api": normalize_verify_api_response(
++            run_verify_api_surface(root_path, candidates)
++        ),
++        "cli": normalize_cli_response(run_cli_surface(root_path, candidates, executable)),
++        "http_rest": normalize_http_response(
++            run_http_surface(root_path, candidates, threshold_path)
++        ),
++    }
++    return compare_normalized_surface_rows(surface_rows)
++
++
++def run_verify_api_surface(
++    root: Path,
++    candidates: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    """Score candidates through the in-process verify API surface."""
++
++    return spd.score_candidates(
++        [dict(candidate) for candidate in candidates],
++        root=root,
++        default_domain="math",
++        abstention_mode=True,
++    )
++
++
++def run_cli_surface(
++    root: Path,
++    candidates: Sequence[Mapping[str, Any]],
++    executable: str,
++) -> JsonDict:
++    """Score candidates through the packaged CLI batch surface."""
++
++    with tempfile.TemporaryDirectory(prefix="carnot-exp3811-") as tmp:
++        candidates_file = Path(tmp) / "candidates.json"
++        candidates_file.write_text(
++            json.dumps([dict(candidate) for candidate in candidates], sort_keys=True),
++            encoding="utf-8",
++        )
++        completed = subprocess.run(
++            [
++                executable,
++                "-m",
++                "carnot.cli",
++                "verify-batch",
++                "--candidates-file",
++                str(candidates_file),
++                "--domain",
++                "math",
++                "--abstention-mode",
++            ],
++            cwd=root,
++            text=True,
++            stdout=subprocess.PIPE,
++            stderr=subprocess.PIPE,
++            check=False,
++        )
++    if completed.returncode != 0:
++        raise RuntimeError(
++            f"CLI surface failed rc={completed.returncode}: {completed.stderr.strip()}"
++        )
++    return json.loads(completed.stdout)
++
++
++def run_http_surface(
++    root: Path,
++    candidates: Sequence[Mapping[str, Any]],
++    threshold_path: Path,
++) -> JsonDict:
++    """Score candidates through the local HTTP/REST endpoint."""
++
++    server = rest.make_server(
++        ("127.0.0.1", 0),
++        root=root,
++        certified_threshold_path=threshold_path,
++    )
++    thread = threading.Thread(target=server.serve_forever, daemon=True)
++    thread.start()
++    try:
++        host, port = server.server_address
++        status, payload = _post_json(
++            str(host),
++            int(port),
++            {
++                "domain": "math",
++                "abstention_mode": True,
++                "candidates": [dict(candidate) for candidate in candidates],
++            },
++        )
++    finally:
++        server.shutdown()
++        thread.join(timeout=2.0)
++        server.server_close()
++    if status != 200:
++        raise RuntimeError(f"HTTP surface failed status={status}: {payload}")
++    return payload
++
++
++def normalize_verify_api_response(response: Mapping[str, Any]) -> dict[str, JsonDict]:
++    """Normalize verify API rows to the parity fields."""
++
++    return {
++        str(row["candidate_id"]): _normalize_product_row(row)
++        for row in response.get("scores", [])
++        if isinstance(row, Mapping)
++    }
++
++
++def normalize_cli_response(response: Mapping[str, Any]) -> dict[str, JsonDict]:
++    """Normalize CLI batch rows to the parity fields."""
++
++    return normalize_verify_api_response(response)
++
++
++def normalize_http_response(response: Mapping[str, Any]) -> dict[str, JsonDict]:
++    """Normalize HTTP/REST rows to the parity fields."""
++
++    normalized: dict[str, JsonDict] = {}
++    for row in response.get("scores", []):
++        if not isinstance(row, Mapping):
++            continue
++        candidate_id = str(row["candidate_id"])
++        normalized[candidate_id] = {
++            "candidate_id": candidate_id,
++            "verdict": str(row["verdict"]),
++            "coverage": _float(row["coverage"]),
++            "risk": _float(row["risk"]),
++            "delta": _float(row["delta"]),
++            "threshold": _float(row["threshold"]),
++        }
++    return normalized
++
++
++def compare_normalized_surface_rows(
++    surface_rows: Mapping[str, Mapping[str, Mapping[str, Any]]],
++) -> JsonDict:
++    """Compare normalized rows and return explicit mismatch records."""
++
++    candidate_ids = sorted(
++        {
++            candidate_id
++            for rows in surface_rows.values()
++            for candidate_id in rows
++        }
++    )
++    mismatches: list[JsonDict] = []
++    for candidate_id in candidate_ids:
++        for surface in SURFACES:
++            if candidate_id not in surface_rows.get(surface, {}):
++                mismatches.append(
++                    {
++                        "candidate_id": candidate_id,
++                        "field": "presence",
++                        "values_by_surface": {
++                            item: candidate_id in rows
++                            for item, rows in surface_rows.items()
++                        },
++                    }
++                )
++                break
++        else:
++            for field in ("verdict", "coverage", "risk", "delta", "threshold"):
++                values = {
++                    surface: surface_rows[surface][candidate_id][field]
++                    for surface in SURFACES
++                }
++                if not _values_match(field, values):
++                    mismatches.append(
++                        {
++                            "candidate_id": candidate_id,
++                            "field": field,
++                            "values_by_surface": values,
++                        }
++                    )
++
++    canonical_rows = [
++        dict(surface_rows["verify_api"][candidate_id])
++        for candidate_id in candidate_ids
++        if candidate_id in surface_rows.get("verify_api", {})
++    ]
++    return {
++        "surfaces_compared": list(SURFACES),
++        "all_surfaces_agree": not mismatches,
++        "n_candidates_compared": len(candidate_ids),
++        "mismatches": mismatches,
++        "canonical_rows": canonical_rows,
++        "surface_rows": {
++            surface: dict(rows)
++            for surface, rows in surface_rows.items()
++        },
++    }
++
++
++def check_preconditions(
++    root: Path | str,
++    *,
++    executable: str,
++    certified_threshold_path: Path | str,
++    exp3779_path: Path | str,
++    exp3789_path: Path | str,
++    exp3810_path: Path | str,
++    fover_corpus_path: Path | str,
++) -> tuple[JsonDict, abstention.CertifiedAbstentionConfig | None]:
++    """Check resources required before claiming cross-surface parity."""
++
++    root_path = Path(root)
++    executable_path = Path(executable)
++    threshold_path = Path(certified_threshold_path).resolve()
++    fover_path = Path(fover_corpus_path).resolve()
++    preconditions: JsonDict = {
++        "interpreter": {
++            "available": (
++                executable_path.exists()
++                and executable_path.name == "python"
++                and ".venv" in executable_path.parts
++            ),
++            "value": str(executable_path),
++            "expected_suffix": ".venv/bin/python",
++        }
++    }
++    if preconditions["interpreter"]["available"]:
++        probe = subprocess.run(
++            [
++                str(executable_path),
++                "-c",
++                (
++                    "import carnot; "
++                    "from carnot.pipeline.second_pair_detector import score_candidates; "
++                    "from carnot.cli import cmd_verify_batch; "
++                    "from carnot.pipeline.abstention_http_rest "
++                    "import score_candidates_http_payload; "
++                    "print('ok')"
++                ),
++            ],
++            cwd=root_path,
++            text=True,
++            stdout=subprocess.PIPE,
++            stderr=subprocess.PIPE,
++            check=False,
++        )
++        preconditions["package_import_and_surfaces"] = {
++            "available": probe.returncode == 0,
++            "returncode": probe.returncode,
++            "stderr": probe.stderr.strip(),
++        }
++    else:
++        preconditions["package_import_and_surfaces"] = {
++            "available": False,
++            "detail": "interpreter unavailable",
++        }
++
++    config: abstention.CertifiedAbstentionConfig | None
++    try:
++        config = abstention.load_certified_abstention_config(threshold_path)
++    except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
++        preconditions["certified_threshold"] = {
++            "available": False,
++            "path": str(threshold_path),
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++        config = None
++    else:
++        preconditions["certified_threshold"] = {
++            "available": True,
++            "path": config.threshold_source,
++            "selected_threshold": config.threshold,
++        }
++
++    for name, path_value in (
++        ("upstream_exp3779_verify_api", exp3779_path),
++        ("upstream_exp3789_cli", exp3789_path),
++    ):
++        path = Path(path_value).resolve()
++        preconditions[name] = {"available": path.exists(), "path": str(path)}
++
++    exp3810 = Path(exp3810_path).resolve()
++    try:
++        exp3810_payload = json.loads(exp3810.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError) as exc:
++        preconditions["http_rest_surface"] = {
++            "available": False,
++            "path": str(exp3810),
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++    else:
++        preconditions["http_rest_surface"] = {
++            "available": exp3810_payload.get("http_rest_surface_added") is True,
++            "path": str(exp3810),
++            "http_rest_surface_added": exp3810_payload.get("http_rest_surface_added"),
++        }
++
++    if fover_path.exists():
++        try:
++            rows = json.loads(fover_path.read_text(encoding="utf-8"))
++        except json.JSONDecodeError as exc:
++            preconditions["fover_corpus"] = {
++                "available": False,
++                "path": str(fover_path),
++                "detail": f"JSONDecodeError: {exc}",
++            }
++        else:
++            preconditions["fover_corpus"] = {
++                "available": isinstance(rows, list) and bool(rows),
++                "path": str(fover_path),
++                "n_examples": len(rows) if isinstance(rows, list) else 0,
++            }
++    else:
++        preconditions["fover_corpus"] = {
++            "available": False,
++            "path": str(fover_path),
++        }
++    return preconditions, config
++
++
++def first_blocker(preconditions: Mapping[str, Any]) -> str | None:
++    """Return the first blocked_<resource> verdict implied by preconditions."""
++
++    for name, result in preconditions.items():
++        if not isinstance(result, Mapping) or result.get("available"):
++            continue
++        if name == "certified_threshold":
++            return "blocked_no_certified_threshold"
++        if name == "fover_corpus":
++            return "blocked_fover_corpus_missing"
++        if name == "http_rest_surface":
++            return "blocked_http_surface_not_landed"
++        if name == "package_import_and_surfaces":
++            return "blocked_surface_import"
++        if name.startswith("upstream_"):
++            return "blocked_upstream_artifact_missing"
++        return f"blocked_{name}"
++    return None
++
++
++def build_artifact(
++    *,
++    verdict: str,
++    duration_s: float,
++    threshold_config: abstention.CertifiedAbstentionConfig | None,
++    preconditions: Mapping[str, Any],
++    comparison: Mapping[str, Any] | None,
++    candidates: Sequence[Mapping[str, Any]],
++    root: Path,
++    output_path: Path,
++    threshold_path: Path,
++    exp3779_path: Path,
++    exp3789_path: Path,
++    exp3810_path: Path,
++    fover_corpus_path: Path,
++) -> JsonDict:
++    """Assemble the Exp 3811 terminal artifact."""
++
++    comparison_payload = dict(comparison or {})
++    all_agree = bool(comparison_payload.get("all_surfaces_agree", False))
++    n_compared = int(comparison_payload.get("n_candidates_compared", 0))
++    mismatches = list(comparison_payload.get("mismatches", []))
++    artifact: JsonDict = {
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "surfaces_compared": list(SURFACES),
++        "all_surfaces_agree": all_agree,
++        "n_candidates_compared": n_compared,
++        "mismatches": mismatches,
++        "certified_threshold_used": (
++            None if threshold_config is None else round(float(threshold_config.threshold), 6)
++        ),
++        "tests_assert_real_behavior": True,
++        "cited_upstream_artifacts": {
++            "verify_api": str(exp3779_path.resolve()),
++            "cli": str(exp3789_path.resolve()),
++            "http_rest": str(exp3810_path.resolve()),
++            "certified_threshold": str(threshold_path.resolve()),
++        },
++        "model_specs": model_specs(threshold_path),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": round(max(0.0, duration_s), 6),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": dict(preconditions),
++        "methodology": {
++            "label": "WIRING smoke, not an accuracy claim",
++            "candidate_source": str(fover_corpus_path.resolve()),
++            "random_seed": RANDOM_SEED,
++            "live_llm_inference": False,
++            "selection": "fixed cached FoVer verifier-scoring candidates spanning verdicts",
++        },
++        "candidate_sample": [
++            {
++                "candidate_id": candidate.get("candidate_id"),
++                "source_corpus_path": candidate.get("source_corpus_path"),
++                "expected_verdict": candidate.get("expected_verdict"),
++            }
++            for candidate in candidates
++        ],
++        "parity_rows": list(comparison_payload.get("canonical_rows", [])),
++        "surface_rows": dict(comparison_payload.get("surface_rows", {})),
++        "output_path": str(output_path.resolve()),
++        "scripts_research_conductor_modified": False,
++        "root": str(root.resolve()),
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    return artifact
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | None = None,
++    executable: str | None = None,
++    certified_threshold_path: Path | None = None,
++    exp3779_path: Path | None = None,
++    exp3789_path: Path | None = None,
++    exp3810_path: Path | None = None,
++    fover_corpus_path: Path | None = None,
++    n_candidates: int = 10,
++    candidate_selector: Callable[[Path, int], Sequence[Mapping[str, Any]]] = (
++        select_cached_fover_candidates
++    ),
++    surface_runner: Callable[..., Mapping[str, Any]] = compare_surfaces,
++) -> JsonDict:
++    """Run Exp 3811 and write its terminal artifact."""
++
++    start = time.perf_counter()
++    root_path = Path(root)
++    output = root_path / OUTPUT_REL_PATH if output_path is None else output_path
++    threshold_path = (
++        root_path / CERTIFIED_THRESHOLD_REL_PATH
++        if certified_threshold_path is None
++        else certified_threshold_path
++    ).resolve()
++    upstream_3779 = (
++        root_path / EXP3779_REL_PATH if exp3779_path is None else exp3779_path
++    ).resolve()
++    upstream_3789 = (
++        root_path / EXP3789_REL_PATH if exp3789_path is None else exp3789_path
++    ).resolve()
++    upstream_3810 = (
++        root_path / EXP3810_REL_PATH if exp3810_path is None else exp3810_path
++    ).resolve()
++    fover_path = (
++        root_path / FOVER_CORPUS_REL_PATH
++        if fover_corpus_path is None
++        else fover_corpus_path
++    ).resolve()
++    exe = executable or str(root_path / ".venv/bin/python")
++
++    preconditions, threshold_config = check_preconditions(
++        root_path,
++        executable=exe,
++        certified_threshold_path=threshold_path,
++        exp3779_path=upstream_3779,
++        exp3789_path=upstream_3789,
++        exp3810_path=upstream_3810,
++        fover_corpus_path=fover_path,
++    )
++    blocker = first_blocker(preconditions)
++    candidates: Sequence[Mapping[str, Any]] = []
++    comparison: Mapping[str, Any] | None = None
++    if blocker is None:
++        candidates = list(candidate_selector(root_path, n_candidates))
++        comparison = dict(
++            surface_runner(
++                root_path,
++                candidates,
++                executable=exe,
++                certified_threshold_path=threshold_path,
++            )
++        )
++        verdict = COMPLETE_VERDICT_TEMPLATE.format(
++            agree=str(bool(comparison.get("all_surfaces_agree"))).lower(),
++            n=int(comparison.get("n_candidates_compared", len(candidates))),
++        )
++    else:
++        verdict = blocker
++
++    artifact = build_artifact(
++        verdict=verdict,
++        duration_s=time.perf_counter() - start,
++        threshold_config=threshold_config,
++        preconditions=preconditions,
++        comparison=comparison,
++        candidates=candidates,
++        root=root_path,
++        output_path=output,
++        threshold_path=threshold_path,
++        exp3779_path=upstream_3779,
++        exp3789_path=upstream_3789,
++        exp3810_path=upstream_3810,
++        fover_corpus_path=fover_path,
++    )
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def model_specs(threshold_path: Path) -> JsonDict:
++    """Return verifier and threshold provenance for the parity smoke."""
++
++    return {
++        "verifiers": list(SCORING_VERIFIERS),
++        "certified_threshold_source": str(threshold_path.resolve()),
++        "surfaces": list(SURFACES),
++        "verify_api_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++        "cli_entrypoint": "python -m carnot.cli verify-batch",
++        "http_entrypoint": f"POST {rest.POST_PATH}",
++        "live_llm_inference": False,
++        "wiring_smoke_not_accuracy_claim": True,
++    }
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash deterministic artifact fields for drift detection."""
++
++    payload = {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "surfaces_compared": artifact.get("surfaces_compared"),
++        "all_surfaces_agree": artifact.get("all_surfaces_agree"),
++        "n_candidates_compared": artifact.get("n_candidates_compared"),
++        "mismatches": artifact.get("mismatches"),
++        "certified_threshold_used": artifact.get("certified_threshold_used"),
++        "candidate_sample": artifact.get("candidate_sample"),
++        "parity_rows": artifact.get("parity_rows"),
++        "random_seed": RANDOM_SEED,
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()[:16]
++
++
++def _normalize_product_row(row: Mapping[str, Any]) -> JsonDict:
++    cert = row.get("certified_abstention")
++    if not isinstance(cert, Mapping):
++        raise ValueError(f"missing certified_abstention metadata for {row.get('candidate_id')}")
++    route_to_review = bool(row.get("route_to_review", row.get("abstained", False)))
++    candidate_id = str(row["candidate_id"])
++    return {
++        "candidate_id": candidate_id,
++        "verdict": "abstain" if route_to_review else "confident",
++        "coverage": _float(cert["coverage"]),
++        "risk": _float(cert["certified_risk_bound"]),
++        "delta": _float(cert["delta"]),
++        "threshold": _float(cert["threshold"]),
++    }
++
++
++def _values_match(field: str, values: Mapping[str, Any]) -> bool:
++    if field == "verdict":
++        return len(set(values.values())) == 1
++    numeric = [float(value) for value in values.values()]
++    return max(numeric) - min(numeric) <= FLOAT_TOLERANCE
++
++
++def _post_json(host: str, port: int, payload: object) -> tuple[int, JsonDict]:
++    conn = http.client.HTTPConnection(host, port, timeout=10.0)
++    try:
++        conn.request(
++            "POST",
++            rest.POST_PATH,
++            body=json.dumps(payload).encode("utf-8"),
++            headers={"Content-Type": "application/json"},
++        )
++        response = conn.getresponse()
++        data = response.read().decode("utf-8")
++        return response.status, json.loads(data) if data else {}
++    finally:
++        conn.close()
++
++
++def _float(value: Any) -> float:
++    return round(float(value), 6)
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 4fb3c53ca1..70c660ed02 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T16:22:48.798483+00:00",
+-  "finished_at": "2026-06-04T16:22:48.821666+00:00",
+-  "duration_s": 0.023,
++  "started_at": "2026-06-04T16:43:48.076998+00:00",
++  "finished_at": "2026-06-04T16:43:48.101253+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 26c384307e..fff21d9309 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T16:22:48Z",
++  "run_date": "2026-06-04T16:43:48Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 0afb21d545..5404c2b392 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T16:22:49Z",
+-  "finished_at": "2026-06-04T16:22:49Z",
++  "started_at": "2026-06-04T16:43:49Z",
++  "finished_at": "2026-06-04T16:43:49Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 8e66df3ded..b2273cf2cb 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T16:22:49Z",
++  "run_date": "2026-06-04T16:43:49Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index b6d8ba4cc0..b51236ad64 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-04T16:22:49Z",
++  "run_date": "2026-06-04T16:43:49Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 49adfa6c85..61129e6fb9 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T16:21:07.177102Z",
+-  "duration_s": 0.007317304611206055,
++  "run_date": "2026-06-04T16:42:08.577885Z",
++  "duration_s": 0.007228374481201172,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "5ef03ad34089b9b927b638099815efcc6c52d82c4b31db49b1d77fc8613cd44d",
++  "reproducibility_checksum": "36a708f1a23d2ae2f3a06375f175f350e3b33394fd44a232941c6157f10488cc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3c470c863ce41d0245191e5aef77f15f9d4d34e1"
++    "adversarial_verify_version": "c08edffb87fcfe9703187f4dd6d05a1f15187053"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 6dfe181a69..082d0cd04d 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T16:21:07.186672Z",
+-  "duration_s": 0.007386684417724609,
++  "run_date": "2026-06-04T16:42:08.587391Z",
++  "duration_s": 0.007435798645019531,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "cae8030e4c4f20d5baa4ca2be7b0e631a18ec12c48b7dc6d9c7b55914b0719a6",
++  "reproducibility_checksum": "7efd65c5b82438375323106ccc277ddee76289659312d04c593bd5080aade28f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3c470c863ce41d0245191e5aef77f15f9d4d34e1"
++    "adversarial_verify_version": "c08edffb87fcfe9703187f4dd6d05a1f15187053"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index f761bd1dfc..08fed66ef8 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.110004425048828,
++  "efficiency_gains_ms": 2.1123886108398438,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 19d13143be..e5ef5b1514 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27677440643310547,
++  "duration_s": 0.3483102321624756,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 0eeab3b55b..bd1ba62614 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0020699501037597656,
++  "duration_s": 0.0008831024169921875,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 2e6eb9c684..571aeb4a61 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.2400988857261837e-05,
++  "duration_s": 3.2099997042678297e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index ecf2d7a7e6..c8bc960561 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 6.20988430455327e-07,
++  "duration_s": 5.709880497306585e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 547db1afe9..a67447150f 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.413459777832031e-05,
++  "duration_s": 7.486343383789062e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3811_abstention_cross_surface_parity_smoke.json b/results/experiment_3811_abstention_cross_surface_parity_smoke.json
+new file mode 100644
+index 0000000000..899836ebf6
+--- /dev/null
++++ b/results/experiment_3811_abstention_cross_surface_parity_smoke.json
+@@ -0,0 +1,484 @@
++{
++  "all_surfaces_agree": true,
++  "candidate_sample": [
++    {
++      "candidate_id": "math-156-0",
++      "expected_verdict": "confident",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-159-1",
++      "expected_verdict": "confident",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-160-2",
++      "expected_verdict": "confident",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-161-3",
++      "expected_verdict": "confident",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-164-4",
++      "expected_verdict": "confident",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-math_v3_1422-200",
++      "expected_verdict": "abstain",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-math_85-29",
++      "expected_verdict": "abstain",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-math_192-51",
++      "expected_verdict": "abstain",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-math_432-83",
++      "expected_verdict": "abstain",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    {
++      "candidate_id": "math-math_v3_792-133",
++      "expected_verdict": "abstain",
++      "source_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    }
++  ],
++  "certified_threshold_used": 0.733216,
++  "cited_upstream_artifacts": {
++    "certified_threshold": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++    "cli": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3789_abstention_cli_batch_surface.json",
++    "http_rest": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json",
++    "verify_api": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3779_abstention_operating_point_product_wiring.json"
++  },
++  "duration_s": 15.484236,
++  "field_principles": {
++    "all_surfaces_agree": "BARE bool -- every candidate's verdict + metadata matched across all three surfaces.",
++    "certified_threshold_used": "The shared threshold from Exp 3771 that all three surfaces loaded.",
++    "cited_upstream_artifacts": "Provenance for the three surfaces + the threshold.",
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the parity outcome; blocked_<resource> if a precondition failed.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples across three surfaces, no live LLM).",
++    "mismatches": "BARE list -- any per-candidate cross-surface mismatch; a drift finding surfaced honestly.",
++    "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
++    "n_candidates_compared": "BARE int, >=10 -- sample-size hygiene spanning confident + abstain.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "surfaces_compared": "BARE list -- the three surfaces compared (verify_api, cli, http_rest); records the Rule-4 coverage.",
++    "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real parity behavior."
++  },
++  "honest_verdict": "complete: abstention_cross_surface_parity_smoke_all_surfaces_agree_true_n10_verify_api_cli_http_rest_no_surface_drift",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples across three surfaces, no live LLM).",
++  "methodology": {
++    "candidate_source": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
++    "label": "WIRING smoke, not an accuracy claim",
++    "live_llm_inference": false,
++    "random_seed": 3811,
++    "selection": "fixed cached FoVer verifier-scoring candidates spanning verdicts"
++  },
++  "mismatches": [],
++  "model_specs": {
++    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++    "cli_entrypoint": "python -m carnot.cli verify-batch",
++    "http_entrypoint": "POST /v1/score-candidates",
++    "live_llm_inference": false,
++    "surfaces": [
++      "verify_api",
++      "cli",
++      "http_rest"
++    ],
++    "verifiers": [
++      "controlled_invariance_executor_v2",
++      "executable_monitor_runtime_adapter",
++      "ast_structure_verifier",
++      "code_structural_dependency_verifier"
++    ],
++    "verify_api_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++    "wiring_smoke_not_accuracy_claim": true
++  },
++  "n_candidates_compared": 10,
++  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3811_abstention_cross_surface_parity_smoke.json",
++  "parity_rows": [
++    {
++      "candidate_id": "math-156-0",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "confident"
++    },
++    {
++      "candidate_id": "math-159-1",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "confident"
++    },
++    {
++      "candidate_id": "math-160-2",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "confident"
++    },
++    {
++      "candidate_id": "math-161-3",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "confident"
++    },
++    {
++      "candidate_id": "math-164-4",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "confident"
++    },
++    {
++      "candidate_id": "math-math_192-51",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "abstain"
++    },
++    {
++      "candidate_id": "math-math_432-83",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "abstain"
++    },
++    {
++      "candidate_id": "math-math_85-29",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "abstain"
++    },
++    {
++      "candidate_id": "math-math_v3_1422-200",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "abstain"
++    },
++    {
++      "candidate_id": "math-math_v3_792-133",
++      "coverage": 0.998218,
++      "delta": 0.05,
++      "risk": 0.037646,
++      "threshold": 0.733216,
++      "verdict": "abstain"
++    }
++  ],
++  "preconditions_checked": {
++    "certified_threshold": {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++      "selected_threshold": 0.733216
++    },
++    "fover_corpus": {
++      "available": true,
++      "n_examples": 6548,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
++    },
++    "http_rest_surface": {
++      "available": true,
++      "http_rest_surface_added": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json"
++    },
++    "interpreter": {
++      "available": true,
++      "expected_suffix": ".venv/bin/python",
++      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++    },
++    "package_import_and_surfaces": {
++      "available": true,
++      "returncode": 0,
++      "stderr": ""
++    },
++    "upstream_exp3779_verify_api": {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3779_abstention_operating_point_product_wiring.json"
++    },
++    "upstream_exp3789_cli": {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3789_abstention_cli_batch_surface.json"
++    }
++  },
++  "random_seed": 3811,
++  "reproducibility_checksum": "d89e242ea2c00e86",
++  "root": "/home/ianblenke/github.com/ianblenke/carnot",
++  "scripts_research_conductor_modified": false,
++  "surface_rows": {
++    "cli": {
++      "math-156-0": {
++        "candidate_id": "math-156-0",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-159-1": {
++        "candidate_id": "math-159-1",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-160-2": {
++        "candidate_id": "math-160-2",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-161-3": {
++        "candidate_id": "math-161-3",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-164-4": {
++        "candidate_id": "math-164-4",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-math_192-51": {
++        "candidate_id": "math-math_192-51",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_432-83": {
++        "candidate_id": "math-math_432-83",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_85-29": {
++        "candidate_id": "math-math_85-29",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_1422-200": {
++        "candidate_id": "math-math_v3_1422-200",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_792-133": {
++        "candidate_id": "math-math_v3_792-133",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      }
++    },
++    "http_rest": {
++      "math-156-0": {
++        "candidate_id": "math-156-0",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-159-1": {
++        "candidate_id": "math-159-1",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-160-2": {
++        "candidate_id": "math-160-2",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-161-3": {
++        "candidate_id": "math-161-3",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-164-4": {
++        "candidate_id": "math-164-4",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-math_192-51": {
++        "candidate_id": "math-math_192-51",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_432-83": {
++        "candidate_id": "math-math_432-83",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_85-29": {
++        "candidate_id": "math-math_85-29",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_1422-200": {
++        "candidate_id": "math-math_v3_1422-200",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_792-133": {
++        "candidate_id": "math-math_v3_792-133",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      }
++    },
++    "verify_api": {
++      "math-156-0": {
++        "candidate_id": "math-156-0",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-159-1": {
++        "candidate_id": "math-159-1",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-160-2": {
++        "candidate_id": "math-160-2",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-161-3": {
++        "candidate_id": "math-161-3",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-164-4": {
++        "candidate_id": "math-164-4",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "confident"
++      },
++      "math-math_192-51": {
++        "candidate_id": "math-math_192-51",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_432-83": {
++        "candidate_id": "math-math_432-83",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_85-29": {
++        "candidate_id": "math-math_85-29",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_1422-200": {
++        "candidate_id": "math-math_v3_1422-200",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      },
++      "math-math_v3_792-133": {
++        "candidate_id": "math-math_v3_792-133",
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "risk": 0.037646,
++        "threshold": 0.733216,
++        "verdict": "abstain"
++      }
++    }
++  },
++  "surfaces_compared": [
++    "verify_api",
++    "cli",
++    "http_rest"
++  ],
++  "tests_assert_real_behavior": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 6b26b99c9d..d38790061c 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T16:20:58Z",
+-  "finished_at": "2026-06-04T16:20:58Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-04T16:44:05Z",
++  "finished_at": "2026-06-04T16:44:05Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 8d0b6ab3d0..4a52042ed3 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T16:20:58Z",
+-  "finished_at": "2026-06-04T16:20:58Z",
++  "started_at": "2026-06-04T16:44:05Z",
++  "finished_at": "2026-06-04T16:44:05Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 0b8f59bb80..8f71f95920 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T16:20:58Z",
+-  "finished_at": "2026-06-04T16:20:58Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-04T16:44:05Z",
++  "finished_at": "2026-06-04T16:44:05Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3811_abstention_cross_surface_parity_smoke.py b/scripts/experiment_3811_abstention_cross_surface_parity_smoke.py
+new file mode 100644
+index 0000000000..394e96b7b8
+--- /dev/null
++++ b/scripts/experiment_3811_abstention_cross_surface_parity_smoke.py
+@@ -0,0 +1,35 @@
++#!/usr/bin/env python3
++"""Run Exp 3811 abstention cross-surface parity smoke.
++
++Spec: REQ-SPOE-3811, SCENARIO-SPOE-3811.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++
++from carnot.reporting import abstention_cross_surface_parity_smoke_3811 as exp3811
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", type=Path, default=None)
++    parser.add_argument("--executable", default=None)
++    args = parser.parse_args(argv)
++
++    artifact = exp3811.run(
++        REPO_ROOT,
++        output_path=args.output,
++        executable=args.executable,
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0 if artifact["honest_verdict"].startswith("complete:") else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3811_abstention_cross_surface_parity_smoke.py b/tests/python/test_experiment_3811_abstention_cross_surface_parity_smoke.py
+new file mode 100644
+index 0000000000..d7b75c5b59
+--- /dev/null
++++ b/tests/python/test_experiment_3811_abstention_cross_surface_parity_smoke.py
+@@ -0,0 +1,383 @@
++"""Tests for Exp 3811 abstention cross-surface parity smoke.
++
++Spec: REQ-SPOE-3811, SCENARIO-SPOE-3811.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++from pathlib import Path
++from types import ModuleType
++
++import pytest
++
++from carnot.reporting import abstention_cross_surface_parity_smoke_3811 as exp3811
++
++
++ROOT = Path(__file__).resolve().parents[2]
++VENV_PYTHON = ROOT / ".venv/bin/python"
++EXP3771_PATH = ROOT / "results/experiment_3771_certified_abstention_operating_point.json"
++SCRIPT_PATH = ROOT / "scripts/experiment_3811_abstention_cross_surface_parity_smoke.py"
++
++
++def _load_script() -> ModuleType:
++    spec = importlib.util.spec_from_file_location("experiment_3811", SCRIPT_PATH)
++    assert spec is not None
++    assert spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def test_scenario_spoe_3811_real_surfaces_agree_on_confident_and_abstain() -> None:
++    """SCENARIO-SPOE-3811: real verify API, CLI, and HTTP surfaces match."""
++
++    candidates = exp3811.select_cached_fover_candidates(ROOT, n_candidates=10)
++    comparison = exp3811.compare_surfaces(
++        ROOT,
++        candidates,
++        executable=str(VENV_PYTHON),
++        certified_threshold_path=EXP3771_PATH,
++    )
++
++    assert comparison["surfaces_compared"] == ["verify_api", "cli", "http_rest"]
++    assert comparison["all_surfaces_agree"] is True
++    assert comparison["mismatches"] == []
++    assert comparison["n_candidates_compared"] == 10
++
++    verdicts = {row["verdict"] for row in comparison["canonical_rows"]}
++    assert {"confident", "abstain"}.issubset(verdicts)
++    for row in comparison["canonical_rows"]:
++        assert row["coverage"] == pytest.approx(0.998218)
++        assert row["risk"] == pytest.approx(0.037646)
++        assert row["delta"] == pytest.approx(0.05)
++        assert row["threshold"] == pytest.approx(0.733216)
++
++
++def test_req_spoe_3811_run_writes_required_complete_artifact(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3811: complete parity artifact records required bare fields."""
++
++    output_path = tmp_path / "results/experiment_3811.json"
++    candidates = [
++        {
++            "candidate_id": "cached-confident",
++            "domain": "math",
++            "text": "cached FoVer confident row",
++            "confidence_error": 0.0,
++            "ensemble_energy": 0.36,
++            "expected_verdict": "confident",
++        },
++        {
++            "candidate_id": "cached-abstain",
++            "domain": "math",
++            "text": "cached FoVer abstain row",
++            "confidence_error": 0.0,
++            "ensemble_energy": 0.65,
++            "expected_verdict": "abstain",
++        },
++    ]
++    comparison = {
++        "surfaces_compared": ["verify_api", "cli", "http_rest"],
++        "all_surfaces_agree": True,
++        "n_candidates_compared": len(candidates),
++        "mismatches": [],
++        "canonical_rows": [
++            {
++                "candidate_id": "cached-confident",
++                "verdict": "confident",
++                "coverage": 0.998218,
++                "risk": 0.037646,
++                "delta": 0.05,
++                "threshold": 0.733216,
++            },
++            {
++                "candidate_id": "cached-abstain",
++                "verdict": "abstain",
++                "coverage": 0.998218,
++                "risk": 0.037646,
++                "delta": 0.05,
++                "threshold": 0.733216,
++            },
++        ],
++        "surface_rows": {},
++    }
++
++    artifact = exp3811.run(
++        ROOT,
++        output_path=output_path,
++        executable=str(VENV_PYTHON),
++        candidate_selector=lambda _root, _n_candidates: candidates,
++        surface_runner=lambda _root, rows, **_kwargs: {
++            **comparison,
++            "n_candidates_compared": len(rows),
++        },
++    )
++
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
++    assert set(exp3811.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["honest_verdict"] == (
++        "complete: abstention_cross_surface_parity_smoke_all_surfaces_agree_"
++        "true_n2_verify_api_cli_http_rest_no_surface_drift"
++    )
++    assert artifact["inference_substrate"] == exp3811.INFERENCE_SUBSTRATE
++    assert artifact["surfaces_compared"] == ["verify_api", "cli", "http_rest"]
++    assert artifact["all_surfaces_agree"] is True
++    assert artifact["n_candidates_compared"] == 2
++    assert artifact["mismatches"] == []
++    assert artifact["certified_threshold_used"] == pytest.approx(0.733216)
++    assert artifact["tests_assert_real_behavior"] is True
++    assert artifact["model_specs"]["verifiers"] == list(exp3811.SCORING_VERIFIERS)
++    assert artifact["random_seed"] == exp3811.RANDOM_SEED
++    assert len(artifact["reproducibility_checksum"]) == 16
++
++
++def test_req_spoe_3811_script_main_routes_to_runner(
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-SPOE-3811: requested script entrypoint delegates to the runner."""
++
++    script = _load_script()
++    output_path = tmp_path / "artifact.json"
++    calls: dict[str, object] = {}
++
++    def fake_run(root: Path, *, output_path: Path | None, executable: str | None) -> dict[str, object]:
++        calls["root"] = root
++        calls["output_path"] = output_path
++        calls["executable"] = executable
++        return {
++            "honest_verdict": (
++                "complete: abstention_cross_surface_parity_smoke_all_surfaces_agree_"
++                "true_n10_verify_api_cli_http_rest_no_surface_drift"
++            )
++        }
++
++    monkeypatch.setattr(script.exp3811, "run", fake_run)
++
++    assert script.main(["--output", str(output_path), "--executable", "python"]) == 0
++    payload = json.loads(capsys.readouterr().out)
++    assert payload["honest_verdict"].startswith("complete:")
++    assert calls == {
++        "root": ROOT,
++        "output_path": output_path,
++        "executable": "python",
++    }
++
++
++def test_req_spoe_3811_http_gate_blocks_without_parity_claims(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3811: absent Exp 3810 HTTP landing blocks gracefully."""
++
++    output_path = tmp_path / "results/experiment_3811.json"
++    exp3810_path = tmp_path / "results/experiment_3810.json"
++    exp3810_path.parent.mkdir(parents=True, exist_ok=True)
++    exp3810_path.write_text(json.dumps({"http_rest_surface_added": False}), encoding="utf-8")
++
++    artifact = exp3811.run(
++        ROOT,
++        output_path=output_path,
++        executable=str(VENV_PYTHON),
++        exp3810_path=exp3810_path,
++        candidate_selector=lambda _root, _n_candidates: (_ for _ in ()).throw(
++            AssertionError("candidate selection must not run when HTTP gate blocks")
++        ),
++    )
++
++    assert artifact["honest_verdict"] == "blocked_http_surface_not_landed"
++    assert artifact["all_surfaces_agree"] is False
++    assert artifact["n_candidates_compared"] == 0
++    assert artifact["mismatches"] == []
++    assert artifact["surfaces_compared"] == ["verify_api", "cli", "http_rest"]
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_spoe_3811_mismatch_reports_drift_details() -> None:
++    """REQ-SPOE-3811: cross-surface mismatch is surfaced, not hidden."""
++
++    surface_rows = {
++        "verify_api": {
++            "row-1": {
++                "candidate_id": "row-1",
++                "verdict": "confident",
++                "coverage": 0.998218,
++                "risk": 0.037646,
++                "delta": 0.05,
++                "threshold": 0.733216,
++            }
++        },
++        "cli": {
++            "row-1": {
++                "candidate_id": "row-1",
++                "verdict": "abstain",
++                "coverage": 0.998218,
++                "risk": 0.037646,
++                "delta": 0.05,
++                "threshold": 0.733216,
++            }
++        },
++        "http_rest": {
++            "row-1": {
++                "candidate_id": "row-1",
++                "verdict": "confident",
++                "coverage": 0.998218,
++                "risk": 0.037646,
++                "delta": 0.05,
++                "threshold": 0.733216,
++            }
++        },
++    }
++
++    comparison = exp3811.compare_normalized_surface_rows(surface_rows)
++
++    assert comparison["all_surfaces_agree"] is False
++    assert comparison["mismatches"] == [
++        {
++            "candidate_id": "row-1",
++            "field": "verdict",
++            "values_by_surface": {
++                "verify_api": "confident",
++                "cli": "abstain",
++                "http_rest": "confident",
++            },
++        }
++    ]
++
++
++def test_req_spoe_3811_defensive_paths_and_blocker_mapping(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-SPOE-3811: blocked resources and drift branches stay explicit."""
++
++    with pytest.raises(RuntimeError, match="CLI surface failed"):
++        exp3811.run_cli_surface(ROOT, [], "/bin/false")
++
++    monkeypatch.setattr(exp3811, "_post_json", lambda *_args, **_kwargs: (500, {"bad": True}))
++    with pytest.raises(RuntimeError, match="HTTP surface failed"):
++        exp3811.run_http_surface(ROOT, [], EXP3771_PATH)
++
++    assert exp3811.normalize_http_response({"scores": [1]}) == {}
++    with pytest.raises(ValueError, match="missing certified_abstention"):
++        exp3811.normalize_verify_api_response({"scores": [{"candidate_id": "bad"}]})
++
++    row = {
++        "candidate_id": "row-1",
++        "verdict": "confident",
++        "coverage": 0.998218,
++        "risk": 0.037646,
++        "delta": 0.05,
++        "threshold": 0.733216,
++    }
++    presence = exp3811.compare_normalized_surface_rows(
++        {"verify_api": {"row-1": row}, "cli": {}, "http_rest": {"row-1": row}}
++    )
++    assert presence["mismatches"][0]["field"] == "presence"
++
++    assert exp3811.first_blocker({"not-a-map": "ok"}) is None
++    assert exp3811.first_blocker({"certified_threshold": {"available": False}}) == (
++        "blocked_no_certified_threshold"
++    )
++    assert exp3811.first_blocker({"fover_corpus": {"available": False}}) == (
++        "blocked_fover_corpus_missing"
++    )
++    assert exp3811.first_blocker({"package_import_and_surfaces": {"available": False}}) == (
++        "blocked_surface_import"
++    )
++    assert exp3811.first_blocker({"upstream_exp3779_verify_api": {"available": False}}) == (
++        "blocked_upstream_artifact_missing"
++    )
++    assert exp3811.first_blocker({"unexpected": {"available": False}}) == "blocked_unexpected"
++
++    bad_fover = tmp_path / "bad_fover.json"
++    bad_fover.write_text("{", encoding="utf-8")
++    preconditions, config = exp3811.check_preconditions(
++        ROOT,
++        executable=str(tmp_path / "python"),
++        certified_threshold_path=tmp_path / "missing_threshold.json",
++        exp3779_path=tmp_path / "missing_3779.json",
++        exp3789_path=tmp_path / "missing_3789.json",
++        exp3810_path=tmp_path / "missing_3810.json",
++        fover_corpus_path=bad_fover,
++    )
++    assert config is None
++    assert preconditions["interpreter"]["available"] is False
++    assert preconditions["certified_threshold"]["available"] is False
++    assert preconditions["http_rest_surface"]["available"] is False
++    assert preconditions["fover_corpus"]["available"] is False
++
++    preconditions, _ = exp3811.check_preconditions(
++        ROOT,
++        executable=str(VENV_PYTHON),
++        certified_threshold_path=EXP3771_PATH,
++        exp3779_path=ROOT / "results/experiment_3779_abstention_operating_point_product_wiring.json",
++        exp3789_path=ROOT / "results/experiment_3789_abstention_cli_batch_surface.json",
++        exp3810_path=ROOT / "results/experiment_3810_abstention_http_rest_surface_v2.json",
++        fover_corpus_path=tmp_path / "missing_fover.json",
++    )
++    assert preconditions["fover_corpus"]["available"] is False
++
++    fover_path = tmp_path / "data/fover_corpus_v4.json"
++    fover_path.parent.mkdir(parents=True, exist_ok=True)
++    fover_path.write_text("[]", encoding="utf-8")
++    all_ids = list(exp3811.FIXED_CONFIDENT_EXAMPLE_IDS + exp3811.FIXED_ABSTAIN_EXAMPLE_IDS)
++    examples = [
++        exp3811.spd.LabeledDetectorExample(
++            domain="math",
++            label=0,
++            ensemble_energy=0.1,
++            confidence_error=0.0,
++            example_id=example_id,
++        )
++        for example_id in [*all_ids, "zz-extra"]
++    ]
++    monkeypatch.setattr(
++        exp3811.spd,
++        "load_cached_labeled_examples",
++        lambda _root, **_kwargs: (examples, {"math": {"status": "loaded"}}),
++    )
++    assert exp3811.select_cached_fover_candidates(tmp_path, n_candidates=11)[-1][
++        "candidate_id"
++    ] == "zz-extra"
++
++    monkeypatch.setattr(
++        exp3811.spd,
++        "load_cached_labeled_examples",
++        lambda _root, **_kwargs: ([], {"math": {"status": "loaded"}}),
++    )
++    with pytest.raises(FileNotFoundError, match="cached FoVer examples missing"):
++        exp3811.select_cached_fover_candidates(tmp_path)
++
++    monkeypatch.setattr(
++        exp3811.spd,
++        "load_cached_labeled_examples",
++        lambda _root, **_kwargs: ([], {"math": {"status": "missing"}}),
++    )
++    with pytest.raises(FileNotFoundError, match="fover_corpus_v4"):
++        exp3811.select_cached_fover_candidates(tmp_path)
++
++    monkeypatch.setattr(
++        exp3811,
++        "REQUIRED_ARTIFACT_FIELDS",
++        (*exp3811.REQUIRED_ARTIFACT_FIELDS, "missing_field"),
++    )
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        exp3811.build_artifact(
++            verdict="blocked_test",
++            duration_s=0.0,
++            threshold_config=None,
++            preconditions={},
++            comparison=None,
++            candidates=[],
++            root=ROOT,
++            output_path=tmp_path / "out.json",
++            threshold_path=EXP3771_PATH,
++            exp3779_path=ROOT / "results/experiment_3779_abstention_operating_point_product_wiring.json",
++            exp3789_path=ROOT / "results/experiment_3789_abstention_cli_batch_surface.json",
++            exp3810_path=ROOT / "results/experiment_3810_abstention_http_rest_surface_v2.json",
++            fover_corpus_path=ROOT / "data/fover_corpus_v4.json",
++        )
+-- 
+2.55.0
+

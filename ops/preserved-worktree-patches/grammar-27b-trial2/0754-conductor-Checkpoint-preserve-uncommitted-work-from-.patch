@@ -1,0 +1,43 @@
+From b0ff5a762d9d55e7c0f7bc15e1a255b683642ceb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 22:20:43 -0400
+Subject: [PATCH 00754/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8dece28b1f..f73344acc2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-07T01:26:59Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-07T02:20:42Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index e8f05152ce..0c2e9815e2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7946,3 +7946,4 @@ ERROR: {
+  |
+ | 2026-06-07 00:55 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: remains stable |
+ | 2026-06-07 01:24 UTC | BUILD + UNIT-TEST the reasoner-self-verification h | OK | 88 passed in 60.28s (0:01:00) |
++| 2026-06-07 02:18 UTC | MOAT SCISSOR IN-DISTRIBUTION with the TESTED harne | OK | 101 passed in 4.73s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b933fcb7ee..b98d808519 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-07T01:26:59Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-07T02:20:42Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

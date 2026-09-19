@@ -1,0 +1,1438 @@
+From ee42744d307fd3624ce600fa7b67af629a9299b9 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 01:46:59 -0400
+Subject: [PATCH 00703/11171] [outer-loop] Add pre-push gitlink guard (prevents
+ the nano-trm CI/Pages break recurring)
+
+Closes the class of bug behind the 2026-06-06 nano-trm incident (commit
+c4c612662): a conductor `git add -A` swallowed a cloned experiment repo as a
+submodule gitlink (mode 160000) with no .gitmodules, breaking every GitHub
+Actions checkout (Pages, CI, phase1-reproducer) at exit 128.
+
+  - scripts/gitlink_guard.py: refuses pushing to main any tree-mode-160000
+    gitlink that lacks a matching .gitmodules entry. Fail-open on git infra
+    error, fail-closed on a confirmed stray gitlink. Runs at PUSH time to cover
+    the conductor's --no-verify auto-push.
+  - scripts/git-hooks/pre-push: now runs BOTH guards (blog-publish + gitlink),
+    replaying the captured pre-push stdin to each; non-zero from either blocks.
+  - scripts/install-git-hooks.sh: echo updated.
+  - ops/known-issues.md: OPERATOR CONSTRAINTS entry + memory
+    feedback_no_embedded_repo_gitlinks.
+
+Verified against the real c4c612662 range (blocks, names nano-trm) + clean ranges
+(allow) + end-to-end via the installed hook.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ openspec/capabilities/ebt-nrgpt/spec.md       |  12 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   4 +
+ ops/conductor-state.json                      |   2 +-
+ ops/known-issues.md                           |  26 +
+ ...experiment_3882_thesis_a_partb_killgate.py | 757 ++++++++++++++++++
+ scripts/git-hooks/pre-push                    |  30 +-
+ scripts/gitlink_guard.py                      | 177 ++++
+ scripts/install-git-hooks.sh                  |   2 +-
+ ...experiment_3882_thesis_a_partb_killgate.py | 298 +++++++
+ 10 files changed, 1295 insertions(+), 15 deletions(-)
+ create mode 100644 scripts/experiments/experiment_3882_thesis_a_partb_killgate.py
+ create mode 100644 scripts/gitlink_guard.py
+ create mode 100644 tests/python/test_experiment_3882_thesis_a_partb_killgate.py
+
+diff --git a/openspec/capabilities/ebt-nrgpt/spec.md b/openspec/capabilities/ebt-nrgpt/spec.md
+index b7f1cfcb1b..e59d8fa754 100644
+--- a/openspec/capabilities/ebt-nrgpt/spec.md
++++ b/openspec/capabilities/ebt-nrgpt/spec.md
+@@ -147,6 +147,18 @@ Given no evaluated seed reaches held-out AR accuracy in `[0.4, 0.95]`, the Exp 3
+ ## SCENARIO-EBT-3871-ADJUDICATION: Beam Accuracy Decides Artifact Versus Fundamental
+ Given the positive-control AR accuracy is in `[0.4, 0.95]`, the Exp 3871 workflow writes ARTIFACT when beam accuracy recovers at least half of AR accuracy, writes FUNDAMENTAL when both beam and greedy argmin remain below 20% of AR accuracy, and otherwise writes INCONCLUSIVE while preserving matched-FLOP accounting.
+ 
++## REQ-EBT-3882: Thesis-A Part-B Kill-Gate Beam Search Rerun
++The system must provide `scripts/experiments/experiment_3882_thesis_a_partb_killgate.py` to rerun the Thesis-A part-b kill-gate after the Exp 3871 scaled-harness import bug. The workflow must check CUDA before live work, import `thesis_a_part_b_scaled` by inserting the repository `scripts/` directory on `sys.path`, load a reusable confirmed-headroom checkpoint when available or otherwise train configured scaled seeds with checkpointing, require held-out AR headroom in `[0.4, 0.95]` before adjudicating, and evaluate AR best-of-N, greedy EBT energy-argmin, and global cumulative-energy EBT beam search with matched inference-FLOP accounting. The artifact must be written to `results/experiment_3882_thesis_a_partb_killgate.json`, must use a terminal `complete:` or `blocked_` honest verdict, and must emit required result fields as bare JSON values rather than `{value, principle}` wrappers.
++
++## SCENARIO-EBT-3882-IMPORT: Scaled Harness Import Uses Scripts Path
++Given the repository root and the scaled Thesis-A harness, the Exp 3882 precondition path inserts `scripts/` on `sys.path` and imports `thesis_a_part_b_scaled` directly. It must not import `scripts.thesis_a_part_b_scaled`, so the Exp 3871 `ModuleNotFoundError` path cannot recur.
++
++## SCENARIO-EBT-3882-SCHEMA: Artifact Fields Are Bare Values
++Given an Exp 3882 seed evaluation, the artifact sets `positive_control_passed`, `ar_best_accuracy`, `ebt_argmin_accuracy`, `ebt_beam_accuracy`, `adjudication`, `matched_flops_ratio`, `seeds_used`, `n_heldout`, `preconditions_checked`, `model_specs`, `random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`, and `inference_substrate` as bare JSON bools, numbers, strings, arrays, or objects. None of those fields may be wrapped in a `{value, principle}` dictionary.
++
++## SCENARIO-EBT-3882-ADJUDICATION: Beam Accuracy Decides The Kill-Gate
++Given positive-control AR accuracy in `[0.4, 0.95]`, Exp 3882 writes ARTIFACT when beam accuracy is at least half the AR accuracy, writes FUNDAMENTAL when both beam and greedy argmin are below 20% of AR accuracy, and writes INCONCLUSIVE otherwise. Given failed AR headroom, it writes `complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar<best>` and does not label the result ARTIFACT or FUNDAMENTAL.
++
+ ## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
+ The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
+ 
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index bad2e394d4..9fb7ef76db 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 404900, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-06T04:20:42Z"}
+\ No newline at end of file
++{"pid": 404900, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-06T05:43:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 70b8f5691b..b6edd8edc4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7922,3 +7922,7 @@ ERROR: {
+ | 2026-06-06 04:02 UTC | Plan milestone 2026.06.359 | OK | 11 tasks proposed |
+ | 2026-06-06 04:05 UTC | Milestone 2026.06.359 activated | OK | 11 tasks queued |
+ | 2026-06-06 04:18 UTC | Archive .358 -> activate .359; GREEN-GATE de-risk: | OK | 106 passed in 4.87s |
++| 2026-06-06 05:41 UTC | THESIS-A PART-(b) KILL-GATE, IMPORT-FIXED: on a CO | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:  * 3
+++
+++
+++def  |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 7c89c1c9ad..3f3464facc 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 404900, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-06T04:20:42Z"}
+\ No newline at end of file
++{"pid": 404900, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-06T05:43:50Z"}
+\ No newline at end of file
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 140a74a3e9..8ac18c6ca7 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -44,6 +44,32 @@ standalone hook inspects committed SHAs only and never touches the working tree.
+ Run `bash scripts/install-git-hooks.sh` once per clone. See memory
+ `feedback_blog_draft_branch_not_main`.
+ 
++### 2026-06-06: NEVER commit an embedded repo as a submodule gitlink (broke all CI/Pages)
++
++**Incident.** A conductor experiment (commit `c4c612662`, "Latent-Symbol Bridge
++Task 0") cloned `nano-trm` into the working tree; the conductor's `git add -A`
++committed the embedded repo as a submodule GITLINK (tree mode 160000) with NO
++`.gitmodules` entry. Every GitHub Actions checkout that inits submodules — the
++`pages build and deployment` workflow, CI, the phase1-reproducer — then aborted
++with `fatal: No url found for submodule path 'nano-trm' in .gitmodules` (exit
++128). carnot-ebm.org froze on a stale Pages build (a freshly-approved blog post
++404'd) and CI went red for ~37 min before it was caught. Fixed by
++`git rm --cached nano-trm` + gitignoring the embedded clones (commit `d12bada96`).
++
++**Constraint (planner + agents + outer-loop + conductor experiments).** Do NOT
++commit an embedded git repo (any directory containing its own `.git`) into the
++tree. Experiments that clone a helper repo (nano-trm, trm_src, hrm_ckpt, ebt_tmp,
++etc.) MUST keep it gitignored. A `git add -A` that swallows an embedded repo
++creates a checkout-breaking gitlink.
++
++**Mechanical enforcement (shipped 2026-06-06).** `scripts/gitlink_guard.py` runs
++in the standalone pre-push hook (`scripts/git-hooks/pre-push`, alongside the blog
++guard). It refuses any push to main that adds a tree-mode-160000 gitlink with no
++matching `.gitmodules` entry, at PUSH time so it covers the conductor's
++`--no-verify` auto-push. A real submodule (with a `.gitmodules` entry) passes; an
++accidental embedded-repo gitlink is blocked with remediation instructions. Verified
++against the real `c4c612662` range. See memory `feedback_no_embedded_repo_gitlinks`.
++
+ ### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
+ 
+ **Resolution:** the failure root cause was diagnosed and fixed.
+diff --git a/scripts/experiments/experiment_3882_thesis_a_partb_killgate.py b/scripts/experiments/experiment_3882_thesis_a_partb_killgate.py
+new file mode 100644
+index 0000000000..365eee01c2
+--- /dev/null
++++ b/scripts/experiments/experiment_3882_thesis_a_partb_killgate.py
+@@ -0,0 +1,757 @@
++#!/usr/bin/env python3
++"""Exp 3882: Thesis-A part-b kill-gate beam-search rerun.
++
++Spec refs: REQ-EBT-3882, SCENARIO-EBT-3882-IMPORT,
++SCENARIO-EBT-3882-SCHEMA, SCENARIO-EBT-3882-ADJUDICATION.
++
++This reruns the headroom-confirmed Thesis-A part-b probe after the Exp 3871
++scaled-harness import bug.  It asks whether global discrete beam search over
++cumulative EBT energy recovers generation accuracy when AR has confirmed
++held-out headroom.
++"""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import importlib
++import json
++import random
++import sys
++import time
++from dataclasses import asdict, dataclass, field
++from pathlib import Path
++from typing import Any, Sequence
++
++import numpy as np
++import torch
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))  # pragma: no cover - depends on caller sys.path.
++
++from carnot.phase3.matched_compute_eval_harness import match_ar_best_of_m  # noqa: E402
++
++
++EXPERIMENT_ID = 3882
++SCHEMA = "carnot.experiment_3882_thesis_a_partb_killgate.v1"
++OUTPUT_REL_PATH = Path("results/experiment_3882_thesis_a_partb_killgate.json")
++DEFAULT_SEEDS = (1, 2, 3)
++DEFAULT_DIM = 768
++DEFAULT_LAYERS = 4
++DEFAULT_HEADS = 12
++DEFAULT_BLOCK_SIZE = 48
++DEFAULT_DIGITS = 3
++DEFAULT_TRAIN_STEPS = 12_000
++DEFAULT_N_EVAL = 100
++DEFAULT_BEAM = 8
++DEFAULT_TOPK = 12
++DEFAULT_DEVICE = "cuda:0"
++VOCAB = 258
++
++BARE_REQUIRED_FIELDS = (
++    "positive_control_passed",
++    "ar_best_accuracy",
++    "ebt_argmin_accuracy",
++    "ebt_beam_accuracy",
++    "adjudication",
++    "matched_flops_ratio",
++    "seeds_used",
++    "n_heldout",
++    "preconditions_checked",
++    "model_specs",
++    "random_seed",
++    "random_seeds_used",
++    "reproducibility_checksum",
++    "duration_s",
++    "inference_substrate",
++)
++REQUIRED_FIELDS = (
++    "schema",
++    "experiment",
++    "honest_verdict",
++    *BARE_REQUIRED_FIELDS,
++    "all_configured_seeds",
++    "seed_evaluations",
++    "field_principles",
++)
++
++FIELD_PRINCIPLES = {
++    "positive_control_passed": (
++        "BARE BOOL - true only when best held-out AR is in [0.4,0.95] before "
++        "any ARTIFACT/FUNDAMENTAL verdict."
++    ),
++    "ar_best_accuracy": (
++        "Positive control value - AR<0.3 means no headroom and INCONCLUSIVE."
++    ),
++    "ebt_argmin_accuracy": "Greedy energy-argmin decode accuracy.",
++    "ebt_beam_accuracy": "Global cumulative-energy discrete beam-search accuracy.",
++    "adjudication": "ARTIFACT | FUNDAMENTAL | INCONCLUSIVE.",
++    "matched_flops_ratio": "EBT beam / AR best-of-N inference-FLOP ratio.",
++    "seeds_used": "Random seeds actually evaluated.",
++    "n_heldout": "Held-out examples evaluated for the selected seed.",
++    "preconditions_checked": "CUDA and corrected scaled-harness import evidence.",
++    "model_specs": "Scaled model and decode configuration.",
++    "random_seed": "Selected seed used for the kill-gate decision.",
++    "random_seeds_used": "All evaluated random seeds.",
++    "reproducibility_checksum": "SHA256 checksum over configuration and results.",
++    "duration_s": "Real wall-clock duration in seconds.",
++    "inference_substrate": "Execution substrate for the artifact.",
++}
++
++
++@dataclass(frozen=True)
++class PreconditionReport:
++    """Pre-launch checks that gate live model work."""
++
++    cuda: bool
++    cuda_device_count: int
++    scaled_harness_import: bool
++    python_executable: str = field(default_factory=lambda: sys.executable)
++    cuda_devices: list[str] = field(default_factory=list)
++    scaled_harness_error: str | None = None
++
++
++@dataclass(frozen=True)
++class SeedEvaluation:
++    """One seed's headroom, EBT decode metrics, and matched-compute accounting."""
++
++    seed: int
++    checkpoint_path: str
++    checkpoint_reused: bool
++    n_heldout: int
++    ar_best_accuracy: float
++    ar_best_of_n: int
++    ar_forward_evals: int
++    ebt_argmin_accuracy: float | None
++    ebt_argmin_evals: int | None
++    ebt_beam_accuracy: float | None
++    ebt_beam_evals: int | None
++    matched_flops_ratio: float | None
++    samples: list[dict[str, Any]]
++    training_diverged: bool
++
++
++@dataclass(frozen=True)
++class AdjudicationResult:
++    """Threshold outcome for the Exp 3882 falsification gate."""
++
++    positive_control_passed: bool
++    adjudication: str
++    honest_verdict: str
++
++
++def load_scaled_modules() -> tuple[Any, Any]:  # pragma: no cover - covered by live preflight.
++    """Import the scaled Thesis-A harness through the fixed scripts path."""
++
++    scripts_dir = REPO_ROOT / "scripts"
++    if str(scripts_dir) not in sys.path:
++        sys.path.insert(0, str(scripts_dir))
++    scaled = importlib.import_module("thesis_a_part_b_scaled")
++    return scaled.pb, scaled
++
++
++def adjudicate(ar_best: float, ebt_argmin: float | None, ebt_beam: float | None) -> AdjudicationResult:
++    """Apply SCENARIO-EBT-3882 thresholds without touching model code."""
++
++    positive_control_passed = 0.4 <= ar_best <= 0.95
++    if not positive_control_passed:
++        return AdjudicationResult(
++            positive_control_passed=False,
++            adjudication="INCONCLUSIVE",
++            honest_verdict=f"complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar{ar_best:.3f}",
++        )
++
++    argmin = float(ebt_argmin if ebt_argmin is not None else 0.0)
++    beam = float(ebt_beam if ebt_beam is not None else 0.0)
++    if beam >= 0.5 * ar_best:
++        return AdjudicationResult(
++            positive_control_passed=True,
++            adjudication="ARTIFACT",
++            honest_verdict=(
++                f"complete: thesis_a_partb_ARTIFACT_beam{beam:.3f}_"
++                f"recovers_vs_argmin{argmin:.3f}_ar{ar_best:.3f}_"
++                "greedy_was_bottleneck"
++            ),
++        )
++    if beam < 0.2 * ar_best and argmin < 0.2 * ar_best:
++        return AdjudicationResult(
++            positive_control_passed=True,
++            adjudication="FUNDAMENTAL",
++            honest_verdict=(
++                f"complete: thesis_a_partb_FUNDAMENTAL_beam{beam:.3f}_"
++                f"argmin{argmin:.3f}_both_fail_vs_ar{ar_best:.3f}_"
++                "landscape_misshaped"
++            ),
++        )
++    return AdjudicationResult(
++        positive_control_passed=True,
++        adjudication="INCONCLUSIVE",
++        honest_verdict=(
++            f"complete: thesis_a_partb_INCONCLUSIVE_beam{beam:.3f}_"
++            f"argmin{argmin:.3f}_ar{ar_best:.3f}_thresholds_not_decisive"
++        ),
++    )
++
++
++def matched_ar_best_of_n(*, n_heldout: int, ans_len: int, beam: int) -> int:
++    """Select the AR best-of-N budget matching cumulative beam energy evals."""
++
++    beam_eval_total = VOCAB * (1 + beam * max(0, ans_len - 1)) * n_heldout
++    ar_single_total = ans_len * n_heldout
++    return match_ar_best_of_m(
++        target_total_flops=beam_eval_total,
++        ar_single_sample_total_flops=ar_single_total,
++        tolerance=0.01,
++    ).ar_best_of_m
++
++
++@torch.no_grad()
++def ebt_beam_generate(ebt, pid, ans_len, device, beam=8, topk=12):
++    """GLOBAL discrete search: beam search over the answer tokens minimising cumulative
++    per-position EBT energy, evaluated only at valid token embeddings. Returns
++    (best_ids, n_energy_evals). Cost = beam * VOCAB per generated token."""
++    emb = ebt.token_embedding.weight
++    cand_ids = torch.arange(VOCAB, device=device)
++    cand_emb = emb[cand_ids]
++    beams = [(list(pid), 0.0)]
++    nf = 0
++    for _ in range(ans_len):
++        expanded = []
++        for ids, cum in beams:
++            ctx = torch.tensor([ids], device=device); m = ctx.shape[1]
++            orig = ebt.token_embedding(ctx).expand(VOCAB, -1, -1)
++            known = ebt.token_embedding(ctx[:, 1:]).expand(VOCAB, -1, -1) if m >= 2 \
++                else torch.zeros((VOCAB, 0, emb.shape[1]), device=device)
++            pred = torch.cat([known, cand_emb.unsqueeze(1)], dim=1)
++            e = ebt(orig, pred)[:, -1, 0]
++            nf += VOCAB
++            low_e, idx = torch.topk(e, topk, largest=False)
++            for j in range(topk):
++                expanded.append((ids + [int(cand_ids[int(idx[j])])], cum + float(low_e[j])))
++        expanded.sort(key=lambda x: x[1])
++        beams = expanded[:beam]
++    return beams[0][0][len(pid):], nf
++
++
++def _stable_checksum(payload: dict[str, Any]) -> str:
++    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
++
++
++def _select_seed(evaluations: Sequence[SeedEvaluation]) -> SeedEvaluation:
++    if not evaluations:
++        raise ValueError("at least one seed evaluation is required")
++    passing = [item for item in evaluations if 0.4 <= item.ar_best_accuracy <= 0.95]
++    if passing:
++        return max(passing, key=lambda item: (item.ar_best_accuracy, -item.seed))
++    return max(evaluations, key=lambda item: (item.ar_best_accuracy, -item.seed))
++
++
++def build_artifact(
++    *,
++    seed_evaluations: Sequence[SeedEvaluation],
++    all_configured_seeds: Sequence[int],
++    preconditions: PreconditionReport,
++    model_specs: dict[str, Any],
++    started_s: float,
++    finished_s: float,
++    inference_substrate: str,
++) -> dict[str, Any]:
++    """Build the terminal JSON artifact with bare required fields."""
++
++    evaluations = list(seed_evaluations)
++    selected = _select_seed(evaluations)
++    gate = adjudicate(
++        selected.ar_best_accuracy,
++        selected.ebt_argmin_accuracy,
++        selected.ebt_beam_accuracy,
++    )
++    seeds_used = [item.seed for item in evaluations]
++    checksum_payload = {
++        "experiment": EXPERIMENT_ID,
++        "selected_seed": selected.seed,
++        "configured_seeds": list(all_configured_seeds),
++        "seed_evaluations": [asdict(item) for item in evaluations],
++        "model_specs": model_specs,
++        "preconditions": asdict(preconditions),
++        "gate": asdict(gate),
++    }
++    artifact = {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_ID,
++        "honest_verdict": gate.honest_verdict,
++        "positive_control_passed": bool(gate.positive_control_passed),
++        "ar_best_accuracy": selected.ar_best_accuracy,
++        "ebt_argmin_accuracy": selected.ebt_argmin_accuracy,
++        "ebt_beam_accuracy": selected.ebt_beam_accuracy,
++        "adjudication": gate.adjudication,
++        "matched_flops_ratio": selected.matched_flops_ratio,
++        "seeds_used": seeds_used,
++        "n_heldout": selected.n_heldout,
++        "preconditions_checked": asdict(preconditions),
++        "model_specs": dict(model_specs, selected_seed=selected.seed),
++        "random_seed": selected.seed,
++        "random_seeds_used": seeds_used,
++        "reproducibility_checksum": _stable_checksum(checksum_payload),
++        "duration_s": round(float(finished_s - started_s), 2),
++        "inference_substrate": inference_substrate,
++        "all_configured_seeds": list(all_configured_seeds),
++        "seed_evaluations": [asdict(item) for item in evaluations],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    honest_verdict: str,
++    preconditions: PreconditionReport,
++    model_specs: dict[str, Any],
++    started_s: float,
++    finished_s: float,
++) -> dict[str, Any]:
++    """Build a terminal blocked artifact with the same bare-field schema."""
++
++    checksum_payload = {
++        "experiment": EXPERIMENT_ID,
++        "honest_verdict": honest_verdict,
++        "preconditions": asdict(preconditions),
++        "model_specs": model_specs,
++    }
++    return {
++        "schema": SCHEMA,
++        "experiment": EXPERIMENT_ID,
++        "honest_verdict": honest_verdict,
++        "positive_control_passed": False,
++        "ar_best_accuracy": None,
++        "ebt_argmin_accuracy": None,
++        "ebt_beam_accuracy": None,
++        "adjudication": "INCONCLUSIVE",
++        "matched_flops_ratio": None,
++        "seeds_used": [],
++        "n_heldout": 0,
++        "preconditions_checked": asdict(preconditions),
++        "model_specs": dict(model_specs),
++        "random_seed": None,
++        "random_seeds_used": [],
++        "reproducibility_checksum": _stable_checksum(checksum_payload),
++        "duration_s": round(float(finished_s - started_s), 2),
++        "inference_substrate": "blocked_precondition",
++        "all_configured_seeds": [],
++        "seed_evaluations": [],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++
++
++def validate_artifact(artifact: dict[str, Any]) -> list[str]:
++    """Return schema errors that make the Exp 3882 artifact non-terminal."""
++
++    errors: list[str] = []
++    missing = sorted(set(REQUIRED_FIELDS) - set(artifact))
++    if missing:
++        errors.append(f"missing required fields: {', '.join(missing)}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not (verdict.startswith("complete:") or verdict.startswith("blocked_")):
++        errors.append("honest_verdict must start with complete: or blocked_")
++    for field_name in BARE_REQUIRED_FIELDS:
++        value = artifact.get(field_name)
++        if isinstance(value, dict) and {"value", "principle"} <= set(value):
++            errors.append(f"{field_name} must be a bare value, not a value/principle wrapper")
++    if not isinstance(artifact.get("positive_control_passed"), bool):
++        errors.append("positive_control_passed must be a bare bool")
++
++    for metric in ("ar_best_accuracy", "ebt_argmin_accuracy", "ebt_beam_accuracy", "matched_flops_ratio"):
++        value = artifact.get(metric)
++        if value is not None and not isinstance(value, (int, float)):
++            errors.append(f"{metric} must be numeric or null")
++    if artifact.get("adjudication") not in {"ARTIFACT", "FUNDAMENTAL", "INCONCLUSIVE"}:
++        errors.append("adjudication must be ARTIFACT, FUNDAMENTAL, or INCONCLUSIVE")
++    if not isinstance(artifact.get("seeds_used"), list):
++        errors.append("seeds_used must be a list")
++    if not isinstance(artifact.get("random_seeds_used"), list):
++        errors.append("random_seeds_used must be a list")
++    if not isinstance(artifact.get("n_heldout"), int) or isinstance(artifact.get("n_heldout"), bool):
++        errors.append("n_heldout must be an integer")
++    if not isinstance(artifact.get("preconditions_checked"), dict):
++        errors.append("preconditions_checked must be an object")
++    if not isinstance(artifact.get("model_specs"), dict):
++        errors.append("model_specs must be an object")
++    checksum = artifact.get("reproducibility_checksum")
++    if not isinstance(checksum, str) or len(checksum) != 64:
++        errors.append("reproducibility_checksum must be a sha256 hex string")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or duration < 0:
++        errors.append("duration_s must be non-negative")
++    if not isinstance(artifact.get("inference_substrate"), str):
++        errors.append("inference_substrate must be a string")
++    return errors
++
++
++def write_artifact(path: Path, artifact: dict[str, Any]) -> None:
++    """Write sorted JSON so reruns are diffable."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def check_preconditions() -> PreconditionReport:  # pragma: no cover - live preflight.
++    """Check CUDA and the corrected scaled-harness import before live work."""
++
++    cuda = bool(torch.cuda.is_available() and torch.cuda.device_count() > 0)
++    device_count = int(torch.cuda.device_count()) if torch.cuda.is_available() else 0
++    device_names = [torch.cuda.get_device_name(i) for i in range(device_count)] if cuda else []
++    try:
++        load_scaled_modules()
++        scaled_import = True
++        error = None
++    except Exception as exc:
++        scaled_import = False
++        error = repr(exc)
++    return PreconditionReport(
++        cuda=cuda,
++        cuda_device_count=device_count,
++        cuda_devices=device_names,
++        scaled_harness_import=scaled_import,
++        scaled_harness_error=error,
++    )
++
++
++def _set_seed(seed: int) -> None:  # pragma: no cover - live model path.
++    random.seed(seed)
++    np.random.seed(seed)
++    torch.manual_seed(seed)
++    if torch.cuda.is_available():
++        torch.cuda.manual_seed_all(seed)
++
++
++def _checkpoint_path(seed: int) -> Path:  # pragma: no cover - live model path.
++    return REPO_ROOT / "results" / f"experiment_3882_thesis_a_partb_seed{seed}.pt"
++
++
++def _scaled_artifact_checkpoint(seed: int) -> Path | None:  # pragma: no cover - live model path.
++    artifact_path = REPO_ROOT / "results" / f"thesis_a_part_b_scaled_seed{seed}.json"
++    if not artifact_path.exists():
++        return None
++    try:
++        artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    except json.JSONDecodeError:
++        return None
++    candidates: list[Any] = [
++        artifact.get("checkpoint_path"),
++        artifact.get("model_checkpoint_path"),
++        artifact.get("trained_checkpoint_path"),
++    ]
++    checkpoint = artifact.get("checkpoint")
++    if isinstance(checkpoint, dict):
++        candidates.extend([checkpoint.get("path"), checkpoint.get("checkpoint_path")])
++    for candidate in candidates:
++        if not isinstance(candidate, str) or not candidate:
++            continue
++        path = Path(candidate)
++        if not path.is_absolute():
++            path = REPO_ROOT / path
++        if path.exists():
++            return path
++    return None
++
++
++def _build_data(pb: Any, *, digits: int, seed: int, block_size: int) -> tuple[Any, list[tuple[str, str]]]:  # pragma: no cover
++    mu = (10 ** digits) ** 2
++    n_train = min(40_000, int(mu * 0.7))
++    train_items = pb.build_corpus(digits, n_train, seed)
++    train_prompts = {item[0] for item in train_items}
++    eval_items = pb.build_corpus(digits, 4_000, seed + 777, exclude=train_prompts)
++    blocks = pb.corpus_to_blocks(train_items, block_size)
++    return blocks, eval_items
++
++
++def _load_or_train_models(  # pragma: no cover - live GPU path.
++    *,
++    pb: Any,
++    sc: Any,
++    seed: int,
++    device: torch.device,
++    digits: int,
++    dim: int,
++    layers: int,
++    heads: int,
++    block_size: int,
++    train_steps: int,
++) -> tuple[Any, Any, list[tuple[str, str]], Path, bool, bool]:
++    _set_seed(seed)
++    blocks, eval_items = _build_data(pb, digits=digits, seed=seed, block_size=block_size)
++    ebt, ar = sc.build_models(dim, layers, heads, block_size, device)
++    checkpoint = _scaled_artifact_checkpoint(seed) or _checkpoint_path(seed)
++    reused = False
++    training_diverged = False
++    if checkpoint.exists():
++        state = torch.load(checkpoint, map_location=device)
++        ebt.load_state_dict(state["ebt"])
++        ar.load_state_dict(state["ar"])
++        training_diverged = bool(state.get("nan", False))
++        reused = True
++        print(f"[resume] seed={seed} loaded {checkpoint} nan={training_diverged}", flush=True)
++    else:
++        print(f"[train] seed={seed} steps={train_steps} checkpoint={checkpoint}", flush=True)
++        training_diverged = bool(
++            pb.train_models(
++                ebt,
++                ar,
++                blocks,
++                device,
++                train_steps,
++                bs=16,
++                langevin=(5, 15),
++                log=lambda message: print(f"[seed {seed}] {message}", flush=True),
++            )
++        )
++        torch.save(
++            {
++                "ebt": ebt.state_dict(),
++                "ar": ar.state_dict(),
++                "nan": training_diverged,
++                "config": {
++                    "seed": seed,
++                    "digits": digits,
++                    "dim": dim,
++                    "layers": layers,
++                    "heads": heads,
++                    "block_size": block_size,
++                    "train_steps": train_steps,
++                },
++            },
++            checkpoint,
++        )
++        print(f"[ckpt] seed={seed} saved {checkpoint} nan={training_diverged}", flush=True)
++    return ebt, ar, eval_items, checkpoint, reused, training_diverged
++
++
++def evaluate_seed(  # pragma: no cover - live GPU path.
++    *,
++    pb: Any,
++    ebt: Any,
++    ar: Any,
++    eval_items: Sequence[tuple[str, str]],
++    seed: int,
++    checkpoint: Path,
++    checkpoint_reused: bool,
++    training_diverged: bool,
++    device: torch.device,
++    digits: int,
++    n_eval: int,
++    beam: int,
++    topk: int,
++) -> SeedEvaluation:
++    """Decode held-out examples with AR first, then EBT only if headroom holds."""
++
++    ans_len = digits + 1
++    items = list(eval_items[:n_eval])
++    if not items:
++        raise ValueError("held-out eval set is empty")
++    ar_best_of_n = matched_ar_best_of_n(n_heldout=len(items), ans_len=ans_len, beam=beam)
++    _set_seed(seed + 100_000)
++    ebt.eval()
++    ar.eval()
++    ar_correct = 0
++    ar_forward = 0
++    ar_outputs: list[list[int]] = []
++    for index, (prompt, true_answer) in enumerate(items):
++        pid = pb.enc(prompt)
++        true = pb.enc(true_answer)
++        ar_ids, nf = pb.ar_selfconsistency(ar, pid, ans_len, device, ar_best_of_n)
++        ar_forward += int(nf)
++        ar_correct += int(ar_ids == true)
++        ar_outputs.append(ar_ids)
++        if (index + 1) % 20 == 0:
++            print(f"[ar seed={seed}] {index + 1}/{len(items)} arN={ar_correct / (index + 1):.3f}", flush=True)
++
++    n = len(items)
++    ar_accuracy = ar_correct / n
++    if not (0.4 <= ar_accuracy <= 0.95):
++        return SeedEvaluation(
++            seed=seed,
++            checkpoint_path=str(checkpoint.relative_to(REPO_ROOT) if checkpoint.is_absolute() else checkpoint),
++            checkpoint_reused=checkpoint_reused,
++            n_heldout=n,
++            ar_best_accuracy=ar_accuracy,
++            ar_best_of_n=ar_best_of_n,
++            ar_forward_evals=ar_forward,
++            ebt_argmin_accuracy=None,
++            ebt_argmin_evals=None,
++            ebt_beam_accuracy=None,
++            ebt_beam_evals=None,
++            matched_flops_ratio=None,
++            samples=[],
++            training_diverged=training_diverged,
++        )
++
++    argmin_correct = 0
++    beam_correct = 0
++    argmin_evals = 0
++    beam_evals = 0
++    samples: list[dict[str, Any]] = []
++    for index, (prompt, true_answer) in enumerate(items):
++        pid = pb.enc(prompt)
++        true = pb.enc(true_answer)
++        argmin_ids, nf = pb.ebt_generate(ebt, pid, ans_len, device)
++        argmin_evals += int(nf)
++        argmin_correct += int(argmin_ids == true)
++        beam_ids, nf = ebt_beam_generate(ebt, pid, ans_len, device, beam=beam, topk=topk)
++        beam_evals += int(nf)
++        beam_correct += int(beam_ids == true)
++        if index < 8:
++            samples.append(
++                {
++                    "prompt": prompt,
++                    "true": true_answer,
++                    "ar_best_of_n": pb.dec_ids(ar_outputs[index]),
++                    "ebt_argmin": pb.dec_ids(argmin_ids),
++                    "ebt_beam": pb.dec_ids(beam_ids),
++                }
++            )
++        if (index + 1) % 20 == 0:
++            denom = index + 1
++            print(
++                f"[ebt seed={seed}] {denom}/{len(items)} "
++                f"argmin={argmin_correct / denom:.3f} "
++                f"beam={beam_correct / denom:.3f}",
++                flush=True,
++            )
++    return SeedEvaluation(
++        seed=seed,
++        checkpoint_path=str(checkpoint.relative_to(REPO_ROOT) if checkpoint.is_absolute() else checkpoint),
++        checkpoint_reused=checkpoint_reused,
++        n_heldout=n,
++        ar_best_accuracy=ar_accuracy,
++        ar_best_of_n=ar_best_of_n,
++        ar_forward_evals=ar_forward,
++        ebt_argmin_accuracy=argmin_correct / n,
++        ebt_argmin_evals=argmin_evals,
++        ebt_beam_accuracy=beam_correct / n,
++        ebt_beam_evals=beam_evals,
++        matched_flops_ratio=(beam_evals / ar_forward) if ar_forward else None,
++        samples=samples,
++        training_diverged=training_diverged,
++    )
++
++
++def run_experiment(args: argparse.Namespace) -> dict[str, Any]:  # pragma: no cover - live GPU path.
++    started = time.monotonic()
++    preconditions = check_preconditions()
++    model_specs = {
++        "dim": args.dim,
++        "n_layers": args.layers,
++        "n_heads": args.heads,
++        "block_size": args.block_size,
++        "digits": args.digits,
++        "train_steps": args.train_steps,
++        "beam": args.beam,
++        "topk": args.topk,
++        "n_eval": args.n_eval,
++        "ar_best_of_n": "matched_to_cumulative_beam_energy_evals_with_exp3727_budget_matcher",
++        "ebt": "scaled_ebt_from_scratch_or_checkpoint",
++        "ar": "matched_scaled_ar_from_scratch_or_checkpoint",
++    }
++    if not preconditions.cuda:
++        artifact = build_blocked_artifact(
++            honest_verdict="blocked_no_cuda",
++            preconditions=preconditions,
++            model_specs=model_specs,
++            started_s=started,
++            finished_s=time.monotonic(),
++        )
++        write_artifact(REPO_ROOT / OUTPUT_REL_PATH, artifact)
++        return artifact
++    if not preconditions.scaled_harness_import:
++        artifact = build_blocked_artifact(
++            honest_verdict="blocked_scaled_harness_import",
++            preconditions=preconditions,
++            model_specs=model_specs,
++            started_s=started,
++            finished_s=time.monotonic(),
++        )
++        write_artifact(REPO_ROOT / OUTPUT_REL_PATH, artifact)
++        return artifact
++
++    pb, sc = load_scaled_modules()
++    global VOCAB
++    VOCAB = int(pb.VOCAB)
++    device = torch.device(args.device)
++    torch.cuda.set_device(device)
++    evaluations: list[SeedEvaluation] = []
++    for seed in args.seeds:
++        ebt, ar, eval_items, checkpoint, reused, diverged = _load_or_train_models(
++            pb=pb,
++            sc=sc,
++            seed=seed,
++            device=device,
++            digits=args.digits,
++            dim=args.dim,
++            layers=args.layers,
++            heads=args.heads,
++            block_size=args.block_size,
++            train_steps=args.train_steps,
++        )
++        evaluations.append(
++            evaluate_seed(
++                pb=pb,
++                ebt=ebt,
++                ar=ar,
++                eval_items=eval_items,
++                seed=seed,
++                checkpoint=checkpoint,
++                checkpoint_reused=reused,
++                training_diverged=diverged,
++                device=device,
++                digits=args.digits,
++                n_eval=args.n_eval,
++                beam=args.beam,
++                topk=args.topk,
++            )
++        )
++        del ebt, ar
++        torch.cuda.empty_cache()
++
++    artifact = build_artifact(
++        seed_evaluations=evaluations,
++        all_configured_seeds=args.seeds,
++        preconditions=preconditions,
++        model_specs=model_specs,
++        started_s=started,
++        finished_s=time.monotonic(),
++        inference_substrate="live_llm_inference",
++    )
++    errors = validate_artifact(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    write_artifact(REPO_ROOT / OUTPUT_REL_PATH, artifact)
++    return artifact
++
++
++def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:  # pragma: no cover - CLI wrapper.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--seeds", type=int, nargs="+", default=list(DEFAULT_SEEDS))
++    parser.add_argument("--device", default=DEFAULT_DEVICE)
++    parser.add_argument("--digits", type=int, default=DEFAULT_DIGITS)
++    parser.add_argument("--dim", type=int, default=DEFAULT_DIM)
++    parser.add_argument("--layers", type=int, default=DEFAULT_LAYERS)
++    parser.add_argument("--heads", type=int, default=DEFAULT_HEADS)
++    parser.add_argument("--block-size", type=int, default=DEFAULT_BLOCK_SIZE)
++    parser.add_argument("--train-steps", type=int, default=DEFAULT_TRAIN_STEPS)
++    parser.add_argument("--n-eval", type=int, default=DEFAULT_N_EVAL)
++    parser.add_argument("--beam", type=int, default=DEFAULT_BEAM)
++    parser.add_argument("--topk", type=int, default=DEFAULT_TOPK)
++    return parser.parse_args(argv)
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover - CLI wrapper.
++    artifact = run_experiment(parse_args(argv))
++    print(artifact["honest_verdict"], flush=True)
++    print(f"[artifact] {REPO_ROOT / OUTPUT_REL_PATH}", flush=True)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - CLI wrapper.
++    raise SystemExit(main())
+diff --git a/scripts/git-hooks/pre-push b/scripts/git-hooks/pre-push
+index 502a5c3519..c47103beb4 100755
+--- a/scripts/git-hooks/pre-push
++++ b/scripts/git-hooks/pre-push
+@@ -1,21 +1,27 @@
+ #!/usr/bin/env bash
+ # Carnot pre-push hook (standalone — NOT managed by pre-commit).
+ #
+-# Runs the blog publish guard: refuses to push an un-approved blog post to main
+-# (carnot-ebm.org is served from main via GitHub Pages; pushing a post = publishing
+-# it; posts are operator-approved only). See scripts/blog_publish_guard.py and
+-# ops/known-issues.md "Blog publish gate".
++# Runs the project's pre-push guards against the refs being pushed:
++#   1. blog_publish_guard.py  — no un-approved blog post reaches Pages (operator-only).
++#   2. gitlink_guard.py       — no stray submodule gitlink (mode 160000) without a
++#                               .gitmodules entry (breaks every Actions checkout).
++# See ops/known-issues.md "Blog publish gate" + "nano-trm gitlink".
+ #
+-# Standalone (vs a pre-commit pre-push hook) on purpose: pre-commit's pre-push
+-# dispatcher stashes unstaged files for the hook run, which would put a stash
+-# window on the conductor's auto-push path (CLAUDE.md "Never Stash — Always
+-# Commit-First"). This hook inspects committed SHAs only and never touches the
+-# working tree, so nothing is stashed.
++# Standalone (vs pre-commit's pre-push) on purpose: pre-commit's dispatcher
++# stashes unstaged files for the hook run, which would put a stash window on the
++# conductor's auto-push path (CLAUDE.md "Never Stash — Always Commit-First").
++# These guards inspect committed SHAs only and never touch the working tree.
+ #
+-# git passes the refs being pushed on stdin; forward them to the guard.
++# git passes the refs on stdin ('<local ref> <local sha> <remote ref> <remote
++# sha>'); stdin can only be read once, so capture it and replay to each guard.
+ # $1 = remote name, $2 = remote URL.
+-set -euo pipefail
++set -uo pipefail
+ ROOT="$(git rev-parse --show-toplevel)"
+ PY="${ROOT}/.venv/bin/python"
+ [ -x "$PY" ] || PY="python3"
+-exec "$PY" "${ROOT}/scripts/blog_publish_guard.py"
++
++REFS="$(cat)"   # consume the pre-push stdin once
++rc=0
++printf '%s' "$REFS" | "$PY" "${ROOT}/scripts/blog_publish_guard.py" || rc=1
++printf '%s' "$REFS" | "$PY" "${ROOT}/scripts/gitlink_guard.py"      || rc=1
++exit "$rc"
+diff --git a/scripts/gitlink_guard.py b/scripts/gitlink_guard.py
+new file mode 100644
+index 0000000000..1605819f16
+--- /dev/null
++++ b/scripts/gitlink_guard.py
+@@ -0,0 +1,177 @@
++#!/usr/bin/env python3
++"""Pre-push guard: refuse to push a stray submodule gitlink (mode 160000) that
++has no matching .gitmodules entry.
++
++WHY THIS EXISTS (2026-06-06 incident)
++-------------------------------------
++A conductor experiment (commit c4c612662, "Latent-Symbol Bridge Task 0") cloned
++`nano-trm` into the working tree; the conductor's `git add -A` then committed the
++embedded repo as a submodule GITLINK (tree mode 160000) with NO `.gitmodules`
++entry. Every GitHub Actions checkout that initializes submodules — the
++"pages build and deployment" workflow, CI, the phase1-reproducer — then aborted
++with:
++
++    fatal: No url found for submodule path 'nano-trm' in .gitmodules
++    The process '/usr/bin/git' failed with exit code 128
++
++So carnot-ebm.org froze on a stale Pages build (a freshly-approved blog post
++404'd) and CI went red, for ~37 minutes before it was noticed and fixed. The
++class of bug: ANY experiment that clones a repo into the working dir can be
++swallowed by `git add -A` as a gitlink and break every checkout the same way,
++under a different name. `.gitignore` covers the *known* offenders; this guard
++covers the *class*.
++
++WHAT THIS GUARD DOES
++--------------------
++Runs as part of the standalone git `pre-push` hook (scripts/git-hooks/pre-push).
++For any push whose target is `main`, it finds files ADDED or MODIFIED to tree
++mode 160000 (a gitlink) in the pushed range and blocks the push if any such path
++is NOT declared as a submodule in `.gitmodules` (at the pushed tip). A real,
++intentional submodule (with a `.gitmodules` `path =` entry) passes; an accidental
++embedded-repo gitlink does not.
++
++It runs at PUSH time on purpose: the conductor commits with `--no-verify`
++(skipping commit-stage hooks), but its `git push origin main` does NOT pass
++`--no-verify`, so a standalone pre-push hook is the reliable chokepoint. Blocking
++the push is the right failure mode: a wedged push that alerts loudly is far
++cheaper than propagating a checkout-breaking gitlink to the remote where it takes
++down Pages + CI for everyone.
++
++FAIL MODE
++---------
++FAIL-OPEN on infrastructure errors (cannot compute the diff — shallow clone,
++missing object): log to stderr and allow, so a transient git hiccup never wedges
++the push loop. FAIL-CLOSED only on a confirmed stray gitlink.
++
++REMEDIATION (printed on block)
++------------------------------
++    git rm --cached <path>          # untrack the gitlink (keeps it on disk)
++    echo '/<path>/' >> .gitignore   # stop git add -A from re-committing it
++    git commit -m 'untrack stray gitlink <path>'
++…or, if it is meant to be a real submodule, add a `.gitmodules` entry for it.
++
++USAGE
++-----
++Invoked by scripts/git-hooks/pre-push (reads the git pre-push stdin protocol:
++'<local ref> <local sha> <remote ref> <remote sha>' per line). Also honors the
++pre-commit env protocol (PRE_COMMIT_FROM_REF/_TO_REF) if present. Standalone test:
++    echo 'refs/heads/main <new> refs/heads/main <old>' | python3 scripts/gitlink_guard.py
++Exit 0 = allow; exit 1 = block.
++"""
++from __future__ import annotations
++
++import os
++import subprocess
++import sys
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parent.parent
++EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
++GITLINK_MODE = "160000"
++
++
++def _run(args: list[str]) -> tuple[int, str, str]:
++    p = subprocess.run(args, cwd=REPO, capture_output=True, text=True)
++    return p.returncode, p.stdout, p.stderr
++
++
++def _iter_push_ranges() -> list[tuple[str, str, str]]:
++    frm = os.environ.get("PRE_COMMIT_FROM_REF")
++    to = os.environ.get("PRE_COMMIT_TO_REF")
++    if frm is not None and to is not None:
++        remote_ref = os.environ.get("PRE_COMMIT_REMOTE_BRANCH", "refs/heads/main")
++        return [(remote_ref, frm, to)]
++    ranges: list[tuple[str, str, str]] = []
++    for line in sys.stdin:
++        parts = line.split()
++        if len(parts) == 4:
++            _local_ref, local_sha, remote_ref, remote_sha = parts
++            ranges.append((remote_ref, remote_sha, local_sha))
++    return ranges
++
++
++def _targets_main(remote_ref: str) -> bool:
++    return remote_ref.split("/")[-1] == "main" or remote_ref == "main"
++
++
++def _gitmodules_paths(tree_sha: str) -> set[str]:
++    """Submodule paths declared in .gitmodules at tree_sha (empty set if none)."""
++    rc, out, _ = _run(["git", "show", f"{tree_sha}:.gitmodules"])
++    if rc != 0:
++        return set()
++    paths = set()
++    for line in out.splitlines():
++        line = line.strip()
++        if line.startswith("path") and "=" in line:
++            paths.add(line.split("=", 1)[1].strip())
++    return paths
++
++
++def _added_gitlinks(old_sha: str, new_sha: str) -> list[str] | None:
++    """Paths added/modified to mode 160000 in old..new, or None if undeterminable."""
++    if new_sha.strip("0") == "":
++        return []
++    base = EMPTY_TREE if old_sha.strip("0") == "" else old_sha
++    rc, out, err = _run(["git", "diff", "--raw", "--diff-filter=AM", f"{base}..{new_sha}"])
++    if rc != 0:
++        sys.stderr.write(f"[gitlink-guard] WARN: cannot diff {base}..{new_sha}: {err.strip()}\n")
++        return None
++    links = []
++    for line in out.splitlines():
++        # ':<oldmode> <newmode> <oldsha> <newsha> <status>\t<path>'
++        if "\t" not in line:
++            continue
++        meta, path = line.split("\t", 1)
++        fields = meta.lstrip(":").split()
++        if len(fields) >= 2 and fields[1] == GITLINK_MODE:
++            links.append(path.strip())
++    return links
++
++
++def main() -> int:
++    violations: set[str] = set()
++    errored = False
++    for remote_ref, old_sha, new_sha in _iter_push_ranges():
++        if not _targets_main(remote_ref):
++            continue
++        links = _added_gitlinks(old_sha, new_sha)
++        if links is None:
++            errored = True
++            continue
++        if not links:
++            continue
++        declared = _gitmodules_paths(new_sha)
++        for path in links:
++            if path not in declared:
++                violations.add(path)
++
++    if violations:
++        sys.stderr.write(
++            "\n[gitlink-guard] PUSH REFUSED — stray submodule gitlink(s) with no .gitmodules entry.\n"
++            "  A gitlink (tree mode 160000) with no matching .gitmodules entry breaks\n"
++            "  EVERY GitHub Actions checkout that inits submodules (Pages, CI, ...):\n"
++            "    fatal: No url found for submodule path '<path>' in .gitmodules\n"
++            "  This is almost always an experiment repo accidentally swallowed by\n"
++            "  `git add -A`. Offending path(s):\n"
++        )
++        for p in sorted(violations):
++            sys.stderr.write(f"    - {p}\n")
++        sys.stderr.write(
++            "\n  Fix (untrack it, keep it on disk, stop it recurring):\n"
++            "    git rm --cached <path>\n"
++            "    echo '/<path>/' >> .gitignore\n"
++            "    git commit -m 'untrack stray gitlink <path>'\n"
++            "  …or, if it is a real submodule, add a .gitmodules entry for it.\n\n"
++        )
++        return 1
++
++    if errored:
++        sys.stderr.write(
++            "[gitlink-guard] note: could not verify some ranges; allowing push "
++            "(fail-open on infra error).\n"
++        )
++    return 0
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/scripts/install-git-hooks.sh b/scripts/install-git-hooks.sh
+index 10d47cb306..2ac4d3273b 100755
+--- a/scripts/install-git-hooks.sh
++++ b/scripts/install-git-hooks.sh
+@@ -9,4 +9,4 @@
+ set -euo pipefail
+ ROOT="$(git rev-parse --show-toplevel)"
+ install -m 0755 "${ROOT}/scripts/git-hooks/pre-push" "${ROOT}/.git/hooks/pre-push"
+-echo "installed .git/hooks/pre-push (standalone blog publish guard)"
++echo "installed .git/hooks/pre-push (standalone guards: blog-publish + gitlink)"
+diff --git a/tests/python/test_experiment_3882_thesis_a_partb_killgate.py b/tests/python/test_experiment_3882_thesis_a_partb_killgate.py
+new file mode 100644
+index 0000000000..8e3dd6eb34
+--- /dev/null
++++ b/tests/python/test_experiment_3882_thesis_a_partb_killgate.py
+@@ -0,0 +1,298 @@
++"""Tests for Exp 3882 Thesis-A part-b kill-gate beam-search rerun.
++
++Spec refs: REQ-EBT-3882, SCENARIO-EBT-3882-IMPORT,
++SCENARIO-EBT-3882-SCHEMA, SCENARIO-EBT-3882-ADJUDICATION.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import inspect
++import sys
++from pathlib import Path
++
++import pytest
++import torch
++
++
++ROOT = Path(__file__).resolve().parents[2]
++SCRIPT_PATH = ROOT / "scripts" / "experiments" / "experiment_3882_thesis_a_partb_killgate.py"
++SPEC_PATH = ROOT / "openspec" / "capabilities" / "ebt-nrgpt" / "spec.md"
++
++
++def _load_exp3882():
++    spec = importlib.util.spec_from_file_location("exp3882", SCRIPT_PATH)
++    assert spec is not None
++    module = importlib.util.module_from_spec(spec)
++    assert spec.loader is not None
++    sys.modules[spec.name] = module
++    spec.loader.exec_module(module)
++    return module
++
++
++def test_req_ebt_3882_spec_anchor_exists() -> None:
++    """REQ-EBT-3882: OpenSpec declares the rerun contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-EBT-3882" in spec
++    assert "SCENARIO-EBT-3882-IMPORT" in spec
++    assert "SCENARIO-EBT-3882-SCHEMA" in spec
++    assert "SCENARIO-EBT-3882-ADJUDICATION" in spec
++    assert SCRIPT_PATH.name in spec
++    assert "results/experiment_3882_thesis_a_partb_killgate.json" in spec
++
++
++def test_scenario_ebt_3882_import_uses_scripts_path() -> None:
++    """SCENARIO-EBT-3882-IMPORT: scaled harness import avoids package import."""
++
++    exp = _load_exp3882()
++    source = inspect.getsource(exp.load_scaled_modules)
++
++    assert 'REPO_ROOT / "scripts"' in source
++    assert "thesis_a_part_b_scaled" in source
++    assert "scripts.thesis_a_part_b_scaled" not in source
++
++
++def test_scenario_ebt_3882_adjudication_thresholds() -> None:
++    """SCENARIO-EBT-3882-ADJUDICATION: thresholds classify the kill-gate."""
++
++    exp = _load_exp3882()
++
++    artifact = exp.adjudicate(ar_best=0.84, ebt_argmin=0.0, ebt_beam=0.42)
++    assert artifact.adjudication == "ARTIFACT"
++    assert artifact.honest_verdict.startswith("complete: thesis_a_partb_ARTIFACT")
++
++    fundamental = exp.adjudicate(ar_best=0.84, ebt_argmin=0.0, ebt_beam=0.0)
++    assert fundamental.adjudication == "FUNDAMENTAL"
++    assert fundamental.honest_verdict.startswith("complete: thesis_a_partb_FUNDAMENTAL")
++
++    partial = exp.adjudicate(ar_best=0.84, ebt_argmin=0.0, ebt_beam=0.25)
++    assert partial.adjudication == "INCONCLUSIVE"
++    assert partial.honest_verdict.startswith("complete: thesis_a_partb_INCONCLUSIVE")
++
++
++def test_scenario_ebt_3882_no_headroom_never_fundamental() -> None:
++    """SCENARIO-EBT-3882-ADJUDICATION: failed headroom blocks strong labels."""
++
++    exp = _load_exp3882()
++
++    result = exp.adjudicate(ar_best=0.39, ebt_argmin=0.0, ebt_beam=0.0)
++
++    assert result.positive_control_passed is False
++    assert result.adjudication == "INCONCLUSIVE"
++    assert result.honest_verdict == "complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar0.390"
++    assert "FUNDAMENTAL" not in result.honest_verdict
++
++
++def test_scenario_ebt_3882_schema_uses_bare_required_fields() -> None:
++    """SCENARIO-EBT-3882-SCHEMA: required fields are not value/principle dicts."""
++
++    exp = _load_exp3882()
++    seed_eval = exp.SeedEvaluation(
++        seed=1,
++        checkpoint_path="results/experiment_3882_seed1.pt",
++        checkpoint_reused=True,
++        n_heldout=100,
++        ar_best_accuracy=0.84,
++        ar_best_of_n=1612,
++        ar_forward_evals=644_800,
++        ebt_argmin_accuracy=0.0,
++        ebt_argmin_evals=103_200,
++        ebt_beam_accuracy=0.0,
++        ebt_beam_evals=645_000,
++        matched_flops_ratio=1.0003,
++        samples=[{"prompt": "043+359=", "true": "0402"}],
++        training_diverged=False,
++    )
++
++    artifact = exp.build_artifact(
++        seed_evaluations=[seed_eval],
++        all_configured_seeds=[1, 2, 3],
++        preconditions=exp.PreconditionReport(cuda=True, cuda_device_count=2, scaled_harness_import=True),
++        model_specs={"dim": 768, "n_layers": 4, "beam": 8},
++        started_s=10.0,
++        finished_s=75.0,
++        inference_substrate="live_llm_inference",
++    )
++
++    assert artifact["positive_control_passed"] is True
++    assert artifact["ar_best_accuracy"] == 0.84
++    assert artifact["ebt_argmin_accuracy"] == 0.0
++    assert artifact["ebt_beam_accuracy"] == 0.0
++    assert artifact["adjudication"] == "FUNDAMENTAL"
++    assert artifact["matched_flops_ratio"] == 1.0003
++    assert artifact["seeds_used"] == [1]
++    assert artifact["random_seeds_used"] == [1]
++    assert artifact["n_heldout"] == 100
++    assert len(artifact["reproducibility_checksum"]) == 64
++    for field in exp.BARE_REQUIRED_FIELDS:
++        assert not (isinstance(artifact[field], dict) and {"value", "principle"} <= set(artifact[field]))
++    assert exp.validate_artifact(artifact) == []
++
++
++def test_scenario_ebt_3882_schema_handles_no_headroom_and_blocked(tmp_path: Path) -> None:
++    """SCENARIO-EBT-3882-SCHEMA: no-headroom and blocked artifacts stay bare."""
++
++    exp = _load_exp3882()
++    no_headroom = exp.SeedEvaluation(
++        seed=2,
++        checkpoint_path="results/experiment_3882_seed2.pt",
++        checkpoint_reused=False,
++        n_heldout=100,
++        ar_best_accuracy=0.12,
++        ar_best_of_n=1612,
++        ar_forward_evals=644_800,
++        ebt_argmin_accuracy=None,
++        ebt_argmin_evals=None,
++        ebt_beam_accuracy=None,
++        ebt_beam_evals=None,
++        matched_flops_ratio=None,
++        samples=[],
++        training_diverged=False,
++    )
++    better_no_headroom = exp.SeedEvaluation(
++        seed=3,
++        checkpoint_path="results/experiment_3882_seed3.pt",
++        checkpoint_reused=False,
++        n_heldout=100,
++        ar_best_accuracy=0.30,
++        ar_best_of_n=1612,
++        ar_forward_evals=644_800,
++        ebt_argmin_accuracy=None,
++        ebt_argmin_evals=None,
++        ebt_beam_accuracy=None,
++        ebt_beam_evals=None,
++        matched_flops_ratio=None,
++        samples=[],
++        training_diverged=False,
++    )
++
++    artifact = exp.build_artifact(
++        seed_evaluations=[no_headroom, better_no_headroom],
++        all_configured_seeds=[1, 2, 3],
++        preconditions=exp.PreconditionReport(cuda=True, cuda_device_count=1, scaled_harness_import=True),
++        model_specs={"dim": 768, "n_layers": 4, "beam": 8},
++        started_s=1.0,
++        finished_s=2.0,
++        inference_substrate="live_llm_inference",
++    )
++
++    assert artifact["positive_control_passed"] is False
++    assert artifact["random_seed"] == 3
++    assert artifact["honest_verdict"] == "complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar0.300"
++    assert exp.validate_artifact(artifact) == []
++
++    blocked = exp.build_blocked_artifact(
++        honest_verdict="blocked_no_cuda",
++        preconditions=exp.PreconditionReport(cuda=False, cuda_device_count=0, scaled_harness_import=False),
++        model_specs={"dim": 768},
++        started_s=3.0,
++        finished_s=4.25,
++    )
++    assert blocked["honest_verdict"] == "blocked_no_cuda"
++    assert blocked["positive_control_passed"] is False
++    assert blocked["duration_s"] == 1.25
++    assert exp.validate_artifact(blocked) == []
++
++    out = tmp_path / "result.json"
++    exp.write_artifact(out, blocked)
++    assert out.read_text(encoding="utf-8").endswith("\n")
++
++    with pytest.raises(ValueError, match="at least one seed evaluation"):
++        exp.build_artifact(
++            seed_evaluations=[],
++            all_configured_seeds=[1, 2, 3],
++            preconditions=exp.PreconditionReport(cuda=True, cuda_device_count=1, scaled_harness_import=True),
++            model_specs={"dim": 768},
++            started_s=1.0,
++            finished_s=2.0,
++            inference_substrate="live_llm_inference",
++        )
++
++
++def test_validate_artifact_rejects_wrapped_bare_fields() -> None:
++    """SCENARIO-EBT-3882-SCHEMA: value/principle wrappers are invalid."""
++
++    exp = _load_exp3882()
++    bad = {
++        "honest_verdict": "complete: bad",
++        "positive_control_passed": True,
++        "ar_best_accuracy": {"value": 0.84, "principle": "bad"},
++    }
++
++    errors = exp.validate_artifact(bad)
++
++    assert "ar_best_accuracy must be a bare value, not a value/principle wrapper" in errors
++    assert "positive_control_passed must be a bare bool" not in errors
++
++    more_bad = {
++        "honest_verdict": "not_terminal",
++        "positive_control_passed": {"value": True, "principle": "bad"},
++        "ar_best_accuracy": "bad",
++        "ebt_argmin_accuracy": None,
++        "ebt_beam_accuracy": None,
++        "matched_flops_ratio": None,
++        "adjudication": "BAD",
++        "seeds_used": "bad",
++        "random_seeds_used": "bad",
++        "n_heldout": True,
++        "preconditions_checked": [],
++        "model_specs": [],
++        "reproducibility_checksum": "short",
++        "duration_s": -1.0,
++        "inference_substrate": {},
++    }
++
++    more_errors = exp.validate_artifact(more_bad)
++
++    assert "honest_verdict must start with complete: or blocked_" in more_errors
++    assert "positive_control_passed must be a bare bool" in more_errors
++    assert "ar_best_accuracy must be numeric or null" in more_errors
++    assert "adjudication must be ARTIFACT, FUNDAMENTAL, or INCONCLUSIVE" in more_errors
++    assert "seeds_used must be a list" in more_errors
++    assert "random_seeds_used must be a list" in more_errors
++    assert "n_heldout must be an integer" in more_errors
++    assert "preconditions_checked must be an object" in more_errors
++    assert "model_specs must be an object" in more_errors
++    assert "reproducibility_checksum must be a sha256 hex string" in more_errors
++    assert "duration_s must be non-negative" in more_errors
++    assert "inference_substrate must be a string" in more_errors
++
++
++def test_ebt_beam_generate_uses_cumulative_energy_beam_cost() -> None:
++    """REQ-EBT-3882: global beam expands cumulative energy beams."""
++
++    exp = _load_exp3882()
++
++    class MockEBT(torch.nn.Module):
++        def __init__(self) -> None:
++            super().__init__()
++            self.token_embedding = torch.nn.Embedding(exp.VOCAB, 8)
++
++        def forward(self, orig: torch.Tensor, pred: torch.Tensor) -> torch.Tensor:
++            energy = torch.zeros((orig.shape[0], orig.shape[1], 1), dtype=pred.dtype)
++            energy[:, -1, 0] = torch.arange(orig.shape[0], dtype=pred.dtype)
++            return energy
++
++    ids, n_energy_evals = exp.ebt_beam_generate(
++        MockEBT(),
++        pid=[2, 3, 4],
++        ans_len=2,
++        device=torch.device("cpu"),
++        beam=2,
++        topk=2,
++    )
++
++    assert len(ids) == 2
++    assert n_energy_evals == exp.VOCAB * 3
++
++
++def test_matched_ar_best_of_n_tracks_beam_flops() -> None:
++    """REQ-EBT-3882: AR best-of-N is selected by Exp 3727 budget matcher."""
++
++    exp = _load_exp3882()
++
++    best_of_n = exp.matched_ar_best_of_n(n_heldout=100, ans_len=4, beam=8)
++
++    assert best_of_n in {1612, 1613}
+-- 
+2.55.0
+

@@ -1,0 +1,47 @@
+From ffb100b20f4e9b80c03d1601cc2a5dce12575352 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 08:29:10 -0400
+Subject: [PATCH 00627/11171] [conductor] Facts-domain COMPLEMENTARITY (gated
+ on exp3862 facts_catch_delta>0, re-issue of exp3851): does the
+ graph-grounding verifier catch factual hallucinations the math-bound ensemble
+ misses, and would {{math verifiers + graph verifier}} be a broader fact-aware
+ system? Quantify the independent contribution + error-mask correlation.
+
+Automated research step by research conductor.
+Task ID: exp3863-graph-verifier-facts-complementarity-v2
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/dogfood-memory.json                                         | 2 +-
+ ...experiment_3863_graph_verifier_facts_complementarity_v2.json | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index d5038a022e..6548448ce2 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 154,
+   "code_violations": 0,
+-  "experiments_checked": 2944,
++  "experiments_checked": 2945,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_3863_graph_verifier_facts_complementarity_v2.json b/results/experiment_3863_graph_verifier_facts_complementarity_v2.json
+index f451c82703..9f2961dc4b 100644
+--- a/results/experiment_3863_graph_verifier_facts_complementarity_v2.json
++++ b/results/experiment_3863_graph_verifier_facts_complementarity_v2.json
+@@ -9,7 +9,7 @@
+       "sha256": "d90ab76407c5fb8c6e422edde62efd87e45fc300c052b681f3ff4e9ff9f9e831"
+     }
+   ],
+-  "duration_s": 0.000607,
++  "duration_s": 0.000463,
+   "ensemble_catches_graph_miss_ids": [],
+   "ensemble_catches_graph_misses": 0,
+   "extended_ensemble_recommended": false,
+-- 
+2.55.0
+

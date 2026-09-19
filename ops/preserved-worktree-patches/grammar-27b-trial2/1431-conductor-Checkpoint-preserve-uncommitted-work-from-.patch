@@ -1,0 +1,70 @@
+From f6dc847cac99dc1ae1117836203783069d7ae3f5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 08:39:23 -0400
+Subject: [PATCH 01431/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...ent_4095_verifier_registry_gaps_hygiene.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index db23ce0d55..7875866883 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 141, "phase": "iteration_start", "last_beat": "2026-06-12T12:16:39Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 142, "phase": "iteration_start", "last_beat": "2026-06-12T12:39:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fe8b5cbf13..7bce4c06be 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8333,3 +8333,4 @@ c |
+ | 2026-06-12 11:26 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+ | 2026-06-12 11:26 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+ | 2026-06-12 12:14 UTC | SOTA-INGESTION SLOT (reserved): ingest the certifi | OK | 99 passed in 3.64s |
++| 2026-06-12 12:37 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bfd84aabec..cc19a21faf 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 2240979, "iteration": 141, "phase": "iteration_start", "started_at": "2026-06-12T12:16:39Z"}
+\ No newline at end of file
++{"pid": 2240979, "iteration": 142, "phase": "iteration_start", "started_at": "2026-06-12T12:39:21Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4095_verifier_registry_gaps_hygiene.json b/results/experiment_4095_verifier_registry_gaps_hygiene.json
+index ab32488957..a114895c3b 100644
+--- a/results/experiment_4095_verifier_registry_gaps_hygiene.json
++++ b/results/experiment_4095_verifier_registry_gaps_hygiene.json
+@@ -80,5 +80,18 @@
+     "status": "pending"
+   },
+   "rft_outcome_recorded": true,
+-  "schema": "carnot.experiment_4095_verifier_registry_gaps_hygiene.v1"
+-}
++  "schema": "carnot.experiment_4095_verifier_registry_gaps_hygiene.v1",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.197 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

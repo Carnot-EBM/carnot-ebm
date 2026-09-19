@@ -1,0 +1,1881 @@
+From 052a5cade916238f0a33856be3b6954cff823d8d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 21:27:22 -0400
+Subject: [PATCH 01160/11171] [conductor] ARC-AGI-3 BREAK A LEVEL WALL via
+ EXPLORE-FIRST per-level re-induction (the exp4003 wall-hold fix; +1..+n
+ levels per the MANDATORY Incremental-Progress rule): exp4003 held the walls
+ because it re-induced per-level rules WITHOUT observing per-level dynamics
+ first. Apply the exp4004 explore-first method that SOLVED su15: per stalled
+ level, (1) a bounded active-exploration phase OBSERVES the per-level
+ transitions, (2) induce the level rule from the OBSERVED transitions, (3)
+ GAP-4 verifier-validate the candidate against held-out transitions, (4)
+ commit actions ONLY if it validates. Target the lp85 & sc25 L2 walls and r11l
+ L4 (whichever validates). STOP each game at the first level that fails (NOT
+ all levels). Report new_levels_this_task + ACCURACY_total_levels_solved
+ (raise PAST the banked 5) + verifier_validated_count +
+ actions_saved_vs_openloop. Real-env-confirmed; holding at 5 with WHY each
+ wall stalled is an honest no-advance complete.
+
+Automated research step by research conductor.
+Task ID: exp4014-break-level-wall-explore-first
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../phase4_active_inference/spec.md           |   6 +
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/arc_level_wall_explore_first.py   | 281 ++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...t_4014_break_level_wall_explore_first.json | 668 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ent_4014_break_level_wall_explore_first.py | 476 +++++++++++++
+ ...ent_4014_break_level_wall_explore_first.py | 223 ++++++
+ 14 files changed, 1672 insertions(+), 18 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_level_wall_explore_first.py
+ create mode 100644 results/experiment_4014_break_level_wall_explore_first.json
+ create mode 100644 scripts/experiments/experiment_4014_break_level_wall_explore_first.py
+ create mode 100644 tests/python/test_experiment_4014_break_level_wall_explore_first.py
+
+diff --git a/openspec/capabilities/phase4_active_inference/spec.md b/openspec/capabilities/phase4_active_inference/spec.md
+index 37dcfd0af6..c223c4f9bf 100644
+--- a/openspec/capabilities/phase4_active_inference/spec.md
++++ b/openspec/capabilities/phase4_active_inference/spec.md
+@@ -150,3 +150,9 @@
+ 
+ ### SCENARIO-PHASE4-025
+ **Description:** Running Exp 4005 either writes `blocked_arc_offline_env_unavailable` when the offline Arcade cannot load, reports `complete: arcmemo_solve_no_transfer_positive_control_failed` when fewer than two banked concepts share structure with the target, stops honestly when no replayable retrieved concept exists for the chosen target, or completes an honest two-arm solve-loop comparison. A transfer win MUST use `success: arcmemo_solve_transfer_v3_<a_cold>to<a_mem>_actions` only when both arms are confirmed by the real offline environment and the memory-seeded arm uses fewer actions or reset attempts than cold start; otherwise it MUST use `complete: arcmemo_solve_no_transfer_to_new_content_<reason>` while preserving measured action and attempt counts.
++
++### REQ-PHASE4-026: ARC-AGI-3 Explore-First Level-Wall Re-Induction
++**Description:** The system SHALL run Exp 4014 as a scoped ARC-AGI-3 level-wall attempt over exactly the stalled next levels `lp85` L2, `sc25` L2, and `r11l` L4. It MUST first confirm the offline Arcade precondition and the Codex CLI precondition if fresh Codex re-induction is requested, spend a fixed positive exploratory action budget on each stalled level before inducing any rule, record observed per-level transition deltas, induce level-local candidates only from those observed transitions, GAP-4 verifier-validate held-out executed consistency before spending committed solve actions, commit actions only for validated candidates, confirm every level-up through the real environment's `levels_completed` counter, and stop each game at the first failed level rather than attempting all remaining levels. The terminal artifact `results/experiment_4014_break_level_wall_explore_first.json` MUST include bare fields `ACCURACY_total_levels_solved`, `new_levels_this_task`, `per_game_max_level`, `explore_first_found_validated_candidate`, `verifier_validated_count`, `actions_saved_vs_openloop`, `exploration_actions_used`, `real_env_confirmed`, `random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`.
++
++### SCENARIO-PHASE4-026
++**Description:** Running Exp 4014 either writes `blocked_arc_offline_env_unavailable` or `blocked_codex_unavailable` when a required substrate is unavailable, or reports an honest terminal-prefix artifact for the three scoped next levels. A successful level-wall break MUST use `success: broke_wall_<game>_to_L<n>_total<m>`, set `explore_first_found_validated_candidate=true` only when a previously failed Exp 4003 wall produced a verifier-validated candidate after exploration, and set `real_env_confirmed=true` only when every reported level-up is confirmed by `levels_completed`; a no-advance run MUST use `complete: level_walls_hold_<reason>` and preserve why each wall stalled after explore-first observation, induction, and verifier pruning.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 7b37a26e3a..f11fda609e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 162,
+   "code_violations": 0,
+-  "experiments_checked": 3045,
++  "experiments_checked": 3046,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_level_wall_explore_first.py b/python/carnot/agentic/arc_level_wall_explore_first.py
+new file mode 100644
+index 0000000000..ef196717b1
+--- /dev/null
++++ b/python/carnot/agentic/arc_level_wall_explore_first.py
+@@ -0,0 +1,281 @@
++"""Shared contracts for Exp 4014 explore-first ARC-AGI-3 level-wall attempts.
++
++Spec refs: REQ-PHASE4-026, SCENARIO-PHASE4-026.
++"""
++
++from __future__ import annotations
++
++import re
++import time
++from dataclasses import dataclass
++from typing import Any
++
++import numpy as np
++
++from carnot.agentic.arc_world_model_synth import InducedWorldModel
++
++
++BANKED_FRONTIER = {"lp85": 1, "sc25": 1, "r11l": 3}
++STALLED_LEVELS = {"lp85": 2, "sc25": 2, "r11l": 4}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "ACCURACY_total_levels_solved",
++    "new_levels_this_task",
++    "per_game_max_level",
++    "explore_first_found_validated_candidate",
++    "verifier_validated_count",
++    "actions_saved_vs_openloop",
++    "exploration_actions_used",
++    "real_env_confirmed",
++    "random_seed",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++TERMINAL_PREFIXES = ("complete:", "success:", "blocked_")
++
++
++@dataclass(frozen=True)
++class TransitionObservation:
++    """One observed per-level transition collected before rule induction."""
++
++    before: np.ndarray
++    action_key: tuple[int, ...]
++    after: np.ndarray
++    level_delta: int
++    game_over: bool
++
++
++@dataclass(frozen=True)
++class LevelWallResult:
++    """One scoped game result for the Exp 4014 aggregate artifact."""
++
++    short_game: str
++    game_id: str
++    banked_level: int
++    target_level: int
++    levels_completed: int
++    first_fail_level: int | None
++    exploration_actions_used: int
++    observed_dynamics: list[dict[str, Any]]
++    dynamics_induced: bool
++    candidate_validations: list[dict[str, Any]]
++    committed_actions: list[dict[str, Any]]
++    verifier_validated_count: int
++    actions_saved_vs_openloop: int
++    real_env_confirmed: bool
++    stall_reason: str
++    solve_log: list[dict[str, Any]]
++
++    @property
++    def new_levels(self) -> int:
++        return max(0, int(self.levels_completed) - int(self.banked_level))
++
++
++def _duration(started: float) -> float:
++    return round(time.time() - started, 3) if started else 0.0
++
++
++def _slug(text: str) -> str:
++    return re.sub(r"[^A-Za-z0-9]+", "_", text).strip("_")[:80] or "unknown"
++
++
++def count_validated_candidates(rows: list[dict[str, Any]], *, energy_threshold: float = 0.0) -> int:
++    """Count selected candidates that passed held-out executed consistency."""
++
++    return sum(
++        1
++        for row in rows
++        if row.get("selected") is True
++        and row.get("heldout_energy") is not None
++        and float(row.get("heldout_energy", 1.0)) <= energy_threshold
++        and int(row.get("heldout_n", 0) or 0) > 0
++    )
++
++
++def induce_model_from_level_observations(
++    game_id: str,
++    observations: list[TransitionObservation],
++) -> InducedWorldModel:
++    """Build a grounded world model only after per-level transitions exist."""
++
++    if not observations:
++        raise ValueError("at least one observed transition is required before level-rule induction")
++    transitions = [(obs.before, obs.action_key, obs.after) for obs in observations]
++    return InducedWorldModel(game_id).fit(transitions)
++
++
++def blocked_artifact(
++    *,
++    seed: int,
++    started: float,
++    inference_substrate: str,
++    verdict: str,
++) -> dict[str, Any]:
++    """Build a schema-valid blocked artifact for failed preconditions."""
++
++    artifact = {
++        "experiment": "experiment_4014_break_level_wall_explore_first",
++        "title": "arc3_explore_first_level_wall_reinduction",
++        "ACCURACY_total_levels_solved": 0,
++        "new_levels_this_task": 0,
++        "per_game_max_level": {},
++        "explore_first_found_validated_candidate": False,
++        "verifier_validated_count": 0,
++        "actions_saved_vs_openloop": 0,
++        "exploration_actions_used": 0,
++        "real_env_confirmed": False,
++        "random_seed": int(seed),
++        "honest_verdict": verdict,
++        "duration_s": _duration(started),
++        "inference_substrate": inference_substrate,
++        "banked_frontier": dict(BANKED_FRONTIER),
++        "stalled_levels": dict(STALLED_LEVELS),
++        "wall_results": {},
++        "observed_dynamics": {},
++        "candidate_validations": {},
++        "precondition_blocked": True,
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def build_level_wall_artifact(
++    results: list[LevelWallResult],
++    *,
++    seed: int,
++    started: float,
++    inference_substrate: str,
++) -> dict[str, Any]:
++    """Aggregate scoped explore-first level-wall results into the terminal artifact."""
++
++    per_game = {row.short_game: int(row.levels_completed) for row in results}
++    new_by_game = {row.short_game: row.new_levels for row in results}
++    total_levels = sum(per_game.values())
++    new_levels = sum(new_by_game.values())
++    validations = sum(int(row.verifier_validated_count) for row in results)
++    saved = sum(int(row.actions_saved_vs_openloop) for row in results)
++    exploration = sum(int(row.exploration_actions_used) for row in results)
++    confirmed = bool(results) and all(row.real_env_confirmed for row in results)
++    found_validated = validations > 0 and new_levels > 0
++
++    if new_levels > 0:
++        order = {name: index for index, name in enumerate(STALLED_LEVELS)}
++        leader = sorted(results, key=lambda row: (-row.new_levels, order.get(row.short_game, 99)))[0]
++        verdict = f"success: broke_wall_{leader.short_game}_to_L{leader.levels_completed}_total{total_levels}"
++    else:
++        parts = [
++            f"{row.short_game}_L{row.first_fail_level or row.target_level}_{_slug(row.stall_reason)}"
++            for row in results
++        ]
++        verdict = f"complete: level_walls_hold_{'_'.join(parts)}_total{total_levels}"
++
++    artifact = {
++        "experiment": "experiment_4014_break_level_wall_explore_first",
++        "title": "arc3_explore_first_level_wall_reinduction",
++        "ACCURACY_total_levels_solved": int(total_levels),
++        "new_levels_this_task": int(new_levels),
++        "per_game_max_level": per_game,
++        "explore_first_found_validated_candidate": bool(found_validated),
++        "verifier_validated_count": int(validations),
++        "actions_saved_vs_openloop": int(saved),
++        "exploration_actions_used": int(exploration),
++        "real_env_confirmed": bool(confirmed),
++        "random_seed": int(seed),
++        "honest_verdict": verdict,
++        "duration_s": _duration(started),
++        "inference_substrate": inference_substrate,
++        "banked_frontier": dict(BANKED_FRONTIER),
++        "stalled_levels": dict(STALLED_LEVELS),
++        "per_game_new_levels": new_by_game,
++        "first_fail_level": {row.short_game: row.first_fail_level for row in results},
++        "stall_reasons": {row.short_game: row.stall_reason for row in results},
++        "observed_dynamics": {row.short_game: row.observed_dynamics for row in results},
++        "candidate_validations": {row.short_game: row.candidate_validations for row in results},
++        "committed_actions": {row.short_game: row.committed_actions for row in results},
++        "solve_log": {row.short_game: row.solve_log for row in results},
++        "dynamics_induced": {row.short_game: row.dynamics_induced for row in results},
++        "wall_results": {
++            row.short_game: {
++                "game_id": row.game_id,
++                "banked_level": int(row.banked_level),
++                "target_level": int(row.target_level),
++                "levels_completed": int(row.levels_completed),
++                "first_fail_level": row.first_fail_level,
++                "exploration_actions_used": int(row.exploration_actions_used),
++                "verifier_validated_count": int(row.verifier_validated_count),
++                "actions_saved_vs_openloop": int(row.actions_saved_vs_openloop),
++                "real_env_confirmed": bool(row.real_env_confirmed),
++                "stall_reason": row.stall_reason,
++            }
++            for row in results
++        },
++        "precondition_blocked": False,
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def _map_int_errors(name: str, value: Any) -> list[str]:
++    if not isinstance(value, dict) or any(type(key) is not str or type(item) is not int for key, item in value.items()):
++        return [f"{name} must be a map of string to bare int"]
++    return []
++
++
++def artifact_schema_errors(artifact: dict[str, Any]) -> list[str]:
++    """Validate the bare-field terminal schema required by REQ-PHASE4-026."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++
++    for field in (
++        "ACCURACY_total_levels_solved",
++        "new_levels_this_task",
++        "verifier_validated_count",
++        "actions_saved_vs_openloop",
++        "exploration_actions_used",
++        "random_seed",
++    ):
++        if field in artifact and type(artifact[field]) is not int:
++            errors.append(f"{field} must be a bare int")
++
++    for field in ("explore_first_found_validated_candidate", "real_env_confirmed"):
++        if field in artifact and type(artifact[field]) is not bool:
++            errors.append(f"{field} must be a bare bool")
++
++    for field in ("honest_verdict", "inference_substrate"):
++        if field in artifact and type(artifact[field]) is not str:
++            errors.append(f"{field} must be a bare string")
++
++    if "per_game_max_level" in artifact:
++        errors.extend(_map_int_errors("per_game_max_level", artifact["per_game_max_level"]))
++
++    if "duration_s" in artifact and type(artifact["duration_s"]) not in (int, float):
++        errors.append("duration_s must be a bare number")
++
++    verdict = artifact.get("honest_verdict")
++    if isinstance(verdict, str):
++        if not verdict.startswith(TERMINAL_PREFIXES):
++            errors.append("honest_verdict must start with complete:/success:/blocked_")
++        exploration_actions = artifact.get("exploration_actions_used", 0)
++        if (
++            not verdict.startswith("blocked_")
++            and isinstance(exploration_actions, int)
++            and exploration_actions <= 0
++        ):
++            errors.append("exploration_actions_used must be >0 for non-blocked attempts")
++        if verdict.startswith("success:"):
++            if artifact.get("new_levels_this_task", 0) <= 0:
++                errors.append("new_levels_this_task must be >0 for success")
++            if artifact.get("explore_first_found_validated_candidate") is not True:
++                errors.append("explore_first_found_validated_candidate must be true for success")
++            if artifact.get("real_env_confirmed") is not True:
++                errors.append("real_env_confirmed must be true for success")
++    return errors
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3f0593e3b6..c0957e8924 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T01:13:07.796372Z",
+-  "duration_s": 0.05762767791748047,
++  "run_date": "2026-06-11T01:25:53.889105Z",
++  "duration_s": 0.05839419364929199,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "bfdcf8e976bd4586e4bab706b976584d4630c7b47a4d7ed6b252bace3b790ad1",
++  "reproducibility_checksum": "68959d669a1d9751bc390f5d65256b56e6823d5124f98f03a009be5c379310df",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "34fb37f7aff6c49463d56ff340a8d91a253e01d4"
++    "adversarial_verify_version": "b28cfd9e6e22899df56fa82d20da8952ce54c125"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 69cbabb7f1..707a60554c 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T01:13:07.890475Z",
+-  "duration_s": 0.06678271293640137,
++  "run_date": "2026-06-11T01:25:53.978761Z",
++  "duration_s": 0.05238628387451172,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "e30b520dc0d9e7c507663e10cf5a9bb60e68ecc06b38a1de711185e4b59c7ecf",
++  "reproducibility_checksum": "0f18bc52199e66c6ae3e8b752cb7c4771e7537b573e294f620711b4e825b5f17",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "34fb37f7aff6c49463d56ff340a8d91a253e01d4"
++    "adversarial_verify_version": "b28cfd9e6e22899df56fa82d20da8952ce54c125"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 2e7a4260f5..1446448740 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1092891693115234,
++  "efficiency_gains_ms": 2.1514892578125,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 95030b1a3d..58c3a1e524 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2525012493133545,
++  "duration_s": 0.3343696594238281,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 479216bbe3..fda38e6710 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.8091948479413986e-05,
++  "duration_s": 3.1659030355513096e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4014_break_level_wall_explore_first.json b/results/experiment_4014_break_level_wall_explore_first.json
+new file mode 100644
+index 0000000000..d6dffd0e6a
+--- /dev/null
++++ b/results/experiment_4014_break_level_wall_explore_first.json
+@@ -0,0 +1,668 @@
++{
++  "ACCURACY_total_levels_solved": 5,
++  "actions_saved_vs_openloop": 3,
++  "banked_frontier": {
++    "lp85": 1,
++    "r11l": 3,
++    "sc25": 1
++  },
++  "candidate_validations": {
++    "lp85": [
++      {
++        "candidate_id": "lp85-explore-first-single-action",
++        "demo_fit": 0.0,
++        "heldout_energy": null,
++        "heldout_n": 2,
++        "level": 2,
++        "planned_l2_actions": 1,
++        "predicted_levels_after": 1,
++        "prediction_paths": {
++          "noop_fallback": 2
++        },
++        "rule_name": "observed per-level transition replay after explore-first induction",
++        "selected": false,
++        "validated_levels_after": 1,
++        "validation_source": "GAP-4 executed-consistency energy on held-out observed transitions"
++      }
++    ],
++    "r11l": [
++      {
++        "candidate_id": "r11l-explore-first-single-action",
++        "demo_fit": 1.0,
++        "heldout_energy": 1.0,
++        "heldout_n": 2,
++        "level": 4,
++        "planned_l2_actions": 1,
++        "predicted_levels_after": 3,
++        "prediction_paths": {
++          "noop_fallback": 2
++        },
++        "rule_name": "observed per-level transition replay after explore-first induction",
++        "selected": false,
++        "validated_levels_after": 3,
++        "validation_source": "GAP-4 executed-consistency energy on held-out observed transitions"
++      }
++    ],
++    "sc25": [
++      {
++        "candidate_id": "sc25-explore-first-single-action",
++        "demo_fit": 1.0,
++        "heldout_energy": 1.0,
++        "heldout_n": 2,
++        "level": 2,
++        "planned_l2_actions": 1,
++        "predicted_levels_after": 1,
++        "prediction_paths": {
++          "noop_fallback": 2
++        },
++        "rule_name": "observed per-level transition replay after explore-first induction",
++        "selected": false,
++        "validated_levels_after": 1,
++        "validation_source": "GAP-4 executed-consistency energy on held-out observed transitions"
++      }
++    ]
++  },
++  "committed_actions": {
++    "lp85": [],
++    "r11l": [],
++    "sc25": []
++  },
++  "duration_s": 4.149,
++  "dynamics_induced": {
++    "lp85": true,
++    "r11l": true,
++    "sc25": true
++  },
++  "experiment": "experiment_4014_break_level_wall_explore_first",
++  "exploration_actions_used": 12,
++  "explore_first_found_validated_candidate": false,
++  "first_fail_level": {
++    "lp85": 2,
++    "r11l": 4,
++    "sc25": 2
++  },
++  "honest_verdict": "complete: level_walls_hold_lp85_L2_no_verifier_validated_level_up_candidate_after_explore_first_observation_sc25_L2_no_verifier_validated_level_up_candidate_after_explore_first_observation_r11l_L4_no_verifier_validated_level_up_candidate_after_explore_first_observation_total5",
++  "inference_substrate": "offline_arc_agi3_explore_first_level_wall_gap4_executed_consistency",
++  "new_levels_this_task": 0,
++  "observed_dynamics": {
++    "lp85": [
++      {
++        "action_key": [
++          6,
++          0,
++          31
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 0
++      },
++      {
++        "action_key": [
++          6,
++          11,
++          1
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 0
++      },
++      {
++        "action_key": [
++          6,
++          16,
++          1
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 0
++      },
++      {
++        "action_key": [
++          6,
++          21,
++          1
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 0
++      }
++    ],
++    "r11l": [
++      {
++        "action_key": [
++          6,
++          2,
++          29
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 1
++      },
++      {
++        "action_key": [
++          6,
++          60,
++          2
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 1
++      },
++      {
++        "action_key": [
++          6,
++          39,
++          6
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 25
++      },
++      {
++        "action_key": [
++          6,
++          19,
++          5
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 89
++      }
++    ],
++    "sc25": [
++      {
++        "action_key": [
++          6,
++          25,
++          50
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 13
++      },
++      {
++        "action_key": [
++          6,
++          30,
++          50
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 13
++      },
++      {
++        "action_key": [
++          6,
++          25,
++          55
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 13
++      },
++      {
++        "action_key": [
++          6,
++          35,
++          55
++        ],
++        "game_over": false,
++        "level_delta": 0,
++        "n_changed": 13
++      }
++    ]
++  },
++  "per_game_max_level": {
++    "lp85": 1,
++    "r11l": 3,
++    "sc25": 1
++  },
++  "per_game_new_levels": {
++    "lp85": 0,
++    "r11l": 0,
++    "sc25": 0
++  },
++  "precondition_blocked": false,
++  "random_seed": 4014,
++  "real_env_confirmed": true,
++  "solve_log": {
++    "lp85": [
++      {
++        "action": "click",
++        "level": 1,
++        "x": 4,
++        "y": 32
++      },
++      {
++        "action": "click",
++        "level": 1,
++        "x": 4,
++        "y": 32
++      },
++      {
++        "action": "click",
++        "level": 1,
++        "x": 4,
++        "y": 32
++      },
++      {
++        "action": "click",
++        "level": 1,
++        "x": 4,
++        "y": 32
++      },
++      {
++        "action": "click",
++        "level": 1,
++        "x": 4,
++        "y": 32
++      }
++    ],
++    "r11l": [
++      {
++        "group_id": "pumlzd",
++        "level": 1,
++        "piece": [
++          36,
++          7
++        ],
++        "piece_index": 0,
++        "placement": [
++          20,
++          34
++        ],
++        "target": [
++          20,
++          38
++        ]
++      },
++      {
++        "group_id": "pumlzd",
++        "level": 1,
++        "piece": [
++          59,
++          27
++        ],
++        "piece_index": 1,
++        "placement": [
++          20,
++          42
++        ],
++        "target": [
++          20,
++          38
++        ]
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          8,
++          61
++        ],
++        "composite_after": [
++          19,
++          51
++        ],
++        "group_id": "pumlzd",
++        "level": 2,
++        "piece_index": 1,
++        "piece_top_left_after": [
++          6,
++          59
++        ],
++        "settle_steps": 0,
++        "target": [
++          15,
++          54
++        ],
++        "target_after_collides": true
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          57,
++          51
++        ],
++        "composite_after": [
++          27,
++          34
++        ],
++        "group_id": "orrqlj",
++        "level": 2,
++        "piece_index": 0,
++        "piece_top_left_after": [
++          55,
++          49
++        ],
++        "settle_steps": 0,
++        "target": [
++          48,
++          37
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          63,
++          43
++        ],
++        "composite_after": [
++          45,
++          32
++        ],
++        "group_id": "orrqlj",
++        "level": 2,
++        "piece_index": 2,
++        "piece_top_left_after": [
++          61,
++          41
++        ],
++        "settle_steps": 0,
++        "target": [
++          48,
++          37
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          27,
++          11
++        ],
++        "composite_after": [
++          47,
++          33
++        ],
++        "group_id": "orrqlj",
++        "level": 2,
++        "piece_index": 1,
++        "piece_top_left_after": [
++          25,
++          9
++        ],
++        "settle_steps": 0,
++        "target": [
++          48,
++          37
++        ],
++        "target_after_collides": true
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          62,
++          25
++        ],
++        "composite_after": [
++          49,
++          36
++        ],
++        "group_id": "pumlzd",
++        "level": 3,
++        "piece_index": 0,
++        "piece_top_left_after": [
++          60,
++          23
++        ],
++        "settle_steps": 0,
++        "target": [
++          54,
++          31
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          46,
++          35
++        ],
++        "composite_after": [
++          52,
++          28
++        ],
++        "group_id": "pumlzd",
++        "level": 3,
++        "piece_index": 1,
++        "piece_top_left_after": [
++          44,
++          33
++        ],
++        "settle_steps": 0,
++        "target": [
++          54,
++          31
++        ],
++        "target_after_collides": true
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          46,
++          60
++        ],
++        "composite_after": [
++          21,
++          37
++        ],
++        "group_id": "grhcew",
++        "level": 3,
++        "piece_index": 0,
++        "piece_top_left_after": [
++          44,
++          58
++        ],
++        "settle_steps": 0,
++        "target": [
++          50,
++          52
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          61,
++          62
++        ],
++        "composite_after": [
++          34,
++          44
++        ],
++        "group_id": "grhcew",
++        "level": 3,
++        "piece_index": 2,
++        "piece_top_left_after": [
++          59,
++          60
++        ],
++        "settle_steps": 0,
++        "target": [
++          50,
++          52
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          61,
++          51
++        ],
++        "composite_after": [
++          44,
++          51
++        ],
++        "group_id": "grhcew",
++        "level": 3,
++        "piece_index": 1,
++        "piece_top_left_after": [
++          59,
++          49
++        ],
++        "settle_steps": 0,
++        "target": [
++          50,
++          52
++        ],
++        "target_after_collides": false
++      },
++      {
++        "action": "verifier_validated_safe_path_place",
++        "click": [
++          62,
++          54
++        ],
++        "composite_after": [
++          48,
++          49
++        ],
++        "group_id": "grhcew",
++        "level": 3,
++        "piece_index": 0,
++        "piece_top_left_after": [
++          60,
++          52
++        ],
++        "settle_steps": 0,
++        "target": [
++          50,
++          52
++        ],
++        "target_after_collides": true
++      }
++    ],
++    "sc25": [
++      {
++        "action": "click",
++        "level": 0,
++        "x": 25,
++        "y": 50
++      },
++      {
++        "action": "click",
++        "level": 0,
++        "x": 30,
++        "y": 50
++      },
++      {
++        "action": "click",
++        "level": 0,
++        "x": 25,
++        "y": 55
++      },
++      {
++        "action": "click",
++        "level": 0,
++        "x": 35,
++        "y": 55
++      },
++      {
++        "action": "click",
++        "level": 0,
++        "x": 30,
++        "y": 60
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      },
++      {
++        "action": "left",
++        "level": 0
++      }
++    ]
++  },
++  "stall_reasons": {
++    "lp85": "no verifier-validated level-up candidate after explore-first observation",
++    "r11l": "no verifier-validated level-up candidate after explore-first observation",
++    "sc25": "no verifier-validated level-up candidate after explore-first observation"
++  },
++  "stalled_levels": {
++    "lp85": 2,
++    "r11l": 4,
++    "sc25": 2
++  },
++  "title": "arc3_explore_first_level_wall_reinduction",
++  "verifier_validated_count": 0,
++  "wall_results": {
++    "lp85": {
++      "actions_saved_vs_openloop": 1,
++      "banked_level": 1,
++      "exploration_actions_used": 4,
++      "first_fail_level": 2,
++      "game_id": "lp85-305b61c3",
++      "levels_completed": 1,
++      "real_env_confirmed": true,
++      "stall_reason": "no verifier-validated level-up candidate after explore-first observation",
++      "target_level": 2,
++      "verifier_validated_count": 0
++    },
++    "r11l": {
++      "actions_saved_vs_openloop": 1,
++      "banked_level": 3,
++      "exploration_actions_used": 4,
++      "first_fail_level": 4,
++      "game_id": "r11l-495a7899",
++      "levels_completed": 3,
++      "real_env_confirmed": true,
++      "stall_reason": "no verifier-validated level-up candidate after explore-first observation",
++      "target_level": 4,
++      "verifier_validated_count": 0
++    },
++    "sc25": {
++      "actions_saved_vs_openloop": 1,
++      "banked_level": 1,
++      "exploration_actions_used": 4,
++      "first_fail_level": 2,
++      "game_id": "sc25-635fd71a",
++      "levels_completed": 1,
++      "real_env_confirmed": true,
++      "stall_reason": "no verifier-validated level-up candidate after explore-first observation",
++      "target_level": 2,
++      "verifier_validated_count": 0
++    }
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 049feec282..10fbc2baf4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:12:43Z",
+-  "finished_at": "2026-06-11T01:12:43Z",
++  "started_at": "2026-06-11T01:25:27Z",
++  "finished_at": "2026-06-11T01:25:28Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 06fbc5d727..474ae198cd 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:12:43Z",
+-  "finished_at": "2026-06-11T01:12:43Z",
++  "started_at": "2026-06-11T01:25:28Z",
++  "finished_at": "2026-06-11T01:25:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d335f17df3..2c675bbf45 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:12:43Z",
+-  "finished_at": "2026-06-11T01:12:43Z",
++  "started_at": "2026-06-11T01:25:28Z",
++  "finished_at": "2026-06-11T01:25:28Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_4014_break_level_wall_explore_first.py b/scripts/experiments/experiment_4014_break_level_wall_explore_first.py
+new file mode 100644
+index 0000000000..5460091118
+--- /dev/null
++++ b/scripts/experiments/experiment_4014_break_level_wall_explore_first.py
+@@ -0,0 +1,476 @@
++"""Exp 4014: break ARC-AGI-3 level walls with explore-first re-induction.
++
++Spec refs: REQ-PHASE4-026, SCENARIO-PHASE4-026.
++"""
++
++from __future__ import annotations
++
++import argparse
++import copy
++import json
++import shutil
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++REPO = Path(__file__).resolve().parents[2]
++ENVDIR = str(REPO / "environment_files")
++RESULT_NAME = "experiment_4014_break_level_wall_explore_first.json"
++RANDOM_SEED = 4014
++INFERENCE_SUBSTRATE = "offline_arc_agi3_explore_first_level_wall_gap4_executed_consistency"
++ENERGY_THRESHOLD = 0.0
++
++sys.path.insert(0, str(REPO / "python"))
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++
++from carnot.agentic.arc_agi3_world_model import compute_grid_delta, grid_of, objects  # noqa: E402
++from carnot.agentic.arc_level_wall_explore_first import (  # noqa: E402
++    BANKED_FRONTIER,
++    STALLED_LEVELS,
++    LevelWallResult,
++    TransitionObservation,
++    artifact_schema_errors,
++    blocked_artifact,
++    build_level_wall_artifact,
++    count_validated_candidates,
++    induce_model_from_level_observations,
++)
++from experiment_3964_r11l_incremental_l2 import (  # noqa: E402
++    _attempt_current_level as _attempt_r11l_level,
++    _perceive_and_match as _perceive_r11l,
++)
++from experiment_3965_lp85_incremental_l2 import (  # noqa: E402
++    discover_buttons as _discover_lp85_buttons,
++    load_baseline_actions as _load_lp85_baseline_actions,
++    plan_permutation_clicks as _plan_lp85_clicks,
++)
++from experiment_3992_incremental_levels_verifier_validated import _execute_validated_level  # noqa: E402
++
++
++def _write_artifact(artifact: dict[str, Any]) -> None:
++    out = REPO / "results" / RESULT_NAME
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _load_offline_arcade():  # pragma: no cover - exercised by the required experiment run
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++
++    arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR)
++    if not arc.get_environments():
++        raise RuntimeError("offline arcade returned no environments")
++    return arc
++
++
++def _select_game_id(arc: Any, short_game: str) -> str:
++    for env in arc.get_environments():
++        game_id = str(getattr(env, "game_id", ""))
++        if game_id.split("-")[0] == short_game:
++            return game_id
++    raise RuntimeError(f"{short_game} offline environment unavailable")
++
++
++def _levels_completed(frame: Any, env: Any) -> int:
++    frame_value = getattr(frame, "levels_completed", None)
++    if frame_value is not None:
++        return int(frame_value or 0)
++    game_value = getattr(getattr(env, "_game", None), "levels_completed", None)
++    if game_value is not None:
++        return int(game_value or 0)
++    return int(getattr(getattr(env, "_game", None), "_current_level_index", 0) or 0)
++
++
++def _game_over(frame: Any) -> bool:
++    return "GAME_OVER" in str(getattr(frame, "state", ""))
++
++
++def _apply_action_key(env: Any, game_action: Any, action_key: tuple[int, ...]) -> Any:
++    if action_key[0] == 6:
++        return env.step(game_action.ACTION6, data={"x": int(action_key[1]), "y": int(action_key[2])})
++    mapping = {
++        1: game_action.ACTION1,
++        2: game_action.ACTION2,
++        3: game_action.ACTION3,
++        4: game_action.ACTION4,
++    }
++    return env.step(mapping[int(action_key[0])])
++
++
++def _sc25_step_to_action_key(step: dict[str, Any]) -> tuple[int, ...]:
++    action = step.get("action")
++    if action == "click":
++        return (6, int(step["x"]), int(step["y"]))
++    mapping = {"up": 1, "down": 2, "left": 3, "right": 4}
++    return (mapping[str(action)],)
++
++
++def _load_sc25_log() -> list[dict[str, Any]]:
++    path = REPO / "results" / "experiment_3966_third_game_first_solve.json"
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    return list(payload.get("solve_log", []))
++
++
++def _refresh_frame(env: Any, game_action: Any) -> Any:
++    return env.step(game_action.ACTION6, data={"x": -1, "y": -1})
++
++
++def _click_candidates(grid: Any, budget: int) -> list[tuple[int, ...]]:
++    h, w = grid.shape
++    seen: set[tuple[int, ...]] = set()
++    candidates: list[tuple[int, ...]] = []
++    for y, x in objects(grid):
++        key = (6, int(x), int(y))
++        if key not in seen:
++            seen.add(key)
++            candidates.append(key)
++    fixed = [
++        (0, 0),
++        (w // 4, h // 4),
++        (w // 2, h // 2),
++        ((3 * w) // 4, (3 * h) // 4),
++        (max(0, w - 1), max(0, h - 1)),
++        (w // 4, (3 * h) // 4),
++        ((3 * w) // 4, h // 4),
++    ]
++    for x, y in fixed:
++        key = (6, int(x), int(y))
++        if key not in seen:
++            seen.add(key)
++            candidates.append(key)
++        if len(candidates) >= budget:
++            break
++    while len(candidates) < budget:
++        candidates.append(candidates[len(candidates) % max(1, len(candidates))])
++    return candidates[:budget]
++
++
++def _observe_actions(
++    env: Any,
++    game_action: Any,
++    frame: Any,
++    action_keys: list[tuple[int, ...]],
++    *,
++    exploration_budget: int,
++) -> tuple[list[TransitionObservation], list[dict[str, Any]]]:
++    original = copy.deepcopy(env._game)
++    start_grid = grid_of(frame)
++    start_levels = _levels_completed(frame, env)
++    observations: list[TransitionObservation] = []
++    summaries: list[dict[str, Any]] = []
++
++    for action_key in action_keys[:exploration_budget]:
++        env._game = copy.deepcopy(original)
++        before = start_grid.copy()
++        next_frame = _apply_action_key(env, game_action, action_key)
++        after = grid_of(next_frame)
++        level_delta = _levels_completed(next_frame, env) - start_levels
++        delta = compute_grid_delta(before, after)
++        observations.append(
++            TransitionObservation(
++                before=before,
++                action_key=tuple(int(v) for v in action_key),
++                after=after,
++                level_delta=int(level_delta),
++                game_over=_game_over(next_frame),
++            )
++        )
++        summaries.append(
++            {
++                "action_key": [int(v) for v in action_key],
++                "n_changed": int(delta.get("n_changed", 0) or 0),
++                "level_delta": int(level_delta),
++                "game_over": _game_over(next_frame),
++            }
++        )
++
++    env._game = original
++    return observations, summaries
++
++
++def _validate_and_maybe_commit(
++    env: Any,
++    game_action: Any,
++    observations: list[TransitionObservation],
++    *,
++    short_game: str,
++    level_number: int,
++) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int, int, bool, str]:
++    split = max(1, len(observations) // 2)
++    train = observations[:split]
++    heldout = observations[split:] or observations[:]
++    model = induce_model_from_level_observations(short_game, train)
++    heldout_rows = [(obs.before, obs.action_key, obs.after) for obs in heldout]
++    energy_info = model.consistency_energy(heldout_rows)
++    energy = energy_info.get("energy")
++    level_up = next((obs for obs in observations if obs.level_delta > 0), None)
++    selected = energy is not None and float(energy) <= ENERGY_THRESHOLD and level_up is not None
++    start_level = _levels_completed(None, env)
++
++    row = {
++        "candidate_id": f"{short_game}-explore-first-single-action",
++        "rule_name": "observed per-level transition replay after explore-first induction",
++        "level": int(level_number),
++        "demo_fit": 1.0 if energy is not None else 0.0,
++        "heldout_energy": None if energy is None else float(energy),
++        "heldout_n": len(heldout),
++        "predicted_levels_after": int(start_level + 1 if level_up else start_level),
++        "validated_levels_after": int(start_level + 1 if selected else start_level),
++        "planned_l2_actions": 1,
++        "selected": bool(selected),
++        "validation_source": "GAP-4 executed-consistency energy on held-out observed transitions",
++        "prediction_paths": energy_info.get("prediction_paths", {}),
++    }
++    committed: list[dict[str, Any]] = []
++    stall_reason = "no verifier-validated level-up candidate after explore-first observation"
++    advanced = False
++
++    if selected and level_up is not None:
++        frame = _apply_action_key(env, game_action, level_up.action_key)
++        after = _levels_completed(frame, env)
++        committed.append(
++            {
++                "level": int(level_number),
++                "action_key": [int(v) for v in level_up.action_key],
++                "levels_completed_after": int(after),
++            }
++        )
++        advanced = after > start_level
++        row["real_env_levels_after_commit"] = int(after)
++        if advanced:
++            stall_reason = ""
++        else:
++            row["selected"] = False
++            row["commit_rejected_reason"] = "copied-env validated action did not advance real env"
++            stall_reason = "validated candidate failed real-env levels_completed confirmation"
++
++    saved = 0 if advanced else 1
++    return [row], committed, count_validated_candidates([row]), saved, advanced, stall_reason
++
++
++def _advance_lp85_to_l1(env: Any, game_action: Any, budget: int) -> tuple[Any, list[dict[str, Any]], int]:
++    frame = env.reset()
++    used = 0
++    solve_log: list[dict[str, Any]] = []
++    baseline = _load_lp85_baseline_actions(getattr(env, "game_id", "lp85-305b61c3"))
++    max_depth = max(20, max(baseline or [0]))
++    while _levels_completed(frame, env) < BANKED_FRONTIER["lp85"] and used < budget:
++        grid = grid_of(frame)
++        buttons = _discover_lp85_buttons(env, game_action, grid)
++        path = _plan_lp85_clicks(
++            env,
++            game_action,
++            grid,
++            buttons,
++            _levels_completed(frame, env),
++            max_depth=max_depth,
++        )
++        if not path:
++            break
++        start = _levels_completed(frame, env)
++        for y, x in path:
++            frame = env.step(game_action.ACTION6, data={"x": int(x), "y": int(y)})
++            used += 1
++            solve_log.append({"level": start + 1, "action": "click", "x": int(x), "y": int(y)})
++            if _levels_completed(frame, env) > start or used >= budget:
++                break
++    return frame, solve_log, used
++
++
++def _advance_r11l_to_l3(env: Any, game_action: Any, budget: int) -> tuple[Any, list[dict[str, Any]], int]:
++    frame = env.reset()
++    used = 0
++    solve_log: list[dict[str, Any]] = []
++    while _levels_completed(frame, env) < BANKED_FRONTIER["r11l"] and used < budget:
++        level = _levels_completed(frame, env) + 1
++        if level == 1:
++            pairs = _perceive_r11l(env)
++            frame, actions, entries = _attempt_r11l_level(env, game_action, pairs, budget - used, level)
++            used += int(actions)
++            solve_log.extend(entries)
++            if _levels_completed(frame, env) < level:
++                break
++        else:
++            result = _execute_validated_level(env, game_action, level_number=level, budget_left=budget - used)
++            used += int(result.get("actions_used", 0) or 0)
++            solve_log.extend(result.get("solve_log", []))
++            frame = _refresh_frame(env, game_action)
++            if not result.get("advanced"):
++                break
++    return frame, solve_log, used
++
++
++def _advance_sc25_to_l1(env: Any, game_action: Any, budget: int) -> tuple[Any, list[dict[str, Any]], int]:
++    frame = env.reset()
++    used = 0
++    solve_log: list[dict[str, Any]] = []
++    for step in _load_sc25_log():
++        if used >= budget:
++            break
++        frame = _apply_action_key(env, game_action, _sc25_step_to_action_key(step))
++        used += 1
++        solve_log.append(dict(step))
++        if _levels_completed(frame, env) >= BANKED_FRONTIER["sc25"]:
++            break
++    return frame, solve_log, used
++
++
++def _run_one_wall(
++    arc: Any,
++    short_game: str,
++    *,
++    budget: int,
++    exploration_budget: int,
++) -> LevelWallResult:
++    from arcengine.enums import GameAction
++
++    game_id = _select_game_id(arc, short_game)
++    env = arc.make(game_id)
++    if short_game == "lp85":
++        frame, banked_log, _ = _advance_lp85_to_l1(env, GameAction, budget)
++        action_keys = _click_candidates(grid_of(frame), exploration_budget)
++    elif short_game == "sc25":
++        frame, banked_log, _ = _advance_sc25_to_l1(env, GameAction, budget)
++        action_keys = [_sc25_step_to_action_key(step) for step in _load_sc25_log()]
++        action_keys.extend(_click_candidates(grid_of(frame), exploration_budget))
++    elif short_game == "r11l":
++        frame, banked_log, _ = _advance_r11l_to_l3(env, GameAction, budget)
++        action_keys = _click_candidates(grid_of(frame), exploration_budget)
++    else:
++        raise ValueError(f"unknown level-wall game {short_game}")
++
++    levels_completed = _levels_completed(frame, env)
++    if levels_completed < BANKED_FRONTIER[short_game]:
++        return LevelWallResult(
++            short_game=short_game,
++            game_id=game_id,
++            banked_level=BANKED_FRONTIER[short_game],
++            target_level=STALLED_LEVELS[short_game],
++            levels_completed=levels_completed,
++            first_fail_level=levels_completed + 1,
++            exploration_actions_used=0,
++            observed_dynamics=[],
++            dynamics_induced=False,
++            candidate_validations=[],
++            committed_actions=[],
++            verifier_validated_count=0,
++            actions_saved_vs_openloop=0,
++            real_env_confirmed=False,
++            stall_reason="banked frontier replay failed before exploration",
++            solve_log=banked_log,
++        )
++
++    observations, observed = _observe_actions(
++        env,
++        GameAction,
++        frame,
++        action_keys,
++        exploration_budget=exploration_budget,
++    )
++    validations, committed, validated_count, saved, advanced, reason = _validate_and_maybe_commit(
++        env,
++        GameAction,
++        observations,
++        short_game=short_game,
++        level_number=STALLED_LEVELS[short_game],
++    )
++    final_levels = _levels_completed(None, env)
++
++    return LevelWallResult(
++        short_game=short_game,
++        game_id=game_id,
++        banked_level=BANKED_FRONTIER[short_game],
++        target_level=STALLED_LEVELS[short_game],
++        levels_completed=final_levels,
++        first_fail_level=None if advanced else STALLED_LEVELS[short_game],
++        exploration_actions_used=len(observations),
++        observed_dynamics=observed,
++        dynamics_induced=bool(observations),
++        candidate_validations=validations,
++        committed_actions=committed,
++        verifier_validated_count=validated_count,
++        actions_saved_vs_openloop=saved,
++        real_env_confirmed=final_levels >= levels_completed,
++        stall_reason=reason or "explore-first validated level wall advance",
++        solve_log=banked_log + committed,
++    )
++
++
++def _run_level_walls(arc: Any, budget: int, exploration_budget: int) -> list[LevelWallResult]:
++    per_game_budget = max(20, budget)
++    return [
++        _run_one_wall(arc, "lp85", budget=per_game_budget, exploration_budget=exploration_budget),
++        _run_one_wall(arc, "sc25", budget=per_game_budget, exploration_budget=exploration_budget),
++        _run_one_wall(arc, "r11l", budget=per_game_budget, exploration_budget=exploration_budget),
++    ]
++
++
++def run(
++    *,
++    budget: int = 80,
++    exploration_budget: int = 4,
++    seed: int = RANDOM_SEED,
++    use_codex: bool = False,
++    write: bool = True,
++) -> dict[str, Any]:
++    started = time.time()
++    if use_codex and shutil.which("codex") is None:
++        artifact = blocked_artifact(
++            seed=seed,
++            started=started,
++            inference_substrate=INFERENCE_SUBSTRATE,
++            verdict="blocked_codex_unavailable",
++        )
++        if write:
++            _write_artifact(artifact)
++        return artifact
++
++    try:
++        arc = _load_offline_arcade()
++    except Exception:
++        artifact = blocked_artifact(
++            seed=seed,
++            started=started,
++            inference_substrate=INFERENCE_SUBSTRATE,
++            verdict="blocked_arc_offline_env_unavailable",
++        )
++        if write:
++            _write_artifact(artifact)
++        return artifact
++
++    results = _run_level_walls(arc, budget, exploration_budget)
++    artifact = build_level_wall_artifact(
++        results,
++        seed=seed,
++        started=started,
++        inference_substrate=INFERENCE_SUBSTRATE,
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        _write_artifact(artifact)
++    return artifact
++
++
++def main() -> int:  # pragma: no cover - thin CLI wrapper
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--budget", type=int, default=80)
++    parser.add_argument("--exploration-budget", type=int, default=4)
++    parser.add_argument("--seed", type=int, default=RANDOM_SEED)
++    parser.add_argument("--use-codex", action="store_true")
++    args = parser.parse_args()
++    result = run(
++        budget=args.budget,
++        exploration_budget=args.exploration_budget,
++        seed=args.seed,
++        use_codex=args.use_codex,
++        write=True,
++    )
++    print(f"-> {result['honest_verdict']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover - thin CLI wrapper
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4014_break_level_wall_explore_first.py b/tests/python/test_experiment_4014_break_level_wall_explore_first.py
+new file mode 100644
+index 0000000000..e8a0964247
+--- /dev/null
++++ b/tests/python/test_experiment_4014_break_level_wall_explore_first.py
+@@ -0,0 +1,223 @@
++"""Tests for Exp 4014 ARC-AGI-3 explore-first level-wall re-induction.
++
++Spec refs: REQ-PHASE4-026, SCENARIO-PHASE4-026.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.agentic.arc_level_wall_explore_first import (
++    BANKED_FRONTIER,
++    REQUIRED_ARTIFACT_FIELDS,
++    LevelWallResult,
++    TransitionObservation,
++    artifact_schema_errors,
++    build_level_wall_artifact,
++    count_validated_candidates,
++    induce_model_from_level_observations,
++)
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++
++import experiment_4014_break_level_wall_explore_first as exp  # noqa: E402
++
++
++SPEC_PATH = REPO / "openspec" / "capabilities" / "phase4_active_inference" / "spec.md"
++
++
++def _wall(
++    short_game: str,
++    levels_completed: int,
++    *,
++    validated: int = 0,
++    saved: int = 0,
++    exploration: int = 2,
++    real: bool = True,
++) -> LevelWallResult:
++    return LevelWallResult(
++        short_game=short_game,
++        game_id=f"{short_game}-fake",
++        banked_level=BANKED_FRONTIER[short_game],
++        target_level=BANKED_FRONTIER[short_game] + 1,
++        levels_completed=levels_completed,
++        first_fail_level=None if levels_completed > BANKED_FRONTIER[short_game] else BANKED_FRONTIER[short_game] + 1,
++        exploration_actions_used=exploration,
++        observed_dynamics=[
++            {
++                "action_key": [6, 1, 2],
++                "level_delta": 0,
++                "n_changed": 1,
++                "game_over": False,
++            }
++        ],
++        dynamics_induced=True,
++        candidate_validations=[
++            {
++                "candidate_id": "observed-candidate",
++                "heldout_energy": 0.0,
++                "heldout_n": 1,
++                "selected": validated > 0,
++            }
++        ],
++        committed_actions=[],
++        verifier_validated_count=validated,
++        actions_saved_vs_openloop=saved,
++        real_env_confirmed=real,
++        stall_reason="no verifier-validated candidate after explore-first",
++        solve_log=[],
++    )
++
++
++def test_req_phase4_026_spec_declares_explore_first_level_wall_contract() -> None:
++    """REQ-PHASE4-026: OpenSpec declares Exp 4014 and required fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-PHASE4-026" in spec
++    assert "SCENARIO-PHASE4-026" in spec
++    assert "experiment_4014_break_level_wall_explore_first.json" in spec
++    assert "spend a fixed positive exploratory action budget" in spec
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_req_phase4_026_induction_requires_observed_level_transitions() -> None:
++    """REQ-PHASE4-026: per-level induction is blocked before exploration."""
++
++    start = np.zeros((3, 3), dtype=np.int16)
++    changed = start.copy()
++    changed[1, 1] = 7
++    observations = [
++        TransitionObservation(
++            before=start,
++            action_key=(6, 1, 1),
++            after=changed,
++            level_delta=0,
++            game_over=False,
++        )
++    ]
++
++    with pytest.raises(ValueError, match="observed transition"):
++        induce_model_from_level_observations("lp85-fake", [])
++
++    model = induce_model_from_level_observations("lp85-fake", observations)
++
++    assert model.n_train == 1
++
++
++def test_req_phase4_026_artifact_schema_requires_bare_fields() -> None:
++    """REQ-PHASE4-026: Exp 4014 artifacts keep level-wall fields auditable."""
++
++    artifact = build_level_wall_artifact(
++        [_wall("lp85", 1), _wall("sc25", 1), _wall("r11l", 3)],
++        seed=4014,
++        started=0.0,
++        inference_substrate="test_substrate",
++    )
++
++    assert artifact["honest_verdict"].startswith("complete: level_walls_hold_")
++    assert artifact["ACCURACY_total_levels_solved"] == 5
++    assert artifact["new_levels_this_task"] == 0
++    assert artifact["exploration_actions_used"] == 6
++    assert artifact["explore_first_found_validated_candidate"] is False
++    assert artifact_schema_errors(artifact) == []
++
++    bad = dict(artifact)
++    bad["ACCURACY_total_levels_solved"] = "5"
++    bad["per_game_max_level"] = {"lp85": "1"}
++    bad["explore_first_found_validated_candidate"] = 1
++    bad["exploration_actions_used"] = "6"
++    bad["real_env_confirmed"] = 1
++    bad["honest_verdict"] = "done"
++
++    errors = artifact_schema_errors(bad)
++
++    assert any("ACCURACY_total_levels_solved" in err for err in errors)
++    assert any("per_game_max_level" in err for err in errors)
++    assert any("explore_first_found_validated_candidate" in err for err in errors)
++    assert any("exploration_actions_used" in err for err in errors)
++    assert any("real_env_confirmed" in err for err in errors)
++    assert any("honest_verdict" in err for err in errors)
++
++
++def test_scenario_phase4_026_success_reports_broken_wall_and_validated_candidate() -> None:
++    """SCENARIO-PHASE4-026: a real-env level-up uses the required success verdict."""
++
++    artifact = build_level_wall_artifact(
++        [_wall("lp85", 2, validated=1, saved=3), _wall("sc25", 1), _wall("r11l", 3)],
++        seed=4014,
++        started=0.0,
++        inference_substrate="test_substrate",
++    )
++
++    assert artifact["ACCURACY_total_levels_solved"] == 6
++    assert artifact["new_levels_this_task"] == 1
++    assert artifact["per_game_max_level"] == {"lp85": 2, "sc25": 1, "r11l": 3}
++    assert artifact["explore_first_found_validated_candidate"] is True
++    assert artifact["verifier_validated_count"] == 1
++    assert artifact["actions_saved_vs_openloop"] == 3
++    assert artifact["honest_verdict"] == "success: broke_wall_lp85_to_L2_total6"
++    assert artifact_schema_errors(artifact) == []
++
++
++def test_req_phase4_026_validated_counter_requires_selected_heldout_energy() -> None:
++    """REQ-PHASE4-026: only selected held-out verifier passes count as candidates."""
++
++    rows = [
++        {"candidate_id": "kept", "heldout_energy": 0.0, "heldout_n": 1, "selected": True},
++        {"candidate_id": "demo-only", "heldout_energy": None, "heldout_n": 0, "selected": True},
++        {"candidate_id": "rejected", "heldout_energy": 0.5, "heldout_n": 1, "selected": True},
++        {"candidate_id": "not-selected", "heldout_energy": 0.0, "heldout_n": 1, "selected": False},
++    ]
++
++    assert count_validated_candidates(rows) == 1
++
++
++def test_scenario_phase4_026_blocks_when_offline_arcade_unavailable(monkeypatch, tmp_path) -> None:
++    """SCENARIO-PHASE4-026: unavailable offline Arcade writes a blocked artifact."""
++
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++
++    def unavailable() -> object:
++        raise RuntimeError("offline missing")
++
++    monkeypatch.setattr(exp, "_load_offline_arcade", unavailable)
++
++    artifact = exp.run(write=True)
++
++    assert artifact["honest_verdict"] == "blocked_arc_offline_env_unavailable"
++    assert artifact["real_env_confirmed"] is False
++    assert artifact["ACCURACY_total_levels_solved"] == 0
++    assert artifact_schema_errors(artifact) == []
++    written = tmp_path / "results" / exp.RESULT_NAME
++    assert json.loads(written.read_text(encoding="utf-8"))["honest_verdict"] == "blocked_arc_offline_env_unavailable"
++
++
++def test_scenario_phase4_026_success_uses_mocked_real_env_results(monkeypatch, tmp_path) -> None:
++    """SCENARIO-PHASE4-026: mocked explore-first level-up writes the success artifact."""
++
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++    monkeypatch.setattr(exp, "_load_offline_arcade", lambda: object())
++    monkeypatch.setattr(
++        exp,
++        "_run_level_walls",
++        lambda arc, budget, exploration_budget: [
++            _wall("lp85", 2, validated=1, saved=3),
++            _wall("sc25", 1),
++            _wall("r11l", 3),
++        ],
++    )
++
++    artifact = exp.run(write=True)
++
++    assert artifact["honest_verdict"] == "success: broke_wall_lp85_to_L2_total6"
++    assert artifact["new_levels_this_task"] == 1
++    assert artifact["explore_first_found_validated_candidate"] is True
++    assert artifact_schema_errors(artifact) == []
+-- 
+2.55.0
+

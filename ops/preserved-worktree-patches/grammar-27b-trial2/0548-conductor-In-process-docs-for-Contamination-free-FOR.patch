@@ -1,0 +1,27 @@
+From f65a11b2b0b7b76e70f5eae51d4cba578c85d089 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 22:28:34 -0400
+Subject: [PATCH 00548/11171] [conductor] In-process docs for
+ Contamination-free FORMAL core 5-seed CI replication (the depth anchor):
+ replicate exp3826's formal_only=0.8947 / full=0.9131 / learned=0.8699
+ decomposition across 5 disjoint seeds, report per-condition mean +/- CI95,
+ and a positive control, so the contamination-free moat floor is paper-citable
+ per the Adversarial-Confirmation Discipline.
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b6fce8f590..b0561164ea 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8622,3 +8622,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ 
+ - 2026-06-04: Archive milestone .352 (converged invariants intact, FoVer frozen 0.9131) and activate .353 (Harden the contamination-free formal core, Tier-4 self-learning, EDLM kill-gate execution surface). (✅ Complete) — honest_verdict=complete: archived_v352_activated_v353; results/experiment_3834_archive_v352_activate_v353.json
+ - 2026-06-05: Archive milestone .352 (LDT-gap probe) and activate .353 (CONTAMINATION-FREE FORMAL CORE hardening + Tier-4 self-learning + EDLM operator execution surface). (✅ Complete) — honest_verdict=complete: archived_v352_activated_v353_invariants_intact_fover_0.9131_unchanged; results/experiment_3834_archive_v352_activate_v353.json
++- 2026-06-05: Contamination-free FORMAL core 5-seed CI replication (the depth anchor): replicate exp3826's formal_only=0.8947 / full=0.9131 / learned=0.8699 decomposition across 5 disjoint seeds, report per-condition mean +/- CI95, and a positive control, so the contamination-free moat floor is paper-citable per the Adversarial-Confirmation Discipline. (✅ Complete) — honest_verdict=complete: formal_core_5seed_CONFIRMED_formalonly0.8947_full0.9131_contamination_free_ci0.0209; results/experiment_3835_formal_core_5seed_ci.json
+-- 
+2.55.0
+

@@ -1,0 +1,65 @@
+From 7469dee17c2196f627801edb0caf42bfb98bf4a3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 04:49:52 -0400
+Subject: [PATCH 01569/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                         |  2 +-
+ ops/conductor-log.md                                 |  1 +
+ ops/conductor-state.json                             |  2 +-
+ ...riment_4135_sudoku_accumulate_pass1_fixed_lr.json | 12 ++++++++++--
+ 4 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8b143922b0..abebae5af7 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-13T07:55:42Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-06-13T08:49:51Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index dc7ab99365..f2c4e8149c 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8407,3 +8407,4 @@ c |
+ | 2026-06-13 07:37 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+ | 2026-06-13 07:40 UTC | Milestone 2026.06.383 activated | OK | 11 tasks queued |
+ | 2026-06-13 07:53 UTC | Archive .382 -> activate .383; KEEP the hardened g | OK | 91 passed, 1 warning in 5.36s |
++| 2026-06-13 08:47 UTC | ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1d7c54fc51..69713f3b24 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-13T07:55:42Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 12, "phase": "iteration_start", "started_at": "2026-06-13T08:49:51Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json b/results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json
+index 0e913b998b..059a18beba 100644
+--- a/results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json
++++ b/results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json
+@@ -1556,5 +1556,13 @@
+   ],
+   "train_lr_point_count": 0,
+   "val_exact_accuracy": null,
+-  "validation_first_lr": null
+-}
++  "validation_first_lr": null,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=6.99 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

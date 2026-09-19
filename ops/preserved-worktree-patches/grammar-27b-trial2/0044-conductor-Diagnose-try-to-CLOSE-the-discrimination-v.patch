@@ -1,0 +1,1455 @@
+From c4c2dfc62bdf6ee4305b67389ce3072ec51dbe19 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 20:02:46 -0400
+Subject: [PATCH 00044/11171] =?UTF-8?q?[conductor]=20Diagnose=20+=20try=20?=
+ =?UTF-8?q?to=20CLOSE=20the=20discrimination-vs-selection=20gap=20(exp3672?=
+ =?UTF-8?q?:=20ensemble=20AUROC=200.93=20but=20selection=20<=20SC)=20?=
+ =?UTF-8?q?=E2=80=94=20is=20the=20decoupling=20fixable=20for=20an=20energy?=
+ =?UTF-8?q?=20verifier=20via=20per-question=20normalization=20/=20a=20with?=
+ =?UTF-8?q?in-question=20ranking=20calibration=20/=20a=20stronger=20self-c?=
+ =?UTF-8?q?ertainty=20baseline=20(arXiv:2502.18581),=20or=20is=20it=20fund?=
+ =?UTF-8?q?amental=20as=20arXiv:2512.23067=20suggests=3F?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3682-discrimination-vs-selection-gap-diagnosis
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/verification/spec.md    |  56 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../discrimination_vs_selection_gap_3682.py   | 807 ++++++++++++++++++
+ ..._3682_discrimination_vs_selection_gap.json | 127 +++
+ ...nt_3682_discrimination_vs_selection_gap.py |  48 ++
+ ...nt_3682_discrimination_vs_selection_gap.py | 334 ++++++++
+ 6 files changed, 1373 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/verify/discrimination_vs_selection_gap_3682.py
+ create mode 100644 results/experiment_3682_discrimination_vs_selection_gap.json
+ create mode 100644 scripts/experiment_3682_discrimination_vs_selection_gap.py
+ create mode 100644 tests/python/test_experiment_3682_discrimination_vs_selection_gap.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 1e8da32fdd..ef702cea2c 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -9903,6 +9903,62 @@ measured outcome rather than hard-coding a single success string.
+ |---|---|---|
+ | REQ-VERIFY-3672 | Implemented (`python/carnot/verify/ensemble_selection_sc_weak_3672.py`, `scripts/experiment_3672_ensemble_selection_where_sc_weak.py`) | Implemented (`tests/python/test_experiment_3672_ensemble_selection_sc_weak.py`) |
+ 
++### REQ-VERIFY-3682: Discrimination Versus Selection Gap Diagnosis
++
++The repository shall provide an Exp 3682 workflow that diagnoses whether the
++Exp 3672 verifier-ensemble selection failure is a fixable calibration artifact
++or a fundamental discrimination-versus-selection decoupling on the cached
++multi-candidate corpus. The workflow SHALL use only cached candidates and local
++verifier scoring, SHALL NOT invoke live LLM generation, and SHALL write
++`complete: blocked_no_multi_candidate_corpus` if the Exp 3672 multi-candidate
++corpus cannot be loaded with per-candidate correctness labels.
++
++For runnable inputs, the workflow SHALL report cross-question per-candidate
++AUROC, within-question energy-vs-correctness rank correlation, SC selection
++accuracy, oracle best-of-N accuracy, and a positive-control flag that is true
++only when oracle accuracy exceeds SC and the best attempted fix changes at
++least one selection relative to SC. It SHALL evaluate all requested fixes on
++the same cached candidates: within-question energy normalization, a deterministic
++train/held-out within-question ranking calibration, self-certainty best-of-N,
++and ensemble-plus-self-certainty fusion. The workflow SHALL report the paired
++delta, bootstrap confidence interval, and exact McNemar statistic for the best
++attempted fix against SC.
++
++The terminal artifact SHALL be
++`results/experiment_3682_discrimination_vs_selection_gap.json` and SHALL include
++`honest_verdict`, `inference_substrate`, `per_candidate_auroc`,
++`within_question_rank_corr`, `sc_selection_accuracy`,
++`oracle_bestofn_accuracy`, `flip_count`,
++`selection_accuracy_per_question_normalized`,
++`selection_accuracy_ranking_calibrated`,
++`self_certainty_selection_accuracy`, `best_fix_vs_sc_delta_ci`,
++`positive_control_valid`, a bare top-level `selection_gap_closed` boolean,
++`n_examples`, `random_seed`, `reproducibility_checksum`, and `duration_s`, with
++field principles documenting why each required field exists. The bare
++`selection_gap_closed` boolean SHALL be true only when the positive control is
++valid and at least one ensemble or ensemble-plus-self-certainty fix beats SC
++with a paired delta confidence interval excluding zero in the positive
++direction. The terminal verdict SHALL be one of
++`complete: selection_gap_closed_per_question_calibration_recovers_value`,
++`complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067`,
++or `complete: blocked_no_multi_candidate_corpus`.
++
++### SCENARIO-VERIFY-3682: Honest Selection-Gap Outcomes Are Parametrized
++
++Given synthetic multi-candidate fixtures covering
++`fix_recovers_selection_value`, `decoupling_fundamental_no_fix_helps`, and
++`blocked` outcomes, when the Exp 3682 artifact builder and classifier run, then
++they emit the required bare booleans, discrimination and within-question
++decoupling metrics, positive-control fields, paired delta statistics, and a
++terminal verdict selected from the measured outcome rather than hard-coding one
++success string.
++
++## Implementation Status (REQ-VERIFY-3682)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-3682 | Planned (`python/carnot/verify/discrimination_vs_selection_gap_3682.py`, `scripts/experiment_3682_discrimination_vs_selection_gap.py`) | Planned (`tests/python/test_experiment_3682_discrimination_vs_selection_gap.py`) |
++
+ ### REQ-VERIFY-3646: Trained EBM Judge OOD Counterpoint V2
+ 
+ The repository shall provide an Exp 3646 workflow that trains a small
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index e3ad57efad..22afb5dc1d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2807,
++  "experiments_checked": 2808,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/verify/discrimination_vs_selection_gap_3682.py b/python/carnot/verify/discrimination_vs_selection_gap_3682.py
+new file mode 100644
+index 0000000000..beadcb3ce2
+--- /dev/null
++++ b/python/carnot/verify/discrimination_vs_selection_gap_3682.py
+@@ -0,0 +1,807 @@
++"""Exp 3682 discrimination-vs-selection gap diagnosis.
++
++This module tests whether the Exp 3672 result is just a calibration problem or
++the reward-model selection crisis pattern: good per-candidate discrimination
++but poor best-of-N selection. It uses cached candidates only.
++
++Spec: REQ-VERIFY-3682, SCENARIO-VERIFY-3682.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Callable, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++import math
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot.phase3.p01_energy_vote_scoring import mcnemar_exact, paired_bootstrap_ci
++from carnot.verify.ensemble_selection_sc_weak_3672 import (
++    DEFAULT_CORPUS_PATHS,
++    DEFAULT_MAX_MAJORITY_SUPPORTS,
++    DEFAULT_MAX_SC_ACCURACY,
++    DEFAULT_MIN_CANDIDATES,
++    DEFAULT_MIN_EXAMPLES,
++    DEFAULT_N_BOOT,
++    Candidate,
++    ProblemRecord,
++    compute_regime_stats,
++    load_multicandidate_records,
++    majority_vote_with_support,
++    make_default_energy_scorer,
++    select_sc_weak_regime,
++)
++
++
++OUTPUT_REL_PATH = Path("results/experiment_3682_discrimination_vs_selection_gap.json")
++RANDOM_SEED = int(
++    hashlib.sha256(b"exp=3682;discrimination-vs-selection-gap").hexdigest()[:8],
++    16,
++) % (2**31)
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates (principle: best-of-N over "
++    "cached candidates; no LLM generation)."
++)
++
++CLOSED_VERDICT = "complete: selection_gap_closed_per_question_calibration_recovers_value"
++FUNDAMENTAL_VERDICT = (
++    "complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067"
++)
++BLOCKED_VERDICT = "complete: blocked_no_multi_candidate_corpus"
++TERMINAL_VERDICTS = (CLOSED_VERDICT, FUNDAMENTAL_VERDICT, BLOCKED_VERDICT)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "per_candidate_auroc",
++    "within_question_rank_corr",
++    "sc_selection_accuracy",
++    "oracle_bestofn_accuracy",
++    "flip_count",
++    "selection_accuracy_per_question_normalized",
++    "selection_accuracy_ranking_calibrated",
++    "self_certainty_selection_accuracy",
++    "best_fix_vs_sc_delta_ci",
++    "positive_control_valid",
++    "selection_gap_closed",
++    "n_examples",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": ("Best-of-N over cached candidates; no LLM generation."),
++    "per_candidate_auroc": (
++        "Cross-question discrimination -- confirms the ensemble discriminates "
++        "(the half that works)."
++    ),
++    "within_question_rank_corr": (
++        "Energy-vs-correctness rank correlation WITHIN questions -- the "
++        "decoupling measure (arXiv:2512.23067)."
++    ),
++    "sc_selection_accuracy": "Majority-vote SC baseline accuracy -- the bar.",
++    "oracle_bestofn_accuracy": (
++        "Upper bound; must exceed SC for the positive control (selectable headroom)."
++    ),
++    "flip_count": (
++        "Selections changed by the best fix vs SC -- flip_count==0 means a "
++        "degenerate test (FALSE_NEGATIVE_RISK)."
++    ),
++    "selection_accuracy_per_question_normalized": (
++        "FIX A: selection after within-question energy normalization."
++    ),
++    "selection_accuracy_ranking_calibrated": (
++        "FIX B: selection after a within-question ranking calibration (held-out)."
++    ),
++    "self_certainty_selection_accuracy": (
++        "FIX C baseline: self-certainty BoN selection (arXiv:2502.18581) -- "
++        "the stronger free baseline."
++    ),
++    "best_fix_vs_sc_delta_ci": (
++        "Paired delta + bootstrap CI + McNemar of the BEST fix vs SC -- the "
++        "gap-closure magnitude + significance."
++    ),
++    "positive_control_valid": (
++        "True iff oracle > SC AND flips > 0 -- without it the null is "
++        "uninformative (the P0.1 lesson)."
++    ),
++    "selection_gap_closed": (
++        "BARE bool. True iff at least one fix makes ensemble (or "
++        "ensemble+self-certainty) selection beat SC with the delta CI excluding "
++        "0, positive-control-valid -- the diagnosis verdict. STORE AS BARE "
++        "true/false."
++    ),
++    "n_examples": "Sample-size rigor (>=50 multi-candidate items).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class GapEvaluation:
++    """Measured diagnostics and fix outcomes for the selected candidate rows."""
++
++    n_examples: int
++    mean_candidates_per_example: float
++    per_candidate_auroc: float | None
++    within_question_rank_corr: float | None
++    within_question_rank_corr_details: dict[str, Any]
++    sc_selection_accuracy: float
++    oracle_bestofn_accuracy: float
++    oracle_minus_sc_headroom: float
++    ensemble_selection_accuracy: float
++    selection_accuracy_per_question_normalized: float
++    normalized_selection_details: dict[str, Any]
++    selection_accuracy_ranking_calibrated: float
++    ranking_calibration: dict[str, Any]
++    self_certainty_selection_accuracy: float
++    ensemble_self_certainty_fusion_accuracy: float
++    best_fix_vs_sc_delta_ci: dict[str, Any]
++    flip_count: int
++    positive_control_valid: bool
++    selection_gap_closed: bool
++    best_fix_method: str
++    random_seed: int
++    reproducibility_checksum: str
++
++
++@dataclass(frozen=True)
++class OutcomeClassification:
++    """Terminal verdict and bare bool selected from measured gates."""
++
++    category: str
++    terminal_verdict: str
++    selection_gap_closed: bool
++
++
++def classify_outcome(
++    *,
++    blocked: bool,
++    positive_control_valid: bool,
++    selection_gap_closed: bool,
++) -> OutcomeClassification:
++    """Map blocked/positive-control/gap-closed gates to terminal outcomes."""
++
++    if blocked:
++        return OutcomeClassification("blocked", BLOCKED_VERDICT, False)
++    if positive_control_valid and selection_gap_closed:
++        return OutcomeClassification(
++            "fix_recovers_selection_value",
++            CLOSED_VERDICT,
++            True,
++        )
++    return OutcomeClassification(
++        "decoupling_fundamental_no_fix_helps",
++        FUNDAMENTAL_VERDICT,
++        False,
++    )
++
++
++def _accuracy(correct: Sequence[bool]) -> float:
++    return sum(1 for item in correct if item) / len(correct) if correct else 0.0
++
++
++def tie_aware_auroc(labels: Sequence[int], scores: Sequence[float]) -> float | None:
++    """Pure-Python AUROC with 0.5 credit for tied positive/negative scores."""
++
++    positives = [score for label, score in zip(labels, scores, strict=True) if label == 1]
++    negatives = [score for label, score in zip(labels, scores, strict=True) if label == 0]
++    if not positives or not negatives:
++        return None
++    wins = 0.0
++    for positive in positives:
++        for negative in negatives:
++            if positive > negative:
++                wins += 1.0
++            elif positive == negative:
++                wins += 0.5
++    return wins / (len(positives) * len(negatives))
++
++
++def mean_within_question_rank_corr(
++    energy_rows: Sequence[Sequence[float]],
++    label_rows: Sequence[Sequence[int]],
++) -> dict[str, Any]:
++    """Compute a Kendall-tau-style within-question correctness rank signal."""
++
++    taus: list[float] = []
++    total_signed = 0.0
++    total_pairs = 0
++    for energies, labels in zip(energy_rows, label_rows, strict=True):
++        signed = 0.0
++        pairs = 0
++        for i, (energy_i, label_i) in enumerate(zip(energies, labels, strict=True)):
++            for energy_j, label_j in zip(energies[i + 1 :], labels[i + 1 :], strict=True):
++                if label_i == label_j:
++                    continue
++                pairs += 1
++                positive_energy = energy_i if label_i == 1 else energy_j
++                negative_energy = energy_j if label_i == 1 else energy_i
++                positive_score = -positive_energy
++                negative_score = -negative_energy
++                if positive_score > negative_score:
++                    signed += 1.0
++                elif positive_score < negative_score:
++                    signed -= 1.0
++        if pairs:
++            taus.append(signed / pairs)
++            total_signed += signed
++            total_pairs += pairs
++    return {
++        "mean_tau": (sum(taus) / len(taus)) if taus else None,
++        "weighted_tau": (total_signed / total_pairs) if total_pairs else None,
++        "n_questions": len(taus),
++        "n_comparable_pairs": total_pairs,
++    }
++
++
++def normalized_energy_scores(energies: Sequence[float], *, method: str) -> list[float]:
++    """Return per-question normalized energy goodness scores; higher is better."""
++
++    values = [float(energy) for energy in energies]
++    if not values:
++        return []
++    if method == "minmax":
++        lo = min(values)
++        hi = max(values)
++        if hi == lo:
++            return [0.0 for _ in values]
++        return [(hi - value) / (hi - lo) for value in values]
++    if method == "zscore":
++        mean = sum(values) / len(values)
++        variance = sum((value - mean) ** 2 for value in values) / len(values)
++        std = math.sqrt(variance)
++        if std == 0.0:
++            return [0.0 for _ in values]
++        return [(mean - value) / std for value in values]
++    raise ValueError(f"unknown normalization method: {method}")
++
++
++def _minmax_high_good(values: Sequence[float]) -> list[float]:
++    vals = [float(value) for value in values]
++    if not vals:
++        return []
++    lo = min(vals)
++    hi = max(vals)
++    if hi == lo:
++        return [0.0 for _ in vals]
++    return [(value - lo) / (hi - lo) for value in vals]
++
++
++def _select_by_scores(
++    candidates: Sequence[Candidate],
++    scores: Sequence[float | None],
++) -> str | None:
++    best_answer: str | None = None
++    best_score = -math.inf
++    for candidate, score in zip(candidates, scores, strict=True):
++        if candidate.answer is None or score is None:
++            continue
++        value = float(score)
++        if value > best_score:
++            best_score = value
++            best_answer = candidate.answer
++    return best_answer
++
++
++def _answer_correct(record: ProblemRecord, answer: str | None) -> bool:
++    return answer is not None and answer == record.gold
++
++
++def _confidence_scores(candidates: Sequence[Candidate]) -> list[float | None]:
++    return [candidate.confidence for candidate in candidates]
++
++
++def _fusion_scores(candidates: Sequence[Candidate], energies: Sequence[float]) -> list[float]:
++    energy_good = normalized_energy_scores(energies, method="minmax")
++    raw_confidences = [
++        candidate.confidence if candidate.confidence is not None else -math.inf
++        for candidate in candidates
++    ]
++    finite = [value for value in raw_confidences if math.isfinite(value)]
++    floor = min(finite) if finite else 0.0
++    confidences = [value if math.isfinite(value) else floor for value in raw_confidences]
++    confidence_good = _minmax_high_good(confidences)
++    return [energy + confidence for energy, confidence in zip(energy_good, confidence_good)]
++
++
++def _lift_summary(
++    method_correct: Sequence[bool],
++    baseline_correct: Sequence[bool],
++    *,
++    method: str,
++    seed: int,
++    n_boot: int,
++    flip_count: int,
++) -> dict[str, Any]:
++    method_acc = _accuracy(method_correct)
++    baseline_acc = _accuracy(baseline_correct)
++    return {
++        "method": method,
++        "comparison": f"{method}_vs_self_consistency",
++        "accuracy": method_acc,
++        "sc_accuracy_paired": baseline_acc,
++        "delta": method_acc - baseline_acc,
++        "ci95": list(
++            paired_bootstrap_ci(
++                list(method_correct),
++                list(baseline_correct),
++                seed=seed,
++                n_boot=n_boot,
++            )
++        ),
++        "mcnemar_exact_p": mcnemar_exact(list(baseline_correct), list(method_correct)),
++        "flip_count": flip_count,
++        "n": len(method_correct),
++    }
++
++
++def _split_indices(
++    n_items: int, *, seed: int, train_fraction: float
++) -> tuple[list[int], list[int]]:
++    if n_items <= 1:
++        return list(range(n_items)), list(range(n_items))
++    keyed = [
++        (
++            hashlib.sha256(f"{seed}:{idx}".encode()).hexdigest(),
++            idx,
++        )
++        for idx in range(n_items)
++    ]
++    ordered = [idx for _key, idx in sorted(keyed)]
++    train_n = int(round(n_items * train_fraction))
++    train_n = max(1, min(n_items - 1, train_n))
++    return ordered[:train_n], ordered[train_n:]
++
++
++def _fit_pairwise_orientation(
++    records: Sequence[ProblemRecord],
++    energy_rows: Sequence[Sequence[float]],
++    train_indices: Sequence[int],
++) -> dict[str, Any]:
++    low_wins = 0.0
++    high_wins = 0.0
++    ties = 0
++    pairs = 0
++    for idx in train_indices:
++        labels = [1 if candidate.correct else 0 for candidate in records[idx].candidates]
++        energies = energy_rows[idx]
++        for i, (energy_i, label_i) in enumerate(zip(energies, labels, strict=True)):
++            for energy_j, label_j in zip(energies[i + 1 :], labels[i + 1 :], strict=True):
++                if label_i == label_j:
++                    continue
++                pairs += 1
++                correct_energy = energy_i if label_i == 1 else energy_j
++                wrong_energy = energy_j if label_i == 1 else energy_i
++                if correct_energy < wrong_energy:
++                    low_wins += 1.0
++                elif correct_energy > wrong_energy:
++                    high_wins += 1.0
++                else:
++                    ties += 1
++                    low_wins += 0.5
++                    high_wins += 0.5
++    orientation = "higher_energy_better" if high_wins > low_wins else "lower_energy_better"
++    wins = high_wins if orientation == "higher_energy_better" else low_wins
++    return {
++        "orientation": orientation,
++        "train_n": len(train_indices),
++        "pairwise_train_pairs": pairs,
++        "pairwise_train_ties": ties,
++        "pairwise_train_accuracy": (wins / pairs) if pairs else None,
++    }
++
++
++def _checksum(
++    records: Sequence[ProblemRecord],
++    energy_rows: Sequence[Sequence[float]],
++    *,
++    seed: int,
++) -> str:
++    digest = hashlib.sha256()
++    digest.update(f"exp=3682;seed={seed};substrate={INFERENCE_SUBSTRATE}".encode())
++    for record, energies in zip(records, energy_rows, strict=True):
++        digest.update(record.source_path.encode())
++        digest.update(record.problem_id.encode())
++        digest.update(record.gold.encode())
++        for candidate, energy in zip(record.candidates, energies, strict=True):
++            digest.update(str(candidate.answer).encode())
++            digest.update(str(candidate.correct).encode())
++            digest.update(str(candidate.confidence).encode())
++            digest.update(f"{energy:.12g}".encode())
++            digest.update(hashlib.sha256(candidate.text.encode()).hexdigest().encode())
++    return digest.hexdigest()[:16]
++
++
++def evaluate_gap(
++    records: Sequence[ProblemRecord],
++    *,
++    energy_scorer: Callable[[Candidate], float],
++    seed: int = RANDOM_SEED,
++    n_boot: int = DEFAULT_N_BOOT,
++    train_fraction: float = 0.67,
++) -> GapEvaluation:
++    """Evaluate discrimination, within-question rank signal, and fixes."""
++
++    stats = compute_regime_stats(records)
++    energy_rows = [
++        [float(energy_scorer(candidate)) for candidate in record.candidates] for record in records
++    ]
++    label_rows = [
++        [1 if candidate.correct else 0 for candidate in record.candidates] for record in records
++    ]
++    flat_labels = [label for labels in label_rows for label in labels]
++    flat_scores = [-energy for energies in energy_rows for energy in energies]
++    per_candidate_auroc = tie_aware_auroc(flat_labels, flat_scores)
++    rank_details = mean_within_question_rank_corr(energy_rows, label_rows)
++
++    sc_answers: list[str | None] = []
++    sc_correct: list[bool] = []
++    ensemble_correct: list[bool] = []
++    normalized_z_correct: list[bool] = []
++    normalized_minmax_correct: list[bool] = []
++    self_certainty_correct: list[bool] = []
++    fusion_correct: list[bool] = []
++    normalized_answers: list[str | None] = []
++    fusion_answers: list[str | None] = []
++
++    for record, energies in zip(records, energy_rows, strict=True):
++        sc_answer, _support = majority_vote_with_support(record)
++        ensemble_answer = _select_by_scores(record.candidates, [-energy for energy in energies])
++        normalized_z_answer = _select_by_scores(
++            record.candidates,
++            normalized_energy_scores(energies, method="zscore"),
++        )
++        normalized_minmax_answer = _select_by_scores(
++            record.candidates,
++            normalized_energy_scores(energies, method="minmax"),
++        )
++        self_certainty_answer = _select_by_scores(
++            record.candidates,
++            _confidence_scores(record.candidates),
++        )
++        fusion_answer = _select_by_scores(
++            record.candidates, _fusion_scores(record.candidates, energies)
++        )
++
++        sc_answers.append(sc_answer)
++        normalized_answers.append(normalized_z_answer)
++        fusion_answers.append(fusion_answer)
++        sc_correct.append(_answer_correct(record, sc_answer))
++        ensemble_correct.append(_answer_correct(record, ensemble_answer))
++        normalized_z_correct.append(_answer_correct(record, normalized_z_answer))
++        normalized_minmax_correct.append(_answer_correct(record, normalized_minmax_answer))
++        self_certainty_correct.append(_answer_correct(record, self_certainty_answer))
++        fusion_correct.append(_answer_correct(record, fusion_answer))
++
++    train_indices, heldout_indices = _split_indices(
++        len(records),
++        seed=seed,
++        train_fraction=train_fraction,
++    )
++    ranking_calibration = _fit_pairwise_orientation(records, energy_rows, train_indices)
++    high_good = ranking_calibration["orientation"] == "higher_energy_better"
++    ranking_correct: list[bool] = []
++    ranking_sc_correct: list[bool] = []
++    ranking_answers: list[str | None] = []
++    ranking_sc_answers: list[str | None] = []
++    for idx in heldout_indices:
++        record = records[idx]
++        energies = energy_rows[idx]
++        scores = [energy if high_good else -energy for energy in energies]
++        answer = _select_by_scores(record.candidates, scores)
++        sc_answer = sc_answers[idx]
++        ranking_answers.append(answer)
++        ranking_sc_answers.append(sc_answer)
++        ranking_correct.append(_answer_correct(record, answer))
++        ranking_sc_correct.append(sc_correct[idx])
++    ranking_calibration = {
++        **ranking_calibration,
++        "heldout_n": len(heldout_indices),
++        "train_fraction": train_fraction,
++    }
++
++    normalized_flips = sum(
++        1
++        for sc_answer, answer in zip(sc_answers, normalized_answers, strict=True)
++        if sc_answer != answer
++    )
++    fusion_flips = sum(
++        1
++        for sc_answer, answer in zip(sc_answers, fusion_answers, strict=True)
++        if sc_answer != answer
++    )
++    ranking_flips = sum(
++        1
++        for sc_answer, answer in zip(ranking_sc_answers, ranking_answers, strict=True)
++        if sc_answer != answer
++    )
++    fix_summaries = [
++        _lift_summary(
++            normalized_z_correct,
++            sc_correct,
++            method="per_question_normalized",
++            seed=seed + 11,
++            n_boot=n_boot,
++            flip_count=normalized_flips,
++        ),
++        _lift_summary(
++            ranking_correct,
++            ranking_sc_correct,
++            method="ranking_calibrated",
++            seed=seed + 12,
++            n_boot=n_boot,
++            flip_count=ranking_flips,
++        ),
++        _lift_summary(
++            fusion_correct,
++            sc_correct,
++            method="ensemble_self_certainty_fusion",
++            seed=seed + 13,
++            n_boot=n_boot,
++            flip_count=fusion_flips,
++        ),
++    ]
++    best_fix = max(
++        fix_summaries, key=lambda item: (item["accuracy"], item["delta"], item["flip_count"])
++    )
++    positive_control_valid = (
++        stats.oracle_bestofn_accuracy > _accuracy(sc_correct) and best_fix["flip_count"] > 0
++    )
++    selection_gap_closed = bool(
++        positive_control_valid
++        and any(summary["delta"] > 0.0 and summary["ci95"][0] > 0.0 for summary in fix_summaries)
++    )
++
++    return GapEvaluation(
++        n_examples=stats.n_examples,
++        mean_candidates_per_example=stats.mean_candidates_per_example,
++        per_candidate_auroc=per_candidate_auroc,
++        within_question_rank_corr=rank_details["weighted_tau"],
++        within_question_rank_corr_details=rank_details,
++        sc_selection_accuracy=_accuracy(sc_correct),
++        oracle_bestofn_accuracy=stats.oracle_bestofn_accuracy,
++        oracle_minus_sc_headroom=stats.oracle_minus_sc_headroom,
++        ensemble_selection_accuracy=_accuracy(ensemble_correct),
++        selection_accuracy_per_question_normalized=_accuracy(normalized_z_correct),
++        normalized_selection_details={
++            "zscore_accuracy": _accuracy(normalized_z_correct),
++            "minmax_accuracy": _accuracy(normalized_minmax_correct),
++        },
++        selection_accuracy_ranking_calibrated=_accuracy(ranking_correct),
++        ranking_calibration=ranking_calibration,
++        self_certainty_selection_accuracy=_accuracy(self_certainty_correct),
++        ensemble_self_certainty_fusion_accuracy=_accuracy(fusion_correct),
++        best_fix_vs_sc_delta_ci=best_fix,
++        flip_count=int(best_fix["flip_count"]),
++        positive_control_valid=positive_control_valid,
++        selection_gap_closed=selection_gap_closed,
++        best_fix_method=str(best_fix["method"]),
++        random_seed=seed,
++        reproducibility_checksum=_checksum(records, energy_rows, seed=seed),
++    )
++
++
++def _required_fields_present(artifact: dict[str, Any]) -> bool:
++    return all(field in artifact for field in REQUIRED_ARTIFACT_FIELDS)
++
++
++def _base_artifact(
++    *,
++    verdict: str,
++    corpus_paths: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    artifact: dict[str, Any] = {
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "corpus_paths": list(corpus_paths),
++        "per_candidate_auroc": None,
++        "within_question_rank_corr": None,
++        "within_question_rank_corr_details": None,
++        "sc_selection_accuracy": None,
++        "oracle_bestofn_accuracy": None,
++        "oracle_minus_sc_headroom": None,
++        "flip_count": 0,
++        "ensemble_selection_accuracy": None,
++        "selection_accuracy_per_question_normalized": None,
++        "normalized_selection_details": None,
++        "selection_accuracy_ranking_calibrated": None,
++        "ranking_calibration": None,
++        "self_certainty_selection_accuracy": None,
++        "ensemble_self_certainty_fusion_accuracy": None,
++        "best_fix_method": None,
++        "best_fix_vs_sc_delta_ci": None,
++        "positive_control_valid": False,
++        "selection_gap_closed": False,
++        "n_examples": 0,
++        "mean_candidates_per_example": 0.0,
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": None,
++        "duration_s": duration_s,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    artifact["acceptance_gate"] = {
++        "condition": (
++            "per_candidate_auroc present AND within_question_rank_corr present "
++            "AND positive_control_valid == true AND flip_count > 0"
++        ),
++        "principle": (
++            "A selection-gap verdict requires the discrimination measure, the "
++            "within-question decoupling measure, a valid positive control and a "
++            "fix that actually changed selections -- otherwise it repeats the "
++            "degenerate-test trap."
++        ),
++        "required_fields_present": _required_fields_present(artifact),
++        "per_candidate_auroc_present": artifact["per_candidate_auroc"] is not None,
++        "within_question_rank_corr_present": artifact["within_question_rank_corr"] is not None,
++        "positive_control_valid": artifact["positive_control_valid"],
++        "flip_count_gt_0": artifact["flip_count"] > 0,
++    }
++    artifact["schema"] = sorted(artifact.keys())
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    corpus_paths: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the blocked artifact for a missing multi-candidate corpus."""
++
++    return _base_artifact(
++        verdict=BLOCKED_VERDICT,
++        corpus_paths=corpus_paths,
++        duration_s=duration_s,
++    )
++
++
++def build_measured_artifact(
++    *,
++    result: GapEvaluation,
++    corpus_paths: Sequence[str],
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the terminal measured artifact from an evaluation result."""
++
++    classification = classify_outcome(
++        blocked=False,
++        positive_control_valid=result.positive_control_valid,
++        selection_gap_closed=result.selection_gap_closed,
++    )
++    artifact = _base_artifact(
++        verdict=classification.terminal_verdict,
++        corpus_paths=corpus_paths,
++        duration_s=duration_s,
++    )
++    artifact.update(
++        {
++            "honest_outcome": classification.category,
++            "per_candidate_auroc": result.per_candidate_auroc,
++            "within_question_rank_corr": result.within_question_rank_corr,
++            "within_question_rank_corr_details": result.within_question_rank_corr_details,
++            "sc_selection_accuracy": result.sc_selection_accuracy,
++            "oracle_bestofn_accuracy": result.oracle_bestofn_accuracy,
++            "oracle_minus_sc_headroom": result.oracle_minus_sc_headroom,
++            "flip_count": result.flip_count,
++            "ensemble_selection_accuracy": result.ensemble_selection_accuracy,
++            "selection_accuracy_per_question_normalized": {
++                "selected_accuracy": result.selection_accuracy_per_question_normalized,
++                **result.normalized_selection_details,
++            },
++            "normalized_selection_details": result.normalized_selection_details,
++            "selection_accuracy_ranking_calibrated": (result.selection_accuracy_ranking_calibrated),
++            "ranking_calibration": result.ranking_calibration,
++            "self_certainty_selection_accuracy": result.self_certainty_selection_accuracy,
++            "ensemble_self_certainty_fusion_accuracy": (
++                result.ensemble_self_certainty_fusion_accuracy
++            ),
++            "best_fix_method": result.best_fix_method,
++            "best_fix_vs_sc_delta_ci": result.best_fix_vs_sc_delta_ci,
++            "positive_control_valid": result.positive_control_valid,
++            "selection_gap_closed": classification.selection_gap_closed,
++            "n_examples": result.n_examples,
++            "mean_candidates_per_example": result.mean_candidates_per_example,
++            "random_seed": result.random_seed,
++            "reproducibility_checksum": result.reproducibility_checksum,
++        }
++    )
++    artifact["acceptance_gate"]["per_candidate_auroc_present"] = (
++        artifact["per_candidate_auroc"] is not None
++    )
++    artifact["acceptance_gate"]["within_question_rank_corr_present"] = (
++        artifact["within_question_rank_corr"] is not None
++    )
++    artifact["acceptance_gate"]["positive_control_valid"] = artifact["positive_control_valid"]
++    artifact["acceptance_gate"]["flip_count_gt_0"] = artifact["flip_count"] > 0
++    artifact["schema"] = sorted(artifact.keys())
++    return artifact
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    """Validate the Exp 3682 terminal artifact shape."""
++
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    if missing:
++        raise AssertionError(f"missing required fields: {sorted(missing)}")
++    missing_principles = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact.get("field_principles", {}))
++    if missing_principles:
++        raise AssertionError(f"missing field principles: {sorted(missing_principles)}")
++    if artifact["honest_verdict"] not in TERMINAL_VERDICTS:
++        raise AssertionError(f"unknown terminal verdict: {artifact['honest_verdict']}")
++    if type(artifact["selection_gap_closed"]) is not bool:
++        raise AssertionError("selection_gap_closed must be a bare bool")
++    if type(artifact["positive_control_valid"]) is not bool:
++        raise AssertionError("positive_control_valid must be a bare bool")
++    gate = artifact.get("acceptance_gate", {})
++    if gate.get("required_fields_present") is not True:
++        raise AssertionError("acceptance gate must record required_fields_present=true")
++
++
++def _path_label(path: Path, repo_root: Path) -> str:
++    try:
++        return path.relative_to(repo_root).as_posix()
++    except ValueError:
++        return path.as_posix()
++
++
++def run_experiment(
++    *,
++    repo_root: Path,
++    output_path: Path | None = None,
++    corpus_paths: Sequence[Path] = DEFAULT_CORPUS_PATHS,
++    min_candidates: int = DEFAULT_MIN_CANDIDATES,
++    min_examples: int = DEFAULT_MIN_EXAMPLES,
++    max_sc_accuracy: float = DEFAULT_MAX_SC_ACCURACY,
++    max_majority_supports: Sequence[float] = DEFAULT_MAX_MAJORITY_SUPPORTS,
++    energy_scorer: Callable[[Candidate], float] | None = None,
++    seed: int = RANDOM_SEED,
++    n_boot: int = DEFAULT_N_BOOT,
++) -> dict[str, Any]:
++    """Run Exp 3682 and optionally write the terminal JSON artifact."""
++
++    start = time.time()
++    resolved_paths = [path if path.is_absolute() else repo_root / path for path in corpus_paths]
++    path_labels = [_path_label(path, repo_root) for path in resolved_paths]
++    records = load_multicandidate_records(resolved_paths, min_candidates=min_candidates)
++    if not records:
++        artifact = build_blocked_artifact(
++            corpus_paths=path_labels,
++            duration_s=time.time() - start,
++        )
++    else:
++        selected = select_sc_weak_regime(
++            records,
++            min_examples=min_examples,
++            max_sc_accuracy=max_sc_accuracy,
++            max_majority_supports=max_majority_supports,
++        )
++        result = evaluate_gap(
++            selected.records,
++            energy_scorer=energy_scorer or make_default_energy_scorer(),
++            seed=seed,
++            n_boot=n_boot,
++        )
++        artifact = build_measured_artifact(
++            result=result,
++            corpus_paths=path_labels,
++            duration_s=time.time() - start,
++        )
++        artifact["selected_stratum"] = selected.status
++        artifact["stratum_rule"] = selected.rule
++        artifact["max_majority_support"] = selected.max_majority_support
++        artifact["schema"] = sorted(artifact.keys())
++    validate_artifact(artifact)
++    if output_path is not None:
++        output_path.parent.mkdir(parents=True, exist_ok=True)
++        output_path.write_text(
++            json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++            encoding="utf-8",
++        )
++    return artifact
+diff --git a/results/experiment_3682_discrimination_vs_selection_gap.json b/results/experiment_3682_discrimination_vs_selection_gap.json
+new file mode 100644
+index 0000000000..82ee8fe95a
+--- /dev/null
++++ b/results/experiment_3682_discrimination_vs_selection_gap.json
+@@ -0,0 +1,127 @@
++{
++  "acceptance_gate": {
++    "condition": "per_candidate_auroc present AND within_question_rank_corr present AND positive_control_valid == true AND flip_count > 0",
++    "flip_count_gt_0": true,
++    "per_candidate_auroc_present": true,
++    "positive_control_valid": true,
++    "principle": "A selection-gap verdict requires the discrimination measure, the within-question decoupling measure, a valid positive control and a fix that actually changed selections -- otherwise it repeats the degenerate-test trap.",
++    "required_fields_present": true,
++    "within_question_rank_corr_present": true
++  },
++  "best_fix_method": "per_question_normalized",
++  "best_fix_vs_sc_delta_ci": {
++    "accuracy": 0.3442622950819672,
++    "ci95": [
++      -0.19672131147540983,
++      -0.04918032786885246
++    ],
++    "comparison": "per_question_normalized_vs_self_consistency",
++    "delta": -0.11475409836065575,
++    "flip_count": 28,
++    "mcnemar_exact_p": 0.015625,
++    "method": "per_question_normalized",
++    "n": 61,
++    "sc_accuracy_paired": 0.45901639344262296
++  },
++  "corpus_paths": [
++    "data/p01_gsm8k_generations.jsonl",
++    "data/p01_hardmath_generations.jsonl"
++  ],
++  "duration_s": 0.8012046813964844,
++  "ensemble_selection_accuracy": 0.3442622950819672,
++  "ensemble_self_certainty_fusion_accuracy": 0.2786885245901639,
++  "field_principles": {
++    "best_fix_vs_sc_delta_ci": "Paired delta + bootstrap CI + McNemar of the BEST fix vs SC -- the gap-closure magnitude + significance.",
++    "duration_s": "Plausibility floor.",
++    "flip_count": "Selections changed by the best fix vs SC -- flip_count==0 means a degenerate test (FALSE_NEGATIVE_RISK).",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "Best-of-N over cached candidates; no LLM generation.",
++    "n_examples": "Sample-size rigor (>=50 multi-candidate items).",
++    "oracle_bestofn_accuracy": "Upper bound; must exceed SC for the positive control (selectable headroom).",
++    "per_candidate_auroc": "Cross-question discrimination -- confirms the ensemble discriminates (the half that works).",
++    "positive_control_valid": "True iff oracle > SC AND flips > 0 -- without it the null is uninformative (the P0.1 lesson).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "sc_selection_accuracy": "Majority-vote SC baseline accuracy -- the bar.",
++    "selection_accuracy_per_question_normalized": "FIX A: selection after within-question energy normalization.",
++    "selection_accuracy_ranking_calibrated": "FIX B: selection after a within-question ranking calibration (held-out).",
++    "selection_gap_closed": "BARE bool. True iff at least one fix makes ensemble (or ensemble+self-certainty) selection beat SC with the delta CI excluding 0, positive-control-valid -- the diagnosis verdict. STORE AS BARE true/false.",
++    "self_certainty_selection_accuracy": "FIX C baseline: self-certainty BoN selection (arXiv:2502.18581) -- the stronger free baseline.",
++    "within_question_rank_corr": "Energy-vs-correctness rank correlation WITHIN questions -- the decoupling measure (arXiv:2512.23067)."
++  },
++  "flip_count": 28,
++  "honest_outcome": "decoupling_fundamental_no_fix_helps",
++  "honest_verdict": "complete: selection_gap_fundamental_no_fix_beats_sc_discrimination_decoupled_as_2512_23067",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: best-of-N over cached candidates; no LLM generation).",
++  "max_majority_support": 0.6666666666666666,
++  "mean_candidates_per_example": 6.0,
++  "n_examples": 61,
++  "normalized_selection_details": {
++    "minmax_accuracy": 0.3442622950819672,
++    "zscore_accuracy": 0.3442622950819672
++  },
++  "oracle_bestofn_accuracy": 0.6065573770491803,
++  "oracle_minus_sc_headroom": 0.14754098360655737,
++  "per_candidate_auroc": 0.5555075187969924,
++  "positive_control_valid": true,
++  "random_seed": 514504639,
++  "ranking_calibration": {
++    "heldout_n": 20,
++    "orientation": "lower_energy_better",
++    "pairwise_train_accuracy": 0.5813953488372093,
++    "pairwise_train_pairs": 215,
++    "pairwise_train_ties": 40,
++    "train_fraction": 0.67,
++    "train_n": 41
++  },
++  "reproducibility_checksum": "afcdc3b34d0584ee",
++  "sc_selection_accuracy": 0.45901639344262296,
++  "schema": [
++    "acceptance_gate",
++    "best_fix_method",
++    "best_fix_vs_sc_delta_ci",
++    "corpus_paths",
++    "duration_s",
++    "ensemble_selection_accuracy",
++    "ensemble_self_certainty_fusion_accuracy",
++    "field_principles",
++    "flip_count",
++    "honest_outcome",
++    "honest_verdict",
++    "inference_substrate",
++    "max_majority_support",
++    "mean_candidates_per_example",
++    "n_examples",
++    "normalized_selection_details",
++    "oracle_bestofn_accuracy",
++    "oracle_minus_sc_headroom",
++    "per_candidate_auroc",
++    "positive_control_valid",
++    "random_seed",
++    "ranking_calibration",
++    "reproducibility_checksum",
++    "sc_selection_accuracy",
++    "schema",
++    "selected_stratum",
++    "selection_accuracy_per_question_normalized",
++    "selection_accuracy_ranking_calibrated",
++    "selection_gap_closed",
++    "self_certainty_selection_accuracy",
++    "stratum_rule",
++    "within_question_rank_corr",
++    "within_question_rank_corr_details"
++  ],
++  "selected_stratum": "sc_weak_headroom",
++  "selection_accuracy_per_question_normalized": 0.3442622950819672,
++  "selection_accuracy_ranking_calibrated": 0.15,
++  "selection_gap_closed": false,
++  "self_certainty_selection_accuracy": 0.3442622950819672,
++  "stratum_rule": "majority_support <= 0.666667; n_examples >= 50; sc_accuracy <= 0.550000",
++  "within_question_rank_corr": 0.14084507042253522,
++  "within_question_rank_corr_details": {
++    "mean_tau": 0.1271021021021021,
++    "n_comparable_pairs": 284,
++    "n_questions": 37,
++    "weighted_tau": 0.14084507042253522
++  }
++}
+diff --git a/scripts/experiment_3682_discrimination_vs_selection_gap.py b/scripts/experiment_3682_discrimination_vs_selection_gap.py
+new file mode 100644
+index 0000000000..6c2e4e604e
+--- /dev/null
++++ b/scripts/experiment_3682_discrimination_vs_selection_gap.py
+@@ -0,0 +1,48 @@
++#!/usr/bin/env python3
++"""Run Exp 3682 discrimination-vs-selection gap diagnosis.
++
++Spec: REQ-VERIFY-3682, SCENARIO-VERIFY-3682.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.verify.discrimination_vs_selection_gap_3682 import (  # noqa: E402
++    OUTPUT_REL_PATH,
++    run_experiment,
++)
++
++
++def main() -> int:
++    artifact = run_experiment(
++        repo_root=REPO_ROOT,
++        output_path=REPO_ROOT / OUTPUT_REL_PATH,
++    )
++    print(artifact["honest_verdict"])
++    print(
++        "per_candidate_auroc="
++        f"{artifact['per_candidate_auroc']} "
++        "within_question_rank_corr="
++        f"{artifact['within_question_rank_corr']} "
++        "sc_selection_accuracy="
++        f"{artifact['sc_selection_accuracy']} "
++        "oracle_bestofn_accuracy="
++        f"{artifact['oracle_bestofn_accuracy']} "
++        "best_fix_method="
++        f"{artifact['best_fix_method']} "
++        "selection_gap_closed="
++        f"{artifact['selection_gap_closed']}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3682_discrimination_vs_selection_gap.py b/tests/python/test_experiment_3682_discrimination_vs_selection_gap.py
+new file mode 100644
+index 0000000000..15c411e7aa
+--- /dev/null
++++ b/tests/python/test_experiment_3682_discrimination_vs_selection_gap.py
+@@ -0,0 +1,334 @@
++"""Tests for Exp 3682 discrimination-vs-selection gap diagnosis.
++
++Spec: REQ-VERIFY-3682, SCENARIO-VERIFY-3682.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.verify import discrimination_vs_selection_gap_3682 as mod
++
++
++def _candidate(answer: str, gold: str, energy: float, confidence: float) -> mod.Candidate:
++    return mod.Candidate(
++        answer=answer,
++        correct=answer == gold,
++        text=f"candidate energy={energy}",
++        confidence=confidence,
++    )
++
++
++def _record(
++    problem_id: str,
++    gold: str,
++    rows: list[tuple[str, float, float]],
++) -> mod.ProblemRecord:
++    return mod.ProblemRecord(
++        problem_id=problem_id,
++        source_path="synthetic.jsonl",
++        gold=gold,
++        candidates=tuple(
++            _candidate(answer, gold, energy, confidence) for answer, energy, confidence in rows
++        ),
++    )
++
++
++def _energy_scorer(candidate: mod.Candidate) -> float:
++    return float(candidate.text.rsplit("energy=", 1)[1])
++
++
++def _fundamental_records(n: int = 6) -> list[mod.ProblemRecord]:
++    records = []
++    for idx in range(n):
++        gold = f"g{idx}"
++        records.append(
++            _record(
++                f"fundamental-{idx}",
++                gold,
++                [
++                    ("majority", 10.0, 0.80),
++                    ("majority", 10.5, 0.75),
++                    ("decoy", 0.0, 0.90),
++                    (gold, 1.0, 0.10),
++                    (f"other-{idx}", 12.0, 0.05),
++                ],
++            )
++        )
++    return records
++
++
++def _calibration_recovers_records(n: int = 8) -> list[mod.ProblemRecord]:
++    records = []
++    for idx in range(n):
++        gold = f"g{idx}"
++        records.append(
++            _record(
++                f"recovers-{idx}",
++                gold,
++                [
++                    ("majority", 0.0, 0.90),
++                    ("majority", 0.2, 0.85),
++                    ("decoy", 0.1, 0.80),
++                    (gold, 10.0, 0.10),
++                ],
++            )
++        )
++    return records
++
++
++@pytest.mark.parametrize(
++    (
++        "blocked",
++        "positive_control_valid",
++        "selection_gap_closed",
++        "expected_category",
++        "expected_verdict",
++    ),
++    [
++        pytest.param(
++            False,
++            True,
++            True,
++            "fix_recovers_selection_value",
++            mod.CLOSED_VERDICT,
++            id="fix_recovers_selection_value",
++        ),
++        pytest.param(
++            False,
++            True,
++            False,
++            "decoupling_fundamental_no_fix_helps",
++            mod.FUNDAMENTAL_VERDICT,
++            id="decoupling_fundamental_no_fix_helps",
++        ),
++        pytest.param(
++            True,
++            False,
++            False,
++            "blocked",
++            mod.BLOCKED_VERDICT,
++            id="blocked",
++        ),
++    ],
++)
++def test_scenario_verify_3682_parametrizes_honest_outcomes(
++    blocked: bool,
++    positive_control_valid: bool,
++    selection_gap_closed: bool,
++    expected_category: str,
++    expected_verdict: str,
++) -> None:
++    """SCENARIO-VERIFY-3682: honest outcomes are not one hard-coded success."""
++
++    classification = mod.classify_outcome(
++        blocked=blocked,
++        positive_control_valid=positive_control_valid,
++        selection_gap_closed=selection_gap_closed,
++    )
++
++    assert classification.category == expected_category
++    assert classification.terminal_verdict == expected_verdict
++    assert type(classification.selection_gap_closed) is bool
++
++
++def test_req_verify_3682_diagnoses_decoupled_discrimination_without_gap_closure() -> None:
++    """REQ-VERIFY-3682: AUROC can be useful while within-question selection still fails."""
++
++    result = mod.evaluate_gap(
++        _fundamental_records(),
++        energy_scorer=_energy_scorer,
++        seed=123,
++        n_boot=200,
++        train_fraction=0.5,
++    )
++
++    assert result.per_candidate_auroc == pytest.approx(0.75)
++    assert result.within_question_rank_corr == pytest.approx(0.5)
++    assert result.sc_selection_accuracy == pytest.approx(0.0)
++    assert result.oracle_bestofn_accuracy == pytest.approx(1.0)
++    assert result.selection_accuracy_per_question_normalized == pytest.approx(0.0)
++    assert result.selection_accuracy_ranking_calibrated == pytest.approx(0.0)
++    assert result.self_certainty_selection_accuracy == pytest.approx(0.0)
++    assert result.positive_control_valid is True
++    assert result.flip_count == 6
++    assert result.selection_gap_closed is False
++    assert result.best_fix_vs_sc_delta_ci["delta"] == pytest.approx(0.0)
++
++
++def test_req_verify_3682_pairwise_calibration_can_recover_selection_value() -> None:
++    """REQ-VERIFY-3682: ranking calibration is a real attempted fix on held-out rows."""
++
++    result = mod.evaluate_gap(
++        _calibration_recovers_records(),
++        energy_scorer=_energy_scorer,
++        seed=456,
++        n_boot=200,
++        train_fraction=0.5,
++    )
++
++    assert result.sc_selection_accuracy == pytest.approx(0.0)
++    assert result.oracle_bestofn_accuracy == pytest.approx(1.0)
++    assert result.ranking_calibration["orientation"] == "higher_energy_better"
++    assert result.ranking_calibration["heldout_n"] == 4
++    assert result.selection_accuracy_ranking_calibrated == pytest.approx(1.0)
++    assert result.best_fix_vs_sc_delta_ci["method"] == "ranking_calibrated"
++    assert result.best_fix_vs_sc_delta_ci["ci95"][0] > 0.0
++    assert result.positive_control_valid is True
++    assert result.selection_gap_closed is True
++
++
++def test_req_verify_3682_artifacts_validate_required_fields_and_bare_bool() -> None:
++    """REQ-VERIFY-3682: terminal artifacts preserve the required schema."""
++
++    result = mod.evaluate_gap(
++        _calibration_recovers_records(),
++        energy_scorer=_energy_scorer,
++        seed=789,
++        n_boot=100,
++        train_fraction=0.5,
++    )
++    artifact = mod.build_measured_artifact(
++        result=result,
++        corpus_paths=["synthetic.jsonl"],
++        duration_s=1.25,
++    )
++
++    mod.validate_artifact(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"] == mod.CLOSED_VERDICT
++    assert type(artifact["selection_gap_closed"]) is bool
++    assert artifact["acceptance_gate"]["positive_control_valid"] is True
++
++    blocked = mod.build_blocked_artifact(corpus_paths=["missing.jsonl"], duration_s=0.1)
++    mod.validate_artifact(blocked)
++    assert blocked["honest_verdict"] == mod.BLOCKED_VERDICT
++    assert blocked["selection_gap_closed"] is False
++    assert blocked["n_examples"] == 0
++
++    with pytest.raises(AssertionError, match="missing required fields"):
++        mod.validate_artifact({})
++
++    bad_principles = dict(blocked)
++    bad_principles["field_principles"] = {}
++    with pytest.raises(AssertionError, match="missing field principles"):
++        mod.validate_artifact(bad_principles)
++
++    bad_bool = dict(blocked)
++    bad_bool["selection_gap_closed"] = "false"
++    with pytest.raises(AssertionError, match="bare bool"):
++        mod.validate_artifact(bad_bool)
++
++    bad_positive_control_bool = dict(blocked)
++    bad_positive_control_bool["positive_control_valid"] = "false"
++    with pytest.raises(AssertionError, match="positive_control_valid"):
++        mod.validate_artifact(bad_positive_control_bool)
++
++    bad_verdict = dict(blocked)
++    bad_verdict["honest_verdict"] = "complete: invalid"
++    with pytest.raises(AssertionError, match="unknown terminal verdict"):
++        mod.validate_artifact(bad_verdict)
++
++    bad_gate = dict(blocked)
++    bad_gate["acceptance_gate"] = {"required_fields_present": False}
++    with pytest.raises(AssertionError, match="acceptance gate"):
++        mod.validate_artifact(bad_gate)
++
++
++def test_req_verify_3682_run_experiment_writes_artifact_and_blocks(tmp_path: Path) -> None:
++    """REQ-VERIFY-3682: run_experiment writes measured and blocked terminal artifacts."""
++
++    corpus = tmp_path / "corpus.jsonl"
++    rows = []
++    for record in _calibration_recovers_records():
++        rows.append(
++            {
++                "problem_id": record.problem_id,
++                "gold": record.gold,
++                "samples": [
++                    {
++                        "answer": candidate.answer,
++                        "correct": candidate.correct,
++                        "text": candidate.text,
++                        "mean_token_logprob": candidate.confidence,
++                    }
++                    for candidate in record.candidates
++                ],
++            }
++        )
++    corpus.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++        encoding="utf-8",
++    )
++    output = tmp_path / "result.json"
++
++    artifact = mod.run_experiment(
++        repo_root=tmp_path,
++        output_path=output,
++        corpus_paths=[Path("corpus.jsonl")],
++        min_candidates=4,
++        min_examples=4,
++        max_sc_accuracy=0.25,
++        max_majority_supports=(0.50,),
++        energy_scorer=_energy_scorer,
++        seed=321,
++        n_boot=100,
++    )
++
++    assert output.exists()
++    assert json.loads(output.read_text(encoding="utf-8")) == artifact
++    assert artifact["honest_verdict"] == mod.CLOSED_VERDICT
++
++    blocked = mod.run_experiment(
++        repo_root=tmp_path,
++        corpus_paths=[Path("missing.jsonl")],
++        energy_scorer=_energy_scorer,
++    )
++    assert blocked["honest_verdict"] == mod.BLOCKED_VERDICT
++
++
++def test_req_verify_3682_edge_metrics_are_defensive() -> None:
++    """REQ-VERIFY-3682: helpers handle degenerate rows without fabricating evidence."""
++
++    assert mod.tie_aware_auroc([], []) is None
++    assert mod.tie_aware_auroc([1, 1], [0.2, 0.3]) is None
++    assert mod.tie_aware_auroc([1, 0], [0.5, 0.5]) == pytest.approx(0.5)
++    assert mod.mean_within_question_rank_corr([], []) == {
++        "mean_tau": None,
++        "weighted_tau": None,
++        "n_questions": 0,
++        "n_comparable_pairs": 0,
++    }
++    assert mod.normalized_energy_scores([], method="zscore") == []
++    assert mod.normalized_energy_scores([2.0, 2.0], method="zscore") == [0.0, 0.0]
++    assert mod.normalized_energy_scores([2.0, 2.0], method="minmax") == [0.0, 0.0]
++    assert mod.normalized_energy_scores([2.0, 4.0], method="minmax") == [1.0, 0.0]
++    with pytest.raises(ValueError, match="unknown normalization"):
++        mod.normalized_energy_scores([1.0], method="bad")
++
++    assert mod._minmax_high_good([]) == []
++    assert mod._minmax_high_good([1.0, 1.0]) == [0.0, 0.0]
++    assert mod._select_by_scores([mod.Candidate(None, False, "", None)], [1.0]) is None
++    assert mod._split_indices(1, seed=1, train_fraction=0.5) == ([0], [0])
++    assert mod._path_label(Path("/outside/file.jsonl"), Path("/repo")) == "/outside/file.jsonl"
++
++    tied = mod._fit_pairwise_orientation(
++        [
++            mod.ProblemRecord(
++                problem_id="tie",
++                source_path="synthetic",
++                gold="g",
++                candidates=(
++                    mod.Candidate("g", True, "", None),
++                    mod.Candidate("x", False, "", None),
++                ),
++            )
++        ],
++        [[1.0, 1.0]],
++        [0],
++    )
++    assert tied["pairwise_train_ties"] == 1
+-- 
+2.55.0
+

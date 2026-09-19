@@ -1,0 +1,33 @@
+From 4765c054672c6f44879e6179e2e681be683f0fd0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 06:37:09 -0400
+Subject: [PATCH 00727/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20GateMate=20A1-EVB-2M=20continuity=20=E2=80=94=20corrigendu?=
+ =?UTF-8?q?m=20the=20exp3866=20TAUTOLOGY=20flag=20(duration=5Fs=20was=20bi?=
+ =?UTF-8?q?t-identical=20to=20run=5Fduration=5Fs)=20by=20recording=20DISTI?=
+ =?UTF-8?q?NCT=20wall-clock=20timers,=20and=20attempt=20a=20JTAG=20bitstre?=
+ =?UTF-8?q?am=20READBACK=20to=20verify=20the=20flashed=20n=3D16=20Ising=20?=
+ =?UTF-8?q?tile=20matches=20the=20bitstream=20(closes=20the=20'no=5Freadba?=
+ =?UTF-8?q?ck'=20caveat=20toward=20a=20clean=20gatemate=5Fbitstream=5Fflas?=
+ =?UTF-8?q?hed=20terminal).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b2a06de354..a5b0ec951b 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8677,3 +8677,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-06: Graph-grounding fact verifier, DE-FABRICATED (real wall-clock + per-item scores): on a RAGTruth-style factual corpus, does graph-grounding (HalluGraph arXiv:2512.01659 entity-grounding + relation-preservation; MemGraphRAG arXiv:2606.00610) reproduce facts_catch_delta>0 over the math-bound ensemble baseline, with a non-fabricated duration (>=60s) and per-item scores persisted for complementarity? (⚠️ Blocked) — honest_verdict=blocked_graph_verifier_not_invoked; results/experiment_3886_graph_grounding_fact_verifier_defabricated.json
+ - 2026-06-06: Facts COMPLEMENTARITY (disk-reads exp3886, no hard gate): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble MISSES (low error-mask correlation), and would {{math verifiers + graph verifier}} be a strictly broader fact-aware system? Quantify the independent contribution + error-mask correlation + fused AUROC. (⚠️ Blocked) — honest_verdict=blocked_upstream_scores_missing; results/experiment_3887_facts_complementarity.json
+ - 2026-06-06: FR-11 continuous self-learning v24 (research-program.md MANDATE) — load the persisted v23 independence-reweighting state, continue Tier-1 ONLINE reweighting on a FRESH verification corpus (upweight verifiers that catch the residual others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v23->v24 iteration (no long-horizon overfit). CPU counter updates (<1us/update, the Tier-1 hardware path). (✅ Complete) — honest_verdict=complete: fr11_v24_INVARIANT_HELD_auroc0.9075_memcontrib0.0185_state_persisted; results/experiment_3888_fr11_v24_independence_reweighting.json
++- 2026-06-06: GateMate A1-EVB-2M continuity — corrigendum the exp3866 TAUTOLOGY flag (duration_s was bit-identical to run_duration_s) by recording DISTINCT wall-clock timers, and attempt a JTAG bitstream READBACK to verify the flashed n=16 Ising tile matches the bitstream (closes the 'no_readback' caveat toward a clean gatemate_bitstream_flashed terminal). (⚠️ Blocked) — honest_verdict=blocked_gatemate_board_unreachable; results/experiment_3889_gatemate_continuity_corrigendum.json
+-- 
+2.55.0
+

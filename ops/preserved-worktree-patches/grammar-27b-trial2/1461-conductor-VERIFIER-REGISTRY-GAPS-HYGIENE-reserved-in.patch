@@ -1,0 +1,362 @@
+From 52af68340954af704117617913b92f00de5accd1 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 12:55:18 -0400
+Subject: [PATCH 01461/11171] [conductor] VERIFIER-REGISTRY + GAPS HYGIENE
+ (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval
+ reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (zero
+ codex/GGUF). RECORD the .379 outcomes: the NEW GAP-TRM-GRID-DISCRIMINATION
+ entry (did any verifier beat TRM-vote at rerank, exp4099?) and the TRM-RFT
+ outcome (exp4100). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the
+ honest source of truth.
+
+Automated research step by research conductor.
+Task ID: exp4103-verifier-registry-gaps-hygiene
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/dogfood-memory.json                       |  2 +-
+ ops/verifier_gaps.md                          | 20 +++++
+ ops/verifier_registry.yaml                    | 22 +++++
+ results/experiment_1717_findings_audit.json   |  8 +-
+ ...xperiment_1796_findings_audit_186_187.json |  8 +-
+ results/experiment_1869_hiled.json            |  2 +-
+ results/experiment_2538_kv260_sd_flash.json   |  2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |  2 +-
+ ...periment_3350_kv260_latency_benchmark.json |  2 +-
+ ...t_4103_verifier_registry_gaps_hygiene.json | 85 +++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |  6 +-
+ results/experiment_638_tier1_fr11_relay.json  |  6 +-
+ results/experiment_645_tier1_fr11_relay.json  |  6 +-
+ 13 files changed, 149 insertions(+), 22 deletions(-)
+ create mode 100644 results/experiment_4103_verifier_registry_gaps_hygiene.json
+
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 86913b4e4e..cd041826ee 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 168,
+   "code_violations": 0,
+-  "experiments_checked": 3125,
++  "experiments_checked": 3126,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/verifier_gaps.md b/ops/verifier_gaps.md
+index e48d07597c..5acfa192da 100644
+--- a/ops/verifier_gaps.md
++++ b/ops/verifier_gaps.md
+@@ -619,3 +619,23 @@ registry version that closed them when a new verifier captures a previously-open
+ - candidate design: run or consume Exp 4090 only after the precision-calibrated corpus and training artifacts exist; keep absent/pending state out of headline claims.
+ - priority: high
+ <!-- exp4095-rft-a-vs-b:end -->
++
++<!-- exp4103-trm-grid-discrimination:start -->
++### GAP-TRM-GRID-DISCRIMINATION: TRM-grid rerank discrimination
++- status: open_captured_pp_0.0000
++- evidence: `results/experiment_4099_trm_pool_verifier_discrimination_probe.json`; best_reranker=K_OF_N_AGREEMENT; captured_pp=0.0; captured_pp_ci95=[0.0, 0.0]; verifier_beats_trm_vote=false; pool_n_tasks=62.
++- failure mode: a correct grid can be present in the TRM candidate pool but remain unselectable because every recorded reranker ties TRM vote or ranks confident-wrong grids ahead of it.
++- missing discriminator: signal separating a correct TRM grid from a confident-wrong TRM grid on the candidate pool.
++- candidate design: train or mine a TRM-grid discriminator only after a held-out pool shows it beats TRM vote; until then keep the gap open and treat Exp 4100 as smoke.
++- priority: high
++<!-- exp4103-trm-grid-discrimination:end -->
++
++<!-- exp4103-trm-rft-outcome:start -->
++### GAP-TRM-VERIFIER-RFT-4100: Exp 4100 TRM verifier-RFT outcome
++- status: smoke_checkpoint_ok
++- evidence: `results/experiment_4100_trm_verifier_rft_conditional.json`; branch_taken=smoke; trm_native_trainer_checkpoint_ok=true; rft_vs_ablation_delta={'ci95': [0.0, 0.0], 'delta': 0.0, 'metric': 'heldout_pass@2', 'status': 'not_run_no_verifier_signal'}; bottleneck=verifier_discrimination_on_trm_grids.
++- failure mode: verifier-as-reward RFT cannot be promoted when the upstream grid reranker captured 0.0pp; the mechanism smoke proves checkpoint plumbing, not a reward win.
++- missing discriminator: decision-grade evidence that verifier-certified TRM training beats the vote-label ablation on held-out grid induction.
++- candidate design: rerun full RFT only after a non-TRM grid reranker clears the Exp 4099 discrimination gate.
++- priority: high
++<!-- exp4103-trm-rft-outcome:end -->
+diff --git a/ops/verifier_registry.yaml b/ops/verifier_registry.yaml
+index 40bf54e929..12ecbbe750 100644
+--- a/ops/verifier_registry.yaml
++++ b/ops/verifier_registry.yaml
+@@ -218,6 +218,12 @@ verifiers:
+     exp4095_arc1_rule_exec_gated_pass2: 0.5806
+     exp4095_arc1_headroom_recovered: 4
+     exp4095_arc1_vote_wins_lost: 0
++    eval_exp_4103: results/experiment_4103_verifier_registry_gaps_hygiene.json
++    exp4103_regression_guard_passed: true
++    exp4103_arc1_rule_exec_vote_pass2: 0.4516
++    exp4103_arc1_rule_exec_gated_pass2: 0.5806
++    exp4103_arc1_headroom_recovered: 4
++    exp4103_arc1_vote_wins_lost: 0
+   selection_policy:
+     tier_1: snap_tau_lte_0.005
+     tier_2: promote_first_fresh_raw_demo_perfect
+@@ -281,6 +287,22 @@ verifiers:
+     status: blocked
+     outcome: verifier_as_reward_rft_blocked
+     honest_verdict: blocked_gate_check_failed
++  - role_id: trm_grid_discriminator_training_time_4100
++    experiment: results/experiment_4100_trm_verifier_rft_conditional.json
++    role: candidate_trm_training_time_reward_signal
++    status: smoke
++    outcome: smoke_checkpoint_ok
++    honest_verdict: 'complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000'
++    rft_vs_ablation_delta:
++      ci95:
++      - 0.0
++      - 0.0
++      delta: 0.0
++      metric: heldout_pass@2
++      status: not_run_no_verifier_signal
++    bottleneck: verifier_discrimination_on_trm_grids
++    exp4099_captured_pp: 0.0
++    eval_exp_4103: results/experiment_4103_verifier_registry_gaps_hygiene.json
+   certification_precision_operating_point:
+     experiment: results/experiment_4087_certification_precision_rescue.json
+     status: precision_rescue_succeeded
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index bfb49c7ce3..5f0b7e5f1e 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T16:21:37.936556Z",
+-  "duration_s": 0.06182980537414551,
++  "run_date": "2026-06-12T16:54:09.300002Z",
++  "duration_s": 0.10541701316833496,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "4cc559a9320859b9a447c115a60f7be0f68bd8a395fc855ab2bb3bac5a86d93a",
++  "reproducibility_checksum": "3382afbf56ed031c0d870527778a720d501af3ce9bf726720069388ff85e854b",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "93d0c664726fbdcf26ea766b0f7631a2b887eaec"
++    "adversarial_verify_version": "1f588f9f2c3f215f9ca72bbba73ff67ee6b7fdcd"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5fb2b36af2..49bb967ff9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T16:21:38.175798Z",
+-  "duration_s": 0.051929473876953125,
++  "run_date": "2026-06-12T16:54:09.419216Z",
++  "duration_s": 0.08276796340942383,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "0b231d83ae5ee4c913cefd55625d78c95bab6bf32aadce5addd744306e195e62",
++  "reproducibility_checksum": "84368887d3f9afd1ede9ecfc997ae96bd0787629e102898cd034ffdb9efd9166",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "93d0c664726fbdcf26ea766b0f7631a2b887eaec"
++    "adversarial_verify_version": "1f588f9f2c3f215f9ca72bbba73ff67ee6b7fdcd"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 9f0af72555..0c1696fd26 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.129077911376953,
++  "efficiency_gains_ms": 2.1104812622070312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 93ad650a71..64c84c9741 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T16:08:52Z",
++  "run_date": "2026-06-12T16:55:10Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index a47487895f..ce8327d7f7 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000098466873169,
++  "duration_s": 5.000072002410889,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 02e62f04cc..9af46a90f9 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 6.0243066400289536e-05,
++  "duration_s": 3.038700003799022e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4103_verifier_registry_gaps_hygiene.json b/results/experiment_4103_verifier_registry_gaps_hygiene.json
+new file mode 100644
+index 0000000000..f1e717d441
+--- /dev/null
++++ b/results/experiment_4103_verifier_registry_gaps_hygiene.json
+@@ -0,0 +1,85 @@
++{
++  "cited_upstream_artifacts": [
++    "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "results/arc3_gap4_induced_programs.json",
++    "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
++    "results/experiment_4100_trm_verifier_rft_conditional.json"
++  ],
++  "duration_s": 0.233,
++  "exp4099_gap": {
++    "artifact_path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
++    "best_reranker": "K_OF_N_AGREEMENT",
++    "captured_pp": 0.0,
++    "captured_pp_ci95": [
++      0.0,
++      0.0
++    ],
++    "gap_id": "GAP-TRM-GRID-DISCRIMINATION",
++    "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
++    "missing_discriminator": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
++    "pool_n_tasks": 62,
++    "reproducibility_checksum": "7f84aa1e2b8ecade24d00ebef7841df86062c8f362e5da721db5f49aaf869ea8",
++    "status": "open_captured_pp_0.0000",
++    "trm_vote_pass2": 0.2742,
++    "verifier_beats_trm_vote": false
++  },
++  "exp4100_outcome": {
++    "artifact_path": "results/experiment_4100_trm_verifier_rft_conditional.json",
++    "bottleneck": "verifier_discrimination_on_trm_grids",
++    "branch_taken": "smoke",
++    "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
++    "reproducibility_checksum": "9c86753fc8ba6b7255c1247d1a0de960e9417f584359603f950d770ae128d2c8",
++    "rft_vs_ablation_delta": {
++      "ci95": [
++        0.0,
++        0.0
++      ],
++      "delta": 0.0,
++      "metric": "heldout_pass@2",
++      "status": "not_run_no_verifier_signal"
++    },
++    "status": "smoke_checkpoint_ok",
++    "trm_native_trainer_checkpoint_ok": true
++  },
++  "experiment": "experiment_4103_verifier_registry_gaps_hygiene",
++  "field_principles": {
++    "gaps_updated": "Lists the verifier_gaps entries touched (GAP-TRM-GRID-DISCRIMINATION et al.) so the gap backlog stays the honest complement of the registry.",
++    "honest_verdict": "Terminal-prefixed. Records the registry/gaps were reconciled to the .379 truth.",
++    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact from cached candidates; catches a silent verifier regression independent of the new work."
++  },
++  "gaps_path": "ops/verifier_gaps.md",
++  "gaps_updated": [
++    "GAP-TRM-GRID-DISCRIMINATION",
++    "GAP-TRM-VERIFIER-RFT-4100"
++  ],
++  "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "offline_replay": {
++    "arc1_rule_exec": {
++      "gated_pass2": 0.5806,
++      "headroom_recovered": 4,
++      "n": 31,
++      "vote_pass2": 0.4516,
++      "vote_wins_lost": 0
++    },
++    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
++    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
++    "expected": {
++      "arc1_rule_exec": {
++        "gated_pass2": 0.5806,
++        "headroom_recovered": 4,
++        "n": 31,
++        "vote_pass2": 0.4516,
++        "vote_wins_lost": 0
++      }
++    },
++    "gap4_arc1_reproduced": true,
++    "no_codex_calls": true,
++    "no_gguf_inference": true,
++    "regression_guard_passed": true
++  },
++  "registry_path": "ops/verifier_registry.yaml",
++  "registry_updated": true,
++  "regression_guard_passed": true,
++  "schema": "carnot.experiment_4103_verifier_registry_gaps_hygiene.v1"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index c1c6f9c9e8..cf7c27d8db 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T16:21:12Z",
+-  "finished_at": "2026-06-12T16:21:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-12T16:53:43Z",
++  "finished_at": "2026-06-12T16:53:43Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ce856574cf..4ebd9ad7df 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T16:21:13Z",
+-  "finished_at": "2026-06-12T16:21:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-12T16:53:43Z",
++  "finished_at": "2026-06-12T16:53:43Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 590ff14119..9471ce26d4 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T16:21:13Z",
+-  "finished_at": "2026-06-12T16:21:13Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-12T16:53:43Z",
++  "finished_at": "2026-06-12T16:53:43Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+-- 
+2.55.0
+

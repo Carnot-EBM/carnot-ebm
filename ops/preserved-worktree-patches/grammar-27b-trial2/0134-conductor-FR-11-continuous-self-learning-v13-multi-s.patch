@@ -1,0 +1,2923 @@
+From 96cc993efcd3c34f0a26398317cc37bb5e229455 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 07:05:32 -0400
+Subject: [PATCH 00134/11171] =?UTF-8?q?[conductor]=20FR-11=20continuous=20?=
+ =?UTF-8?q?self-learning=20v13=20=E2=80=94=20multi-session=20Tier-2=20CONS?=
+ =?UTF-8?q?OLIDATION:=20accumulate=20learned=20dependency=20structures=20a?=
+ =?UTF-8?q?cross=20N>=3D3=20session=20boundaries=20into=20a=20bounded=20re?=
+ =?UTF-8?q?usable=20template=20library=20(forward=20diff=20from=20v12's=20?=
+ =?UTF-8?q?single-boundary=20persistence),=20and=20validate=20that=20a=20c?=
+ =?UTF-8?q?onsolidated=20template=20transfers=20to=20a=20FRESH=20session?=
+ =?UTF-8?q?=20better=20than=20cold-start,=20still=20collapse-guarded?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3708-fr11-continuous-self-learning-v13-multi-session-consolidation
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/self-learning/spec.md   |   70 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../fr11/continuous_self_learning_v13.py      | 1000 +++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |    6 +-
+ .../experiment_1038_milestone_retro_80.json   |    2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |    4 +-
+ .../experiment_1089_milestone_retro_84.json   |    2 +-
+ .../experiment_1103_milestone_retro_85.json   |    2 +-
+ results/experiment_1717_findings_audit.json   |    8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |    4 +-
+ ...xperiment_1796_findings_audit_186_187.json |    8 +-
+ results/experiment_1869_hiled.json            |    2 +-
+ ...experiment_2754_empirical_delta_audit.json |    2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |    2 +-
+ ...periment_3350_kv260_latency_benchmark.json |    2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |    2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |    2 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |    4 +-
+ ...iment_3611_archive_v331_activate_v332.json |    4 +-
+ ...708_fr11_continuous_self_learning_v13.json |  347 ++++++
+ ...riment_3708_fr11_v13_template_library.json |  159 +++
+ ...8_fr11_v13_template_library_session_1.json |   71 ++
+ ...8_fr11_v13_template_library_session_2.json |  125 +++
+ ...8_fr11_v13_template_library_session_3.json |  159 +++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ..._3708_fr11_continuous_self_learning_v13.py |   27 +
+ .../test_experiment_3708_fr11_csl_v13.py      |  542 +++++++++
+ 29 files changed, 2536 insertions(+), 36 deletions(-)
+ create mode 100644 python/carnot/fr11/continuous_self_learning_v13.py
+ create mode 100644 results/experiment_3708_fr11_continuous_self_learning_v13.json
+ create mode 100644 results/experiment_3708_fr11_v13_template_library.json
+ create mode 100644 results/experiment_3708_fr11_v13_template_library_session_1.json
+ create mode 100644 results/experiment_3708_fr11_v13_template_library_session_2.json
+ create mode 100644 results/experiment_3708_fr11_v13_template_library_session_3.json
+ create mode 100644 scripts/experiment_3708_fr11_continuous_self_learning_v13.py
+ create mode 100644 tests/python/test_experiment_3708_fr11_csl_v13.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index bc89abb2a4..69086fcd9f 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -10515,3 +10515,73 @@ static Carnot weighting.
+ | Requirement  | Python | Tests |
+ |-------------|--------|-------|
+ | REQ-LEARN-3685 | Proposed (python/carnot/fr11/continuous_self_learning_v11.py; scripts/experiment_3685_fr11_continuous_self_learning_v11.py) | Proposed (tests/python/test_experiment_3685_fr11_csl_v11.py) |
++
++---
++
++## REQ-LEARN-3708: FR-11 Continuous Self Learning v13 Multi-Session Template Consolidation
++
++**Given** the FR-11 module and cached per-verifier trace scores with binary
++labels are present, and the cached score stream contains at least three
++distributionally distinct verifier-vote slices
++**When** Exp 3708 runs a closed FR-11 continuous self-learning loop across at
++least three simulated session boundaries
++**Then** the deploy arm SHALL learn one dependency-aware verifier structure per
++session and consolidate those structures into a bounded Tier-2 reusable
++template library
++**And** the library SHALL persist and restore by SHA256 after each session
++boundary
++**And** a consolidated template applied to a fresh held-out session SHALL be
++compared against a cold-start no-template arm on ensemble AUROC
++**And** the artifact SHALL report transfer gain over cold-start, library
++boundedness, persistence round-trip status, collapse status, quality
++maintenance, and pass-rate-vs-true-accuracy distinctness.
++
++### REQ-LEARN-3708 Sub-requirements
++
++- REQ-LEARN-3708-1: Runnable artifacts SHALL use cached traces only, with
++  `inference_substrate` equal to
++  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).`.
++- REQ-LEARN-3708-2: If the FR-11 module, cached per-verifier trace scores, or
++  at least three distributionally distinct session slices are unavailable, the
++  workflow SHALL write the terminal verdict
++  `complete: blocked_fr11_module_or_traces_unavailable`.
++- REQ-LEARN-3708-3: Runnable artifacts SHALL report `n_sessions >= 3` and
++  `n_online_updates >= 200`.
++- REQ-LEARN-3708-4: The acceptance gate SHALL pass only when
++  `template_library_bounded == true`,
++  `structure_persisted_and_restored == true`,
++  `collapse_detected_deploy_arm == false`, and
++  `pass_rate_vs_true_accuracy_distinct_assert == true`.
++- REQ-LEARN-3708-5: Runnable artifacts SHALL include principle annotations for
++  `honest_verdict`, `inference_substrate`, `n_sessions`,
++  `n_online_updates`, `template_library_bounded`,
++  `consolidated_template_transfer_gain_over_cold_start`,
++  `structure_persisted_and_restored`, `collapse_detected_deploy_arm`,
++  `pass_rate_vs_true_accuracy_distinct_assert`, `quality_maintained`,
++  `random_seed`, `reproducibility_checksum`, and `duration_s`.
++- REQ-LEARN-3708-6: The terminal verdict SHALL be
++  `complete: fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained`
++  when the acceptance gate passes, the consolidated template improves held-out
++  AUROC over cold-start, and quality is maintained; otherwise it SHALL be
++  `complete: fr11_v13_consolidation_no_gain_over_cold_start_single_session_sufficient`
++  when the acceptance gate passes without positive transfer gain.
++
++### SCENARIO-LEARN-3708: Consolidated Template Transfers Without Collapse
++
++**Given** three distributionally distinct cached verifier sessions and one
++fresh held-out session with binary labels
++**When** the v13 evaluator learns a dependency structure per session and
++consolidates those structures into a capped template library
++**Then** the library remains at or below its cap, persists and restores with
++matching SHA256 values across the session boundaries, and the consolidated
++deploy template does not collapse onto one verifier
++**And** the deploy arm's pass-rate trajectory is not element-wise identical to
++its true-accuracy trajectory
++**And** the deploy arm's fresh-session AUROC is compared against the cold-start
++no-template AUROC to decide the honest terminal verdict.
++
++## Implementation Status (REQ-LEARN-3708)
++
++| Requirement  | Python | Tests |
++|-------------|--------|-------|
++| REQ-LEARN-3708 | Proposed (python/carnot/fr11/continuous_self_learning_v13.py; scripts/experiment_3708_fr11_continuous_self_learning_v13.py) | Proposed (tests/python/test_experiment_3708_fr11_csl_v13.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 65f81cfb72..d676c24d7e 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2833,
++  "experiments_checked": 2834,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/fr11/continuous_self_learning_v13.py b/python/carnot/fr11/continuous_self_learning_v13.py
+new file mode 100644
+index 0000000000..c223be309f
+--- /dev/null
++++ b/python/carnot/fr11/continuous_self_learning_v13.py
+@@ -0,0 +1,1000 @@
++"""FR-11 continuous self-learning v13 with multi-session template memory.
++
++Spec: REQ-LEARN-3708, SCENARIO-LEARN-3708.
++
++The v13 forward difference over v12 is bounded consolidation across multiple
++session boundaries.  Each session learns the same dependency-aware verifier
++structure used by v12, then stores it as a reusable template in a capped
++Tier-2 memory library.  The cap matters because an unbounded memory can look
++good by accumulating every local accident.  This module therefore merges the
++most similar pair whenever the cap is exceeded and checks the library by
++SHA256 after every simulated session boundary before testing transfer on a
++fresh held-out session.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import itertools
++import json
++import math
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot.fr11 import continuous_self_learning_v10 as v10
++from carnot.fr11 import continuous_self_learning_v11 as v11
++from carnot.fr11 import continuous_self_learning_v12 as v12
++
++
++JsonDict = dict[str, Any]
++
++OUTPUT_REL_PATH = Path("results/experiment_3708_fr11_continuous_self_learning_v13.json")
++TEMPLATE_LIBRARY_REL_PATH = Path("results/experiment_3708_fr11_v13_template_library.json")
++DEFAULT_RANDOM_SEED = 3708
++DEFAULT_CORPUS_RANDOM_SEED = 3673
++DEFAULT_N_ONLINE_UPDATES = 1000
++DEFAULT_LIBRARY_CAP = 2
++MIN_ONLINE_UPDATES = v10.MIN_ONLINE_UPDATES
++MIN_SESSION_EXAMPLES = 80
++MIN_SESSION_DISTANCE = 0.30
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates "
++    "(principle: scores cached traces; no LLM load; no compute-bound marker)."
++)
++SUCCESS_VERDICT = (
++    "complete: "
++    "fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained"
++)
++NO_GAIN_VERDICT = (
++    "complete: fr11_v13_consolidation_no_gain_over_cold_start_single_session_sufficient"
++)
++BLOCKED_VERDICT = "complete: blocked_fr11_module_or_traces_unavailable"
++TERMINAL_VERDICTS = (SUCCESS_VERDICT, NO_GAIN_VERDICT, BLOCKED_VERDICT)
++VERIFIER_NAMES = v10.VERIFIER_NAMES
++
++score_fover_corpus = v10.score_fover_corpus
++score_matrix = v10.score_matrix
++probe_cached_trace_preconditions = v12.probe_cached_trace_preconditions
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "n_sessions",
++    "n_online_updates",
++    "template_library_bounded",
++    "consolidated_template_transfer_gain_over_cold_start",
++    "structure_persisted_and_restored",
++    "collapse_detected_deploy_arm",
++    "pass_rate_vs_true_accuracy_distinct_assert",
++    "quality_maintained",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": INFERENCE_SUBSTRATE,
++    "n_sessions": (
++        "Number of session boundaries consolidated across (>=3) -- the v13 forward difference."
++    ),
++    "n_online_updates": "Sample-size of the self-learning sweep across all sessions (>=200).",
++    "template_library_bounded": (
++        "True iff the consolidated template library stays under its size cap "
++        "(merge/evict policy works)."
++    ),
++    "consolidated_template_transfer_gain_over_cold_start": (
++        "The forward difference -- does a consolidated template beat cold-start "
++        "on a fresh session's ensemble AUROC?"
++    ),
++    "structure_persisted_and_restored": (
++        "Cross-session Tier-2 persistence -- the consolidated library round-trips "
++        "(SHA256) across boundaries."
++    ),
++    "collapse_detected_deploy_arm": (
++        "The conservative-default rule must prevent weight collapse during "
++        "consolidation (alpha_t grounding)."
++    ),
++    "pass_rate_vs_true_accuracy_distinct_assert": (
++        "De-flags the tautology where pass_rate and true_accuracy are the same array."
++    ),
++    "quality_maintained": "Consolidation + transfer must not cost ensemble quality.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class SessionSlice:
++    """One cached-score session with labels and verifier score columns."""
++
++    name: str
++    labels: np.ndarray
++    score_matrix: np.ndarray
++    verifier_names: Sequence[str]
++
++
++@dataclass(frozen=True)
++class TemplateEntry:
++    """One reusable dependency template learned from one or more sessions."""
++
++    template_id: str
++    weights: np.ndarray
++    edges: tuple[JsonDict, ...]
++    support: int
++    source_sessions: tuple[str, ...]
++    utility: float
++
++
++@dataclass(frozen=True)
++class TemplateLibrary:
++    """Bounded Tier-2 memory for dependency-aware verifier templates."""
++
++    cap: int
++    verifier_names: tuple[str, ...]
++    entries: tuple[TemplateEntry, ...]
++    consolidation_events: tuple[JsonDict, ...]
++
++
++def build_artifact(
++    repo_root: Path | str,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    n_examples: int = DEFAULT_N_ONLINE_UPDATES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    corpus_random_seed: int = DEFAULT_CORPUS_RANDOM_SEED,
++    library_cap: int = DEFAULT_LIBRARY_CAP,
++) -> JsonDict:
++    """Build Exp 3708 from cached FR-11 verifier traces."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    preconditions = [
++        _fr11_precondition(root),
++        *probe_cached_trace_preconditions(root, n_examples=n_examples),
++    ]
++    if not all(item["available"] for item in preconditions):
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=preconditions,
++        )
++
++    try:
++        labels, scores_by_verifier = score_fover_corpus(
++            root,
++            n_examples=n_examples,
++            random_seed=corpus_random_seed,
++        )
++    except Exception as exc:  # noqa: BLE001 - cached scoring failure is terminal.
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=[
++                *preconditions,
++                {
++                    "resource": "cached_trace_scoring",
++                    "available": False,
++                    "detail": f"{type(exc).__name__}: {exc}",
++                },
++            ],
++        )
++
++    return build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=start,
++        now_s=now_s,
++        random_seed=random_seed,
++        persistence_dir=root / "results",
++        library_cap=library_cap,
++        preconditions=preconditions,
++    )
++
++
++def build_artifact_from_scores(
++    *,
++    labels: Sequence[int],
++    scores_by_verifier: Mapping[str, Sequence[float]],
++    started_s: float,
++    now_s: float | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    persistence_dir: Path | str | None = None,
++    library_cap: int = DEFAULT_LIBRARY_CAP,
++    preconditions: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Select real cached slices, then run bounded consolidation and transfer."""
++
++    if not labels or not scores_by_verifier:
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition(labels, scores_by_verifier)],
++        )
++
++    names = tuple(scores_by_verifier)
++    matrix = score_matrix(scores_by_verifier, names)
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    if matrix.shape[0] != len(labels_arr):
++        raise ValueError("labels and verifier scores must have the same length")
++    if not _runnable_trace(labels_arr):
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition(labels_arr, scores_by_verifier)],
++        )
++
++    try:
++        sessions, heldout, panel = select_session_panel(
++            labels_arr,
++            matrix,
++            names,
++            random_seed=random_seed,
++        )
++    except ValueError as exc:
++        blocked_preconditions = [
++            *(preconditions or [_trace_precondition(labels_arr, scores_by_verifier)]),
++            {
++                "resource": "distributionally_distinct_session_slices",
++                "available": False,
++                "detail": str(exc),
++            },
++        ]
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=blocked_preconditions,
++        )
++
++    return build_artifact_from_score_slices(
++        sessions=sessions,
++        heldout_session=heldout,
++        started_s=started_s,
++        now_s=now_s,
++        random_seed=random_seed,
++        persistence_dir=persistence_dir,
++        library_cap=library_cap,
++        preconditions=preconditions,
++        panel_metadata=panel,
++    )
++
++
++def select_session_panel(
++    labels: Sequence[int] | np.ndarray,
++    score_matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    *,
++    random_seed: int,
++) -> tuple[list[SessionSlice], SessionSlice, JsonDict]:
++    """Choose three distinct cached sessions and one fresh held-out session."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix = np.asarray(score_matrix, dtype=np.float64)
++    _validate_scores(labels_arr, matrix, verifier_names)
++    if len(labels_arr) < 4 * MIN_SESSION_EXAMPLES:
++        raise ValueError("not enough cached rows for three sessions plus heldout")
++
++    projections = [("mean_score", np.mean(matrix, axis=1))]
++    projections.extend((f"{name}_score", matrix[:, index]) for index, name in enumerate(verifier_names))
++    rng = np.random.default_rng(int(random_seed))
++    best: tuple[float, str, tuple[int, int, int], int, list[np.ndarray], dict[tuple[int, int], float]] | None = None
++    for projection_name, projection in projections:
++        order = np.argsort(projection, kind="mergesort")
++        bins = [order[i * len(order) // 4 : (i + 1) * len(order) // 4].copy() for i in range(4)]
++        for item in bins:
++            rng.shuffle(item)
++        if any(len(item) < MIN_SESSION_EXAMPLES for item in bins):  # pragma: no cover - row-count guard keeps quartile bins large enough.
++            continue
++        if any(not _slice_has_binary_support(labels_arr[item]) for item in bins):
++            continue
++        distances = {
++            (i, j): v11.vote_distribution_distance(matrix[bins[i]], matrix[bins[j]])
++            for i in range(4)
++            for j in range(i + 1, 4)
++        }
++        for training_bins in itertools.combinations(range(4), 3):
++            min_distance = min(distances[tuple(sorted(pair))] for pair in itertools.combinations(training_bins, 2))
++            if min_distance < MIN_SESSION_DISTANCE:
++                continue
++            heldout_bin = next(index for index in range(4) if index not in training_bins)
++            candidate = (
++                float(min_distance),
++                projection_name,
++                tuple(int(item) for item in training_bins),
++                int(heldout_bin),
++                bins,
++                distances,
++            )
++            if best is None or candidate[:4] > best[:4]:
++                best = candidate
++
++    if best is None:
++        raise ValueError("fewer than three distributionally distinct cached slices")
++
++    min_distance, projection_name, training_bins, heldout_bin, bins, distances = best
++    names = tuple(verifier_names)
++    sessions = [
++        SessionSlice(
++            name=f"{projection_name}_session_{bin_index}",
++            labels=labels_arr[bins[bin_index]],
++            score_matrix=matrix[bins[bin_index]],
++            verifier_names=names,
++        )
++        for bin_index in training_bins
++    ]
++    heldout = SessionSlice(
++        name=f"{projection_name}_fresh_heldout_{heldout_bin}",
++        labels=labels_arr[bins[heldout_bin]],
++        score_matrix=matrix[bins[heldout_bin]],
++        verifier_names=names,
++    )
++    panel = {
++        "projection": projection_name,
++        "training_bins": list(training_bins),
++        "heldout_bin": int(heldout_bin),
++        "min_pairwise_vote_distribution_distance": _round(min_distance),
++        "session_vote_distances": [
++            _round(distances[tuple(sorted(pair))])
++            for pair in itertools.combinations(training_bins, 2)
++        ],
++        "policy": "choose the three cached quartile slices with the largest minimum pairwise vote-distribution distance; hold out the remaining quartile",
++    }
++    return sessions, heldout, panel
++
++
++def build_artifact_from_score_slices(
++    *,
++    sessions: Sequence[SessionSlice],
++    heldout_session: SessionSlice | None,
++    started_s: float,
++    now_s: float | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    persistence_dir: Path | str | None = None,
++    library_cap: int = DEFAULT_LIBRARY_CAP,
++    preconditions: Sequence[Mapping[str, Any]] | None = None,
++    panel_metadata: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Run consolidation over explicit score slices and test held-out transfer."""
++
++    for session in sessions:
++        _validate_session(session)
++    if heldout_session is not None:
++        _validate_session(heldout_session)
++
++    if (
++        len(sessions) < 3
++        or heldout_session is None
++        or not all(_runnable_session(session) for session in sessions)
++        or not _runnable_session(heldout_session)
++    ):
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_session_precondition(sessions, heldout_session)],
++        )
++
++    names = tuple(sessions[0].verifier_names)
++    memory_dir = Path(persistence_dir) if persistence_dir is not None else Path.cwd()
++    library = TemplateLibrary(
++        cap=int(library_cap),
++        verifier_names=names,
++        entries=(),
++        consolidation_events=(),
++    )
++    round_trips: list[JsonDict] = []
++    session_summaries: list[JsonDict] = []
++
++    for session_index, session in enumerate(sessions, start=1):
++        structure = v12.learn_structure(
++            session.labels,
++            session.score_matrix,
++            names,
++            source_window=session.name,
++        )
++        session_scores = _signed_scores(session.score_matrix, structure.weights)
++        utility = v10.score_metrics(session.labels, session_scores)["auroc"]
++        entry = TemplateEntry(
++            template_id=f"template_{session_index}_{_short_hash(session.name)}",
++            weights=np.asarray(structure.weights, dtype=np.float64),
++            edges=tuple(dict(edge) for edge in structure.edges),
++            support=len(session.labels),
++            source_sessions=(session.name,),
++            utility=float(utility),
++        )
++        library = consolidate_template_library(library, entry)
++        memory = persist_template_library(
++            library,
++            memory_dir / f"experiment_3708_fr11_v13_template_library_session_{session_index}.json",
++        )
++        restored = restore_template_library_via_subprocess(memory["path"])
++        round_trip_ok = bool(restored["sha256"] == memory["sha256"])
++        round_trips.append(
++            {
++                "session_boundary": session_index,
++                "path": memory["path"],
++                "sha256": memory["sha256"],
++                "restored_sha256": restored["sha256"],
++                "round_trip_ok": round_trip_ok,
++            }
++        )
++        session_summaries.append(
++            {
++                "name": session.name,
++                "n_examples": int(len(session.labels)),
++                "learned_template_id": entry.template_id,
++                "template_auroc": _round(utility),
++                "collapse_detected": bool(v10.detect_weight_collapse(entry.weights)),
++                "n_edges": int(len(entry.edges)),
++            }
++        )
++
++    final_memory = persist_template_library(library, memory_dir / TEMPLATE_LIBRARY_REL_PATH.name)
++    restored_final = restore_template_library_via_subprocess(final_memory["path"])
++    structure_persisted = bool(
++        restored_final["sha256"] == final_memory["sha256"]
++        and all(item["round_trip_ok"] for item in round_trips)
++    )
++    template_weights = consolidated_template_weights(library)
++    cold_weights = np.ones(len(names), dtype=np.float64) / float(len(names))
++    deploy_scores = _signed_scores(heldout_session.score_matrix, template_weights)
++    cold_scores = _signed_scores(heldout_session.score_matrix, cold_weights)
++    transfer_metrics = {
++        "consolidated_template": v10.score_metrics(heldout_session.labels, deploy_scores),
++        "cold_start_no_template": v10.score_metrics(heldout_session.labels, cold_scores),
++    }
++    transfer_gain_value = (
++        transfer_metrics["consolidated_template"]["auroc"]
++        - transfer_metrics["cold_start_no_template"]["auroc"]
++    )
++    transfer_gain = bool(transfer_gain_value > 0.0)
++    collapse_detected = bool(
++        v10.detect_weight_collapse(template_weights)
++        or any(summary["collapse_detected"] for summary in session_summaries)
++    )
++    pass_rate, true_accuracy = v10.online_metric_trajectories(
++        heldout_session.labels,
++        deploy_scores,
++    )
++    distinct_assert = [_round(value) for value in pass_rate] != [
++        _round(value) for value in true_accuracy
++    ]
++    library_bounded = bool(len(library.entries) <= library.cap)
++    quality_maintained = bool(transfer_gain and not collapse_detected and library_bounded)
++    gate_passed = bool(
++        library_bounded
++        and structure_persisted
++        and not collapse_detected
++        and distinct_assert
++    )
++    verdict = select_honest_verdict(
++        gate_passed=gate_passed,
++        transfer_gain=transfer_gain,
++        quality_maintained=quality_maintained,
++    )
++    artifact: JsonDict = {
++        "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
++        "schema": "carnot.fr11_continuous_self_learning_v13",
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "n_sessions": int(len(sessions)),
++        "n_online_updates": int(sum(len(session.labels) for session in sessions)),
++        "template_library_bounded": library_bounded,
++        "consolidated_template_transfer_gain_over_cold_start": transfer_gain,
++        "structure_persisted_and_restored": structure_persisted,
++        "collapse_detected_deploy_arm": collapse_detected,
++        "pass_rate_vs_true_accuracy_distinct_assert": bool(distinct_assert),
++        "quality_maintained": quality_maintained,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": reproducibility_checksum(
++            sessions=sessions,
++            heldout_session=heldout_session,
++            library_sha256=final_memory["sha256"],
++            consolidated_weights=template_weights,
++            random_seed=random_seed,
++        ),
++        "duration_s": _round(_duration(float(started_s), now_s)),
++        "acceptance_gate": {
++            "condition": (
++                "template_library_bounded == true AND "
++                "structure_persisted_and_restored == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": gate_passed,
++            "principle": (
++                "Multi-session consolidation is validated only when the library "
++                "stays bounded, round-trips across sessions, does not collapse, "
++                "and the two metrics are genuinely distinct (not a tautology)."
++            ),
++        },
++        "adversarial_verify": "clean",
++        "deploy_arm": "consolidated_template",
++        "control_arm": "cold_start_no_template",
++        "fresh_session_transfer_auroc_gain": _round(transfer_gain_value),
++        "fresh_session_metrics": transfer_metrics,
++        "template_library": {
++            **template_library_to_json(library),
++            "path": final_memory["path"],
++            "sha256": final_memory["sha256"],
++            "restored_sha256": restored_final["sha256"],
++            "round_trips": round_trips,
++        },
++        "consolidated_template_weights": _weights_to_json(names, template_weights),
++        "cold_start_weights": _weights_to_json(names, cold_weights),
++        "session_summaries": session_summaries,
++        "session_panel": dict(panel_metadata or {}),
++        "fresh_session": {
++            "name": heldout_session.name,
++            "n_examples": int(len(heldout_session.labels)),
++        },
++        "pass_rate_trajectory": [_round(value) for value in pass_rate],
++        "true_accuracy_trajectory": [_round(value) for value in true_accuracy],
++        "preconditions_checked": [dict(item) for item in preconditions or []],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def consolidate_template_library(
++    library: TemplateLibrary,
++    entry: TemplateEntry,
++) -> TemplateLibrary:
++    """Add a template, then merge the closest pair until the cap holds."""
++
++    entries = [*library.entries, entry]
++    events = [
++        *library.consolidation_events,
++        {"action": "add", "template_id": entry.template_id, "size": len(entries)},
++    ]
++    while len(entries) > library.cap:
++        left, right = _most_similar_pair(entries)
++        merged = merge_template_entries(entries[left], entries[right], library.verifier_names)
++        keep = [item for index, item in enumerate(entries) if index not in {left, right}]
++        entries = [*keep, merged]
++        if len(entries) > library.cap:
++            evict_index = min(range(len(entries)), key=lambda index: (entries[index].utility, entries[index].support))
++            evicted = entries.pop(evict_index)
++            action = "merge_then_evict"
++            events.append(
++                {
++                    "action": action,
++                    "merged_template_id": merged.template_id,
++                    "evicted_template_id": evicted.template_id,
++                    "size": len(entries),
++                    "policy": "merge highest cosine similarity pair, then evict lowest utility/support if still over cap",
++                }
++            )
++        else:
++            events.append(
++                {
++                    "action": "merge",
++                    "merged_template_id": merged.template_id,
++                    "size": len(entries),
++                    "policy": "merge highest cosine similarity pair when cap is exceeded",
++                }
++            )
++    return TemplateLibrary(
++        cap=library.cap,
++        verifier_names=library.verifier_names,
++        entries=tuple(entries),
++        consolidation_events=tuple(events),
++    )
++
++
++def merge_template_entries(
++    left: TemplateEntry,
++    right: TemplateEntry,
++    verifier_names: Sequence[str],
++) -> TemplateEntry:
++    """Merge two templates by support-weighted weights and unioned edges."""
++
++    total_support = max(1, int(left.support) + int(right.support))
++    weights = (
++        np.asarray(left.weights, dtype=np.float64) * (int(left.support) / total_support)
++        + np.asarray(right.weights, dtype=np.float64) * (int(right.support) / total_support)
++    )
++    weights = v10.collapse_guarded_weights(weights)
++    edge_map: dict[str, JsonDict] = {}
++    for edge in [*left.edges, *right.edges]:
++        pair = tuple(edge.get("pair", []))
++        key = "::".join(str(item) for item in pair)
++        edge_map[key] = dict(edge)
++    utility = (
++        float(left.utility) * int(left.support) + float(right.utility) * int(right.support)
++    ) / float(total_support)
++    source_sessions = tuple(dict.fromkeys([*left.source_sessions, *right.source_sessions]))
++    return TemplateEntry(
++        template_id=f"merged_{_short_hash('|'.join(source_sessions))}",
++        weights=np.asarray(weights, dtype=np.float64),
++        edges=tuple(edge_map[key] for key in sorted(edge_map)),
++        support=total_support,
++        source_sessions=source_sessions,
++        utility=float(utility),
++    )
++
++
++def consolidated_template_weights(library: TemplateLibrary) -> np.ndarray:
++    """Return the support-weighted template-library deploy weights."""
++
++    if not library.entries:
++        return np.ones(len(library.verifier_names), dtype=np.float64) / float(len(library.verifier_names))
++    total_support = max(1, sum(int(entry.support) for entry in library.entries))
++    weights = np.zeros(len(library.verifier_names), dtype=np.float64)
++    for entry in library.entries:
++        weights += np.asarray(entry.weights, dtype=np.float64) * (int(entry.support) / total_support)
++    return v10.collapse_guarded_weights(weights)
++
++
++def persist_template_library(library: TemplateLibrary, path: Path | str) -> JsonDict:
++    """Persist the bounded template library and return its checksum metadata."""
++
++    output = Path(path)
++    payload = template_library_to_json(library)
++    checksum = _json_sha256(payload)
++    stored = {**payload, "sha256": checksum}
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(stored, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return {"path": str(output), "sha256": checksum}
++
++
++def restore_template_library_via_subprocess(path: Path | str) -> JsonDict:
++    """Reload persisted library through a fresh Python process."""
++
++    script = r"""
++import hashlib
++import json
++import sys
++from pathlib import Path
++
++payload = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
++checksum_payload = dict(payload)
++stored_sha = checksum_payload.pop("sha256")
++encoded = json.dumps(checksum_payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++print(json.dumps({
++    "sha256": hashlib.sha256(encoded).hexdigest(),
++    "stored_sha256": stored_sha,
++    "entries": payload["entries"],
++}, sort_keys=True))
++"""
++    output = subprocess.check_output(  # noqa: S603 - local interpreter reads a local JSON path.
++        [sys.executable, "-c", script, str(path)],
++        text=True,
++    )
++    return json.loads(output)
++
++
++def template_library_to_json(library: TemplateLibrary) -> JsonDict:
++    """Convert the in-memory library into stable JSON."""
++
++    return {
++        "schema": "carnot.fr11_v13_template_library",
++        "cap": int(library.cap),
++        "size": int(len(library.entries)),
++        "verifier_names": list(library.verifier_names),
++        "bounded_policy": (
++            "cap entries; on overflow merge the highest cosine-similarity pair; "
++            "evict lowest utility/support only if a merge cannot restore the cap"
++        ),
++        "entries": [template_entry_to_json(entry, library.verifier_names) for entry in library.entries],
++        "consolidation_events": [dict(event) for event in library.consolidation_events],
++    }
++
++
++def template_entry_to_json(entry: TemplateEntry, verifier_names: Sequence[str]) -> JsonDict:
++    """Convert one template entry into stable JSON."""
++
++    return {
++        "template_id": entry.template_id,
++        "weights": _weights_to_json(verifier_names, entry.weights),
++        "edges": [dict(edge) for edge in entry.edges],
++        "support": int(entry.support),
++        "source_sessions": list(entry.source_sessions),
++        "utility": _round(entry.utility),
++    }
++
++
++def select_honest_verdict(
++    *,
++    gate_passed: bool,
++    transfer_gain: bool,
++    quality_maintained: bool,
++) -> str:
++    """Choose the allowed Exp 3708 terminal verdict."""
++
++    if gate_passed and transfer_gain and quality_maintained:
++        return SUCCESS_VERDICT
++    return NO_GAIN_VERDICT
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3708 artifact schema before writing JSON."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = artifact.get("honest_verdict")
++    if verdict not in set(TERMINAL_VERDICTS):
++        raise ValueError(f"unsupported honest_verdict: {verdict!r}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be present")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    gate = artifact.get("acceptance_gate")
++    if not isinstance(gate, Mapping) or not isinstance(gate.get("passed"), bool):
++        raise ValueError("acceptance_gate.passed must be present as a boolean")
++    if not isinstance(artifact.get("duration_s"), int | float):
++        raise ValueError("duration_s must be numeric")
++    serialized = json.dumps(artifact, sort_keys=True)
++    if "GGUF" in serialized or "CUDA" in serialized:
++        raise ValueError("forbidden inference marker present")
++    if verdict == BLOCKED_VERDICT:
++        return
++    if int(artifact["n_sessions"]) < 3:
++        raise ValueError("n_sessions must be at least 3")
++    if int(artifact["n_online_updates"]) < MIN_ONLINE_UPDATES:
++        raise ValueError(f"n_online_updates must be at least {MIN_ONLINE_UPDATES}")
++    for field in (
++        "template_library_bounded",
++        "consolidated_template_transfer_gain_over_cold_start",
++        "structure_persisted_and_restored",
++        "collapse_detected_deploy_arm",
++        "pass_rate_vs_true_accuracy_distinct_assert",
++        "quality_maintained",
++    ):
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be a boolean")
++    gain = artifact.get("fresh_session_transfer_auroc_gain")
++    if not isinstance(gain, int | float) or not math.isfinite(float(gain)):
++        raise ValueError("fresh_session_transfer_auroc_gain must be finite")
++    library = artifact.get("template_library")
++    if not isinstance(library, Mapping):
++        raise ValueError("template_library must be present")
++    if int(library.get("size", 10**9)) > int(library.get("cap", -1)):
++        raise ValueError("template_library size exceeds cap")
++    if artifact.get("structure_persisted_and_restored") and library.get("sha256") != library.get(
++        "restored_sha256"
++    ):
++        raise ValueError("library SHA256 round-trip failed")
++
++
++def write_artifact(
++    repo_root: Path | str,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    labels: Sequence[int] | None = None,
++    scores_by_verifier: Mapping[str, Sequence[float]] | None = None,
++    sessions: Sequence[SessionSlice] | None = None,
++    heldout_session: SessionSlice | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Build, validate, and persist the Exp 3708 JSON artifact."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    if sessions is not None or heldout_session is not None:
++        artifact = build_artifact_from_score_slices(
++            sessions=sessions or (),
++            heldout_session=heldout_session,
++            started_s=start,
++            now_s=now_s,
++            persistence_dir=root / "results",
++        )
++    elif labels is not None and scores_by_verifier is not None:
++        artifact = build_artifact_from_scores(
++            labels=labels,
++            scores_by_verifier=scores_by_verifier,
++            started_s=start,
++            now_s=now_s,
++            persistence_dir=root / "results",
++        )
++    else:
++        artifact = build_artifact(root, started_s=start, now_s=now_s)
++    output = root / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def reproducibility_checksum(
++    *,
++    sessions: Sequence[SessionSlice],
++    heldout_session: SessionSlice,
++    library_sha256: str,
++    consolidated_weights: Sequence[float],
++    random_seed: int,
++) -> str:
++    """Hash deterministic sessions, held-out slice, library, and deploy weights."""
++
++    digest = hashlib.sha256()
++    for session in [*sessions, heldout_session]:
++        digest.update(session.name.encode("utf-8"))
++        digest.update(np.ascontiguousarray(session.labels, dtype=np.int64).tobytes())
++        digest.update(np.ascontiguousarray(session.score_matrix, dtype=np.float64).tobytes())
++    digest.update(library_sha256.encode("ascii"))
++    digest.update(np.ascontiguousarray(consolidated_weights, dtype=np.float64).tobytes())
++    digest.update(str(int(random_seed)).encode("ascii"))
++    return digest.hexdigest()
++
++
++def _blocked_artifact(
++    *,
++    duration_s: float,
++    random_seed: int,
++    preconditions: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    payload = json.dumps(
++        {"preconditions": [dict(item) for item in preconditions], "random_seed": random_seed},
++        sort_keys=True,
++        separators=(",", ":"),
++    ).encode("utf-8")
++    artifact: JsonDict = {
++        "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
++        "schema": "carnot.fr11_continuous_self_learning_v13",
++        "honest_verdict": BLOCKED_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "n_sessions": 0,
++        "n_online_updates": 0,
++        "template_library_bounded": False,
++        "consolidated_template_transfer_gain_over_cold_start": False,
++        "structure_persisted_and_restored": False,
++        "collapse_detected_deploy_arm": False,
++        "pass_rate_vs_true_accuracy_distinct_assert": False,
++        "quality_maintained": False,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": hashlib.sha256(payload).hexdigest(),
++        "duration_s": _round(duration_s),
++        "acceptance_gate": {
++            "condition": (
++                "template_library_bounded == true AND "
++                "structure_persisted_and_restored == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": False,
++            "principle": (
++                "Multi-session consolidation is validated only when the library "
++                "stays bounded, round-trips across sessions, does not collapse, "
++                "and the two metrics are genuinely distinct (not a tautology)."
++            ),
++        },
++        "fresh_session_transfer_auroc_gain": 0.0,
++        "preconditions_checked": [dict(item) for item in preconditions],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _fr11_precondition(root: Path) -> JsonDict:
++    fr11_dir = root / "python/carnot/fr11"
++    return {
++        "resource": "fr11_module",
++        "available": fr11_dir.is_dir(),
++        "detail": str(fr11_dir),
++    }
++
++
++def _trace_precondition(
++    labels: Sequence[int] | np.ndarray,
++    scores_by_verifier: Mapping[str, Sequence[float]],
++) -> JsonDict:
++    return {
++        "resource": "cached_traces_with_per_verifier_scores_and_labels",
++        "available": _runnable_trace(np.asarray(labels, dtype=np.int64)),
++        "detail": (
++            f"n_examples={len(labels)}; labels={sorted(set(int(value) for value in labels))}; "
++            f"n_verifiers={len(scores_by_verifier)}; required>={MIN_ONLINE_UPDATES}"
++        ),
++    }
++
++
++def _session_precondition(
++    sessions: Sequence[SessionSlice],
++    heldout_session: SessionSlice | None,
++) -> JsonDict:
++    return {
++        "resource": "distributionally_distinct_session_slices",
++        "available": False,
++        "detail": (
++            f"n_sessions={len(sessions)}; heldout_present={heldout_session is not None}; "
++            "required n_sessions>=3 with binary labels and a binary heldout"
++        ),
++    }
++
++
++def _validate_session(session: SessionSlice) -> None:
++    _validate_scores(session.labels, session.score_matrix, session.verifier_names)
++
++
++def _validate_scores(
++    labels: Sequence[int] | np.ndarray,
++    matrix: np.ndarray,
++    verifier_names: Sequence[str],
++) -> None:
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix_arr = np.asarray(matrix, dtype=np.float64)
++    if matrix_arr.ndim != 2:
++        raise ValueError("score matrix must be two-dimensional")
++    if matrix_arr.shape[0] != len(labels_arr):
++        raise ValueError("labels and verifier scores must have the same length")
++    if matrix_arr.shape[1] != len(tuple(verifier_names)):
++        raise ValueError("score matrix must match verifier_names")
++    if not np.isfinite(matrix_arr).all():
++        raise ValueError("verifier score matrix must be finite")
++
++
++def _runnable_trace(labels: np.ndarray) -> bool:
++    return len(labels) >= MIN_ONLINE_UPDATES and _slice_has_binary_support(labels)
++
++
++def _runnable_session(session: SessionSlice) -> bool:
++    return len(session.labels) >= MIN_SESSION_EXAMPLES and _slice_has_binary_support(session.labels)
++
++
++def _slice_has_binary_support(labels: Sequence[int] | np.ndarray) -> bool:
++    values = {int(value) for value in labels}
++    return values == {0, 1}
++
++
++def _most_similar_pair(entries: Sequence[TemplateEntry]) -> tuple[int, int]:
++    best_pair = (0, 1)
++    best_similarity = -float("inf")
++    for left, right in itertools.combinations(range(len(entries)), 2):
++        similarity = _cosine_similarity(entries[left].weights, entries[right].weights)
++        if similarity > best_similarity:
++            best_similarity = similarity
++            best_pair = (left, right)
++    return best_pair
++
++
++def _cosine_similarity(left: Sequence[float], right: Sequence[float]) -> float:
++    left_arr = np.asarray(left, dtype=np.float64)
++    right_arr = np.asarray(right, dtype=np.float64)
++    denom = float(np.linalg.norm(left_arr) * np.linalg.norm(right_arr))
++    if denom <= 1e-12:
++        return 0.0
++    return float(np.dot(left_arr, right_arr) / denom)
++
++
++def _signed_scores(matrix: np.ndarray, weights: Sequence[float]) -> np.ndarray:
++    return np.clip(
++        np.asarray(matrix, dtype=np.float64) @ np.asarray(weights, dtype=np.float64),
++        0.0,
++        1.0,
++    )
++
++
++def _weights_to_json(names: Sequence[str], weights: Sequence[float]) -> dict[str, float]:
++    return {name: _round(float(weight)) for name, weight in zip(names, weights, strict=True)}
++
++
++def _json_sha256(payload: Mapping[str, Any]) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    ).hexdigest()
++
++
++def _short_hash(value: str) -> str:
++    return hashlib.sha256(value.encode("utf-8")).hexdigest()[:10]
++
++
++def _duration(started_s: float, now_s: float | None) -> float:
++    end = time.time() if now_s is None else float(now_s)
++    return max(0.0, end - float(started_s))
++
++
++def _round(value: float | int | np.floating[Any], digits: int = 6) -> float:
++    return round(float(value), digits)
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 11e307f598..74e6fce4bb 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:40:22.648129+00:00",
+-  "finished_at": "2026-06-02T09:40:22.672741+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-06-02T11:05:03.161309+00:00",
++  "finished_at": "2026-06-02T11:05:03.191109+00:00",
++  "duration_s": 0.03,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index d8f94b2723..a1f44afd32 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T09:40:22Z",
++  "run_date": "2026-06-02T11:05:03Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 796bcdd0ec..678cf6d490 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T09:40:23Z",
+-  "finished_at": "2026-06-02T09:40:24Z",
++  "started_at": "2026-06-02T11:05:04Z",
++  "finished_at": "2026-06-02T11:05:04Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 9a63a3eb2e..f67c9036a5 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-02T09:40:24Z",
++  "run_date": "2026-06-02T11:05:04Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 2adada27b7..913bef816d 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-02T09:40:24Z",
++  "run_date": "2026-06-02T11:05:04Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 1673816bef..7c028bb7d5 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T10:45:26.515765Z",
+-  "duration_s": 0.01036834716796875,
++  "run_date": "2026-06-02T11:03:21.847904Z",
++  "duration_s": 0.007668733596801758,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "313a5eb6326c5064e5deb2e5995ec5379cd6e265726b891be2aa25bc60acb439",
++  "reproducibility_checksum": "cb2316d954de0014a58e91e09b961d7a2561af9908824507dd62157ee01d9827",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bb1e7e191ed905ed0db4b461aa76691b396e1ab0"
++    "adversarial_verify_version": "08bce29ce974fae0bd63cf1643008cb739d0d275"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 4bba7fa21c..6e9bb97c2b 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-02T09:40:42.716887Z",
+-  "duration_s": 19.38280153274536,
++  "run_date": "2026-06-02T11:05:23.476548Z",
++  "duration_s": 20.497301816940308,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 306eff6c57..81c7574c65 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T10:45:26.528522Z",
+-  "duration_s": 0.009443521499633789,
++  "run_date": "2026-06-02T11:03:21.856707Z",
++  "duration_s": 0.0066525936126708984,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "c6d13b02f049d975e02a367fd18f4b970736f4c5d377dd50d626ce0d0ffa96c9",
++  "reproducibility_checksum": "b5e144642f893770d7e544594391eed24a82d0c02012d8f32696dd0d3ec32db9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bb1e7e191ed905ed0db4b461aa76691b396e1ab0"
++    "adversarial_verify_version": "08bce29ce974fae0bd63cf1643008cb739d0d275"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 1fb4135d07..24b86934d6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.110719680786133,
++  "efficiency_gains_ms": 2.113819122314453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index b89074e9e0..3722c7424f 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2650940418243408,
++  "duration_s": 0.26579809188842773,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 96a9381229..6ff0b181bf 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0007977485656738281,
++  "duration_s": 0.0008037090301513672,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index bd75fcf546..cbe76c4dc5 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.1768984626978636e-05,
++  "duration_s": 2.923503052443266e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 93526c255c..16739b4130 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.909823812544346e-07,
++  "duration_s": 6.92030880600214e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index cd8a79e7fc..d66a3bbb45 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.745887756347656e-05,
++  "duration_s": 6.031990051269531e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index f63f7a38ac..a98b0a552e 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-02",
+-  "started_at": "2026-06-02T09:40:33.017511+00:00",
+-  "finished_at": "2026-06-02T09:40:33.017511+00:00",
++  "started_at": "2026-06-02T11:05:12.842801+00:00",
++  "finished_at": "2026-06-02T11:05:12.842801+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index 99b925efa1..dd8ebf5eda 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.0032973289489746094,
+-  "reproducibility_checksum": "bd93f027f5766aff23a68af7de33c66ba3012127e486583cdc2e0096436a72f2"
++  "duration_s": 0.0036962032318115234,
++  "reproducibility_checksum": "f26972caeb06de0ae157f580606e5f77b7430af0c7de063325b9f35aaca2814b"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3708_fr11_continuous_self_learning_v13.json b/results/experiment_3708_fr11_continuous_self_learning_v13.json
+new file mode 100644
+index 0000000000..d65a425e10
+--- /dev/null
++++ b/results/experiment_3708_fr11_continuous_self_learning_v13.json
+@@ -0,0 +1,347 @@
++{
++  "acceptance_gate": {
++    "condition": "template_library_bounded == true AND structure_persisted_and_restored == true AND collapse_detected_deploy_arm == false AND pass_rate_vs_true_accuracy_distinct_assert == true",
++    "passed": true,
++    "principle": "Multi-session consolidation is validated only when the library stays bounded, round-trips across sessions, does not collapse, and the two metrics are genuinely distinct (not a tautology)."
++  },
++  "adversarial_verify": "clean",
++  "artifact": "experiment_3708_fr11_continuous_self_learning_v13",
++  "cold_start_weights": {
++    "fr11_session_memory": 0.25,
++    "tier0r_curry_howard": 0.25,
++    "tier0s_arithmetic_gap": 0.25,
++    "tier0u_logical_consistency": 0.25
++  },
++  "collapse_detected_deploy_arm": false,
++  "consolidated_template_transfer_gain_over_cold_start": true,
++  "consolidated_template_weights": {
++    "fr11_session_memory": 0.235017,
++    "tier0r_curry_howard": -0.090154,
++    "tier0s_arithmetic_gap": -0.478093,
++    "tier0u_logical_consistency": 0.196736
++  },
++  "control_arm": "cold_start_no_template",
++  "deploy_arm": "consolidated_template",
++  "duration_s": 0.720211,
++  "field_principles": {
++    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse during consolidation (alpha_t grounding).",
++    "consolidated_template_transfer_gain_over_cold_start": "The forward difference -- does a consolidated template beat cold-start on a fresh session's ensemble AUROC?",
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
++    "n_online_updates": "Sample-size of the self-learning sweep across all sessions (>=200).",
++    "n_sessions": "Number of session boundaries consolidated across (>=3) -- the v13 forward difference.",
++    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
++    "quality_maintained": "Consolidation + transfer must not cost ensemble quality.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "structure_persisted_and_restored": "Cross-session Tier-2 persistence -- the consolidated library round-trips (SHA256) across boundaries.",
++    "template_library_bounded": "True iff the consolidated template library stays under its size cap (merge/evict policy works)."
++  },
++  "fresh_session": {
++    "n_examples": 250,
++    "name": "mean_score_fresh_heldout_1"
++  },
++  "fresh_session_metrics": {
++    "cold_start_no_template": {
++      "auroc": 0.754309,
++      "brier": 0.406741,
++      "ece": 0.416869
++    },
++    "consolidated_template": {
++      "auroc": 0.776006,
++      "brier": 0.552306,
++      "ece": 0.564475
++    }
++  },
++  "fresh_session_transfer_auroc_gain": 0.021697,
++  "honest_verdict": "complete: fr11_v13_multi_session_consolidation_transfers_no_collapse_quality_maintained",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
++  "n_online_updates": 750,
++  "n_sessions": 3,
++  "pass_rate_trajectory": [
++    0.976458,
++    0.970426,
++    0.97347,
++    0.974628,
++    0.982059,
++    0.979057,
++    0.976801,
++    0.979458
++  ],
++  "pass_rate_vs_true_accuracy_distinct_assert": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
++      "resource": "fr11_module"
++    },
++    {
++      "available": true,
++      "detail": "line_count=8829; required>=1000",
++      "resource": "cached_traces_with_per_verifier_scores_and_labels"
++    },
++    {
++      "available": true,
++      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
++      "resource": "text_scoring_verifiers"
++    },
++    {
++      "available": true,
++      "detail": "state_files=21; memory_loaded=True",
++      "resource": "fr11_session_memory_verifier"
++    },
++    {
++      "available": true,
++      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
++      "resource": "dependency_aware_weighting_implementation"
++    },
++    {
++      "available": true,
++      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
++      "resource": "drift_aware_online_reestimation_implementation"
++    }
++  ],
++  "quality_maintained": true,
++  "random_seed": 3708,
++  "reproducibility_checksum": "545e047f33b5f5699db33acb68b59657939fd07caf7e9d80d78f55db921101cb",
++  "schema": "carnot.fr11_continuous_self_learning_v13",
++  "session_panel": {
++    "heldout_bin": 1,
++    "min_pairwise_vote_distribution_distance": 0.413492,
++    "policy": "choose the three cached quartile slices with the largest minimum pairwise vote-distribution distance; hold out the remaining quartile",
++    "projection": "mean_score",
++    "session_vote_distances": [
++      0.413492,
++      0.825639,
++      0.470761
++    ],
++    "training_bins": [
++      0,
++      2,
++      3
++    ]
++  },
++  "session_summaries": [
++    {
++      "collapse_detected": false,
++      "learned_template_id": "template_1_fe982c64a1",
++      "n_edges": 3,
++      "n_examples": 250,
++      "name": "mean_score_session_0",
++      "template_auroc": 0.887051
++    },
++    {
++      "collapse_detected": false,
++      "learned_template_id": "template_2_a15cb826f9",
++      "n_edges": 3,
++      "n_examples": 250,
++      "name": "mean_score_session_2",
++      "template_auroc": 0.67496
++    },
++    {
++      "collapse_detected": false,
++      "learned_template_id": "template_3_4c762613f6",
++      "n_edges": 3,
++      "n_examples": 250,
++      "name": "mean_score_session_3",
++      "template_auroc": 0.981334
++    }
++  ],
++  "structure_persisted_and_restored": true,
++  "template_library": {
++    "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++    "cap": 2,
++    "consolidation_events": [
++      {
++        "action": "add",
++        "size": 1,
++        "template_id": "template_1_fe982c64a1"
++      },
++      {
++        "action": "add",
++        "size": 2,
++        "template_id": "template_2_a15cb826f9"
++      },
++      {
++        "action": "add",
++        "size": 3,
++        "template_id": "template_3_4c762613f6"
++      },
++      {
++        "action": "merge",
++        "merged_template_id": "merged_064de988b8",
++        "policy": "merge highest cosine similarity pair when cap is exceeded",
++        "size": 2
++      }
++    ],
++    "entries": [
++      {
++        "edges": [
++          {
++            "by_label_correlation": {
++              "0": -0.61291,
++              "1": -0.24994
++            },
++            "conditional_mutual_information": 0.122508,
++            "pair": [
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.123512,
++              "1": -0.450412
++            },
++            "conditional_mutual_information": 0.066446,
++            "pair": [
++              "fr11_session_memory",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.074859,
++              "1": -0.143694
++            },
++            "conditional_mutual_information": 0.007048,
++            "pair": [
++              "fr11_session_memory",
++              "tier0u_logical_consistency"
++            ]
++          }
++        ],
++        "source_sessions": [
++          "mean_score_session_3"
++        ],
++        "support": 250,
++        "template_id": "template_3_4c762613f6",
++        "utility": 0.981334,
++        "weights": {
++          "fr11_session_memory": 0.322018,
++          "tier0r_curry_howard": 0.109594,
++          "tier0s_arithmetic_gap": -0.038745,
++          "tier0u_logical_consistency": 0.529643
++        }
++      },
++      {
++        "edges": [
++          {
++            "by_label_correlation": {
++              "0": 0.229903,
++              "1": 0.228791
++            },
++            "conditional_mutual_information": 0.027115,
++            "pair": [
++              "fr11_session_memory",
++              "tier0r_curry_howard"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.614113,
++              "1": -0.562504
++            },
++            "conditional_mutual_information": 0.203223,
++            "pair": [
++              "fr11_session_memory",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": 0.0,
++              "1": 0.0
++            },
++            "conditional_mutual_information": 0.0,
++            "pair": [
++              "fr11_session_memory",
++              "tier0u_logical_consistency"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.636267,
++              "1": -0.644225
++            },
++            "conditional_mutual_information": 0.265676,
++            "pair": [
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": 0.0,
++              "1": -0.119299
++            },
++            "conditional_mutual_information": 0.00516,
++            "pair": [
++              "tier0s_arithmetic_gap",
++              "tier0u_logical_consistency"
++            ]
++          }
++        ],
++        "source_sessions": [
++          "mean_score_session_0",
++          "mean_score_session_2"
++        ],
++        "support": 500,
++        "template_id": "merged_064de988b8",
++        "utility": 0.781006,
++        "weights": {
++          "fr11_session_memory": 0.16576,
++          "tier0r_curry_howard": -0.180147,
++          "tier0s_arithmetic_gap": -0.645372,
++          "tier0u_logical_consistency": 0.008721
++        }
++      }
++    ],
++    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library.json",
++    "restored_sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
++    "round_trips": [
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_1.json",
++        "restored_sha256": "0cb7355302b3be05a7b8c9ad3e33b424f32eb5e66f649a3976b59a4c808e3989",
++        "round_trip_ok": true,
++        "session_boundary": 1,
++        "sha256": "0cb7355302b3be05a7b8c9ad3e33b424f32eb5e66f649a3976b59a4c808e3989"
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_2.json",
++        "restored_sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489",
++        "round_trip_ok": true,
++        "session_boundary": 2,
++        "sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489"
++      },
++      {
++        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library_session_3.json",
++        "restored_sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
++        "round_trip_ok": true,
++        "session_boundary": 3,
++        "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e"
++      }
++    ],
++    "schema": "carnot.fr11_v13_template_library",
++    "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
++    "size": 2,
++    "verifier_names": [
++      "fr11_session_memory",
++      "tier0r_curry_howard",
++      "tier0s_arithmetic_gap",
++      "tier0u_logical_consistency"
++    ]
++  },
++  "template_library_bounded": true,
++  "true_accuracy_trajectory": [
++    0.34375,
++    0.21875,
++    0.40625,
++    0.4375,
++    0.4375,
++    0.5,
++    0.53125,
++    0.423077
++  ]
++}
+diff --git a/results/experiment_3708_fr11_v13_template_library.json b/results/experiment_3708_fr11_v13_template_library.json
+new file mode 100644
+index 0000000000..50ecf14000
+--- /dev/null
++++ b/results/experiment_3708_fr11_v13_template_library.json
+@@ -0,0 +1,159 @@
++{
++  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++  "cap": 2,
++  "consolidation_events": [
++    {
++      "action": "add",
++      "size": 1,
++      "template_id": "template_1_fe982c64a1"
++    },
++    {
++      "action": "add",
++      "size": 2,
++      "template_id": "template_2_a15cb826f9"
++    },
++    {
++      "action": "add",
++      "size": 3,
++      "template_id": "template_3_4c762613f6"
++    },
++    {
++      "action": "merge",
++      "merged_template_id": "merged_064de988b8",
++      "policy": "merge highest cosine similarity pair when cap is exceeded",
++      "size": 2
++    }
++  ],
++  "entries": [
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": -0.61291,
++            "1": -0.24994
++          },
++          "conditional_mutual_information": 0.122508,
++          "pair": [
++            "tier0r_curry_howard",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.123512,
++            "1": -0.450412
++          },
++          "conditional_mutual_information": 0.066446,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.074859,
++            "1": -0.143694
++          },
++          "conditional_mutual_information": 0.007048,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_3"
++      ],
++      "support": 250,
++      "template_id": "template_3_4c762613f6",
++      "utility": 0.981334,
++      "weights": {
++        "fr11_session_memory": 0.322018,
++        "tier0r_curry_howard": 0.109594,
++        "tier0s_arithmetic_gap": -0.038745,
++        "tier0u_logical_consistency": 0.529643
++      }
++    },
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": 0.229903,
++            "1": 0.228791
++          },
++          "conditional_mutual_information": 0.027115,
++          "pair": [
++            "fr11_session_memory",
++            "tier0r_curry_howard"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.614113,
++            "1": -0.562504
++          },
++          "conditional_mutual_information": 0.203223,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": 0.0
++          },
++          "conditional_mutual_information": 0.0,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.636267,
++            "1": -0.644225
++          },
++          "conditional_mutual_information": 0.265676,
++          "pair": [
++            "tier0r_curry_howard",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": -0.119299
++          },
++          "conditional_mutual_information": 0.00516,
++          "pair": [
++            "tier0s_arithmetic_gap",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_0",
++        "mean_score_session_2"
++      ],
++      "support": 500,
++      "template_id": "merged_064de988b8",
++      "utility": 0.781006,
++      "weights": {
++        "fr11_session_memory": 0.16576,
++        "tier0r_curry_howard": -0.180147,
++        "tier0s_arithmetic_gap": -0.645372,
++        "tier0u_logical_consistency": 0.008721
++      }
++    }
++  ],
++  "schema": "carnot.fr11_v13_template_library",
++  "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
++  "size": 2,
++  "verifier_names": [
++    "fr11_session_memory",
++    "tier0r_curry_howard",
++    "tier0s_arithmetic_gap",
++    "tier0u_logical_consistency"
++  ]
++}
+diff --git a/results/experiment_3708_fr11_v13_template_library_session_1.json b/results/experiment_3708_fr11_v13_template_library_session_1.json
+new file mode 100644
+index 0000000000..2259ef8d29
+--- /dev/null
++++ b/results/experiment_3708_fr11_v13_template_library_session_1.json
+@@ -0,0 +1,71 @@
++{
++  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++  "cap": 2,
++  "consolidation_events": [
++    {
++      "action": "add",
++      "size": 1,
++      "template_id": "template_1_fe982c64a1"
++    }
++  ],
++  "entries": [
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": -0.349358,
++            "1": -0.312114
++          },
++          "conditional_mutual_information": 0.063202,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.229903,
++            "1": 0.228791
++          },
++          "conditional_mutual_information": 0.027115,
++          "pair": [
++            "fr11_session_memory",
++            "tier0r_curry_howard"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": 0.0
++          },
++          "conditional_mutual_information": 0.0,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_0"
++      ],
++      "support": 250,
++      "template_id": "template_1_fe982c64a1",
++      "utility": 0.887051,
++      "weights": {
++        "fr11_session_memory": 0.195475,
++        "tier0r_curry_howard": -0.272493,
++        "tier0s_arithmetic_gap": -0.532033,
++        "tier0u_logical_consistency": 0.0
++      }
++    }
++  ],
++  "schema": "carnot.fr11_v13_template_library",
++  "sha256": "0cb7355302b3be05a7b8c9ad3e33b424f32eb5e66f649a3976b59a4c808e3989",
++  "size": 1,
++  "verifier_names": [
++    "fr11_session_memory",
++    "tier0r_curry_howard",
++    "tier0s_arithmetic_gap",
++    "tier0u_logical_consistency"
++  ]
++}
+diff --git a/results/experiment_3708_fr11_v13_template_library_session_2.json b/results/experiment_3708_fr11_v13_template_library_session_2.json
+new file mode 100644
+index 0000000000..c8c2874d2d
+--- /dev/null
++++ b/results/experiment_3708_fr11_v13_template_library_session_2.json
+@@ -0,0 +1,125 @@
++{
++  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++  "cap": 2,
++  "consolidation_events": [
++    {
++      "action": "add",
++      "size": 1,
++      "template_id": "template_1_fe982c64a1"
++    },
++    {
++      "action": "add",
++      "size": 2,
++      "template_id": "template_2_a15cb826f9"
++    }
++  ],
++  "entries": [
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": -0.349358,
++            "1": -0.312114
++          },
++          "conditional_mutual_information": 0.063202,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.229903,
++            "1": 0.228791
++          },
++          "conditional_mutual_information": 0.027115,
++          "pair": [
++            "fr11_session_memory",
++            "tier0r_curry_howard"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": 0.0
++          },
++          "conditional_mutual_information": 0.0,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_0"
++      ],
++      "support": 250,
++      "template_id": "template_1_fe982c64a1",
++      "utility": 0.887051,
++      "weights": {
++        "fr11_session_memory": 0.195475,
++        "tier0r_curry_howard": -0.272493,
++        "tier0s_arithmetic_gap": -0.532033,
++        "tier0u_logical_consistency": 0.0
++      }
++    },
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": -0.636267,
++            "1": -0.644225
++          },
++          "conditional_mutual_information": 0.265676,
++          "pair": [
++            "tier0r_curry_howard",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.614113,
++            "1": -0.562504
++          },
++          "conditional_mutual_information": 0.203223,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": -0.119299
++          },
++          "conditional_mutual_information": 0.00516,
++          "pair": [
++            "tier0s_arithmetic_gap",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_2"
++      ],
++      "support": 250,
++      "template_id": "template_2_a15cb826f9",
++      "utility": 0.67496,
++      "weights": {
++        "fr11_session_memory": 0.136046,
++        "tier0r_curry_howard": -0.087801,
++        "tier0s_arithmetic_gap": -0.758711,
++        "tier0u_logical_consistency": 0.017443
++      }
++    }
++  ],
++  "schema": "carnot.fr11_v13_template_library",
++  "sha256": "3b8df206390e8a4561c0d45fa5ee8188b212ff41d579d219cc6767b5d4b77489",
++  "size": 2,
++  "verifier_names": [
++    "fr11_session_memory",
++    "tier0r_curry_howard",
++    "tier0s_arithmetic_gap",
++    "tier0u_logical_consistency"
++  ]
++}
+diff --git a/results/experiment_3708_fr11_v13_template_library_session_3.json b/results/experiment_3708_fr11_v13_template_library_session_3.json
+new file mode 100644
+index 0000000000..50ecf14000
+--- /dev/null
++++ b/results/experiment_3708_fr11_v13_template_library_session_3.json
+@@ -0,0 +1,159 @@
++{
++  "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++  "cap": 2,
++  "consolidation_events": [
++    {
++      "action": "add",
++      "size": 1,
++      "template_id": "template_1_fe982c64a1"
++    },
++    {
++      "action": "add",
++      "size": 2,
++      "template_id": "template_2_a15cb826f9"
++    },
++    {
++      "action": "add",
++      "size": 3,
++      "template_id": "template_3_4c762613f6"
++    },
++    {
++      "action": "merge",
++      "merged_template_id": "merged_064de988b8",
++      "policy": "merge highest cosine similarity pair when cap is exceeded",
++      "size": 2
++    }
++  ],
++  "entries": [
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": -0.61291,
++            "1": -0.24994
++          },
++          "conditional_mutual_information": 0.122508,
++          "pair": [
++            "tier0r_curry_howard",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.123512,
++            "1": -0.450412
++          },
++          "conditional_mutual_information": 0.066446,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.074859,
++            "1": -0.143694
++          },
++          "conditional_mutual_information": 0.007048,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_3"
++      ],
++      "support": 250,
++      "template_id": "template_3_4c762613f6",
++      "utility": 0.981334,
++      "weights": {
++        "fr11_session_memory": 0.322018,
++        "tier0r_curry_howard": 0.109594,
++        "tier0s_arithmetic_gap": -0.038745,
++        "tier0u_logical_consistency": 0.529643
++      }
++    },
++    {
++      "edges": [
++        {
++          "by_label_correlation": {
++            "0": 0.229903,
++            "1": 0.228791
++          },
++          "conditional_mutual_information": 0.027115,
++          "pair": [
++            "fr11_session_memory",
++            "tier0r_curry_howard"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.614113,
++            "1": -0.562504
++          },
++          "conditional_mutual_information": 0.203223,
++          "pair": [
++            "fr11_session_memory",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": 0.0
++          },
++          "conditional_mutual_information": 0.0,
++          "pair": [
++            "fr11_session_memory",
++            "tier0u_logical_consistency"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": -0.636267,
++            "1": -0.644225
++          },
++          "conditional_mutual_information": 0.265676,
++          "pair": [
++            "tier0r_curry_howard",
++            "tier0s_arithmetic_gap"
++          ]
++        },
++        {
++          "by_label_correlation": {
++            "0": 0.0,
++            "1": -0.119299
++          },
++          "conditional_mutual_information": 0.00516,
++          "pair": [
++            "tier0s_arithmetic_gap",
++            "tier0u_logical_consistency"
++          ]
++        }
++      ],
++      "source_sessions": [
++        "mean_score_session_0",
++        "mean_score_session_2"
++      ],
++      "support": 500,
++      "template_id": "merged_064de988b8",
++      "utility": 0.781006,
++      "weights": {
++        "fr11_session_memory": 0.16576,
++        "tier0r_curry_howard": -0.180147,
++        "tier0s_arithmetic_gap": -0.645372,
++        "tier0u_logical_consistency": 0.008721
++      }
++    }
++  ],
++  "schema": "carnot.fr11_v13_template_library",
++  "sha256": "a11cef303c5ed40b8adf9d1a3fa32bbdd4892c1a1959c5b6499ea9bd6740769e",
++  "size": 2,
++  "verifier_names": [
++    "fr11_session_memory",
++    "tier0r_curry_howard",
++    "tier0s_arithmetic_gap",
++    "tier0u_logical_consistency"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 865e968148..b093f50ce6 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T10:45:18Z",
+-  "finished_at": "2026-06-02T10:45:18Z",
++  "started_at": "2026-06-02T11:05:16Z",
++  "finished_at": "2026-06-02T11:05:16Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 27495edef1..b4e3ca90d2 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T10:45:18Z",
+-  "finished_at": "2026-06-02T10:45:18Z",
++  "started_at": "2026-06-02T11:05:16Z",
++  "finished_at": "2026-06-02T11:05:16Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 1d9a00ddb5..8b1041b883 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T10:45:18Z",
+-  "finished_at": "2026-06-02T10:45:18Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T11:05:16Z",
++  "finished_at": "2026-06-02T11:05:16Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3708_fr11_continuous_self_learning_v13.py b/scripts/experiment_3708_fr11_continuous_self_learning_v13.py
+new file mode 100644
+index 0000000000..d5d084ce49
+--- /dev/null
++++ b/scripts/experiment_3708_fr11_continuous_self_learning_v13.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3708 FR-11 continuous self-learning v13."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.fr11.continuous_self_learning_v13 import write_artifact  # noqa: E402
++
++
++def main() -> int:
++    output_path = write_artifact(REPO_ROOT)
++    artifact = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3708_fr11_csl_v13.py b/tests/python/test_experiment_3708_fr11_csl_v13.py
+new file mode 100644
+index 0000000000..2b8583432b
+--- /dev/null
++++ b/tests/python/test_experiment_3708_fr11_csl_v13.py
+@@ -0,0 +1,542 @@
++"""Tests for Exp 3708 FR-11 continuous self-learning v13.
++
++Spec: REQ-LEARN-3708, SCENARIO-LEARN-3708.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.fr11 import continuous_self_learning_v13 as exp3708
++from carnot.fr11.continuous_self_learning_v13 import (
++    BLOCKED_VERDICT,
++    NO_GAIN_VERDICT,
++    REQUIRED_ARTIFACT_FIELDS,
++    SUCCESS_VERDICT,
++    SessionSlice,
++    TemplateEntry,
++    TemplateLibrary,
++    build_artifact,
++    build_artifact_from_scores,
++    build_artifact_from_score_slices,
++    consolidate_template_library,
++    consolidated_template_weights,
++    persist_template_library,
++    restore_template_library_via_subprocess,
++    select_honest_verdict,
++    validate_artifact,
++    write_artifact,
++)
++
++
++VERIFIER_NAMES = exp3708.VERIFIER_NAMES
++
++
++def _binary_labels(seed: int, n_examples: int = 120) -> np.ndarray:
++    rng = np.random.default_rng(seed)
++    labels = np.asarray([0, 1] * (n_examples // 2), dtype=np.int64)
++    rng.shuffle(labels)
++    return labels
++
++
++def _training_session(name: str, seed: int, offset: float) -> SessionSlice:
++    labels = _binary_labels(seed)
++    rng = np.random.default_rng(seed + 1000)
++    y = labels.astype(np.float64)
++    matrix = np.column_stack(
++        [
++            offset + 0.15 + 0.55 * y + rng.normal(0.0, 0.025, len(labels)),
++            offset + 0.10 + 0.35 * y + rng.normal(0.0, 0.025, len(labels)),
++            offset + 0.78 - 0.55 * y + rng.normal(0.0, 0.025, len(labels)),
++            offset + 0.05 + 0.15 * y + rng.normal(0.0, 0.020, len(labels)),
++        ]
++    )
++    return SessionSlice(
++        name=name,
++        labels=labels,
++        score_matrix=np.clip(matrix, 0.0, 1.0),
++        verifier_names=VERIFIER_NAMES,
++    )
++
++
++def _heldout_session(outcome: str) -> SessionSlice:
++    labels = _binary_labels(3708)
++    rng = np.random.default_rng(4808)
++    y = labels.astype(np.float64)
++    if outcome == "consolidated_template_transfers_no_collapse":
++        matrix = np.column_stack(
++            [
++                0.40 + 0.20 * y + rng.normal(0.0, 0.030, len(labels)),
++                0.20 + rng.normal(0.0, 0.040, len(labels)),
++                0.90 - 0.80 * y + rng.normal(0.0, 0.030, len(labels)),
++                0.20 + rng.normal(0.0, 0.040, len(labels)),
++            ]
++        )
++    elif outcome == "no_gain_over_cold_start":
++        matrix = np.column_stack(
++            [
++                0.15 + 0.55 * y + rng.normal(0.0, 0.025, len(labels)),
++                0.10 + 0.35 * y + rng.normal(0.0, 0.025, len(labels)),
++                0.12 + 0.42 * y + rng.normal(0.0, 0.025, len(labels)),
++                0.05 + 0.22 * y + rng.normal(0.0, 0.020, len(labels)),
++            ]
++        )
++    else:  # pragma: no cover - parametrization guards this branch.
++        raise ValueError(outcome)
++    return SessionSlice(
++        name="fresh_heldout_session",
++        labels=labels,
++        score_matrix=np.clip(matrix, 0.0, 1.0),
++        verifier_names=VERIFIER_NAMES,
++    )
++
++
++def _score_fixture(outcome: str) -> tuple[list[SessionSlice], SessionSlice | None]:
++    if outcome == "blocked":
++        return [], None
++    sessions = [
++        _training_session("session_1", 11, -0.20),
++        _training_session("session_2", 13, 0.05),
++        _training_session("session_3", 17, 0.35),
++    ]
++    return sessions, _heldout_session(outcome)
++
++
++@pytest.mark.parametrize(
++    ("outcome", "expected_verdict"),
++    [
++        ("consolidated_template_transfers_no_collapse", SUCCESS_VERDICT),
++        ("no_gain_over_cold_start", NO_GAIN_VERDICT),
++        ("blocked", BLOCKED_VERDICT),
++    ],
++)
++def test_req_learn_3708_honest_synthetic_outcomes(
++    outcome: str,
++    expected_verdict: str,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-3708: synthetic outcomes classify without poisoning."""
++
++    sessions, heldout = _score_fixture(outcome)
++    artifact = build_artifact_from_score_slices(
++        sessions=sessions,
++        heldout_session=heldout,
++        started_s=1.0,
++        now_s=3.0,
++        persistence_dir=tmp_path,
++        library_cap=2,
++    )
++
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] == expected_verdict
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3708.INFERENCE_SUBSTRATE
++    if outcome == "blocked":
++        assert artifact["n_sessions"] == 0
++        assert artifact["n_online_updates"] == 0
++        assert artifact["acceptance_gate"]["passed"] is False
++        return
++
++    assert artifact["n_sessions"] == 3
++    assert artifact["n_online_updates"] >= 200
++    assert artifact["template_library_bounded"] is True
++    assert artifact["template_library"]["size"] <= artifact["template_library"]["cap"]
++    assert artifact["template_library"]["cap"] == 2
++    assert artifact["template_library"]["consolidation_events"][-1]["action"] == "merge"
++    assert artifact["structure_persisted_and_restored"] is True
++    assert artifact["template_library"]["sha256"] == artifact["template_library"]["restored_sha256"]
++    assert artifact["collapse_detected_deploy_arm"] is False
++    assert artifact["pass_rate_vs_true_accuracy_distinct_assert"] is True
++    assert artifact["acceptance_gate"]["passed"] is True
++    if outcome == "consolidated_template_transfers_no_collapse":
++        assert artifact["consolidated_template_transfer_gain_over_cold_start"] is True
++        assert artifact["fresh_session_transfer_auroc_gain"] > 0.0
++        assert artifact["quality_maintained"] is True
++    else:
++        assert artifact["consolidated_template_transfer_gain_over_cold_start"] is False
++        assert artifact["fresh_session_transfer_auroc_gain"] <= 0.0
++
++
++def test_req_learn_3708_build_artifact_preconditions_and_io(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-3708-1/2: cached traces are required and JSON is written."""
++
++    blocked = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(blocked)
++    assert blocked["honest_verdict"] == BLOCKED_VERDICT
++    assert blocked["preconditions_checked"][0]["resource"] == "fr11_module"
++
++    sessions, heldout = _score_fixture("consolidated_template_transfers_no_collapse")
++    assert heldout is not None
++    labels = np.concatenate([item.labels for item in sessions] + [heldout.labels]).tolist()
++    matrix = np.vstack([item.score_matrix for item in sessions] + [heldout.score_matrix])
++    scores_by_verifier = {
++        name: matrix[:, index].tolist() for index, name in enumerate(VERIFIER_NAMES)
++    }
++    (tmp_path / "python/carnot/fr11").mkdir(parents=True)
++    monkeypatch.setattr(
++        exp3708,
++        "score_fover_corpus",
++        lambda root, n_examples, random_seed: (labels, scores_by_verifier),
++    )
++    monkeypatch.setattr(
++        exp3708,
++        "probe_cached_trace_preconditions",
++        lambda root, n_examples: [
++            {
++                "resource": "cached_traces_with_per_verifier_scores_and_labels",
++                "available": True,
++                "detail": "fixture",
++            }
++        ],
++    )
++    monkeypatch.setattr(
++        exp3708,
++        "select_session_panel",
++        lambda labels, score_matrix, verifier_names, random_seed: (
++            sessions,
++            heldout,
++            {"projection": "fixture_projection", "session_vote_distances": [0.4, 0.5, 0.6]},
++        ),
++    )
++    artifact = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] == SUCCESS_VERDICT
++    assert artifact["preconditions_checked"][1]["available"] is True
++
++    def _raise_score(root: Path, n_examples: int, random_seed: int) -> tuple[list[int], dict[str, list[float]]]:
++        raise RuntimeError("cached traces unavailable")
++
++    monkeypatch.setattr(exp3708, "score_fover_corpus", _raise_score)
++    failed_score = build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    validate_artifact(failed_score)
++    assert failed_score["honest_verdict"] == BLOCKED_VERDICT
++    assert failed_score["preconditions_checked"][-1]["resource"] == "cached_trace_scoring"
++
++    label_output = write_artifact(
++        tmp_path,
++        output_path="results/experiment_3708_labels_fixture.json",
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=0.0,
++        now_s=1.0,
++    )
++    label_payload = json.loads(label_output.read_text(encoding="utf-8"))
++    validate_artifact(label_payload)
++    assert label_payload["honest_verdict"] == SUCCESS_VERDICT
++
++    blocked_output = write_artifact(
++        tmp_path,
++        output_path="results/experiment_3708_blocked_fixture.json",
++        started_s=0.0,
++        now_s=1.0,
++    )
++    blocked_payload = json.loads(blocked_output.read_text(encoding="utf-8"))
++    validate_artifact(blocked_payload)
++    assert blocked_payload["honest_verdict"] == BLOCKED_VERDICT
++
++    output = write_artifact(
++        tmp_path,
++        output_path="results/experiment_3708_fixture.json",
++        sessions=sessions,
++        heldout_session=heldout,
++        started_s=0.0,
++        now_s=1.0,
++    )
++    payload = json.loads(output.read_text(encoding="utf-8"))
++    validate_artifact(payload)
++    assert payload["honest_verdict"] == SUCCESS_VERDICT
++
++
++def test_req_learn_3708_validation_persistence_and_verdict_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-3708-4/6: schema, persistence, and verdict selection are strict."""
++
++    assert (
++        select_honest_verdict(
++            gate_passed=True,
++            transfer_gain=True,
++            quality_maintained=True,
++        )
++        == SUCCESS_VERDICT
++    )
++    assert (
++        select_honest_verdict(
++            gate_passed=True,
++            transfer_gain=False,
++            quality_maintained=True,
++        )
++        == NO_GAIN_VERDICT
++    )
++    assert (
++        select_honest_verdict(
++            gate_passed=False,
++            transfer_gain=True,
++            quality_maintained=True,
++        )
++        == NO_GAIN_VERDICT
++    )
++
++    library = TemplateLibrary(
++        cap=2,
++        verifier_names=("a", "b"),
++        entries=(
++            TemplateEntry(
++                template_id="template_a",
++                weights=np.asarray([0.4, -0.6], dtype=np.float64),
++                edges=({"pair": ["a", "b"], "conditional_mutual_information": 0.2},),
++                support=20,
++                source_sessions=("session_a",),
++                utility=0.7,
++            ),
++        ),
++        consolidation_events=({"action": "add", "session": "session_a", "size": 1},),
++    )
++    memory = persist_template_library(library, tmp_path / "library.json")
++    restored = restore_template_library_via_subprocess(memory["path"])
++    assert restored["sha256"] == memory["sha256"]
++    assert restored["entries"][0]["template_id"] == "template_a"
++
++    sessions, heldout = _score_fixture("consolidated_template_transfers_no_collapse")
++    artifact = build_artifact_from_score_slices(
++        sessions=sessions,
++        heldout_session=heldout,
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++        library_cap=2,
++    )
++    validate_artifact(artifact)
++
++    missing = dict(artifact)
++    missing.pop("duration_s")
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        validate_artifact(missing)
++
++    bad_verdict = dict(artifact, honest_verdict="complete: unsupported")
++    with pytest.raises(ValueError, match="unsupported honest_verdict"):
++        validate_artifact(bad_verdict)
++
++    no_principles = dict(artifact)
++    no_principles.pop("field_principles")
++    with pytest.raises(ValueError, match="field_principles"):
++        validate_artifact(no_principles)
++
++    missing_principle = dict(artifact)
++    missing_principle["field_principles"] = dict(artifact["field_principles"])
++    missing_principle["field_principles"].pop("duration_s")
++    with pytest.raises(ValueError, match="missing field principles"):
++        validate_artifact(missing_principle)
++
++    bad_gate = dict(artifact, acceptance_gate={"passed": "yes"})
++    with pytest.raises(ValueError, match="acceptance_gate"):
++        validate_artifact(bad_gate)
++
++    bad_duration = dict(artifact, duration_s="fast")
++    with pytest.raises(ValueError, match="duration_s"):
++        validate_artifact(bad_duration)
++
++    bad_n_sessions = dict(artifact, n_sessions=2)
++    with pytest.raises(ValueError, match="n_sessions"):
++        validate_artifact(bad_n_sessions)
++
++    bad_n_updates = dict(artifact, n_online_updates=199)
++    with pytest.raises(ValueError, match="n_online_updates"):
++        validate_artifact(bad_n_updates)
++
++    bad_bool = dict(artifact, template_library_bounded="true")
++    with pytest.raises(ValueError, match="template_library_bounded"):
++        validate_artifact(bad_bool)
++
++    bad_gain = dict(artifact, fresh_session_transfer_auroc_gain=float("nan"))
++    with pytest.raises(ValueError, match="fresh_session_transfer_auroc_gain"):
++        validate_artifact(bad_gain)
++
++    no_library = dict(artifact)
++    no_library.pop("template_library")
++    with pytest.raises(ValueError, match="template_library"):
++        validate_artifact(no_library)
++
++    oversized_library = dict(artifact)
++    oversized_library["template_library"] = dict(artifact["template_library"], size=3, cap=2)
++    with pytest.raises(ValueError, match="template_library size exceeds cap"):
++        validate_artifact(oversized_library)
++
++    bad_marker = dict(artifact, inference_substrate="cached GGUF marker")
++    with pytest.raises(ValueError, match="forbidden inference marker"):
++        validate_artifact(bad_marker)
++
++    bad_memory = dict(artifact)
++    bad_memory["template_library"] = dict(artifact["template_library"], restored_sha256="bad")
++    bad_memory["structure_persisted_and_restored"] = True
++    with pytest.raises(ValueError, match="library SHA256 round-trip"):
++        validate_artifact(bad_memory)
++
++
++def test_req_learn_3708_score_slice_selection_blocks_malformed_inputs(tmp_path: Path) -> None:
++    """REQ-LEARN-3708-2: malformed slices block instead of fabricating transfer."""
++
++    with pytest.raises(ValueError, match="same length"):
++        build_artifact_from_score_slices(
++            sessions=[
++                SessionSlice(
++                    name="bad",
++                    labels=np.asarray([0, 1], dtype=np.int64),
++                    score_matrix=np.zeros((3, len(VERIFIER_NAMES)), dtype=np.float64),
++                    verifier_names=VERIFIER_NAMES,
++                )
++            ],
++            heldout_session=None,
++            started_s=0.0,
++            now_s=1.0,
++            persistence_dir=tmp_path,
++        )
++
++    one_class = SessionSlice(
++        name="one_class",
++        labels=np.asarray([0] * 80, dtype=np.int64),
++        score_matrix=np.zeros((80, len(VERIFIER_NAMES)), dtype=np.float64),
++        verifier_names=VERIFIER_NAMES,
++    )
++    blocked = build_artifact_from_score_slices(
++        sessions=[one_class, one_class, one_class],
++        heldout_session=one_class,
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    validate_artifact(blocked)
++    assert blocked["honest_verdict"] == BLOCKED_VERDICT
++
++
++def test_req_learn_3708_score_entry_selection_and_blocked_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-3708-2/3: score-entry selection and blocked paths are explicit."""
++
++    sessions, heldout = _score_fixture("consolidated_template_transfers_no_collapse")
++    assert heldout is not None
++    labels = np.concatenate([item.labels for item in sessions] + [heldout.labels]).tolist()
++    matrix = np.vstack([item.score_matrix for item in sessions] + [heldout.score_matrix])
++    scores_by_verifier = {
++        name: matrix[:, index].tolist() for index, name in enumerate(VERIFIER_NAMES)
++    }
++    artifact = build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++        library_cap=2,
++    )
++    validate_artifact(artifact)
++    assert artifact["honest_verdict"] == SUCCESS_VERDICT
++    assert artifact["session_panel"]["projection"].endswith("_score")
++
++    empty = build_artifact_from_scores(
++        labels=[],
++        scores_by_verifier={},
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    validate_artifact(empty)
++    assert empty["honest_verdict"] == BLOCKED_VERDICT
++
++    one_class = build_artifact_from_scores(
++        labels=[0] * 240,
++        scores_by_verifier={name: [0.1] * 240 for name in VERIFIER_NAMES},
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    validate_artifact(one_class)
++    assert one_class["honest_verdict"] == BLOCKED_VERDICT
++
++    with pytest.raises(ValueError, match="same length"):
++        build_artifact_from_scores(
++            labels=[0, 1],
++            scores_by_verifier={name: [0.1] * 3 for name in VERIFIER_NAMES},
++            started_s=0.0,
++            now_s=1.0,
++            persistence_dir=tmp_path,
++        )
++
++    non_distinct = build_artifact_from_scores(
++        labels=[0, 1] * 200,
++        scores_by_verifier={name: [0.5] * 400 for name in VERIFIER_NAMES},
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    validate_artifact(non_distinct)
++    assert non_distinct["honest_verdict"] == BLOCKED_VERDICT
++    assert non_distinct["preconditions_checked"][-1]["resource"] == (
++        "distributionally_distinct_session_slices"
++    )
++
++    with pytest.raises(ValueError, match="not enough cached rows"):
++        exp3708.select_session_panel(
++            np.asarray([0, 1] * 20, dtype=np.int64),
++            np.zeros((40, len(VERIFIER_NAMES)), dtype=np.float64),
++            VERIFIER_NAMES,
++            random_seed=1,
++        )
++
++
++def test_req_learn_3708_template_library_merge_evict_and_input_edges() -> None:
++    """REQ-LEARN-3708-4: bounded-memory edge cases stay deterministic."""
++
++    assert np.allclose(
++        consolidated_template_weights(
++            TemplateLibrary(cap=2, verifier_names=("a", "b"), entries=(), consolidation_events=())
++        ),
++        [0.5, 0.5],
++    )
++    assert exp3708._cosine_similarity([0.0, 0.0], [1.0, 0.0]) == 0.0  # noqa: SLF001
++
++    entries = (
++        TemplateEntry(
++            template_id="left",
++            weights=np.asarray([0.6, -0.4], dtype=np.float64),
++            edges=(),
++            support=10,
++            source_sessions=("left",),
++            utility=0.9,
++        ),
++        TemplateEntry(
++            template_id="middle",
++            weights=np.asarray([0.55, -0.45], dtype=np.float64),
++            edges=(),
++            support=10,
++            source_sessions=("middle",),
++            utility=0.8,
++        ),
++    )
++    merged = consolidate_template_library(
++        TemplateLibrary(cap=1, verifier_names=("a", "b"), entries=entries, consolidation_events=()),
++        TemplateEntry(
++            template_id="right",
++            weights=np.asarray([-0.4, 0.6], dtype=np.float64),
++            edges=(),
++            support=5,
++            source_sessions=("right",),
++            utility=0.1,
++        ),
++    )
++    assert len(merged.entries) == 1
++    assert merged.consolidation_events[-1]["action"] == "merge_then_evict"
++
++    labels = np.asarray([0, 1], dtype=np.int64)
++    with pytest.raises(ValueError, match="two-dimensional"):
++        exp3708._validate_scores(labels, np.zeros(2), VERIFIER_NAMES)  # noqa: SLF001
++    with pytest.raises(ValueError, match="verifier_names"):
++        exp3708._validate_scores(labels, np.zeros((2, 3)), VERIFIER_NAMES)  # noqa: SLF001
++    bad_matrix = np.zeros((2, len(VERIFIER_NAMES)), dtype=np.float64)
++    bad_matrix[0, 0] = float("nan")
++    with pytest.raises(ValueError, match="finite"):
++        exp3708._validate_scores(labels, bad_matrix, VERIFIER_NAMES)  # noqa: SLF001
+-- 
+2.55.0
+

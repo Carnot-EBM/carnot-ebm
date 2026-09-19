@@ -1,0 +1,1557 @@
+From 5476a6e098f6dc6d7b5d00b46320e4fc3b535460 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 10:05:09 -0400
+Subject: [PATCH 00449/11171] [conductor] External research refresh for .348:
+ file the genuinely-new 2026 papers surfaced during planning into
+ research-references.md '.348 additions' -- tied to the .348 tracks
+ (Tier-3-as-fast-path early rejection, the banked verifier product's
+ robustness/abstention surface, the EDLM operator-seed route). Each entry
+ as-reported, with how it relates. Pure documentation; runs no model. NOTE:
+ the planner already appended a '.348 additions' section during planning --
+ this task CONFIRMS it parses + APPENDS any further papers found, never
+ deleting prior content (never-prune).
+
+Automated research step by research conductor.
+Task ID: exp3805-external-research-refresh
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  60 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../external_research_refresh_3805.py         | 632 ++++++++++++++++++
+ research-references.md                        |  12 +
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...riment_3805_external_research_refresh.json | 252 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...periment_3805_external_research_refresh.py |  28 +
+ ...periment_3805_external_research_refresh.py | 220 ++++++
+ 23 files changed, 1235 insertions(+), 31 deletions(-)
+ create mode 100644 python/carnot/reporting/external_research_refresh_3805.py
+ create mode 100644 results/experiment_3805_external_research_refresh.json
+ create mode 100644 scripts/experiment_3805_external_research_refresh.py
+ create mode 100644 tests/python/test_experiment_3805_external_research_refresh.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index d4c47271c3..5103d29b66 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -17253,3 +17253,63 @@ GPU adjudication, and does not report a new energy-as-generator failure.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3797 | Implemented (`python/carnot/reporting/archive_v347_activate_v348_3797.py`, `scripts/experiment_3797_archive_v347_activate_v348.py`) | Implemented (`tests/python/test_experiment_3797_archive_v347_activate_v348.py`) |
++
++### REQ-REPORT-3805: External Research Refresh .348
++
++The Exp 3805 workflow SHALL confirm that `research-references.md` contains a
++single intact `## .348 additions` section with the planning-sweep context,
++source-reported-number disclaimer, arXiv:2508.01969,
++arXiv:2604.02341, and the EDLM implementation anchor for
++arXiv:2410.21357 / `MinkaiXu/Energy-Diffusion-LLM`. It SHALL then append, not
++replace, additional late-2025 or 2026 arXiv references into that same section
++for the `.348` forward tracks: Tier-3-as-fast-path early rejection and
++early-exit predictive verification, verifier robustness and reward-gaming
++mitigation, selective prediction or conformal abstention for the banked
++verifier product, and EDLM / discrete-diffusion language-model follow-ups.
++
++The filed references SHALL include arXiv:2510.08146, arXiv:2603.23701,
++arXiv:2604.04648, arXiv:2603.06797, arXiv:2605.01643,
++arXiv:2603.21172, arXiv:2604.03904, arXiv:2509.12527,
++arXiv:2602.03769, arXiv:2512.10858, arXiv:2605.26106, and
++arXiv:2603.13243. It SHALL NOT duplicate the already-filed `.348`
++arXiv:2508.01969 anchor or the `.346`/`.347` reward-gaming entries
++arXiv:2604.15149 and arXiv:2602.01750.
++
++The appended bullets SHALL mirror the existing `.348` section style: each paper
++entry includes an arXiv ID, title, submitted or revised date, a one-line
++as-reported summary, and an explicit tie to the relevant `.348` track. Peer
++numbers SHALL be recorded only as source-reported and SHALL require independent
++re-derivation before any forward-facing Carnot claim.
++
++The workflow SHALL use aggregation/documentation provenance hygiene, SHALL NOT
++include GGUF, CUDA, or live-model markers in the terminal artifact, and SHALL
++NOT edit operator-curated docs or `scripts/research_conductor.py`.
++
++The terminal artifact SHALL be written to
++`results/experiment_3805_external_research_refresh.json` and SHALL include bare
++top-level values for `honest_verdict`, `inference_substrate`,
++`references_added`, `n_references_added`, `section_appended_not_replaced`,
++`numbers_are_as_reported`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts (principle: a documentation append, no live model).`
++The terminal verdict SHALL equal
++`complete: external_research_refresh_348_filed_references_section_appended_numbers_as_reported`.
++
++#### SCENARIO-REPORT-3805: .348 Research Refresh Extends The Existing Section Append-Only
++
++**Given** `research-references.md` already contains intact `.347 additions`
++and `.348 additions` sections
++**When** the Exp 3805 workflow runs
++**Then** it preserves all prior content byte-for-byte as a prefix, appends the
++new `.348` paper bullets without duplicating the existing `.348`,
++arXiv:2508.01969, arXiv:2604.15149, or arXiv:2602.01750 entries, writes the
++required aggregation-only terminal artifact, marks peer numbers as-reported
++rather than Carnot measurements, and passes adversarial verification without a
++critical flag.
++
++## Implementation Status (REQ-REPORT-3805)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3805 | Planned (`python/carnot/reporting/external_research_refresh_3805.py`, `scripts/experiment_3805_external_research_refresh.py`) | Planned (`tests/python/test_experiment_3805_external_research_refresh.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ec5b4bde42..c60e552599 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 146,
+   "code_violations": 0,
+-  "experiments_checked": 2906,
++  "experiments_checked": 2907,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/external_research_refresh_3805.py b/python/carnot/reporting/external_research_refresh_3805.py
+new file mode 100644
+index 0000000000..675db1c973
+--- /dev/null
++++ b/python/carnot/reporting/external_research_refresh_3805.py
+@@ -0,0 +1,632 @@
++"""Append the .348 external research refresh and write its audit artifact.
++
++Spec refs: REQ-REPORT-3805, SCENARIO-REPORT-3805.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterable, Mapping
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from scripts import adversarial_verify
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RANDOM_SEED = 3805
++RESEARCH_REFERENCES_REL_PATH = Path("research-references.md")
++OUTPUT_REL_PATH = Path("results/experiment_3805_external_research_refresh.json")
++INFERENCE_SUBSTRATE = (
++    "aggregation_from_upstream_artifacts (principle: a documentation append, "
++    "no live model)."
++)
++TERMINAL_VERDICT = (
++    "complete: "
++    "external_research_refresh_348_filed_references_section_appended_"
++    "numbers_as_reported"
++)
++SECTION_HEADER = (
++    "## .348 additions - early-rejection predictive verification, "
++    "outcome-guided process rewards, EDLM impl confirmation (2026-06-04)"
++)
++
++REQUIRED_348_TOKENS = (
++    "Added by the `.348 planning sweep",
++    "Numbers are source-reported by the papers",
++    "arXiv:2508.01969",
++    "arXiv:2604.02341",
++    "MinkaiXu/Energy-Diffusion-LLM",
++    "arXiv:2410.21357",
++    "reference_deep_think_post_bounded_2026_06",
++    "project_energy_selection_thesis_bounded",
++    "project_thesis_a_ebt_seeded",
++)
++
++EXCLUDED_DUPLICATE_IDS = (
++    "arXiv:2508.01969",
++    "arXiv:2604.15149",
++    "arXiv:2602.01750",
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "references_added",
++    "n_references_added",
++    "section_appended_not_replaced",
++    "numbers_are_as_reported",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; the refresh outcome.",
++    "inference_substrate": (
++        "A documentation append over upstream paper records; prevents confusing "
++        "this refresh with a compute-bound experiment."
++    ),
++    "references_added": (
++        "The list of arXiv ids filed this sweep -- the deliverable; keeps the "
++        "project current per research-program.md planning requirement 4."
++    ),
++    "n_references_added": "BARE int -- sample-size hygiene on the refresh.",
++    "section_appended_not_replaced": (
++        "BARE bool, true -- the '.348 additions' section was "
++        "APPENDED/confirmed-intact (never-prune rule; no prior content removed)."
++    ),
++    "numbers_are_as_reported": (
++        "BARE bool, true -- peer numbers are source-reported, not Carnot "
++        "measurements (adversarial-verify discipline)."
++    ),
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++@dataclass(frozen=True)
++class ResearchReference:
++    """One external paper filed into the append-only research register."""
++
++    arxiv_id: str
++    title: str
++    submitted: str
++    tracks: tuple[str, ...]
++    as_reported_summary: str
++    relevance: str
++    as_reported_note: str
++    arxiv_abs_resolved: bool = True
++    venue_context: str | None = None
++
++    @property
++    def arxiv_abs_url(self) -> str:
++        return f"https://arxiv.org/abs/{self.arxiv_id.removeprefix('arXiv:')}"
++
++    def to_artifact_row(self) -> JsonDict:
++        row: JsonDict = {
++            "arxiv_id": self.arxiv_id,
++            "title": self.title,
++            "submitted": self.submitted,
++            "tracks": list(self.tracks),
++            "arxiv_abs_url": self.arxiv_abs_url,
++            "source_kind": "arxiv_abs",
++            "arxiv_abs_resolved": self.arxiv_abs_resolved,
++            "numbers_are_as_reported": True,
++            "as_reported_summary": self.as_reported_summary,
++            "relevance": self.relevance,
++            "as_reported_note": self.as_reported_note,
++        }
++        if self.venue_context:
++            row["venue_context"] = self.venue_context
++        return row
++
++
++REFERENCES = (
++    ResearchReference(
++        arxiv_id="arXiv:2510.08146",
++        title="Think Just Enough: Sequence-Level Entropy as a Confidence Signal for LLM Reasoning",
++        submitted="submitted 2025-10-09; last revised 2025-10-28",
++        tracks=("FR-11 v20 Tier-3-as-fast-path",),
++        as_reported_summary=(
++            "Uses sequence-level entropy from token logprobs as a reasoning "
++            "early-stopping confidence signal; reports 25-50% computational "
++            "savings while maintaining task accuracy."
++        ),
++        relevance=(
++            "A direct early-stop peer for the Tier-3 fast-path gate, with the "
++            "important constraint that entropy must be checked against Carnot's "
++            "verifier signal before becoming a product threshold."
++        ),
++        as_reported_note=(
++            "Savings and accuracy-preservation claims are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2603.23701",
++        title="The Diminishing Returns of Early-Exit Decoding in Modern LLMs",
++        submitted="submitted 2026-03-24",
++        tracks=("FR-11 v20 Tier-3-as-fast-path",),
++        as_reported_summary=(
++            "Re-evaluates layer-wise early exit in modern LLMs and reports that "
++            "newer recipes reduce layer redundancy, making early-exit benefits "
++            "model- and architecture-dependent."
++        ),
++        relevance=(
++            "Cautionary boundary for Tier-3-as-fast-path: fast-path gates should "
++            "be verifier-calibrated and model-specific, not assumed from older "
++            "early-exit literature."
++        ),
++        as_reported_note=(
++            "Architecture trends and benchmark outcomes are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2604.04648",
++        title="From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with Pessimism",
++        submitted="submitted 2026-04-06",
++        tracks=("verifier robustness / reward-gaming mitigation",),
++        as_reported_summary=(
++            "Penalizes uncertain out-of-distribution reward estimates in "
++            "Best-of-N selection; reports substantial mitigation of reward "
++            "hacking from atypical high-scoring responses."
++        ),
++        relevance=(
++            "Concrete mitigation for the banked verifier's reward-gaming surface: "
++            "use pessimistic uncertainty penalties rather than trusting the "
++            "highest verifier score under distribution shift."
++        ),
++        as_reported_note=(
++            "Reward-hacking mitigation and theoretical claims are source-reported only."
++        ),
++        venue_context="ICLR 2026",
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2603.06797",
++        title="Best-of-Tails: Bridging Optimism and Pessimism in Inference-Time Alignment",
++        submitted="submitted 2026-03-06",
++        tracks=("verifier robustness / reward-gaming mitigation",),
++        as_reported_summary=(
++            "Adapts inference-time alignment to reward-tail heaviness; reports "
++            "that per-prompt pessimism/optimism interpolation improves alignment "
++            "relative to fixed reward-model selection rules."
++        ),
++        relevance=(
++            "Complements the context-compaction mitigation: verifier routing can "
++            "treat extreme reward tails as a risk signal instead of blindly "
++            "expanding compute."
++        ),
++        as_reported_note=(
++            "Regret framing and alignment improvements are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2605.01643",
++        title="AI Alignment via Incentives and Correction",
++        submitted="submitted 2026-05-02; last revised 2026-05-11",
++        tracks=("verifier robustness / reward-gaming mitigation",),
++        as_reported_summary=(
++            "Models solver/auditor oversight as an incentive equilibrium and "
++            "reports that adaptive reward profiles preserve oversight pressure "
++            "and reduce hallucinated incorrect attempts in an LLM coding pipeline."
++        ),
++        relevance=(
++            "Useful robustness frame for Carnot's banked verifier: score the "
++            "correction event and auditor inspection incentives, not only the "
++            "solver's final answer."
++        ),
++        as_reported_note=(
++            "Pipeline outcomes and incentive-equilibrium claims are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2603.21172",
++        title="Entropy Alone is Insufficient for Safe Selective Prediction in LLMs",
++        submitted="submitted 2026-03-22",
++        tracks=("selective-prediction / abstention surface",),
++        as_reported_summary=(
++            "Finds model-dependent failures of entropy-only abstention and "
++            "reports improved risk-coverage and calibration from combining "
++            "entropy with a correctness probe."
++        ),
++        relevance=(
++            "Direct banked-abstention product warning: Carnot should privilege "
++            "verifier/probe-backed abstention over entropy-only routing."
++        ),
++        as_reported_note=(
++            "Risk-coverage and calibration outcomes are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2604.03904",
++        title="I-CALM: Incentivizing Confidence-Aware Abstention for LLM Hallucination Mitigation",
++        submitted="submitted 2026-04-05",
++        tracks=("selective-prediction / abstention surface",),
++        as_reported_summary=(
++            "Uses prompt-only confidence elicitation, explicit abstention rewards, "
++            "and humility norms; reports a coverage-reliability frontier that "
++            "reduces false answers by shifting error-prone cases to abstention."
++        ),
++        relevance=(
++            "Peer abstention-control surface for the banked verifier product, "
++            "especially where deployment wants a tunable reliability/coverage "
++            "frontier rather than a single fixed threshold."
++        ),
++        as_reported_note=(
++            "False-answer and frontier behavior are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2509.12527",
++        title=(
++            "Selective Risk Certification for LLM Outputs via Information-Lift "
++            "Statistics: PAC-Bayes, Robustness, and Skeleton Design"
++        ),
++        submitted="submitted 2025-09-16; last revised 2025-11-19",
++        tracks=("selective-prediction / abstention surface",),
++        as_reported_summary=(
++            "Introduces information-lift selective-risk certificates and reports "
++            "77.0% coverage at 2% risk plus blocking 96% of critical errors in "
++            "high-stakes scenarios."
++        ),
++        relevance=(
++            "Certification route for the banked abstention product: pair Carnot's "
++            "verifier score with an auditable selective-risk bound."
++        ),
++        as_reported_note=(
++            "Coverage, risk, and critical-error numbers are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2602.03769",
++        title="Reasoning with Latent Tokens in Diffusion Language Models",
++        submitted="submitted 2026-02-03",
++        tracks=("EDLM operator-seed",),
++        as_reported_summary=(
++            "Shows that diffusion LMs use predicted-but-undecoded latent tokens "
++            "for global coherence and reports a smooth speed/quality tradeoff by "
++            "modulating how many latent tokens participate."
++        ),
++        relevance=(
++            "EDLM-adjacent substrate evidence: the operator-seed route can exploit "
++            "diffusion's latent-token lookahead instead of repeating the bounded "
++            "tiny EBT generator path."
++        ),
++        as_reported_note=(
++            "Reasoning and speed/quality tradeoff claims are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2512.10858",
++        title="Scaling Behavior of Discrete Diffusion Language Models",
++        submitted="submitted 2025-12-11; last revised 2026-02-15",
++        tracks=("EDLM operator-seed",),
++        as_reported_summary=(
++            "Studies scaling laws for discrete diffusion language models and "
++            "reports a 10B-parameter uniform-diffusion model trained for 10^22 "
++            "FLOPs while narrowing the likelihood gap at scale."
++        ),
++        relevance=(
++            "Scaling precondition for the EDLM operator seed: discrete diffusion "
++            "is a foundation-model substrate with scale behavior, not merely a "
++            "small-model generator novelty."
++        ),
++        as_reported_note=(
++            "Model size, FLOP, and scaling-law claims are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2605.26106",
++        title="Looped Diffusion Language Models",
++        submitted="submitted 2026-05-25",
++        tracks=("EDLM operator-seed",),
++        as_reported_summary=(
++            "Loops early-middle masked-diffusion transformer layers and reports "
++            "up to 3.3x fewer training FLOPs for matched performance plus up to "
++            "8.5 GSM8K points from the looped design."
++        ),
++        relevance=(
++            "Compute-scaling follow-up for EDLM: recurrent depth and adaptive "
++            "loop counts give an operator-seed route for test-time compute in "
++            "masked diffusion without self-seeding the paradigm."
++        ),
++        as_reported_note=(
++            "Training-FLOP and reasoning-benchmark gains are source-reported only."
++        ),
++    ),
++    ResearchReference(
++        arxiv_id="arXiv:2603.13243",
++        title=(
++            "Think First, Diffuse Fast: Improving Diffusion Language Model "
++            "Reasoning via Autoregressive Plan Conditioning"
++        ),
++        submitted="submitted 2026-02-20",
++        tracks=("EDLM operator-seed",),
++        as_reported_summary=(
++            "Prepends an autoregressive natural-language plan to a diffusion LM "
++            "and reports large reasoning/code gains with stable diffusion "
++            "inference across seeds."
++        ),
++        relevance=(
++            "Operator-seed design hint for EDLM: use an external plan or verifier "
++            "as globally visible conditioning rather than asking the diffusion "
++            "model to discover the full reasoning scaffold alone."
++        ),
++        as_reported_note=(
++            "Accuracy, latency, and stability figures are source-reported only."
++        ),
++    ),
++)
++
++REFERENCE_IDS = tuple(ref.arxiv_id for ref in REFERENCES)
++
++
++def run(
++    repo_root: Path = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Append missing .348 bullets, write the artifact, and return its path."""
++
++    started = time.time() if started_s is None else started_s
++    references_path = repo_root / RESEARCH_REFERENCES_REL_PATH
++    before_text = references_path.read_text(encoding="utf-8")
++    append_action = append_references_if_missing(references_path)
++    after_text = references_path.read_text(encoding="utf-8")
++
++    artifact = build_artifact(
++        repo_root,
++        append_action=append_action,
++        before_text=before_text,
++        after_text=after_text,
++        started_s=started,
++        now_s=now_s,
++    )
++    out_path = repo_root / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++    verify_report = adversarial_verify.verify_artifact(out_path)
++    artifact["adversarial_verify_report"] = compact_verify_report(verify_report)
++    artifact["adversarial_verify_clean"] = report_is_clean(verify_report)
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    out_path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out_path
++
++
++def append_references_if_missing(path: Path) -> str:
++    """Append missing .348 bullets while preserving prior bytes as a prefix."""
++
++    text = path.read_text(encoding="utf-8")
++    confirm_348_section_intact(text)
++    section = extract_348_section(text)
++    missing = [ref for ref in REFERENCES if ref.arxiv_id not in section]
++    if not missing:
++        return "already_present"
++    separator = "" if text.endswith("\n") else "\n"
++    path.write_text(text + separator + render_reference_bullets(missing), encoding="utf-8")
++    return "appended"
++
++
++def render_reference_bullets(
++    references: Iterable[ResearchReference] = REFERENCES,
++) -> str:
++    """Render markdown bullets for references added by this refresh."""
++
++    lines: list[str] = []
++    for ref in references:
++        track = " / ".join(ref.tracks)
++        venue = f" {ref.venue_context}." if ref.venue_context else ""
++        lines.append(
++            (
++                f"- **{ref.arxiv_id} - \"{ref.title}\" ({ref.submitted}; "
++                f"arXiv resolved):** Track: {track}. "
++                f"{ref.as_reported_summary} {ref.relevance} "
++                f"{ref.as_reported_note}{venue}"
++            )
++        )
++    return "\n".join(lines) + "\n"
++
++
++def extract_348_section(text: str) -> str:
++    """Return the .348 section or raise a precise integrity error."""
++
++    start = text.find(SECTION_HEADER)
++    if start == -1:
++        if "## .348 additions" in text:
++            raise ValueError(".348 section not intact: expected canonical header")
++        raise ValueError("missing .348 additions section")
++    next_header = text.find("\n## ", start + len(SECTION_HEADER))
++    if next_header == -1:
++        return text[start:]
++    return text[start:next_header]
++
++
++def confirm_348_section_intact(text: str) -> bool:
++    """Validate that the planner-created .348 section still parses."""
++
++    section = extract_348_section(text)
++    missing = [token for token in REQUIRED_348_TOKENS if token not in section]
++    if missing:
++        raise ValueError(f".348 section not intact: missing {missing}")
++    return True
++
++
++def build_artifact(
++    repo_root: Path,
++    *,
++    append_action: str,
++    before_text: str,
++    after_text: str,
++    started_s: float,
++    now_s: float | None = None,
++) -> JsonDict:
++    """Build the terminal artifact from the before/after research-register state."""
++
++    section = extract_348_section(after_text)
++    artifact: JsonDict = {
++        "honest_verdict": TERMINAL_VERDICT,
++        "schema": "carnot.external_research_refresh.v1",
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "references_added": list(REFERENCE_IDS),
++        "n_references_added": len(REFERENCE_IDS),
++        "section_appended_not_replaced": section_appended_not_replaced(
++            before_text, after_text
++        ),
++        "section_confirmed_intact": confirm_348_section_intact(before_text),
++        "numbers_are_as_reported": True,
++        "random_seed": RANDOM_SEED,
++        "duration_s": elapsed_seconds(started_s, now_s),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "references": [ref.to_artifact_row() for ref in REFERENCES],
++        "research_references_path": RESEARCH_REFERENCES_REL_PATH.as_posix(),
++        "section_header": SECTION_HEADER,
++        "section_sha256": sha256_text(section),
++        "append_action": append_action,
++        "section_parse_summary": {
++            "single_348_section": after_text.count(SECTION_HEADER) == 1,
++            "required_planner_anchors_present": list(REQUIRED_348_TOKENS),
++            "excluded_duplicate_ids": list(EXCLUDED_DUPLICATE_IDS),
++        },
++        "arxiv_resolution_summary": {
++            "all_added_arxiv_ids_resolved": all(
++                ref.arxiv_abs_resolved for ref in REFERENCES
++            ),
++            "verification_basis": (
++                "Primary arXiv abstract pages resolved during the .348 filing; "
++                "entries preserve source-reported claims pending independent "
++                "Carnot re-derivation."
++            ),
++        },
++        "adversarial_verify_clean": True,
++        "adversarial_verify_report": {"max_severity": -1, "flags": []},
++    }
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def section_appended_not_replaced(before_text: str, after_text: str) -> bool:
++    """Return true when old content is preserved and the .348 section is complete."""
++
++    return (
++        after_text.startswith(before_text)
++        and confirm_348_section_intact(after_text)
++        and all(arxiv_id in extract_348_section(after_text) for arxiv_id in REFERENCE_IDS)
++    )
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate required fields and anti-fabrication hygiene."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required fields: {missing}")
++    _ensure(artifact.get("honest_verdict") == TERMINAL_VERDICT, "honest_verdict")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference_substrate")
++    _ensure(artifact.get("references_added") == list(REFERENCE_IDS), "references_added")
++    _ensure(artifact.get("n_references_added") == len(REFERENCE_IDS), "n_references_added")
++    _ensure(int(artifact.get("n_references_added", 0)) > 0, "n_references_added")
++    _ensure(
++        artifact.get("section_appended_not_replaced") is True,
++        "section_appended_not_replaced",
++    )
++    _ensure(artifact.get("section_confirmed_intact") is True, "section_confirmed_intact")
++    _ensure(artifact.get("numbers_are_as_reported") is True, "numbers_are_as_reported")
++    _ensure(artifact.get("random_seed") == RANDOM_SEED, "random_seed")
++    _ensure(float(artifact.get("duration_s", 0.0)) > 0.0, "duration_s")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles")
++    _ensure(set(REQUIRED_ARTIFACT_FIELDS) <= set(principles), "field_principles")
++    refs = artifact.get("references")
++    _ensure(isinstance(refs, list), "references")
++    _ensure(len(refs) == len(REFERENCE_IDS), "references")
++    _ensure(
++        not any(arxiv_id in REFERENCE_IDS for arxiv_id in EXCLUDED_DUPLICATE_IDS),
++        "references",
++    )
++    _ensure(
++        {row.get("arxiv_id") for row in refs if isinstance(row, Mapping)}
++        == set(REFERENCE_IDS),
++        "references",
++    )
++    _ensure(
++        all(
++            isinstance(row, Mapping)
++            and row.get("arxiv_abs_resolved") is True
++            and row.get("numbers_are_as_reported") is True
++            and row.get("source_kind") == "arxiv_abs"
++            for row in refs
++        ),
++        "references",
++    )
++    encoded = json.dumps(artifact, sort_keys=True)
++    _ensure("GGUF" not in encoded and "CUDA" not in encoded, "inference-substrate hygiene")
++    _ensure("live-model" not in encoded, "inference-substrate hygiene")
++    _ensure(
++        artifact.get("reproducibility_checksum") == payload_checksum(artifact),
++        "checksum",
++    )
++    _ensure(artifact.get("adversarial_verify_clean") is True, "adversarial_verify_clean")
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(f"invalid Exp 3805 artifact: {message}")
++
++
++def compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    """Keep the adversarial verifier report compact but auditable."""
++
++    flags = list(report.get("flags", []))
++    return {
++        "max_severity": max((severity_rank(flag.get("severity")) for flag in flags), default=-1),
++        "flags": flags,
++    }
++
++
++def report_is_clean(report: Mapping[str, Any] | None) -> bool:
++    """Return true when no critical adversarial flag is present."""
++
++    if not isinstance(report, Mapping):
++        return True
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in report.get("flags", [])
++    )
++
++
++def severity_rank(severity: Any) -> int:
++    """Map verifier severity labels to sortable integers."""
++
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(severity).lower(), -1)
++
++
++def elapsed_seconds(started_s: float, now_s: float | None) -> float:
++    """Return rounded wall-clock duration with a nonzero floor."""
++
++    now = time.time() if now_s is None else now_s
++    return round(max(now - started_s, 0.0001), 6)
++
++
++def sha256_text(text: str) -> str:
++    """Return a SHA-256 digest for markdown content."""
++
++    return hashlib.sha256(text.encode("utf-8")).hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {
++        key: value for key, value in payload.items() if key != "reproducibility_checksum"
++    }
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
+diff --git a/research-references.md b/research-references.md
+index 702007e8aa..7bfe80c4ac 100644
+--- a/research-references.md
++++ b/research-references.md
+@@ -20928,3 +20928,15 @@ Numbers are source-reported by the papers. They are not Carnot measurements and
+ - **arXiv:2508.01969 - "Accelerating LLM Reasoning via Early Rejection with Partial Reward Modeling":** Track: FR-11 v20 Tier-3-as-fast-path. Hypothesis confirmed in-paper that PRMs are also *Partial* Reward Models -- scores on partially-completed steps become highly predictive of the final reward after surprisingly short prefixes, enabling early rejection of unpromising trajectories. Direct conceptual anchor for wiring the `.347 Tier-3 predictor (predictive AUROC 0.9715, exp3788) into a deployable fast-path/early-exit cascade gate that skips full ensemble scoring when the predictor is confident. Token/latency-saving numbers are source-reported only.
+ - **arXiv:2604.02341 - "LLM Reasoning with Process Rewards for Outcome-Guided Steps" (submitted 2026-02-08):** Track: Tier-3 predictive verification + the banked verifier product. Combines process rewards with outcome guidance for step-level reasoning evaluation. Peer framing for Carnot's step-error verifier-as-process-reward usage; supports the predictive-head direction without reopening any bounded route. Step-evaluation gains are source-reported only.
+ - **EDLM reference implementation confirmed (GitHub: MinkaiXu/Energy-Diffusion-LLM; arXiv:2410.21357, ICLR 2025):** Track: EDLM operator-seed. The `.347 exp3793 preflight resolved the canonical repo + a one-command seed and returned readiness=GO. Filed here so the operator-seed decision has the impl pointer in the converged record. This is NOT a loop commitment -- seeding a Phase-3 EDLM track remains the operator's call (the P3 Verification Trap: the loop cannot self-seed a paradigm).
++- **arXiv:2510.08146 - "Think Just Enough: Sequence-Level Entropy as a Confidence Signal for LLM Reasoning" (submitted 2025-10-09; last revised 2025-10-28; arXiv resolved):** Track: FR-11 v20 Tier-3-as-fast-path. Uses sequence-level entropy from token logprobs as a reasoning early-stopping confidence signal; reports 25-50% computational savings while maintaining task accuracy. A direct early-stop peer for the Tier-3 fast-path gate, with the important constraint that entropy must be checked against Carnot's verifier signal before becoming a product threshold. Savings and accuracy-preservation claims are source-reported only.
++- **arXiv:2603.23701 - "The Diminishing Returns of Early-Exit Decoding in Modern LLMs" (submitted 2026-03-24; arXiv resolved):** Track: FR-11 v20 Tier-3-as-fast-path. Re-evaluates layer-wise early exit in modern LLMs and reports that newer recipes reduce layer redundancy, making early-exit benefits model- and architecture-dependent. Cautionary boundary for Tier-3-as-fast-path: fast-path gates should be verifier-calibrated and model-specific, not assumed from older early-exit literature. Architecture trends and benchmark outcomes are source-reported only.
++- **arXiv:2604.04648 - "From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with Pessimism" (submitted 2026-04-06; arXiv resolved):** Track: verifier robustness / reward-gaming mitigation. Penalizes uncertain out-of-distribution reward estimates in Best-of-N selection; reports substantial mitigation of reward hacking from atypical high-scoring responses. Concrete mitigation for the banked verifier's reward-gaming surface: use pessimistic uncertainty penalties rather than trusting the highest verifier score under distribution shift. Reward-hacking mitigation and theoretical claims are source-reported only. ICLR 2026.
++- **arXiv:2603.06797 - "Best-of-Tails: Bridging Optimism and Pessimism in Inference-Time Alignment" (submitted 2026-03-06; arXiv resolved):** Track: verifier robustness / reward-gaming mitigation. Adapts inference-time alignment to reward-tail heaviness; reports that per-prompt pessimism/optimism interpolation improves alignment relative to fixed reward-model selection rules. Complements the context-compaction mitigation: verifier routing can treat extreme reward tails as a risk signal instead of blindly expanding compute. Regret framing and alignment improvements are source-reported only.
++- **arXiv:2605.01643 - "AI Alignment via Incentives and Correction" (submitted 2026-05-02; last revised 2026-05-11; arXiv resolved):** Track: verifier robustness / reward-gaming mitigation. Models solver/auditor oversight as an incentive equilibrium and reports that adaptive reward profiles preserve oversight pressure and reduce hallucinated incorrect attempts in an LLM coding pipeline. Useful robustness frame for Carnot's banked verifier: score the correction event and auditor inspection incentives, not only the solver's final answer. Pipeline outcomes and incentive-equilibrium claims are source-reported only.
++- **arXiv:2603.21172 - "Entropy Alone is Insufficient for Safe Selective Prediction in LLMs" (submitted 2026-03-22; arXiv resolved):** Track: selective-prediction / abstention surface. Finds model-dependent failures of entropy-only abstention and reports improved risk-coverage and calibration from combining entropy with a correctness probe. Direct banked-abstention product warning: Carnot should privilege verifier/probe-backed abstention over entropy-only routing. Risk-coverage and calibration outcomes are source-reported only.
++- **arXiv:2604.03904 - "I-CALM: Incentivizing Confidence-Aware Abstention for LLM Hallucination Mitigation" (submitted 2026-04-05; arXiv resolved):** Track: selective-prediction / abstention surface. Uses prompt-only confidence elicitation, explicit abstention rewards, and humility norms; reports a coverage-reliability frontier that reduces false answers by shifting error-prone cases to abstention. Peer abstention-control surface for the banked verifier product, especially where deployment wants a tunable reliability/coverage frontier rather than a single fixed threshold. False-answer and frontier behavior are source-reported only.
++- **arXiv:2509.12527 - "Selective Risk Certification for LLM Outputs via Information-Lift Statistics: PAC-Bayes, Robustness, and Skeleton Design" (submitted 2025-09-16; last revised 2025-11-19; arXiv resolved):** Track: selective-prediction / abstention surface. Introduces information-lift selective-risk certificates and reports 77.0% coverage at 2% risk plus blocking 96% of critical errors in high-stakes scenarios. Certification route for the banked abstention product: pair Carnot's verifier score with an auditable selective-risk bound. Coverage, risk, and critical-error numbers are source-reported only.
++- **arXiv:2602.03769 - "Reasoning with Latent Tokens in Diffusion Language Models" (submitted 2026-02-03; arXiv resolved):** Track: EDLM operator-seed. Shows that diffusion LMs use predicted-but-undecoded latent tokens for global coherence and reports a smooth speed/quality tradeoff by modulating how many latent tokens participate. EDLM-adjacent substrate evidence: the operator-seed route can exploit diffusion's latent-token lookahead instead of repeating the bounded tiny EBT generator path. Reasoning and speed/quality tradeoff claims are source-reported only.
++- **arXiv:2512.10858 - "Scaling Behavior of Discrete Diffusion Language Models" (submitted 2025-12-11; last revised 2026-02-15; arXiv resolved):** Track: EDLM operator-seed. Studies scaling laws for discrete diffusion language models and reports a 10B-parameter uniform-diffusion model trained for 10^22 FLOPs while narrowing the likelihood gap at scale. Scaling precondition for the EDLM operator seed: discrete diffusion is a foundation-model substrate with scale behavior, not merely a small-model generator novelty. Model size, FLOP, and scaling-law claims are source-reported only.
++- **arXiv:2605.26106 - "Looped Diffusion Language Models" (submitted 2026-05-25; arXiv resolved):** Track: EDLM operator-seed. Loops early-middle masked-diffusion transformer layers and reports up to 3.3x fewer training FLOPs for matched performance plus up to 8.5 GSM8K points from the looped design. Compute-scaling follow-up for EDLM: recurrent depth and adaptive loop counts give an operator-seed route for test-time compute in masked diffusion without self-seeding the paradigm. Training-FLOP and reasoning-benchmark gains are source-reported only.
++- **arXiv:2603.13243 - "Think First, Diffuse Fast: Improving Diffusion Language Model Reasoning via Autoregressive Plan Conditioning" (submitted 2026-02-20; arXiv resolved):** Track: EDLM operator-seed. Prepends an autoregressive natural-language plan to a diffusion LM and reports large reasoning/code gains with stable diffusion inference across seeds. Operator-seed design hint for EDLM: use an external plan or verifier as globally visible conditioning rather than asking the diffusion model to discover the full reasoning scaffold alone. Accuracy, latency, and stability figures are source-reported only.
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 02af856a01..d6ad7fb1f1 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T13:48:14.701070+00:00",
+-  "finished_at": "2026-06-04T13:48:14.725035+00:00",
++  "started_at": "2026-06-04T14:04:45.660430+00:00",
++  "finished_at": "2026-06-04T14:04:45.684331+00:00",
+   "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index eece05f6cc..98a9791827 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T13:48:14Z",
++  "run_date": "2026-06-04T14:04:45Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 76bc1aad14..2ec46ad2cf 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T13:48:16Z",
+-  "finished_at": "2026-06-04T13:48:16Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-04T14:04:46Z",
++  "finished_at": "2026-06-04T14:04:47Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index aedbfaed6c..ad02cc8f26 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T13:48:16Z",
++  "run_date": "2026-06-04T14:04:47Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index a029e3e848..8550d72c13 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-04T13:48:16Z",
++  "run_date": "2026-06-04T14:04:47Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index fb6c87b4f7..f02f5edc16 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T13:46:38.097352Z",
+-  "duration_s": 0.009935140609741211,
++  "run_date": "2026-06-04T14:03:08.059868Z",
++  "duration_s": 0.008799552917480469,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "e8603dbda829457ca93667cd0371c1fc34ef2a477a209cad351ba53f5fbc6d4e",
++  "reproducibility_checksum": "974b2db625798d9938f3c7aae195a6a2416a5c67b9e259cda3f14595ab2eb378",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d21d98e2ebe4248b62d6946edf3e95a72a28787f"
++    "adversarial_verify_version": "2a672cdc562886fad30d560c6a268cf1afd5e6ff"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index f6f98d43da..e69e2a0c01 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T13:46:38.110045Z",
+-  "duration_s": 0.009391069412231445,
++  "run_date": "2026-06-04T14:03:08.072732Z",
++  "duration_s": 0.009410619735717773,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "a67bb37a0ca7d8fb36b11ac398c6bd9a42522d449065d0a5de42c63293428a04",
++  "reproducibility_checksum": "7c5eea37b5cf9f7e72c7ec8002243de37179db96b0f3737bce6e6458dc520bd8",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d21d98e2ebe4248b62d6946edf3e95a72a28787f"
++    "adversarial_verify_version": "2a672cdc562886fad30d560c6a268cf1afd5e6ff"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index cb71482317..bbedc0bf88 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 5.021095275878906,
++  "efficiency_gains_ms": 2.1414756774902344,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index a95b807090..f5315e5fb5 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.24764156341552734,
++  "duration_s": 0.225172758102417,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index a7378b10d7..64e1a9d182 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0010483264923095703,
++  "duration_s": 0.0009093284606933594,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 18745a2cb1..a3373feee6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.9234986868686974e-05,
++  "duration_s": 2.8063004720024765e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index c8bc960561..d76ce3ee4f 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.709880497306585e-07,
++  "duration_s": 6.610061973333359e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 73653b8a7e..ff23d95be2 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 6.556510925292969e-05,
++  "duration_s": 5.14984130859375e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3805_external_research_refresh.json b/results/experiment_3805_external_research_refresh.json
+new file mode 100644
+index 0000000000..24664322bf
+--- /dev/null
++++ b/results/experiment_3805_external_research_refresh.json
+@@ -0,0 +1,252 @@
++{
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flags": [],
++    "max_severity": -1
++  },
++  "append_action": "appended",
++  "arxiv_resolution_summary": {
++    "all_added_arxiv_ids_resolved": true,
++    "verification_basis": "Primary arXiv abstract pages resolved during the .348 filing; entries preserve source-reported claims pending independent Carnot re-derivation."
++  },
++  "duration_s": 0.02209,
++  "field_principles": {
++    "duration_s": "Wall-clock plausibility floor.",
++    "honest_verdict": "Terminal prefix; the refresh outcome.",
++    "inference_substrate": "A documentation append over upstream paper records; prevents confusing this refresh with a compute-bound experiment.",
++    "n_references_added": "BARE int -- sample-size hygiene on the refresh.",
++    "numbers_are_as_reported": "BARE bool, true -- peer numbers are source-reported, not Carnot measurements (adversarial-verify discipline).",
++    "random_seed": "Determinism precondition.",
++    "references_added": "The list of arXiv ids filed this sweep -- the deliverable; keeps the project current per research-program.md planning requirement 4.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "section_appended_not_replaced": "BARE bool, true -- the '.348 additions' section was APPENDED/confirmed-intact (never-prune rule; no prior content removed)."
++  },
++  "honest_verdict": "complete: external_research_refresh_348_filed_references_section_appended_numbers_as_reported",
++  "inference_substrate": "aggregation_from_upstream_artifacts (principle: a documentation append, no live model).",
++  "n_references_added": 12,
++  "numbers_are_as_reported": true,
++  "random_seed": 3805,
++  "references": [
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2510.08146",
++      "arxiv_id": "arXiv:2510.08146",
++      "as_reported_note": "Savings and accuracy-preservation claims are source-reported only.",
++      "as_reported_summary": "Uses sequence-level entropy from token logprobs as a reasoning early-stopping confidence signal; reports 25-50% computational savings while maintaining task accuracy.",
++      "numbers_are_as_reported": true,
++      "relevance": "A direct early-stop peer for the Tier-3 fast-path gate, with the important constraint that entropy must be checked against Carnot's verifier signal before becoming a product threshold.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2025-10-09; last revised 2025-10-28",
++      "title": "Think Just Enough: Sequence-Level Entropy as a Confidence Signal for LLM Reasoning",
++      "tracks": [
++        "FR-11 v20 Tier-3-as-fast-path"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2603.23701",
++      "arxiv_id": "arXiv:2603.23701",
++      "as_reported_note": "Architecture trends and benchmark outcomes are source-reported only.",
++      "as_reported_summary": "Re-evaluates layer-wise early exit in modern LLMs and reports that newer recipes reduce layer redundancy, making early-exit benefits model- and architecture-dependent.",
++      "numbers_are_as_reported": true,
++      "relevance": "Cautionary boundary for Tier-3-as-fast-path: fast-path gates should be verifier-calibrated and model-specific, not assumed from older early-exit literature.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-03-24",
++      "title": "The Diminishing Returns of Early-Exit Decoding in Modern LLMs",
++      "tracks": [
++        "FR-11 v20 Tier-3-as-fast-path"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2604.04648",
++      "arxiv_id": "arXiv:2604.04648",
++      "as_reported_note": "Reward-hacking mitigation and theoretical claims are source-reported only.",
++      "as_reported_summary": "Penalizes uncertain out-of-distribution reward estimates in Best-of-N selection; reports substantial mitigation of reward hacking from atypical high-scoring responses.",
++      "numbers_are_as_reported": true,
++      "relevance": "Concrete mitigation for the banked verifier's reward-gaming surface: use pessimistic uncertainty penalties rather than trusting the highest verifier score under distribution shift.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-04-06",
++      "title": "From Curiosity to Caution: Mitigating Reward Hacking for Best-of-N with Pessimism",
++      "tracks": [
++        "verifier robustness / reward-gaming mitigation"
++      ],
++      "venue_context": "ICLR 2026"
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2603.06797",
++      "arxiv_id": "arXiv:2603.06797",
++      "as_reported_note": "Regret framing and alignment improvements are source-reported only.",
++      "as_reported_summary": "Adapts inference-time alignment to reward-tail heaviness; reports that per-prompt pessimism/optimism interpolation improves alignment relative to fixed reward-model selection rules.",
++      "numbers_are_as_reported": true,
++      "relevance": "Complements the context-compaction mitigation: verifier routing can treat extreme reward tails as a risk signal instead of blindly expanding compute.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-03-06",
++      "title": "Best-of-Tails: Bridging Optimism and Pessimism in Inference-Time Alignment",
++      "tracks": [
++        "verifier robustness / reward-gaming mitigation"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2605.01643",
++      "arxiv_id": "arXiv:2605.01643",
++      "as_reported_note": "Pipeline outcomes and incentive-equilibrium claims are source-reported only.",
++      "as_reported_summary": "Models solver/auditor oversight as an incentive equilibrium and reports that adaptive reward profiles preserve oversight pressure and reduce hallucinated incorrect attempts in an LLM coding pipeline.",
++      "numbers_are_as_reported": true,
++      "relevance": "Useful robustness frame for Carnot's banked verifier: score the correction event and auditor inspection incentives, not only the solver's final answer.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-05-02; last revised 2026-05-11",
++      "title": "AI Alignment via Incentives and Correction",
++      "tracks": [
++        "verifier robustness / reward-gaming mitigation"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2603.21172",
++      "arxiv_id": "arXiv:2603.21172",
++      "as_reported_note": "Risk-coverage and calibration outcomes are source-reported only.",
++      "as_reported_summary": "Finds model-dependent failures of entropy-only abstention and reports improved risk-coverage and calibration from combining entropy with a correctness probe.",
++      "numbers_are_as_reported": true,
++      "relevance": "Direct banked-abstention product warning: Carnot should privilege verifier/probe-backed abstention over entropy-only routing.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-03-22",
++      "title": "Entropy Alone is Insufficient for Safe Selective Prediction in LLMs",
++      "tracks": [
++        "selective-prediction / abstention surface"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2604.03904",
++      "arxiv_id": "arXiv:2604.03904",
++      "as_reported_note": "False-answer and frontier behavior are source-reported only.",
++      "as_reported_summary": "Uses prompt-only confidence elicitation, explicit abstention rewards, and humility norms; reports a coverage-reliability frontier that reduces false answers by shifting error-prone cases to abstention.",
++      "numbers_are_as_reported": true,
++      "relevance": "Peer abstention-control surface for the banked verifier product, especially where deployment wants a tunable reliability/coverage frontier rather than a single fixed threshold.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-04-05",
++      "title": "I-CALM: Incentivizing Confidence-Aware Abstention for LLM Hallucination Mitigation",
++      "tracks": [
++        "selective-prediction / abstention surface"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2509.12527",
++      "arxiv_id": "arXiv:2509.12527",
++      "as_reported_note": "Coverage, risk, and critical-error numbers are source-reported only.",
++      "as_reported_summary": "Introduces information-lift selective-risk certificates and reports 77.0% coverage at 2% risk plus blocking 96% of critical errors in high-stakes scenarios.",
++      "numbers_are_as_reported": true,
++      "relevance": "Certification route for the banked abstention product: pair Carnot's verifier score with an auditable selective-risk bound.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2025-09-16; last revised 2025-11-19",
++      "title": "Selective Risk Certification for LLM Outputs via Information-Lift Statistics: PAC-Bayes, Robustness, and Skeleton Design",
++      "tracks": [
++        "selective-prediction / abstention surface"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2602.03769",
++      "arxiv_id": "arXiv:2602.03769",
++      "as_reported_note": "Reasoning and speed/quality tradeoff claims are source-reported only.",
++      "as_reported_summary": "Shows that diffusion LMs use predicted-but-undecoded latent tokens for global coherence and reports a smooth speed/quality tradeoff by modulating how many latent tokens participate.",
++      "numbers_are_as_reported": true,
++      "relevance": "EDLM-adjacent substrate evidence: the operator-seed route can exploit diffusion's latent-token lookahead instead of repeating the bounded tiny EBT generator path.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-02-03",
++      "title": "Reasoning with Latent Tokens in Diffusion Language Models",
++      "tracks": [
++        "EDLM operator-seed"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2512.10858",
++      "arxiv_id": "arXiv:2512.10858",
++      "as_reported_note": "Model size, FLOP, and scaling-law claims are source-reported only.",
++      "as_reported_summary": "Studies scaling laws for discrete diffusion language models and reports a 10B-parameter uniform-diffusion model trained for 10^22 FLOPs while narrowing the likelihood gap at scale.",
++      "numbers_are_as_reported": true,
++      "relevance": "Scaling precondition for the EDLM operator seed: discrete diffusion is a foundation-model substrate with scale behavior, not merely a small-model generator novelty.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2025-12-11; last revised 2026-02-15",
++      "title": "Scaling Behavior of Discrete Diffusion Language Models",
++      "tracks": [
++        "EDLM operator-seed"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2605.26106",
++      "arxiv_id": "arXiv:2605.26106",
++      "as_reported_note": "Training-FLOP and reasoning-benchmark gains are source-reported only.",
++      "as_reported_summary": "Loops early-middle masked-diffusion transformer layers and reports up to 3.3x fewer training FLOPs for matched performance plus up to 8.5 GSM8K points from the looped design.",
++      "numbers_are_as_reported": true,
++      "relevance": "Compute-scaling follow-up for EDLM: recurrent depth and adaptive loop counts give an operator-seed route for test-time compute in masked diffusion without self-seeding the paradigm.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-05-25",
++      "title": "Looped Diffusion Language Models",
++      "tracks": [
++        "EDLM operator-seed"
++      ]
++    },
++    {
++      "arxiv_abs_resolved": true,
++      "arxiv_abs_url": "https://arxiv.org/abs/2603.13243",
++      "arxiv_id": "arXiv:2603.13243",
++      "as_reported_note": "Accuracy, latency, and stability figures are source-reported only.",
++      "as_reported_summary": "Prepends an autoregressive natural-language plan to a diffusion LM and reports large reasoning/code gains with stable diffusion inference across seeds.",
++      "numbers_are_as_reported": true,
++      "relevance": "Operator-seed design hint for EDLM: use an external plan or verifier as globally visible conditioning rather than asking the diffusion model to discover the full reasoning scaffold alone.",
++      "source_kind": "arxiv_abs",
++      "submitted": "submitted 2026-02-20",
++      "title": "Think First, Diffuse Fast: Improving Diffusion Language Model Reasoning via Autoregressive Plan Conditioning",
++      "tracks": [
++        "EDLM operator-seed"
++      ]
++    }
++  ],
++  "references_added": [
++    "arXiv:2510.08146",
++    "arXiv:2603.23701",
++    "arXiv:2604.04648",
++    "arXiv:2603.06797",
++    "arXiv:2605.01643",
++    "arXiv:2603.21172",
++    "arXiv:2604.03904",
++    "arXiv:2509.12527",
++    "arXiv:2602.03769",
++    "arXiv:2512.10858",
++    "arXiv:2605.26106",
++    "arXiv:2603.13243"
++  ],
++  "reproducibility_checksum": "70398279ede2c2055ab8721557293d5788be1e67ded08e2e75a9ade7b2255ad4",
++  "research_references_path": "research-references.md",
++  "schema": "carnot.external_research_refresh.v1",
++  "section_appended_not_replaced": true,
++  "section_confirmed_intact": true,
++  "section_header": "## .348 additions - early-rejection predictive verification, outcome-guided process rewards, EDLM impl confirmation (2026-06-04)",
++  "section_parse_summary": {
++    "excluded_duplicate_ids": [
++      "arXiv:2508.01969",
++      "arXiv:2604.15149",
++      "arXiv:2602.01750"
++    ],
++    "required_planner_anchors_present": [
++      "Added by the `.348 planning sweep",
++      "Numbers are source-reported by the papers",
++      "arXiv:2508.01969",
++      "arXiv:2604.02341",
++      "MinkaiXu/Energy-Diffusion-LLM",
++      "arXiv:2410.21357",
++      "reference_deep_think_post_bounded_2026_06",
++      "project_energy_selection_thesis_bounded",
++      "project_thesis_a_ebt_seeded"
++    ],
++    "single_348_section": true
++  },
++  "section_sha256": "ff9c567aa8ed16e252e91661ad9983cf0fa4d476106bba20f2c433d0bf50a7d0"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index a05df8bf73..c639c0ae2a 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T13:46:30Z",
+-  "finished_at": "2026-06-04T13:46:30Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-04T14:04:58Z",
++  "finished_at": "2026-06-04T14:04:58Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e05f062fbd..e2290c4fc6 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T13:46:30Z",
+-  "finished_at": "2026-06-04T13:46:30Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-04T14:04:58Z",
++  "finished_at": "2026-06-04T14:04:58Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 797f249551..b0e34be585 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T13:46:30Z",
+-  "finished_at": "2026-06-04T13:46:30Z",
++  "started_at": "2026-06-04T14:04:58Z",
++  "finished_at": "2026-06-04T14:04:59Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3805_external_research_refresh.py b/scripts/experiment_3805_external_research_refresh.py
+new file mode 100644
+index 0000000000..c7f293eff0
+--- /dev/null
++++ b/scripts/experiment_3805_external_research_refresh.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3805 external research refresh."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.external_research_refresh_3805 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3805_external_research_refresh.py b/tests/python/test_experiment_3805_external_research_refresh.py
+new file mode 100644
+index 0000000000..244a339493
+--- /dev/null
++++ b/tests/python/test_experiment_3805_external_research_refresh.py
+@@ -0,0 +1,220 @@
++"""Tests for Exp 3805 external research refresh.
++
++Spec refs: REQ-REPORT-3805, SCENARIO-REPORT-3805.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import external_research_refresh_3805 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++PRIOR_REFERENCES = """# Research References
++
++## .347 additions - existing prior section
++
++- Existing .347 content stays untouched.
++
++## .348 additions - early-rejection predictive verification, outcome-guided process rewards, EDLM impl confirmation (2026-06-04)
++
++Added by the `.348 planning sweep. Append-only into the converged record: `paper_ready` stays TRUE (G1-G4), FoVer 0.9131 stays frozen, both energy routes stay bounded per `[[project_energy_selection_thesis_bounded]]` / `[[project_thesis_a_ebt_seeded]]`, the verifier-moat thread stays closed per `[[reference_deep_think_post_bounded_2026_06]]`, and EDLM stays an operator-seeded preflight route (the `.347 exp3793 preflight returned GO; the loop does NOT self-seed). `.348 is a LEAN, NON-CHURN maintenance milestone: it ADVANCES the headline (G4 restoration of the demoted product code-repair number), HARDENS the banked verifier product, TUNES the over-firing anomaly classifier, and APPLIES the `.347 Tier-3 predictor as a real fast-path gate.
++
++Numbers are source-reported by the papers. They are not Carnot measurements and must be independently re-derived before entering any forward-facing claim.
++
++- **arXiv:2508.01969 - "Accelerating LLM Reasoning via Early Rejection with Partial Reward Modeling":** Track: FR-11 v20 Tier-3-as-fast-path. Existing anchor stays.
++- **arXiv:2604.02341 - "LLM Reasoning with Process Rewards for Outcome-Guided Steps" (submitted 2026-02-08):** Track: Tier-3 predictive verification + the banked verifier product. Existing anchor stays.
++- **EDLM reference implementation confirmed (GitHub: MinkaiXu/Energy-Diffusion-LLM; arXiv:2410.21357, ICLR 2025):** Track: EDLM operator-seed. Existing anchor stays.
++"""
++
++
++def _seed_references(root: Path, text: str = PRIOR_REFERENCES) -> str:
++    path = root / mod.RESEARCH_REFERENCES_REL_PATH
++    path.write_text(text, encoding="utf-8")
++    return text
++
++
++def test_req_report_3805_spec_anchor_exists() -> None:
++    """REQ-REPORT-3805: OpenSpec declares the refresh contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3805" in spec
++    assert "SCENARIO-REPORT-3805" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert mod.RESEARCH_REFERENCES_REL_PATH.as_posix() in spec
++    for arxiv_id in mod.REFERENCE_IDS:
++        assert arxiv_id in spec
++    assert "arXiv:2508.01969" in spec
++    assert "arXiv:2604.15149" in spec
++    assert "arXiv:2602.01750" in spec
++
++
++def test_scenario_report_3805_appends_into_existing_348_and_writes_artifact(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3805: the .348 section is confirmed and extended."""
++
++    before = _seed_references(tmp_path)
++
++    out_path = mod.run(tmp_path, started_s=100.0, now_s=100.25)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    after = (tmp_path / mod.RESEARCH_REFERENCES_REL_PATH).read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    assert after.startswith(before)
++    assert after.count(mod.SECTION_HEADER) == 1
++    assert after.count("arXiv:2508.01969") == 1
++    assert "arXiv:2604.15149" not in mod.REFERENCE_IDS
++    assert "arXiv:2602.01750" not in mod.REFERENCE_IDS
++    assert "Numbers are source-reported by the papers" in after
++    assert "MinkaiXu/Energy-Diffusion-LLM" in after
++    for arxiv_id in mod.REFERENCE_IDS:
++        assert arxiv_id in after
++    for track in (
++        "FR-11 v20 Tier-3-as-fast-path",
++        "verifier robustness / reward-gaming mitigation",
++        "selective-prediction / abstention surface",
++        "EDLM operator-seed",
++    ):
++        assert track in after
++
++    assert artifact["honest_verdict"] == mod.TERMINAL_VERDICT
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["references_added"] == list(mod.REFERENCE_IDS)
++    assert artifact["n_references_added"] == len(mod.REFERENCE_IDS)
++    assert artifact["section_appended_not_replaced"] is True
++    assert artifact["numbers_are_as_reported"] is True
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["duration_s"] == 0.25
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["section_confirmed_intact"] is True
++    assert artifact["section_sha256"] == mod.sha256_text(mod.extract_348_section(after))
++    assert artifact["adversarial_verify_clean"] is True
++    assert {row["arxiv_id"] for row in artifact["references"]} == set(mod.REFERENCE_IDS)
++    assert all(row["arxiv_abs_resolved"] is True for row in artifact["references"])
++    assert all(row["numbers_are_as_reported"] is True for row in artifact["references"])
++    assert all(row["source_kind"] == "arxiv_abs" for row in artifact["references"])
++
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "live-model" not in encoded
++
++
++def test_req_report_3805_append_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-3805: a rerun does not duplicate the .348 filings."""
++
++    before = _seed_references(tmp_path)
++    path = tmp_path / mod.RESEARCH_REFERENCES_REL_PATH
++
++    first = mod.append_references_if_missing(path)
++    second = mod.append_references_if_missing(path)
++    after = path.read_text(encoding="utf-8")
++
++    assert first == "appended"
++    assert second == "already_present"
++    assert after.startswith(before)
++    assert after.count(mod.SECTION_HEADER) == 1
++    for arxiv_id in mod.REFERENCE_IDS:
++        assert after.count(arxiv_id) == 1
++
++
++def test_req_report_3805_section_integrity_is_checked(tmp_path: Path) -> None:
++    """REQ-REPORT-3805: missing .348 anchors fail before appending."""
++
++    path = tmp_path / mod.RESEARCH_REFERENCES_REL_PATH
++    path.write_text("# Research References\n\n## .348 additions - incomplete\n", encoding="utf-8")
++
++    with pytest.raises(ValueError, match="intact"):
++        mod.append_references_if_missing(path)
++
++    with pytest.raises(ValueError, match="section"):
++        mod.extract_348_section("# Research References\n")
++
++    section_plus_next = PRIOR_REFERENCES + "\n## .349 additions - future\n\n- untouched\n"
++    extracted = mod.extract_348_section(section_plus_next)
++    assert "## .349 additions" not in extracted
++
++    with pytest.raises(ValueError, match="missing"):
++        mod.confirm_348_section_intact(PRIOR_REFERENCES.replace("arXiv:2604.02341", ""))
++
++
++def test_req_report_3805_helper_fallbacks_are_explicit() -> None:
++    """REQ-REPORT-3805: verification-report helper fallbacks are deterministic."""
++
++    assert mod.report_is_clean(None) is True
++    assert mod.report_is_clean({"flags": [{"severity": "critical"}]}) is False
++    assert mod.severity_rank("unknown") == -1
++    assert mod.elapsed_seconds(2.0, 1.0) == 0.0001
++    assert mod.compact_verify_report({"flags": [{"severity": "warn"}]}) == {
++        "max_severity": 1,
++        "flags": [{"severity": "warn"}],
++    }
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda artifact: artifact.pop("references_added"), "missing required"),
++        (lambda artifact: artifact.update(honest_verdict="complete: wrong"), "honest_verdict"),
++        (lambda artifact: artifact.update(n_references_added=3), "n_references_added"),
++        (
++            lambda artifact: artifact.update(section_appended_not_replaced=False),
++            "section_appended_not_replaced",
++        ),
++        (
++            lambda artifact: artifact.update(section_confirmed_intact=False),
++            "section_confirmed_intact",
++        ),
++        (
++            lambda artifact: artifact.update(numbers_are_as_reported=False),
++            "numbers_are_as_reported",
++        ),
++        (
++            lambda artifact: artifact["references"].append(
++                {
++                    "arxiv_id": "arXiv:9999.99999",
++                    "arxiv_abs_resolved": True,
++                    "numbers_are_as_reported": True,
++                }
++            ),
++            "references",
++        ),
++        (lambda artifact: artifact.update(reproducibility_checksum="bad"), "checksum"),
++    ],
++)
++def test_req_report_3805_validation_rejects_schema_violations(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3805: validation enforces the required artifact fields."""
++
++    before = _seed_references(tmp_path)
++    after = before + "\n" + mod.render_reference_bullets()
++    artifact = mod.build_artifact(
++        tmp_path,
++        append_action="appended",
++        before_text=before,
++        after_text=after,
++        started_s=1.0,
++        now_s=1.25,
++    )
++    mutate(artifact)
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(artifact)
++
++
++def test_scenario_report_3805_script_entrypoint_exists() -> None:
++    """SCENARIO-REPORT-3805: the requested script entrypoint exists."""
++
++    assert Path("scripts/experiment_3805_external_research_refresh.py").exists()
+-- 
+2.55.0
+

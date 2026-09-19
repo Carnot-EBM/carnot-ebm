@@ -1,0 +1,57 @@
+From cfc6d00985360b486a4a15d25aea0fe95da27d58 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 22:09:50 -0400
+Subject: [PATCH 01527/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md   | 5 +++++
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index f354b80b91..9fab776dc5 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -261,3 +261,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+ - artifact: results/experiment_4120_thirteenth_game_explore_first.json
++
++## experiment_4122_verifier_registry_gaps_hygiene.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
++- artifact: results/experiment_4122_verifier_registry_gaps_hygiene.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8c0ed1f5f0..85f79102f1 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-13T01:54:11Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-13T02:09:48Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 3d23003d54..df7e841807 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8392,3 +8392,4 @@ c |
+ | 2026-06-13 01:17 UTC | THIRTEENTH ARC-AGI-3 game first-solve via the PROV | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
+ | 2026-06-13 01:31 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 100 passed in 4.79s |
+ | 2026-06-13 01:49 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
++| 2026-06-13 02:04 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 4.91s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9099ee07d8..e89f325b99 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-13T01:54:11Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-13T02:09:48Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

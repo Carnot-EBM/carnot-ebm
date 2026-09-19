@@ -1,0 +1,65 @@
+From f9c775141b9341fafaa082104afba1834d264b10 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 22:55:43 -0400
+Subject: [PATCH 01352/11171] [outer-loop] Fix Phase 1 reproducer workflow:
+ invalid YAML + nonexistent --code flag
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+phase1-reproducer.yml failed at parse time (0s) on EVERY push for weeks:
+line 24's run: value was a plain YAML scalar containing colons
+('def add(a, b): return ...' and '"(2,3):5"'), so YAML raised 'mapping
+values are not allowed here' and GitHub rejected the file — surfacing a
+red 0s 'failure' on every push that masked real CI signal.
+
+The YAML bug also hid a second bug: 'carnot verify --code ...' was never
+valid — verify takes a positional FILE + --test, not --code (verified
+against the installed CLI). So a YAML-only fix would have just moved the
+failure from parse-time to the Monday cron.
+
+Fix: block scalar (|) + correct invocation, rewritten as a real
+reproducer that asserts the verifier CATCHES a planted bug (add() that
+subtracts -> FAIL) and PASSES the control (correct add() -> PASS).
+Verified locally: buggy exits 1, correct exits 0.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ .github/workflows/phase1-reproducer.yml | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/phase1-reproducer.yml b/.github/workflows/phase1-reproducer.yml
+index 8518b95c18..7050ee340e 100644
+--- a/.github/workflows/phase1-reproducer.yml
++++ b/.github/workflows/phase1-reproducer.yml
+@@ -20,5 +20,25 @@ jobs:
+       - name: Install Carnot-EBM
+         run: pip install -e .
+ 
+-      - name: Run verify
+-        run: carnot verify --code 'def add(a, b): return a - b' --func add --test "(2,3):5"
++      # End-to-end reproducer of the Phase 1 ship-gate claim ("at least one
++      # independent CI reproducer"): the published package's `carnot verify`
++      # CLI must (a) catch a planted bug and (b) pass correct code. The block
++      # scalar (|) is required because the commands contain colons, which a
++      # plain YAML scalar would parse as mapping separators.
++      - name: Reproduce — verifier discriminates buggy vs correct code
++        run: |
++          set -u
++          # Planted bug: add() that subtracts. add(2,3) == -1, not 5, so the
++          # verifier must FAIL (non-zero exit). If it PASSES the bug, the
++          # reproducer fails the workflow.
++          printf 'def add(a, b):\n    return a - b\n' > /tmp/buggy.py
++          if carnot verify /tmp/buggy.py --func add --test '(2,3):5'; then
++            echo "REPRODUCER FAILED: verifier did not catch the planted bug"
++            exit 1
++          fi
++          echo "OK: verifier flagged the buggy add()"
++          # Control: a correct add() must PASS (zero exit). A false positive
++          # here also fails the workflow.
++          printf 'def add(a, b):\n    return a + b\n' > /tmp/correct.py
++          carnot verify /tmp/correct.py --func add --test '(2,3):5'
++          echo "OK: verifier passed the correct add()"
+-- 
+2.55.0
+

@@ -1,0 +1,64 @@
+From 6404fc5bef4b8869ed669d954d822c94370ec7df Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 07:55:21 -0400
+Subject: [PATCH 00987/11171] [outer-loop] Flag exp3959 M3-efficiency 24.7x:
+ verifier NOT in loop + simulated, not a real measurement
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The .366 'M3 efficiency on REAL games — the load-bearing verifier-earns-its-place datum'
+claimed efficiency_ratio=24.662x (cis_non_overlapping_pruner_helps). Adversarial review:
+
+1. VERIFIER NOT IN LOOP: with-arm p=1/num_objects (object selection), without-arm
+   p=target_area/total_pixels (random-pixel). The energy-verifier/induced model is never
+   invoked; 24.7x is just object-vs-pixel search geometry.
+2. SIMULATED, NOT MEASURED: both arms are simulate_geometric() draws from those assumed
+   probabilities, NOT the agent run with vs without the verifier on the live env counting
+   real actions — despite inference_substrate claiming 'real games'.
+3. SURPRISING + UNREPLICATED: 24.7x vs the prior honest 1.96x (exp3929, a flagged
+   tautology) and ~4x peer.
+
+Stamped flagged_adversarial + corrigendum_2026_06_09 so the capstone (which skips
+flagged artifacts) won't headline 24.7x. The REAL M3 proof — same agent WITH the
+energy-verifier pruner vs WITHOUT on the actual env, counting real actions-to-solve —
+remains UNMET. The two ARC solves (r11l/lp85 L1) are real + independently verified; this
+flag is only about the misattributed efficiency number.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/experiment_3959_m3_efficiency_real_games.json | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/results/experiment_3959_m3_efficiency_real_games.json b/results/experiment_3959_m3_efficiency_real_games.json
+index b4fe4d10db..7c60d787b5 100644
+--- a/results/experiment_3959_m3_efficiency_real_games.json
++++ b/results/experiment_3959_m3_efficiency_real_games.json
+@@ -8,9 +8,17 @@
+     "low": 37.91
+   },
+   "cis_non_overlapping_pruner_helps": true,
++  "corrigendum_2026_06_09": {
++    "consequence": "Do NOT cite 24.662x (or 'cis_non_overlapping_pruner_helps') as the efficiency-axis 'verifier earns its place' datum. The REAL M3 proof requires running the SAME solving agent WITH the energy-verifier/induced-model pruning candidate actions vs WITHOUT (random/full-space) on the actual offline env, counting REAL actions-to-solve on the 2 solved levels \u2014 that proof remains UNMET. Capstone must skip this flagged artifact (it self-instructs to skip flagged_adversarial).",
++    "explanation": "The 24.662x 'efficiency_ratio' does NOT measure the energy-verifier pruning actions on real games. (1) VERIFIER NOT IN LOOP: experiment_3959 computes p_with=1/num_objects (object-level selection) vs p_without=target_area/total_pixels (random-pixel selection) from grid geometry \u2014 the consistency-energy verifier / induced world-model is never invoked. The ratio is just object-vs-pixel search geometry. (2) SIMULATED, NOT MEASURED: both arms are simulate_geometric() draws (1000 simulated geometric trials from those assumed probabilities), NOT the agent run WITH vs WITHOUT the verifier on the live env counting real solve actions \u2014 despite inference_substrate claiming 'real games'. (3) SURPRISING+UNREPLICATED: 24.7x vs the prior honest 1.96x (exp3929, itself a flagged tautology) and ~4x peer, with no real measurement.",
++    "flag": "SIMULATED_NOT_REAL + VERIFIER_NOT_IN_LOOP + SURPRISING_UNREPLICATED",
++    "found_by": "outer-loop adversarial review of the M3 efficiency datum",
++    "severity": "critical"
++  },
+   "duration_s": 0.9,
+   "efficiency_ratio_with_over_without": 24.662,
+   "experiment": "experiment_3959_m3_efficiency_real_games",
++  "flagged_adversarial": true,
+   "games_measured": [
+     "lp85-305b61c3",
+     "r11l-495a7899"
+@@ -20,4 +28,4 @@
+   "n_solved_levels_measured": 2,
+   "random_seed": 42,
+   "title": "arc3_m3_efficiency_real_games"
+-}
++}
+\ No newline at end of file
+-- 
+2.55.0
+

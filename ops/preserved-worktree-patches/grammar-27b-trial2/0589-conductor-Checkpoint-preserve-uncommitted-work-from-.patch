@@ -1,0 +1,44 @@
+From 08e9daf4e715d500904b5c877cb76652078843db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 04:07:34 -0400
+Subject: [PATCH 00589/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 2 ++
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index fdd049819b..e871eb913a 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 20, "phase": "iteration_start", "last_beat": "2026-06-05T08:05:30Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 21, "phase": "iteration_start", "last_beat": "2026-06-05T08:07:32Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 6c538eaf87..9b62e165b6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7839,3 +7839,5 @@ ERROR: {
+ | 2026-06-05 08:03 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
+ | 2026-06-05 08:03 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3847-moat-scissor-at-scale-v2.n_residua |
+ | 2026-06-05 08:05 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
++| 2026-06-05 08:05 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3847-moat-scissor-at-scale-v2.n_residua |
++| 2026-06-05 08:07 UTC | ThinkPRM COMPLEMENTARITY (arXiv:2504.16828 refutat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3847-moat-scissor-at-scale-v2) |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 507af20048..107408ec24 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 20, "phase": "iteration_start", "started_at": "2026-06-05T08:05:30Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 21, "phase": "iteration_start", "started_at": "2026-06-05T08:07:32Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

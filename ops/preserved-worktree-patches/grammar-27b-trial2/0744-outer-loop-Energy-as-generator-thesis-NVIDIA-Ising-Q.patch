@@ -1,0 +1,72 @@
+From 366049e612f05f683fa784459260d2593c189a68 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 6 Jun 2026 11:30:22 -0400
+Subject: [PATCH 00744/11171] [outer-loop] Energy-as-generator thesis: NVIDIA
+ Ising QEC decoder as deployed corroboration
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Adds external corroboration of the v1->v4 finding (amortized inference > naive
+energy-minimization on an energy/Ising landscape): NVIDIA's open Ising QEC decoder
+(2026-04-14, Apache-2.0) is a TINY learned 3D-CNN (~912K/1.79M params) that beats
+PyMatching/MWPM — the classical combinatorial energy-minimization decoder for the
+surface code — 2.25-2.5x faster + 1.11-1.53x more accurate at d=13. Surface-code
+decoding maps to MAP inference on the random-bond Ising model (Dennis-Kitaev-
+Landahl-Preskill 2002), so a neural net beating MWPM = amortized-inference >
+energy-minimization on an Ising-structured problem, deployed in production QEC.
+Answers "is the Sudoku result just a toy?" (no). Honest caveat: the energy/Ising-
+inference framing is the physics literature's, NOT NVIDIA's (they give no reason
+for the "Ising" name). Naming note: "NVIDIA Ising" (quantum AI) != Ising machines.
+See memory nvidia-ising-qec-amortized.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../energy-as-generator-sudoku-thesis.md      | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/docs/research-notes/energy-as-generator-sudoku-thesis.md b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+index d48034bb7e..ada327e3cb 100644
+--- a/docs/research-notes/energy-as-generator-sudoku-thesis.md
++++ b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+@@ -239,3 +239,37 @@ outputs. (Open: a verifier trained on the GENERATOR's own error distribution —
+ hard negatives mined from refiner samples — might rerank usefully where this
+ Langevin-carved one did not. That is a natural v5, not claimed here.)
+ Artifact: results/sudoku_amortized_capstone_v4.json.
++
++## External corroboration — NVIDIA Ising QEC decoder (2026), a deployed instance
++
++The v1->v4 conclusion — a learned amortized inference net beats naive
++energy-minimization on a hard inference problem over an energy/Ising landscape —
++is not a Sudoku artifact. It is independently corroborated, in a deployed,
++production-targeted domain, by NVIDIA's open "Ising" QEC decoder (launched
++2026-04-14; decoder framework Apache-2.0; weights on HuggingFace/NGC).
++
++**The mapping (established physics, NOT NVIDIA's framing — they give no reason for
++the "Ising" name).** Decoding the rotated surface code is MAP inference on the
++random-bond Ising model (Dennis, Kitaev, Landahl & Preskill, 2002). The classical
++decoder, PyMatching / minimum-weight perfect matching (MWPM), is exactly the
++combinatorial **energy-minimization** solver for that Ising-structured problem.
++
++**The result.** NVIDIA replaced MWPM with a *learned* 3D-CNN decoder — and it wins:
++"2.5x faster than PyMatching and 1.11x more accurate" (Fast model) / "2.25x faster
++and 1.53x more accurate" (Accurate model) at code distance d=13, p=0.003. Notably
++the nets are **tiny** — ~912K and ~1.79M parameters — echoing the tiny-recursive-
++model efficiency point: a small *learned amortized* inference net beats the
++classical energy-minimizer, faster.
++
++**Why it matters here.** This is the same shape as our finding — *amortized
++inference > energy-minimization on an energy/Ising landscape* — realized in real,
++deployed quantum error correction. It answers the obvious "is this just a Sudoku
++toy?" objection: the pattern is winning in production QEC. And the neural decoder
++is functionally a fast verifier/corrector grounded in a physical error model — the
++hybrid shape (a learned amortized component grounded by an externally-defined
++energy/error model). Caveat: NVIDIA does not frame any of this in energy / Ising-
++inference terms; the energy-minimization reading is the established statistical-
++mechanics literature, and the analogy to our result is ours. (Naming note:
++"NVIDIA Ising" is a quantum-AI toolkit, distinct from the Ising *machines* /
++samplers Carnot's hardware path uses — say "Ising machine/sampler" explicitly in
++Carnot docs to disambiguate.) See memory `nvidia-ising-qec-amortized`.
+-- 
+2.55.0
+

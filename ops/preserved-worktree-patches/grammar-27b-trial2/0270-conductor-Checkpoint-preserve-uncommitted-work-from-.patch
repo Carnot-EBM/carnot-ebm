@@ -1,0 +1,43 @@
+From 7e129be4bba4d4b95687ac08a8bf964b44b0a123 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 08:47:57 -0400
+Subject: [PATCH 00270/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3f6b52faff..f1caaa36e5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-03T12:45:42Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-03T12:47:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 421b9ee57e..3eefe11015 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7681,3 +7681,4 @@ ERROR: {
+ | 2026-06-03 03:23 UTC | Capstone .343 — aggregate the Thesis-A attempt-3 o | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 4.12s |
+ | 2026-06-03 12:41 UTC | Plan milestone 2026.06.344 | OK | 11 tasks proposed |
+ | 2026-06-03 12:43 UTC | Milestone 2026.06.344 activated | OK | 11 tasks queued |
++| 2026-06-03 12:45 UTC | Archive milestone .343 HONESTLY (the in-loop Thesi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.59s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1241090a2c..70853c34f9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-03T12:45:42Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-03T12:47:55Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

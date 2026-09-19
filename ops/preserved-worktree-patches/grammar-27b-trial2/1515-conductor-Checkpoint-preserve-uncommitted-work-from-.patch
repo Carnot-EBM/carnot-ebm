@@ -1,0 +1,89 @@
+From 44a545a42a24d1f1545a12a17361bd1184849d41 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 21:05:52 -0400
+Subject: [PATCH 01515/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/anomaly-escalations.md                    |  5 +++++
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ent_4119_carnot_verifier_graft_sudoku.json | 22 +++++++++++++++++--
+ 5 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/ops/anomaly-escalations.md b/ops/anomaly-escalations.md
+index 05ffb48ae8..14eb9e1827 100644
+--- a/ops/anomaly-escalations.md
++++ b/ops/anomaly-escalations.md
+@@ -251,3 +251,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
+ - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+ - artifact: results/experiment_4116_sudoku_extreme_resume_pass1.json
++
++## experiment_4119_carnot_verifier_graft_sudoku.json
++- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
++  - CRITICAL adversarial flag ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
++- artifact: results/experiment_4119_carnot_verifier_graft_sudoku.json
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 009808073f..2e8990ecc5 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-13T00:11:08Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-13T01:05:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index ab539d4f36..8472f066ff 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8388,3 +8388,4 @@ c |
+ | 2026-06-12 23:13 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 1 (estab | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-12 23:41 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 2. DEFEN | OK | 87 passed, 2 warnings in 8.77s |
+ | 2026-06-13 00:08 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 3 (targe | OK | 88 passed, 2 warnings in 8.83s |
++| 2026-06-13 01:00 UTC | GRAFT the Carnot Sudoku verifier on the reproducin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index b2e40067eb..7e80c37e39 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 121206, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-13T00:11:08Z"}
+\ No newline at end of file
++{"pid": 121206, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-13T01:05:50Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4119_carnot_verifier_graft_sudoku.json b/results/experiment_4119_carnot_verifier_graft_sudoku.json
+index 2c72a2f2ba..f69239c3c8 100644
+--- a/results/experiment_4119_carnot_verifier_graft_sudoku.json
++++ b/results/experiment_4119_carnot_verifier_graft_sudoku.json
+@@ -65,5 +65,23 @@
+   ],
+   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+   "verifier_value_added": false,
+-  "verifier_value_added_meaningful": false
+-}
++  "verifier_value_added_meaningful": false,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.122 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "GATE_PASSED_WITHOUT_DATA",
++      "severity": "critical",
++      "detail": "acceptance_gate_passed=true but these fields are null/zero: rerank_lift_vs_vote=null, rft_vs_ablation_delta=null"
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

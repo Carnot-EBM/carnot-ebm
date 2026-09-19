@@ -1,0 +1,1056 @@
+From 112a32239249cf22f8656cf3d9a07df1a898f5db Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 22:08:54 -0400
+Subject: [PATCH 01169/11171] =?UTF-8?q?[conductor]=20Hardware=20continuity?=
+ =?UTF-8?q?=20(consolidated):=20SSH/USB-reachability=20+=20terminal-state?=
+ =?UTF-8?q?=20check=20for=20each=20attached=20board=20--=20KV260=20(ssh=20?=
+ =?UTF-8?q?kria,=20xmutil=20listapps),=20GateMate=20(openFPGALoader=20-c?=
+ =?UTF-8?q?=20dirtyJtag=20--detect),=20PolarFire=20(ssh=20polarfire).=20Re?=
+ =?UTF-8?q?cord=20per-board=20reachability=20+=20the=20next=20concrete=20f?=
+ =?UTF-8?q?orward=20step;=20no=20bitstream=20redesign.=20Per=20north-star?=
+ =?UTF-8?q?=20=C2=A73,=20KV260=20is=20the=20sovereignty=20story=20to=20dri?=
+ =?UTF-8?q?ve=20to=20terminal=20then=20freeze;=20GateMate/PolarFire=20are?=
+ =?UTF-8?q?=20opportunistic.=20Per=20CLAUDE.md=20KV260=20SSH-Not-SD-Card?=
+ =?UTF-8?q?=20Discipline:=20NEVER=20use=20the=20host=20SD-card=20block=20d?=
+ =?UTF-8?q?evice=20as=20a=20KV260=20precondition=20(SSH-reachability=20is?=
+ =?UTF-8?q?=20the=20ONLY=20valid=20KV260=20precondition).=20Use=20DISTINCT?=
+ =?UTF-8?q?=20wall-clock=20timers=20per=20board=20(the=20exp3866=20TAUTOLO?=
+ =?UTF-8?q?GY=20corrigendum).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp4017-hardware-continuity
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/fpga/spec.md            |  57 ++++
+ ops/dogfood-memory.json                       |   2 +-
+ .../experiment_4017_hardware_continuity.py    | 223 +++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ .../experiment_4017_hardware_continuity.json  | 131 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../experiment_4017_hardware_continuity.py    |  33 ++
+ ...est_experiment_4017_hardware_continuity.py | 303 ++++++++++++++++++
+ 19 files changed, 774 insertions(+), 27 deletions(-)
+ create mode 100644 python/carnot/experiment_4017_hardware_continuity.py
+ create mode 100644 results/experiment_4017_hardware_continuity.json
+ create mode 100644 scripts/experiments/experiment_4017_hardware_continuity.py
+ create mode 100644 tests/python/test_experiment_4017_hardware_continuity.py
+
+diff --git a/openspec/capabilities/fpga/spec.md b/openspec/capabilities/fpga/spec.md
+index f092194596..d99e490352 100644
+--- a/openspec/capabilities/fpga/spec.md
++++ b/openspec/capabilities/fpga/spec.md
+@@ -6679,3 +6679,60 @@ The audit is a hardware smoke check only. It MUST NOT claim live model inference
+ **Then:** It writes `results/experiment_3842_kv260_opportunistic_continuity_audit.json` with the terminal or blocked verdict, bare required values, field principles, deterministic seed, checksum, duration, and no retired host-storage or live inference checks.
+ 
+ **Implementation status:** Pending (Exp 3842)
++
++---
++
++### REQ-HW-4017
++
++**Title:** ARC hardware continuity reachability check records all attached boards
++
++**Description:**
++Experiment 4017 MUST keep the KV260, GateMate, and PolarFire boards visible
++during ARC-focused work by running only the permitted per-board reachability
++preconditions and recording honest forward steps. The required preconditions are:
++
++- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
++- GateMate: `openFPGALoader -c dirtyJtag --detect`
++- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`
++
++KV260 MUST NOT use a host SD-card block-device precondition such as `/dev/mmcblk`.
++For each reachable board, the artifact MUST include loaded-overlay or detect /
++continuity output and the next concrete forward step. For each unreachable board,
++the next step MUST be `blocked_<board>_unreachable` while the other boards
++continue. KV260 reachable next steps MUST point toward terminal confirmation per
++north-star section 3.
++
++**Acceptance criteria:**
++- `results/experiment_4017_hardware_continuity.json` is generated.
++- The artifact includes bare scalar fields `kv260_reachable`,
++  `gatemate_reachable`, and `polarfire_reachable`.
++- The artifact includes bare `per_board_next_step`, `per_board_duration_s`,
++  `preconditions_checked`, `honest_verdict`, `duration_s`, and
++  `inference_substrate` fields plus matching field principles.
++- `per_board_duration_s` MUST contain distinct wall-clock measurements for
++  KV260, GateMate, and PolarFire.
++- `preconditions_checked` MUST list which preconditions ran and their boolean
++  availability.
++- `honest_verdict` MUST begin with `complete:`, `success:`, or
++  `blocked_<resource>`.
++- `inference_substrate` MUST be exactly `"hardware_smoke"` and the artifact MUST
++  NOT claim fabric acceleration.
++
++**Implementation status:** Pending (Exp 4017)
++
++---
++
++### SCENARIO-HW-4017
++
++**Scenario:** ARC continuity records reachable boards and blocked board next steps.
++
++**Given:** The ARC milestone requires all three attached boards to remain visible.
++**When:** Experiment 4017 runs the KV260 SSH, GateMate DirtyJTAG detect, and
++PolarFire SSH preconditions, then gathers continuity evidence only for reachable
++boards.
++**Then:** It writes `results/experiment_4017_hardware_continuity.json` with
++terminal-prefix verdict, hardware_smoke substrate, bare reachability values,
++per-board next steps, distinct per-board durations, precondition evidence,
++checksum, deterministic seed, and no host SD-card precondition.
++
++**Implementation status:** Pending (Exp 4017)
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 6fecec717d..5871990710 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 162,
+   "code_violations": 0,
+-  "experiments_checked": 3048,
++  "experiments_checked": 3049,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4017_hardware_continuity.py b/python/carnot/experiment_4017_hardware_continuity.py
+new file mode 100644
+index 0000000000..b7eb951b4a
+--- /dev/null
++++ b/python/carnot/experiment_4017_hardware_continuity.py
+@@ -0,0 +1,223 @@
++"""ARC-focused KV260, GateMate, and PolarFire continuity check for Exp 4017.
++
++This run keeps the three attached boards visible while ARC remains the focus.
++It only checks the required SSH or USB reachability paths, records continuity
++evidence for reachable boards, and records explicit blocked next steps for
++unreachable boards. KV260 stays SSH-only; host SD-card devices are not a gate.
++
++Spec refs: REQ-HW-4017, SCENARIO-HW-4017.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++from carnot import experiment_3972_hardware_continuity as _hardware_base
++from carnot import experiment_4006_hardware_continuity as _previous
++
++
++EXPERIMENT_ID = 4017
++SCHEMA = "carnot.hardware_continuity_arc_reachability.v3"
++SPEC_REFS = ["REQ-HW-4017", "SCENARIO-HW-4017"]
++OUTPUT_REL_PATH = Path("results") / "experiment_4017_hardware_continuity.json"
++RANDOM_SEED = 4017
++INFERENCE_SUBSTRATE = _previous.INFERENCE_SUBSTRATE
++
++CommandResult = _previous.CommandResult
++CommandRunner = _previous.CommandRunner
++Clock = _previous.Clock
++
++KV260_SSH_PRECONDITION = _previous.KV260_SSH_PRECONDITION
++GATEMATE_DETECT_COMMAND = _previous.GATEMATE_DETECT_COMMAND
++POLARFIRE_SSH_PRECONDITION = _previous.POLARFIRE_SSH_PRECONDITION
++KV260_LISTAPPS_COMMAND = _previous.KV260_LISTAPPS_COMMAND
++KV260_UIO_COMMAND = _previous.KV260_UIO_COMMAND
++POLARFIRE_CONTINUITY_COMMAND = _previous.POLARFIRE_CONTINUITY_COMMAND
++
++BOARD_NAMES = _previous.BOARD_NAMES
++REQUIRED_ARTIFACT_FIELDS = _previous.REQUIRED_ARTIFACT_FIELDS
++FIELD_PRINCIPLES = {
++    "kv260_reachable": (
++        "BARE BOOLs -- per-board SSH/USB reachability "
++        "(keeps boards from being silently dropped)."
++    ),
++    "gatemate_reachable": (
++        "BARE BOOLs -- per-board SSH/USB reachability "
++        "(keeps boards from being silently dropped)."
++    ),
++    "polarfire_reachable": (
++        "BARE BOOLs -- per-board SSH/USB reachability "
++        "(keeps boards from being silently dropped)."
++    ),
++    "per_board_next_step": (
++        "The next concrete forward step per reachable board "
++        "(KV260 toward terminal per north-star \u00a73)."
++    ),
++    "per_board_duration_s": (
++        "DISTINCT wall-clock per board -- identical durations is a "
++        "TAUTOLOGY flag (exp3866)."
++    ),
++    "preconditions_checked": (
++        "list of {resource, available} -- records WHICH checks ran "
++        "(pre-empts the fabrication mode)."
++    ),
++    "honest_verdict": "Terminal-prefix verdict + hardware_smoke substrate.",
++    "duration_s": "Terminal-prefix verdict + hardware_smoke substrate.",
++    "inference_substrate": "Terminal-prefix verdict + hardware_smoke substrate.",
++}
++
++run_command = _previous.run_command
++payload_checksum = _previous.payload_checksum
++
++
++def build_artifact(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> dict[str, Any]:
++    """Build the Exp 4017 artifact from live or injected board command results."""
++    artifact = _previous.build_artifact(
++        repo_root=repo_root,
++        command_runner=command_runner,
++        clock=clock,
++    )
++    artifact.update(
++        schema=SCHEMA,
++        experiment=EXPERIMENT_ID,
++        spec_refs=list(SPEC_REFS),
++        random_seed=RANDOM_SEED,
++        field_principles=dict(FIELD_PRINCIPLES),
++    )
++    artifact["per_board_next_step"]["kv260"] = kv260_next_step(
++        bool(artifact["kv260_reachable"]),
++        artifact.get("kv260_loaded_overlay"),
++        list(artifact.get("kv260_uio_devices") or []),
++    )
++    artifact["honest_verdict"] = honest_verdict(
++        kv260_reachable=bool(artifact["kv260_reachable"]),
++        gatemate_reachable=bool(artifact["gatemate_reachable"]),
++        polarfire_reachable=bool(artifact["polarfire_reachable"]),
++        kv260_state=str(artifact["kv260_state"]),
++        gatemate_state=str(artifact["gatemate_state"]),
++        polarfire_state=str(artifact["polarfire_state"]),
++    )
++    artifact["reproducibility_checksum"] = ""
++    artifact["reproducibility_checksum"] = payload_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def kv260_next_step(reachable: bool, overlay: str | None, uio_devices: list[str]) -> str:
++    if not reachable:
++        return "blocked_kv260_unreachable"
++    if overlay and uio_devices:
++        return "kv260_forward_step_run_terminal_overlay_latency_smoke"
++    if overlay:
++        return "kv260_forward_step_restore_uio_binding_then_terminal_latency_smoke"
++    return "kv260_forward_step_load_terminal_overlay_per_north_star_section_3"
++
++
++def honest_verdict(
++    *,
++    kv260_reachable: bool,
++    gatemate_reachable: bool,
++    polarfire_reachable: bool,
++    kv260_state: str,
++    gatemate_state: str,
++    polarfire_state: str,
++) -> str:
++    if not (kv260_reachable or gatemate_reachable or polarfire_reachable):
++        return "blocked_all_boards_unreachable"
++    return (
++        "complete: hardware_continuity_4017_"
++        f"kv{_hardware_base.state_token(kv260_state)}_"
++        f"gm{_hardware_base.state_token(gatemate_state)}_"
++        f"pf{_hardware_base.state_token(polarfire_state)}"
++    )
++
++
++def validate_artifact(artifact: dict[str, Any]) -> None:
++    if artifact.get("schema") != SCHEMA:
++        raise ValueError("schema must identify the Exp 4017 continuity artifact")
++    if artifact.get("experiment") != EXPERIMENT_ID:
++        raise ValueError("experiment must be 4017")
++    if artifact.get("spec_refs") != SPEC_REFS:
++        raise ValueError("spec_refs must reference REQ-HW-4017 and SCENARIO-HW-4017")
++    if artifact.get("random_seed") != RANDOM_SEED:
++        raise ValueError("random_seed must be 4017")
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, dict):
++        raise ValueError("field_principles must be a dict")
++    missing_principles = set(REQUIRED_ARTIFACT_FIELDS) - set(principles)
++    if missing_principles:
++        raise ValueError(f"field_principles missing required fields: {sorted(missing_principles)}")
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if principles[field] != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} principle must match the Exp 4017 contract")
++        value = artifact[field]
++        if isinstance(value, dict) and set(value) == {"value", "principle"}:
++            raise ValueError(f"{field} must remain a bare value, not a principle wrapper")
++    for field in ("kv260_reachable", "gatemate_reachable", "polarfire_reachable"):
++        if not isinstance(artifact.get(field), bool):
++            raise ValueError(f"{field} must be bool")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be hardware_smoke")
++    if artifact.get("fabric_acceleration_claimed") is not False:
++        raise ValueError("fabric_acceleration_claimed must be false")
++    _hardware_base.validate_durations(artifact)
++    _hardware_base.validate_next_steps(artifact)
++    validate_kv260_terminal_next_step(artifact)
++    _hardware_base.validate_preconditions(artifact)
++    _hardware_base.validate_verdict(artifact)
++    text = json.dumps(artifact, sort_keys=True, default=str).lower()
++    if "/dev/mmcblk" in text:
++        raise ValueError("artifact contains forbidden KV260 host storage marker")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum does not match artifact content")
++
++
++def validate_kv260_terminal_next_step(artifact: dict[str, Any]) -> None:
++    if artifact.get("kv260_reachable") and "terminal" not in str(
++        artifact["per_board_next_step"]["kv260"]
++    ):
++        raise ValueError("reachable KV260 next step must point toward terminal confirmation")
++
++
++def write_artifact(repo_root: str | Path, artifact: dict[str, Any]) -> Path:
++    path = Path(repo_root) / OUTPUT_REL_PATH
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = ".",
++    command_runner: CommandRunner = run_command,
++    clock: Clock = time.perf_counter,
++) -> Path:
++    artifact = build_artifact(repo_root=repo_root, command_runner=command_runner, clock=clock)
++    return write_artifact(repo_root, artifact)
++
++
++def main() -> None:  # pragma: no cover - CLI wrapper
++    out_path = run_experiment(repo_root=Path(__file__).resolve().parents[2])
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"gatemate_reachable: {artifact['gatemate_reachable']}")
++    print(f"polarfire_reachable: {artifact['polarfire_reachable']}")
++    print(f"duration_s: {artifact['duration_s']}")
++    print(f"per_board_duration_s: {artifact['per_board_duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 1955a6361f..0f5a1ba089 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:57:44.559977+00:00",
+-  "finished_at": "2026-06-11T01:57:44.584309+00:00",
+-  "duration_s": 0.024,
++  "started_at": "2026-06-11T02:08:41.944070+00:00",
++  "finished_at": "2026-06-11T02:08:41.967369+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 6f6751a1aa..737174147f 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T01:57:44Z",
++  "run_date": "2026-06-11T02:08:42Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 17bbf60680..30e167b57a 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:57:45Z",
+-  "finished_at": "2026-06-11T01:57:45Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T02:08:43Z",
++  "finished_at": "2026-06-11T02:08:43Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 49dd6b44fe..99fffe9329 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T01:57:45Z",
++  "run_date": "2026-06-11T02:08:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 010f2f58a6..2d6c80a565 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-11T01:57:45Z",
++  "run_date": "2026-06-11T02:08:43Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 098d2e347d..84278e94c4 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T01:56:19.368947Z",
+-  "duration_s": 0.10621309280395508,
++  "run_date": "2026-06-11T02:07:17.049049Z",
++  "duration_s": 0.0747840404510498,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ec3127607e57808c82e5ab04675d5fbfec10bbfceab282fa06ee28a70d8020c8",
++  "reproducibility_checksum": "a24704094da6dc8aa0e31ff9e0c44bf039f60dd0ab078a605d812165bc2e1e78",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "00f3b60aadd2a70bbbeda3345b63c8bc2b335da4"
++    "adversarial_verify_version": "6cb3413d2e4e5510fe2014d7344a5ecf93dd78b0"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 639a4261fa..3ae4d6a50d 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T01:56:19.546273Z",
+-  "duration_s": 0.1345679759979248,
++  "run_date": "2026-06-11T02:07:17.157373Z",
++  "duration_s": 0.07719278335571289,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "13455cab7b726b23fd82c123c33dc5a6d90531ef514d0e945f7c3a77bc44a88f",
++  "reproducibility_checksum": "f2477bf829263943abe7c70a6b0172304d280b897a1a43582af8fc51708d76d8",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "00f3b60aadd2a70bbbeda3345b63c8bc2b335da4"
++    "adversarial_verify_version": "6cb3413d2e4e5510fe2014d7344a5ecf93dd78b0"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index a4d4b74b14..0c1696fd26 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1080970764160156,
++  "efficiency_gains_ms": 2.1104812622070312,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 024dfa77e5..a67d818cc6 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.28810787200927734,
++  "duration_s": 0.29717159271240234,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b00c112b1d..1714356c4e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.568700049072504e-05,
++  "duration_s": 3.3803051337599754e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4017_hardware_continuity.json b/results/experiment_4017_hardware_continuity.json
+new file mode 100644
+index 0000000000..519e67b79b
+--- /dev/null
++++ b/results/experiment_4017_hardware_continuity.json
+@@ -0,0 +1,131 @@
++{
++  "duration_s": 7.665326,
++  "experiment": 4017,
++  "fabric_acceleration_claimed": false,
++  "field_principles": {
++    "duration_s": "Terminal-prefix verdict + hardware_smoke substrate.",
++    "gatemate_reachable": "BARE BOOLs -- per-board SSH/USB reachability (keeps boards from being silently dropped).",
++    "honest_verdict": "Terminal-prefix verdict + hardware_smoke substrate.",
++    "inference_substrate": "Terminal-prefix verdict + hardware_smoke substrate.",
++    "kv260_reachable": "BARE BOOLs -- per-board SSH/USB reachability (keeps boards from being silently dropped).",
++    "per_board_duration_s": "DISTINCT wall-clock per board -- identical durations is a TAUTOLOGY flag (exp3866).",
++    "per_board_next_step": "The next concrete forward step per reachable board (KV260 toward terminal per north-star \u00a73).",
++    "polarfire_reachable": "BARE BOOLs -- per-board SSH/USB reachability (keeps boards from being silently dropped).",
++    "preconditions_checked": "list of {resource, available} -- records WHICH checks ran (pre-empts the fabrication mode)."
++  },
++  "gatemate_command_transcript": {
++    "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
++    "command": "openFPGALoader -c dirtyJtag --detect",
++    "duration_s": 0.019732,
++    "exit_code": 0,
++    "stderr": "",
++    "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
++  },
++  "gatemate_detect_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++  "gatemate_reachable": false,
++  "gatemate_state": "blocked_gatemate_unreachable",
++  "honest_verdict": "complete: hardware_continuity_4017_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
++  "inference_substrate": "hardware_smoke",
++  "kv260_command_transcripts": {
++    "ssh_true": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.66769,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    },
++    "uio_list": {
++      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n",
++      "command": "ssh kria 'ls /dev/uio*'",
++      "duration_s": 0.460075,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n"
++    },
++    "xmutil_listapps": {
++      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "command": "ssh kria 'xmutil listapps'",
++      "duration_s": 0.839265,
++      "exit_code": 1,
++      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
++      "stdout": ""
++    }
++  },
++  "kv260_loaded_overlay": null,
++  "kv260_reachable": true,
++  "kv260_state": "reachable_overlay_absent",
++  "kv260_uio_devices": [
++    "/dev/uio0",
++    "/dev/uio1",
++    "/dev/uio2",
++    "/dev/uio3"
++  ],
++  "per_board_duration_s": {
++    "gatemate": 0.019813,
++    "kv260": 5.96747,
++    "polarfire": 1.678017
++  },
++  "per_board_next_step": {
++    "gatemate": "blocked_gatemate_unreachable",
++    "kv260": "kv260_forward_step_load_terminal_overlay_per_north_star_section_3",
++    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch"
++  },
++  "polarfire_command_transcripts": {
++    "continuity": {
++      "combined_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 02:06:20 up 6 days,  4:03,  0 user,  load average: 0.03, 0.01, 0.00\n",
++      "command": "ssh polarfire 'uname -a && uptime'",
++      "duration_s": 0.790479,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 02:06:20 up 6 days,  4:03,  0 user,  load average: 0.03, 0.01, 0.00\n"
++    },
++    "ssh_true": {
++      "combined_output": "",
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "duration_s": 0.887141,
++      "exit_code": 0,
++      "stderr": "",
++      "stdout": ""
++    }
++  },
++  "polarfire_continuity_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 02:06:20 up 6 days,  4:03,  0 user,  load average: 0.03, 0.01, 0.00",
++  "polarfire_reachable": true,
++  "polarfire_state": "reachable_ssh_continuity_recorded",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "checked_before_board_operations": true,
++      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
++      "duration_s": 4.66769,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "kv260_ssh"
++    },
++    {
++      "available": false,
++      "checked_before_board_operations": true,
++      "command": "openFPGALoader -c dirtyJtag --detect",
++      "duration_s": 0.019732,
++      "exit_code": 0,
++      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
++      "resource": "gatemate_jtag_detect"
++    },
++    {
++      "available": true,
++      "checked_before_board_operations": true,
++      "command": "ssh -o ConnectTimeout=5 polarfire true",
++      "duration_s": 0.887141,
++      "exit_code": 0,
++      "observed": "returncode=0",
++      "resource": "polarfire_ssh"
++    }
++  ],
++  "random_seed": 4017,
++  "reproducibility_checksum": "004cb340a3a8c8437ddde521844c66f7a1fb629b936ed653ca5a3094e84020e8",
++  "schema": "carnot.hardware_continuity_arc_reachability.v3",
++  "spec_refs": [
++    "REQ-HW-4017",
++    "SCENARIO-HW-4017"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 86b5be96b7..4ef4f9de45 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:55:54Z",
+-  "finished_at": "2026-06-11T01:55:54Z",
++  "started_at": "2026-06-11T02:06:51Z",
++  "finished_at": "2026-06-11T02:06:51Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index ccaa1b3ee8..f48af6c654 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:55:54Z",
+-  "finished_at": "2026-06-11T01:55:54Z",
++  "started_at": "2026-06-11T02:06:51Z",
++  "finished_at": "2026-06-11T02:06:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 630762bf7f..8bfefa9366 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T01:55:54Z",
+-  "finished_at": "2026-06-11T01:55:54Z",
++  "started_at": "2026-06-11T02:06:52Z",
++  "finished_at": "2026-06-11T02:06:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_4017_hardware_continuity.py b/scripts/experiments/experiment_4017_hardware_continuity.py
+new file mode 100644
+index 0000000000..4fe8db6fbd
+--- /dev/null
++++ b/scripts/experiments/experiment_4017_hardware_continuity.py
+@@ -0,0 +1,33 @@
++#!/usr/bin/env python3
++"""Runner for Exp 4017 ARC hardware continuity.
++
++Spec refs: REQ-HW-4017, SCENARIO-HW-4017.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO_ROOT / "python"))
++
++
++def main() -> None:
++    from carnot.experiment_4017_hardware_continuity import run_experiment
++
++    out_path = run_experiment(repo_root=REPO_ROOT)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    print(f"artifact: {out_path.relative_to(REPO_ROOT)}")
++    print(f"honest_verdict: {artifact['honest_verdict']}")
++    print(f"kv260_reachable: {artifact['kv260_reachable']}")
++    print(f"gatemate_reachable: {artifact['gatemate_reachable']}")
++    print(f"polarfire_reachable: {artifact['polarfire_reachable']}")
++    print(f"duration_s: {artifact['duration_s']}")
++    print(f"per_board_duration_s: {artifact['per_board_duration_s']}")
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_4017_hardware_continuity.py b/tests/python/test_experiment_4017_hardware_continuity.py
+new file mode 100644
+index 0000000000..624ff4d37e
+--- /dev/null
++++ b/tests/python/test_experiment_4017_hardware_continuity.py
+@@ -0,0 +1,303 @@
++"""Tests for Exp 4017 ARC hardware continuity.
++
++Spec refs: REQ-HW-4017, SCENARIO-HW-4017.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++from carnot import experiment_4017_hardware_continuity as mod
++
++
++class RecordingRunner:
++    """SCENARIO-HW-4017 command runner with deterministic board transcripts."""
++
++    def __init__(self, results: dict[tuple[str, ...], mod.CommandResult]) -> None:
++        self.results = results
++        self.commands: list[tuple[str, ...]] = []
++
++    def __call__(self, command: tuple[str, ...], timeout_s: float) -> mod.CommandResult:
++        del timeout_s
++        self.commands.append(command)
++        if command not in self.results:
++            raise AssertionError(f"unexpected command: {command!r}")
++        return self.results[command]
++
++
++def _result(
++    command: tuple[str, ...],
++    returncode: int = 0,
++    stdout: str = "",
++    stderr: str = "",
++    duration_s: float = 0.01,
++) -> mod.CommandResult:
++    return mod.CommandResult(command, returncode, stdout, stderr, duration_s)
++
++
++def _ticks(*values: float) -> mod.Clock:
++    iterator = iter(values)
++    return lambda: next(iterator)
++
++
++def _assert_required_fields_are_bare(payload: dict[str, Any]) -> None:
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert field in payload
++        assert payload["field_principles"][field] == mod.FIELD_PRINCIPLES[field]
++        assert not (
++            isinstance(payload[field], dict) and set(payload[field]) == {"value", "principle"}
++        )
++
++
++def _successful_results() -> dict[tuple[str, ...], mod.CommandResult]:
++    return {
++        mod.KV260_SSH_PRECONDITION: _result(mod.KV260_SSH_PRECONDITION),
++        mod.KV260_LISTAPPS_COMMAND: _result(
++            mod.KV260_LISTAPPS_COMMAND,
++            stdout="carnot_ising_v4 active\n",
++            duration_s=0.20,
++        ),
++        mod.KV260_UIO_COMMAND: _result(
++            mod.KV260_UIO_COMMAND,
++            stdout="/dev/uio0\n/dev/uio1\n",
++            duration_s=0.10,
++        ),
++        mod.GATEMATE_DETECT_COMMAND: _result(
++            mod.GATEMATE_DETECT_COMMAND,
++            stdout="Jtag frequency : requested 6.00MHz\nIDCode : 0x20000001 colognechip GateMate\n",
++            duration_s=0.30,
++        ),
++        mod.POLARFIRE_SSH_PRECONDITION: _result(mod.POLARFIRE_SSH_PRECONDITION),
++        mod.POLARFIRE_CONTINUITY_COMMAND: _result(
++            mod.POLARFIRE_CONTINUITY_COMMAND,
++            stdout="Linux polarfire 6.1\nup 12 minutes\n",
++            duration_s=0.40,
++        ),
++    }
++
++
++def test_req_hw_4017_spec_entry_declares_arc_continuity_contract() -> None:
++    """REQ-HW-4017: OpenSpec anchors the Exp 4017 continuity artifact."""
++    spec = Path("openspec/capabilities/fpga/spec.md").read_text(encoding="utf-8")
++
++    assert "REQ-HW-4017" in spec
++    assert "SCENARIO-HW-4017" in spec
++    assert "experiment_4017_hardware_continuity.json" in spec
++    assert "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'" in spec
++    assert "openFPGALoader -c dirtyJtag --detect" in spec
++    assert "ssh -o ConnectTimeout=5 polarfire 'true'" in spec
++    assert "per_board_next_step" in spec
++    assert "per_board_duration_s" in spec
++    assert "blocked_<board>_unreachable" in spec
++    assert "/dev/mmcblk" in spec
++
++
++def test_req_hw_4017_success_records_evidence_next_steps_and_distinct_timers(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4017: reachable boards keep bare reachability and board timers."""
++    runner = RecordingRunner(_successful_results())
++    artifact = mod.build_artifact(
++        repo_root=tmp_path,
++        command_runner=runner,
++        clock=_ticks(10.0, 10.1, 10.7, 11.0, 11.8, 12.0, 13.1, 14.0),
++    )
++
++    assert runner.commands == [
++        mod.KV260_SSH_PRECONDITION,
++        mod.KV260_LISTAPPS_COMMAND,
++        mod.KV260_UIO_COMMAND,
++        mod.GATEMATE_DETECT_COMMAND,
++        mod.POLARFIRE_SSH_PRECONDITION,
++        mod.POLARFIRE_CONTINUITY_COMMAND,
++    ]
++    assert artifact["schema"] == mod.SCHEMA
++    assert artifact["experiment"] == mod.EXPERIMENT_ID
++    assert artifact["spec_refs"] == mod.SPEC_REFS
++    assert artifact["random_seed"] == mod.RANDOM_SEED
++    assert artifact["inference_substrate"] == "hardware_smoke"
++    assert artifact["kv260_reachable"] is True
++    assert artifact["gatemate_reachable"] is True
++    assert artifact["polarfire_reachable"] is True
++    assert artifact["per_board_duration_s"] == {
++        "kv260": 0.6,
++        "gatemate": 0.8,
++        "polarfire": 1.1,
++    }
++    assert len(set(artifact["per_board_duration_s"].values())) == 3
++    assert artifact["duration_s"] == 4.0
++    assert artifact["per_board_next_step"] == {
++        "kv260": "kv260_forward_step_run_terminal_overlay_latency_smoke",
++        "gatemate": "gatemate_forward_step_run_minimal_ising_tile_smoke",
++        "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch",
++    }
++    assert artifact["kv260_loaded_overlay"] == "carnot_ising_v4"
++    assert artifact["kv260_uio_devices"] == ["/dev/uio0", "/dev/uio1"]
++    assert "colognechip GateMate" in artifact["gatemate_detect_output"]
++    assert "up 12 minutes" in artifact["polarfire_continuity_output"]
++    assert [entry["resource"] for entry in artifact["preconditions_checked"]] == [
++        "kv260_ssh",
++        "gatemate_jtag_detect",
++        "polarfire_ssh",
++    ]
++    assert all(isinstance(entry["available"], bool) for entry in artifact["preconditions_checked"])
++    assert artifact["honest_verdict"].startswith("complete: hardware_continuity_4017")
++    assert "4006" not in artifact["honest_verdict"]
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    assert "mmcblk" not in json.dumps(artifact).lower()
++    _assert_required_fields_are_bare(artifact)
++    mod.validate_artifact(artifact)
++
++
++def test_scenario_hw_4017_unreachable_boards_record_blocked_next_steps(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-HW-4017: unreachable boards are blocked per board and continue."""
++    runner = RecordingRunner(
++        {
++            mod.KV260_SSH_PRECONDITION: _result(
++                mod.KV260_SSH_PRECONDITION,
++                returncode=255,
++                stderr="ssh: connect to host kria timed out",
++            ),
++            mod.GATEMATE_DETECT_COMMAND: _result(
++                mod.GATEMATE_DETECT_COMMAND,
++                returncode=1,
++                stdout="IDCode : 0x00000000 unknown",
++            ),
++            mod.POLARFIRE_SSH_PRECONDITION: _result(
++                mod.POLARFIRE_SSH_PRECONDITION,
++                returncode=255,
++                stderr="ssh: connect to host polarfire timed out",
++            ),
++        }
++    )
++
++    artifact = mod.build_artifact(
++        repo_root=tmp_path,
++        command_runner=runner,
++        clock=_ticks(1.0, 1.2, 1.6, 1.7, 2.4, 2.6, 3.5, 4.0),
++    )
++
++    assert runner.commands == [
++        mod.KV260_SSH_PRECONDITION,
++        mod.GATEMATE_DETECT_COMMAND,
++        mod.POLARFIRE_SSH_PRECONDITION,
++    ]
++    assert artifact["honest_verdict"] == "blocked_all_boards_unreachable"
++    assert artifact["kv260_reachable"] is False
++    assert artifact["gatemate_reachable"] is False
++    assert artifact["polarfire_reachable"] is False
++    assert artifact["per_board_next_step"] == {
++        "kv260": "blocked_kv260_unreachable",
++        "gatemate": "blocked_gatemate_unreachable",
++        "polarfire": "blocked_polarfire_unreachable",
++    }
++    assert artifact["per_board_duration_s"] == {
++        "kv260": 0.4,
++        "gatemate": 0.7,
++        "polarfire": 0.9,
++    }
++    assert artifact["kv260_loaded_overlay"] is None
++    assert artifact["gatemate_detect_output"] == "IDCode : 0x00000000 unknown"
++    assert artifact["polarfire_continuity_output"] == "skipped: polarfire unreachable"
++    mod.validate_artifact(artifact)
++
++
++def test_req_hw_4017_run_experiment_writes_requested_json(tmp_path: Path) -> None:
++    """REQ-HW-4017: run_experiment writes the requested deliverable JSON."""
++    runner = RecordingRunner(_successful_results())
++    out_path = mod.run_experiment(
++        repo_root=tmp_path,
++        command_runner=runner,
++        clock=_ticks(2.0, 2.1, 2.7, 3.0, 3.8, 4.0, 5.1, 6.0),
++    )
++    payload = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert out_path == tmp_path / mod.OUTPUT_REL_PATH
++    assert payload["schema"] == mod.SCHEMA
++    assert payload["reproducibility_checksum"] == mod.payload_checksum(payload)
++    _assert_required_fields_are_bare(payload)
++    mod.validate_artifact(payload)
++
++
++def test_req_hw_4017_validation_rejects_wrong_schema_principles_and_kv260_step(
++    tmp_path: Path,
++) -> None:
++    """REQ-HW-4017: validation rejects stale schemas, wrappers, and bad timers."""
++    good = mod.build_artifact(
++        repo_root=tmp_path,
++        command_runner=RecordingRunner(_successful_results()),
++        clock=_ticks(5.0, 5.1, 5.7, 6.0, 6.8, 7.0, 8.1, 9.0),
++    )
++
++    mutations = [
++        (lambda item: item.update(schema="wrong"), "schema"),
++        (lambda item: item.update(experiment=4006), "experiment"),
++        (lambda item: item.update(spec_refs=["REQ-HW-4006"]), "spec_refs"),
++        (lambda item: item.update(random_seed=4006), "random_seed"),
++        (lambda item: item.pop("per_board_next_step"), "missing required fields"),
++        (lambda item: item.update(field_principles=[]), "field_principles"),
++        (lambda item: item["field_principles"].pop("per_board_next_step"), "missing"),
++        (
++            lambda item: item["field_principles"].update(
++                per_board_next_step="stale principle"
++            ),
++            "principle",
++        ),
++        (
++            lambda item: item.update(kv260_reachable={"value": True, "principle": "wrapped"}),
++            "bare value",
++        ),
++        (lambda item: item.update(kv260_reachable="yes"), "must be bool"),
++        (lambda item: item.update(inference_substrate="live_model"), "hardware_smoke"),
++        (lambda item: item.update(fabric_acceleration_claimed=True), "must be false"),
++        (lambda item: item.update(duration_s=0.0), "duration_s"),
++        (
++            lambda item: item.update(
++                per_board_duration_s={"kv260": 1.0, "gatemate": 1.0, "polarfire": 2.0}
++            ),
++            "distinct",
++        ),
++        (
++            lambda item: item.update(
++                kv260_reachable=True,
++                per_board_next_step={
++                    "kv260": "kv260_forward_step_run_overlay_latency_smoke",
++                    "gatemate": "gatemate_forward_step_run_minimal_ising_tile_smoke",
++                    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch",
++                },
++            ),
++            "terminal",
++        ),
++        (lambda item: item.update(preconditions_checked=[]), "preconditions_checked"),
++        (lambda item: item.update(honest_verdict="pending"), "terminal prefix"),
++        (lambda item: item.update(kv260_command_transcripts={"bad": "/dev/mmcblk0"}), "host"),
++        (lambda item: item.update(reproducibility_checksum="0" * 64), "checksum"),
++    ]
++    for mutation, expected in mutations:
++        bad = json.loads(json.dumps(good))
++        mutation(bad)
++        with pytest.raises(ValueError, match=expected):
++            mod.validate_artifact(bad)
++
++
++def test_req_hw_4017_kv260_next_step_points_toward_terminal() -> None:
++    """REQ-HW-4017: KV260 next steps stay terminal-oriented."""
++    assert (
++        mod.kv260_next_step(True, "carnot_ising", ["/dev/uio0"])
++        == "kv260_forward_step_run_terminal_overlay_latency_smoke"
++    )
++    assert (
++        mod.kv260_next_step(True, "carnot_ising", [])
++        == "kv260_forward_step_restore_uio_binding_then_terminal_latency_smoke"
++    )
++    assert (
++        mod.kv260_next_step(True, None, [])
++        == "kv260_forward_step_load_terminal_overlay_per_north_star_section_3"
++    )
++    assert mod.kv260_next_step(False, None, []) == "blocked_kv260_unreachable"
+-- 
+2.55.0
+

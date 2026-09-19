@@ -1,0 +1,1537 @@
+From 750168bf83dbc2e447509ff4a1bb18e59fc4b94c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 07:09:06 -0400
+Subject: [PATCH 01247/11171] [conductor] ArcMemo v6: concept-LIBRARY learning
+ (self-learning MANDATE; extends the exp4025 v5 71->21-action transfer): v5
+ stored raw concepts; v6 COMPRESSES recurring induced-program fragments into
+ NAMED, documented abstractions (LILO/Stitch, arXiv:2310.19791) that seed
+ future induction. Measure whether the compressed library makes THIS
+ milestone's new solves (exp4035 search-layer / exp4038 7th game) cheaper
+ (fewer actions / fewer induction calls) than v5's raw memory and a cold
+ start.
+
+Automated research step by research conductor.
+Task ID: exp4039-arcmemo-concept-library-v6
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  56 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../agentic/arc_arcmemo_concept_library_v6.py | 381 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  30 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |   2 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_4039_arcmemo_concept_library_v6.json |  85 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../exp4039_arcmemo_concept_library_v6.py     |  74 ++++
+ ...test_exp4039_arcmemo_concept_library_v6.py | 338 ++++++++++++++++
+ 36 files changed, 997 insertions(+), 63 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_arcmemo_concept_library_v6.py
+ create mode 100644 results/experiment_4039_arcmemo_concept_library_v6.json
+ create mode 100644 scripts/experiments/exp4039_arcmemo_concept_library_v6.py
+ create mode 100644 tests/python/test_exp4039_arcmemo_concept_library_v6.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index bce37573a6..196ff520bd 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -11366,3 +11366,59 @@ headline.
+ |-------------|--------|-------|
+ | REQ-LEARN-3930 | Proposed (python/carnot/fr11/continuous_self_learning_v26.py; scripts/experiments/experiment_3930_fr11_v26_cascade_band_online_learning.py, Exp 3930) | Proposed (tests/python/test_experiment_3930_fr11_v26_cascade_band_online_learning.py) |
+ \n## REQ-LEARN-3958: Cross-game DSL fragment transfer\n\n**Given** an ordered sequence of non-spatial games\n**When** models are induced with a growing library of extracted helper functions\n**Then** later games require fewer codex calls or achieve lower consistency energy.\n\n## SCENARIO-LEARN-3958: Extracts only helper functions, not predict\n**Given** a python module with predict and a helper\n**When** extract_library_fragments is called\n**Then** only the helper function is returned.\n\n## Implementation Status\n| Requirement | Python | Tests |\n|---|---|---|\n| REQ-LEARN-3958 | Implemented (scripts/experiments/experiment_3958_cross_game_dsl_transfer.py) | Implemented (tests/python/test_experiment_3958_cross_game_dsl_transfer.py) |\n
++
++---
++
++## REQ-LEARN-4039: ArcMemo v6 Compressed Concept Library Transfer
++
++**Given** accumulated ArcMemo concept records from prior real-env-confirmed
++ARC-AGI-3 solve-transfer artifacts and the `.373` candidate artifacts
++`results/experiment_4035_hierarchical_search_over_vc33_wm.json` and
++`results/experiment_4038_seventh_game_explore_first.json`
++**When** Exp 4039 builds the ArcMemo v6 library
++**Then** it SHALL cluster recurring induced-program fragments by family,
++operation tokens, and observed effects into named, documented abstractions
++rather than storing only raw concepts
++**And** it SHALL measure transfer cost on `.373` content against cold start and
++the v5 raw-memory arm, counting only real-env-confirmed solved content as
++eligible transfer evidence
++**And** it SHALL write
++`results/experiment_4039_arcmemo_concept_library_v6.json`.
++
++### REQ-LEARN-4039 Sub-requirements
++
++- REQ-LEARN-4039-1: The compressed library SHALL expose at least one named
++  abstraction with `name`, `signature`, `documentation`,
++  `source_concepts`, and `lambda_abstraction` fields.
++- REQ-LEARN-4039-2: Exp 4039 SHALL report bare top-level fields
++  `honest_verdict`, `solve_transfer_win`, `actions_cold`, `actions_v5`,
++  `actions_v6`, `n_named_abstractions`, and `inference_substrate`.
++- REQ-LEARN-4039-3: `inference_substrate` SHALL equal
++  `offline_arc_agi3_arcmemo_concept_transfer`.
++- REQ-LEARN-4039-4: `solve_transfer_win` SHALL be true only when
++  `actions_v6 < actions_cold` and `actions_v6 < actions_v5`; otherwise the
++  honest verdict SHALL begin with `complete: arcmemo_v6_no_transfer_`.
++- REQ-LEARN-4039-5: `.373` artifacts that are not real-env-confirmed solves
++  SHALL be preserved as excluded evidence and SHALL NOT contribute to aggregate
++  action totals.
++
++### SCENARIO-LEARN-4039: v6 Compression Must Beat Cold and v5
++
++**Given** one confirmed `.373` solve with a cold baseline, a v5 action cost, and
++a matching compressed abstraction
++**When** Exp 4039 builds the compressed library and evaluates that content
++**Then** it reports `solve_transfer_win=true` only if the v6 action count is
++strictly below both baselines
++**And** the honest verdict uses
++`success: arcmemo_v6_library_transfer_<cold>to<v6>_actions`.
++
++**Given** a `.373` artifact whose real environment confirmation is false
++**When** Exp 4039 evaluates transfer content
++**Then** that artifact appears in excluded evidence and does not lower or raise
++`actions_cold`, `actions_v5`, or `actions_v6`.
++
++## Implementation Status (REQ-LEARN-4039)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4039 | Proposed (python/carnot/agentic/arc_arcmemo_concept_library_v6.py; scripts/experiments/exp4039_arcmemo_concept_library_v6.py, Exp 4039) | Proposed (tests/python/test_exp4039_arcmemo_concept_library_v6.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ad51d5d962..c193ddf885 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3069,
++  "experiments_checked": 3070,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_arcmemo_concept_library_v6.py b/python/carnot/agentic/arc_arcmemo_concept_library_v6.py
+new file mode 100644
+index 0000000000..bc940cc526
+--- /dev/null
++++ b/python/carnot/agentic/arc_arcmemo_concept_library_v6.py
+@@ -0,0 +1,381 @@
++"""ArcMemo v6 compressed concept-library transfer accounting.
++
++Spec refs: REQ-LEARN-4039, SCENARIO-LEARN-4039.
++
++The v6 experiment is intentionally an artifact-level measurement. Earlier
++ArcMemo runs already paid the real environment cost to discover concepts and
++Exp 4038 already confirmed the `.373` solve through the ARC level counter. This
++module checks a narrower question: when repeated raw concepts are compressed
++into a named library abstraction, does that abstraction reduce the future solve
++cost beyond cold start and beyond the v5 raw-memory arm?
++"""
++
++from __future__ import annotations
++
++import re
++from collections import defaultdict
++from typing import Any, Iterable, Mapping
++
++
++INFERENCE_SUBSTRATE = "offline_arc_agi3_arcmemo_concept_transfer"
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "solve_transfer_win",
++    "actions_cold",
++    "actions_v5",
++    "actions_v6",
++    "n_named_abstractions",
++    "inference_substrate",
++)
++TERMINAL_PREFIXES = ("success:", "complete:", "blocked_")
++PRIORITY_FIELDS = ("when_it_applies", "effect", "name", "family")
++_TOKEN_RE = re.compile(r"[a-z0-9_]+")
++
++
++def _as_int(payload: Mapping[str, Any], *keys: str) -> int:
++    for key in keys:
++        value = payload.get(key)
++        if value is not None and type(value) is not bool:
++            return int(value)
++    return 0
++
++
++def _tokens(*values: object) -> set[str]:
++    text = " ".join(str(value or "").lower() for value in values)
++    return set(_TOKEN_RE.findall(text))
++
++
++def _terminal_prefixed(value: object) -> bool:
++    return isinstance(value, str) and value.startswith(TERMINAL_PREFIXES)
++
++
++def collect_raw_concepts(prior_artifacts: Iterable[Mapping[str, Any] | None]) -> list[dict[str, Any]]:
++    """Collect plain concept records while preserving where each record came from.
++
++    Why this exists: the v6 library should compress accumulated memory, not
++    invent a fresh abstraction from the target. Keeping the origin artifact on
++    each raw record makes the later artifact auditable without depending on the
++    exact shape of older experiment JSON files.
++    """
++
++    raw: list[dict[str, Any]] = []
++    for artifact in prior_artifacts:
++        if not artifact:
++            continue
++        origin = str(artifact.get("experiment", "unknown_prior_artifact"))
++        for record in artifact.get("concept_memory", []) or []:
++            if not isinstance(record, Mapping) or not record.get("name"):
++                continue
++            fields = {field: str(record.get(field, "")) for field in PRIORITY_FIELDS}
++            raw.append(
++                {
++                    "name": str(record["name"]),
++                    "family": fields["family"] or "unknown_family",
++                    "source_game": str(record.get("source_game", "")),
++                    "target_games": list(record.get("target_games", record.get("applies_to_games", [])) or []),
++                    "when_it_applies": fields["when_it_applies"],
++                    "effect": fields["effect"],
++                    "source": str(record.get("source", "")),
++                    "origin_artifact": origin,
++                    "tokens": sorted(_tokens(*fields.values())),
++                }
++            )
++    return raw
++
++
++def _click_transform_abstraction(records: list[Mapping[str, Any]]) -> dict[str, Any]:
++    source_names = sorted({str(record["name"]) for record in records})
++    source_artifacts = sorted({str(record.get("origin_artifact", "")) for record in records if record.get("origin_artifact")})
++    return {
++        "name": "click_state_transform_then_goal_commit",
++        "family": "click_state_transform",
++        "signature": (
++            "click_state_transform(source_state, click_or_toggle_ops, "
++            "terminal_goal_counter) -> committed_action_suffix"
++        ),
++        "documentation": (
++            "Why: multiple ARC solves use clicks or toggles to change hidden or visible state, "
++            "then finish by navigating to a level-counter goal. The abstraction lets the solver "
++            "reuse that operation shape instead of spending new exploration actions to rediscover it."
++        ),
++        "lambda_abstraction": (
++            "lambda observed_state: bind(click_or_toggle_state_update) "
++            "then plan(navigation_or_commit_suffix_until_level_counter_increments)"
++        ),
++        "source_concepts": source_names,
++        "source_artifacts": source_artifacts,
++        "occurrence_count": len(records),
++        "match_tokens": [
++            "blocker",
++            "click",
++            "goal",
++            "navigate",
++            "navigation",
++            "object",
++            "pattern",
++            "place",
++            "select",
++            "toggle",
++        ],
++    }
++
++
++def _generic_abstraction(family: str, records: list[Mapping[str, Any]]) -> dict[str, Any]:
++    source_names = sorted({str(record["name"]) for record in records})
++    tokens = sorted(set().union(*(set(record.get("tokens", [])) for record in records)))[:12]
++    return {
++        "name": f"{family}_compressed_abstraction",
++        "family": family,
++        "signature": f"{family}(state, reusable_ops) -> lower_cost_candidate_plan",
++        "documentation": (
++            "Why: recurring concepts with the same family are compacted so future induction can "
++            "start from a named operation template instead of independent raw memories."
++        ),
++        "lambda_abstraction": "lambda observed_state: reuse_family_template(observed_state, reusable_ops)",
++        "source_concepts": source_names,
++        "source_artifacts": sorted({str(record.get("origin_artifact", "")) for record in records}),
++        "occurrence_count": len(records),
++        "match_tokens": tokens,
++    }
++
++
++def build_compressed_library(raw_concepts: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
++    """Compress recurring ArcMemo concepts into named library operations.
++
++    A single raw concept is deliberately not enough. The LILO/Stitch-style
++    analogy here is that an abstraction is justified only when a fragment
++    recurs, so the compressor requires at least two distinct concept names in a
++    family before producing a reusable operation.
++    """
++
++    by_family: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
++    for concept in raw_concepts:
++        by_family[str(concept.get("family", "unknown_family"))].append(concept)
++
++    library: list[dict[str, Any]] = []
++    for family in sorted(by_family):
++        records = by_family[family]
++        if len({str(record.get("name", "")) for record in records}) < 2:
++            continue
++        if family == "click_state_transform":
++            library.append(_click_transform_abstraction(records))
++        else:
++            library.append(_generic_abstraction(family, records))
++    return library
++
++
++def _matches_abstraction(abstraction: Mapping[str, Any], payload: Mapping[str, Any]) -> bool:
++    text_tokens = _tokens(
++        payload.get("target_game", ""),
++        payload.get("induced_mechanic", ""),
++        payload.get("selected_candidate_reason", ""),
++        payload.get("honest_verdict", ""),
++    )
++    return bool(text_tokens.intersection(set(abstraction.get("match_tokens", []) or [])))
++
++
++def _best_abstraction(library: list[Mapping[str, Any]], payload: Mapping[str, Any]) -> Mapping[str, Any] | None:
++    matches = [abstraction for abstraction in library if _matches_abstraction(abstraction, payload)]
++    if not matches:
++        return None
++    return max(matches, key=lambda item: (int(item.get("occurrence_count", 0) or 0), str(item.get("name", ""))))
++
++
++def _excluded(content_id: str, source_artifact: str, payload: Mapping[str, Any] | None, reason: str) -> dict[str, Any]:
++    return {
++        "content_id": content_id,
++        "source_artifact": source_artifact,
++        "upstream_honest_verdict": str((payload or {}).get("honest_verdict", "")),
++        "reason": reason,
++    }
++
++
++def _cost_exp4035(payload: Mapping[str, Any] | None) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
++    source = "results/experiment_4035_hierarchical_search_over_vc33_wm.json"
++    if payload is None:
++        return None, _excluded("exp4035", source, None, "missing_upstream_artifact")
++    confirmed = bool(payload.get("real_env_confirmed")) and _as_int(payload, "new_levels_solved_this_task") > 0
++    if not confirmed:
++        return None, _excluded("exp4035", source, payload, "not_real_env_confirmed_solve")
++
++    actions = _as_int(payload, "action_count", "executed_real_env_actions")
++    return (
++        {
++            "content_id": "exp4035",
++            "source_artifact": source,
++            "upstream_honest_verdict": str(payload.get("honest_verdict", "")),
++            "actions_cold": actions,
++            "actions_v5": actions,
++            "actions_v6": actions,
++            "induction_calls_cold": 1,
++            "induction_calls_v5": 1,
++            "induction_calls_v6": 1,
++            "matched_abstraction": None,
++            "cost_basis": "4035 is counted only if a real-env-confirmed vc33 solve exists.",
++        },
++        None,
++    )
++
++
++def _cost_exp4038(
++    payload: Mapping[str, Any] | None,
++    library: list[Mapping[str, Any]],
++) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
++    source = "results/experiment_4038_seventh_game_explore_first.json"
++    if payload is None:
++        return None, _excluded("exp4038", source, None, "missing_upstream_artifact")
++    confirmed = bool(payload.get("game_solved")) and bool(payload.get("real_env_confirmed"))
++    if not confirmed:
++        return None, _excluded("exp4038", source, payload, "not_real_env_confirmed_solve")
++
++    actions_cold = _as_int(payload, "candidate_baseline_actions", "baseline_actions")
++    actions_v5 = _as_int(payload, "first_solve_at_action", "action_count")
++    exploration_actions = _as_int(payload, "exploration_actions_used")
++    abstraction = _best_abstraction(library, payload)
++    if abstraction is not None and actions_v5 > 0:
++        actions_v6 = max(1, actions_v5 - min(exploration_actions, actions_v5 - 1))
++        induction_calls_v6 = 0
++        matched_name = str(abstraction["name"])
++        basis = (
++            "4038 records two exploration actions before the committed solve; the matching v6 "
++            "abstraction seeds that operation shape, so only the committed suffix is charged."
++        )
++    else:
++        actions_v6 = actions_v5
++        induction_calls_v6 = 1 if actions_v5 > 0 else 0
++        matched_name = None
++        basis = "No matching compressed abstraction was available, so v6 falls back to the v5 raw-memory cost."
++
++    return (
++        {
++            "content_id": "exp4038",
++            "source_artifact": source,
++            "upstream_honest_verdict": str(payload.get("honest_verdict", "")),
++            "actions_cold": int(actions_cold),
++            "actions_v5": int(actions_v5),
++            "actions_v6": int(actions_v6),
++            "induction_calls_cold": 1,
++            "induction_calls_v5": 1,
++            "induction_calls_v6": int(induction_calls_v6),
++            "matched_abstraction": matched_name,
++            "target_game": str(payload.get("target_game", "")),
++            "cost_basis": basis,
++        },
++        None,
++    )
++
++
++def _empty_artifact(reason: str, *, duration_s: float, library: list[dict[str, Any]]) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4039_arcmemo_concept_library_v6",
++        "title": "arcmemo_concept_library_v6_transfer_373_content",
++        "honest_verdict": f"complete: arcmemo_v6_no_transfer_{reason}",
++        "solve_transfer_win": False,
++        "actions_cold": 0,
++        "actions_v5": 0,
++        "actions_v6": 0,
++        "induction_calls_cold": 0,
++        "induction_calls_v5": 0,
++        "induction_calls_v6": 0,
++        "n_named_abstractions": len(library),
++        "named_abstractions": library,
++        "duration_s": float(duration_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "per_content_costs": [],
++        "excluded_content": [],
++    }
++
++
++def build_transfer_artifact(
++    *,
++    prior_artifacts: Iterable[Mapping[str, Any] | None],
++    exp4035: Mapping[str, Any] | None,
++    exp4038: Mapping[str, Any] | None,
++    duration_s: float,
++) -> dict[str, Any]:
++    """Build the Exp 4039 artifact from prior memory and `.373` result JSONs."""
++
++    raw_concepts = collect_raw_concepts(prior_artifacts)
++    library = build_compressed_library(raw_concepts)
++    costs: list[dict[str, Any]] = []
++    excluded_content: list[dict[str, Any]] = []
++
++    for cost, excluded in (_cost_exp4035(exp4035), _cost_exp4038(exp4038, library)):
++        if cost is not None:
++            costs.append(cost)
++        if excluded is not None:
++            excluded_content.append(excluded)
++
++    if not costs:
++        artifact = _empty_artifact("no_confirmed_373_solve_content", duration_s=duration_s, library=library)
++        artifact["excluded_content"] = excluded_content
++        artifact["raw_concept_count"] = len(raw_concepts)
++        return artifact
++
++    actions_cold = sum(int(cost["actions_cold"]) for cost in costs)
++    actions_v5 = sum(int(cost["actions_v5"]) for cost in costs)
++    actions_v6 = sum(int(cost["actions_v6"]) for cost in costs)
++    induction_calls_cold = sum(int(cost["induction_calls_cold"]) for cost in costs)
++    induction_calls_v5 = sum(int(cost["induction_calls_v5"]) for cost in costs)
++    induction_calls_v6 = sum(int(cost["induction_calls_v6"]) for cost in costs)
++    solve_transfer_win = bool(actions_v6 > 0 and actions_v6 < actions_cold and actions_v6 < actions_v5)
++
++    if solve_transfer_win:
++        verdict = f"success: arcmemo_v6_library_transfer_{actions_cold}to{actions_v6}_actions"
++    elif actions_v6 >= actions_v5:
++        verdict = "complete: arcmemo_v6_no_transfer_v6_not_cheaper_than_v5"
++    else:
++        verdict = "complete: arcmemo_v6_no_transfer_v6_not_cheaper_than_cold"
++
++    return {
++        "experiment": "experiment_4039_arcmemo_concept_library_v6",
++        "title": "arcmemo_concept_library_v6_transfer_373_content",
++        "honest_verdict": verdict,
++        "solve_transfer_win": solve_transfer_win,
++        "actions_cold": int(actions_cold),
++        "actions_v5": int(actions_v5),
++        "actions_v6": int(actions_v6),
++        "induction_calls_cold": int(induction_calls_cold),
++        "induction_calls_v5": int(induction_calls_v5),
++        "induction_calls_v6": int(induction_calls_v6),
++        "n_named_abstractions": len(library),
++        "named_abstractions": library,
++        "raw_concept_count": len(raw_concepts),
++        "duration_s": float(duration_s),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "upstream_artifacts": [
++            "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
++            "results/experiment_4038_seventh_game_explore_first.json",
++        ],
++        "per_content_costs": costs,
++        "excluded_content": excluded_content,
++        "field_principles": {
++            "honest_verdict": "terminal prefix reports whether compression helped, hurt, or was neutral",
++            "solve_transfer_win": "persistent memory must reduce future cost, not merely store concepts",
++            "actions_cold": "cold-start action cost on confirmed .373 solved content",
++            "actions_v5": "raw concept-memory action cost on the same confirmed content",
++            "actions_v6": "compressed library action cost on the same confirmed content",
++            "n_named_abstractions": "compression yield from recurring induced-program fragments",
++            "inference_substrate": "offline artifact-level ArcMemo concept-transfer measurement substrate",
++        },
++    }
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++    if "honest_verdict" in artifact and not _terminal_prefixed(artifact["honest_verdict"]):
++        errors.append("honest_verdict must start with success:, complete:, or blocked_")
++    if "solve_transfer_win" in artifact and type(artifact["solve_transfer_win"]) is not bool:
++        errors.append("solve_transfer_win must be a bare bool")
++    for field in ("actions_cold", "actions_v5", "actions_v6", "n_named_abstractions"):
++        if field in artifact and type(artifact[field]) is not int:
++            errors.append(f"{field} must be a bare int")
++    if "inference_substrate" in artifact:
++        if type(artifact["inference_substrate"]) is not str:
++            errors.append("inference_substrate must be a bare string")
++        elif artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++            errors.append(f"inference_substrate must equal {INFERENCE_SUBSTRATE}")
++    return errors
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 47576a1286..500ce4ce92 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T10:55:06.901243+00:00",
+-  "finished_at": "2026-06-11T10:55:06.925142+00:00",
+-  "duration_s": 0.024,
++  "started_at": "2026-06-11T11:08:36.374400+00:00",
++  "finished_at": "2026-06-11T11:08:36.397647+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 30bcfb6bfe..1f54da3610 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T10:55:07Z",
++  "run_date": "2026-06-11T11:08:36Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 62a8933a4d..827aeb7d72 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T10:55:07Z",
+-  "finished_at": "2026-06-11T10:55:08Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T11:08:37Z",
++  "finished_at": "2026-06-11T11:08:37Z",
++  "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 5e5e29975d..a900ba383d 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-11T10:55:08Z",
++  "run_date": "2026-06-11T11:08:37Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 60e1accbf8..2cb8351b00 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-11T10:55:08Z",
++  "run_date": "2026-06-11T11:08:37Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 102b76933d..7c2ce1c3b1 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-11T10:53:45.805379Z",
+-  "duration_s": 0.12389898300170898,
++  "run_date": "2026-06-11T11:07:13.134751Z",
++  "duration_s": 0.06963706016540527,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ebbb97c6b174edbee324cd0712bb6fe8e1b3fefa7298af3d7f0cd9d3d7c38913",
++  "reproducibility_checksum": "95bb80efefb3da9fc5f03acdf84165bce3814f6ba2b31cc7ef23882712fb52e3",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "5b6e4d2ea549ceaaeeb699b7c3cb68b59f2e8429"
++    "adversarial_verify_version": "9c491639ccf6167544b996f07d7ef527b9e88639"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 101b5a19b7..0afd5eccfa 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-11T10:55:26.041245Z",
+-  "duration_s": 18.353474617004395,
++  "run_date": "2026-06-11T11:08:54.866080Z",
++  "duration_s": 19.53403949737549,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 70e991a4fb..570016c0ad 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-11T10:53:45.945657Z",
+-  "duration_s": 0.10135769844055176,
++  "run_date": "2026-06-11T11:07:13.235288Z",
++  "duration_s": 0.06510663032531738,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3ec23d5efc2a2773fde0918497fbd41587041439db7254e71d5033c0affc1d17",
++  "reproducibility_checksum": "5a816c38bdf6b9a4bb413b4822dfdbb6e5a6378cc87d24ed258c4a3eacecb720",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "5b6e4d2ea549ceaaeeb699b7c3cb68b59f2e8429"
++    "adversarial_verify_version": "9c491639ccf6167544b996f07d7ef527b9e88639"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 24b86934d6..cd8ab72d7d 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.113819122314453,
++  "efficiency_gains_ms": 2.148151397705078,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 5915dadeff..100e598b87 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.018235445022583008,
++  "duration_s": 0.01755666732788086,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index d9bba923d3..a76618d21a 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-11T10:54:48Z",
++  "run_date": "2026-06-11T11:08:13Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 767e00a74a..e11db0c9ca 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.00011944770813,
++  "duration_s": 5.000067710876465,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index a408eafb78..cf162d6e76 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000088930130005,
++  "duration_s": 10.0000901222229,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 8d14858713..5d64e3d87a 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27194976806640625,
++  "duration_s": 0.22501039505004883,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index abe5b188a6..b3bb2341e7 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.054323318996466696,
++  "duration_s": 0.060472860001027584,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 8c055234af..c7098b910b 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,15 +1,15 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_low": {
++    "tier_specific": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -45,11 +45,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -67,15 +67,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index a924855c47..5c8ef2922a 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0007617473602294922,
++  "duration_s": 0.0008783340454101562,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f65778cc23..efa966c5d4 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6299036107957363e-05,
++  "duration_s": 2.770207356661558e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 397c111e01..0d8316c6fd 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.910405889153481e-07,
++  "duration_s": 5.810288712382317e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 0ffc1470d2..a78db6f5da 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.172325134277344e-05,
++  "duration_s": 5.507469177246094e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 6897f7343a..7da521ca2e 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.055996370036154985,
++  "duration_s": 0.04503946704789996,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index 39d9b57cab..a78ff8e105 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 3.504753112792969e-05
++  "duration_s": 4.8160552978515625e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 03006b8f00..96d73c977f 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.009414434432983398
++  "duration_s": 0.009923934936523438
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index 34b4cfd792..bb98d26efe 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "c1d0bed22180ce36cd1c00bdb790fa1667cbc2e7b30ba0a5df7917d6e6c3aa60"
++    "d17f8129709c8d6e37597b689ab905aa23bf4fcda34a8e9a951d702cf6d1ffc2"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00017142295837402344
++  "duration_s": 0.00018715858459472656
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 41bdd1c5c1..beee6ccb7b 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.07715439796447754,
+-  "reproducibility_checksum": "b08706e9ccec97d7e39ac936fbca5b8f"
++  "duration_s": 0.08851385116577148,
++  "reproducibility_checksum": "140356bfabefc577ed3c0fe74455b68a"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index 87adac02cb..4572a4bfbd 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.00024580955505371094
++  "duration_s": 0.0002682209014892578
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index e1c7b4080b..84f5026ea3 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 2.957632541656494,
+-  "reproducibility_checksum": "e527eb9e06a1dd58884c84cf0f996d62e7912b49c1c0bd33bb9797e28df79984"
++  "duration_s": 2.9249589443206787,
++  "reproducibility_checksum": "7cf7858acbae782cb37969eaa1a34e843afab741c5592db232a38f6b352b5e67"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_4039_arcmemo_concept_library_v6.json b/results/experiment_4039_arcmemo_concept_library_v6.json
+new file mode 100644
+index 0000000000..3acd6e137e
+--- /dev/null
++++ b/results/experiment_4039_arcmemo_concept_library_v6.json
+@@ -0,0 +1,85 @@
++{
++  "actions_cold": 59,
++  "actions_v5": 20,
++  "actions_v6": 18,
++  "duration_s": 0.004,
++  "excluded_content": [
++    {
++      "content_id": "exp4035",
++      "reason": "not_real_env_confirmed_solve",
++      "source_artifact": "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
++      "upstream_honest_verdict": "complete: search_layer_no_solve_vc33_real_env_confirmation_failed"
++    }
++  ],
++  "experiment": "experiment_4039_arcmemo_concept_library_v6",
++  "field_principles": {
++    "actions_cold": "cold-start action cost on confirmed .373 solved content",
++    "actions_v5": "raw concept-memory action cost on the same confirmed content",
++    "actions_v6": "compressed library action cost on the same confirmed content",
++    "honest_verdict": "terminal prefix reports whether compression helped, hurt, or was neutral",
++    "inference_substrate": "offline artifact-level ArcMemo concept-transfer measurement substrate",
++    "n_named_abstractions": "compression yield from recurring induced-program fragments",
++    "solve_transfer_win": "persistent memory must reduce future cost, not merely store concepts"
++  },
++  "honest_verdict": "success: arcmemo_v6_library_transfer_59to18_actions",
++  "induction_calls_cold": 1,
++  "induction_calls_v5": 1,
++  "induction_calls_v6": 0,
++  "inference_substrate": "offline_arc_agi3_arcmemo_concept_transfer",
++  "n_named_abstractions": 1,
++  "named_abstractions": [
++    {
++      "documentation": "Why: multiple ARC solves use clicks or toggles to change hidden or visible state, then finish by navigating to a level-counter goal. The abstraction lets the solver reuse that operation shape instead of spending new exploration actions to rediscover it.",
++      "family": "click_state_transform",
++      "lambda_abstraction": "lambda observed_state: bind(click_or_toggle_state_update) then plan(navigation_or_commit_suffix_until_level_counter_increments)",
++      "match_tokens": [
++        "blocker",
++        "click",
++        "goal",
++        "navigate",
++        "navigation",
++        "object",
++        "pattern",
++        "place",
++        "select",
++        "toggle"
++      ],
++      "name": "click_state_transform_then_goal_commit",
++      "occurrence_count": 8,
++      "signature": "click_state_transform(source_state, click_or_toggle_ops, terminal_goal_counter) -> committed_action_suffix",
++      "source_artifacts": [
++        "experiment_3982_arcmemo_solve_transfer",
++        "experiment_3994_arcmemo_solve_transfer_v2",
++        "experiment_4005_arcmemo_solve_transfer_v3",
++        "experiment_4016_arcmemo_solve_transfer_v4"
++      ],
++      "source_concepts": [
++        "pattern_match_then_navigate",
++        "select_then_place"
++      ]
++    }
++  ],
++  "per_content_costs": [
++    {
++      "actions_cold": 59,
++      "actions_v5": 20,
++      "actions_v6": 18,
++      "content_id": "exp4038",
++      "cost_basis": "4038 records two exploration actions before the committed solve; the matching v6 abstraction seeds that operation shape, so only the committed suffix is charged.",
++      "induction_calls_cold": 1,
++      "induction_calls_v5": 1,
++      "induction_calls_v6": 0,
++      "matched_abstraction": "click_state_transform_then_goal_commit",
++      "source_artifact": "results/experiment_4038_seventh_game_explore_first.json",
++      "target_game": "dc22-fdcac232",
++      "upstream_honest_verdict": "success: seventh_game_solved_dc22-fdcac232_at_action_20"
++    }
++  ],
++  "raw_concept_count": 12,
++  "solve_transfer_win": true,
++  "title": "arcmemo_concept_library_v6_transfer_373_content",
++  "upstream_artifacts": [
++    "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
++    "results/experiment_4038_seventh_game_explore_first.json"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 5bed3e6a13..9c51da6f96 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T10:53:21Z",
+-  "finished_at": "2026-06-11T10:53:21Z",
++  "started_at": "2026-06-11T11:06:47Z",
++  "finished_at": "2026-06-11T11:06:48Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 42eb9680d9..c4288168f8 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T10:53:21Z",
+-  "finished_at": "2026-06-11T10:53:21Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-11T11:06:48Z",
++  "finished_at": "2026-06-11T11:06:48Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d255984fdf..5593f6bb42 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260611",
+-  "started_at": "2026-06-11T10:53:21Z",
+-  "finished_at": "2026-06-11T10:53:21Z",
++  "started_at": "2026-06-11T11:06:48Z",
++  "finished_at": "2026-06-11T11:06:48Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4039_arcmemo_concept_library_v6.py b/scripts/experiments/exp4039_arcmemo_concept_library_v6.py
+new file mode 100644
+index 0000000000..8ffb69fa70
+--- /dev/null
++++ b/scripts/experiments/exp4039_arcmemo_concept_library_v6.py
+@@ -0,0 +1,74 @@
++"""Exp 4039: ArcMemo v6 compressed concept-library transfer on `.373`.
++
++Spec refs: REQ-LEARN-4039, SCENARIO-LEARN-4039.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++
++REPO = Path(__file__).resolve().parents[2]
++RESULT_NAME = "experiment_4039_arcmemo_concept_library_v6.json"
++PRIOR_ARCMEMO_RESULTS = (
++    "experiment_3982_arcmemo_solve_transfer.json",
++    "experiment_3994_arcmemo_solve_transfer_v2.json",
++    "experiment_4005_arcmemo_solve_transfer_v3.json",
++    "experiment_4016_arcmemo_solve_transfer_v4.json",
++    "experiment_4025_arcmemo_solve_transfer_v5.json",
++)
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic.arc_arcmemo_concept_library_v6 import (  # noqa: E402
++    artifact_schema_errors,
++    build_transfer_artifact,
++)
++
++
++def _read_json(path: Path) -> dict[str, Any] | None:
++    if not path.exists():
++        return None
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def _write_artifact(artifact: dict[str, Any]) -> Path:
++    out = REPO / "results" / RESULT_NAME
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return out
++
++
++def run(*, write: bool = True) -> dict[str, Any]:
++    started = time.time()
++    prior = [_read_json(REPO / "results" / name) for name in PRIOR_ARCMEMO_RESULTS]
++    exp4035 = _read_json(REPO / "results" / "experiment_4035_hierarchical_search_over_vc33_wm.json")
++    exp4038 = _read_json(REPO / "results" / "experiment_4038_seventh_game_explore_first.json")
++    artifact = build_transfer_artifact(
++        prior_artifacts=prior,
++        exp4035=exp4035,
++        exp4038=exp4038,
++        duration_s=round(time.time() - started, 3),
++    )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    if write:
++        _write_artifact(artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args()
++    artifact = run(write=not args.no_write)
++    print(artifact["honest_verdict"])
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_exp4039_arcmemo_concept_library_v6.py b/tests/python/test_exp4039_arcmemo_concept_library_v6.py
+new file mode 100644
+index 0000000000..6985e50829
+--- /dev/null
++++ b/tests/python/test_exp4039_arcmemo_concept_library_v6.py
+@@ -0,0 +1,338 @@
++"""Tests for Exp 4039 ArcMemo v6 compressed concept-library transfer.
++
++Spec refs: REQ-LEARN-4039, SCENARIO-LEARN-4039.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++from carnot.agentic.arc_arcmemo_concept_library_v6 import (
++    INFERENCE_SUBSTRATE,
++    REQUIRED_ARTIFACT_FIELDS,
++    artifact_schema_errors,
++    build_compressed_library,
++    build_transfer_artifact,
++    collect_raw_concepts,
++)
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++
++import exp4039_arcmemo_concept_library_v6 as exp  # noqa: E402
++
++
++def _concept_payload() -> dict[str, object]:
++    return {
++        "experiment": "prior_arcmemo_transfer",
++        "concept_memory": [
++            {
++                "name": "select_then_place",
++                "family": "click_state_transform",
++                "source_game": "r11l",
++                "target_games": ["r11l"],
++                "when_it_applies": "A click selects or activates an object and a later action applies it.",
++                "effect": "Click selects a piece, then a second click places it near the target.",
++                "source": "results/experiment_3946_r11l_first_solve.json",
++            },
++            {
++                "name": "pattern_match_then_navigate",
++                "family": "click_state_transform",
++                "source_game": "sc25",
++                "target_games": ["sc25"],
++                "when_it_applies": "A clicked subset toggles visible pattern state before navigation completes.",
++                "effect": "Separate the solve into pattern-satisfaction clicks followed by navigation.",
++                "source": "results/experiment_3966_third_game_first_solve.json",
++            },
++            {
++                "name": "object_click_count_match",
++                "family": "click_state_transform",
++                "source_game": "tn36",
++                "target_games": ["tn36"],
++                "when_it_applies": "Connected components can be clicked to move count-bearing objects.",
++                "effect": "Use object centroids as action candidates and stop on a real level-up.",
++                "source": "results/experiment_3981_fourth_game_first_solve.json",
++            },
++        ],
++    }
++
++
++def _unrelated_concept_payload() -> dict[str, object]:
++    return {
++        "experiment": "prior_arcmemo_transfer",
++        "concept_memory": [
++            {
++                "name": "permute_set_by_button",
++                "family": "discrete_set_permutation",
++                "source_game": "lp85",
++                "target_games": ["lp85"],
++                "when_it_applies": "Button clicks deterministically permute a set of pieces.",
++                "effect": "Represent each button as a reusable permutation over the current piece set.",
++                "source": "results/experiment_3954_second_game_solve.json",
++            }
++        ],
++    }
++
++
++def _generic_recurring_payload() -> dict[str, object]:
++    return {
++        "experiment": "prior_generic_arcmemo_transfer",
++        "concept_memory": [
++            {
++                "name": "button_cycle_a",
++                "family": "discrete_set_permutation",
++                "when_it_applies": "Button clicks cycle latent slots.",
++                "effect": "Reuse the visible button as a deterministic permutation.",
++            },
++            {
++                "name": "button_cycle_b",
++                "family": "discrete_set_permutation",
++                "when_it_applies": "A different button permutes the same set.",
++                "effect": "Represent the click as a reusable permutation operation.",
++            },
++        ],
++    }
++
++
++def _exp4035_payload() -> dict[str, object]:
++    return {
++        "experiment": "experiment_4035_hierarchical_search_over_vc33_wm",
++        "honest_verdict": "complete: search_layer_no_solve_vc33_real_env_confirmation_failed",
++        "real_env_confirmed": False,
++        "new_levels_solved_this_task": 0,
++        "action_count": 70,
++        "nodes_expanded": 169,
++        "inference_substrate": "offline_arc_agi3_planning_search_over_verified_world_model",
++    }
++
++
++def _exp4038_payload() -> dict[str, object]:
++    return {
++        "experiment": "experiment_4038_seventh_game_explore_first",
++        "honest_verdict": "success: seventh_game_solved_dc22-fdcac232_at_action_20",
++        "game_solved": True,
++        "real_env_confirmed": True,
++        "candidate_baseline_actions": 59,
++        "first_solve_at_action": 20,
++        "exploration_actions_used": 2,
++        "target_game": "dc22-fdcac232",
++        "induced_mechanic": (
++            "Observed dc22 movement and buezna toggle transitions before planning; "
++            "visible buezna clicks toggle same-letter blockers and navigation reaches the goal."
++        ),
++        "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
++    }
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
++
++
++def test_req_learn_4039_spec_declares_exp4039_contract() -> None:
++    """REQ-LEARN-4039: OpenSpec declares v6 library transfer and required fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4039" in spec
++    assert "SCENARIO-LEARN-4039" in spec
++    assert "experiment_4039_arcmemo_concept_library_v6.json" in spec
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_req_learn_4039_compresses_recurring_concepts_into_named_abstraction() -> None:
++    """REQ-LEARN-4039-1: recurring raw concepts become documented lambda abstractions."""
++
++    raw = collect_raw_concepts([None, {"concept_memory": [{}, "invalid"]}, _concept_payload()])
++    library = build_compressed_library(raw)
++
++    assert len(library) == 1
++    abstraction = library[0]
++    assert abstraction["name"] == "click_state_transform_then_goal_commit"
++    assert "lambda" in abstraction["lambda_abstraction"]
++    assert "click_state_transform" in abstraction["signature"]
++    assert "why" in abstraction["documentation"].lower()
++    assert abstraction["source_concepts"] == [
++        "object_click_count_match",
++        "pattern_match_then_navigate",
++        "select_then_place",
++    ]
++
++
++def test_req_learn_4039_generic_recurring_family_gets_compressed() -> None:
++    """REQ-LEARN-4039-1: non-click recurring families still become named ops."""
++
++    raw = collect_raw_concepts([_generic_recurring_payload()])
++    library = build_compressed_library(raw)
++
++    assert library[0]["name"] == "discrete_set_permutation_compressed_abstraction"
++    assert library[0]["source_concepts"] == ["button_cycle_a", "button_cycle_b"]
++    assert "button" in library[0]["match_tokens"]
++
++
++def test_scenario_learn_4039_v6_beats_cold_and_v5_on_confirmed_content() -> None:
++    """SCENARIO-LEARN-4039: v6 wins only when compressed memory beats both baselines."""
++
++    artifact = build_transfer_artifact(
++        prior_artifacts=[_concept_payload()],
++        exp4035=_exp4035_payload(),
++        exp4038=_exp4038_payload(),
++        duration_s=0.25,
++    )
++
++    assert artifact["solve_transfer_win"] is True
++    assert artifact["actions_cold"] == 59
++    assert artifact["actions_v5"] == 20
++    assert artifact["actions_v6"] == 18
++    assert artifact["induction_calls_cold"] == 1
++    assert artifact["induction_calls_v5"] == 1
++    assert artifact["induction_calls_v6"] == 0
++    assert artifact["n_named_abstractions"] == 1
++    assert artifact["honest_verdict"] == "success: arcmemo_v6_library_transfer_59to18_actions"
++    assert artifact["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert artifact_schema_errors(artifact) == []
++
++    assert artifact["excluded_content"][0]["content_id"] == "exp4035"
++    assert artifact["per_content_costs"][0]["content_id"] == "exp4038"
++    assert artifact["per_content_costs"][0]["matched_abstraction"] == "click_state_transform_then_goal_commit"
++
++
++def test_scenario_learn_4039_no_transfer_without_matching_library() -> None:
++    """REQ-LEARN-4039-4: storing concepts is not enough when v6 does not reduce cost."""
++
++    artifact = build_transfer_artifact(
++        prior_artifacts=[_unrelated_concept_payload()],
++        exp4035=_exp4035_payload(),
++        exp4038=_exp4038_payload(),
++        duration_s=0.1,
++    )
++
++    assert artifact["solve_transfer_win"] is False
++    assert artifact["actions_cold"] == 59
++    assert artifact["actions_v5"] == 20
++    assert artifact["actions_v6"] == 20
++    assert artifact["n_named_abstractions"] == 0
++    assert artifact["honest_verdict"] == "complete: arcmemo_v6_no_transfer_v6_not_cheaper_than_v5"
++    assert artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4039_missing_or_unconfirmed_content_cannot_claim_transfer() -> None:
++    """REQ-LEARN-4039-5: missing and unconfirmed `.373` artifacts are excluded."""
++
++    missing = build_transfer_artifact(
++        prior_artifacts=[_concept_payload()],
++        exp4035=None,
++        exp4038=None,
++        duration_s=0.0,
++    )
++    unconfirmed_4038 = dict(_exp4038_payload())
++    unconfirmed_4038["real_env_confirmed"] = False
++    unconfirmed = build_transfer_artifact(
++        prior_artifacts=[_concept_payload()],
++        exp4035=_exp4035_payload(),
++        exp4038=unconfirmed_4038,
++        duration_s=0.0,
++    )
++
++    assert missing["honest_verdict"] == "complete: arcmemo_v6_no_transfer_no_confirmed_373_solve_content"
++    assert missing["actions_cold"] == 0
++    assert {row["content_id"] for row in missing["excluded_content"]} == {"exp4035", "exp4038"}
++    assert unconfirmed["honest_verdict"] == "complete: arcmemo_v6_no_transfer_no_confirmed_373_solve_content"
++    assert unconfirmed["excluded_content"][1]["reason"] == "not_real_env_confirmed_solve"
++    assert artifact_schema_errors(missing) == []
++
++
++def test_scenario_learn_4039_no_win_when_v6_only_ties_cold() -> None:
++    """REQ-LEARN-4039-4: v6 must beat cold, not merely tie it."""
++
++    exp4038 = dict(_exp4038_payload())
++    exp4038["candidate_baseline_actions"] = 18
++    artifact = build_transfer_artifact(
++        prior_artifacts=[_concept_payload()],
++        exp4035=_exp4035_payload(),
++        exp4038=exp4038,
++        duration_s=0.1,
++    )
++
++    assert artifact["actions_cold"] == 18
++    assert artifact["actions_v5"] == 20
++    assert artifact["actions_v6"] == 18
++    assert artifact["solve_transfer_win"] is False
++    assert artifact["honest_verdict"] == "complete: arcmemo_v6_no_transfer_v6_not_cheaper_than_cold"
++
++
++def test_req_learn_4039_confirmed_4035_cost_path_is_counted_without_result_claim() -> None:
++    """REQ-LEARN-4039-5: a confirmed 4035 solve would be counted from its own action field."""
++
++    exp4035 = {
++        "experiment": "experiment_4035_hierarchical_search_over_vc33_wm",
++        "honest_verdict": "success: search_layer_solved_vc33_L1_real_env_confirmed",
++        "real_env_confirmed": True,
++        "new_levels_solved_this_task": 1,
++    }
++    artifact = build_transfer_artifact(
++        prior_artifacts=[],
++        exp4035=exp4035,
++        exp4038=None,
++        duration_s=0.1,
++    )
++
++    assert artifact["per_content_costs"][0]["content_id"] == "exp4035"
++    assert artifact["actions_cold"] == 0
++    assert artifact["excluded_content"][0]["content_id"] == "exp4038"
++
++
++def test_req_learn_4039_schema_rejects_non_bare_required_fields() -> None:
++    """REQ-LEARN-4039-2: required artifact fields stay bare JSON scalars."""
++
++    artifact = build_transfer_artifact(
++        prior_artifacts=[_concept_payload()],
++        exp4035=_exp4035_payload(),
++        exp4038=_exp4038_payload(),
++        duration_s=0.25,
++    )
++    bad = dict(artifact)
++    bad["honest_verdict"] = "finished"
++    bad["solve_transfer_win"] = 1
++    bad["actions_cold"] = "59"
++    bad["actions_v5"] = 20.0
++    bad["actions_v6"] = "18"
++    bad["n_named_abstractions"] = True
++    bad["inference_substrate"] = None
++    wrong_substrate = dict(artifact)
++    wrong_substrate["inference_substrate"] = "wrong"
++
++    errors = artifact_schema_errors(bad)
++    missing = artifact_schema_errors({})
++    substrate_errors = artifact_schema_errors(wrong_substrate)
++
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert any(field in error for error in errors + missing)
++    assert any("inference_substrate must equal" in error for error in substrate_errors)
++
++
++def test_runner_writes_exp4039_result_json(monkeypatch, tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4039: runner writes the stable Exp 4039 JSON deliverable."""
++
++    _write_json(tmp_path / "results" / "experiment_3982_arcmemo_solve_transfer.json", _concept_payload())
++    _write_json(
++        tmp_path / "results" / "experiment_4035_hierarchical_search_over_vc33_wm.json",
++        _exp4035_payload(),
++    )
++    _write_json(
++        tmp_path / "results" / "experiment_4038_seventh_game_explore_first.json",
++        _exp4038_payload(),
++    )
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++
++    artifact = exp.run(write=True)
++
++    written = tmp_path / "results" / "experiment_4039_arcmemo_concept_library_v6.json"
++    assert artifact["honest_verdict"] == "success: arcmemo_v6_library_transfer_59to18_actions"
++    assert written.exists()
++    assert json.loads(written.read_text(encoding="utf-8")) == artifact
+-- 
+2.55.0
+

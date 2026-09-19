@@ -1,0 +1,47 @@
+From 11463c36d7f2260ceeb6f92fd6073542bfe70e21 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 10 Jun 2026 03:08:26 -0400
+Subject: [PATCH 01096/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Capstone=20.369=20(UNGATED=20=E2=80=94=20the=20.365=20op:e?=
+ =?UTF-8?q?xists=20+=20.366=20no-artifact=20lessons):=20the=20milestone's?=
+ =?UTF-8?q?=20headline=20question=20is=20IS=20THE=20GAP-4=20VERIFIER=20NOW?=
+ =?UTF-8?q?=20CONFIRMED,=20DECENTRALIZED,=20AND=20DEPLOYED.=20Aggregate:?=
+ =?UTF-8?q?=20CONFIRMED=20=3D=20the=20precision=20confirmation=20(exp3988?=
+ =?UTF-8?q?=20primary=5Fgate=5Fpassed=20/=20agreement=5Fis=5Fselector=5Fno?=
+ =?UTF-8?q?t=5Flabel)=20+=20de-selection=20coverage=20(exp3987=20debiased?=
+ =?UTF-8?q?=5Fcoverage=5Fcombined)=20+=20feedback-vs-redraw=20(exp3989=20f?=
+ =?UTF-8?q?eedback=5Fbeats=5Fredraw);=20DECENTRALIZED=20=3D=20the=20local-?=
+ =?UTF-8?q?generator=20arm=20(exp3991=20local=5Fbeats=5Fvote=20+=20local?=
+ =?UTF-8?q?=5Finduction=5Fdemo=5Fperfect=5Frate=20+=20the=20cost=20vs=20co?=
+ =?UTF-8?q?dex);=20DEPLOYED=20=3D=20the=20registration=20+=20bit-exact=20r?=
+ =?UTF-8?q?eplay=20(exp3990=20verifier=5Fregistered=20+=20arc2=5Freproduce?=
+ =?UTF-8?q?d=5F19of31=20+=20arc1=5Freproduced=5F28of31).=20Plus=20ARC-AGI-?=
+ =?UTF-8?q?3=20ACCURACY=20(exp3992=20new=5Flevels=5Fsolved=5Fthis=5Ftask?=
+ =?UTF-8?q?=20+=20exp3993=20game=5Fsolved=20->=20total=5Fgames=5Fsolved=20?=
+ =?UTF-8?q?+=20total=5Fnew=5Flevels)=20and=20SELF-LEARNING=20(exp3994=20so?=
+ =?UTF-8?q?lve=5Ftransfer=5Fwin).=20Honest=20verdict=20on=20whether=20.369?=
+ =?UTF-8?q?=20CONFIRMED=20+=20DECENTRALIZED=20+=20DEPLOYED=20the=20verifie?=
+ =?UTF-8?q?r=20and=20advanced=20ARC=20accuracy.=20SKIP=20any=20flagged=5Fa?=
+ =?UTF-8?q?dversarial=20artifact;=20cite=20upstream=20sha256.=20NO=20gated?=
+ =?UTF-8?q?=5Fon=20=E2=80=94=20aggregate=20whatever=20exists.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index 4c897114b6..3721c7b787 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8871,3 +8871,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-10: FOURTH ARC-AGI-3 game first-solve, VERIFIER-PRUNED (the budget fix; raises games-solved 3->4): exp3981 ran out of action budget on open-loop search. Use the GAP-4 execution verifier as an ACTION-PRUNER (verifier-as-free-energy; the Exp1165 ~4x action-efficiency precedent) to prune hopeless branches by executed-consistency before committing, fitting the budget. Solve level-1 of the next-easiest NON-SPATIAL game (tn36-ef4dde99 / su15-1944f8ab / dc22 are candidates, picked empirically by smallest L0 baseline_actions + inducibility) via the perceive -> induced-model -> goal-predicate -> exploit loop that produced r11l/lp85/sc25. A 4th distinct solved game raises generalization 3->4. Real-env-confirmed; AVOID vc33's PSPACE spatial trap. Report first_solve_at_action + actions_vs_baseline (the efficiency axis the verifier-pruner targets). (✅ Complete) — honest_verdict=complete: fourth_game_no_solve_pruner_rejected_unseen_dynamics; results/experiment_3993_fourth_game_verifier_pruned.json
+ - 2026-06-10: ArcMemo SOLVE-transfer v2 (self-learning MANDATE; extends exp3982's 2668->17 win to a NEW game): exp3982 showed concept-memory-seeded solving cut actions 2668->17 on a held-out solved game. This tests whether the SAME concept memory makes the 4th game's solve cheaper (the NEW game from exp3993, or sc25 re-held-out if no 4th game). Two arms at equal perception: (A) cold-start (no memory), (B) concept-memory-seeded (retrieve+try the banked concepts: 'select-then-place' r11l, 'permute-set' lp85, 'pattern-match-then-navigate' sc25 + any 4th-game concept). Does retrieving banked concepts reduce ACTIONS/ATTEMPTS to solve a genuinely NEW game vs cold-start? This is Tier-2 constraint memory (research-program.md) compounding across games — the self-learning datum. POSITIVE CONTROL: the target must share structure with >=2 banked concepts (else transfer is impossible by construction; FALSE_NEGATIVE_RISK). (⚠️ Research Finding) — honest_verdict=success: arcmemo_solve_transfer_v2_2668to17_actions; results/experiment_3994_arcmemo_solve_transfer_v2.json
+ - 2026-06-10: Hardware continuity (consolidated): SSH/USB-reachability + terminal-state check for each attached board — KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board reachability + the next concrete forward step; no bitstream redesign. Per north-star §3, KV260 is the sovereignty story to drive to terminal then freeze; GateMate/PolarFire are opportunistic. Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260 precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum). (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_3995_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded; results/experiment_3995_hardware_continuity.json
++- 2026-06-10: Capstone .369 (UNGATED — the .365 op:exists + .366 no-artifact lessons): the milestone's headline question is IS THE GAP-4 VERIFIER NOW CONFIRMED, DECENTRALIZED, AND DEPLOYED. Aggregate: CONFIRMED = the precision confirmation (exp3988 primary_gate_passed / agreement_is_selector_not_label) + de-selection coverage (exp3987 debiased_coverage_combined) + feedback-vs-redraw (exp3989 feedback_beats_redraw); DECENTRALIZED = the local-generator arm (exp3991 local_beats_vote + local_induction_demo_perfect_rate + the cost vs codex); DEPLOYED = the registration + bit-exact replay (exp3990 verifier_registered + arc2_reproduced_19of31 + arc1_reproduced_28of31). Plus ARC-AGI-3 ACCURACY (exp3992 new_levels_solved_this_task + exp3993 game_solved -> total_games_solved + total_new_levels) and SELF-LEARNING (exp3994 solve_transfer_win). Honest verdict on whether .369 CONFIRMED + DECENTRALIZED + DEPLOYED the verifier and advanced ARC accuracy. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on — aggregate whatever exists. (✅ Complete) — honest_verdict=complete: capstone_v369_gap4_UNCONFIRMED_NOT_DECENTRALIZED_NOT_DEPLOYED_local_not_beats_vote_games3_new_levels2_missing5_flagged_skipped0; results/experiment_3996_capstone_v369.json
+-- 
+2.55.0
+

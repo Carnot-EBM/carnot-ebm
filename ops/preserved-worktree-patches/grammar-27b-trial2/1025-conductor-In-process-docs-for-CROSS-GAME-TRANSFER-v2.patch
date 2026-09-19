@@ -1,0 +1,43 @@
+From 5b0744baf49e77da070e97e476d50ece13886764 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 15:30:08 -0400
+Subject: [PATCH 01025/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20CROSS-GAME=20TRANSFER=20v2=20=E2=80=94=20ArcMemo=20NL=20co?=
+ =?UTF-8?q?ncept-memory=20(self-learning=20MANDATE;=20retry=20of=20exp3958?=
+ =?UTF-8?q?'s=20zero-fragment=20failure):=20the=20AST-fragment=20library?=
+ =?UTF-8?q?=20found=20nothing=20shareable=20(n=5Flibrary=5Ffragments=3D0,?=
+ =?UTF-8?q?=20transfer=5Fwin=3Dfalse).=20v2=20uses=20ArcMemo=20(arXiv:2509?=
+ =?UTF-8?q?.04439):=20distil=20reusable=20CONCEPT-level=20abstractions=20(?=
+ =?UTF-8?q?in=20NL=20/=20structured=20form,=20e.g.=20'a=20click=20selects?=
+ =?UTF-8?q?=20then=20places=20an=20object',=20'a=20button=20permutes=20a?=
+ =?UTF-8?q?=20set',=20'a=20counter=20increments=20per=20step')=20from=20ea?=
+ =?UTF-8?q?ch=20solved/induced=20game,=20store=20them=20in=20a=20retrievab?=
+ =?UTF-8?q?le=20memory,=20retrieve+inject=20them=20when=20inducing=20the?=
+ =?UTF-8?q?=20NEXT=20game,=20and=20measure=20whether=20reuse=20makes=20lat?=
+ =?UTF-8?q?er=20games=20CHEAPER=20(fewer=20codex/proposer=20calls=20and/or?=
+ =?UTF-8?q?=20lower=20held-out=20consistency=20energy=20at=20EQUAL=20activ?=
+ =?UTF-8?q?e-data=20budget).=20This=20is=20Carnot's=20Tier-2=20constraint?=
+ =?UTF-8?q?=20memory=20(research-program.md=20self-learning)=20in=20the=20?=
+ =?UTF-8?q?ARC=20venue;=20ArcMemo=20reports=20+7.5%=20on=20ARC-AGI=20from?=
+ =?UTF-8?q?=20this=20reuse.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f600da6c46..047bb0f040 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8787,3 +8787,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-09: THIRD ARC-AGI-3 game first-solve: solve level-1 of the next-easiest NON-SPATIAL game (sc25-635fd71a / tn36-ef4dde99 / su15-1944f8ab / dc22 are candidates) via the perception -> induced-model -> goal-predicate -> exploit loop that produced the r11l (exp3946) and lp85 (exp3954) solves. A THIRD distinct solved game raises the generalization claim from 2->3 games (two could be coincidence; three is a method). Real-env-confirmed; pick the game empirically by L0 action budget + inducibility, do NOT hardcode the win from source. AVOID vc33's PSPACE spatial trap (see prior_failures). (✅ Complete) — honest_verdict=complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue; results/experiment_3966_third_game_first_solve.json
+ - 2026-06-09: M3 HONEST EFFICIENCY (LOAD-BEARING — the existential 'verifier earns its place' proof, redo of the FABRICATED exp3959): on the REAL games SOLVED so far (banked r11l L1 + lp85 L1, plus any new levels from exp3964/3965), run the solver in two arms with the verifier GENUINELY IN THE LOOP — (i) WITH the Carnot verifier action-pruner (select_verifier_pruned_action / consistency-energy ranks the legal actions), (ii) ablation with the pruner DISABLED (uniform-random legal-action order, same perception + same goal). Count REAL env.step actions-to-solve per arm; bootstrap 95% CIs. Emit anti-fabrication self-audit: verifier_invoked_in_loop + actions_from_real_env + n_real_env_steps MUST be true/non-zero or the run is invalid. Non-overlapping CIs in the pruner-helps direction = the verifier earns its place on a real, externally-defined benchmark. RHAE squares action-efficiency, so a real pruning win is a direct score win AND Carnot's cleanest existential evidence. (⚠️ Blocked) — honest_verdict=blocked_verifier_not_in_loop; results/experiment_3967_m3_honest_efficiency.json
+ - 2026-06-09: OWED (twice) from .365/.366: generalize the active-data -> codex-program-synthesis -> consistency-energy-verification pipeline across the 6 NON-SPATIAL games (r11l, sc25, lp85, tn36, dc22, su15). How many reach a TRUSTWORTHY world-model (held-out consistency energy <= 0.15)? vc33 reached 0.005 from active data; this measures whether that generalizes. Reuse scripts/experiments/arc3_m2_active_codex.py (passive-vs-active codex synthesis) — extend it to the 6-game set and report a per-game trustworthy-model table. This is the accuracy-side verifier-load-bearing measurement: the consistency energy CERTIFIES which induced model is trustworthy, with no oracle. Reminder: energy certifies PREDICTION, not interpretation. (✅ Complete) — honest_verdict=complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6; results/experiment_3968_active_codex_nonspatial_sweep.json
++- 2026-06-09: CROSS-GAME TRANSFER v2 — ArcMemo NL concept-memory (self-learning MANDATE; retry of exp3958's zero-fragment failure): the AST-fragment library found nothing shareable (n_library_fragments=0, transfer_win=false). v2 uses ArcMemo (arXiv:2509.04439): distil reusable CONCEPT-level abstractions (in NL / structured form, e.g. 'a click selects then places an object', 'a button permutes a set', 'a counter increments per step') from each solved/induced game, store them in a retrievable memory, retrieve+inject them when inducing the NEXT game, and measure whether reuse makes later games CHEAPER (fewer codex/proposer calls and/or lower held-out consistency energy at EQUAL active-data budget). This is Carnot's Tier-2 constraint memory (research-program.md self-learning) in the ARC venue; ArcMemo reports +7.5% on ARC-AGI from this reuse. (⚠️ Research Finding) — honest_verdict=success: arcmemo_transfer_win_reused_2_later_games; results/experiment_3970_cross_game_arcmemo_transfer.json
+-- 
+2.55.0
+

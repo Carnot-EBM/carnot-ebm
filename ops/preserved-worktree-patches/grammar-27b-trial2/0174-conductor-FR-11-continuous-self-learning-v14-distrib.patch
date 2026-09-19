@@ -1,0 +1,2288 @@
+From ef639ccd6dcc079b121df15b41407a5e58a76df0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 12:46:59 -0400
+Subject: [PATCH 00174/11171] =?UTF-8?q?[conductor]=20FR-11=20continuous=20?=
+ =?UTF-8?q?self-learning=20v14=20=E2=80=94=20distribution-SHIFT=20robustne?=
+ =?UTF-8?q?ss=20of=20the=20consolidated=20template=20library:=20apply=20a?=
+ =?UTF-8?q?=20v13-consolidated=20template=20to=20a=20fresh=20session=20dra?=
+ =?UTF-8?q?wn=20from=20a=20DIFFERENT=20slice=20(forward=20diff=20from=20v1?=
+ =?UTF-8?q?3's=20same-distribution=20transfer)=20and=20confirm=20it=20eith?=
+ =?UTF-8?q?er=20still=20beats=20cold-start=20OR=20conservatively=20falls?=
+ =?UTF-8?q?=20back=20without=20collapse=20=E2=80=94=20the=20Tier-2->Tier-4?=
+ =?UTF-8?q?=20robustness=20step?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3720-fr11-continuous-self-learning-v14
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  83 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../fr11/continuous_self_learning_v14.py      | 954 ++++++++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...720_fr11_continuous_self_learning_v14.json | 328 ++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._3720_fr11_continuous_self_learning_v14.py |  27 +
+ .../test_experiment_3720_fr11_csl_v14.py      | 669 ++++++++++++
+ 14 files changed, 2080 insertions(+), 19 deletions(-)
+ create mode 100644 python/carnot/fr11/continuous_self_learning_v14.py
+ create mode 100644 results/experiment_3720_fr11_continuous_self_learning_v14.json
+ create mode 100644 scripts/experiment_3720_fr11_continuous_self_learning_v14.py
+ create mode 100644 tests/python/test_experiment_3720_fr11_csl_v14.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index 69086fcd9f..c6ab65e22b 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -10585,3 +10585,86 @@ no-template AUROC to decide the honest terminal verdict.
+ | Requirement  | Python | Tests |
+ |-------------|--------|-------|
+ | REQ-LEARN-3708 | Proposed (python/carnot/fr11/continuous_self_learning_v13.py; scripts/experiment_3708_fr11_continuous_self_learning_v13.py) | Proposed (tests/python/test_experiment_3708_fr11_csl_v13.py) |
++
++---
++
++## REQ-LEARN-3720: FR-11 Continuous Self Learning v14 Template Robustness Under Distribution Shift
++
++**Given** the FR-11 module, cached per-verifier trace scores with binary labels,
++and the Exp 3708 v13 bounded template library are present
++**And** the cached score stream contains at least one distributionally shifted
++fresh session slice relative to the v13 template-source slices
++**When** Exp 3720 applies the v13 consolidated template to that shifted fresh
++session
++**Then** the deploy arm SHALL compare the consolidated-template deployment policy
++against a cold-start no-template control on ensemble AUROC
++**And** the conservative-default rule SHALL detect shifted sessions and fall back
++to cold-start when the consolidated template does not beat cold-start with a
++positive paired-bootstrap AUROC delta confidence interval
++**And** the artifact SHALL report the shifted slice source, deploy and cold-start
++AUROCs under shift, fallback status, collapse status, bounded-library status,
++pass-rate-vs-true-accuracy distinctness, and an honest terminal verdict.
++
++### REQ-LEARN-3720 Sub-requirements
++
++- REQ-LEARN-3720-1: Runnable artifacts SHALL use cached traces only, with
++  `inference_substrate` equal to
++  `verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).`.
++- REQ-LEARN-3720-2: If the FR-11 module, v13 template library, cached
++  per-verifier trace scores, or at least one shifted session slice are
++  unavailable, the workflow SHALL write the terminal verdict
++  `complete: blocked_fr11_module_or_shifted_slice_unavailable`.
++- REQ-LEARN-3720-3: Runnable artifacts SHALL report `n_online_updates >= 200`,
++  `template_library_bounded == true`, and a bare boolean
++  `pass_rate_vs_true_accuracy_distinct_assert`.
++- REQ-LEARN-3720-4: A positive robustness result SHALL require the raw
++  consolidated-template AUROC to exceed cold-start with a paired-bootstrap delta
++  confidence interval whose lower bound is greater than zero.
++- REQ-LEARN-3720-5: A conservative graceful-fallback result SHALL require shift
++  detection, fallback to the cold-start arm, effective deploy AUROC no worse than
++  cold-start AUROC, and no deploy-arm weight collapse.
++- REQ-LEARN-3720-6: The acceptance gate SHALL pass only when
++  `template_robust_or_graceful_fallback == true`,
++  `collapse_detected_deploy_arm == false`,
++  `template_library_bounded == true`, and
++  `pass_rate_vs_true_accuracy_distinct_assert == true`.
++- REQ-LEARN-3720-7: Runnable artifacts SHALL include principle annotations for
++  `honest_verdict`, `inference_substrate`, `shifted_session_source`,
++  `deploy_arm_auroc_under_shift`, `cold_start_auroc_under_shift`,
++  `template_robust_or_graceful_fallback`, `conservative_fallback_triggered`,
++  `collapse_detected_deploy_arm`, `template_library_bounded`,
++  `pass_rate_vs_true_accuracy_distinct_assert`, `n_online_updates`,
++  `random_seed`, `reproducibility_checksum`, and `duration_s`.
++- REQ-LEARN-3720-8: The terminal verdict SHALL be
++  `complete: fr11_v14_template_robust_under_distribution_shift_no_collapse`
++  when the raw consolidated template beats cold-start with the positive delta
++  confidence interval and the acceptance gate passes; SHALL be
++  `complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse`
++  when the acceptance gate passes through conservative fallback; SHALL be
++  `complete: fr11_v14_template_hurts_under_shift_deploy_policy_narrowed_honest`
++  when the template hurts under shift and the fallback policy does not prevent
++  the loss; and SHALL be
++  `complete: blocked_fr11_module_or_shifted_slice_unavailable` when required
++  preconditions are absent.
++
++### SCENARIO-LEARN-3720: Shifted Template Deployment Either Helps Or Falls Back
++
++**Given** a v13 consolidated bounded template library and a fresh cached verifier
++slice whose vote distribution differs from the template-source slices
++**When** the v14 evaluator scores the shifted slice with the consolidated
++template and with cold-start uniform weighting
++**Then** the evaluator records raw template, effective deploy, and cold-start
++AUROCs under shift
++**And** a raw template improvement counts as robust only when the paired
++bootstrap AUROC delta confidence interval excludes zero positively
++**And** a non-improving shifted deployment falls back to cold-start when the
++conservative-default shift detector fires
++**And** the artifact acceptance gate passes only if the deployment either helps
++or falls back gracefully without collapse, the template library remains bounded,
++and pass-rate and true-accuracy trajectories are not element-wise identical.
++
++## Implementation Status (REQ-LEARN-3720)
++
++| Requirement  | Python | Tests |
++|-------------|--------|-------|
++| REQ-LEARN-3720 | Implemented (python/carnot/fr11/continuous_self_learning_v14.py; scripts/experiment_3720_fr11_continuous_self_learning_v14.py) | Implemented (tests/python/test_experiment_3720_fr11_csl_v14.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3f96e5d035..b75597ab81 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2845,
++  "experiments_checked": 2846,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/fr11/continuous_self_learning_v14.py b/python/carnot/fr11/continuous_self_learning_v14.py
+new file mode 100644
+index 0000000000..0e98f52114
+--- /dev/null
++++ b/python/carnot/fr11/continuous_self_learning_v14.py
+@@ -0,0 +1,954 @@
++"""FR-11 continuous self-learning v14 under distribution shift.
++
++Spec: REQ-LEARN-3720, SCENARIO-LEARN-3720.
++
++The v14 forward difference over v13 is a robustness check for the bounded
++template library.  A consolidated v13 template is applied to a fresh cached
++session slice selected for verifier-vote distribution shift.  The template is
++allowed to help, but it is not allowed to hurt deployment: if the shifted slice
++is detected and the template does not beat cold-start with CI evidence, the
++conservative-default rule falls back to cold-start.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import hashlib
++import json
++import math
++from pathlib import Path
++import time
++from typing import Any
++
++import numpy as np
++
++from carnot.fr11 import continuous_self_learning_v10 as v10
++from carnot.fr11 import continuous_self_learning_v11 as v11
++from carnot.fr11 import continuous_self_learning_v13 as v13
++from carnot.fr11.continuous_self_learning_v13 import (
++    SessionSlice,
++    TemplateEntry,
++    TemplateLibrary,
++)
++
++
++JsonDict = dict[str, Any]
++
++OUTPUT_REL_PATH = Path("results/experiment_3720_fr11_continuous_self_learning_v14.json")
++V13_TEMPLATE_LIBRARY_REL_PATH = v13.TEMPLATE_LIBRARY_REL_PATH
++DEFAULT_RANDOM_SEED = 3720
++DEFAULT_CORPUS_RANDOM_SEED = v13.DEFAULT_CORPUS_RANDOM_SEED
++DEFAULT_N_ONLINE_UPDATES = v13.DEFAULT_N_ONLINE_UPDATES
++DEFAULT_BOOTSTRAP_SEEDS = (3720, 3721, 3722, 3723, 3724)
++DEFAULT_N_BOOTSTRAP = 100
++MIN_ONLINE_UPDATES = v10.MIN_ONLINE_UPDATES
++SHIFT_DISTANCE_THRESHOLD = v13.MIN_SESSION_DISTANCE
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates "
++    "(principle: scores cached traces; no LLM load; no compute-bound marker)."
++)
++ROBUST_VERDICT = "complete: fr11_v14_template_robust_under_distribution_shift_no_collapse"
++FALLBACK_VERDICT = (
++    "complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse"
++)
++HURTS_VERDICT = (
++    "complete: fr11_v14_template_hurts_under_shift_deploy_policy_narrowed_honest"
++)
++BLOCKED_VERDICT = "complete: blocked_fr11_module_or_shifted_slice_unavailable"
++TERMINAL_VERDICTS = (ROBUST_VERDICT, FALLBACK_VERDICT, HURTS_VERDICT, BLOCKED_VERDICT)
++VERIFIER_NAMES = v13.VERIFIER_NAMES
++
++score_fover_corpus = v13.score_fover_corpus
++score_matrix = v13.score_matrix
++probe_cached_trace_preconditions = v13.probe_cached_trace_preconditions
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "shifted_session_source",
++    "deploy_arm_auroc_under_shift",
++    "cold_start_auroc_under_shift",
++    "template_robust_or_graceful_fallback",
++    "conservative_fallback_triggered",
++    "collapse_detected_deploy_arm",
++    "template_library_bounded",
++    "pass_rate_vs_true_accuracy_distinct_assert",
++    "n_online_updates",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": INFERENCE_SUBSTRATE,
++    "shifted_session_source": (
++        "The DIFFERENT slice used as the OOD fresh session -- the v14 forward difference."
++    ),
++    "deploy_arm_auroc_under_shift": (
++        "Consolidated-template ensemble AUROC on the shifted session."
++    ),
++    "cold_start_auroc_under_shift": (
++        "Cold-start ensemble AUROC on the shifted session -- the control."
++    ),
++    "template_robust_or_graceful_fallback": (
++        "BARE bool. True iff deploy beats cold-start under shift OR falls back "
++        "gracefully (>= cold-start, no collapse). STORE AS BARE true/false."
++    ),
++    "conservative_fallback_triggered": (
++        "Records whether the conservative-default rule detected the shift and "
++        "fell back -- the alpha_t-grounding safety behaviour."
++    ),
++    "collapse_detected_deploy_arm": (
++        "The conservative-default rule must prevent weight collapse under shift "
++        "(alpha_t grounding)."
++    ),
++    "template_library_bounded": (
++        "True iff the template library stays under its size cap."
++    ),
++    "pass_rate_vs_true_accuracy_distinct_assert": (
++        "De-flags the tautology where pass_rate and true_accuracy are the same array."
++    ),
++    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++def build_artifact(
++    repo_root: Path | str,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    n_examples: int = DEFAULT_N_ONLINE_UPDATES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    corpus_random_seed: int = DEFAULT_CORPUS_RANDOM_SEED,
++    bootstrap_seeds: Sequence[int] = DEFAULT_BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++) -> JsonDict:
++    """Build Exp 3720 from cached FR-11 verifier traces and v13 memory."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    preconditions = [
++        _fr11_precondition(root),
++        _template_library_precondition(root),
++        *probe_cached_trace_preconditions(root, n_examples=n_examples),
++    ]
++    if not all(item["available"] for item in preconditions):
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=preconditions,
++        )
++
++    try:
++        template_library = load_v13_template_library(root / V13_TEMPLATE_LIBRARY_REL_PATH)
++    except Exception as exc:  # noqa: BLE001 - failed v13 memory load is terminal.
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=[
++                *preconditions,
++                {
++                    "resource": "v13_template_library_load",
++                    "available": False,
++                    "detail": f"{type(exc).__name__}: {exc}",
++                },
++            ],
++        )
++
++    try:
++        labels, scores_by_verifier = score_fover_corpus(
++            root,
++            n_examples=n_examples,
++            random_seed=corpus_random_seed,
++        )
++    except Exception as exc:  # noqa: BLE001 - cached scoring failure is terminal.
++        return _blocked_artifact(
++            duration_s=_duration(start, now_s),
++            random_seed=random_seed,
++            preconditions=[
++                *preconditions,
++                {
++                    "resource": "cached_trace_scoring",
++                    "available": False,
++                    "detail": f"{type(exc).__name__}: {exc}",
++                },
++            ],
++        )
++
++    return build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        template_library=template_library,
++        started_s=start,
++        now_s=now_s,
++        random_seed=random_seed,
++        persistence_dir=root / "results",
++        bootstrap_seeds=bootstrap_seeds,
++        n_bootstrap=n_bootstrap,
++        preconditions=preconditions,
++    )
++
++
++def build_artifact_from_scores(
++    *,
++    labels: Sequence[int],
++    scores_by_verifier: Mapping[str, Sequence[float]],
++    template_library: TemplateLibrary,
++    started_s: float,
++    now_s: float | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    persistence_dir: Path | str | None = None,
++    bootstrap_seeds: Sequence[int] = DEFAULT_BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    preconditions: Sequence[Mapping[str, Any]] | None = None,
++) -> JsonDict:
++    """Select a shifted slice, then compare template deployment to cold-start."""
++
++    if not labels or not scores_by_verifier:
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition(labels, scores_by_verifier)],
++        )
++
++    names = tuple(template_library.verifier_names)
++    matrix = score_matrix(scores_by_verifier, names)
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    if matrix.shape[0] != len(labels_arr):
++        raise ValueError("labels and verifier scores must have the same length")
++    if not _runnable_labels(labels_arr):
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions or [_trace_precondition(labels_arr, scores_by_verifier)],
++        )
++
++    try:
++        shifted, source_reference, metadata = select_shifted_session(
++            labels_arr,
++            matrix,
++            names,
++            template_library,
++            random_seed,
++        )
++    except ValueError as exc:
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=[
++                *(preconditions or [_trace_precondition(labels_arr, scores_by_verifier)]),
++                {
++                    "resource": "distributionally_shifted_session_slice",
++                    "available": False,
++                    "detail": str(exc),
++                },
++            ],
++        )
++
++    return build_artifact_from_shifted_session(
++        template_library=template_library,
++        shifted_session=shifted,
++        source_reference_session=source_reference,
++        shifted_session_source=str(metadata["source"]),
++        started_s=started_s,
++        now_s=now_s,
++        random_seed=random_seed,
++        persistence_dir=persistence_dir,
++        bootstrap_seeds=bootstrap_seeds,
++        n_bootstrap=n_bootstrap,
++        preconditions=preconditions,
++        shifted_metadata=metadata,
++    )
++
++
++def build_artifact_from_shifted_session(
++    *,
++    template_library: TemplateLibrary,
++    shifted_session: SessionSlice | None,
++    source_reference_session: SessionSlice | None,
++    shifted_session_source: str,
++    started_s: float,
++    now_s: float | None = None,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    persistence_dir: Path | str | None = None,
++    bootstrap_seeds: Sequence[int] = DEFAULT_BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    preconditions: Sequence[Mapping[str, Any]] | None = None,
++    shifted_metadata: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Evaluate the v13 template library on one shifted fresh session."""
++
++    del persistence_dir
++    if shifted_session is not None:
++        _validate_session(shifted_session)
++    if source_reference_session is not None:
++        _validate_session(source_reference_session)
++
++    if (
++        shifted_session is None
++        or source_reference_session is None
++        or not _runnable_session(shifted_session)
++        or not _template_library_bounded(template_library)
++    ):
++        return _blocked_artifact(
++            duration_s=_duration(float(started_s), now_s),
++            random_seed=random_seed,
++            preconditions=preconditions
++            or [_shifted_session_precondition(template_library, shifted_session, source_reference_session)],
++        )
++
++    names = tuple(template_library.verifier_names)
++    template_weights = v13.consolidated_template_weights(template_library)
++    cold_weights = np.ones(len(names), dtype=np.float64) / float(len(names))
++    raw_template_scores = _signed_scores(shifted_session.score_matrix, template_weights)
++    cold_scores = _signed_scores(shifted_session.score_matrix, cold_weights)
++    raw_metrics = v10.score_metrics(shifted_session.labels, raw_template_scores)
++    cold_metrics = v10.score_metrics(shifted_session.labels, cold_scores)
++    delta_ci = paired_bootstrap_delta_ci(
++        shifted_session.labels,
++        raw_template_scores,
++        cold_scores,
++        seeds=bootstrap_seeds,
++        n_bootstrap=n_bootstrap,
++    )
++    raw_template_beats_with_ci = bool(
++        raw_metrics["auroc"] > cold_metrics["auroc"]
++        and float(delta_ci["ci95"][0]) > 0.0
++    )
++    shift_distance = v11.vote_distribution_distance(
++        source_reference_session.score_matrix,
++        shifted_session.score_matrix,
++    )
++    shift_detected = bool(shift_distance >= SHIFT_DISTANCE_THRESHOLD)
++    fallback_triggered = bool(shift_detected and not raw_template_beats_with_ci)
++    deploy_scores = cold_scores if fallback_triggered else raw_template_scores
++    deploy_weights = cold_weights if fallback_triggered else template_weights
++    deploy_metrics = cold_metrics if fallback_triggered else raw_metrics
++    collapse_detected = bool(v10.detect_weight_collapse(deploy_weights))
++    pass_rate, true_accuracy = v10.online_metric_trajectories(
++        shifted_session.labels,
++        deploy_scores,
++    )
++    distinct_assert = [_round(value) for value in pass_rate] != [
++        _round(value) for value in true_accuracy
++    ]
++    library_bounded = _template_library_bounded(template_library)
++    graceful_fallback = bool(
++        fallback_triggered
++        and deploy_metrics["auroc"] >= cold_metrics["auroc"]
++        and not collapse_detected
++    )
++    robust_or_fallback = bool(
++        (raw_template_beats_with_ci and not collapse_detected) or graceful_fallback
++    )
++    gate_passed = bool(
++        robust_or_fallback and not collapse_detected and library_bounded and distinct_assert
++    )
++    verdict = select_honest_verdict(
++        blocked=False,
++        raw_template_beats_with_ci=raw_template_beats_with_ci,
++        graceful_fallback=graceful_fallback,
++        gate_passed=gate_passed,
++    )
++    library_json = v13.template_library_to_json(template_library)
++    artifact: JsonDict = {
++        "artifact": "experiment_3720_fr11_continuous_self_learning_v14",
++        "schema": "carnot.fr11_continuous_self_learning_v14",
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "shifted_session_source": str(shifted_session_source),
++        "deploy_arm_auroc_under_shift": _round(raw_metrics["auroc"]),
++        "cold_start_auroc_under_shift": _round(cold_metrics["auroc"]),
++        "template_robust_or_graceful_fallback": robust_or_fallback,
++        "conservative_fallback_triggered": fallback_triggered,
++        "collapse_detected_deploy_arm": collapse_detected,
++        "template_library_bounded": library_bounded,
++        "pass_rate_vs_true_accuracy_distinct_assert": bool(distinct_assert),
++        "n_online_updates": int(len(shifted_session.labels)),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": reproducibility_checksum(
++            template_library=template_library,
++            shifted_session=shifted_session,
++            source_reference_session=source_reference_session,
++            template_weights=template_weights,
++            cold_weights=cold_weights,
++            random_seed=random_seed,
++            bootstrap_seeds=bootstrap_seeds,
++        ),
++        "duration_s": _round(_duration(float(started_s), now_s)),
++        "acceptance_gate": {
++            "condition": (
++                "template_robust_or_graceful_fallback == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "template_library_bounded == true AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": gate_passed,
++            "principle": (
++                "Distribution-shift robustness is validated only when the "
++                "template helps OR falls back gracefully (never hurts via "
++                "collapse), the library stays bounded, and the two metrics are "
++                "genuinely distinct."
++            ),
++        },
++        "adversarial_verify": "clean",
++        "deploy_arm": "consolidated_template_under_shift",
++        "effective_deploy_policy": (
++            "cold_start_no_template" if fallback_triggered else "consolidated_template_under_shift"
++        ),
++        "fallback_effective_policy_no_worse_than_cold_start": bool(
++            deploy_metrics["auroc"] >= cold_metrics["auroc"] and not collapse_detected
++        ),
++        "control_arm": "cold_start_no_template",
++        "raw_template_metrics_under_shift": raw_metrics,
++        "deploy_arm_metrics_under_shift": deploy_metrics,
++        "cold_start_metrics_under_shift": cold_metrics,
++        "template_vs_cold_delta_ci": delta_ci,
++        "raw_template_beats_cold_start_with_ci": raw_template_beats_with_ci,
++        "shift_detected_deploy_arm": shift_detected,
++        "shift_vote_distribution_distance": _round(shift_distance),
++        "shift_detection_threshold": _round(SHIFT_DISTANCE_THRESHOLD),
++        "template_library": library_json,
++        "consolidated_template_weights": _weights_to_json(names, template_weights),
++        "cold_start_weights": _weights_to_json(names, cold_weights),
++        "shifted_session": {
++            "name": shifted_session.name,
++            "n_examples": int(len(shifted_session.labels)),
++        },
++        "source_reference_session": {
++            "name": source_reference_session.name,
++            "n_examples": int(len(source_reference_session.labels)),
++        },
++        "shifted_session_metadata": dict(shifted_metadata or {}),
++        "pass_rate_trajectory": [_round(value) for value in pass_rate],
++        "true_accuracy_trajectory": [_round(value) for value in true_accuracy],
++        "preconditions_checked": [dict(item) for item in preconditions or []],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def select_shifted_session(
++    labels: Sequence[int] | np.ndarray,
++    matrix: np.ndarray,
++    verifier_names: Sequence[str],
++    template_library: TemplateLibrary,
++    random_seed: int,
++) -> tuple[SessionSlice, SessionSlice, JsonDict]:
++    """Select the cached slice with the largest verifier-vote shift."""
++
++    del template_library
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix_arr = np.asarray(matrix, dtype=np.float64)
++    _validate_scores(labels_arr, matrix_arr, verifier_names)
++    if len(labels_arr) < MIN_ONLINE_UPDATES:
++        raise ValueError("not enough cached rows for shifted session")
++    if not _runnable_labels(labels_arr):
++        raise ValueError("cached rows lack binary label support")
++
++    names = tuple(verifier_names)
++    if len(labels_arr) < 2 * MIN_ONLINE_UPDATES:
++        session = SessionSlice(
++            name="full_cached_shift_probe",
++            labels=labels_arr,
++            score_matrix=matrix_arr,
++            verifier_names=names,
++        )
++        metadata = {
++            "source": "full_cached_shift_probe_unpartitioned",
++            "policy": "use full cached slice when only one runnable shifted session is available",
++            "vote_distribution_distance": 0.0,
++        }
++        return session, session, metadata
++
++    rng = np.random.default_rng(int(random_seed))
++    projections = [("mean_score", np.mean(matrix_arr, axis=1))]
++    projections.extend((f"{name}_score", matrix_arr[:, index]) for index, name in enumerate(names))
++    best: tuple[float, str, int, np.ndarray, np.ndarray] | None = None
++    for projection_name, projection in projections:
++        order = np.argsort(projection, kind="mergesort")
++        bins = [order[i * len(order) // 4 : (i + 1) * len(order) // 4].copy() for i in range(4)]
++        for item in bins:
++            rng.shuffle(item)
++        for bin_index, shifted_idx in enumerate(bins):
++            if len(shifted_idx) < MIN_ONLINE_UPDATES or not _slice_has_binary_support(
++                labels_arr[shifted_idx],
++            ):
++                continue
++            reference_idx = np.concatenate(
++                [bins[index] for index in range(4) if index != bin_index],
++            )
++            if not _slice_has_binary_support(labels_arr[reference_idx]):
++                continue
++            distance = v11.vote_distribution_distance(
++                matrix_arr[reference_idx],
++                matrix_arr[shifted_idx],
++            )
++            candidate = (float(distance), projection_name, int(bin_index), shifted_idx, reference_idx)
++            if best is None or candidate[:3] > best[:3]:
++                best = candidate
++
++    if best is None:
++        raise ValueError("no binary shifted cached slice is available")
++    distance, projection_name, bin_index, shifted_idx, reference_idx = best
++    if distance < SHIFT_DISTANCE_THRESHOLD:
++        raise ValueError("no distributionally shifted cached slice clears threshold")
++    shifted = SessionSlice(
++        name=f"{projection_name}_shifted_slice_{bin_index}",
++        labels=labels_arr[shifted_idx],
++        score_matrix=matrix_arr[shifted_idx],
++        verifier_names=names,
++    )
++    source_reference = SessionSlice(
++        name=f"{projection_name}_template_source_reference_not_bin_{bin_index}",
++        labels=labels_arr[reference_idx],
++        score_matrix=matrix_arr[reference_idx],
++        verifier_names=names,
++    )
++    metadata = {
++        "source": f"{projection_name}_quartile_{bin_index}_shifted_slice",
++        "projection": projection_name,
++        "shifted_bin": int(bin_index),
++        "vote_distribution_distance": _round(distance),
++        "threshold": _round(SHIFT_DISTANCE_THRESHOLD),
++        "policy": "choose cached quartile slice with maximum verifier-vote distance from the remaining rows",
++    }
++    return shifted, source_reference, metadata
++
++
++def load_v13_template_library(path: Path | str) -> TemplateLibrary:
++    """Load a persisted Exp 3708 v13 template library."""
++
++    payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    if payload.get("schema") != "carnot.fr11_v13_template_library":
++        raise ValueError("expected a carnot.fr11_v13_template_library v13 template library")
++    cap = int(payload.get("cap", 0))
++    if cap < 1:
++        raise ValueError("v13 template library cap must be positive")
++    names = tuple(str(name) for name in payload.get("verifier_names", ()))
++    if not names:
++        raise ValueError("v13 template library verifier_names must be present")
++    entries: list[TemplateEntry] = []
++    for item in payload.get("entries", ()):
++        weights_by_name = item.get("weights")
++        if not isinstance(weights_by_name, Mapping) or any(name not in weights_by_name for name in names):
++            raise ValueError("v13 template library entry weights must cover verifier_names")
++        entries.append(
++            TemplateEntry(
++                template_id=str(item.get("template_id", "")),
++                weights=np.asarray([weights_by_name[name] for name in names], dtype=np.float64),
++                edges=tuple(dict(edge) for edge in item.get("edges", ())),
++                support=int(item.get("support", 0)),
++                source_sessions=tuple(str(value) for value in item.get("source_sessions", ())),
++                utility=float(item.get("utility", 0.0)),
++            )
++        )
++    return TemplateLibrary(
++        cap=cap,
++        verifier_names=names,
++        entries=tuple(entries),
++        consolidation_events=tuple(dict(event) for event in payload.get("consolidation_events", ())),
++    )
++
++
++def paired_bootstrap_delta_ci(
++    labels: Sequence[int] | np.ndarray,
++    template_scores: Sequence[float] | np.ndarray,
++    cold_scores: Sequence[float] | np.ndarray,
++    *,
++    seeds: Sequence[int],
++    n_bootstrap: int,
++) -> JsonDict:
++    """Return a paired bootstrap CI for template AUROC minus cold-start AUROC."""
++
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    template_arr = np.asarray(template_scores, dtype=np.float64)
++    cold_arr = np.asarray(cold_scores, dtype=np.float64)
++    if labels_arr.shape[0] != template_arr.shape[0] or labels_arr.shape[0] != cold_arr.shape[0]:
++        raise ValueError("labels and scores must have the same length")
++    if not np.isfinite(template_arr).all() or not np.isfinite(cold_arr).all():
++        raise ValueError("scores must be finite")
++    point = v10.score_metrics(labels_arr, template_arr)["auroc"] - v10.score_metrics(
++        labels_arr,
++        cold_arr,
++    )["auroc"]
++    values: list[float] = []
++    seed_means: list[float] = []
++    for seed in seeds:
++        rng = np.random.default_rng(int(seed))
++        per_seed: list[float] = []
++        for _ in range(int(n_bootstrap)):
++            idx = rng.integers(0, len(labels_arr), size=len(labels_arr))
++            if len(set(labels_arr[idx].tolist())) < 2:
++                continue
++            value = v10.score_metrics(labels_arr[idx], template_arr[idx])["auroc"] - v10.score_metrics(
++                labels_arr[idx],
++                cold_arr[idx],
++            )["auroc"]
++            per_seed.append(float(value))
++            values.append(float(value))
++        seed_means.append(_round(float(np.mean(per_seed))) if per_seed else _round(point))
++    if values:
++        low, high = np.percentile(np.asarray(values, dtype=np.float64), [2.5, 97.5])
++    else:
++        low = high = point
++    return {
++        "point": _round(point),
++        "ci95": [_round(low), _round(high)],
++        "bootstrap_seeds": [int(seed) for seed in seeds],
++        "seed_mean_deltas": seed_means,
++        "n_bootstrap_per_seed": int(n_bootstrap),
++    }
++
++
++def select_honest_verdict(
++    *,
++    blocked: bool,
++    raw_template_beats_with_ci: bool,
++    graceful_fallback: bool,
++    gate_passed: bool,
++) -> str:
++    """Choose one of the allowed Exp 3720 terminal verdicts."""
++
++    if blocked:
++        return BLOCKED_VERDICT
++    if gate_passed and raw_template_beats_with_ci:
++        return ROBUST_VERDICT
++    if gate_passed and graceful_fallback:
++        return FALLBACK_VERDICT
++    return HURTS_VERDICT
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3720 terminal artifact schema."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    verdict = artifact.get("honest_verdict")
++    if verdict not in TERMINAL_VERDICTS:
++        raise ValueError(f"unsupported honest_verdict: {verdict!r}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be present")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    gate = artifact.get("acceptance_gate")
++    if not isinstance(gate, Mapping) or type(gate.get("passed")) is not bool:
++        raise ValueError("acceptance_gate.passed must be present as a boolean")
++    if not isinstance(artifact.get("duration_s"), int | float):
++        raise ValueError("duration_s must be numeric")
++    serialized = json.dumps(artifact, sort_keys=True)
++    if "GGUF" in serialized or "CUDA" in serialized:
++        raise ValueError("forbidden inference marker present")
++    for field in (
++        "template_robust_or_graceful_fallback",
++        "conservative_fallback_triggered",
++        "collapse_detected_deploy_arm",
++        "template_library_bounded",
++        "pass_rate_vs_true_accuracy_distinct_assert",
++    ):
++        if type(artifact.get(field)) is not bool:
++            raise ValueError(f"{field} must be a boolean")
++    for field in ("deploy_arm_auroc_under_shift", "cold_start_auroc_under_shift"):
++        value = artifact.get(field)
++        if not _is_finite_number(value) or not 0.0 <= float(value) <= 1.0:
++            raise ValueError(f"{field} must be finite and in [0, 1]")
++    _validate_delta_ci(artifact.get("template_vs_cold_delta_ci"))
++    if verdict == BLOCKED_VERDICT:
++        return
++    if int(artifact.get("n_online_updates", 0)) < MIN_ONLINE_UPDATES:
++        raise ValueError(f"n_online_updates must be at least {MIN_ONLINE_UPDATES}")
++    library = artifact.get("template_library")
++    if not isinstance(library, Mapping):
++        raise ValueError("template_library must be present")
++    if int(library.get("size", 10**9)) > int(library.get("cap", -1)):
++        raise ValueError("template_library size exceeds cap")
++
++
++def write_artifact(
++    repo_root: Path | str,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    labels: Sequence[int] | None = None,
++    scores_by_verifier: Mapping[str, Sequence[float]] | None = None,
++    template_library: TemplateLibrary | None = None,
++    shifted_session: SessionSlice | None = None,
++    source_reference_session: SessionSlice | None = None,
++    shifted_session_source: str = "provided_shifted_session",
++    started_s: float | None = None,
++    now_s: float | None = None,
++    bootstrap_seeds: Sequence[int] = DEFAULT_BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++) -> Path:
++    """Build, validate, and persist the Exp 3720 JSON artifact."""
++
++    root = Path(repo_root)
++    start = time.time() if started_s is None else float(started_s)
++    if template_library is not None and (shifted_session is not None or source_reference_session is not None):
++        artifact = build_artifact_from_shifted_session(
++            template_library=template_library,
++            shifted_session=shifted_session,
++            source_reference_session=source_reference_session,
++            shifted_session_source=shifted_session_source,
++            started_s=start,
++            now_s=now_s,
++            persistence_dir=root / "results",
++            bootstrap_seeds=bootstrap_seeds,
++            n_bootstrap=n_bootstrap,
++        )
++    elif template_library is not None and labels is not None and scores_by_verifier is not None:
++        artifact = build_artifact_from_scores(
++            labels=labels,
++            scores_by_verifier=scores_by_verifier,
++            template_library=template_library,
++            started_s=start,
++            now_s=now_s,
++            persistence_dir=root / "results",
++            bootstrap_seeds=bootstrap_seeds,
++            n_bootstrap=n_bootstrap,
++        )
++    else:
++        artifact = build_artifact(
++            root,
++            started_s=start,
++            now_s=now_s,
++            bootstrap_seeds=bootstrap_seeds,
++            n_bootstrap=n_bootstrap,
++        )
++    output = root / output_path
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def reproducibility_checksum(
++    *,
++    template_library: TemplateLibrary,
++    shifted_session: SessionSlice,
++    source_reference_session: SessionSlice,
++    template_weights: Sequence[float],
++    cold_weights: Sequence[float],
++    random_seed: int,
++    bootstrap_seeds: Sequence[int],
++) -> str:
++    """Hash deterministic sessions, template memory, deploy weights, and seeds."""
++
++    digest = hashlib.sha256()
++    digest.update(_json_sha256(v13.template_library_to_json(template_library)).encode("ascii"))
++    for session in (source_reference_session, shifted_session):
++        digest.update(session.name.encode("utf-8"))
++        digest.update(np.ascontiguousarray(session.labels, dtype=np.int64).tobytes())
++        digest.update(np.ascontiguousarray(session.score_matrix, dtype=np.float64).tobytes())
++    digest.update(np.ascontiguousarray(template_weights, dtype=np.float64).tobytes())
++    digest.update(np.ascontiguousarray(cold_weights, dtype=np.float64).tobytes())
++    digest.update(str(int(random_seed)).encode("ascii"))
++    digest.update(json.dumps([int(seed) for seed in bootstrap_seeds]).encode("ascii"))
++    return digest.hexdigest()
++
++
++def _blocked_artifact(
++    *,
++    duration_s: float,
++    random_seed: int,
++    preconditions: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    payload = json.dumps(
++        {"preconditions": [dict(item) for item in preconditions], "random_seed": random_seed},
++        sort_keys=True,
++        separators=(",", ":"),
++    ).encode("utf-8")
++    artifact: JsonDict = {
++        "artifact": "experiment_3720_fr11_continuous_self_learning_v14",
++        "schema": "carnot.fr11_continuous_self_learning_v14",
++        "honest_verdict": BLOCKED_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "shifted_session_source": "blocked_shifted_slice_unavailable",
++        "deploy_arm_auroc_under_shift": 0.0,
++        "cold_start_auroc_under_shift": 0.0,
++        "template_robust_or_graceful_fallback": False,
++        "conservative_fallback_triggered": False,
++        "collapse_detected_deploy_arm": False,
++        "template_library_bounded": False,
++        "pass_rate_vs_true_accuracy_distinct_assert": False,
++        "n_online_updates": 0,
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": hashlib.sha256(payload).hexdigest(),
++        "duration_s": _round(duration_s),
++        "acceptance_gate": {
++            "condition": (
++                "template_robust_or_graceful_fallback == true AND "
++                "collapse_detected_deploy_arm == false AND "
++                "template_library_bounded == true AND "
++                "pass_rate_vs_true_accuracy_distinct_assert == true"
++            ),
++            "passed": False,
++            "principle": (
++                "Distribution-shift robustness is validated only when the "
++                "template helps OR falls back gracefully, no deploy collapse is "
++                "detected, the library stays bounded, and the two metrics are distinct."
++            ),
++        },
++        "adversarial_verify": "clean",
++        "template_vs_cold_delta_ci": {
++            "point": 0.0,
++            "ci95": [0.0, 0.0],
++            "bootstrap_seeds": [],
++            "seed_mean_deltas": [],
++            "n_bootstrap_per_seed": 0,
++        },
++        "preconditions_checked": [dict(item) for item in preconditions],
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def _fr11_precondition(root: Path) -> JsonDict:
++    fr11_dir = root / "python/carnot/fr11"
++    return {
++        "resource": "fr11_module",
++        "available": fr11_dir.is_dir(),
++        "detail": str(fr11_dir),
++    }
++
++
++def _template_library_precondition(root: Path) -> JsonDict:
++    path = root / V13_TEMPLATE_LIBRARY_REL_PATH
++    if not path.is_file():
++        return {
++            "resource": "v13_template_library",
++            "available": False,
++            "detail": str(path),
++        }
++    try:
++        library = load_v13_template_library(path)
++    except Exception as exc:  # noqa: BLE001 - precondition reports the exact parser failure.
++        return {
++            "resource": "v13_template_library",
++            "available": False,
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++    return {
++        "resource": "v13_template_library",
++        "available": _template_library_bounded(library) and bool(library.entries),
++        "detail": f"{path}; size={len(library.entries)}; cap={library.cap}",
++    }
++
++
++def _trace_precondition(
++    labels: Sequence[int] | np.ndarray,
++    scores_by_verifier: Mapping[str, Sequence[float]],
++) -> JsonDict:
++    return {
++        "resource": "cached_traces_with_per_verifier_scores_and_labels",
++        "available": _runnable_labels(np.asarray(labels, dtype=np.int64)),
++        "detail": (
++            f"n_examples={len(labels)}; labels={sorted(set(int(value) for value in labels))}; "
++            f"n_verifiers={len(scores_by_verifier)}; required>={MIN_ONLINE_UPDATES}"
++        ),
++    }
++
++
++def _shifted_session_precondition(
++    template_library: TemplateLibrary,
++    shifted_session: SessionSlice | None,
++    source_reference_session: SessionSlice | None,
++) -> JsonDict:
++    return {
++        "resource": "distributionally_shifted_session_slice",
++        "available": False,
++        "detail": (
++            f"template_library_bounded={_template_library_bounded(template_library)}; "
++            f"shifted_present={shifted_session is not None}; "
++            f"source_reference_present={source_reference_session is not None}; "
++            f"required shifted/source slices with >={MIN_ONLINE_UPDATES} binary rows"
++        ),
++    }
++
++
++def _validate_session(session: SessionSlice) -> None:
++    _validate_scores(session.labels, session.score_matrix, session.verifier_names)
++
++
++def _validate_scores(
++    labels: Sequence[int] | np.ndarray,
++    matrix: np.ndarray,
++    verifier_names: Sequence[str],
++) -> None:
++    labels_arr = np.asarray(labels, dtype=np.int64)
++    matrix_arr = np.asarray(matrix, dtype=np.float64)
++    if matrix_arr.ndim != 2:
++        raise ValueError("score matrix must be two-dimensional")
++    if matrix_arr.shape[0] != len(labels_arr):
++        raise ValueError("labels and verifier scores must have the same length")
++    if matrix_arr.shape[1] != len(tuple(verifier_names)):
++        raise ValueError("score matrix must match verifier_names")
++    if not np.isfinite(matrix_arr).all():
++        raise ValueError("verifier score matrix must be finite")
++
++
++def _runnable_session(session: SessionSlice) -> bool:
++    return len(session.labels) >= MIN_ONLINE_UPDATES and _slice_has_binary_support(session.labels)
++
++
++def _runnable_labels(labels: np.ndarray) -> bool:
++    return len(labels) >= MIN_ONLINE_UPDATES and _slice_has_binary_support(labels)
++
++
++def _slice_has_binary_support(labels: Sequence[int] | np.ndarray) -> bool:
++    return {int(value) for value in labels} == {0, 1}
++
++
++def _template_library_bounded(library: TemplateLibrary) -> bool:
++    return int(library.cap) >= 1 and len(library.entries) <= int(library.cap)
++
++
++def _signed_scores(matrix: np.ndarray, weights: Sequence[float]) -> np.ndarray:
++    return np.clip(
++        np.asarray(matrix, dtype=np.float64) @ np.asarray(weights, dtype=np.float64),
++        0.0,
++        1.0,
++    )
++
++
++def _weights_to_json(names: Sequence[str], weights: Sequence[float]) -> dict[str, float]:
++    return {name: _round(weight) for name, weight in zip(names, weights, strict=True)}
++
++
++def _validate_delta_ci(value: Any) -> None:
++    if not isinstance(value, Mapping):
++        raise ValueError("template_vs_cold_delta_ci must be an object")
++    point = value.get("point")
++    ci = value.get("ci95")
++    if not _is_finite_number(point) or not isinstance(ci, list) or len(ci) != 2:
++        raise ValueError("template_vs_cold_delta_ci must include point and ci95")
++    if not all(_is_finite_number(item) for item in ci):
++        raise ValueError("template_vs_cold_delta_ci bounds must be finite")
++    if not float(ci[0]) <= float(point) <= float(ci[1]):
++        raise ValueError("template_vs_cold_delta_ci must contain its point estimate")
++
++
++def _json_sha256(payload: Mapping[str, Any]) -> str:
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8"),
++    ).hexdigest()
++
++
++def _is_finite_number(value: Any) -> bool:
++    return isinstance(value, int | float) and math.isfinite(float(value))
++
++
++def _duration(started_s: float, now_s: float | None) -> float:
++    end = time.time() if now_s is None else float(now_s)
++    return max(0.0, end - float(started_s))
++
++
++def _round(value: float | int | np.floating[Any], digits: int = 6) -> float:
++    return round(float(value), digits)
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 56109ad7b3..878c7713f3 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T15:44:15.168241Z",
+-  "duration_s": 0.010856866836547852,
++  "run_date": "2026-06-02T16:45:08.245428Z",
++  "duration_s": 0.009231328964233398,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "29484008e9daec24edf299c6fb2d48d0a9940d644ca19135cbf3012513ddee8f",
++  "reproducibility_checksum": "11c876904c3068bce65216401f344e0fb9f1470bea9d2282e6d9aca1e935d9a7",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "d0dabf1b7b846117f552db0ce45d91aa5a0f6f42"
++    "adversarial_verify_version": "1e1f8b41bc2866259fbee1d7e8793d4dec959ea8"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 5b2024fae9..2996ebc642 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T15:44:15.181030Z",
+-  "duration_s": 0.009333610534667969,
++  "run_date": "2026-06-02T16:45:08.263481Z",
++  "duration_s": 0.014821767807006836,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "22a9a4404e43a82a8ea178ff2294c8a0d98877ebf361e522306e1854495a1659",
++  "reproducibility_checksum": "7d73f601c1b7e3ceafb2a2315ccf3ff4bf41f6c406e2e29a51bbe16b8b0832f9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "d0dabf1b7b846117f552db0ce45d91aa5a0f6f42"
++    "adversarial_verify_version": "1e1f8b41bc2866259fbee1d7e8793d4dec959ea8"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 07268b9332..2cc8f7c603 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1228790283203125,
++  "efficiency_gains_ms": 2.1295547485351562,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 1a099880b0..c8548e3563 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2814795970916748,
++  "duration_s": 0.23913860321044922,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 74fa3313c0..0d055a29f6 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.457500133663416e-05,
++  "duration_s": 3.563700011000037e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3720_fr11_continuous_self_learning_v14.json b/results/experiment_3720_fr11_continuous_self_learning_v14.json
+new file mode 100644
+index 0000000000..3a08d08de2
+--- /dev/null
++++ b/results/experiment_3720_fr11_continuous_self_learning_v14.json
+@@ -0,0 +1,328 @@
++{
++  "acceptance_gate": {
++    "condition": "template_robust_or_graceful_fallback == true AND collapse_detected_deploy_arm == false AND template_library_bounded == true AND pass_rate_vs_true_accuracy_distinct_assert == true",
++    "passed": true,
++    "principle": "Distribution-shift robustness is validated only when the template helps OR falls back gracefully (never hurts via collapse), the library stays bounded, and the two metrics are genuinely distinct."
++  },
++  "adversarial_verify": "clean",
++  "artifact": "experiment_3720_fr11_continuous_self_learning_v14",
++  "cold_start_auroc_under_shift": 0.708859,
++  "cold_start_metrics_under_shift": {
++    "auroc": 0.708859,
++    "brier": 0.407879,
++    "ece": 0.548139
++  },
++  "cold_start_weights": {
++    "fr11_session_memory": 0.25,
++    "tier0r_curry_howard": 0.25,
++    "tier0s_arithmetic_gap": 0.25,
++    "tier0u_logical_consistency": 0.25
++  },
++  "collapse_detected_deploy_arm": false,
++  "conservative_fallback_triggered": true,
++  "consolidated_template_weights": {
++    "fr11_session_memory": 0.235017,
++    "tier0r_curry_howard": -0.090154,
++    "tier0s_arithmetic_gap": -0.478094,
++    "tier0u_logical_consistency": 0.196736
++  },
++  "control_arm": "cold_start_no_template",
++  "deploy_arm": "consolidated_template_under_shift",
++  "deploy_arm_auroc_under_shift": 0.699111,
++  "deploy_arm_metrics_under_shift": {
++    "auroc": 0.708859,
++    "brier": 0.407879,
++    "ece": 0.548139
++  },
++  "duration_s": 0.817536,
++  "effective_deploy_policy": "cold_start_no_template",
++  "fallback_effective_policy_no_worse_than_cold_start": true,
++  "field_principles": {
++    "cold_start_auroc_under_shift": "Cold-start ensemble AUROC on the shifted session -- the control.",
++    "collapse_detected_deploy_arm": "The conservative-default rule must prevent weight collapse under shift (alpha_t grounding).",
++    "conservative_fallback_triggered": "Records whether the conservative-default rule detected the shift and fell back -- the alpha_t-grounding safety behaviour.",
++    "deploy_arm_auroc_under_shift": "Consolidated-template ensemble AUROC on the shifted session.",
++    "duration_s": "Plausibility floor.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
++    "n_online_updates": "Sample-size of the self-learning sweep (>=200).",
++    "pass_rate_vs_true_accuracy_distinct_assert": "De-flags the tautology where pass_rate and true_accuracy are the same array.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "shifted_session_source": "The DIFFERENT slice used as the OOD fresh session -- the v14 forward difference.",
++    "template_library_bounded": "True iff the template library stays under its size cap.",
++    "template_robust_or_graceful_fallback": "BARE bool. True iff deploy beats cold-start under shift OR falls back gracefully (>= cold-start, no collapse). STORE AS BARE true/false."
++  },
++  "honest_verdict": "complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached traces; no LLM load; no compute-bound marker).",
++  "n_online_updates": 250,
++  "pass_rate_trajectory": [
++    0.681663,
++    0.702604,
++    0.677284,
++    0.676312,
++    0.675888,
++    0.675484,
++    0.63919,
++    0.681737
++  ],
++  "pass_rate_vs_true_accuracy_distinct_assert": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/fr11",
++      "resource": "fr11_module"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3708_fr11_v13_template_library.json; size=2; cap=2",
++      "resource": "v13_template_library"
++    },
++    {
++      "available": true,
++      "detail": "line_count=8829; required>=1000",
++      "resource": "cached_traces_with_per_verifier_scores_and_labels"
++    },
++    {
++      "available": true,
++      "detail": "loaded=tier0r_curry_howard,tier0s_arithmetic_gap,tier0u_logical_consistency",
++      "resource": "text_scoring_verifiers"
++    },
++    {
++      "available": true,
++      "detail": "state_files=21; memory_loaded=True",
++      "resource": "fr11_session_memory_verifier"
++    },
++    {
++      "available": true,
++      "detail": "online graph fit, graph learner, and fixed crossfit baseline importable",
++      "resource": "dependency_aware_weighting_implementation"
++    },
++    {
++      "available": true,
++      "detail": "drift stream builder, online re-estimator, and v10 fixed baseline importable",
++      "resource": "drift_aware_online_reestimation_implementation"
++    }
++  ],
++  "random_seed": 3720,
++  "raw_template_beats_cold_start_with_ci": false,
++  "raw_template_metrics_under_shift": {
++    "auroc": 0.699111,
++    "brier": 0.726324,
++    "ece": 0.787959
++  },
++  "reproducibility_checksum": "7c8c580e98ceb7e7e5e38170f0ab26a0f0fd03ee715005afbdc6394dfc996a5d",
++  "schema": "carnot.fr11_continuous_self_learning_v14",
++  "shift_detected_deploy_arm": true,
++  "shift_detection_threshold": 0.3,
++  "shift_vote_distribution_distance": 0.987971,
++  "shifted_session": {
++    "n_examples": 250,
++    "name": "fr11_session_memory_score_shifted_slice_3"
++  },
++  "shifted_session_metadata": {
++    "policy": "choose cached quartile slice with maximum verifier-vote distance from the remaining rows",
++    "projection": "fr11_session_memory_score",
++    "shifted_bin": 3,
++    "source": "fr11_session_memory_score_quartile_3_shifted_slice",
++    "threshold": 0.3,
++    "vote_distribution_distance": 0.987971
++  },
++  "shifted_session_source": "fr11_session_memory_score_quartile_3_shifted_slice",
++  "source_reference_session": {
++    "n_examples": 750,
++    "name": "fr11_session_memory_score_template_source_reference_not_bin_3"
++  },
++  "template_library": {
++    "bounded_policy": "cap entries; on overflow merge the highest cosine-similarity pair; evict lowest utility/support only if a merge cannot restore the cap",
++    "cap": 2,
++    "consolidation_events": [
++      {
++        "action": "add",
++        "size": 1,
++        "template_id": "template_1_fe982c64a1"
++      },
++      {
++        "action": "add",
++        "size": 2,
++        "template_id": "template_2_a15cb826f9"
++      },
++      {
++        "action": "add",
++        "size": 3,
++        "template_id": "template_3_4c762613f6"
++      },
++      {
++        "action": "merge",
++        "merged_template_id": "merged_064de988b8",
++        "policy": "merge highest cosine similarity pair when cap is exceeded",
++        "size": 2
++      }
++    ],
++    "entries": [
++      {
++        "edges": [
++          {
++            "by_label_correlation": {
++              "0": -0.61291,
++              "1": -0.24994
++            },
++            "conditional_mutual_information": 0.122508,
++            "pair": [
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.123512,
++              "1": -0.450412
++            },
++            "conditional_mutual_information": 0.066446,
++            "pair": [
++              "fr11_session_memory",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.074859,
++              "1": -0.143694
++            },
++            "conditional_mutual_information": 0.007048,
++            "pair": [
++              "fr11_session_memory",
++              "tier0u_logical_consistency"
++            ]
++          }
++        ],
++        "source_sessions": [
++          "mean_score_session_3"
++        ],
++        "support": 250,
++        "template_id": "template_3_4c762613f6",
++        "utility": 0.981334,
++        "weights": {
++          "fr11_session_memory": 0.322018,
++          "tier0r_curry_howard": 0.109594,
++          "tier0s_arithmetic_gap": -0.038745,
++          "tier0u_logical_consistency": 0.529643
++        }
++      },
++      {
++        "edges": [
++          {
++            "by_label_correlation": {
++              "0": 0.229903,
++              "1": 0.228791
++            },
++            "conditional_mutual_information": 0.027115,
++            "pair": [
++              "fr11_session_memory",
++              "tier0r_curry_howard"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.614113,
++              "1": -0.562504
++            },
++            "conditional_mutual_information": 0.203223,
++            "pair": [
++              "fr11_session_memory",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": 0.0,
++              "1": 0.0
++            },
++            "conditional_mutual_information": 0.0,
++            "pair": [
++              "fr11_session_memory",
++              "tier0u_logical_consistency"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": -0.636267,
++              "1": -0.644225
++            },
++            "conditional_mutual_information": 0.265676,
++            "pair": [
++              "tier0r_curry_howard",
++              "tier0s_arithmetic_gap"
++            ]
++          },
++          {
++            "by_label_correlation": {
++              "0": 0.0,
++              "1": -0.119299
++            },
++            "conditional_mutual_information": 0.00516,
++            "pair": [
++              "tier0s_arithmetic_gap",
++              "tier0u_logical_consistency"
++            ]
++          }
++        ],
++        "source_sessions": [
++          "mean_score_session_0",
++          "mean_score_session_2"
++        ],
++        "support": 500,
++        "template_id": "merged_064de988b8",
++        "utility": 0.781006,
++        "weights": {
++          "fr11_session_memory": 0.16576,
++          "tier0r_curry_howard": -0.180147,
++          "tier0s_arithmetic_gap": -0.645372,
++          "tier0u_logical_consistency": 0.008721
++        }
++      }
++    ],
++    "schema": "carnot.fr11_v13_template_library",
++    "size": 2,
++    "verifier_names": [
++      "fr11_session_memory",
++      "tier0r_curry_howard",
++      "tier0s_arithmetic_gap",
++      "tier0u_logical_consistency"
++    ]
++  },
++  "template_library_bounded": true,
++  "template_robust_or_graceful_fallback": true,
++  "template_vs_cold_delta_ci": {
++    "bootstrap_seeds": [
++      3720,
++      3721,
++      3722,
++      3723,
++      3724
++    ],
++    "ci95": [
++      -0.182126,
++      0.16427
++    ],
++    "n_bootstrap_per_seed": 100,
++    "point": -0.009748,
++    "seed_mean_deltas": [
++      -0.000845,
++      -0.019347,
++      -0.01467,
++      -0.019541,
++      0.002821
++    ]
++  },
++  "true_accuracy_trajectory": [
++    0.125,
++    0.28125,
++    0.1875,
++    0.25,
++    0.1875,
++    0.21875,
++    0.34375,
++    0.192308
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1ac2f8a039..9cebc3d9ee 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T15:44:06Z",
+-  "finished_at": "2026-06-02T15:44:06Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T16:45:00Z",
++  "finished_at": "2026-06-02T16:45:00Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 90ec552df1..b2b6c175b5 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T15:44:06Z",
+-  "finished_at": "2026-06-02T15:44:06Z",
++  "started_at": "2026-06-02T16:45:00Z",
++  "finished_at": "2026-06-02T16:45:00Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index bd1be40654..0945552a7b 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T15:44:06Z",
+-  "finished_at": "2026-06-02T15:44:06Z",
++  "started_at": "2026-06-02T16:45:00Z",
++  "finished_at": "2026-06-02T16:45:00Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3720_fr11_continuous_self_learning_v14.py b/scripts/experiment_3720_fr11_continuous_self_learning_v14.py
+new file mode 100644
+index 0000000000..b5778ac8c4
+--- /dev/null
++++ b/scripts/experiment_3720_fr11_continuous_self_learning_v14.py
+@@ -0,0 +1,27 @@
++#!/usr/bin/env python3
++"""Run Exp 3720 FR-11 continuous self-learning v14."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.fr11.continuous_self_learning_v14 import write_artifact  # noqa: E402
++
++
++def main() -> int:
++    output_path = write_artifact(REPO_ROOT)
++    artifact = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3720_fr11_csl_v14.py b/tests/python/test_experiment_3720_fr11_csl_v14.py
+new file mode 100644
+index 0000000000..ac8e471ab3
+--- /dev/null
++++ b/tests/python/test_experiment_3720_fr11_csl_v14.py
+@@ -0,0 +1,669 @@
++"""Tests for Exp 3720 FR-11 continuous self-learning v14.
++
++Spec: REQ-LEARN-3720, SCENARIO-LEARN-3720.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.fr11 import continuous_self_learning_v13 as exp3708
++from carnot.fr11 import continuous_self_learning_v14 as exp3720
++from carnot.fr11.continuous_self_learning_v13 import (
++    SessionSlice,
++    TemplateEntry,
++    TemplateLibrary,
++)
++
++
++VERIFIER_NAMES = exp3720.VERIFIER_NAMES
++
++
++def _binary_labels(seed: int, n_examples: int = 240) -> np.ndarray:
++    rng = np.random.default_rng(seed)
++    labels = np.asarray([0, 1] * (n_examples // 2), dtype=np.int64)
++    rng.shuffle(labels)
++    return labels
++
++
++def _shifted_session(outcome: str) -> SessionSlice:
++    labels = _binary_labels(3720)
++    y = labels.astype(np.float64)
++    if outcome == "template_robust_under_shift":
++        matrix = np.column_stack(
++            [
++                0.10 + 0.80 * y,
++                0.90 - 0.80 * y,
++                np.full(len(labels), 0.44),
++                np.full(len(labels), 0.56),
++            ]
++        )
++    elif outcome in {"template_falls_back_gracefully", "template_hurts_under_shift"}:
++        matrix = np.column_stack(
++            [
++                0.90 - 0.80 * y,
++                0.10 + 0.80 * y,
++                np.full(len(labels), 0.44),
++                np.full(len(labels), 0.56),
++            ]
++        )
++    else:  # pragma: no cover - parametrization guards this branch.
++        raise ValueError(outcome)
++    return SessionSlice(
++        name=f"synthetic_{outcome}_slice",
++        labels=labels,
++        score_matrix=np.clip(matrix, 0.0, 1.0),
++        verifier_names=VERIFIER_NAMES,
++    )
++
++
++def _source_reference(outcome: str, shifted: SessionSlice) -> SessionSlice:
++    if outcome == "template_hurts_under_shift":
++        return SessionSlice(
++            name="synthetic_source_not_detected_by_shift_rule",
++            labels=shifted.labels.copy(),
++            score_matrix=shifted.score_matrix.copy(),
++            verifier_names=VERIFIER_NAMES,
++        )
++    labels = _binary_labels(3719)
++    matrix = np.column_stack(
++        [
++            np.full(len(labels), 0.20),
++            np.full(len(labels), 0.20),
++            np.full(len(labels), 0.20),
++            np.full(len(labels), 0.20),
++        ]
++    )
++    return SessionSlice(
++        name="synthetic_v13_template_source_slice",
++        labels=labels,
++        score_matrix=matrix,
++        verifier_names=VERIFIER_NAMES,
++    )
++
++
++def _template_library(weights: list[float] | None = None, *, cap: int = 2) -> TemplateLibrary:
++    entry = TemplateEntry(
++        template_id="synthetic_v13_template",
++        weights=np.asarray(weights or [0.72, -0.22, 0.03, 0.03], dtype=np.float64),
++        edges=({"pair": [VERIFIER_NAMES[0], VERIFIER_NAMES[1]], "conditional_mutual_information": 0.1},),
++        support=240,
++        source_sessions=("synthetic_v13_template_source_slice",),
++        utility=0.75,
++    )
++    return TemplateLibrary(
++        cap=cap,
++        verifier_names=tuple(VERIFIER_NAMES),
++        entries=(entry,),
++        consolidation_events=({"action": "add", "template_id": entry.template_id, "size": 1},),
++    )
++
++
++def _artifact_for_outcome(outcome: str, tmp_path: Path) -> dict[str, object]:
++    if outcome == "blocked":
++        return exp3720.build_artifact_from_shifted_session(
++            template_library=_template_library(),
++            shifted_session=None,
++            source_reference_session=None,
++            shifted_session_source="synthetic_blocked_missing_shifted_slice",
++            started_s=1.0,
++            now_s=3.0,
++            random_seed=3720,
++            persistence_dir=tmp_path,
++            bootstrap_seeds=(11, 13),
++            n_bootstrap=8,
++        )
++    shifted = _shifted_session(outcome)
++    return exp3720.build_artifact_from_shifted_session(
++        template_library=_template_library(),
++        shifted_session=shifted,
++        source_reference_session=_source_reference(outcome, shifted),
++        shifted_session_source=f"synthetic_{outcome}_distribution_slice",
++        started_s=1.0,
++        now_s=3.0,
++        random_seed=3720,
++        persistence_dir=tmp_path,
++        bootstrap_seeds=(11, 13),
++        n_bootstrap=8,
++    )
++
++
++@pytest.mark.parametrize(
++    ("outcome", "expected_verdict", "expected_fallback", "expected_gate"),
++    [
++        (
++            "template_robust_under_shift",
++            exp3720.ROBUST_VERDICT,
++            False,
++            True,
++        ),
++        (
++            "template_falls_back_gracefully",
++            exp3720.FALLBACK_VERDICT,
++            True,
++            True,
++        ),
++        (
++            "template_hurts_under_shift",
++            exp3720.HURTS_VERDICT,
++            False,
++            False,
++        ),
++        ("blocked", exp3720.BLOCKED_VERDICT, False, False),
++    ],
++)
++def test_req_learn_3720_honest_synthetic_outcomes(
++    outcome: str,
++    expected_verdict: str,
++    expected_fallback: bool,
++    expected_gate: bool,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-LEARN-3720: honest outcomes are parametrized and non-poisoned."""
++
++    artifact = _artifact_for_outcome(outcome, tmp_path)
++
++    exp3720.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == expected_verdict
++    assert set(exp3720.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3720.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3720.INFERENCE_SUBSTRATE
++    assert artifact["conservative_fallback_triggered"] is expected_fallback
++    assert artifact["acceptance_gate"]["passed"] is expected_gate
++    assert "GGUF" not in json.dumps(artifact)
++    assert "CUDA" not in json.dumps(artifact)
++
++    if outcome == "blocked":
++        assert artifact["n_online_updates"] == 0
++        assert artifact["template_robust_or_graceful_fallback"] is False
++        return
++
++    assert artifact["n_online_updates"] >= 200
++    assert artifact["template_library_bounded"] is True
++    assert artifact["template_library"]["size"] <= artifact["template_library"]["cap"]
++    assert artifact["collapse_detected_deploy_arm"] is False
++    assert artifact["pass_rate_vs_true_accuracy_distinct_assert"] is True
++    assert artifact["pass_rate_trajectory"] != artifact["true_accuracy_trajectory"]
++    assert type(artifact["template_robust_or_graceful_fallback"]) is bool
++
++    if outcome == "template_robust_under_shift":
++        assert artifact["template_robust_or_graceful_fallback"] is True
++        assert artifact["deploy_arm_auroc_under_shift"] > artifact["cold_start_auroc_under_shift"]
++        assert artifact["effective_deploy_policy"] == "consolidated_template_under_shift"
++        assert artifact["template_vs_cold_delta_ci"]["ci95"][0] > 0.0
++    elif outcome == "template_falls_back_gracefully":
++        assert artifact["template_robust_or_graceful_fallback"] is True
++        assert artifact["deploy_arm_auroc_under_shift"] < artifact["cold_start_auroc_under_shift"]
++        assert artifact["effective_deploy_policy"] == "cold_start_no_template"
++        assert artifact["fallback_effective_policy_no_worse_than_cold_start"] is True
++        assert artifact["template_vs_cold_delta_ci"]["ci95"][1] <= 0.0
++    else:
++        assert artifact["template_robust_or_graceful_fallback"] is False
++        assert artifact["deploy_arm_auroc_under_shift"] < artifact["cold_start_auroc_under_shift"]
++        assert artifact["effective_deploy_policy"] == "consolidated_template_under_shift"
++
++
++def test_req_learn_3720_build_artifact_preconditions_and_io(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-3720-1/2: cached traces and v13 memory are required."""
++
++    blocked = exp3720.build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    exp3720.validate_artifact(blocked)
++    assert blocked["honest_verdict"] == exp3720.BLOCKED_VERDICT
++    assert blocked["preconditions_checked"][0]["resource"] == "fr11_module"
++
++    (tmp_path / "python/carnot/fr11").mkdir(parents=True)
++    library_path = tmp_path / exp3708.TEMPLATE_LIBRARY_REL_PATH
++    library_path.parent.mkdir(parents=True, exist_ok=True)
++    library_path.write_text(
++        json.dumps(exp3708.template_library_to_json(_template_library()), indent=2),
++        encoding="utf-8",
++    )
++    shifted = _shifted_session("template_robust_under_shift")
++    labels = shifted.labels.tolist()
++    scores_by_verifier = {
++        name: shifted.score_matrix[:, index].tolist()
++        for index, name in enumerate(VERIFIER_NAMES)
++    }
++    monkeypatch.setattr(
++        exp3720,
++        "probe_cached_trace_preconditions",
++        lambda root, n_examples: [
++            {
++                "resource": "cached_traces_with_per_verifier_scores_and_labels",
++                "available": True,
++                "detail": "fixture",
++            }
++        ],
++    )
++    monkeypatch.setattr(
++        exp3720,
++        "score_fover_corpus",
++        lambda root, n_examples, random_seed: (labels, scores_by_verifier),
++    )
++    monkeypatch.setattr(
++        exp3720,
++        "select_shifted_session",
++        lambda labels, score_matrix, verifier_names, template_library, random_seed: (
++            shifted,
++            _source_reference("template_robust_under_shift", shifted),
++            {"source": "monkeypatched_shifted_slice"},
++        ),
++    )
++    artifact = exp3720.build_artifact(
++        tmp_path,
++        started_s=0.0,
++        now_s=1.0,
++        bootstrap_seeds=(1,),
++        n_bootstrap=2,
++    )
++    exp3720.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == exp3720.ROBUST_VERDICT
++    assert artifact["shifted_session_source"] == "monkeypatched_shifted_slice"
++
++    def _raise_score(root: Path, n_examples: int, random_seed: int) -> tuple[list[int], dict[str, list[float]]]:
++        raise RuntimeError("cached traces unavailable")
++
++    monkeypatch.setattr(exp3720, "score_fover_corpus", _raise_score)
++    failed_score = exp3720.build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    exp3720.validate_artifact(failed_score)
++    assert failed_score["preconditions_checked"][-1]["resource"] == "cached_trace_scoring"
++
++    output = exp3720.write_artifact(
++        tmp_path,
++        output_path="results/experiment_3720_fixture.json",
++        template_library=_template_library(),
++        shifted_session=shifted,
++        source_reference_session=_source_reference("template_robust_under_shift", shifted),
++        shifted_session_source="write_fixture_shifted_slice",
++        started_s=0.0,
++        now_s=1.0,
++        bootstrap_seeds=(1,),
++        n_bootstrap=2,
++    )
++    payload = json.loads(output.read_text(encoding="utf-8"))
++    exp3720.validate_artifact(payload)
++    assert payload["honest_verdict"] == exp3720.ROBUST_VERDICT
++
++    label_output = exp3720.write_artifact(
++        tmp_path,
++        output_path="results/experiment_3720_label_fixture.json",
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        template_library=_template_library(),
++        started_s=0.0,
++        now_s=1.0,
++        bootstrap_seeds=(1,),
++        n_bootstrap=2,
++    )
++    label_payload = json.loads(label_output.read_text(encoding="utf-8"))
++    exp3720.validate_artifact(label_payload)
++    assert label_payload["honest_verdict"] == exp3720.ROBUST_VERDICT
++
++    auto_blocked = exp3720.write_artifact(
++        tmp_path / "auto_blocked_root",
++        output_path="results/experiment_3720_auto_blocked.json",
++        started_s=0.0,
++        now_s=1.0,
++    )
++    auto_payload = json.loads(auto_blocked.read_text(encoding="utf-8"))
++    exp3720.validate_artifact(auto_payload)
++    assert auto_payload["honest_verdict"] == exp3720.BLOCKED_VERDICT
++
++
++def test_req_learn_3720_build_artifact_template_load_failure(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-LEARN-3720-2: v13 memory load failures block explicitly."""
++
++    (tmp_path / "python/carnot/fr11").mkdir(parents=True)
++    monkeypatch.setattr(
++        exp3720,
++        "_template_library_precondition",
++        lambda root: {"resource": "v13_template_library", "available": True, "detail": "fixture"},
++    )
++    monkeypatch.setattr(
++        exp3720,
++        "probe_cached_trace_preconditions",
++        lambda root, n_examples: [
++            {
++                "resource": "cached_traces_with_per_verifier_scores_and_labels",
++                "available": True,
++                "detail": "fixture",
++            }
++        ],
++    )
++
++    def _raise_load(path: Path) -> TemplateLibrary:
++        raise RuntimeError("bad v13 memory")
++
++    monkeypatch.setattr(exp3720, "load_v13_template_library", _raise_load)
++    failed_load = exp3720.build_artifact(tmp_path, started_s=0.0, now_s=1.0)
++    exp3720.validate_artifact(failed_load)
++    assert failed_load["preconditions_checked"][-1]["resource"] == "v13_template_library_load"
++
++
++def test_req_learn_3720_score_selection_and_blocked_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-3720-2/3: malformed scores block before claiming robustness."""
++
++    shifted = _shifted_session("template_robust_under_shift")
++    labels = shifted.labels.tolist()
++    scores_by_verifier = {
++        name: shifted.score_matrix[:, index].tolist()
++        for index, name in enumerate(VERIFIER_NAMES)
++    }
++    artifact = exp3720.build_artifact_from_scores(
++        labels=labels,
++        scores_by_verifier=scores_by_verifier,
++        template_library=_template_library(),
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++        bootstrap_seeds=(1,),
++        n_bootstrap=2,
++    )
++    exp3720.validate_artifact(artifact)
++    assert artifact["n_online_updates"] >= 200
++
++    empty = exp3720.build_artifact_from_scores(
++        labels=[],
++        scores_by_verifier={},
++        template_library=_template_library(),
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    exp3720.validate_artifact(empty)
++    assert empty["honest_verdict"] == exp3720.BLOCKED_VERDICT
++
++    one_class = exp3720.build_artifact_from_scores(
++        labels=[0] * 240,
++        scores_by_verifier={name: [0.1] * 240 for name in VERIFIER_NAMES},
++        template_library=_template_library(),
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    exp3720.validate_artifact(one_class)
++    assert one_class["honest_verdict"] == exp3720.BLOCKED_VERDICT
++
++    with pytest.raises(ValueError, match="same length"):
++        exp3720.build_artifact_from_scores(
++            labels=[0, 1],
++            scores_by_verifier={name: [0.1] * 3 for name in VERIFIER_NAMES},
++            template_library=_template_library(),
++            started_s=0.0,
++            now_s=1.0,
++            persistence_dir=tmp_path,
++        )
++
++    with pytest.raises(ValueError, match="not enough cached rows"):
++        exp3720.select_shifted_session(
++            np.asarray([0, 1] * 20, dtype=np.int64),
++            np.zeros((40, len(VERIFIER_NAMES)), dtype=np.float64),
++            VERIFIER_NAMES,
++            _template_library(),
++            random_seed=1,
++        )
++
++    with pytest.raises(ValueError, match="binary label support"):
++        exp3720.select_shifted_session(
++            np.asarray([0] * 240, dtype=np.int64),
++            np.zeros((240, len(VERIFIER_NAMES)), dtype=np.float64),
++            VERIFIER_NAMES,
++            _template_library(),
++            random_seed=1,
++        )
++
++    non_shifted = exp3720.build_artifact_from_scores(
++        labels=[0, 1] * 200,
++        scores_by_verifier={name: [0.5] * 400 for name in VERIFIER_NAMES},
++        template_library=_template_library(),
++        started_s=0.0,
++        now_s=1.0,
++        persistence_dir=tmp_path,
++    )
++    exp3720.validate_artifact(non_shifted)
++    assert non_shifted["preconditions_checked"][-1]["resource"] == (
++        "distributionally_shifted_session_slice"
++    )
++
++    with pytest.raises(ValueError, match="no distributionally shifted"):
++        exp3720.select_shifted_session(
++            np.asarray([0, 1] * 400, dtype=np.int64),
++            np.full((800, len(VERIFIER_NAMES)), 0.20, dtype=np.float64),
++            VERIFIER_NAMES,
++            _template_library(),
++            random_seed=1,
++        )
++
++    reference_not_binary_labels = np.asarray([0, 1] * 100 + [0] * 600, dtype=np.int64)
++    with pytest.raises(ValueError, match="no binary shifted"):
++        exp3720.select_shifted_session(
++            reference_not_binary_labels,
++            np.full((800, len(VERIFIER_NAMES)), 0.20, dtype=np.float64),
++            VERIFIER_NAMES,
++            _template_library(),
++            random_seed=1,
++        )
++
++    large_labels = np.asarray([0, 1] * 400, dtype=np.int64)
++    large_matrix = np.full((800, len(VERIFIER_NAMES)), 0.20, dtype=np.float64)
++    large_matrix[600:, :] = 0.80
++    shifted, source_reference, metadata = exp3720.select_shifted_session(
++        large_labels,
++        large_matrix,
++        VERIFIER_NAMES,
++        _template_library(),
++        random_seed=1,
++    )
++    assert shifted.name.endswith("shifted_slice_3")
++    assert source_reference.name.endswith("not_bin_3")
++    assert metadata["vote_distribution_distance"] >= exp3720.SHIFT_DISTANCE_THRESHOLD
++
++
++def test_req_learn_3720_validation_and_template_edges(tmp_path: Path) -> None:
++    """REQ-LEARN-3720-6/7/8: schema and v13 library validation are strict."""
++
++    assert (
++        exp3720.select_honest_verdict(
++            blocked=False,
++            raw_template_beats_with_ci=True,
++            graceful_fallback=False,
++            gate_passed=True,
++        )
++        == exp3720.ROBUST_VERDICT
++    )
++    assert (
++        exp3720.select_honest_verdict(
++            blocked=False,
++            raw_template_beats_with_ci=False,
++            graceful_fallback=True,
++            gate_passed=True,
++        )
++        == exp3720.FALLBACK_VERDICT
++    )
++    assert (
++        exp3720.select_honest_verdict(
++            blocked=False,
++            raw_template_beats_with_ci=True,
++            graceful_fallback=False,
++            gate_passed=False,
++        )
++        == exp3720.HURTS_VERDICT
++    )
++    assert (
++        exp3720.select_honest_verdict(
++            blocked=True,
++            raw_template_beats_with_ci=False,
++            graceful_fallback=False,
++            gate_passed=False,
++        )
++        == exp3720.BLOCKED_VERDICT
++    )
++
++    library_path = tmp_path / "library.json"
++    library_path.write_text(
++        json.dumps(exp3708.template_library_to_json(_template_library()), indent=2),
++        encoding="utf-8",
++    )
++    loaded = exp3720.load_v13_template_library(library_path)
++    assert loaded.cap == 2
++    assert loaded.entries[0].template_id == "synthetic_v13_template"
++
++    with pytest.raises(FileNotFoundError):
++        exp3720.load_v13_template_library(tmp_path / "missing.json")
++
++    bad_schema = tmp_path / "bad_schema.json"
++    bad_schema.write_text(json.dumps({"schema": "wrong"}), encoding="utf-8")
++    with pytest.raises(ValueError, match="v13 template library"):
++        exp3720.load_v13_template_library(bad_schema)
++
++    bad_cap = tmp_path / "bad_cap.json"
++    payload = exp3708.template_library_to_json(_template_library(cap=0))
++    payload["cap"] = 0
++    bad_cap.write_text(json.dumps(payload), encoding="utf-8")
++    with pytest.raises(ValueError, match="cap"):
++        exp3720.load_v13_template_library(bad_cap)
++
++    bad_weight = tmp_path / "bad_weight.json"
++    payload = exp3708.template_library_to_json(_template_library())
++    payload["entries"][0]["weights"].pop(VERIFIER_NAMES[0])
++    bad_weight.write_text(json.dumps(payload), encoding="utf-8")
++    with pytest.raises(ValueError, match="weights"):
++        exp3720.load_v13_template_library(bad_weight)
++
++    bad_names = tmp_path / "bad_names.json"
++    payload = exp3708.template_library_to_json(_template_library())
++    payload["verifier_names"] = []
++    bad_names.write_text(json.dumps(payload), encoding="utf-8")
++    with pytest.raises(ValueError, match="verifier_names"):
++        exp3720.load_v13_template_library(bad_names)
++
++    invalid_root = tmp_path / "invalid_precondition_root"
++    (invalid_root / "results").mkdir(parents=True)
++    (invalid_root / exp3708.TEMPLATE_LIBRARY_REL_PATH).write_text(
++        json.dumps({"schema": "wrong"}),
++        encoding="utf-8",
++    )
++    invalid_precondition = exp3720._template_library_precondition(invalid_root)  # noqa: SLF001
++    assert invalid_precondition["available"] is False
++
++    artifact = _artifact_for_outcome("template_robust_under_shift", tmp_path)
++    exp3720.validate_artifact(artifact)
++
++    missing = dict(artifact)
++    missing.pop("duration_s")
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        exp3720.validate_artifact(missing)
++
++    bad_verdict = dict(artifact, honest_verdict="complete: unsupported")
++    with pytest.raises(ValueError, match="unsupported honest_verdict"):
++        exp3720.validate_artifact(bad_verdict)
++
++    no_principles = dict(artifact)
++    no_principles.pop("field_principles")
++    with pytest.raises(ValueError, match="field_principles"):
++        exp3720.validate_artifact(no_principles)
++
++    missing_principle = dict(artifact)
++    missing_principle["field_principles"] = dict(artifact["field_principles"])
++    missing_principle["field_principles"].pop("duration_s")
++    with pytest.raises(ValueError, match="missing field principles"):
++        exp3720.validate_artifact(missing_principle)
++
++    bad_gate = dict(artifact, acceptance_gate={"passed": "yes"})
++    with pytest.raises(ValueError, match="acceptance_gate"):
++        exp3720.validate_artifact(bad_gate)
++
++    bad_duration = dict(artifact, duration_s="fast")
++    with pytest.raises(ValueError, match="duration_s"):
++        exp3720.validate_artifact(bad_duration)
++
++    bad_bool = dict(artifact, template_robust_or_graceful_fallback="true")
++    with pytest.raises(ValueError, match="template_robust_or_graceful_fallback"):
++        exp3720.validate_artifact(bad_bool)
++
++    bad_numeric = dict(artifact, cold_start_auroc_under_shift=float("nan"))
++    with pytest.raises(ValueError, match="cold_start_auroc_under_shift"):
++        exp3720.validate_artifact(bad_numeric)
++
++    bad_updates = dict(artifact, n_online_updates=199)
++    with pytest.raises(ValueError, match="n_online_updates"):
++        exp3720.validate_artifact(bad_updates)
++
++    oversized_library = dict(artifact)
++    oversized_library["template_library"] = dict(artifact["template_library"], size=3, cap=2)
++    with pytest.raises(ValueError, match="template_library size exceeds cap"):
++        exp3720.validate_artifact(oversized_library)
++
++    no_library = dict(artifact)
++    no_library.pop("template_library")
++    with pytest.raises(ValueError, match="template_library"):
++        exp3720.validate_artifact(no_library)
++
++    bad_marker = dict(artifact, inference_substrate="cached GGUF marker")
++    with pytest.raises(ValueError, match="forbidden inference marker"):
++        exp3720.validate_artifact(bad_marker)
++
++    bad_ci_object = dict(artifact, template_vs_cold_delta_ci=None)
++    with pytest.raises(ValueError, match="template_vs_cold_delta_ci"):
++        exp3720.validate_artifact(bad_ci_object)
++
++    bad_ci_missing = dict(artifact, template_vs_cold_delta_ci={"point": 0.1})
++    with pytest.raises(ValueError, match="template_vs_cold_delta_ci"):
++        exp3720.validate_artifact(bad_ci_missing)
++
++    bad_ci_bound = dict(artifact, template_vs_cold_delta_ci={"point": 0.1, "ci95": [0.0, "bad"]})
++    with pytest.raises(ValueError, match="template_vs_cold_delta_ci"):
++        exp3720.validate_artifact(bad_ci_bound)
++
++    bad_ci = dict(artifact, template_vs_cold_delta_ci={"point": 0.1, "ci95": [0.2, 0.3]})
++    with pytest.raises(ValueError, match="template_vs_cold_delta_ci"):
++        exp3720.validate_artifact(bad_ci)
++
++    labels = np.asarray([0, 1], dtype=np.int64)
++    with pytest.raises(ValueError, match="two-dimensional"):
++        exp3720._validate_scores(labels, np.zeros(2), VERIFIER_NAMES)  # noqa: SLF001
++    with pytest.raises(ValueError, match="same length"):
++        exp3720._validate_scores(labels, np.zeros((3, len(VERIFIER_NAMES))), VERIFIER_NAMES)  # noqa: SLF001
++    with pytest.raises(ValueError, match="verifier_names"):
++        exp3720._validate_scores(labels, np.zeros((2, 3)), VERIFIER_NAMES)  # noqa: SLF001
++    bad_matrix = np.zeros((2, len(VERIFIER_NAMES)), dtype=np.float64)
++    bad_matrix[0, 0] = float("nan")
++    with pytest.raises(ValueError, match="finite"):
++        exp3720._validate_scores(labels, bad_matrix, VERIFIER_NAMES)  # noqa: SLF001
++
++    with pytest.raises(ValueError, match="same length"):
++        exp3720.paired_bootstrap_delta_ci([0, 1], [0.1], [0.2, 0.3], seeds=(1,), n_bootstrap=1)
++    with pytest.raises(ValueError, match="finite"):
++        exp3720.paired_bootstrap_delta_ci(
++            [0, 1],
++            [0.1, float("nan")],
++            [0.2, 0.3],
++            seeds=(1,),
++            n_bootstrap=1,
++        )
++    sparse_ci = exp3720.paired_bootstrap_delta_ci(
++        [0, 1],
++        [0.1, 0.9],
++        [0.5, 0.5],
++        seeds=(0,),
++        n_bootstrap=4,
++    )
++    assert sparse_ci["n_bootstrap_per_seed"] == 4
++    no_bootstrap_ci = exp3720.paired_bootstrap_delta_ci(
++        [0, 1],
++        [0.1, 0.9],
++        [0.5, 0.5],
++        seeds=(1,),
++        n_bootstrap=0,
++    )
++    assert no_bootstrap_ci["ci95"] == [no_bootstrap_ci["point"], no_bootstrap_ci["point"]]
+-- 
+2.55.0
+

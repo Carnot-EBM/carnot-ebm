@@ -1,0 +1,145 @@
+From 17d9f5e5dbf72414bdf348b067d61598bb2819fd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 21:32:42 -0400
+Subject: [PATCH 00683/11171] [outer-loop] Sudoku v4 amortized capstone:
+ reversal confirms the wall is amortization (split verdict)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+4-way eval on the SAME trained Refiner + carved global-negative EBT (n=500, seed0):
+  random-init energy descent      0.000   (v1->v3 failure, recomputed)
+  refiner greedy (amortized)      0.180   (replicates v1's 0.182)
+  refiner-init energy descent     0.166   (learned start, SAME energy)
+  energy-rerank refiner@K=32       0.120
+
+CONFIRMED by reversal: identical energy, only init differs -> 0.000 (cold) vs
+0.166 (learned refiner init). The 0->16.6% jump from initialization alone proves
+the wall was amortized inference, not the energy.
+
+HONEST NEGATIVE: the carved EBT does NOT improve the amortized generator here —
+energy polishing slightly hurts (0.18->0.166), energy-reranking K=32 hurts more
+(0.18->0.12). The Langevin-carved EBT scores gross validity but cannot discriminate
+among the refiner's near-correct candidates. Energy's role narrows to training
+oracle + validity gate, NOT a rerank stage on a strong amortized generator.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ .../energy-as-generator-sudoku-thesis.md      | 60 +++++++++++++++++++
+ results/sudoku_amortized_capstone_v4.json     | 35 +++++++++++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 results/sudoku_amortized_capstone_v4.json
+
+diff --git a/docs/research-notes/energy-as-generator-sudoku-thesis.md b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+index e378a1b29c..d48034bb7e 100644
+--- a/docs/research-notes/energy-as-generator-sudoku-thesis.md
++++ b/docs/research-notes/energy-as-generator-sudoku-thesis.md
+@@ -179,3 +179,63 @@ toward the answer).
+   contrastively-trained energy, which we exhaustively show fails (3 experiments,
+   even with perfect latent + perfect carving).
+ Artifact: results/sudoku_latent_energy_v3.json.
++
++## v4 — AMORTIZED CAPSTONE: confirm the wall by REVERSAL (2026-06-05)
++
++v1->v3 argued the wall is amortized inference by ELIMINATION (energy descent fails
++even with perfect latent + perfect carving). v4 confirms it by REVERSAL: train the
++amortized generator (Refiner) AND the carved scorer (global-negative EBT) on the
++same data, then run FOUR inference procedures against the SAME two trained models
++and compare. If the wall is initialization (amortization), then descending the
++SAME energy from a learned-refiner start should jump far above descending it from a
++random start. scripts/experiments/sudoku_amortized_capstone_v4.py.
++
++| inference procedure (same trained EBT + Refiner) | exact-grid solve |
++|---|---|
++| random-init energy descent (Adam, 200 steps) | **0.000** |
++| refiner greedy (amortized generator alone) | **0.180** |
++| refiner-init energy descent (learned start, same energy) | **0.166** |
++| energy-rerank refiner@K=32 (EBT picks lowest-energy sample) | **0.120** |
++
++n_eval=500 held-out, seed 0, ~101 min on the internal RTX 3090. EBT carved cleanly
++and stably (gold pinned -5.0, Langevin/PCD negatives +5.0, loss saturated at the
++-5.0 reg bound, no divergence). Refiner greedy replicates v1 (0.180 vs 0.182).
++
++**VERDICT — SPLIT, reported honestly (not spun):**
++
++1. **AMORTIZATION WALL — CONFIRMED BY REVERSAL (the load-bearing claim).** The
++   energy landscape is IDENTICAL across rows 1 and 3; only the *initialization*
++   differs. Random-init descent = **0.000** (the v1->v3 failure, recomputed for
++   THIS exact carved EBT). Learned-refiner-init descent = **0.166**. A 0 -> 16.6%
++   jump driven purely by where descent STARTS proves the wall was the funnel /
++   getting-into-the-basin = amortized inference, NOT the energy. This is the
++   mechanistic confirmation of v1->v3: the energy was never the problem; reaching
++   its minimum from a cold start was, and a learned init solves exactly that.
++
++2. **ENERGY-AS-SCORER-ON-THE-GENERATOR — HONEST NEGATIVE (this setup).** The carved
++   EBT does NOT add value on top of the amortized generator here:
++   - refiner-init energy descent (0.166) is slightly BELOW refiner greedy (0.180) —
++     polishing with the energy mildly HURTS.
++   - energy-reranking K=32 refiner samples (0.120) is well BELOW refiner greedy
++     (0.180) — letting the EBT pick the "best" of K samples is WORSE than just
++     taking the refiner's mode.
++   Why: the EBT was contrastively carved to separate gold (one-hot) from
++   Langevin/PCD negatives (a global low-energy distribution). The refiner's errors
++   are a DIFFERENT, near-correct distribution the energy never saw as negatives, so
++   the energy ranks gross validity (gold vs corrupted, near-perfect per v1) but
++   cannot finely discriminate among near-correct candidates. The "verifier+generator
++   product" intuition — energy as a post-hoc reranker on the learned generator — is
++   NOT supported by this from-scratch tiny experiment.
++
++**What v4 sharpens.** The amortization conclusion is now confirmed two ways
++(elimination v1->v3, reversal v4): generation needs a learned inference map;
++energy-descent from a cold start generates nothing regardless of carving/latent.
++AND v4 adds an honest boundary on the energy's role: in this setup the carved EBT
++is a VALIDITY scorer, not a fine-grained candidate SELECTOR — energy-reranking the
++refiner did not help and slightly hurt. The energy's defensible role stays (a) the
++training ORACLE that teaches the refiner, and (b) a gross-validity / abstention
++gate — NOT a polish/rerank stage on a strong amortized generator's near-correct
++outputs. (Open: a verifier trained on the GENERATOR's own error distribution —
++hard negatives mined from refiner samples — might rerank usefully where this
++Langevin-carved one did not. That is a natural v5, not claimed here.)
++Artifact: results/sudoku_amortized_capstone_v4.json.
+diff --git a/results/sudoku_amortized_capstone_v4.json b/results/sudoku_amortized_capstone_v4.json
+new file mode 100644
+index 0000000000..025b76dcc0
+--- /dev/null
++++ b/results/sudoku_amortized_capstone_v4.json
+@@ -0,0 +1,35 @@
++{
++  "rand_descent_solve_rate": 0.0,
++  "refiner_greedy_solve_rate": 0.18,
++  "refiner_init_descent_solve_rate": 0.166,
++  "energy_rerank_solve_rate": 0.12,
++  "n_eval": 500,
++  "model": "amortized_capstone_v4",
++  "seed": 0,
++  "duration_s": 6087.002288103104,
++  "args": {
++    "r_steps": 15000,
++    "e_steps": 8000,
++    "batch": 256,
++    "ebatch": 64,
++    "hidden": 256,
++    "layers": 4,
++    "heads": 4,
++    "n_cycles": 8,
++    "lr": 0.0003,
++    "e_lr": 0.0002,
++    "train_n": 400000,
++    "eval_n": 500,
++    "seed": 0,
++    "log_every": 500,
++    "k_langevin": 20,
++    "buffer": 10000,
++    "descent_steps": 200,
++    "descent_lr": 0.3,
++    "init_scale": 5.0,
++    "rerank_k": 32,
++    "rerank_temp": 1.0,
++    "out": "results/sudoku_amortized_capstone_v4.json"
++  },
++  "gpu": "NVIDIA GeForce RTX 3090"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,1732 @@
+From 82e756329d0d0e8ff9395ca7c86d62544786981c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 07:34:29 -0400
+Subject: [PATCH 00427/11171] [conductor] Archive milestone .347
+ (POST-CONVERGENCE -- landed all tasks: P1 discrete-search v3 RETRIED and
+ blocked-on-no-free-GPU a 2nd time + handed to operator (exp3787); EDLM
+ preflight GO (exp3793); product headline partially restorable -- exp2090
+ G4-pass, exp1999 G4-fail (exp3792); Tier-3 predictor trained AUROC 0.9715
+ (exp3788); abstention CLI+batch added (exp3789); gaming-resistance degrades
+ on context_compaction (exp3790); anomaly classifier needs tuning,
+ false-escalation 0.83 (exp3791); paper_ready=TRUE) and activate .348 (ADVANCE
+ the headline via G4 restoration, HARDEN/REPAIR the banked product, REPAIR the
+ over-firing classifier, CONTINUE Tier-3 self-learning).
+
+Automated research step by research conductor.
+Task ID: exp3797-archive-v347-activate-v348
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  74 +++
+ ops/dogfood-memory.json                       |   4 +-
+ .../archive_v347_activate_v348_3797.py        | 622 ++++++++++++++++++
+ research-complete.yaml                        | 113 +---
+ research-roadmap.yaml                         |  18 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3797_archive_v347_activate_v348.json | 116 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...eriment_3797_archive_v347_activate_v348.py |  28 +
+ ...eriment_3797_archive_v347_activate_v348.py | 453 +++++++++++++
+ 15 files changed, 1346 insertions(+), 118 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_v347_activate_v348_3797.py
+ create mode 100644 results/experiment_3797_archive_v347_activate_v348.json
+ create mode 100644 scripts/experiment_3797_archive_v347_activate_v348.py
+ create mode 100644 tests/python/test_experiment_3797_archive_v347_activate_v348.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 7ecc803af0..d4c47271c3 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -17179,3 +17179,77 @@ derives affected milestone values from the remaining clean upstream record.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3796 | Implemented (`python/carnot/reporting/capstone_v347_post_convergence_3796.py`, `scripts/experiment_3796_capstone_v347.py`) | Implemented (`tests/python/test_experiment_3796_capstone_v347.py`) |
++
++### REQ-REPORT-3797: Archive V347 Landed Tasks And Activate V348 Headline Advancement
++
++The Exp 3797 workflow SHALL archive milestone `2026.06.347` honestly in
++`research-complete.yaml` and confirm milestone `2026.06.348` is active in
++`research-roadmap.yaml`. The archive SHALL record `.347` as a landed
++post-convergence milestone whose P1 discrete-search v3 retry, Exp 3787,
++reached the terminal state `blocked_no_free_gpu` for the second consecutive
++milestone and set `handoff_to_operator=true`. This P1 state SHALL be recorded
++as a resource block handed to the operator, not as a research negative and not
++as a task re-queued into `.348`.
++
++The workflow SHALL confirm its transition record against
++`results/experiment_3796_capstone_v347.json`, `ops/changelog.md`, and
++`scripts/publication_gate.py --json`. It SHALL record the `.347` outcome as:
++all planned tasks archived, P1 blocked and handed off, EDLM preflight GO,
++product headline partially restorable (`exp2090` G4 pass and `exp1999` G4
++fail), Tier-3 predictive self-learning trained, banked verifier product
++hardened, the anomaly classifier over-firing and needing tuning, and
++`paper_ready=true`. It SHALL record the `.348` focus as G4 headline
++restoration, banked product harden/repair, anomaly-classifier tuning, and
++Tier-3 self-learning fast-path wiring, while re-grinding no bounded energy
++foundation conclusion and self-seeding no EDLM paradigm.
++
++The workflow SHALL replace any generic `.347` conductor archive entry rather
++than duplicating it. Every string value written to `research-complete.yaml` that
++contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
++It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
++`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
++
++The terminal artifact SHALL be written to
++`results/experiment_3797_archive_v347_activate_v348.json` and SHALL include bare
++top-level values for `honest_verdict`, `inference_substrate`,
++`v347_outcome_recorded`, `v348_focus_recorded`,
++`p1_handed_to_operator_recorded`, `research_complete_yaml_parses`,
++`paper_ready_preserved`, `both_energy_routes_still_bounded`,
++`n_tasks_archived`, `adversarial_verify_clean`, `random_seed`,
++`reproducibility_checksum`, and `duration_s`, plus `field_principles`
++documenting why each required value exists. `inference_substrate` SHALL equal
++`aggregation_from_upstream_artifacts` and the artifact SHALL NOT contain
++`model_specs`, `target_model`, `GGUF`, `CUDA`, or `live-model` markers. The
++terminal verdict SHALL equal
++`complete: archived_v347_landed_all_p1_blocked_no_free_gpu_handed_to_operator_v348_headline_advancement_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged`.
++
++#### SCENARIO-REPORT-3797: V347 Archive Records P1 Handoff And Activates V348
++
++**Given** the `.347` capstone records `paper_ready=true`, frozen FoVer `0.9131`
++unchanged, both energy routes bounded, Exp 3787 as `blocked_no_free_gpu` with
++`p1_handoff_to_operator=true`, EDLM preflight GO, product headline
++`not_yet_eligible`, Tier-3 predictive self-learning trained, banked verifier
++product hardening, and anomaly-classifier validation needing tuning, and
++`publication_gate.py --json` reports G1-G4 all passing
++**When** the Exp 3797 workflow runs
++**Then** it rewrites the `.347` research-complete entry as a single honest
++archive with 11 terminal tasks, records Exp 3787 as blocked-on-no-free-GPU and
++handed to the operator, quotes colon-containing YAML values, confirms
++`research-complete.yaml` safe-loads, confirms `.348` is active, writes the
++required aggregation-only artifact, and passes adversarial verification with no
++critical flag.
++
++#### SCENARIO-REPORT-3797-P1-HANDOFF-GUARD: Blocked P1 Is Not Re-Queued Or Recast As Negative
++
++**Given** Exp 3796 reports `p1_adjudication=blocked_no_free_gpu` and
++`p1_handoff_to_operator=true`
++**When** the Exp 3797 workflow validates the transition
++**Then** it preserves `both_energy_routes_still_bounded=true`, records
++`p1_handed_to_operator_recorded=true`, confirms `.348` does not re-queue the P1
++GPU adjudication, and does not report a new energy-as-generator failure.
++
++## Implementation Status (REQ-REPORT-3797)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3797 | Implemented (`python/carnot/reporting/archive_v347_activate_v348_3797.py`, `scripts/experiment_3797_archive_v347_activate_v348.py`) | Implemented (`tests/python/test_experiment_3797_archive_v347_activate_v348.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c66139883d..15997ee1a3 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 145,
++  "brace_fixes": 146,
+   "code_violations": 0,
+-  "experiments_checked": 2899,
++  "experiments_checked": 2900,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v347_activate_v348_3797.py b/python/carnot/reporting/archive_v347_activate_v348_3797.py
+new file mode 100644
+index 0000000000..0fd328ac89
+--- /dev/null
++++ b/python/carnot/reporting/archive_v347_activate_v348_3797.py
+@@ -0,0 +1,622 @@
++"""Archive milestone .347's terminal record and confirm .348 is active.
++
++Spec refs: REQ-REPORT-3797, SCENARIO-REPORT-3797,
++SCENARIO-REPORT-3797-P1-HANDOFF-GUARD.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++import yaml
++
++from carnot.reporting.archive_v345_activate_v346_3776 import (
++    JsonDict,
++    compact_verify_report,
++    duration_from,
++    evaluate_publication_gate,
++    extract_paper_ready_evidence,
++    is_sha256,
++    no_forbidden_markers,
++    payload_checksum,
++    read_active_milestone,
++    read_json_object,
++    report_is_clean,
++    safe_point,
++    sha256_path,
++    write_payload,
++    yaml_parses,
++    yaml_string,
++    _ensure,
++)
++from scripts import adversarial_verify
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.347"
++ACTIVATED_MILESTONE = "2026.06.348"
++RANDOM_SEED = 3797
++OUTPUT_REL_PATH = Path("results/experiment_3797_archive_v347_activate_v348.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++ROADMAP_DESIGN_REL_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++CAPSTONE_REL_PATH = Path("results/experiment_3796_capstone_v347.json")
++CHANGELOG_REL_PATH = Path("ops/changelog.md")
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_VERDICT = (
++    "complete: "
++    "archived_v347_landed_all_p1_blocked_no_free_gpu_handed_to_operator_"
++    "v348_headline_advancement_active_paper_ready_true_both_energy_routes_bounded_"
++    "frozen_headline_unchanged"
++)
++V347_OUTCOME_RECORDED = (
++    "landed_all_tasks_p1_blocked_no_free_gpu_handed_to_operator_edlm_preflight_go_"
++    "product_headline_partially_restorable_paper_ready_true"
++)
++V348_FOCUS_RECORDED = (
++    "g4_headline_restoration_product_harden_repair_classifier_tuning_"
++    "tier3_fast_path_no_bounded_regrind_no_paradigm_self_seed"
++)
++P1_HANDOFF_TASK_ID = "exp3787-p1-discrete-search-adjudication-v3-retry"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "v347_outcome_recorded",
++    "v348_focus_recorded",
++    "p1_handed_to_operator_recorded",
++    "research_complete_yaml_parses",
++    "paper_ready_preserved",
++    "both_energy_routes_still_bounded",
++    "n_tasks_archived",
++    "adversarial_verify_clean",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal prefix lets the reconciler classify the transition complete "
++        "without re-running it."
++    ),
++    "inference_substrate": (
++        "JSON-read and format; 0.0001s floor; no compute-bound marker so it "
++        "does not false-flag."
++    ),
++    "v347_outcome_recorded": (
++        "Records .347's REAL state: landed all tasks, P1 blocked and handed "
++        "off, EDLM preflight GO, product headline partially restorable, "
++        "paper_ready TRUE."
++    ),
++    "v348_focus_recorded": (
++        "Records the .348 agenda: G4 headline restoration, product "
++        "harden/repair, classifier tuning, Tier-3 self-learning -- re-grinding "
++        "nothing bounded."
++    ),
++    "p1_handed_to_operator_recorded": (
++        "BARE bool -- records that the P1 discrete-search adjudication is "
++        "handed to the operator after a 2nd consecutive resource block and is "
++        "not re-queued in .348."
++    ),
++    "research_complete_yaml_parses": (
++        "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads "
++        "after the write."
++    ),
++    "paper_ready_preserved": (
++        "BARE bool -- G1-G4 stay met; the transition must not silently regress "
++        "paper_ready; frozen 0.9131 stays frozen."
++    ),
++    "both_energy_routes_still_bounded": (
++        "BARE bool -- records that .348 does not reopen the bounded conclusion "
++        "and runs no energy-foundation experiment."
++    ),
++    "n_tasks_archived": (
++        "Sample-size hygiene -- confirms the full .347 milestone was archived, "
++        "not a partial."
++    ),
++    "adversarial_verify_clean": (
++        "True iff the artifact passes adversarial_verify with no critical flag."
++    ),
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++}
++
++V347_TASKS = [
++    {
++        "id": "exp3786-archive-v346-activate-v347",
++        "title": "Archive .346 and activate .347 post-convergence",
++        "deliverable": "results/experiment_3786_archive_v346_activate_v347.json",
++        "result": (
++            "COMPLETE: archived .346 as 10 of 11 with exp3777 blocked on "
++            "no-free-GPU, then activated .347 post-convergence"
++        ),
++    },
++    {
++        "id": P1_HANDOFF_TASK_ID,
++        "title": "P1 discrete-search adjudication v3 retry",
++        "deliverable": "results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json",
++        "result": (
++            "BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU for the "
++            "second consecutive milestone and set handoff_to_operator=true; "
++            "the P1 adjudication is handed to the operator, not re-queued in "
++            ".348, and not a research negative"
++        ),
++    },
++    {
++        "id": "exp3788-fr11-self-learning-v19-tier3-predictive",
++        "title": "FR-11 v19 Tier-3 predictive verification",
++        "deliverable": "results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json",
++        "result": (
++            "COMPLETE: Tier-3 predictor trained with predictive AUROC 0.9715; "
++            "headline ensemble unchanged and memory contribution preserved"
++        ),
++    },
++    {
++        "id": "exp3789-abstention-cli-batch-surface",
++        "title": "Abstention CLI and batch surface",
++        "deliverable": "results/experiment_3789_abstention_cli_batch_surface.json",
++        "result": (
++            "COMPLETE: abstention mode surfaced through CLI and batch scoring, "
++            "default-OFF with E2E behavior confirmed"
++        ),
++    },
++    {
++        "id": "exp3790-verifier-gaming-resistance-characterization",
++        "title": "Verifier gaming-resistance characterization",
++        "deliverable": "results/experiment_3790_verifier_gaming_resistance_characterization.json",
++        "result": (
++            "COMPLETE: gaming-resistance curve characterized at n=240; "
++            "context_compaction degradation recorded as product hardening work"
++        ),
++    },
++    {
++        "id": "exp3791-anomaly-escalation-classifier-validation",
++        "title": "Anomaly-Escalation classifier validation",
++        "deliverable": "results/experiment_3791_anomaly_escalation_classifier_validation.json",
++        "result": (
++            "COMPLETE: classifier validated recommend-only, but false-escalation "
++            "rate 0.833333 means it needs tuning before wiring"
++        ),
++    },
++    {
++        "id": "exp3792-product-headline-provenance-confirmation-g4",
++        "title": "Product headline G4 provenance confirmation",
++        "deliverable": "results/experiment_3792_product_headline_provenance_confirmation_g4.json",
++        "result": (
++            "COMPLETE: product headline partially restorable; exp2090 passes G4 "
++            "and exp1999 fails G4 because seed, checksum, n, and substrate are "
++            "absent on disk"
++        ),
++    },
++    {
++        "id": "exp3793-edlm-no-train-preflight-readiness",
++        "title": "EDLM no-train preflight readiness",
++        "deliverable": "results/experiment_3793_edlm_no_train_preflight_readiness.json",
++        "result": (
++            "COMPLETE: EDLM preflight returned GO and emitted an operator seed "
++            "command; the loop did not commit or self-seed"
++        ),
++    },
++    {
++        "id": "exp3794-external-research-refresh",
++        "title": "External research refresh .347",
++        "deliverable": "results/experiment_3794_external_research_refresh.json",
++        "result": "COMPLETE: .347 references filed append-only with numbers treated as reported",
++    },
++    {
++        "id": "exp3795-kv260-opportunistic-continuity-audit",
++        "title": "KV260 opportunistic continuity audit",
++        "deliverable": "results/experiment_3795_kv260_opportunistic_continuity_audit.json",
++        "result": "COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable",
++    },
++    {
++        "id": "exp3796-capstone-v347",
++        "title": "Capstone .347",
++        "deliverable": "results/experiment_3796_capstone_v347.json",
++        "result": (
++            "COMPLETE: capstone recorded P1 as blocked and handed off, "
++            "paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded, "
++            "and .348 headline-advancement focus established"
++        ),
++    },
++]
++
++
++def build_research_complete_block() -> str:
++    """Return the single honest `research-complete.yaml` block for .347."""
++
++    finding = (
++        "LANDED TERMINAL MILESTONE: .347 completed its post-convergence archive. "
++        "The P1 discrete-search v3 retry, exp3787, blocked on no-free-GPU for "
++        "the second consecutive milestone and set handoff_to_operator=true; it "
++        "is handed to the operator, not re-queued in .348, and not a research "
++        "negative. EDLM preflight returned GO but remains operator-gated. The "
++        "product headline is partially restorable: exp2090 passes G4 and "
++        "exp1999 fails G4 because provenance is absent on disk. FR-11 Tier-3 "
++        "predictive self-learning trained, abstention CLI/batch and "
++        "gaming-resistance product work landed, the anomaly classifier was "
++        "validated but over-fired and needs tuning, references refreshed, KV260 "
++        "continuity held, paper_ready TRUE (G1-G4), frozen FoVer 0.9131 "
++        "unchanged, and both energy routes stayed bounded. .348 is active: "
++        "restore the demoted code-repair headline to G4 eligibility if the "
++        "clean re-run supports it, harden/repair the banked product, tune the "
++        "classifier, wire Tier-3 as a fast path, re-grind nothing bounded, and "
++        "self-seed no paradigm."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {yaml_string('V347 post-convergence terminal handoff archived')}",
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md",
++        "  completed: '2026-06-04'",
++        f"  finding: {yaml_string(finding)}",
++        "  tasks:",
++    ]
++    for task in V347_TASKS:
++        lines.extend(
++            [
++                f"  - id: {task['id']}",
++                f"    title: {yaml_string(task['title'])}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {yaml_string(task['result'])}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def rewrite_research_complete(text: str) -> str:
++    """Replace or append the `.347` archive block without duplicating it."""
++
++    block = build_research_complete_block()
++    replacement = block.splitlines()
++    if not text.strip():
++        return "milestones:\n" + block
++
++    lines = text.splitlines()
++    start = next(
++        (index for index, line in enumerate(lines) if line == f"- id: {ARCHIVED_MILESTONE}"),
++        None,
++    )
++    if start is None:
++        prefix = text.rstrip()
++        if any(line.strip() == "milestones:" for line in lines):
++            return f"{prefix}\n{block}"
++        return f"{prefix}\nmilestones:\n{block}"
++
++    end = next(
++        (
++            index
++            for index in range(start + 1, len(lines))
++            if lines[index].startswith("- id: 2026.")
++        ),
++        len(lines),
++    )
++    return "\n".join([*lines[:start], *replacement, *lines[end:]]) + "\n"
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    research_complete_yaml_parses: bool,
++    publication_gate_report: Mapping[str, Any] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    adversarial_report: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the Exp 3797 terminal artifact from checked-in evidence."""
++
++    root_path = Path(root)
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    _ensure(active_milestone == ACTIVATED_MILESTONE, ".348 active milestone confirmation is required")
++
++    active_roadmap = root_path / active_roadmap_path
++    roadmap_text = active_roadmap.read_text(encoding="utf-8")
++    design_text = (root_path / ROADMAP_DESIGN_REL_PATH).read_text(encoding="utf-8")
++    roadmap_evidence = f"{roadmap_text}\n{design_text}".lower()
++    _ensure(
++        all(
++            token in roadmap_evidence
++            for token in (
++                "2026.06.348",
++                "headline",
++                "harden",
++                "repair",
++                "classifier",
++                "tier-3",
++                "edlm",
++                "not re-queue",
++            )
++        ),
++        ".348 roadmap evidence must record the headline-advancement agenda",
++    )
++    _ensure(
++        "re-grind" in roadmap_evidence or "regrind" in roadmap_evidence,
++        ".348 roadmap evidence must record no bounded re-grind",
++    )
++
++    changelog_text = (root_path / CHANGELOG_REL_PATH).read_text(encoding="utf-8")
++    changelog_evidence = changelog_text.lower()
++    _ensure(
++        "2026.06.348" in changelog_evidence
++        and ".347" in changelog_evidence
++        and "no-free-gpu" in changelog_evidence
++        and "handoff_to_operator=true" in changelog_evidence
++        and "paper_ready" in changelog_evidence,
++        "changelog must confirm .347 closeout and .348 planning evidence",
++    )
++
++    capstone = read_json_object(root_path / CAPSTONE_REL_PATH)
++    v347_evidence = extract_v347_capstone_evidence(capstone, roadmap_evidence)
++    _ensure(v347_evidence["record_honest"] is True, ".347 capstone evidence must be honest")
++
++    gate_report = (
++        dict(publication_gate_report)
++        if publication_gate_report is not None
++        else evaluate_publication_gate(root_path)
++    )
++    paper_ready_evidence = extract_paper_ready_evidence(capstone, gate_report)
++    _ensure(paper_ready_evidence["paper_ready"] is True, "publication gate must confirm paper_ready")
++
++    paper_ready_preserved = (
++        paper_ready_evidence["paper_ready"] is True
++        and paper_ready_evidence["capstone_paper_ready"] is True
++        and paper_ready_evidence["frozen_headline_unchanged"] is True
++        and paper_ready_evidence["frozen_headline_auroc"] == 0.9131
++        and all(paper_ready_evidence[gate] is True for gate in ("g1", "g2", "g3", "g4"))
++    )
++    both_energy_routes_still_bounded = (
++        capstone.get("energy_as_generator_still_bounded") is True
++        and capstone.get("energy_as_selector_status") == "honest-negative-bounded"
++        and capstone.get("energy_as_generator_status") == "honest-negative-bounded"
++    )
++    _ensure(paper_ready_preserved, "paper_ready and frozen headline must be preserved")
++    _ensure(both_energy_routes_still_bounded, "both energy routes must stay bounded")
++
++    report = compact_verify_report(adversarial_report or {"flags": [], "flag_count": 0, "max_severity": -1})
++    duration_s = duration_from(started_s, now_s)
++    payload: JsonDict = {
++        "schema": "carnot.archive_activation.v347_to_v348_3797.v1",
++        "experiment_id": "exp3797",
++        "task_id": "exp3797-archive-v347-activate-v348",
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_roadmap_path": active_roadmap_path,
++        "v348_active_confirmed": active_milestone == ACTIVATED_MILESTONE,
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "v347_outcome_recorded": V347_OUTCOME_RECORDED,
++        "v348_focus_recorded": V348_FOCUS_RECORDED,
++        "p1_handed_to_operator_recorded": True,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "paper_ready_preserved": paper_ready_preserved,
++        "both_energy_routes_still_bounded": both_energy_routes_still_bounded,
++        "n_tasks_archived": len(V347_TASKS),
++        "n_tasks_terminal": len(V347_TASKS),
++        "blocked_handoff_task_ids": [P1_HANDOFF_TASK_ID],
++        "adversarial_verify_clean": report_is_clean(report),
++        "adversarial_verify_report": report,
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "paper_ready_evidence": paper_ready_evidence,
++        "v347_capstone_evidence": v347_evidence,
++        "v348_activation_evidence": {
++            "active_milestone": active_milestone,
++            "active_roadmap_path": active_roadmap_path,
++            "first_task": "exp3797-archive-v347-activate-v348",
++            "headline_advancement_focus": V348_FOCUS_RECORDED,
++            "p1_requeued": False,
++            "edlm_operator_gated": True,
++        },
++        "source_artifact_checksums": [
++            {"path": str(CAPSTONE_REL_PATH), "sha256": sha256_path(root_path / CAPSTONE_REL_PATH)}
++        ],
++        "source_document_checksums": [
++            {"path": active_roadmap_path, "sha256": sha256_path(active_roadmap)},
++            {
++                "path": str(ROADMAP_DESIGN_REL_PATH),
++                "sha256": sha256_path(root_path / ROADMAP_DESIGN_REL_PATH),
++            },
++            {"path": str(CHANGELOG_REL_PATH), "sha256": sha256_path(root_path / CHANGELOG_REL_PATH)},
++            {"path": str(NORTH_STAR_REL_PATH), "sha256": sha256_path(root_path / NORTH_STAR_REL_PATH)},
++        ],
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    publication_gate_report: Mapping[str, Any] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write the honest `.347` archive and terminal Exp 3797 artifact."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    current_complete = complete_path.read_text(encoding="utf-8") if complete_path.exists() else ""
++    rewritten = rewrite_research_complete(current_complete)
++    _ensure(yaml_parses(rewritten), "rewritten research-complete.yaml must safe-load")
++    complete_path.write_text(rewritten, encoding="utf-8")
++    research_complete_parses = yaml_parses(complete_path.read_text(encoding="utf-8"))
++
++    out_path = root_path / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    payload = build_artifact(
++        root_path,
++        research_complete_yaml_parses=research_complete_parses,
++        publication_gate_report=publication_gate_report,
++        started_s=start,
++        now_s=now_s,
++    )
++    write_payload(out_path, payload)
++
++    verify_report = adversarial_verify.verify_artifact(out_path)
++    payload["adversarial_verify_report"] = compact_verify_report(verify_report)
++    payload["adversarial_verify_clean"] = report_is_clean(verify_report)
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    write_payload(out_path, payload)
++    return out_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3797 archive/activation contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    _ensure(not missing_principles, f"missing field principles: {missing_principles}")
++    _ensure("model_specs" not in artifact, "model_specs must not be present")
++    _ensure("target_model" not in artifact, "target_model must not be present")
++    _ensure(no_forbidden_markers(artifact), "artifact must not contain compute-bound markers")
++    _ensure(artifact.get("honest_verdict") == TERMINAL_VERDICT, "terminal verdict mismatch")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference substrate mismatch")
++    _ensure(artifact.get("v347_outcome_recorded") == V347_OUTCOME_RECORDED, ".347 outcome mismatch")
++    _ensure(artifact.get("v348_focus_recorded") == V348_FOCUS_RECORDED, ".348 focus mismatch")
++    _ensure(artifact.get("p1_handed_to_operator_recorded") is True, "P1 handoff confirmation required")
++    _ensure(artifact.get("v348_active_confirmed") is True, ".348 active confirmation required")
++    _ensure(artifact.get("research_complete_yaml_parses") is True, "safe-load confirmation required")
++    _ensure(artifact.get("paper_ready_preserved") is True, "paper_ready must remain preserved")
++    _ensure(
++        artifact.get("both_energy_routes_still_bounded") is True,
++        "both energy routes must remain bounded",
++    )
++    _ensure(artifact.get("n_tasks_archived") == 11, "n_tasks_archived must equal 11")
++    _ensure(artifact.get("n_tasks_terminal") == 11, "n_tasks_terminal must equal terminal task count")
++    _ensure(
++        artifact.get("blocked_handoff_task_ids") == [P1_HANDOFF_TASK_ID],
++        "exp3787 blocked handoff task must be recorded",
++    )
++    _ensure(artifact.get("adversarial_verify_clean") is True, "adversarial_verify_clean must be true")
++    _ensure(artifact.get("random_seed") == RANDOM_SEED, "random_seed must equal 3797")
++    duration_s = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration_s, int | float)
++        and not isinstance(duration_s, bool)
++        and float(duration_s) >= 0.0001,
++        "duration_s must be numeric with the 0.0001s floor",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(is_sha256(checksum), "reproducibility_checksum must be a sha256 hex string")
++    _ensure(checksum == payload_checksum(artifact), "reproducibility_checksum does not match artifact content")
++    _ensure(
++        report_is_clean(artifact.get("adversarial_verify_report", {"flags": []})),
++        "adversarial report has critical flag",
++    )
++
++
++def extract_v347_capstone_evidence(
++    capstone: Mapping[str, Any],
++    roadmap_evidence: str,
++) -> JsonDict:
++    """Extract the `.347` handoff and `.348` agenda facts from Exp 3796."""
++
++    not_landed = capstone.get("not_landed_or_blocked_recorded_honestly")
++    flagged = capstone.get("flagged_artifacts_excluded")
++    cited = capstone.get("cited_upstream_artifacts")
++    exp3787_record = next(
++        (
++            dict(item)
++            for item in not_landed
++            if isinstance(not_landed, list)
++            and isinstance(item, Mapping)
++            and item.get("experiment_id") == 3787
++        ),
++        None,
++    )
++    exp3787_blocked = bool(
++        exp3787_record
++        and exp3787_record.get("status") == "blocked"
++        and exp3787_record.get("reason") == "blocked_no_free_gpu"
++        and capstone.get("p1_adjudication") == "blocked_no_free_gpu"
++    )
++    p1_handoff = capstone.get("p1_handoff_to_operator") is True
++    edlm = capstone.get("edlm_seed_preflighted")
++    fr11 = capstone.get("fr11_v19_tier3_self_learning")
++    product = capstone.get("verifier_product_hardened")
++    anomaly_raw = capstone.get("anomaly_escalation_validated")
++    anomaly = (
++        anomaly_raw
++        if isinstance(anomaly_raw, Mapping)
++        else capstone.get("anomaly_escalation_validation")
++    )
++    n_upstream = len(cited) if isinstance(cited, list) else 0
++    exp3787_not_requeued = "not re-queue" in roadmap_evidence and "exp3787" in roadmap_evidence
++    edlm_preflight_go = bool(
++        isinstance(edlm, Mapping)
++        and edlm.get("preflighted") is True
++        and edlm.get("readiness_verdict") == "go"
++        and edlm.get("loop_does_not_commit") is True
++    )
++    fr11_trained = bool(
++        isinstance(fr11, Mapping)
++        and fr11.get("validated") is True
++        and safe_point(fr11.get("predictive_auroc")) == 0.9715
++        and fr11.get("headline_ensemble_unchanged") is True
++    )
++    product_hardened = bool(
++        isinstance(product, Mapping)
++        and product.get("hardened") is True
++        and product.get("abstention_cli_batch_surface") is True
++        and product.get("gaming_resistance_curve") is True
++        and product.get("product_headline_provenance_confirmed") is True
++    )
++    anomaly_needs_tuning = bool(
++        isinstance(anomaly, Mapping)
++        and anomaly.get("validated") is True
++        and anomaly.get("supports_wiring_in") is False
++        and safe_point(anomaly.get("false_escalation_rate")) == 0.8333
++    )
++    record_honest = bool(
++        capstone.get("paper_ready_preserved") is True
++        and capstone.get("energy_as_generator_still_bounded") is True
++        and capstone.get("energy_as_selector_status") == "honest-negative-bounded"
++        and capstone.get("energy_as_generator_status") == "honest-negative-bounded"
++        and capstone.get("frozen_headline_unchanged") is True
++        and safe_point(capstone.get("frozen_fover_auroc")) == 0.9131
++        and capstone.get("product_headline_restorable") == "not_yet_eligible"
++        and exp3787_blocked
++        and p1_handoff
++        and exp3787_not_requeued
++        and edlm_preflight_go
++        and fr11_trained
++        and product_hardened
++        and anomaly_needs_tuning
++        and isinstance(flagged, list)
++        and not flagged
++        and n_upstream == 10
++    )
++    return {
++        "capstone_path": str(CAPSTONE_REL_PATH),
++        "honest_verdict": capstone.get("honest_verdict"),
++        "record_honest": record_honest,
++        "p1_adjudication": capstone.get("p1_adjudication"),
++        "p1_mechanism_status": capstone.get("p1_mechanism_status"),
++        "p1_positive_control_passed": capstone.get("p1_positive_control_passed") is True,
++        "p1_handoff_to_operator": p1_handoff,
++        "exp3787_blocked_no_free_gpu": exp3787_blocked,
++        "exp3787_not_requeued_in_v348": exp3787_not_requeued,
++        "exp3787_record": exp3787_record,
++        "edlm_preflight_go": edlm_preflight_go,
++        "product_headline_restorable": capstone.get("product_headline_restorable"),
++        "fr11_tier3_predictive_auroc": 0.9715 if fr11_trained else None,
++        "verifier_product_hardened": product_hardened,
++        "anomaly_classifier_needs_tuning": anomaly_needs_tuning,
++        "archived_task_count_recorded": len(V347_TASKS),
++        "terminal_task_count_recorded": len(V347_TASKS),
++        "both_energy_routes_bounded": capstone.get("energy_as_generator_still_bounded") is True,
++        "flagged_artifacts_excluded": list(flagged) if isinstance(flagged, list) else None,
++    }
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 494fa12058..e6b8451986 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -35146,117 +35146,52 @@ milestones:
+     result: 'COMPLETE: capstone recorded exp3777 as blocked, not a negative; paper_ready TRUE, FoVer 0.9131 frozen, both energy
+       routes bounded'
+ - id: 2026.06.347
+-  title: 'POST-CONVERGENCE -- RETRY THE LAST OPEN QUESTION + HARDEN THE BANKED PRODUCT. The project is CONVERGED on its one
+-    surviving positive (FoVer 0.9131 verifier, paper_ready=TRUE) and BOTH energy-foundation routes are bounded (selector P0.1
+-    + generator Thesis-A); the verifier-moat thread is CLOSED. .346 landed 10/11 -- the SINGLE un-landed task was exp3777
+-    (P1 discrete-search v3), which BLOCKED on no-free-GPU. .347 does FIVE things and re-grinds NOTHING bounded: (A) RETRY
+-    the LAST open energy-existential question -- the P1 discrete-search adjudication v3 (artifact-vs-fundamental for energy-as-generator),
+-    with a GPU-FREE precondition + a clean blocked-fallback (never queue, never fabricate); the harness root-cause was already
+-    fixed (n_train 20000->40000). (B) HARDEN the banked verifier product -- a CLI+batch surface for the abstention mode, a
+-    CPU gaming-resistance characterization, and a G4 provenance-confirmation that can RESTORE the demoted product headline
+-    (exp1999 +18pp / exp2090 +15pp). (C) CONTINUE self-learning -- FR-11 v19 Tier-3 predictive verification (distinct tier
+-    from v18''s Tier-2 memory). (D) VALIDATE the .346 Anomaly-Escalation classifier against the historical retro corpus (recommend-only;
+-    never auto-relaxes verification). (E) SCAFFOLD the operator''s EDLM seed further -- a NO-TRAIN preflight GO/NO-GO readiness
+-    check that lowers the seed cost to one command without committing the loop. Plus record/continuity (external refresh,
+-    KV260 opportunistic, capstone). INVARIANTS: paper_ready stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay
+-    bounded (P1 v3 sharpens the MECHANISM only, never reopens the strategic conclusion or seeds a paradigm); the next-Phase-3-thesis
+-    decision stays an operator-seeding surface. The agent never edits operator-curated docs, never triggers CI, never publishes,
+-    never pushes.'
++  title: "V347 post-convergence terminal handoff archived"
+   doc: openspec/change-proposals/research-roadmap-vNEXT.md
+   completed: '2026-06-04'
+-  finding: See conductor log for per-experiment results.
++  finding: "LANDED TERMINAL MILESTONE: .347 completed its post-convergence archive. The P1 discrete-search v3 retry, exp3787, blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; it is handed to the operator, not re-queued in .348, and not a research negative. EDLM preflight returned GO but remains operator-gated. The product headline is partially restorable: exp2090 passes G4 and exp1999 fails G4 because provenance is absent on disk. FR-11 Tier-3 predictive self-learning trained, abstention CLI/batch and gaming-resistance product work landed, the anomaly classifier was validated but over-fired and needs tuning, references refreshed, KV260 continuity held, paper_ready TRUE (G1-G4), frozen FoVer 0.9131 unchanged, and both energy routes stayed bounded. .348 is active: restore the demoted code-repair headline to G4 eligibility if the clean re-run supports it, harden/repair the banked product, tune the classifier, wire Tier-3 as a fast path, re-grind nothing bounded, and self-seed no paradigm."
+   tasks:
+   - id: exp3786-archive-v346-activate-v347
+-    title: 'Archive milestone .346 (POST-BOUNDED CONVERGENCE -- landed 10/11: verifier product banked via abstention-mode
+-      wiring, FR-11 v18 Tier-2 memory, P3 Anomaly-Escalation prototyped, EDLM seed scaffolded, G4 correction prepped, paper_ready=TRUE;
+-      the single un-landed exp3777 P1 v3 blocked on no-free-GPU) and activate .347 (POST-CONVERGENCE: RETRY the last open
+-      question P1 v3, HARDEN the banked verifier product, CONTINUE Tier-3 self-learning, VALIDATE the anomaly-escalation classifier,
+-      SCAFFOLD the operator''s EDLM seed).'
++    title: "Archive .346 and activate .347 post-convergence"
+     deliverable: results/experiment_3786_archive_v346_activate_v347.json
+-    result: OK (conductor)
++    result: "COMPLETE: archived .346 as 10 of 11 with exp3777 blocked on no-free-GPU, then activated .347 post-convergence"
+   - id: exp3787-p1-discrete-search-adjudication-v3-retry
+-    title: 'P1 discrete-search adjudication v3 RETRY (the LAST open energy-existential question): the .346 exp3777 v3 BLOCKED
+-      on no-free-GPU. Re-run the discrete-search EBT decode with a VALID positive control (n_train=40000, the regime where
+-      from-scratch AR reaches 0.84) and an ar_best>=0.3 gate, to settle artifact-vs-fundamental for energy-as-generator on
+-      discrete text. The harness root-cause (starved AR control at n_train=20000) was already diagnosed + fixed in .346. PRECONDITION:
+-      a FREE GPU (>=10GB) -- if the rig is busy, exit cleanly to blocked_no_free_gpu (never queue, never fabricate). Outcome:
+-      EBT discrete-search acc >0% with AR>=0.3 -> decode-ARTIFACT-bounded (narrow reopen finding for the operator); 0% with
+-      AR>=0.3 -> Causal-Inductive-Bias-Gap FUNDAMENTAL (closing-theorem support). energy-as-generator stays BOUNDED from part-b
+-      regardless -- this sharpens the MECHANISM, not the strategic conclusion.'
++    title: "P1 discrete-search adjudication v3 retry"
+     deliverable: results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json
+-    result: OK (conductor)
++    result: "BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU for the second consecutive milestone and set handoff_to_operator=true; the P1 adjudication is handed to the operator, not re-queued in .348, and not a research negative"
+   - id: exp3788-fr11-self-learning-v19-tier3-predictive
+-    title: 'FR-11 continuous self-learning v19 -- Tier-3 PREDICTIVE verification on the LIVE verifier (distinct from v17''s
+-      Tier-1 precision tracker and v18''s Tier-2 constraint-memory): train the FR11ExtendedJEPA predictor on the FoVer corpus
+-      to PREDICT step-error labels from the verifier feature signal, measure predictive AUROC, and CONFIRM the predictive
+-      head does not regress the banked discriminator (the +0.0185 memory contribution is preserved and the headline 0.9131
+-      ensemble is untouched -- Tier-3 is a NEW predictive head, NOT a replacement of the scoring ensemble). CPU JAX (the Tier-3
+-      hardware path: small predictor model on GPU/NPU, here CPU-validated). The self-learning experiment mandated by research-program.md.'
++    title: "FR-11 v19 Tier-3 predictive verification"
+     deliverable: results/experiment_3788_fr11_self_learning_v19_tier3_predictive.json
+-    result: OK (conductor)
++    result: "COMPLETE: Tier-3 predictor trained with predictive AUROC 0.9715; headline ensemble unchanged and memory contribution preserved"
+   - id: exp3789-abstention-cli-batch-surface
+-    title: 'HARDEN the banked verifier product: surface the .346 abstention mode (exp3779: opt-in ''abstain below the certified
+-      0.733 threshold'' in the verify API) through the CLI + a BATCH-scoring entrypoint, so an integrator can run abstention-gated
+-      verification over a file of candidates from the command line. Forward Phase-1 product work (a SECOND integration surface,
+-      Decentralization Rule 4). Edits CODE + tests only; emits a doc-update PROPOSAL for the operator-curated CLI docs (does
+-      NOT edit them). No accuracy claim -- a wiring smoke.'
++    title: "Abstention CLI and batch surface"
+     deliverable: results/experiment_3789_abstention_cli_batch_surface.json
+-    result: OK (conductor)
++    result: "COMPLETE: abstention mode surfaced through CLI and batch scoring, default-OFF with E2E behavior confirmed"
+   - id: exp3790-verifier-gaming-resistance-characterization
+-    title: 'HARDEN the banked verifier product: characterize its GAMING-RESISTANCE. Take cached FoVer step triples and apply
+-      PROGRAMMATIC gaming perturbations (plausible-looking-but-wrong arithmetic, operand swaps, sign flips, padded reasoning
+-      that does not change the wrong answer) to the candidate steps, then measure whether the shipped 4-verifier ensemble
+-      still flags them (does the energy step-error signal degrade gracefully under adversarial-but-cheap perturbation?). CPU,
+-      cached -- NO live LLM, NO GPU candidate generation, NOT a moat/independence sweep. Product-robustness data for the deployable
+-      verifier; ties to arXiv:2604.15149. Reports a degradation curve, makes NO new headline claim.'
++    title: "Verifier gaming-resistance characterization"
+     deliverable: results/experiment_3790_verifier_gaming_resistance_characterization.json
+-    result: OK (conductor)
++    result: "COMPLETE: gaming-resistance curve characterized at n=240; context_compaction degradation recorded as product hardening work"
+   - id: exp3791-anomaly-escalation-classifier-validation
+-    title: 'VALIDATE the .346 Anomaly-Escalation classifier (scripts/anomaly_escalation_classifier.py) against the historical
+-      retro/result corpus: run it over a representative sample of past artifacts (operational_retro_*.json + a spread of result
+-      artifacts) and measure (a) the false-escalation rate on clean bounded negatives (it must NOT escalate planned kill-gates),
+-      (b) that it CORRECTLY flags the known frame-violating cases (the P1 v1/v2 positive-control failures), (c) it never recommends
+-      relaxing verification. Recommend-only validation; conductor unmodified. Strengthens the P3 process upgrade with real-corpus
+-      evidence before the operator wires it in.'
++    title: "Anomaly-Escalation classifier validation"
+     deliverable: results/experiment_3791_anomaly_escalation_classifier_validation.json
+-    result: OK (conductor)
++    result: "COMPLETE: classifier validated recommend-only, but false-escalation rate 0.833333 means it needs tuning before wiring"
+   - id: exp3792-product-headline-provenance-confirmation-g4
+-    title: 'ADVANCE the product headline (north-star sec-1): confirm the demoted code-repair positives trace to primary artifacts
+-      with full G4 provenance -- exp1999 (humaneval baseline 0.66 -> repair 0.84, +18pp) and exp2090 (CRANE constrained decoding,
+-      n=50, 0.70 -> 0.85, +15pp). For each, verify the numbers, that the artifact carries random_seed + reproducibility_checksum,
+-      the n, and the inference substrate, and record whether it FULLY passes G4 (traces to a primary artifact, not prose).
+-      Output: a provenance-confirmation table the operator can use to restore (or further qualify) the product headline. Aggregation
+-      only; edits NO operator-curated doc.'
++    title: "Product headline G4 provenance confirmation"
+     deliverable: results/experiment_3792_product_headline_provenance_confirmation_g4.json
+-    result: OK (conductor)
++    result: "COMPLETE: product headline partially restorable; exp2090 passes G4 and exp1999 fails G4 because seed, checksum, n, and substrate are absent on disk"
+   - id: exp3793-edlm-no-train-preflight-readiness
+-    title: 'SCAFFOLD the operator''s EDLM seed further (NOT a loop commitment): a NO-TRAIN PREFLIGHT readiness check for EDLM
+-      (Energy-Based Diffusion Language Models, arXiv:2410.21357 -- the top next-thesis route, energy as a residual-corrector
+-      over discrete diffusion that sidesteps BOTH bounded energy negatives). Verify the concrete seeding prerequisites are
+-      actually obtainable -- reference impl fetchable, deps installable in a scratch check, the dataset + pretrained AR base
+-      reachable, the minimal-kill-gate compute fits the rig -- and emit a GO/NO-GO readiness report so the operator can seed
+-      it with one command. Runs NO training; opens NO Phase-3 track; the loop does NOT commit.'
++    title: "EDLM no-train preflight readiness"
+     deliverable: results/experiment_3793_edlm_no_train_preflight_readiness.json
+-    result: OK (conductor)
++    result: "COMPLETE: EDLM preflight returned GO and emitted an operator seed command; the loop did not commit or self-seed"
+   - id: exp3794-external-research-refresh
+-    title: 'External research refresh for .347: file the genuinely-new 2026 papers surfaced during planning into research-references.md
+-      ''.347 additions'' -- tied to the .347 tracks (EDLM next-thesis preflight, the banked verifier product''s abstention/selective-prediction
+-      surface, Tier-3 predictive verification, gaming-resistance). Each entry as-reported, with how it relates. Pure documentation;
+-      runs no model.'
++    title: "External research refresh .347"
+     deliverable: results/experiment_3794_external_research_refresh.json
+-    result: OK (conductor)
++    result: "COMPLETE: .347 references filed append-only with numbers treated as reported"
+   - id: exp3795-kv260-opportunistic-continuity-audit
+-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
+-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
+-      opportunistic future-work).
++    title: "KV260 opportunistic continuity audit"
+     deliverable: results/experiment_3795_kv260_opportunistic_continuity_audit.json
+-    result: OK (conductor)
++    result: "COMPLETE: KV260 terminal state held; SSH reachable and overlay loadable"
+   - id: exp3796-capstone-v347
+-    title: 'Capstone .347 -- aggregate the POST-CONVERGENCE milestone: the last energy-existential question RETRIED (P1 discrete-search
+-      v3: decode-artifact-bounded / fundamental / inconclusive / blocked-no-free-GPU), the banked verifier product HARDENED
+-      (abstention CLI+batch surface, gaming-resistance characterized, product-headline provenance confirmed), Tier-3 predictive
+-      self-learning (FR-11 v19), the Anomaly-Escalation classifier VALIDATED, the operator''s EDLM seed PREFLIGHTED, references
+-      refreshed, KV260 terminal confirmed. paper_ready MUST stay TRUE; frozen 0.9131 unchanged; both energy routes stay bounded
+-      (P1 v3 sharpens the mechanism only).'
++    title: "Capstone .347"
+     deliverable: results/experiment_3796_capstone_v347.json
+-    result: OK (conductor)
++    result: "COMPLETE: capstone recorded P1 as blocked and handed off, paper_ready TRUE, FoVer 0.9131 frozen, both energy routes bounded, and .348 headline-advancement focus established"
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index d6d1f62fa5..a30f81b363 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -184,7 +184,7 @@ tasks:
+           principle: "Terminal prefix; blocked_<resource> if no inference path was usable; the real repair delta otherwise."
+         inference_substrate: "live_llm_inference (principle: live SOTA-GGUF HumanEval generation + repair)."
+         inference_path:
+-          principle: "BARE string in {gpu_live, cpu_gguf_reduced_n} -- which path actually ran; CPU fallback is honest, blocked if neither."
++          principle: "BARE string in {{gpu_live, cpu_gguf_reduced_n}} -- which path actually ran; CPU fallback is honest, blocked if neither."
+         baseline_pass1:
+           principle: "The baseline HumanEval pass@1 -- the positive control; MUST be non-trivial (a 0.0 baseline = broken harness = blocked, not a finding)."
+         repair_pass1:
+@@ -200,7 +200,7 @@ tasks:
+         g4_provenance_complete:
+           principle: "BARE bool, true -- the artifact carries random_seed AND reproducibility_checksum AND n AND inference_substrate (the G4 gate exp1999 failed)."
+         product_headline_restorable:
+-          principle: "BARE string in {restorable, restorable_with_caveat, stays_demoted} -- the honest operator-facing recommendation based on the measured delta + provenance."
++          principle: "BARE string in {{restorable, restorable_with_caveat, stays_demoted}} -- the honest operator-facing recommendation based on the measured delta + provenance."
+         operator_curated_doc_unedited:
+           principle: "BARE bool, true -- docs/technical-report.md and all operator-curated docs were NOT edited (Public Documentation Discipline)."
+         model_specs:
+@@ -259,8 +259,8 @@ tasks:
+            reproducibility_checksum, inference_substrate, positive_control_passed, g4_provenance_complete.
+         2. Decide G4 pass/fail for the re-run number: PASSES iff it resolves to exp3798's primary artifact carrying
+            BOTH random_seed AND reproducibility_checksum AND a non-trivial n AND positive_control_passed.
+-        3. Build an updated provenance-confirmation TABLE: {number, source artifact, n, seed present, checksum
+-           present, substrate, positive_control_passed, G4 pass/fail, caveat}. Include the re-run code-repair number
++        3. Build an updated provenance-confirmation TABLE: {{number, source artifact, n, seed present, checksum
++           present, substrate, positive_control_passed, G4 pass/fail, caveat}}. Include the re-run code-repair number
+            AND the already-passing exp2090 CRANE +15pp. State PLAINLY whether the product headline is now
+            restorable, restorable_with_caveat, or still not_yet_eligible.
+         4. Do NOT edit docs/technical-report.md or any operator-curated doc. This artifact + table ARE the
+@@ -272,13 +272,13 @@ tasks:
+           principle: "Terminal prefix; the re-confirmation outcome."
+         inference_substrate: "aggregation_from_upstream_artifacts (principle: provenance aggregation over the re-run, no live model)."
+         provenance_table:
+-          principle: "Per-number {source, n, seed_present, checksum_present, substrate, positive_control, g4_pass, caveat} -- the core deliverable the operator uses to restore/qualify the headline."
++          principle: "Per-number {{source, n, seed_present, checksum_present, substrate, positive_control, g4_pass, caveat}} -- the core deliverable the operator uses to restore/qualify the headline."
+         rerun_code_repair_g4_pass:
+           principle: "BARE bool -- whether the exp3798 re-run number now fully traces to a primary artifact with seed+checksum+n (G4)."
+         exp2090_g4_pass:
+           principle: "BARE bool -- the CRANE +15pp number's G4 status (already passing per .347; re-asserted)."
+         product_headline_restorable:
+-          principle: "BARE string in {restorable, restorable_with_caveat, not_yet_headline_eligible} -- the honest operator-facing recommendation."
++          principle: "BARE string in {{restorable, restorable_with_caveat, not_yet_headline_eligible}} -- the honest operator-facing recommendation."
+         operator_curated_doc_unedited:
+           principle: "BARE bool, true -- docs/technical-report.md and all operator-curated docs were NOT edited (Public Documentation Discipline)."
+         cited_upstream_artifacts:
+@@ -361,7 +361,7 @@ tasks:
+         clean_auroc_preserved:
+           principle: "BARE bool, true -- the mitigation keeps the clean-corpus AUROC within the frozen 0.9131 CI (the load-bearing invariant; a clean regression fails the mitigation)."
+         evasion_status:
+-          principle: "BARE string in {closed, narrowed, failed} -- the honest mitigation result for the context_compaction evasion."
++          principle: "BARE string in {{closed, narrowed, failed}} -- the honest mitigation result for the context_compaction evasion."
+         n_samples:
+           principle: "BARE int, >=200 -- sample-size rigor so the before/after curves are CLT-valid."
+         not_a_moat_reopen:
+@@ -423,7 +423,7 @@ tasks:
+         1. Add a minimal HTTP/REST endpoint (use the stdlib http.server or whatever lightweight server pattern the
+            repo already uses -- do NOT add a heavy new framework dependency if one is not already present) that
+            accepts a POST with one or more candidates and runs the verify pipeline in abstention mode: for each
+-           candidate, return JSON {verdict: confident|abstain, score, coverage, risk, delta}. Load the threshold
++           candidate, return JSON {{verdict: confident|abstain, score, coverage, risk, delta}}. Load the threshold
+            from the same config the wiring uses (default = exp3771's 0.733), NOT a hardcoded constant. Default
+            abstention OFF (a request flag turns it on) so existing behavior is unchanged.
+         2. E2E CONFIRM: start the endpoint in-process / on a test port, POST a tiny batch of cached FoVer examples
+@@ -818,7 +818,7 @@ tasks:
+         product_headline_advanced:
+           principle: "Records exp3798 (G4 re-run delta + g4_provenance_complete) + exp3799 (restorable/with-caveat/not-yet-eligible) -- the headline-advancement result (or honest block)."
+         product_headline_restorable:
+-          principle: "BARE string in {restorable, restorable_with_caveat, not_yet_eligible, blocked_rerun} -- the operator-facing recommendation."
++          principle: "BARE string in {{restorable, restorable_with_caveat, not_yet_eligible, blocked_rerun}} -- the operator-facing recommendation."
+         verifier_product_hardened:
+           principle: "Records the context_compaction mitigation (exp3800 evasion_status + clean_auroc_preserved) + the HTTP/REST 3rd surface (exp3801) -- the deployable-product advances."
+         anomaly_classifier_repaired:
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index a19e7f68c5..1322f4ac0c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T10:41:29.393050Z",
+-  "duration_s": 0.00982046127319336,
++  "run_date": "2026-06-04T11:32:56.944377Z",
++  "duration_s": 0.0076982975006103516,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "3eea0a03a365e75423571ae51adf9b1c0b10393bf1da3225ed7e3b3290d723cd",
++  "reproducibility_checksum": "89448d55ed34240ffcb89a28fc3c281c502761e980fd7e87198b76efea96532c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "3649356ea1d1817f3941b85d456c2d3b9db0093a"
++    "adversarial_verify_version": "bc6d7bb62071361eb89028a50de498a6ace34282"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 7c6bdb56a7..b46014d42f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T10:41:29.405738Z",
+-  "duration_s": 0.009294748306274414,
++  "run_date": "2026-06-04T11:32:56.953965Z",
++  "duration_s": 0.007361888885498047,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "0f54eb6293eb6b3471a8efc8dc69deee69daafeb8052f9914c26fb83f0a74ee2",
++  "reproducibility_checksum": "05a75cb739ec421d40790b91d61e70bb6777dbefb0fa41b6bb9f657570f2a131",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "3649356ea1d1817f3941b85d456c2d3b9db0093a"
++    "adversarial_verify_version": "bc6d7bb62071361eb89028a50de498a6ace34282"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b92d028126..babf72795b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1102428436279297,
++  "efficiency_gains_ms": 2.115011215209961,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index eea9af1d94..81d71aa46e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6269000954926014e-05,
++  "duration_s": 2.589900395832956e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3797_archive_v347_activate_v348.json b/results/experiment_3797_archive_v347_activate_v348.json
+new file mode 100644
+index 0000000000..b4a44ba6ed
+--- /dev/null
++++ b/results/experiment_3797_archive_v347_activate_v348.json
+@@ -0,0 +1,116 @@
++{
++  "activated_milestone": "2026.06.348",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": [],
++    "max_severity": -1
++  },
++  "archived_milestone": "2026.06.347",
++  "blocked_handoff_task_ids": [
++    "exp3787-p1-discrete-search-adjudication-v3-retry"
++  ],
++  "both_energy_routes_still_bounded": true,
++  "duration_s": 3.079165,
++  "experiment_id": "exp3797",
++  "field_principles": {
++    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
++    "both_energy_routes_still_bounded": "BARE bool -- records that .348 does not reopen the bounded conclusion and runs no energy-foundation experiment.",
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
++    "inference_substrate": "JSON-read and format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
++    "n_tasks_archived": "Sample-size hygiene -- confirms the full .347 milestone was archived, not a partial.",
++    "p1_handed_to_operator_recorded": "BARE bool -- records that the P1 discrete-search adjudication is handed to the operator after a 2nd consecutive resource block and is not re-queued in .348.",
++    "paper_ready_preserved": "BARE bool -- G1-G4 stay met; the transition must not silently regress paper_ready; frozen 0.9131 stays frozen.",
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
++    "research_complete_yaml_parses": "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write.",
++    "v347_outcome_recorded": "Records .347's REAL state: landed all tasks, P1 blocked and handed off, EDLM preflight GO, product headline partially restorable, paper_ready TRUE.",
++    "v348_focus_recorded": "Records the .348 agenda: G4 headline restoration, product harden/repair, classifier tuning, Tier-3 self-learning -- re-grinding nothing bounded."
++  },
++  "honest_verdict": "complete: archived_v347_landed_all_p1_blocked_no_free_gpu_handed_to_operator_v348_headline_advancement_active_paper_ready_true_both_energy_routes_bounded_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_tasks_archived": 11,
++  "n_tasks_terminal": 11,
++  "p1_handed_to_operator_recorded": true,
++  "paper_ready_evidence": {
++    "capstone_paper_ready": true,
++    "frozen_headline_auroc": 0.9131,
++    "frozen_headline_unchanged": true,
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true,
++    "paper_ready": true,
++    "publication_gate_source": "scripts/publication_gate.py --json",
++    "unmet_gates": []
++  },
++  "paper_ready_preserved": true,
++  "random_seed": 3797,
++  "reproducibility_checksum": "e6ed3e22a43b39036085eac9f81ba0983ffdebd7d7cd5281e1aaddfd34afad41",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v347_to_v348_3797.v1",
++  "source_artifact_checksums": [
++    {
++      "path": "results/experiment_3796_capstone_v347.json",
++      "sha256": "294b19f8c34021d58fffaaef865e1f79002198070938d8f52c39530de4e4d66b"
++    }
++  ],
++  "source_document_checksums": [
++    {
++      "path": "research-roadmap.yaml",
++      "sha256": "375c85e2ae789c318c5aa01702e6048d28c8432d3d82e8664a3ed340a5fa5daa"
++    },
++    {
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "d7e74fc378f4450d0d25a29600c0a51fcb9a35add8ce1e49fde8da96d923c74c"
++    },
++    {
++      "path": "ops/changelog.md",
++      "sha256": "054a2b4e17c0a98e83b015dc7f00831d82983b655accd960c63ab75a76ae2747"
++    },
++    {
++      "path": "ops/north-star.md",
++      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
++    }
++  ],
++  "task_id": "exp3797-archive-v347-activate-v348",
++  "v347_capstone_evidence": {
++    "anomaly_classifier_needs_tuning": true,
++    "archived_task_count_recorded": 11,
++    "both_energy_routes_bounded": true,
++    "capstone_path": "results/experiment_3796_capstone_v347.json",
++    "edlm_preflight_go": true,
++    "exp3787_blocked_no_free_gpu": true,
++    "exp3787_not_requeued_in_v348": true,
++    "exp3787_record": {
++      "experiment_id": 3787,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json",
++      "reason": "blocked_no_free_gpu",
++      "status": "blocked"
++    },
++    "flagged_artifacts_excluded": [],
++    "fr11_tier3_predictive_auroc": 0.9715,
++    "honest_verdict": "complete: capstone_v347_p1_blocked_no_free_gpu_energy_as_generator_still_bounded_verifier_product_hardened_fr11_v19_tier3_anomaly_validated_edlm_preflighted_paper_ready_true_frozen_headline_unchanged",
++    "p1_adjudication": "blocked_no_free_gpu",
++    "p1_handoff_to_operator": true,
++    "p1_mechanism_status": "open_for_operator: blocked_no_free_gpu",
++    "p1_positive_control_passed": false,
++    "product_headline_restorable": "not_yet_eligible",
++    "record_honest": true,
++    "terminal_task_count_recorded": 11,
++    "verifier_product_hardened": true
++  },
++  "v347_outcome_recorded": "landed_all_tasks_p1_blocked_no_free_gpu_handed_to_operator_edlm_preflight_go_product_headline_partially_restorable_paper_ready_true",
++  "v348_activation_evidence": {
++    "active_milestone": "2026.06.348",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "edlm_operator_gated": true,
++    "first_task": "exp3797-archive-v347-activate-v348",
++    "headline_advancement_focus": "g4_headline_restoration_product_harden_repair_classifier_tuning_tier3_fast_path_no_bounded_regrind_no_paradigm_self_seed",
++    "p1_requeued": false
++  },
++  "v348_active_confirmed": true,
++  "v348_focus_recorded": "g4_headline_restoration_product_harden_repair_classifier_tuning_tier3_fast_path_no_bounded_regrind_no_paradigm_self_seed"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 789e3b5b77..d7d5da68ab 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T10:45:43Z",
+-  "finished_at": "2026-06-04T10:45:43Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-04T11:32:48Z",
++  "finished_at": "2026-06-04T11:32:48Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e3f23d1aaa..fe02bd60db 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T10:45:43Z",
+-  "finished_at": "2026-06-04T10:45:43Z",
++  "started_at": "2026-06-04T11:32:48Z",
++  "finished_at": "2026-06-04T11:32:49Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 35ea1b4593..256212a418 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T10:45:43Z",
+-  "finished_at": "2026-06-04T10:45:43Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-04T11:32:49Z",
++  "finished_at": "2026-06-04T11:32:49Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3797_archive_v347_activate_v348.py b/scripts/experiment_3797_archive_v347_activate_v348.py
+new file mode 100644
+index 0000000000..c3b55a8511
+--- /dev/null
++++ b/scripts/experiment_3797_archive_v347_activate_v348.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3797 v347 archive and v348 activation."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.archive_v347_activate_v348_3797 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3797_archive_v347_activate_v348.py b/tests/python/test_experiment_3797_archive_v347_activate_v348.py
+new file mode 100644
+index 0000000000..fed951027e
+--- /dev/null
++++ b/tests/python/test_experiment_3797_archive_v347_activate_v348.py
+@@ -0,0 +1,453 @@
++"""Tests for Exp 3797 v347 archive and v348 activation.
++
++Spec refs: REQ-REPORT-3797, SCENARIO-REPORT-3797,
++SCENARIO-REPORT-3797-P1-HANDOFF-GUARD.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot.reporting import archive_v347_activate_v348_3797 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _publication_gate_ready() -> dict[str, object]:
++    return {
++        "paper_ready": True,
++        "gates": {
++            "G1": {"pass": True, "detail": "headline measured"},
++            "G2": {"pass": True, "detail": "independent reproducer"},
++            "G3": {"pass": True, "detail": "narrowing clean"},
++            "G4": {"pass": True, "detail": "numbers trace"},
++        },
++        "unmet_gates": [],
++    }
++
++
++def _seed_repo(root: Path, *, active_milestone: str = "2026.06.348") -> None:
++    (root / "openspec" / "change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{active_milestone}"\n'
++        'milestone_title: "POST-CONVERGENCE -- ADVANCE THE HEADLINE (G4 RESTORATION) + '
++        'HARDEN/REPAIR THE BANKED PRODUCT"\n'
++        "tasks:\n"
++        "  - id: exp3797-archive-v347-activate-v348\n"
++        "    title: Archive .347 and activate .348 headline advancement\n"
++        "  - id: exp3798-g4-product-headline-restoration\n"
++        "    title: ADVANCE the product headline via G4 restoration\n"
++        "  - id: exp3800-gaming-resistance-mitigation-v2\n"
++        "    title: HARDEN/REPAIR product context_compaction evasion\n"
++        "  - id: exp3802-anomaly-escalation-classifier-v2-tuning\n"
++        "    title: REPAIR anomaly-escalation classifier false-escalation\n"
++        "  - id: exp3803-fr11-v20-tier3-fast-path-gate\n"
++        "    title: CONTINUE Tier-3 self-learning fast-path gate\n",
++        encoding="utf-8",
++    )
++    (root / "openspec" / "change-proposals" / "research-roadmap-vNEXT.md").write_text(
++        "# Research Roadmap - Milestone 2026.06.348\n\n"
++        ".347 landed all tasks. exp3787 blocked on no-free-GPU for the second "
++        "consecutive milestone and handoff_to_operator=true; .348 does NOT re-queue "
++        "P1. EDLM preflight GO stays operator-gated. Product headline is partially "
++        "restorable: exp2090 passes G4, exp1999 fails G4. .348 ADVANCEs the headline, "
++        "HARDEN/REPAIRs the banked product, tunes the anomaly-escalation classifier, "
++        "continues Tier-3 self-learning, re-grinds nothing bounded, and self-seeds no "
++        "paradigm.\n",
++        encoding="utf-8",
++    )
++    (root / "research-complete.yaml").write_text(
++        "milestones:\n"
++        "- id: 2026.06.346\n"
++        "  finding: previous archive\n"
++        "- id: 2026.06.347\n"
++        "  title: stale conductor archive\n"
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md\n"
++        "  completed: '2026-06-04'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp3787-p1-discrete-search-adjudication-v3-retry\n"
++        "    title: P1 discrete-search v3 retry\n"
++        "    deliverable: results/experiment_3787_p1_discrete_search_adjudication_v3_retry.json\n"
++        "    result: OK (conductor)\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "north-star.md").write_text(
++        "# North Star\n\nFrozen FoVer headline AUROC: 0.9131.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "changelog.md").write_text(
++        "Milestone 2026.06.348 Planning. .347 landed all tasks; exp3787 blocked "
++        "on no-free-GPU for the second consecutive milestone and set "
++        "handoff_to_operator=true. exp3792 found exp2090 G4 pass and exp1999 G4 "
++        "fail. exp3793 EDLM preflight GO. paper_ready=TRUE. .348 does not re-queue P1.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor unchanged\n",
++        encoding="utf-8",
++    )
++    _write_json(
++        root / "results" / "experiment_3796_capstone_v347.json",
++        {
++            "honest_verdict": (
++                "complete: capstone_v347_p1_blocked_no_free_gpu_"
++                "energy_as_generator_still_bounded_verifier_product_hardened_"
++                "fr11_v19_tier3_anomaly_validated_edlm_preflighted_"
++                "paper_ready_true_frozen_headline_unchanged"
++            ),
++            "paper_ready_preserved": True,
++            "publication_gate_state": {
++                "paper_ready": True,
++                "g1": True,
++                "g2": True,
++                "g3": True,
++                "g4": True,
++                "unmet_gates": [],
++            },
++            "p1_adjudication": "blocked_no_free_gpu",
++            "p1_handoff_to_operator": True,
++            "p1_mechanism_status": "open_for_operator: blocked_no_free_gpu",
++            "p1_positive_control_passed": False,
++            "energy_as_generator_still_bounded": True,
++            "energy_as_selector_status": "honest-negative-bounded",
++            "energy_as_generator_status": "honest-negative-bounded",
++            "product_headline_restorable": "not_yet_eligible",
++            "edlm_seed_preflighted": {
++                "preflighted": True,
++                "readiness_verdict": "go",
++                "loop_does_not_commit": True,
++            },
++            "fr11_v19_tier3_self_learning": {
++                "validated": True,
++                "predictive_auroc": 0.9715,
++                "headline_ensemble_unchanged": True,
++                "memory_contribution_preserved": True,
++            },
++            "verifier_product_hardened": {
++                "hardened": True,
++                "abstention_cli_batch_surface": True,
++                "gaming_resistance_curve": True,
++                "product_headline_provenance_confirmed": True,
++            },
++            "anomaly_escalation_validated": True,
++            "anomaly_escalation_validation": {
++                "validated": True,
++                "supports_wiring_in": False,
++                "false_escalation_rate": 0.833333,
++                "frame_violating_recall": 1.0,
++            },
++            "not_landed_or_blocked_recorded_honestly": [
++                {
++                    "experiment_id": 3787,
++                    "path": str(
++                        root
++                        / "results"
++                        / "experiment_3787_p1_discrete_search_adjudication_v3_retry.json"
++                    ),
++                    "reason": "blocked_no_free_gpu",
++                    "status": "blocked",
++                }
++            ],
++            "cited_upstream_artifacts": [
++                {"experiment_id": experiment_id, "status": status}
++                for experiment_id, status in [
++                    (3786, "landed"),
++                    (3787, "blocked"),
++                    (3788, "landed"),
++                    (3789, "landed"),
++                    (3790, "landed"),
++                    (3791, "landed"),
++                    (3792, "landed"),
++                    (3793, "landed"),
++                    (3794, "landed"),
++                    (3795, "landed"),
++                ]
++            ],
++            "flagged_artifacts_excluded": [],
++            "frozen_headline_unchanged": True,
++            "frozen_fover_auroc": 0.9131,
++            "random_seed": 3796,
++            "reproducibility_checksum": "6" * 64,
++            "duration_s": 0.5,
++        },
++    )
++
++
++def test_req_report_3797_spec_anchor_exists() -> None:
++    """REQ-REPORT-3797: OpenSpec declares the archive/activation contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3797" in spec
++    assert "SCENARIO-REPORT-3797" in spec
++    assert "SCENARIO-REPORT-3797-P1-HANDOFF-GUARD" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_scenario_report_3797_run_archives_v347_handoff_and_activates_v348(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-REPORT-3797: archive records P1 handoff and .348 focus."""
++
++    _seed_repo(tmp_path)
++    before_docs = {
++        "roadmap": (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8"),
++        "conductor": (tmp_path / "scripts" / "research_conductor.py").read_text(
++            encoding="utf-8"
++        ),
++        "north": (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8"),
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++    }
++
++    out_path = mod.run(
++        tmp_path,
++        publication_gate_report=_publication_gate_ready(),
++        started_s=10.0,
++        now_s=10.5,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    complete_text = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    complete = yaml.safe_load(complete_text)
++    row = [item for item in complete["milestones"] if str(item.get("id")) == "2026.06.347"]
++    task_results = {task["id"]: task["result"] for task in row[0]["tasks"]}
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.TERMINAL_VERDICT
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["v347_outcome_recorded"] == mod.V347_OUTCOME_RECORDED
++    assert artifact["v348_focus_recorded"] == mod.V348_FOCUS_RECORDED
++    assert artifact["p1_handed_to_operator_recorded"] is True
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["both_energy_routes_still_bounded"] is True
++    assert artifact["n_tasks_archived"] == 11
++    assert artifact["n_tasks_terminal"] == 11
++    assert artifact["blocked_handoff_task_ids"] == [
++        "exp3787-p1-discrete-search-adjudication-v3-retry"
++    ]
++    assert artifact["v348_active_confirmed"] is True
++    assert artifact["active_roadmap_path"] == "research-roadmap.yaml"
++    assert artifact["paper_ready_evidence"] == {
++        "publication_gate_source": "provided_report",
++        "paper_ready": True,
++        "g1": True,
++        "g2": True,
++        "g3": True,
++        "g4": True,
++        "unmet_gates": [],
++        "capstone_paper_ready": True,
++        "frozen_headline_auroc": 0.9131,
++        "frozen_headline_unchanged": True,
++    }
++    assert artifact["v347_capstone_evidence"]["exp3787_blocked_no_free_gpu"] is True
++    assert artifact["v347_capstone_evidence"]["p1_handoff_to_operator"] is True
++    assert artifact["v347_capstone_evidence"]["edlm_preflight_go"] is True
++    assert artifact["v347_capstone_evidence"]["product_headline_restorable"] == "not_yet_eligible"
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["adversarial_verify_report"]["max_severity"] < 2
++    assert artifact["random_seed"] == 3797
++    assert artifact["duration_s"] == 0.5
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "model_specs" not in encoded
++    assert "target_model" not in encoded
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "live-model" not in encoded
++
++    assert complete_text.count("- id: 2026.06.347") == 1
++    assert yaml.safe_load(complete_text)
++    assert "See conductor log" not in complete_text
++    assert "OK (conductor)" not in complete_text
++    assert "LANDED TERMINAL MILESTONE" in row[0]["finding"]
++    assert "blocked on no-free-GPU" in row[0]["finding"]
++    assert "handed to the operator" in row[0]["finding"]
++    assert "not a research negative" in row[0]["finding"]
++    assert len(row[0]["tasks"]) == 11
++    assert task_results["exp3786-archive-v346-activate-v347"].startswith("COMPLETE:")
++    assert task_results["exp3787-p1-discrete-search-adjudication-v3-retry"].startswith(
++        "BLOCKED_RESOURCE_HANDOFF:"
++    )
++    assert "no-free-GPU" in task_results["exp3787-p1-discrete-search-adjudication-v3-retry"]
++    assert "operator" in task_results["exp3787-p1-discrete-search-adjudication-v3-retry"]
++    assert task_results["exp3796-capstone-v347"].startswith("COMPLETE:")
++    assert 'result: "BLOCKED_RESOURCE_HANDOFF: exp3787 blocked on no-free-GPU' in complete_text
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == before_docs[
++        "roadmap"
++    ]
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before_docs["conductor"]
++    assert (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8") == before_docs[
++        "north"
++    ]
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before_docs[
++        "status"
++    ]
++    assert (tmp_path / "ops" / "changelog.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["changelog"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["trace"]
++
++
++def test_req_report_3797_research_complete_rewrite_is_idempotent(
++    tmp_path: Path,
++) -> None:
++    """REQ-REPORT-3797: the .347 archive row is replaced once and stays stable."""
++
++    _seed_repo(tmp_path)
++
++    first_path = mod.run(
++        tmp_path,
++        publication_gate_report=_publication_gate_ready(),
++        started_s=2.0,
++        now_s=2.125,
++    )
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    first_artifact = json.loads(first_path.read_text(encoding="utf-8"))
++
++    second_path = mod.run(
++        tmp_path,
++        publication_gate_report=_publication_gate_ready(),
++        started_s=2.0,
++        now_s=2.125,
++    )
++    second_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second_artifact = json.loads(second_path.read_text(encoding="utf-8"))
++
++    assert first_complete == second_complete
++    assert first_complete.count("- id: 2026.06.347") == 1
++    assert first_artifact == second_artifact
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("v347_outcome_recorded"), "missing required"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (lambda p: p.update(honest_verdict="complete: wrong"), "terminal verdict"),
++        (lambda p: p.update(inference_substrate="aggregation plus model"), "inference"),
++        (lambda p: p.update(v347_outcome_recorded="partial"), ".347 outcome"),
++        (lambda p: p.update(v348_focus_recorded="unclear"), ".348 focus"),
++        (lambda p: p.update(p1_handed_to_operator_recorded=False), "P1 handoff"),
++        (lambda p: p.update(research_complete_yaml_parses=False), "safe-load"),
++        (lambda p: p.update(paper_ready_preserved=False), "paper_ready"),
++        (lambda p: p.update(both_energy_routes_still_bounded=False), "energy routes"),
++        (lambda p: p.update(n_tasks_archived=10), "11"),
++        (lambda p: p.update(n_tasks_terminal=10), "terminal"),
++        (lambda p: p.update(blocked_handoff_task_ids=[]), "exp3787"),
++        (lambda p: p.update(adversarial_verify_clean=False), "adversarial"),
++        (lambda p: p.update(random_seed=1), "random_seed"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(target_model="none"), "target_model"),
++        (lambda p: p.update(copied_marker="GGUF"), "compute-bound markers"),
++    ],
++)
++def test_req_report_3797_validate_artifact_rejects_dishonest_fields(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3797: validation blocks silent archive regressions."""
++
++    _seed_repo(tmp_path)
++    payload = json.loads(
++        mod.run(
++            tmp_path,
++            publication_gate_report=_publication_gate_ready(),
++            started_s=4.0,
++            now_s=4.5,
++        ).read_text(encoding="utf-8")
++    )
++    mod.validate_artifact(payload)
++
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(broken)
++
++
++def test_req_report_3797_defensive_helpers_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-3797: malformed inputs do not produce a terminal archive."""
++
++    _seed_repo(tmp_path, active_milestone="2026.06.347")
++    with pytest.raises(ValueError, match=".348 active"):
++        mod.run(
++            tmp_path,
++            publication_gate_report=_publication_gate_ready(),
++            started_s=1.0,
++            now_s=1.1,
++        )
++
++    _seed_repo(tmp_path)
++    _write_json(
++        tmp_path / "results" / "experiment_3796_capstone_v347.json",
++        {"paper_ready_preserved": False, "not_landed_or_blocked_recorded_honestly": []},
++    )
++    with pytest.raises(ValueError, match=".347 capstone"):
++        mod.build_artifact(
++            tmp_path,
++            research_complete_yaml_parses=True,
++            publication_gate_report=_publication_gate_ready(),
++        )
++
++    _seed_repo(tmp_path)
++    with pytest.raises(ValueError, match="publication gate"):
++        mod.build_artifact(
++            tmp_path,
++            research_complete_yaml_parses=True,
++            publication_gate_report={"paper_ready": False, "gates": {}, "unmet_gates": ["G2"]},
++        )
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-roadmap.yaml").write_text("tasks: []\n", encoding="utf-8")
++    with pytest.raises(ValueError, match=".348 active"):
++        mod.build_artifact(
++            tmp_path,
++            research_complete_yaml_parses=True,
++            publication_gate_report=_publication_gate_ready(),
++        )
++
++    appended = mod.rewrite_research_complete("milestones:\n- id: 2026.06.346\n")
++    assert appended.count("- id: 2026.06.347") == 1
++    assert yaml.safe_load(appended)
++    assert mod.rewrite_research_complete("").startswith("milestones:\n- id: 2026.06.347")
++    assert "milestones:\n- id: 2026.06.347" in mod.rewrite_research_complete(
++        "# completed only\n"
++    )
++
++
++def test_scenario_report_3797_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3797: the requested script entrypoint exists."""
++
++    script = Path("scripts/experiment_3797_archive_v347_activate_v348.py")
++    assert script.exists()
++    text = script.read_text(encoding="utf-8")
++    assert "archive_v347_activate_v348_3797" in text
+-- 
+2.55.0
+

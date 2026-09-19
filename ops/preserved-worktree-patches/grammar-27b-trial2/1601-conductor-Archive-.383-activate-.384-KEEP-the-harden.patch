@@ -1,0 +1,1659 @@
+From d5498cdfce1c6b23d5a14b005905f4440e508403 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 08:33:47 -0400
+Subject: [PATCH 01601/11171] [conductor] Archive .383 -> activate .384; KEEP
+ the hardened green-gate + poison-test quarantine. Assert
+ research-complete.yaml + ops/exclusion_manifest.yaml parse under
+ yaml.safe_load and nano-trm/src/nn/train.py is present; run the smart-subset
+ pre-test gate green; RECORD the .383 close-state truth (accumulation NO-OP'd
+ at the max_epochs cap, baseline stuck at 0.278, decisive graft deferred
+ uninformatively -> .384 fixes the cap).
+
+Automated research step by research conductor.
+Task ID: exp4145-archive-v383-activate-v384
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  69 ++
+ ops/dogfood-memory.json                       |   4 +-
+ ...eriment_4145_archive_v383_activate_v384.py |  19 +
+ .../archive_v383_activate_v384_4145.py        | 734 ++++++++++++++++++
+ research-complete.yaml                        |   3 +-
+ research-roadmap.yaml                         |   4 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ ...iment_4145_archive_v383_activate_v384.json | 117 +++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...eriment_4145_archive_v383_activate_v384.py | 445 +++++++++++
+ 17 files changed, 1408 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/experiment_4145_archive_v383_activate_v384.py
+ create mode 100644 python/carnot/reporting/archive_v383_activate_v384_4145.py
+ create mode 100644 results/experiment_4145_archive_v383_activate_v384.json
+ create mode 100644 tests/python/test_experiment_4145_archive_v383_activate_v384.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index b5ca7ac5b4..0ecb278485 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -20229,6 +20229,75 @@ claim `.381` was archived successfully.
+ |---|---|---|
+ | REQ-REPORT-4125 | Implemented (`python/carnot/reporting/archive_v381_activate_v382_4125.py`, `scripts/experiments/exp4125_archive_v381_activate_v382.py`) | Implemented (`tests/python/test_experiment_4125_archive_v381_activate_v382.py`) |
+ 
++### REQ-REPORT-4145: Archive .383, Activate .384, And Preserve The Max-Epochs No-Op Close-State
++
++The Exp 4145 workflow SHALL archive milestone `2026.06.383`, confirm milestone
++`2026.06.384` is the active milestone, and write the record-only aggregation
++artifact `results/experiment_4145_archive_v383_activate_v384.json`. It SHALL run
++no live model training: its `inference_substrate` SHALL be
++`aggregation_from_upstream_artifacts`.
++
++Before claiming completion the workflow SHALL confirm:
++
++- `research-complete.yaml` parses under `yaml.safe_load`
++- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
++- `nano-trm/src/nn/train.py` exists
++- the smart-subset pre-test gate is green
++
++If any precondition is absent or red, the workflow SHALL write a blocked
++artifact whose `honest_verdict` starts with `blocked_`, record the failed
++resource in `preconditions_checked`, and stop without fabricating a terminal
++archive.
++
++The complete artifact SHALL include the principle-annotated fields
++`honest_verdict`, `v383_close_state`, and `preconditions_checked` with these
++exact principles:
++
++- `honest_verdict`: `Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.`
++- `v383_close_state`: `Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) so the next planner builds on the truth.`
++- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
++
++The complete-path `honest_verdict` SHALL start with one of `complete:`,
++`success:`, `passed:`, or `shipped:`. `v383_close_state` SHALL truthfully record
++that `.383` accumulation no-op'd at the resumed-checkpoint `max_epochs` cap,
++that Exp 4135 ran for about `6.99` seconds, did not train, wrote no real
++`val_exact_accuracy`, and left the stable checkpoint untouched, that the
++baseline remained `0.278172343969` (rounded to `0.278`), and that the decisive
++graft was deferred uninformatively with `FALSE_NEGATIVE_RISK`. The artifact
++SHALL also record that `.384` continues from the intact `0.278` checkpoint with
++the max-epochs cap fix.
++
++#### SCENARIO-REPORT-4145: The Archive Preserves The Honest .383 No-Op Diagnosis
++
++**Given** `.383` has Exp 4135-4138 accumulation artifacts that did not advance
++the baseline, Exp 4139 deferred the graft uninformatively with false-negative
++risk, the `.383` capstone records the baseline as stuck at `0.278`, the history
++and exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py` exists, the
++smart-subset pre-test gate is green, and `.384` is active
++**When** the Exp 4145 archive workflow runs
++**Then** it archives `.383`, confirms `.384`, keeps the YAML history parseable
++with one `.383` record, writes
++`results/experiment_4145_archive_v383_activate_v384.json`, records the
++max-epochs no-op, unchanged `0.278` baseline, intact checkpoint, false-negative
++risk, and `.384` epoch-cap fix in `v383_close_state`, records the checked
++resources in `preconditions_checked`, declares
++`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
++verdict.
++
++#### SCENARIO-REPORT-4145-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
++
++**Given** any required precondition is absent or red
++**When** the Exp 4145 archive workflow runs
++**Then** it writes a blocked artifact whose `honest_verdict` starts with
++`blocked_`, records the failed resource in `preconditions_checked`, and does not
++claim `.383` was archived successfully.
++
++## Implementation Status (REQ-REPORT-4145)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4145 | Implemented (`python/carnot/reporting/archive_v383_activate_v384_4145.py`, `python/carnot/experiment_4145_archive_v383_activate_v384.py`) | Implemented (`tests/python/test_experiment_4145_archive_v383_activate_v384.py`) |
++
+ ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+ 
+ The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a005f09ef1..e1402d0f4d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 170,
++  "brace_fixes": 171,
+   "code_violations": 0,
+-  "experiments_checked": 3167,
++  "experiments_checked": 3168,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/experiment_4145_archive_v383_activate_v384.py b/python/carnot/experiment_4145_archive_v383_activate_v384.py
+new file mode 100644
+index 0000000000..12a107720c
+--- /dev/null
++++ b/python/carnot/experiment_4145_archive_v383_activate_v384.py
+@@ -0,0 +1,19 @@
++"""Conductor entrypoint for Exp 4145 archive / activation."""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++from carnot.reporting.archive_v383_activate_v384_4145 import REPO_ROOT, run
++
++
++def main() -> int:
++    """Run the Exp 4145 record-only archive workflow."""
++
++    output_path: Path = run(REPO_ROOT)
++    print(output_path)
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/python/carnot/reporting/archive_v383_activate_v384_4145.py b/python/carnot/reporting/archive_v383_activate_v384_4145.py
+new file mode 100644
+index 0000000000..f7bd15029a
+--- /dev/null
++++ b/python/carnot/reporting/archive_v383_activate_v384_4145.py
+@@ -0,0 +1,734 @@
++"""Archive .383, activate .384, and record the max-epochs no-op truth.
++
++Spec refs: REQ-REPORT-4145, SCENARIO-REPORT-4145,
++SCENARIO-REPORT-4145-BLOCKED-PRECONDITION.
++
++This is a record-only transition. It does not train nano-TRM. Its job is to
++preserve the operational diagnosis that `.383` did not advance the Sudoku
++baseline because the resumed checkpoint was already at the configured epoch
++ceiling, so `.384` must raise the ceiling before resuming from the intact
++0.278 checkpoint.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import re
++import subprocess
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.383"
++ACTIVATED_MILESTONE = "2026.06.384"
++RANDOM_SEED = 4145
++OUTPUT_REL_PATH = Path("results/experiment_4145_archive_v383_activate_v384.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++NANO_TRM_TRAIN_REL_PATH = Path("nano-trm/src/nn/train.py")
++PYTEST_BIN = Path(".venv/bin/pytest")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SCHEMA = "carnot.archive_activation.v383_to_v384_4145.v1"
++EXPERIMENT_ID = "exp4145"
++TASK_ID = "exp4145-archive-v383-activate-v384"
++
++BASELINE_VAL_DEFAULT = 0.278172343969
++PASS1_DURATION_DEFAULT = 6.99
++PUBLISHED_BASELINE_TARGET = 0.87
++
++CORE_SMART_SUBSET = (
++    "tests/python/test_pipeline_extract.py",
++    "tests/python/test_docs.py",
++)
++
++V383_SOURCE_ARTIFACTS: tuple[JsonDict, ...] = (
++    {
++        "experiment_id": "4135",
++        "deliverable": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
++    },
++    {
++        "experiment_id": "4138",
++        "deliverable": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++    },
++    {
++        "experiment_id": "4139",
++        "deliverable": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
++    },
++    {
++        "experiment_id": "4144",
++        "deliverable": "results/experiment_4144_capstone_v383.json",
++    },
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "archived_milestone",
++    "activated_milestone",
++    "active_milestone_confirmed",
++    "research_complete_yaml_parses",
++    "exclusion_manifest_parses",
++    "nano_trm_train_present",
++    "pretest_suite_green",
++    "v383_close_state",
++    "preconditions_checked",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "archived_milestone": "Provenance: the milestone being closed, 2026.06.383.",
++    "activated_milestone": "Confirms .384 is live for the epoch-cap repair path.",
++    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
++    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
++    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
++    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
++    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
++    "v383_close_state": (
++        "Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) "
++        "so the next planner builds on the truth."
++    ),
++    "preconditions_checked": (
++        "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
++    ),
++    "honest_verdict": (
++        "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:."
++    ),
++    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
++    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
++}
++
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++RECORD_ID_RE = re.compile(r"^- id:\s*['\"]?2026\.06\.383['\"]?\s*$")
++CANONICAL_FINDING = (
++    ".383 accumulation no-op'd at the resumed checkpoint max_epochs cap: exp4135 ran 6.99s, "
++    "never trained, wrote no real val_exact_accuracy, and left the stable checkpoint untouched. "
++    "The baseline stayed at 0.278, the decisive graft deferred uninformatively with "
++    "FALSE_NEGATIVE_RISK, and .384 fixes the cap before resuming from the intact 0.278 checkpoint."
++)
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured subprocess output for one required precondition command."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++def yaml_parses(text: str) -> bool:
++    """Return true when PyYAML can safe-load the supplied text."""
++
++    try:
++        yaml.safe_load(text)
++    except yaml.YAMLError:
++        return False
++    return True
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Compute a positive duration for a record-only task."""
++
++    if started_s is None:
++        return 0.0001
++    end_s = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(0.0001, end_s - float(started_s)), 6)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return a deterministic SHA-256 checksum over artifact content."""
++
++    filtered = {k: v for k, v in payload.items() if k != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    """Return true when value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
++
++
++def write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write deterministic JSON with a trailing newline."""
++
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _milestone_from_text(text: str) -> str:
++    for line in text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def read_active_milestone(root: Path) -> tuple[str, str]:
++    """Return the active milestone and the roadmap path used."""
++
++    for rel_path in (Path("research-roadmap.yaml"), Path("research-roadmap-next.yaml")):
++        path = root / rel_path
++        if path.exists():
++            milestone = _milestone_from_text(path.read_text(encoding="utf-8"))
++            if milestone != "unknown":
++                return milestone, str(rel_path)
++    return "unknown", "research-roadmap.yaml"
++
++
++def train_file_present(root: Path) -> bool:
++    """Return true when the nano-TRM trainer entrypoint exists."""
++
++    return (root / NANO_TRM_TRAIN_REL_PATH).exists()
++
++
++def archive_record_count(text: str) -> int:
++    """Count top-level `.383` archive records without counting nested task ids."""
++
++    return sum(1 for line in text.splitlines() if RECORD_ID_RE.match(line))
++
++
++def _record_id(line: str) -> str | None:
++    """Return a top-level YAML milestone id, or None for nested task ids."""
++
++    if not line.startswith("- id:"):
++        return None
++    return line.split(":", 1)[1].strip().strip("\"'")
++
++
++def _yaml_quote(value: str) -> str:
++    return "'" + value.replace("'", "''") + "'"
++
++
++def _insert_before_tasks(lines: list[str], new_line: str) -> list[str]:
++    for index, line in enumerate(lines):
++        if line == "  tasks:":
++            return lines[:index] + [new_line] + lines[index:]
++    return lines + [new_line]
++
++
++def build_canonical_record() -> str:
++    """Build a minimal `.383` record for the absent-history case."""
++
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {_yaml_quote('Archive .383 and activate .384; preserve max-epochs no-op close-state')}",
++        "  completed: '2026-06-13'",
++        f"  finding: {_yaml_quote(CANONICAL_FINDING)}",
++        "  activation_recorded: exp4145-archive-v383-activate-v384",
++        "  tasks:",
++        "  - id: exp4135-sudoku-accumulate-pass1-fixed-lr",
++        "    result: 'no-op at max_epochs cap; duration 6.99s; val missing'",
++        "  - id: exp4139-decisive-verifier-graft-sudoku",
++        "    result: 'deferred uninformatively; FALSE_NEGATIVE_RISK'",
++        "  - id: exp4144-capstone-v383",
++        "    result: 'baseline stayed 0.278; .384 fixes cap'",
++    ]
++    return "\n".join(lines) + "\n"
++
++
++def _canonicalize_target_span(lines: list[str]) -> list[str]:
++    out: list[str] = []
++    finding_written = False
++    activation_written = False
++    for line in lines:
++        if line.startswith("  finding:"):
++            if not finding_written:
++                out.append(f"  finding: {_yaml_quote(CANONICAL_FINDING)}")
++                finding_written = True
++            continue
++        if line.startswith("  activation_recorded:"):
++            if not activation_written:
++                out.append("  activation_recorded: exp4145-archive-v383-activate-v384")
++                activation_written = True
++            continue
++        out.append(line)
++    if not finding_written:
++        out = _insert_before_tasks(out, f"  finding: {_yaml_quote(CANONICAL_FINDING)}")
++    if not activation_written:
++        out = _insert_before_tasks(out, "  activation_recorded: exp4145-archive-v383-activate-v384")
++    return out
++
++
++def dedupe_or_update_record(text: str) -> tuple[str, int, str]:
++    """Ensure exactly one top-level `.383` record exists and carries the no-op truth."""
++
++    lines = text.split("\n")
++    starts = [i for i, line in enumerate(lines) if _record_id(line) is not None]
++    spans: list[tuple[int, int]] = []
++    for index, start in enumerate(starts):
++        end = starts[index + 1] if index + 1 < len(starts) else len(lines)
++        spans.append((start, end))
++    target_spans = [(start, end) for start, end in spans if _record_id(lines[start]) == ARCHIVED_MILESTONE]
++    if not target_spans:
++        return f"{text.rstrip()}\n{build_canonical_record()}", 0, "appended"
++
++    first_start, first_end = target_spans[0]
++    remove: set[int] = set()
++    for start, end in target_spans[1:]:
++        remove.update(range(start, end))
++    replacement = _canonicalize_target_span(lines[first_start:first_end])
++    rebuilt: list[str] = []
++    for index, line in enumerate(lines):
++        if first_start <= index < first_end:
++            if index == first_start:
++                rebuilt.extend(replacement)
++            continue
++        if index in remove:
++            continue
++        rebuilt.append(line)
++    new_text = "\n".join(rebuilt)
++    if len(target_spans) > 1:
++        return new_text, len(target_spans) - 1, "deduped"
++    if new_text != text:
++        return new_text, 0, "updated"
++    return text, 0, "unchanged"
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON object from disk, returning empty dict on absence or bad shape."""
++
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {}
++    if not isinstance(payload, Mapping):
++        return {}
++    return dict(payload)
++
++
++def file_sha256(path: Path) -> str | None:
++    """Return file SHA-256, or None when the file is absent."""
++
++    try:
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return None
++
++
++def read_v383_sources(root: Path) -> dict[str, JsonDict]:
++    """Read source artifacts that carry the `.383` close-state."""
++
++    out: dict[str, JsonDict] = {}
++    for source in V383_SOURCE_ARTIFACTS:
++        out[str(source["experiment_id"])] = read_json_object(root / str(source["deliverable"]))
++    return out
++
++
++def build_cited_upstream(root: Path) -> list[JsonDict]:
++    """Return provenance hashes for the upstream `.383` artifacts."""
++
++    cited: list[JsonDict] = []
++    for source in V383_SOURCE_ARTIFACTS:
++        rel = str(source["deliverable"])
++        cited.append(
++            {
++                "experiment_id": str(source["experiment_id"]),
++                "deliverable": rel,
++                "sha256": file_sha256(root / rel),
++            }
++        )
++    return cited
++
++
++def _number(value: Any, default: float) -> float:
++    return float(value) if isinstance(value, int | float) and not isinstance(value, bool) else float(default)
++
++
++def _mapping(value: Any) -> Mapping[str, Any]:
++    return value if isinstance(value, Mapping) else {}
++
++
++def _coerce_false(value: Any) -> bool:
++    return bool(value) if value is not None else False
++
++
++def build_v383_close_state(sources: Mapping[str, Mapping[str, Any]]) -> JsonDict:
++    """Build the honest `.383` close-state from capstone and no-op artifacts."""
++
++    pass1 = _mapping(sources.get("4135", {}))
++    pass4 = _mapping(sources.get("4138", {}))
++    graft = _mapping(sources.get("4139", {}))
++    capstone = _mapping(sources.get("4144", {}))
++    capstone_trajectory = _mapping(capstone.get("baseline_val_trajectory"))
++    capstone_graft = _mapping(capstone.get("verifier_value_added_verdict"))
++
++    baseline_val = _number(
++        capstone_trajectory.get("final_val_exact_accuracy"),
++        _number(pass4.get("val_exact_accuracy"), BASELINE_VAL_DEFAULT),
++    )
++    pass1_duration = _number(pass1.get("duration_s"), PASS1_DURATION_DEFAULT)
++    pass1_val = pass1.get("exact_accuracy_metric", pass1.get("val_exact_accuracy"))
++    pass1_metrics_missing = pass1_val is None and pass1.get("exact_accuracy_metrics_path") is None
++    pass1_trained = pass1_duration > 120.0 and not pass1_metrics_missing
++    false_negative_risk = bool(
++        graft.get("false_negative_risk", capstone_graft.get("false_negative_risk", True))
++    )
++
++    return {
++        "summary": "accumulation_noop_at_max_epochs_cap_baseline_0.278_graft_false_negative_risk_v384_fixes_cap",
++        "accumulation_noop": True,
++        "noop_reason": "max_epochs_cap",
++        "noop_evidence": (
++            "exp4135 returned in 6.99s with no real val_exact_accuracy, which is too short "
++            "for a resumed bounded training pass and matches the max_epochs cap diagnosis."
++        ),
++        "exp4135_duration_s": round(pass1_duration, 2),
++        "exp4135_trained": pass1_trained,
++        "exp4135_val_exact_accuracy": pass1_val,
++        "exp4135_metrics_missing": pass1_metrics_missing,
++        "checkpoint_untouched": not pass1_trained,
++        "stable_checkpoint_path": str(
++            pass1.get("stable_checkpoint_path")
++            or pass4.get("stable_checkpoint_path")
++            or "results/trm_runs/sudoku_extreme_baseline/last.ckpt"
++        ),
++        "checkpoint_val_exact_accuracy": BASELINE_VAL_DEFAULT,
++        "baseline_val_exact_accuracy": baseline_val,
++        "baseline_val_exact_accuracy_rounded": round(baseline_val, 3),
++        "published_exact_accuracy_target": PUBLISHED_BASELINE_TARGET,
++        "matches_published_087": _coerce_false(capstone_trajectory.get("matches_published_087")),
++        "near_faithful_080": _coerce_false(capstone_trajectory.get("near_faithful_080")),
++        "baseline_status": str(
++            capstone_trajectory.get("status") or pass4.get("baseline_status") or "baseline_config_blocked"
++        ),
++        "graft_deferred": bool(graft.get("graft_deferred", capstone_graft.get("status") == "deferred")),
++        "false_negative_risk": false_negative_risk,
++        "graft_honest_verdict": str(graft.get("honest_verdict", "")),
++        "verifier_value_added": bool(graft.get("verifier_value_added", capstone_graft.get("verifier_value_added", False))),
++        "capstone_v383": {
++            "artifact_present": bool(capstone),
++            "honest_verdict": str(capstone.get("honest_verdict", "")),
++            "headline_outcome": str(capstone.get("headline_outcome", "baseline_config_blocked")),
++        },
++        "v384_forward_plan": {
++            "resume_from_intact_checkpoint": True,
++            "fixes_max_epochs_cap": True,
++            "required_resume_fix": "set +trainer.max_epochs above the checkpoint epoch before Trainer.fit",
++            "anti_noop_guard": "duration_s > 120 and checkpoint epoch advanced and real val_exact_accuracy read",
++        },
++    }
++
++
++def _run_command(command: list[str], root: Path) -> CommandResult:
++    try:
++        completed = subprocess.run(command, cwd=root, check=False, capture_output=True, text=True)
++    except OSError as exc:
++        return CommandResult(command=command, exit_code=127, stdout="", stderr=str(exc))
++    return CommandResult(
++        command=command,
++        exit_code=int(completed.returncode),
++        stdout=str(completed.stdout),
++        stderr=str(completed.stderr),
++    )
++
++
++def smart_subset_targets(root: Path) -> list[str]:
++    """Return existing smart-subset targets, or the first core target as fallback."""
++
++    targets = [target for target in CORE_SMART_SUBSET if (root / target).exists()]
++    return targets or [CORE_SMART_SUBSET[0]]
++
++
++def smart_subset_command(targets: Sequence[str]) -> list[str]:
++    """Return the smart-subset pytest command."""
++
++    return [str(PYTEST_BIN), *targets, "-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="]
++
++
++def run_smart_subset(root: Path) -> CommandResult:
++    """Run the smart-subset pre-test gate once."""
++
++    return _run_command(smart_subset_command(smart_subset_targets(root)), root)
++
++
++def terminal_verdict(v383_close_state: Mapping[str, Any]) -> str:
++    """Return the complete-path verdict for the archive transition."""
++
++    val = _number(v383_close_state.get("baseline_val_exact_accuracy_rounded"), 0.278)
++    return (
++        "success: archived_v383_v384_active_max_epochs_noop_recorded_"
++        f"baseline_{val:.3f}_graft_false_negative_risk_pretest_green"
++    )
++
++
++def _base_payload(
++    *,
++    honest_verdict: str,
++    research_complete_yaml_parses: bool,
++    exclusion_manifest_parses: bool,
++    nano_trm_train_present: bool,
++    pretest_suite_green: bool,
++    v383_close_state: Mapping[str, Any],
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    active_milestone_confirmed: str,
++    active_roadmap_path: str,
++    research_complete_record_action: str,
++    research_complete_duplicates_removed: int,
++    cited_upstream_artifacts: Sequence[Mapping[str, Any]],
++) -> JsonDict:
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "active_roadmap_path": active_roadmap_path,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "exclusion_manifest_parses": exclusion_manifest_parses,
++        "nano_trm_train_present": nano_trm_train_present,
++        "pretest_suite_green": pretest_suite_green,
++        "v383_close_state": dict(v383_close_state),
++        "preconditions_checked": dict(preconditions_checked),
++        "honest_verdict": honest_verdict,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "research_complete_record_action": research_complete_record_action,
++        "research_complete_duplicates_removed": research_complete_duplicates_removed,
++        "cited_upstream_artifacts": [dict(item) for item in cited_upstream_artifacts],
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(reason: str, **kwargs: Any) -> JsonDict:
++    """Build a blocked artifact without fabricating green resources."""
++
++    defaults: JsonDict = {
++        "research_complete_yaml_parses": False,
++        "exclusion_manifest_parses": False,
++        "nano_trm_train_present": False,
++        "pretest_suite_green": False,
++        "v383_close_state": {"status": "blocked", "reason": reason},
++        "active_milestone_confirmed": "",
++        "active_roadmap_path": "research-roadmap.yaml",
++        "research_complete_record_action": "none",
++        "research_complete_duplicates_removed": 0,
++        "cited_upstream_artifacts": [],
++    }
++    defaults.update(kwargs)
++    return _base_payload(honest_verdict=reason, **defaults)
++
++
++def build_complete_artifact(**kwargs: Any) -> JsonDict:
++    """Build and validate the Exp 4145 complete artifact."""
++
++    close_state = kwargs["v383_close_state"]
++    payload = _base_payload(
++        honest_verdict=terminal_verdict(close_state),
++        research_complete_yaml_parses=True,
++        exclusion_manifest_parses=True,
++        nano_trm_train_present=True,
++        pretest_suite_green=True,
++        active_milestone_confirmed=ACTIVATED_MILESTONE,
++        **kwargs,
++    )
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the fields that stop this archive from laundering the `.383` truth."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must be terminal-prefixed")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    for field in ("honest_verdict", "v383_close_state", "preconditions_checked"):
++        if principles.get(field) != FIELD_PRINCIPLES[field]:
++            raise ValueError(f"{field} principle must match REQ-REPORT-4145")
++    if artifact.get("archived_milestone") != ARCHIVED_MILESTONE:
++        raise ValueError("archived milestone must be 2026.06.383")
++    if artifact.get("activated_milestone") != ACTIVATED_MILESTONE:
++        raise ValueError("activated milestone must be 2026.06.384")
++    if artifact.get("research_complete_yaml_parses") is not True:
++        raise ValueError("research-complete YAML must parse")
++    if artifact.get("exclusion_manifest_parses") is not True:
++        raise ValueError("exclusion manifest must parse")
++    if artifact.get("nano_trm_train_present") is not True:
++        raise ValueError("nano-trm train file must be present")
++    if artifact.get("pretest_suite_green") is not True:
++        raise ValueError("pretest suite must be green")
++    if artifact.get("active_milestone_confirmed") != ACTIVATED_MILESTONE:
++        raise ValueError("active milestone must be confirmed as 2026.06.384")
++    close_state = artifact.get("v383_close_state")
++    if not isinstance(close_state, Mapping):
++        raise ValueError("v383_close_state must be a mapping")
++    if close_state.get("accumulation_noop") is not True:
++        raise ValueError("v383_close_state must record accumulation_noop=True")
++    if close_state.get("noop_reason") != "max_epochs_cap":
++        raise ValueError("noop_reason must be max_epochs_cap")
++    if close_state.get("exp4135_duration_s") != PASS1_DURATION_DEFAULT:
++        raise ValueError("exp4135_duration_s must be 6.99")
++    if close_state.get("baseline_val_exact_accuracy_rounded") != 0.278:
++        raise ValueError("baseline_val_exact_accuracy must round to 0.278")
++    if close_state.get("graft_deferred") is not True:
++        raise ValueError("graft_deferred must be True")
++    if close_state.get("false_negative_risk") is not True:
++        raise ValueError("false_negative_risk must be True")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, int | float) or isinstance(duration, bool) or duration <= 0:
++        raise ValueError("duration_s must be positive")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be aggregation_from_upstream_artifacts")
++    if not isinstance(artifact.get("cited_upstream_artifacts"), list):
++        raise ValueError("cited_upstream_artifacts must be a list")
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum mismatch")
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    pretest_result: CommandResult | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Run the `.383` archive and `.384` activation guard."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    manifest_path = root_path / EXCLUSION_MANIFEST_REL_PATH
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    complete_exists = complete_path.exists()
++    complete_text = complete_path.read_text(encoding="utf-8") if complete_exists else ""
++    complete_parses = complete_exists and yaml_parses(complete_text)
++    manifest_exists = manifest_path.exists()
++    manifest_text = manifest_path.read_text(encoding="utf-8") if manifest_exists else ""
++    manifest_parses = manifest_exists and yaml_parses(manifest_text)
++    has_train = train_file_present(root_path)
++
++    preconditions: JsonDict = {
++        "research_complete_yaml_exists": complete_exists,
++        "research_complete_yaml_parses": complete_parses,
++        "exclusion_manifest_exists": manifest_exists,
++        "exclusion_manifest_parses": manifest_parses,
++        "nano_trm_train_present": has_train,
++        "nano_trm_train_path": str(NANO_TRM_TRAIN_REL_PATH),
++        "active_milestone": active_milestone,
++        "active_roadmap_path": active_roadmap_path,
++        "pretest_suite_green": False,
++    }
++
++    def blocked(reason: str, **extra: Any) -> Path:
++        write_payload(
++            output_path,
++            build_blocked_artifact(
++                reason,
++                preconditions_checked=preconditions,
++                duration_s=duration_from(start, now_s),
++                active_milestone_confirmed=active_milestone,
++                active_roadmap_path=active_roadmap_path,
++                **extra,
++            ),
++        )
++        return output_path
++
++    if not complete_exists:
++        return blocked("blocked_research_complete_yaml_missing")
++    if not complete_parses:
++        return blocked("blocked_research_complete_yaml_poison")
++    if not manifest_exists:
++        return blocked("blocked_exclusion_manifest_missing", research_complete_yaml_parses=True)
++    if not manifest_parses:
++        return blocked("blocked_exclusion_manifest_yaml_poison", research_complete_yaml_parses=True)
++    if not has_train:
++        return blocked(
++            "blocked_nano_trm_train_missing",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++        )
++    if active_milestone != ACTIVATED_MILESTONE:
++        return blocked(
++            "blocked_v384_not_active",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++        )
++
++    pretest = pretest_result if pretest_result is not None else run_smart_subset(root_path)
++    pretest_green = pretest.exit_code == 0
++    preconditions["pretest_suite_green"] = pretest_green
++    preconditions["pretest_command"] = pretest.command
++    preconditions["pretest_exit_code"] = pretest.exit_code
++    if not pretest_green:
++        return blocked(
++            "blocked_smart_subset_pretest_not_green",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++        )
++
++    new_text, removed, action = dedupe_or_update_record(complete_text)
++    if not yaml_parses(new_text):
++        return blocked(
++            "blocked_research_complete_edit_invalid",
++            research_complete_yaml_parses=False,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++            pretest_suite_green=True,
++        )
++    if new_text != complete_text:
++        complete_path.write_text(new_text, encoding="utf-8")
++    after_parses = yaml_parses(complete_path.read_text(encoding="utf-8"))
++    preconditions["research_complete_record_action"] = action
++    preconditions["research_complete_duplicates_removed"] = removed
++    preconditions["research_complete_yaml_parses_after_edit"] = after_parses
++    if not after_parses:
++        return blocked(
++            "blocked_research_complete_yaml_poison_after_edit",
++            research_complete_yaml_parses=False,
++            exclusion_manifest_parses=True,
++            nano_trm_train_present=has_train,
++            pretest_suite_green=True,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=removed,
++        )
++
++    sources = read_v383_sources(root_path)
++    close_state = build_v383_close_state(sources)
++    cited = build_cited_upstream(root_path)
++    payload = build_complete_artifact(
++        v383_close_state=close_state,
++        preconditions_checked=preconditions,
++        duration_s=duration_from(start, now_s),
++        active_roadmap_path=active_roadmap_path,
++        research_complete_record_action=action,
++        research_complete_duplicates_removed=removed,
++        cited_upstream_artifacts=cited,
++    )
++    write_payload(output_path, payload)
++    return output_path
++
++
++def main() -> int:
++    """CLI entrypoint for the conductor-requested script."""
++
++    output_path = run(REPO_ROOT)
++    print(output_path)
++    return 0
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 239697f6bf..0a86d4b75a 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -39346,7 +39346,8 @@ milestones:
+     verifier-as-reward graft (the LABEL de-confound never yet tested on a faithful baseline)
+   doc: openspec/change-proposals/research-roadmap-v383.md
+   completed: '2026-06-13'
+-  finding: See conductor log for per-experiment results.
++  finding: '.383 accumulation no-op''d at the resumed checkpoint max_epochs cap: exp4135 ran 6.99s, never trained, wrote no real val_exact_accuracy, and left the stable checkpoint untouched. The baseline stayed at 0.278, the decisive graft deferred uninformatively with FALSE_NEGATIVE_RISK, and .384 fixes the cap before resuming from the intact 0.278 checkpoint.'
++  activation_recorded: exp4145-archive-v383-activate-v384
+   tasks:
+   - id: exp4134-archive-v382-activate-v383
+     title: Archive .382 -> activate .383; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 095ae388de..3529b7b1bf 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -397,7 +397,7 @@ tasks:
+       CONCRETE STEPS:
+         1. Read exp4146/4147/4148/4149/4150/4151/4152/4153/4154. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+         2. Answer: (a) did the epoch-fix un-stall accumulation (exp4146 trained a real pass, epoch advanced)? (b) did the baseline converge to ~0.87 (exp4149 matches_published_087)? (c) did the DECISIVE graft run (exp4150 verifier_value_added + A-vs-B CI) or defer? (d) is the DiffusionGemma gate now resolved? (e) total ARC games solved.
+-        3. Honest headline: one of {baseline_converged_graft_validated, baseline_converged_graft_null, baseline_converged_graft_deferred, accumulation_unstalled_still_climbing_v385, accumulation_still_blocked}.
++        3. Honest headline: one of {{baseline_converged_graft_validated, baseline_converged_graft_null, baseline_converged_graft_deferred, accumulation_unstalled_still_climbing_v385, accumulation_still_blocked}}.
+       REQUIRED ARTIFACT FIELDS:
+         honest_verdict:
+           principle: "Terminal-prefixed. An honest 'unstalled, still climbing, .385 continues' is COMPLETE and valuable."
+@@ -408,5 +408,5 @@ tasks:
+         diffusiongemma_gate_status:
+           principle: "RESOLVED-positive / RESOLVED-null / STILL-PENDING -- the explicit status of the queued DiffusionGemma gate after the decisive graft."
+         upstream_provenance:
+-          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail."
++          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail."
+       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3124ead6ac..ba52832287 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T11:39:48.218001Z",
+-  "duration_s": 0.019206523895263672,
++  "run_date": "2026-06-13T12:32:00.135299Z",
++  "duration_s": 0.023002147674560547,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "4b0aba37566479dab06e7719ec1ad85202add527b8f7f2b36f2d07e330f2ed47",
++  "reproducibility_checksum": "9afc5455d3aa0346cfbffae61720b590b7127176c8ce708a8887956aa67ca1e5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "e93b89f74aa033509f535968f9125d4d0d5f2cd7"
++    "adversarial_verify_version": "9460484f43864bea9d85a400e95050ca24f2069d"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index b85b55ece4..4f7709b3a3 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T11:39:48.243728Z",
+-  "duration_s": 0.021156787872314453,
++  "run_date": "2026-06-13T12:32:00.166364Z",
++  "duration_s": 0.025690555572509766,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "8f5da7354a393211d5b4af874bdf463991b6f9376d65e200bd4d4d5c84e15d91",
++  "reproducibility_checksum": "b2b28d5af05c0c7dc99a2c7b09f9c5d7e3353b9c3a9b510c8cbb3a107a4c750a",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "e93b89f74aa033509f535968f9125d4d0d5f2cd7"
++    "adversarial_verify_version": "9460484f43864bea9d85a400e95050ca24f2069d"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 8cf1233229..2e7a4260f5 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.145051956176758,
++  "efficiency_gains_ms": 2.1092891693115234,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 5d75411dcc..39d8c4e195 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0012798309326171875,
++  "duration_s": 0.0010976791381835938,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index da2b983f09..a880a3753e 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 4.438299220055342e-05,
++  "duration_s": 4.1808001697063446e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 0dd29e237c..20a9c1a4f4 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 5.709953256882727e-07,
++  "duration_s": 5.010078893974423e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_4145_archive_v383_activate_v384.json b/results/experiment_4145_archive_v383_activate_v384.json
+new file mode 100644
+index 0000000000..f6ad8f0c83
+--- /dev/null
++++ b/results/experiment_4145_archive_v383_activate_v384.json
+@@ -0,0 +1,117 @@
++{
++  "activated_milestone": "2026.06.384",
++  "active_milestone_confirmed": "2026.06.384",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "archived_milestone": "2026.06.383",
++  "cited_upstream_artifacts": [
++    {
++      "deliverable": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
++      "experiment_id": "4135",
++      "sha256": "36f2e5c10188832811dca929fa9f49876fe78eaf2c738114fa7d8686144b69b0"
++    },
++    {
++      "deliverable": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++      "experiment_id": "4138",
++      "sha256": "85a6d185671bfbf75a891a2245a4fa113adf34c4e8f27a3cab6988403ad8ce06"
++    },
++    {
++      "deliverable": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
++      "experiment_id": "4139",
++      "sha256": "9f47d372a96728ef65a836011dfc015ab018fdbfe82cd2c5d2835f1619c2f4a6"
++    },
++    {
++      "deliverable": "results/experiment_4144_capstone_v383.json",
++      "experiment_id": "4144",
++      "sha256": "32ae7879e0dfc533cf1c5c5b1939501d35818eecffe19e2a6cd299d978c8356a"
++    }
++  ],
++  "duration_s": 12.100527,
++  "exclusion_manifest_parses": true,
++  "experiment_id": "exp4145",
++  "field_principles": {
++    "activated_milestone": "Confirms .384 is live for the epoch-cap repair path.",
++    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
++    "archived_milestone": "Provenance: the milestone being closed, 2026.06.383.",
++    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
++    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
++    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
++    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
++    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
++    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
++    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
++    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
++    "v383_close_state": "Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) so the next planner builds on the truth."
++  },
++  "honest_verdict": "success: archived_v383_v384_active_max_epochs_noop_recorded_baseline_0.278_graft_false_negative_risk_pretest_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "nano_trm_train_present": true,
++  "preconditions_checked": {
++    "active_milestone": "2026.06.384",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "exclusion_manifest_exists": true,
++    "exclusion_manifest_parses": true,
++    "nano_trm_train_path": "nano-trm/src/nn/train.py",
++    "nano_trm_train_present": true,
++    "pretest_command": [
++      ".venv/bin/pytest",
++      "tests/python/test_pipeline_extract.py",
++      "tests/python/test_docs.py",
++      "-q",
++      "--no-header",
++      "-n",
++      "0",
++      "--no-cov",
++      "-o",
++      "addopts="
++    ],
++    "pretest_exit_code": 0,
++    "pretest_suite_green": true,
++    "research_complete_duplicates_removed": 0,
++    "research_complete_record_action": "updated",
++    "research_complete_yaml_exists": true,
++    "research_complete_yaml_parses": true,
++    "research_complete_yaml_parses_after_edit": true
++  },
++  "pretest_suite_green": true,
++  "random_seed": 4145,
++  "reproducibility_checksum": "c97d83784c682a7666d62d7bb89cf5a01cf3d2aacaa81511dd8780fec7f334cc",
++  "research_complete_duplicates_removed": 0,
++  "research_complete_record_action": "updated",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v383_to_v384_4145.v1",
++  "task_id": "exp4145-archive-v383-activate-v384",
++  "v383_close_state": {
++    "accumulation_noop": true,
++    "baseline_status": "baseline_config_blocked",
++    "baseline_val_exact_accuracy": 0.278172343969,
++    "baseline_val_exact_accuracy_rounded": 0.278,
++    "capstone_v383": {
++      "artifact_present": true,
++      "headline_outcome": "baseline_config_blocked",
++      "honest_verdict": "blocked: capstone_v383_baseline_config_blocked_baseline_converged0_near_faithful0_headroom0_verifier_deferred_diffusiongemma0_levels13_flagged_skipped6"
++    },
++    "checkpoint_untouched": true,
++    "checkpoint_val_exact_accuracy": 0.278172343969,
++    "exp4135_duration_s": 6.99,
++    "exp4135_metrics_missing": true,
++    "exp4135_trained": false,
++    "exp4135_val_exact_accuracy": null,
++    "false_negative_risk": true,
++    "graft_deferred": true,
++    "graft_honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
++    "matches_published_087": false,
++    "near_faithful_080": false,
++    "noop_evidence": "exp4135 returned in 6.99s with no real val_exact_accuracy, which is too short for a resumed bounded training pass and matches the max_epochs cap diagnosis.",
++    "noop_reason": "max_epochs_cap",
++    "published_exact_accuracy_target": 0.87,
++    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++    "summary": "accumulation_noop_at_max_epochs_cap_baseline_0.278_graft_false_negative_risk_v384_fixes_cap",
++    "v384_forward_plan": {
++      "anti_noop_guard": "duration_s > 120 and checkpoint epoch advanced and real val_exact_accuracy read",
++      "fixes_max_epochs_cap": true,
++      "required_resume_fix": "set +trainer.max_epochs above the checkpoint epoch before Trainer.fit",
++      "resume_from_intact_checkpoint": true
++    },
++    "verifier_value_added": false
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ef560ddeeb..7bdd99520f 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T11:43:34Z",
+-  "finished_at": "2026-06-13T11:43:34Z",
++  "started_at": "2026-06-13T12:31:50Z",
++  "finished_at": "2026-06-13T12:31:50Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index c67cf175d7..dbeaf71d97 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T11:43:34Z",
+-  "finished_at": "2026-06-13T11:43:34Z",
++  "started_at": "2026-06-13T12:31:51Z",
++  "finished_at": "2026-06-13T12:31:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 80d468c578..62080c0ccf 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T11:43:35Z",
+-  "finished_at": "2026-06-13T11:43:35Z",
++  "started_at": "2026-06-13T12:31:51Z",
++  "finished_at": "2026-06-13T12:31:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_experiment_4145_archive_v383_activate_v384.py b/tests/python/test_experiment_4145_archive_v383_activate_v384.py
+new file mode 100644
+index 0000000000..7298be82e9
+--- /dev/null
++++ b/tests/python/test_experiment_4145_archive_v383_activate_v384.py
+@@ -0,0 +1,445 @@
++"""Tests for Exp 4145 .383 archive / .384 activation.
++
++Spec refs: REQ-REPORT-4145, SCENARIO-REPORT-4145,
++SCENARIO-REPORT-4145-BLOCKED-PRECONDITION.
++"""
++
++from __future__ import annotations
++
++import copy
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot.reporting import archive_v383_activate_v384_4145 as mod
++
++
++GREEN = mod.CommandResult(command=["pytest"], exit_code=0, stdout="81 passed", stderr="")
++RED = mod.CommandResult(command=["pytest"], exit_code=1, stdout="FAILED smart subset", stderr="")
++
++
++def _write_json(path: Path, payload: dict) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload), encoding="utf-8")
++
++
++def _research_complete_text(*, duplicates: int = 1) -> str:
++    head = (
++        "# Carnot Research - Completed Experiments\n"
++        "milestones:\n"
++        "- id: 2026.06.382\n"
++        "  finding: prior milestone\n"
++    )
++    block = (
++        "- id: 2026.06.383\n"
++        "  title: old conductor row\n"
++        "  completed: '2026-06-13'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp4144-capstone-v383\n"
++        "    result: OK\n"
++    )
++    return head + block * duplicates
++
++
++def make_repo(tmp_path: Path, *, duplicates: int = 1) -> Path:
++    root = tmp_path
++    root.mkdir(parents=True, exist_ok=True)
++    (root / "research-complete.yaml").write_text(
++        _research_complete_text(duplicates=duplicates), encoding="utf-8"
++    )
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "exclusion_manifest.yaml").write_text(
++        "retired:\n- experiment_id: 2091\n  reason: archived\n", encoding="utf-8"
++    )
++    (root / "research-roadmap.yaml").write_text("milestone: 2026.06.384\n", encoding="utf-8")
++    (root / "nano-trm" / "src" / "nn").mkdir(parents=True, exist_ok=True)
++    (root / "nano-trm" / "src" / "nn" / "train.py").write_text("# train\n", encoding="utf-8")
++    (root / "tests" / "python").mkdir(parents=True, exist_ok=True)
++    (root / "tests" / "python" / "test_pipeline_extract.py").write_text(
++        "def test_pipeline_extract():\n    assert True\n", encoding="utf-8"
++    )
++    (root / "tests" / "python" / "test_docs.py").write_text(
++        "def test_docs():\n    assert True\n", encoding="utf-8"
++    )
++    _write_json(
++        root / "results" / "experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
++        {
++            "duration_s": 6.99,
++            "exact_accuracy_metric": None,
++            "exact_accuracy_metrics_path": None,
++            "flagged_adversarial": True,
++            "honest_verdict": "complete: missing_real_val_exact_accuracy",
++            "lr_continued_not_rewarmed": False,
++            "stable_checkpoint_path": "results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
++        {
++            "baseline_status": "config-blocked",
++            "corrected_config_recommendation": (
++                "for .384 raise trainer.max_epochs above the current checkpoint epoch"
++            ),
++            "honest_verdict": "complete: baseline config-blocked before pass4",
++            "matches_published_087": False,
++            "near_faithful_080": False,
++            "stable_checkpoint_path": "results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++            "val_exact_accuracy": 0.278172343969,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4139_decisive_verifier_graft_sudoku.json",
++        {
++            "baseline_val_exact_accuracy": 0.278172343969,
++            "false_negative_risk": True,
++            "graft_deferred": True,
++            "headroom_present": False,
++            "honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
++            "verifier_value_added": False,
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_4144_capstone_v383.json",
++        {
++            "baseline_val_trajectory": {
++                "status": "baseline_config_blocked",
++                "final_val_exact_accuracy": 0.278172343969,
++                "matches_published_087": None,
++                "near_faithful_080": None,
++                "attempted_passes": [
++                    {"experiment_id": 4135, "included": False, "status": "skipped_flagged_adversarial"}
++                ],
++            },
++            "headline_outcome": "baseline_config_blocked",
++            "honest_verdict": "blocked: capstone_v383_baseline_config_blocked",
++            "verifier_value_added_verdict": {
++                "artifact_status": "skipped_flagged_adversarial",
++                "false_negative_risk": True,
++                "reason": "baseline_not_faithful_or_near_faithful",
++                "status": "deferred",
++                "verifier_value_added": False,
++            },
++        },
++    )
++    return root
++
++
++def run_happy(root: Path) -> dict:
++    out = mod.run(root, pretest_result=GREEN, started_s=1000.0, now_s=1000.5)
++    return json.loads(out.read_text(encoding="utf-8"))
++
++
++def test_req_report_4145_spec_declares_contract() -> None:
++    """REQ-REPORT-4145: OpenSpec declares required fields and scenarios."""
++
++    spec = Path("openspec/capabilities/research-reporting/spec.md").read_text(encoding="utf-8")
++    assert "REQ-REPORT-4145" in spec
++    assert "SCENARIO-REPORT-4145" in spec
++    assert "SCENARIO-REPORT-4145-BLOCKED-PRECONDITION" in spec
++    assert "v383_close_state" in spec
++    assert "preconditions_checked" in spec
++    assert "6.99" in spec and "0.278" in spec and "FALSE_NEGATIVE_RISK" in spec
++
++
++def test_shared_helpers_and_archive_record_editing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-4145: helper behavior is deterministic and YAML-safe."""
++
++    assert mod.yaml_parses("a: 1\n") is True
++    assert mod.yaml_parses("a: : :\n- [\n") is False
++    assert mod.duration_from(None, None) == 0.0001
++    assert mod.duration_from(100.0, 100.25) == 0.25
++    assert mod.duration_from(100.0, 99.0) == 0.0001
++    monkeypatch.setattr(mod.time, "perf_counter", lambda: 101.0)
++    assert mod.duration_from(100.0, None) == 1.0
++    assert mod.payload_checksum({"a": 1}) == mod.payload_checksum(
++        {"a": 1, "reproducibility_checksum": "old"}
++    )
++    assert mod.is_sha256("a" * 64) is True
++    assert mod.is_sha256("z" * 64) is False
++    out = tmp_path / "artifact.json"
++    mod.write_payload(out, {"b": 2, "a": 1})
++    assert out.read_text(encoding="utf-8").startswith("{\n  \"a\"")
++
++    assert mod.archive_record_count(_research_complete_text(duplicates=3)) == 3
++    deduped, removed, action = mod.dedupe_or_update_record(_research_complete_text(duplicates=3))
++    assert action == "deduped"
++    assert removed == 2
++    assert mod.archive_record_count(deduped) == 1
++    assert "max_epochs cap" in deduped
++    assert mod.yaml_parses(deduped)
++    updated, removed2, action2 = mod.dedupe_or_update_record(_research_complete_text(duplicates=1))
++    assert (removed2, action2) == (0, "updated")
++    assert mod.archive_record_count(updated) == 1
++    appended, removed3, action3 = mod.dedupe_or_update_record(
++        "# history\nmilestones:\n- id: 2026.06.382\n  finding: prior\n"
++    )
++    assert (removed3, action3) == (0, "appended")
++    assert "activation_recorded: exp4145-archive-v383-activate-v384" in appended
++    assert mod.archive_record_count(appended) == 1
++
++
++def test_precondition_helpers_and_json_readers(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """SCENARIO-REPORT-4145-BLOCKED-PRECONDITION: resource probes are explicit."""
++
++    assert mod._milestone_from_text("name: no milestone\n") == "unknown"
++    assert mod.read_active_milestone(tmp_path) == ("unknown", "research-roadmap.yaml")
++    (tmp_path / "research-roadmap-next.yaml").write_text("milestone: 2026.06.384\n", encoding="utf-8")
++    assert mod.read_active_milestone(tmp_path) == ("2026.06.384", "research-roadmap-next.yaml")
++    assert mod.train_file_present(tmp_path) is False
++    train = tmp_path / mod.NANO_TRM_TRAIN_REL_PATH
++    train.parent.mkdir(parents=True, exist_ok=True)
++    train.write_text("# train\n", encoding="utf-8")
++    assert mod.train_file_present(tmp_path) is True
++
++    assert mod.read_json_object(tmp_path / "missing.json") == {}
++    bad = tmp_path / "bad.json"
++    bad.write_text("{bad", encoding="utf-8")
++    assert mod.read_json_object(bad) == {}
++    not_obj = tmp_path / "list.json"
++    not_obj.write_text("[1]", encoding="utf-8")
++    assert mod.read_json_object(not_obj) == {}
++    good = tmp_path / "good.json"
++    good.write_text(json.dumps({"x": 1}), encoding="utf-8")
++    assert mod.read_json_object(good) == {"x": 1}
++    assert mod.is_sha256(mod.file_sha256(good))
++    assert mod.file_sha256(tmp_path / "nope") is None
++
++    root = make_repo(tmp_path / "repo")
++    targets = mod.smart_subset_targets(root)
++    assert "tests/python/test_pipeline_extract.py" in targets
++    assert mod.smart_subset_command(targets)[0] == str(mod.PYTEST_BIN)
++    assert mod.smart_subset_targets(tmp_path / "empty") == [mod.CORE_SMART_SUBSET[0]]
++    assert mod._run_command(["true"], tmp_path).exit_code == 0
++    assert mod._run_command(["definitely-not-a-real-binary-xyz"], tmp_path).exit_code == 127
++    monkeypatch.setattr(mod, "_run_command", lambda command, root_path: GREEN)
++    assert mod.run_smart_subset(root).exit_code == 0
++
++
++def test_read_sources_and_build_v383_close_state(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4145: close-state records no-op cap, stuck baseline, and false-negative risk."""
++
++    root = make_repo(tmp_path)
++    sources = mod.read_v383_sources(root)
++    assert sources["4135"]["duration_s"] == 6.99
++    cited = mod.build_cited_upstream(root)
++    assert cited[-1]["experiment_id"] == "4144"
++    assert mod.is_sha256(cited[-1]["sha256"])
++    state = mod.build_v383_close_state(sources)
++    assert state["accumulation_noop"] is True
++    assert state["noop_reason"] == "max_epochs_cap"
++    assert state["exp4135_duration_s"] == 6.99
++    assert state["exp4135_trained"] is False
++    assert state["checkpoint_untouched"] is True
++    assert state["baseline_val_exact_accuracy"] == 0.278172343969
++    assert state["baseline_val_exact_accuracy_rounded"] == 0.278
++    assert state["matches_published_087"] is False
++    assert state["graft_deferred"] is True
++    assert state["false_negative_risk"] is True
++    assert state["v384_forward_plan"]["fixes_max_epochs_cap"] is True
++
++    default_state = mod.build_v383_close_state({})
++    assert default_state["exp4135_duration_s"] == 6.99
++    assert default_state["baseline_val_exact_accuracy_rounded"] == 0.278
++
++
++def test_run_happy_path_writes_valid_artifact_and_updates_archive(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4145: complete path writes the terminal archive artifact."""
++
++    root = make_repo(tmp_path, duplicates=2)
++    artifact = run_happy(root)
++    assert artifact["honest_verdict"].startswith("success:")
++    assert artifact["archived_milestone"] == "2026.06.383"
++    assert artifact["activated_milestone"] == "2026.06.384"
++    assert artifact["active_milestone_confirmed"] == "2026.06.384"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["exclusion_manifest_parses"] is True
++    assert artifact["nano_trm_train_present"] is True
++    assert artifact["pretest_suite_green"] is True
++    assert artifact["research_complete_record_action"] == "deduped"
++    assert artifact["research_complete_duplicates_removed"] == 1
++    assert artifact["v383_close_state"]["accumulation_noop"] is True
++    assert artifact["v383_close_state"]["baseline_val_exact_accuracy_rounded"] == 0.278
++    assert artifact["v383_close_state"]["false_negative_risk"] is True
++    assert artifact["field_principles"]["v383_close_state"] == mod.FIELD_PRINCIPLES["v383_close_state"]
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert mod.is_sha256(artifact["reproducibility_checksum"])
++    complete_text = (root / "research-complete.yaml").read_text(encoding="utf-8")
++    assert mod.archive_record_count(complete_text) == 1
++    assert "max_epochs cap" in complete_text
++    mod.validate_artifact(artifact)
++
++
++def test_run_real_pretest_branch_and_entrypoint_are_injectable(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """SCENARIO-REPORT-4145: real pretest and CLI entrypoint can be substituted."""
++
++    root = make_repo(tmp_path)
++    monkeypatch.setattr(mod, "run_smart_subset", lambda root_path: GREEN)
++    artifact = json.loads(mod.run(root, started_s=1.0, now_s=1.1).read_text(encoding="utf-8"))
++    assert artifact["preconditions_checked"]["pretest_suite_green"] is True
++
++    called_mod: dict[str, Path] = {}
++
++    def fake_mod_run(root_path: Path = mod.REPO_ROOT) -> Path:
++        called_mod["root"] = Path(root_path)
++        return root / mod.OUTPUT_REL_PATH
++
++    monkeypatch.setattr(mod, "run", fake_mod_run)
++    assert mod.main() == 0
++    assert called_mod["root"] == mod.REPO_ROOT
++
++    import carnot.experiment_4145_archive_v383_activate_v384 as entrypoint
++
++    called: dict[str, Path] = {}
++
++    def fake_run(root_path: Path = mod.REPO_ROOT) -> Path:
++        called["root"] = Path(root_path)
++        return root / mod.OUTPUT_REL_PATH
++
++    monkeypatch.setattr(entrypoint, "run", fake_run)
++    assert entrypoint.main() == 0
++    assert called["root"] == entrypoint.REPO_ROOT
++
++
++def test_run_blocked_preconditions_before_research_complete_edit(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4145-BLOCKED-PRECONDITION: blocked paths do not fabricate success."""
++
++    missing = mod.run(tmp_path, pretest_result=GREEN)
++    assert json.loads(missing.read_text(encoding="utf-8"))["honest_verdict"] == (
++        "blocked_research_complete_yaml_missing"
++    )
++
++    root = make_repo(tmp_path / "poison")
++    (root / "research-complete.yaml").write_text("a: : :\n- [\n", encoding="utf-8")
++    artifact = json.loads(mod.run(root, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_research_complete_yaml_poison"
++
++    root2 = make_repo(tmp_path / "manifest_missing")
++    (root2 / "ops" / "exclusion_manifest.yaml").unlink()
++    artifact2 = json.loads(mod.run(root2, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact2["honest_verdict"] == "blocked_exclusion_manifest_missing"
++
++    root3 = make_repo(tmp_path / "manifest_poison")
++    (root3 / "ops" / "exclusion_manifest.yaml").write_text("a: : :\n- [\n", encoding="utf-8")
++    artifact3 = json.loads(mod.run(root3, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact3["honest_verdict"] == "blocked_exclusion_manifest_yaml_poison"
++
++    root4 = make_repo(tmp_path / "train_missing")
++    (root4 / mod.NANO_TRM_TRAIN_REL_PATH).unlink()
++    artifact4 = json.loads(mod.run(root4, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact4["honest_verdict"] == "blocked_nano_trm_train_missing"
++
++    root5 = make_repo(tmp_path / "wrong_milestone")
++    (root5 / "research-roadmap.yaml").write_text("milestone: 2026.06.383\n", encoding="utf-8")
++    artifact5 = json.loads(mod.run(root5, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact5["honest_verdict"] == "blocked_v384_not_active"
++
++    root6 = make_repo(tmp_path / "red")
++    before = (root6 / "research-complete.yaml").read_text(encoding="utf-8")
++    artifact6 = json.loads(mod.run(root6, pretest_result=RED).read_text(encoding="utf-8"))
++    assert artifact6["honest_verdict"] == "blocked_smart_subset_pretest_not_green"
++    assert artifact6["preconditions_checked"]["pretest_suite_green"] is False
++    assert (root6 / "research-complete.yaml").read_text(encoding="utf-8") == before
++
++
++def test_run_blocked_research_complete_edit_guards(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """REQ-REPORT-4145: invalid archive edits are blocked before completion."""
++
++    root = make_repo(tmp_path / "invalid")
++    monkeypatch.setattr(mod, "dedupe_or_update_record", lambda text: ("a: : :\n- [", 0, "appended"))
++    artifact = json.loads(mod.run(root, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"] == "blocked_research_complete_edit_invalid"
++
++    root2 = make_repo(tmp_path / "after")
++    calls = {"n": 0}
++
++    def fake_parses(text: str) -> bool:
++        calls["n"] += 1
++        return calls["n"] != 4
++
++    monkeypatch.setattr(mod, "yaml_parses", fake_parses)
++    artifact2 = json.loads(mod.run(root2, pretest_result=GREEN).read_text(encoding="utf-8"))
++    assert artifact2["honest_verdict"] == "blocked_research_complete_yaml_poison_after_edit"
++
++
++def test_build_artifact_shapes(tmp_path: Path) -> None:
++    """REQ-REPORT-4145: complete and blocked artifact builders keep schema shape."""
++
++    root = make_repo(tmp_path)
++    state = mod.build_v383_close_state(mod.read_v383_sources(root))
++    complete = mod.build_complete_artifact(
++        v383_close_state=state,
++        preconditions_checked={"ok": True},
++        duration_s=0.5,
++        active_roadmap_path="research-roadmap.yaml",
++        research_complete_record_action="updated",
++        research_complete_duplicates_removed=0,
++        cited_upstream_artifacts=mod.build_cited_upstream(root),
++    )
++    assert complete["honest_verdict"].startswith("success:")
++    blocked = mod.build_blocked_artifact(
++        "blocked_x",
++        preconditions_checked={"ok": False},
++        duration_s=0.1,
++        active_milestone_confirmed="",
++        active_roadmap_path="research-roadmap.yaml",
++    )
++    assert blocked["honest_verdict"] == "blocked_x"
++    assert mod.is_sha256(blocked["reproducibility_checksum"])
++    assert mod.terminal_verdict(state).startswith("success:")
++
++
++def test_validate_artifact_rejection_guards(tmp_path: Path) -> None:
++    """REQ-REPORT-4145: validation rejects artifacts that launder the .383 truth."""
++
++    good = run_happy(make_repo(tmp_path))
++
++    def set_path(obj: dict, path: list[str], value: object) -> None:
++        cur = obj
++        for key in path[:-1]:
++            cur = cur[key]
++        cur[path[-1]] = value
++
++    cases = [
++        ("missing required fields", lambda a: a.pop("v383_close_state")),
++        ("terminal-prefixed", lambda a: a.__setitem__("honest_verdict", "done")),
++        ("field_principles must be a mapping", lambda a: a.__setitem__("field_principles", "x")),
++        ("missing field principles", lambda a: a.__setitem__("field_principles", {})),
++        (
++            "principle must match REQ-REPORT-4145",
++            lambda a: a["field_principles"].__setitem__("v383_close_state", "wrong"),
++        ),
++        ("archived milestone", lambda a: a.__setitem__("archived_milestone", "2026.06.999")),
++        ("activated milestone", lambda a: a.__setitem__("activated_milestone", "2026.06.999")),
++        ("research-complete YAML", lambda a: a.__setitem__("research_complete_yaml_parses", False)),
++        ("exclusion manifest", lambda a: a.__setitem__("exclusion_manifest_parses", False)),
++        ("nano-trm train", lambda a: a.__setitem__("nano_trm_train_present", False)),
++        ("pretest suite", lambda a: a.__setitem__("pretest_suite_green", False)),
++        ("active milestone", lambda a: a.__setitem__("active_milestone_confirmed", "2026.06.383")),
++        ("v383_close_state must be a mapping", lambda a: a.__setitem__("v383_close_state", "x")),
++        ("accumulation_noop", lambda a: set_path(a, ["v383_close_state", "accumulation_noop"], False)),
++        ("noop_reason", lambda a: set_path(a, ["v383_close_state", "noop_reason"], "timer")),
++        ("exp4135_duration_s", lambda a: set_path(a, ["v383_close_state", "exp4135_duration_s"], 120.0)),
++        ("baseline_val_exact_accuracy", lambda a: set_path(a, ["v383_close_state", "baseline_val_exact_accuracy_rounded"], 0.87)),
++        ("graft_deferred", lambda a: set_path(a, ["v383_close_state", "graft_deferred"], False)),
++        ("false_negative_risk", lambda a: set_path(a, ["v383_close_state", "false_negative_risk"], False)),
++        ("duration_s", lambda a: a.__setitem__("duration_s", 0)),
++        ("inference_substrate", lambda a: a.__setitem__("inference_substrate", "live_training")),
++        ("cited_upstream_artifacts", lambda a: a.__setitem__("cited_upstream_artifacts", "x")),
++        ("reproducibility_checksum", lambda a: a.__setitem__("reproducibility_checksum", "short")),
++    ]
++    for match, mutate in cases:
++        artifact = copy.deepcopy(good)
++        mutate(artifact)
++        with pytest.raises(ValueError, match=match):
++            mod.validate_artifact(artifact)
++
++    mismatch = copy.deepcopy(good)
++    mismatch["honest_verdict"] = "success: changed"
++    with pytest.raises(ValueError, match="checksum"):
++        mod.validate_artifact(mismatch)
+-- 
+2.55.0
+

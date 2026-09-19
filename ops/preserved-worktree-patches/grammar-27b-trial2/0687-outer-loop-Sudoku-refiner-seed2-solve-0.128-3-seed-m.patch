@@ -1,0 +1,59 @@
+From 1111f7ba72f346cc4ba62cc25259f0dbd2746c83 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 23:04:23 -0400
+Subject: [PATCH 00687/11171] =?UTF-8?q?[outer-loop]=20Sudoku=20refiner=20s?=
+ =?UTF-8?q?eed2:=20solve=200.128=20=E2=80=94=203-seed=20mean=20~0.141=20(r?=
+ =?UTF-8?q?ange=200.112-0.182)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+refiner_solve_rate=0.128, blank_cell_acc=0.671, violations=15.6 (n=500, seed2).
+Refiner exact-grid solve over seeds {0,1,2} = {0.182, 0.112, 0.128}, mean ~0.141,
+blank-cell stable ~0.65-0.67. Ordering refiner(~0.14) >> AR(0.002/SC 0.000) robust.
+AR seed1 (last run) launching next.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+---
+ results/sudoku_refiner_seed2.json | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 results/sudoku_refiner_seed2.json
+
+diff --git a/results/sudoku_refiner_seed2.json b/results/sudoku_refiner_seed2.json
+new file mode 100644
+index 0000000000..27c4e99ad8
+--- /dev/null
++++ b/results/sudoku_refiner_seed2.json
+@@ -0,0 +1,28 @@
++{
++  "refiner_solve_rate": 0.128,
++  "refiner_blank_cell_acc": 0.6710191197044159,
++  "refiner_mean_violations": 15.622,
++  "n_eval": 500,
++  "n_params": 1804553,
++  "train_seconds": 2208.1884360313416,
++  "model": "refiner",
++  "args": {
++    "model": "refiner",
++    "steps": 12000,
++    "batch": 256,
++    "hidden": 256,
++    "layers": 4,
++    "heads": 4,
++    "lr": 0.0003,
++    "train_n": 400000,
++    "eval_n": 500,
++    "sc_k": 32,
++    "seed": 2,
++    "log_every": 1000,
++    "descent_steps": 200,
++    "descent_lr": 0.3,
++    "n_cycles": 8,
++    "out": "results/sudoku_refiner_seed2.json"
++  },
++  "gpu": "NVIDIA GeForce RTX 3090"
++}
+\ No newline at end of file
+-- 
+2.55.0
+

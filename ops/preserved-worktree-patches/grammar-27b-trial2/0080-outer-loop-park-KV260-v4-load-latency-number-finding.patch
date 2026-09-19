@@ -1,0 +1,55 @@
+From 10fa3dfd4b8dbc5ee00a2c7343068ab57c271470 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 23:50:49 -0400
+Subject: [PATCH 00080/11171] [outer-loop] park KV260 v4-load + latency-number
+ findings (do-not-re-investigate, POC-tier)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Board recovered 2026-06-01 (operator power-cycle), Carnot-ready via
+xmutil loadapp carnot_ising_v2_n64; exp3568 transcript clean (23.99us/3000 iters).
+Parked two findings: (1) carnot_ising_v4 won't loadapp (xmutil app-resolution -1,
+no kernel error, identical .dtbo; fpgautil not installed to bypass — needs a
+hands-on session); (2) the 23.99us-vs-3.183us(.260 exp2742) gap is NOT a clean
+regression — the .260 baseline is unreconstructable (no script/methodology/n_spins,
+different field layout) and Ising latency is problem-dependent. KV260 is POC-tier
+per CLAUDE.md; revisit only if latency becomes a headline claim again.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ ops/known-issues.md | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e3004e48bc..88aa235474 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -207,6 +207,24 @@ Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full rankin
+ 
+ ## DEFERRED / PARKED ITEMS (planner may propose, not mandatory)
+ 
++### 2026-06-01: KV260 v4-load + latency-number — DO NOT re-investigate (POC-tier)
++Board recovered 2026-06-01 (operator power-cycle); reachable via `ssh kria`, Carnot
++Ising accelerator runs via `xmutil loadapp carnot_ising_v2_n64` (ising_sampler on
++/dev/uio4), exp3568 transcript clean (mean 23.99us, 3000 iters). Two findings,
++both PARKED (KV260 is POC-tier per CLAUDE.md — not a load-bearing perf claim):
++(1) `xmutil loadapp carnot_ising_v4` fails with "Load Error: -1" at the
++app-resolution layer (kernel logs nothing; .dtbo byte-identical to the working v2;
++v4 bitstream header valid but md5-distinct). `fpgautil` (the bypass) is NOT
++installed on the board — forcing v4 needs a hands-on session (install fpgautil OR
++repair the v4 xmutil app registration). (2) The 23.99us vs the .260 graduation
++3.183us (exp2742) is NOT a clean regression and is NOT worth chasing: exp2742 has
++no standalone script, no methodology_note, no recorded n_spins/anneal config, and
++a different field layout (n_cycles_measured=100) — so the baseline workload/
++bitstream is unreconstructable, and Ising latency is problem-dependent. Both
++harnesses use the same Python-poll round-trip (so it is NOT a hw-cycle-vs-software
++difference). Only revisit if KV260 latency becomes a HEADLINE claim again (it
++should not — the real product is the verifier).
++
+ ### 2026-05-01: paperbanana for diagrams + infographics (parked, not yet adopted)
+ 
+ **Background:** the project currently produces figures via matplotlib
+-- 
+2.55.0
+

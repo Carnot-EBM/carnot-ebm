@@ -1,0 +1,2076 @@
+From f277db811e0d61056254f3f9def32b542b032770 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 01:45:53 -0400
+Subject: [PATCH 01378/11171] [conductor] VERIFIER-AS-REWARD RFT -- CORPUS
+ BUILD (THE PIVOT, part 1; DE-CONFOUNDED per the 2026-06-12 adversarial
+ review): build THREE N-matched corpora from the SAME codex generator so the
+ experiment isolates the VERIFIER'S LABEL, not codex-distillation. For each
+ ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def
+ transform(grid)` programs; the model-free execution verifier
+ (python/carnot/agentic/arc_gap4_execution_verifier.py) labels each. (A)
+ RFT-CORRECT corpus = verifier-certified DEMO-PERFECT programs (the verifier's
+ label-free positive signal). (B) RFT-ABLATION corpus = the verifier-LABEL
+ ablation: programs the verifier certifies as NOT demo-perfect (demo-failing /
+ randomly-filtered), SAME generator, N-MATCHED and composition-matched to (A).
+ (C) gold-SFT corpus = TEST-gold-passing programs (oracle labels), N-matched.
+ THE LOAD-BEARING CONTRAST is (A) vs (B): same codex intelligence, the ONLY
+ difference is whether the verifier's label is CORRECT -- if A>B the
+ verifier's LABEL carries training signal (verifier-as-reward), if A~=B then
+ 'RFT helps' is just codex-distillation and the verifier adds nothing (the
+ honest null the review warned of). (A) vs (C) asks whether the label-free
+ verifier signal matches oracle labels. PRECISION GATE (scoping-doc Phase-0,
+ MANDATORY before trusting any train): measure the verifier's certification
+ precision -- P(test-gold | demo-perfect) -- on a labeled held-out; if < 0.85
+ at recall >= 0.20 the RFT-CORRECT corpus is POISONED and the result is
+ uninterpretable -> report blocked_precision_gate_unmet and STOP. Write the
+ LoRA trainer for the small-model LADDER (cached HF safetensors, NOT GGUF:
+ Qwen/Qwen3.5-0.8B headroom rung [primary], openbmb/MiniCPM5-1B strong rung;
+ optional Qwen/Qwen2.5-0.5B or Qwen/Qwen3.5-2B) using trl 1.6.0 (SFTTrainer +
+ GRPOTrainer) + peft LoRA, + the held-OUT eval harness. Smoke-train 2 tasks
+ for ONE base; commit the runner.
+
+Automated research step by research conductor.
+Task ID: exp4077-verifier-reward-rft-corpus-build
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  71 ++
+ ops/dogfood-memory.json                       |   2 +-
+ ...xp4077_verifier_reward_rft_corpus_build.py | 854 ++++++++++++++++++
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  44 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...4077_verifier_reward_rft_corpus_build.json |  63 ++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...xp4077_verifier_reward_rft_corpus_build.py |  34 +
+ ...t_4077_verifier_reward_rft_corpus_build.py | 519 +++++++++++
+ 28 files changed, 1598 insertions(+), 57 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py
+ create mode 100644 results/experiment_4077_verifier_reward_rft_corpus_build.json
+ create mode 100644 scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py
+ create mode 100644 tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index ac773b9337..fc6577cc15 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -11619,3 +11619,74 @@ evidence without letting that target-derived fragment satisfy
+ | Requirement | Python | Tests |
+ |---|---|---|
+ | REQ-LEARN-4072 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v9.py; scripts/experiments/exp4072_arcmemo_cross_game_transfer_v9.py, Exp 4072) | Proposed (tests/python/test_exp4072_arcmemo_cross_game_transfer_v9.py) |
++
++---
++
++## REQ-LEARN-4077: ARC Execution-Verifier Reward RFT Corpus Build Gate
++
++**Given** cached ARC program-generation outputs with at least `k=8` generated
++transform programs per task, HF safetensors LADDER bases
++`Qwen/Qwen3.5-0.8B` and `openbmb/MiniCPM5-1B`, importable `trl`/`peft`
++trainers, visible CUDA, and loadable ARC-1 plus ARC-2 task pools
++**When** Exp 4077 prepares the verifier-as-self-improvement reward beachhead
++**Then** it SHALL check every precondition before corpus construction or
++training, compute the Phase-0 certification precision and recall of
++`demo-perfect => test-gold` on a labeled held-out split, and stop with
++`honest_verdict=blocked_precision_gate_unmet_<p>_<r>` when precision is below
++`0.85` or recall is below `0.20`.
++
++If and only if the precision gate passes, the experiment SHALL build three
++N-matched corpora from the same generated program pool: `RFT-CORRECT`
++containing demo-perfect programs, `RFT-ABLATION` containing not-demo-perfect
++programs matched to the RFT-correct task distribution, and `gold-SFT`
++containing test-gold-passing programs matched to the RFT-correct size where
++possible. The disjoint held-out eval split SHALL never be included in any
++training corpus.
++
++The terminal artifact SHALL write
++`results/experiment_4077_verifier_reward_rft_corpus_build.json` with bare
++top-level fields `honest_verdict`, `certification_precision`,
++`certification_recall`, `n_rft_correct`, `n_rft_ablation`, `n_gold_sft`,
++`n_heldout_tasks`, `runner_ready`, `trainer_smoke_passed`,
++`preconditions_checked`, and `inference_substrate`.
++
++### REQ-LEARN-4077 Sub-requirements
++
++- REQ-LEARN-4077-1: The runner SHALL reuse
++  `carnot.agentic.arc_gap4_execution_verifier` and
++  `carnot.verify.sandbox.sandboxed_exec_function` to score generated transform
++  programs against public demos and held-out candidate gold labels.
++- REQ-LEARN-4077-2: The precision gate SHALL pass only when
++  `certification_precision >= 0.85` and `certification_recall >= 0.20`.
++- REQ-LEARN-4077-3: When the precision gate fails, corpus counts SHALL be zero
++  and the runner SHALL NOT build RFT/SFT corpora or run a smoke train.
++- REQ-LEARN-4077-4: When the precision gate passes, the three corpora SHALL be
++  generated from the same held-in program pool and SHALL have equal item counts.
++- REQ-LEARN-4077-5: The LoRA runner SHALL expose three arms
++  `rft_correct`, `rft_ablation`, and `gold_sft`, plus a held-out eval manifest,
++  and SHALL support a two-task smoke train without launching the full Exp 4078
++  training run.
++
++### SCENARIO-LEARN-4077: Precision Gate Blocks Poisoned Demo-Perfect Labels
++
++**Given** a labeled held-out ARC program pool where demo-perfect programs are
++gold-correct below 85% precision
++**When** Exp 4077 computes the certification gate
++**Then** the artifact reports `blocked_precision_gate_unmet_<p>_<r>`, leaves
++all three corpus counts at zero, and records `trainer_smoke_passed=false`.
++
++### SCENARIO-LEARN-4077-NMATCH: Passing Gate Builds Three Matched Arms
++
++**Given** a generated held-in program pool whose demo-perfect certification
++passes the precision gate and contains enough not-demo-perfect and test-gold
++programs
++**When** Exp 4077 builds the training corpora
++**Then** `n_rft_correct == n_rft_ablation == n_gold_sft`, every ablation item
++comes from the same generator but is not demo-perfect, and the held-out eval
++manifest contains only disjoint task ids.
++
++## Implementation Status (REQ-LEARN-4077)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4077 | Proposed (python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py, Exp 4077) | Proposed (tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 502e7959b8..13da23b83d 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 165,
+   "code_violations": 0,
+-  "experiments_checked": 3103,
++  "experiments_checked": 3104,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py b/python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py
+new file mode 100644
+index 0000000000..7a39789bcd
+--- /dev/null
++++ b/python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py
+@@ -0,0 +1,854 @@
++"""Exp 4077 verifier-reward RFT corpus build gate.
++
++Spec refs: REQ-LEARN-4077, SCENARIO-LEARN-4077,
++SCENARIO-LEARN-4077-NMATCH.
++
++The experiment is intentionally gated before any training. It measures whether
++the existing ARC execution-verifier label, "demo-perfect program", is precise
++enough to become an RFT correctness label. If the certification precision is
++below the Phase-0 threshold, the runner writes a blocked artifact and does not
++construct training corpora.
++"""
++
++from __future__ import annotations
++
++import gzip
++import importlib
++import json
++import time
++from collections import defaultdict
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import asdict, dataclass
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++
++from carnot.agentic.arc_gap4_execution_verifier import (
++    Gap4ExecutionVerifier,
++    get_consistency_energy,
++)
++from carnot.verify.sandbox import sandboxed_exec_function
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++RESULT_FILENAME = "experiment_4077_verifier_reward_rft_corpus_build.json"
++DEFAULT_ARC1_POOL = Path("results/arc3_gap3_stage2_eval_pool.json.gz")
++DEFAULT_ARC2_POOL = Path("results/arc3_gap4_arc2_eval_pool.json.gz")
++DEFAULT_PROGRAM_CHECKPOINT = Path("results/experiment_4012_gap4_local_best_of_n.checkpoint.json")
++INFERENCE_SUBSTRATE = "offline_arc_k8_execution_verifier_reward_lora_runner"
++RANDOM_SEED = 4077
++K_PROGRAMS_PER_TASK = 8
++PRECISION_THRESHOLD = 0.85
++RECALL_THRESHOLD = 0.20
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "certification_precision",
++    "certification_recall",
++    "n_rft_correct",
++    "n_rft_ablation",
++    "n_gold_sft",
++    "n_heldout_tasks",
++    "runner_ready",
++    "trainer_smoke_passed",
++    "preconditions_checked",
++    "inference_substrate",
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "blocked_")
++_SANDBOX_NUMPY_UNAVAILABLE = False
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One mandatory resource check recorded in the terminal artifact."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def to_dict(self) -> dict[str, object]:
++        return asdict(self)
++
++
++@dataclass(frozen=True)
++class ArcTask:
++    """ARC task row with public demos, test input, and candidate gold labels."""
++
++    task_id: str
++    pool_name: str
++    demos: list[dict[str, Any]]
++    test_input: Any
++    candidates: list[dict[str, Any]]
++
++    @property
++    def gold_outputs(self) -> list[Any]:
++        return [candidate.get("grid") for candidate in self.candidates if candidate.get("correct") is True]
++
++
++@dataclass(frozen=True)
++class CandidateProgram:
++    """Generated transform program for one ARC task."""
++
++    task_id: str
++    program_id: str
++    code: str
++    source: str
++
++
++@dataclass(frozen=True)
++class ProgramEvaluation:
++    """Post-hoc labels for one generated program."""
++
++    task_id: str
++    program_id: str
++    code: str
++    source: str
++    split: str
++    demo_perfect: bool
++    test_gold: bool
++    verifier_energy: float
++    error: str
++
++
++@dataclass(frozen=True)
++class CertificationMetrics:
++    """Phase-0 precision/recall for demo-perfect certification."""
++
++    precision: float
++    recall: float
++    n_certified: int
++    n_gold: int
++    n_true_positive: int
++
++    @property
++    def gate_passed(self) -> bool:
++        return self.precision >= PRECISION_THRESHOLD and self.recall >= RECALL_THRESHOLD
++
++
++@dataclass(frozen=True)
++class RftCorpora:
++    """N-matched records for the three training arms."""
++
++    rft_correct: list[dict[str, object]]
++    rft_ablation: list[dict[str, object]]
++    gold_sft: list[dict[str, object]]
++
++
++def _resource_slug(text: str) -> str:
++    return (
++        text.lower()
++        .replace("/", "_")
++        .replace("-", "_")
++        .replace(".", "_")
++        .replace("__", "_")
++    )
++
++
++def check_hf_safetensors_model(
++    model_id: str,
++    *,
++    cache_root: str | Path | None = None,
++    trust_remote_code: bool = False,
++) -> PreconditionCheck:
++    """REQ-LEARN-4077: require cached HF safetensors, not GGUF-only weights."""
++
++    root = Path(cache_root) if cache_root is not None else Path.home() / ".cache" / "huggingface" / "hub"
++    resource = f"hf_safetensors_{_resource_slug(model_id)}"
++    model_dir = root / f"models--{model_id.replace('/', '--')}"
++    safetensors = sorted(model_dir.glob("snapshots/*/*.safetensors"))
++    configs = sorted(model_dir.glob("snapshots/*/config.json"))
++    ggufs = sorted(model_dir.glob("snapshots/*/*.gguf"))
++    if not model_dir.exists():
++        return PreconditionCheck(resource, False, f"missing cache directory {model_dir}")
++    if not safetensors:
++        suffix = "gguf_only" if ggufs else "no_safetensors"
++        return PreconditionCheck(resource, False, f"{suffix}; LoRA requires trainable HF weights")
++    if not configs:
++        return PreconditionCheck(resource, False, "safetensors present but config.json missing")
++    detail = f"{len(safetensors)} safetensors shard(s); trust_remote_code={trust_remote_code}"
++    return PreconditionCheck(resource, True, detail)
++
++
++def check_trainer_imports() -> PreconditionCheck:  # pragma: no cover
++    """REQ-LEARN-4077: assert TRL and PEFT trainer imports before training."""
++
++    try:
++        import peft  # noqa: F401
++        import trl  # noqa: F401
++        from trl import GRPOTrainer, SFTTrainer  # noqa: F401
++
++        return PreconditionCheck("trl_peft_trainers", True, "trl, peft, SFTTrainer, GRPOTrainer import")
++    except Exception as exc:
++        return PreconditionCheck("trl_peft_trainers", False, f"{type(exc).__name__}: {exc}")
++
++
++def check_cuda_visible() -> PreconditionCheck:  # pragma: no cover
++    """REQ-LEARN-4077: require CUDA before LoRA smoke training."""
++
++    try:
++        torch = importlib.import_module("torch")
++        available = bool(torch.cuda.is_available())
++        detail = "torch.cuda.is_available() is true" if available else "torch.cuda.is_available() is false"
++        return PreconditionCheck("cuda_visible", available, detail)
++    except Exception as exc:
++        return PreconditionCheck("cuda_visible", False, f"{type(exc).__name__}: {exc}")
++
++
++def _load_json_or_gzip(path: Path) -> Any:
++    if path.suffix == ".gz":
++        with gzip.open(path, "rt", encoding="utf-8") as handle:
++            return json.load(handle)
++    return json.loads(path.read_text(encoding="utf-8"))
++
++
++def check_arc_pool(path: str | Path, resource: str) -> PreconditionCheck:
++    """REQ-LEARN-4077: verify a cached ARC pool is readable and non-empty."""
++
++    pool_path = Path(path)
++    try:
++        payload = _load_json_or_gzip(pool_path)
++    except Exception as exc:
++        return PreconditionCheck(resource, False, f"{type(exc).__name__}: {exc}")
++    entries = payload.get("entries") if isinstance(payload, Mapping) else payload
++    available = isinstance(entries, list) and len(entries) > 0
++    detail = f"{len(entries) if isinstance(entries, list) else 0} entries at {pool_path}"
++    return PreconditionCheck(resource, available, detail)
++
++
++def check_preconditions(*, repo_root: str | Path = REPO_ROOT) -> list[PreconditionCheck]:  # pragma: no cover
++    """REQ-LEARN-4077: collect every mandatory precondition before inference."""
++
++    root = Path(repo_root)
++    return [
++        check_hf_safetensors_model("Qwen/Qwen3.5-0.8B"),
++        check_hf_safetensors_model("openbmb/MiniCPM5-1B", trust_remote_code=True),
++        check_trainer_imports(),
++        check_cuda_visible(),
++        check_arc_pool(root / DEFAULT_ARC1_POOL, "arc1_pool"),
++        check_arc_pool(root / DEFAULT_ARC2_POOL, "arc2_pool"),
++    ]
++
++
++def _first_missing(preconditions_checked: Sequence[PreconditionCheck]) -> PreconditionCheck | None:
++    return next((check for check in preconditions_checked if not check.available), None)
++
++
++def load_arc_pool(path: str | Path, *, pool_name: str) -> list[ArcTask]:
++    """Load ARC task rows from a cached GAP-4 candidate pool."""
++
++    payload = _load_json_or_gzip(Path(path))
++    entries = payload.get("entries") if isinstance(payload, Mapping) else payload
++    if not isinstance(entries, list):
++        raise ValueError(f"{path} does not contain an entries list")
++    tasks: list[ArcTask] = []
++    for entry in entries:
++        if not isinstance(entry, Mapping):
++            continue
++        task_id = str(entry.get("task") or entry.get("task_id") or "")
++        if not task_id:
++            continue
++        tasks.append(
++            ArcTask(
++                task_id=task_id,
++                pool_name=pool_name,
++                demos=list(entry.get("demos") or []),
++                test_input=entry.get("test_input"),
++                candidates=list(entry.get("candidates") or []),
++            )
++        )
++    if not tasks:
++        raise ValueError(f"{path} contains no usable ARC tasks")
++    return tasks
++
++
++def load_program_checkpoint(path: str | Path, *, k_required: int = K_PROGRAMS_PER_TASK) -> dict[str, list[CandidateProgram]]:
++    """Load cached k-sample transform programs from the local generator checkpoint."""
++
++    payload = json.loads(Path(path).read_text(encoding="utf-8"))
++    tasks = payload.get("tasks")
++    if not isinstance(tasks, Mapping):
++        raise ValueError(f"{path} does not contain a tasks mapping")
++    programs: dict[str, list[CandidateProgram]] = {}
++    for task_id, rows in tasks.items():
++        if not isinstance(rows, list) or len(rows) < k_required:
++            continue
++        task_programs: list[CandidateProgram] = []
++        for index, row in enumerate(rows[:k_required]):
++            if not isinstance(row, Mapping) or not isinstance(row.get("code"), str):
++                continue
++            draw_index = row.get("draw_index", index)
++            task_programs.append(
++                CandidateProgram(
++                    task_id=str(task_id),
++                    program_id=f"{task_id}:draw{draw_index}",
++                    code=str(row["code"]),
++                    source=str(row.get("source") or "experiment_4012_local_k8"),
++                )
++            )
++        if len(task_programs) >= k_required:
++            programs[str(task_id)] = task_programs
++    if not programs:
++        raise ValueError(f"{path} contains no tasks with k>={k_required} programs")
++    return programs
++
++
++def load_default_task_splits(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    k_required: int = K_PROGRAMS_PER_TASK,
++) -> tuple[list[ArcTask], list[ArcTask], list[ArcTask]]:
++    """Build disjoint precision, held-in train, and held-out eval ARC splits."""
++
++    root = Path(repo_root)
++    programs = load_program_checkpoint(root / DEFAULT_PROGRAM_CHECKPOINT, k_required=k_required)
++    arc1_tasks = {task.task_id: task for task in load_arc_pool(root / DEFAULT_ARC1_POOL, pool_name="arc1")}
++    task_ids = sorted(task_id for task_id in programs if task_id in arc1_tasks)
++    if len(task_ids) < 3:
++        raise ValueError("fewer than three ARC-1 k-program tasks are available")
++    if len(task_ids) < 12:
++        return ([arc1_tasks[task_id] for task_id in task_ids], [], [])
++    n_precision = max(1, min(6, len(task_ids) // 3))
++    n_eval = max(1, min(4, len(task_ids) - n_precision - 1))
++    precision_ids = task_ids[:n_precision]
++    eval_ids = task_ids[-n_eval:]
++    heldin_ids = [task_id for task_id in task_ids if task_id not in set(precision_ids + eval_ids)]
++    return (
++        [arc1_tasks[task_id] for task_id in precision_ids],
++        [arc1_tasks[task_id] for task_id in heldin_ids],
++        [arc1_tasks[task_id] for task_id in eval_ids],
++    )
++
++
++def _normalize_grid(value: Any) -> Any:
++    if isinstance(value, np.ndarray):
++        return value.astype(int).tolist()
++    if isinstance(value, list):
++        return value
++    return np.asarray(value, dtype=int).tolist()
++
++
++def _wrapped_transform_code(code: str) -> str:
++    return (
++        "import numpy as np\n"
++        f"{code}\n\n"
++        "def __carnot_transform(input_grid):\n"
++        "    result = transform(np.array(input_grid, dtype=int))\n"
++        "    return np.asarray(result, dtype=int).tolist()\n"
++    )
++
++
++def _execute_transform(code: str, grid: Any, *, timeout: float = 2.0) -> tuple[Any, str]:
++    wrapped = _wrapped_transform_code(code)
++    global _SANDBOX_NUMPY_UNAVAILABLE  # noqa: PLW0603 - cache one sandbox substrate fact
++    from carnot.verify.python_types import safe_exec_function
++
++    if _SANDBOX_NUMPY_UNAVAILABLE:
++        result, error = safe_exec_function(wrapped, "__carnot_transform", (grid,), timeout=timeout)
++    else:
++        result, error = sandboxed_exec_function(
++            wrapped,
++            "__carnot_transform",
++            (grid,),
++            timeout=timeout,
++            allow_fallback=True,
++        )
++        if error is not None and type(error).__name__ == "ModuleNotFoundError" and "numpy" in str(error):
++            _SANDBOX_NUMPY_UNAVAILABLE = True
++            result, error = safe_exec_function(wrapped, "__carnot_transform", (grid,), timeout=timeout)
++    if error is not None:
++        return None, f"{type(error).__name__}: {error}"
++    return _normalize_grid(result), ""
++
++
++def evaluate_program(
++    task: ArcTask,
++    program: CandidateProgram,
++    *,
++    split: str = "heldout",
++) -> ProgramEvaluation:
++    """REQ-LEARN-4077-1: execute one transform program and assign labels."""
++
++    errors: list[str] = []
++    demo_matches: list[bool] = []
++    for index, demo in enumerate(task.demos):
++        prediction, error = _execute_transform(program.code, demo.get("input"))
++        if error:
++            errors.append(f"demo{index}:{error}")
++            demo_matches.append(False)
++            continue
++        demo_matches.append(prediction == demo.get("output"))
++
++    test_prediction, test_error = _execute_transform(program.code, task.test_input)
++    if test_error:
++        errors.append(f"test:{test_error}")
++    gold_outputs = task.gold_outputs
++    test_gold = bool(not test_error and any(test_prediction == gold for gold in gold_outputs))
++
++    verifier_energy = 1.0
++    if test_prediction is not None:
++        rule = Gap4ExecutionVerifier().induce_program(task.demos)
++        if rule is not None:
++            verifier_energy = float(get_consistency_energy(rule, task.test_input, test_prediction))
++
++    return ProgramEvaluation(
++        task_id=task.task_id,
++        program_id=program.program_id,
++        code=program.code,
++        source=program.source,
++        split=split,
++        demo_perfect=bool(task.demos and all(demo_matches)),
++        test_gold=test_gold,
++        verifier_energy=float(verifier_energy),
++        error="; ".join(errors),
++    )
++
++
++def evaluate_programs(
++    tasks: Sequence[ArcTask],
++    programs_by_task: Mapping[str, Sequence[CandidateProgram]],
++    *,
++    split: str,
++    program_evaluator: Callable[[ArcTask, CandidateProgram], ProgramEvaluation] | None = None,
++) -> list[ProgramEvaluation]:
++    """Evaluate all available k-sample programs for a task split."""
++
++    evaluator = program_evaluator or (lambda task, program: evaluate_program(task, program, split=split))
++    rows: list[ProgramEvaluation] = []
++    for task in tasks:
++        for program in programs_by_task.get(task.task_id, ()):
++            row = evaluator(task, program)
++            if row.split != split:
++                row = ProgramEvaluation(
++                    task_id=row.task_id,
++                    program_id=row.program_id,
++                    code=row.code,
++                    source=row.source,
++                    split=split,
++                    demo_perfect=row.demo_perfect,
++                    test_gold=row.test_gold,
++                    verifier_energy=row.verifier_energy,
++                    error=row.error,
++                )
++            rows.append(row)
++    return rows
++
++
++def compute_certification_metrics(evaluations: Sequence[ProgramEvaluation]) -> CertificationMetrics:
++    """REQ-LEARN-4077-2: compute P(test-gold | demo-perfect) and recall."""
++
++    certified = [row for row in evaluations if row.demo_perfect]
++    gold = [row for row in evaluations if row.test_gold]
++    true_positive = [row for row in certified if row.test_gold]
++    precision = len(true_positive) / len(certified) if certified else 0.0
++    recall = len(true_positive) / len(gold) if gold else 0.0
++    return CertificationMetrics(
++        precision=float(precision),
++        recall=float(recall),
++        n_certified=len(certified),
++        n_gold=len(gold),
++        n_true_positive=len(true_positive),
++    )
++
++
++def _corpus_item(row: ProgramEvaluation, arm: str) -> dict[str, object]:
++    return {
++        "arm": arm,
++        "task_id": row.task_id,
++        "program_id": row.program_id,
++        "source": row.source,
++        "code": row.code,
++        "demo_perfect": bool(row.demo_perfect),
++        "test_gold": bool(row.test_gold),
++        "verifier_energy": float(row.verifier_energy),
++        "text": (
++            f"ARC task {row.task_id}\n"
++            f"Generator source: {row.source}\n"
++            "Write a Python transform(grid) program.\n\n"
++            f"{row.code}"
++        ),
++    }
++
++
++def build_n_matched_corpora(evaluations: Sequence[ProgramEvaluation]) -> RftCorpora:
++    """REQ-LEARN-4077-4: build three same-generator N-matched training arms."""
++
++    by_task: dict[str, list[ProgramEvaluation]] = defaultdict(list)
++    for row in evaluations:
++        if row.split == "heldin":
++            by_task[row.task_id].append(row)
++
++    rft_correct: list[dict[str, object]] = []
++    rft_ablation: list[dict[str, object]] = []
++    gold_sft: list[dict[str, object]] = []
++    for task_id in sorted(by_task):
++        rows = sorted(by_task[task_id], key=lambda row: row.program_id)
++        correct = [row for row in rows if row.demo_perfect]
++        ablation = [row for row in rows if not row.demo_perfect]
++        gold = [row for row in rows if row.test_gold]
++        n_match = min(len(correct), len(ablation), len(gold))
++        for row in correct[:n_match]:
++            rft_correct.append(_corpus_item(row, "rft_correct"))
++        for row in ablation[:n_match]:
++            rft_ablation.append(_corpus_item(row, "rft_ablation"))
++        for row in gold[:n_match]:
++            gold_sft.append(_corpus_item(row, "gold_sft"))
++
++    return RftCorpora(rft_correct=rft_correct, rft_ablation=rft_ablation, gold_sft=gold_sft)
++
++
++def build_heldout_eval_manifest(evaluations: Sequence[ProgramEvaluation]) -> list[dict[str, object]]:
++    """REQ-LEARN-4077-5: expose a disjoint held-out eval task manifest."""
++
++    task_ids = sorted({row.task_id for row in evaluations if row.split == "heldout"})
++    return [{"task_id": task_id, "split": "heldout"} for task_id in task_ids]
++
++
++def _preconditions_payload(preconditions_checked: Sequence[PreconditionCheck]) -> list[dict[str, object]]:
++    return [check.to_dict() for check in preconditions_checked]
++
++
++def _field_principles() -> dict[str, str]:
++    return {
++        "certification_precision": "Phase-0 gate: demo-perfect labels must predict test-gold at high precision.",
++        "certification_recall": "Usability gate: certification must retain a non-trivial share of gold programs.",
++        "n_rft_correct": "RFT-correct corpus size after N matching; zero when the label is poisoned.",
++        "n_rft_ablation": "Verifier-label ablation size matched to RFT-correct.",
++        "n_gold_sft": "Oracle-label upper-bound corpus size matched where possible.",
++        "n_heldout_tasks": "Disjoint tasks reserved for precision/eval accounting.",
++        "runner_ready": "Whether the corpus/trainer harness can be invoked after preconditions.",
++        "trainer_smoke_passed": "True only after the two-task LoRA smoke train runs.",
++    }
++
++
++def _base_artifact(
++    *,
++    honest_verdict: str,
++    metrics: CertificationMetrics,
++    n_rft_correct: int,
++    n_rft_ablation: int,
++    n_gold_sft: int,
++    n_heldout_tasks: int,
++    runner_ready: bool,
++    trainer_smoke_passed: bool,
++    preconditions_checked: Sequence[PreconditionCheck],
++    duration_s: float,
++) -> dict[str, object]:
++    artifact: dict[str, object] = {
++        "experiment": "experiment_4077_verifier_reward_rft_corpus_build",
++        "schema": "carnot.experiment_4077_verifier_reward_rft_corpus_build.v1",
++        "honest_verdict": honest_verdict,
++        "certification_precision": round(float(metrics.precision), 4),
++        "certification_recall": round(float(metrics.recall), 4),
++        "n_rft_correct": int(n_rft_correct),
++        "n_rft_ablation": int(n_rft_ablation),
++        "n_gold_sft": int(n_gold_sft),
++        "n_heldout_tasks": int(n_heldout_tasks),
++        "runner_ready": bool(runner_ready),
++        "trainer_smoke_passed": bool(trainer_smoke_passed),
++        "preconditions_checked": _preconditions_payload(preconditions_checked),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": _field_principles(),
++        "duration_s": float(duration_s),
++        "random_seed": RANDOM_SEED,
++        "spec_refs": ["REQ-LEARN-4077", "SCENARIO-LEARN-4077", "SCENARIO-LEARN-4077-NMATCH"],
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:  # pragma: no cover - builders only pass schema-valid values
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def build_precondition_blocked_artifact(
++    preconditions_checked: Sequence[PreconditionCheck],
++    *,
++    duration_s: float,
++) -> dict[str, object]:
++    """REQ-LEARN-4077: fail closed before inference when resources are missing."""
++
++    missing = _first_missing(preconditions_checked)
++    verdict = f"blocked_{missing.resource if missing else 'unknown_precondition'}"
++    return _base_artifact(
++        honest_verdict=verdict,
++        metrics=CertificationMetrics(0.0, 0.0, 0, 0, 0),
++        n_rft_correct=0,
++        n_rft_ablation=0,
++        n_gold_sft=0,
++        n_heldout_tasks=0,
++        runner_ready=False,
++        trainer_smoke_passed=False,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++    )
++
++
++def build_precision_blocked_artifact(
++    metrics: CertificationMetrics,
++    *,
++    preconditions_checked: Sequence[PreconditionCheck],
++    n_heldout_tasks: int,
++    duration_s: float,
++) -> dict[str, object]:
++    """SCENARIO-LEARN-4077: block poisoned demo-perfect labels before corpus build."""
++
++    verdict = f"blocked_precision_gate_unmet_{metrics.precision:.4f}_{metrics.recall:.4f}"
++    return _base_artifact(
++        honest_verdict=verdict,
++        metrics=metrics,
++        n_rft_correct=0,
++        n_rft_ablation=0,
++        n_gold_sft=0,
++        n_heldout_tasks=n_heldout_tasks,
++        runner_ready=True,
++        trainer_smoke_passed=False,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++    )
++
++
++def build_complete_artifact(
++    metrics: CertificationMetrics,
++    *,
++    corpora: RftCorpora,
++    heldout_manifest: Sequence[Mapping[str, object]],
++    preconditions_checked: Sequence[PreconditionCheck],
++    trainer_smoke_passed: bool,
++    duration_s: float,
++) -> dict[str, object]:
++    """SCENARIO-LEARN-4077-NMATCH: report a completed three-arm corpus build."""
++
++    n_a = len(corpora.rft_correct)
++    n_b = len(corpora.rft_ablation)
++    n_c = len(corpora.gold_sft)
++    verdict = f"complete: rft_corpus_built_3arms_nA_{n_a}_nB_{n_b}_nC_{n_c}_precgate_PASS"
++    return _base_artifact(
++        honest_verdict=verdict,
++        metrics=metrics,
++        n_rft_correct=n_a,
++        n_rft_ablation=n_b,
++        n_gold_sft=n_c,
++        n_heldout_tasks=len(heldout_manifest),
++        runner_ready=True,
++        trainer_smoke_passed=trainer_smoke_passed,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++    )
++
++
++def artifact_schema_errors(artifact: Mapping[str, object]) -> list[str]:
++    """Validate the required bare Exp 4077 artifact fields."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str):
++        errors.append("honest_verdict must be a string")
++    elif not verdict.startswith(TERMINAL_PREFIXES):
++        errors.append("honest_verdict must be terminal-prefixed")
++
++    for field in ("certification_precision", "certification_recall"):
++        if field in artifact and not isinstance(artifact[field], int | float):
++            errors.append(f"{field} must be numeric")
++    for field in ("n_rft_correct", "n_rft_ablation", "n_gold_sft", "n_heldout_tasks"):
++        if field in artifact and type(artifact[field]) is not int:
++            errors.append(f"{field} must be a bare int")
++    for field in ("runner_ready", "trainer_smoke_passed"):
++        if field in artifact and type(artifact[field]) is not bool:
++            errors.append(f"{field} must be a bare bool")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        errors.append("inference_substrate must declare the Exp 4077 substrate")
++
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, list):
++        errors.append("preconditions_checked must be a list")
++    elif any(not isinstance(item, Mapping) or "resource" not in item or "available" not in item for item in preconditions):
++        errors.append("preconditions_checked entries must include resource and available")
++
++    if isinstance(verdict, str) and verdict.startswith("complete:"):
++        counts = [int(artifact.get(field, -1)) for field in ("n_rft_correct", "n_rft_ablation", "n_gold_sft")]
++        if len(set(counts)) != 1:
++            errors.append("complete artifacts must be N-matched across all three corpora")
++    if isinstance(verdict, str) and verdict.startswith("blocked_precision_gate_unmet"):
++        if any(int(artifact.get(field, 0) or 0) for field in ("n_rft_correct", "n_rft_ablation", "n_gold_sft")):
++            errors.append("precision-gate blocked artifacts must not include corpus rows")
++        if artifact.get("trainer_smoke_passed") is not False:
++            errors.append("precision-gate blocked artifacts must not smoke train")
++    return errors
++
++
++def write_corpus_jsonl(corpora: RftCorpora, output_dir: str | Path) -> dict[str, Path]:
++    """Write the three corpora as JSONL sidecars for the later Exp 4078 runner."""
++
++    root = Path(output_dir)
++    root.mkdir(parents=True, exist_ok=True)
++    mapping = {
++        "rft_correct": (root / "experiment_4077_rft_correct.jsonl", corpora.rft_correct),
++        "rft_ablation": (root / "experiment_4077_rft_ablation.jsonl", corpora.rft_ablation),
++        "gold_sft": (root / "experiment_4077_gold_sft.jsonl", corpora.gold_sft),
++    }
++    paths: dict[str, Path] = {}
++    for name, (path, rows) in mapping.items():
++        path.write_text(
++            "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows),
++            encoding="utf-8",
++        )
++        paths[name] = path
++    return paths
++
++
++def smoke_train_two_tasks(
++    corpora: RftCorpora,
++    *,
++    trainer_factory: Callable[[list[dict[str, object]], list[str]], bool] | None = None,
++) -> bool:
++    """REQ-LEARN-4077-5: run or delegate the two-task three-arm LoRA smoke."""
++
++    arms = ["rft_correct", "rft_ablation", "gold_sft"]
++    records = (corpora.rft_correct + corpora.rft_ablation + corpora.gold_sft)[:2]
++    if len(records) < 2:
++        return False
++    if trainer_factory is not None:
++        return bool(trainer_factory(records, arms))
++    return _run_trl_lora_smoke(records, arms)  # pragma: no cover - real smoke is gated by Phase 0
++
++
++def _run_trl_lora_smoke(records: list[dict[str, object]], arms: list[str]) -> bool:  # pragma: no cover
++    """Minimal real TRL/PEFT smoke path; skipped unless the precision gate passes."""
++
++    from datasets import Dataset
++    from peft import LoraConfig
++    from transformers import AutoModelForCausalLM, AutoTokenizer
++    from trl import SFTConfig, SFTTrainer
++
++    del arms
++    model_id = "Qwen/Qwen3.5-0.8B"
++    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True, trust_remote_code=True)
++    if tokenizer.pad_token is None:
++        tokenizer.pad_token = tokenizer.eos_token
++    model = AutoModelForCausalLM.from_pretrained(
++        model_id,
++        local_files_only=True,
++        trust_remote_code=True,
++        device_map="auto",
++    )
++    dataset = Dataset.from_list([{"text": str(row["text"])} for row in records[:2]])
++    peft_config = LoraConfig(
++        r=4,
++        lora_alpha=8,
++        lora_dropout=0.0,
++        bias="none",
++        task_type="CAUSAL_LM",
++        target_modules=["q_proj", "v_proj"],
++    )
++    args = SFTConfig(
++        output_dir=str(REPO_ROOT / "results" / "experiment_4077_lora_smoke"),
++        max_steps=1,
++        per_device_train_batch_size=1,
++        gradient_accumulation_steps=1,
++        learning_rate=1e-5,
++        logging_steps=1,
++        save_strategy="no",
++        report_to="none",
++        max_length=256,
++        bf16=False,
++        fp16=False,
++    )
++    trainer = SFTTrainer(
++        model=model,
++        args=args,
++        train_dataset=dataset,
++        processing_class=tokenizer,
++        peft_config=peft_config,
++    )
++    trainer.train()
++    return True
++
++
++def write_result_artifact(artifact: Mapping[str, object], path: str | Path) -> Path:
++    output_path = Path(path)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output_path
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    output_path: str | Path | None = None,
++    preconditions_checker: Callable[..., Sequence[PreconditionCheck]] = check_preconditions,
++    task_loader: Callable[..., tuple[Sequence[ArcTask], Sequence[ArcTask]] | tuple[Sequence[ArcTask], Sequence[ArcTask], Sequence[ArcTask]]] = load_default_task_splits,
++    program_loader: Callable[..., Mapping[str, Sequence[CandidateProgram]]] = load_program_checkpoint,
++    program_evaluator: Callable[[ArcTask, CandidateProgram], ProgramEvaluation] | None = None,
++    smoke_trainer: Callable[[RftCorpora], bool] | None = None,
++) -> dict[str, object]:
++    """REQ-LEARN-4077: run preconditions, precision gate, corpus build, and JSON write."""
++
++    start = time.perf_counter()
++    root = Path(repo_root)
++    checks = list(preconditions_checker(repo_root=root))
++    output = Path(output_path) if output_path is not None else root / "results" / RESULT_FILENAME
++    if _first_missing(checks) is not None:
++        artifact = build_precondition_blocked_artifact(checks, duration_s=time.perf_counter() - start)
++        write_result_artifact(artifact, output)
++        return artifact
++
++    split_result = task_loader(repo_root=root)
++    if len(split_result) == 2:
++        precision_tasks, heldin_tasks = split_result
++        heldout_tasks: Sequence[ArcTask] = ()
++    else:
++        precision_tasks, heldin_tasks, heldout_tasks = split_result
++
++    try:
++        programs_by_task = program_loader(root / DEFAULT_PROGRAM_CHECKPOINT, k_required=K_PROGRAMS_PER_TASK)
++    except TypeError:
++        programs_by_task = program_loader(repo_root=root)
++
++    precision_rows = evaluate_programs(
++        precision_tasks,
++        programs_by_task,
++        split="heldout",
++        program_evaluator=program_evaluator,
++    )
++    metrics = compute_certification_metrics(precision_rows)
++    if not metrics.gate_passed:
++        artifact = build_precision_blocked_artifact(
++            metrics,
++            preconditions_checked=checks,
++            n_heldout_tasks=len({task.task_id for task in precision_tasks}),
++            duration_s=time.perf_counter() - start,
++        )
++        write_result_artifact(artifact, output)
++        return artifact
++
++    heldin_rows = evaluate_programs(
++        heldin_tasks,
++        programs_by_task,
++        split="heldin",
++        program_evaluator=program_evaluator,
++    )
++    heldout_rows = evaluate_programs(
++        heldout_tasks,
++        programs_by_task,
++        split="heldout",
++        program_evaluator=program_evaluator,
++    )
++    all_rows = heldin_rows + heldout_rows
++    corpora = build_n_matched_corpora(all_rows)
++    manifest = build_heldout_eval_manifest(all_rows)
++    smoke_passed = smoke_trainer(corpora) if smoke_trainer is not None else smoke_train_two_tasks(corpora)
++    if any((corpora.rft_correct, corpora.rft_ablation, corpora.gold_sft)):
++        write_corpus_jsonl(corpora, output.parent)
++    artifact = build_complete_artifact(
++        metrics,
++        corpora=corpora,
++        heldout_manifest=manifest,
++        preconditions_checked=checks,
++        trainer_smoke_passed=bool(smoke_passed),
++        duration_s=time.perf_counter() - start,
++    )
++    write_result_artifact(artifact, output)
++    return artifact
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index f1285480cc..2b13bbad29 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:02:34.109501+00:00",
+-  "finished_at": "2026-06-12T05:02:34.134566+00:00",
+-  "duration_s": 0.025,
++  "started_at": "2026-06-12T05:45:27.254312+00:00",
++  "finished_at": "2026-06-12T05:45:27.278680+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index d78aa7e06a..29c620186d 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:02:34Z",
++  "run_date": "2026-06-12T05:45:27Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 5c7efa6863..12017b817e 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:02:35Z",
+-  "finished_at": "2026-06-12T05:02:35Z",
++  "started_at": "2026-06-12T05:45:28Z",
++  "finished_at": "2026-06-12T05:45:28Z",
+   "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 91a3f0f4e1..d78203a9a5 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:02:35Z",
++  "run_date": "2026-06-12T05:45:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 4f4c03e407..834d87791c 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-12T05:02:35Z",
++  "run_date": "2026-06-12T05:45:28Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 3d5c6c2c1e..397ef7a25f 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-12T05:01:12.535883Z",
+-  "duration_s": 0.06927251815795898,
++  "run_date": "2026-06-12T05:44:06.771714Z",
++  "duration_s": 0.13465046882629395,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0cbf6e6496c1e9ef70c2452115770d1131277d750e9b60532b6a72519bb82271",
++  "reproducibility_checksum": "fbd3cf3aba19cee6d4063c25b44a83a0c5db5f3263ff61cb46ee39d1b8db5023",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bd29adfe281b0ab84a103542127214bbfbe13721"
++    "adversarial_verify_version": "3f64dc4838644c7f7ad23de2d6050de7b88f3c99"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 96542235f3..c82a1d554b 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-12T05:01:12.689265Z",
+-  "duration_s": 0.12393498420715332,
++  "run_date": "2026-06-12T05:44:06.855387Z",
++  "duration_s": 0.05316901206970215,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "a423093b3a1ee3bd6d1873ed0082eebbc6800a363a38b324aa746c833a09f4bf",
++  "reproducibility_checksum": "f9beda4070503378c1b4d7410e72bef597fa566324892ae63ca15fbe3a6213e6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bd29adfe281b0ab84a103542127214bbfbe13721"
++    "adversarial_verify_version": "3f64dc4838644c7f7ad23de2d6050de7b88f3c99"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 24b86934d6..bbe80996a6 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.113819122314453,
++  "efficiency_gains_ms": 2.111673355102539,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index 8175e3d622..0ced8e2ee5 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.021337032318115234,
++  "duration_s": 0.025249719619750977,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index fbf76c31a7..1529c01e9c 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T05:02:13Z",
++  "run_date": "2026-06-12T05:45:08Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index a802b5a137..7dc779e2ca 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000084400177002,
++  "duration_s": 5.00008225440979,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index ed1f0e4f3a..e90f80ffc3 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000073909759521,
++  "duration_s": 10.000117540359497,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 275d773828..f71d00cad9 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.30543065071105957,
++  "duration_s": 0.2202439308166504,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index cda17098de..1ab669bdb3 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.05743598099797964,
++  "duration_s": 0.05665373301599175,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index 305d76de8c..af4eb66042 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,10 +1,10 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -13,8 +13,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -23,20 +23,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.8,
++        "architecture_only": 0.8,
++        "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,11 +45,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_low": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -67,15 +67,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -95,8 +95,8 @@
+     "tier_memory"
+   ],
+   "corpus_specific_verifiers": [
+-    "tier_transfer",
+-    "tier_specific"
++    "tier_specific",
++    "tier_transfer"
+   ],
+   "low_signal_verifiers": [
+     "tier_low"
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 33e5862817..5b87392a29 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0013744831085205078,
++  "duration_s": 0.0008890628814697266,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index bfae33ca68..d6aea8e9bd 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6289955712854862e-05,
++  "duration_s": 3.1239003874361515e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 5aa04f6f0a..e444364045 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.720664143562317e-07,
++  "duration_s": 4.0105078369379044e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index c17e502e15..46b3a6cf1e 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.5299530029296875e-05,
++  "duration_s": 4.38690185546875e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_4077_verifier_reward_rft_corpus_build.json b/results/experiment_4077_verifier_reward_rft_corpus_build.json
+new file mode 100644
+index 0000000000..7007a59e69
+--- /dev/null
++++ b/results/experiment_4077_verifier_reward_rft_corpus_build.json
+@@ -0,0 +1,63 @@
++{
++  "certification_precision": 0.6818,
++  "certification_recall": 1.0,
++  "duration_s": 5.6321884479839355,
++  "experiment": "experiment_4077_verifier_reward_rft_corpus_build",
++  "field_principles": {
++    "certification_precision": "Phase-0 gate: demo-perfect labels must predict test-gold at high precision.",
++    "certification_recall": "Usability gate: certification must retain a non-trivial share of gold programs.",
++    "n_gold_sft": "Oracle-label upper-bound corpus size matched where possible.",
++    "n_heldout_tasks": "Disjoint tasks reserved for precision/eval accounting.",
++    "n_rft_ablation": "Verifier-label ablation size matched to RFT-correct.",
++    "n_rft_correct": "RFT-correct corpus size after N matching; zero when the label is poisoned.",
++    "runner_ready": "Whether the corpus/trainer harness can be invoked after preconditions.",
++    "trainer_smoke_passed": "True only after the two-task LoRA smoke train runs."
++  },
++  "honest_verdict": "blocked_precision_gate_unmet_0.6818_1.0000",
++  "inference_substrate": "offline_arc_k8_execution_verifier_reward_lora_runner",
++  "n_gold_sft": 0,
++  "n_heldout_tasks": 3,
++  "n_rft_ablation": 0,
++  "n_rft_correct": 0,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "1 safetensors shard(s); trust_remote_code=False",
++      "resource": "hf_safetensors_qwen_qwen3_5_0_8b"
++    },
++    {
++      "available": true,
++      "detail": "1 safetensors shard(s); trust_remote_code=True",
++      "resource": "hf_safetensors_openbmb_minicpm5_1b"
++    },
++    {
++      "available": true,
++      "detail": "trl, peft, SFTTrainer, GRPOTrainer import",
++      "resource": "trl_peft_trainers"
++    },
++    {
++      "available": true,
++      "detail": "torch.cuda.is_available() is true",
++      "resource": "cuda_visible"
++    },
++    {
++      "available": true,
++      "detail": "31 entries at /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
++      "resource": "arc1_pool"
++    },
++    {
++      "available": true,
++      "detail": "31 entries at /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_eval_pool.json.gz",
++      "resource": "arc2_pool"
++    }
++  ],
++  "random_seed": 4077,
++  "runner_ready": true,
++  "schema": "carnot.experiment_4077_verifier_reward_rft_corpus_build.v1",
++  "spec_refs": [
++    "REQ-LEARN-4077",
++    "SCENARIO-LEARN-4077",
++    "SCENARIO-LEARN-4077-NMATCH"
++  ],
++  "trainer_smoke_passed": false
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 291a9d643d..ad4beffd4e 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:00:46Z",
+-  "finished_at": "2026-06-12T05:00:46Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-12T05:43:41Z",
++  "finished_at": "2026-06-12T05:43:41Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 693f92aa80..2aeeecb92b 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:00:46Z",
+-  "finished_at": "2026-06-12T05:00:46Z",
++  "started_at": "2026-06-12T05:43:41Z",
++  "finished_at": "2026-06-12T05:43:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index a322f6707e..2f189c200f 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260612",
+-  "started_at": "2026-06-12T05:00:46Z",
+-  "finished_at": "2026-06-12T05:00:47Z",
++  "started_at": "2026-06-12T05:43:41Z",
++  "finished_at": "2026-06-12T05:43:41Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py b/scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py
+new file mode 100644
+index 0000000000..045a585f0b
+--- /dev/null
++++ b/scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py
+@@ -0,0 +1,34 @@
++"""CLI entrypoint for Exp 4077 verifier-reward RFT corpus build."""
++
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++
++from carnot.agentic.arc_exp4077_verifier_reward_rft_corpus_build import (
++    REPO_ROOT,
++    RESULT_FILENAME,
++    run_experiment,
++)
++
++
++def parse_args() -> argparse.Namespace:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument(
++        "--output",
++        type=Path,
++        default=REPO_ROOT / "results" / RESULT_FILENAME,
++        help="Path for the terminal Exp 4077 JSON artifact.",
++    )
++    return parser.parse_args()
++
++
++def main() -> None:
++    args = parse_args()
++    artifact = run_experiment(output_path=args.output)
++    print(json.dumps(artifact, sort_keys=True))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py b/tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py
+new file mode 100644
+index 0000000000..d5e9d57270
+--- /dev/null
++++ b/tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py
+@@ -0,0 +1,519 @@
++"""Tests for Exp 4077 verifier-reward RFT corpus build.
++
++Spec refs: REQ-LEARN-4077, SCENARIO-LEARN-4077,
++SCENARIO-LEARN-4077-NMATCH.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.agentic import arc_exp4077_verifier_reward_rft_corpus_build as exp4077
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _preconditions(available: bool = True) -> list[exp4077.PreconditionCheck]:
++    return [
++        exp4077.PreconditionCheck("hf_safetensors_qwen_qwen3_5_0_8b", available, "test"),
++        exp4077.PreconditionCheck("hf_safetensors_openbmb_minicpm5_1b", available, "test"),
++        exp4077.PreconditionCheck("trl_peft_trainers", available, "test"),
++        exp4077.PreconditionCheck("cuda_visible", available, "test"),
++        exp4077.PreconditionCheck("arc1_pool", available, "test"),
++        exp4077.PreconditionCheck("arc2_pool", available, "test"),
++    ]
++
++
++def _eval(
++    task_id: str,
++    program_id: str,
++    *,
++    demo_perfect: bool,
++    test_gold: bool,
++    split: str = "heldin",
++) -> exp4077.ProgramEvaluation:
++    return exp4077.ProgramEvaluation(
++        task_id=task_id,
++        program_id=program_id,
++        code=f"def transform(grid):\n    return grid  # {task_id}-{program_id}\n",
++        source="fixture_generator_k8",
++        split=split,
++        demo_perfect=demo_perfect,
++        test_gold=test_gold,
++        verifier_energy=0.0 if demo_perfect else 1.0,
++        error="",
++    )
++
++
++def _passing_evaluations() -> list[exp4077.ProgramEvaluation]:
++    rows: list[exp4077.ProgramEvaluation] = []
++    for task_id in ("train-a", "train-b"):
++        rows.extend(
++            [
++                _eval(task_id, "correct-0", demo_perfect=True, test_gold=True),
++                _eval(task_id, "correct-1", demo_perfect=True, test_gold=True),
++                _eval(task_id, "ablate-0", demo_perfect=False, test_gold=False),
++                _eval(task_id, "ablate-1", demo_perfect=False, test_gold=False),
++                _eval(task_id, "gold-0", demo_perfect=False, test_gold=True),
++                _eval(task_id, "gold-1", demo_perfect=False, test_gold=True),
++            ]
++        )
++    rows.extend(
++        [
++            _eval("eval-heldout", "heldout-0", demo_perfect=True, test_gold=True, split="heldout"),
++            _eval("eval-heldout", "heldout-1", demo_perfect=False, test_gold=False, split="heldout"),
++        ]
++    )
++    return rows
++
++
++def test_req_learn_4077_spec_declares_contract() -> None:
++    """REQ-LEARN-4077: OpenSpec declares the gate, arms, and artifact fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4077" in spec
++    assert "SCENARIO-LEARN-4077" in spec
++    assert "SCENARIO-LEARN-4077-NMATCH" in spec
++    assert "experiment_4077_verifier_reward_rft_corpus_build.json" in spec
++    assert "Qwen/Qwen3.5-0.8B" in spec
++    assert "openbmb/MiniCPM5-1B" in spec
++    for field in exp4077.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++
++
++def test_scenario_learn_4077_precision_gate_blocks_poisoned_labels() -> None:
++    """SCENARIO-LEARN-4077: low certification precision blocks corpus building."""
++
++    evaluations = [
++        _eval("heldout", "p0", demo_perfect=True, test_gold=True, split="heldout"),
++        _eval("heldout", "p1", demo_perfect=True, test_gold=False, split="heldout"),
++        _eval("heldout", "p2", demo_perfect=True, test_gold=False, split="heldout"),
++        _eval("heldout", "p3", demo_perfect=False, test_gold=True, split="heldout"),
++    ]
++    metrics = exp4077.compute_certification_metrics(evaluations)
++    artifact = exp4077.build_precision_blocked_artifact(
++        metrics,
++        preconditions_checked=_preconditions(),
++        n_heldout_tasks=1,
++        duration_s=0.25,
++    )
++
++    assert metrics.precision == pytest.approx(1 / 3)
++    assert metrics.recall == pytest.approx(1 / 2)
++    assert artifact["honest_verdict"] == "blocked_precision_gate_unmet_0.3333_0.5000"
++    assert artifact["n_rft_correct"] == 0
++    assert artifact["n_rft_ablation"] == 0
++    assert artifact["n_gold_sft"] == 0
++    assert artifact["trainer_smoke_passed"] is False
++    assert exp4077.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4077_nmatch_builds_three_equal_arms(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4077-NMATCH: passing gate yields task-matched corpora."""
++
++    rows = _passing_evaluations()
++    metrics = exp4077.compute_certification_metrics([row for row in rows if row.split == "heldout"])
++    corpora = exp4077.build_n_matched_corpora(rows)
++    manifest = exp4077.build_heldout_eval_manifest(rows)
++    artifact = exp4077.build_complete_artifact(
++        metrics,
++        corpora=corpora,
++        heldout_manifest=manifest,
++        preconditions_checked=_preconditions(),
++        trainer_smoke_passed=True,
++        duration_s=0.5,
++    )
++
++    assert metrics.gate_passed is True
++    assert len(corpora.rft_correct) == len(corpora.rft_ablation) == len(corpora.gold_sft) == 4
++    assert artifact["n_rft_correct"] == artifact["n_rft_ablation"] == artifact["n_gold_sft"] == 4
++    assert artifact["honest_verdict"] == "complete: rft_corpus_built_3arms_nA_4_nB_4_nC_4_precgate_PASS"
++    assert artifact["trainer_smoke_passed"] is True
++    assert artifact["n_heldout_tasks"] == 1
++    assert {item["task_id"] for item in corpora.rft_correct}.isdisjoint(
++        {item["task_id"] for item in manifest}
++    )
++    assert all(item["demo_perfect"] is False for item in corpora.rft_ablation)
++    assert all(item["test_gold"] is True for item in corpora.gold_sft)
++    assert exp4077.artifact_schema_errors(artifact) == []
++
++    paths = exp4077.write_corpus_jsonl(corpora, tmp_path)
++    assert set(paths) == {"rft_correct", "rft_ablation", "gold_sft"}
++    assert paths["rft_correct"].read_text(encoding="utf-8").count("\n") == 4
++
++
++def test_req_learn_4077_evaluates_programs_with_sandbox_and_verifier() -> None:
++    """REQ-LEARN-4077-1: transform programs are executed and verifier-scored."""
++
++    task = exp4077.ArcTask(
++        task_id="identity",
++        pool_name="fixture",
++        demos=[
++            {
++                "input": [[1, 2], [3, 4]],
++                "output": [[1, 2], [3, 4]],
++            }
++        ],
++        test_input=[[5, 6]],
++        candidates=[{"grid": [[5, 6]], "correct": True}],
++    )
++    program = exp4077.CandidateProgram(
++        task_id="identity",
++        program_id="identity-0",
++        code="def transform(grid):\n    return grid\n",
++        source="fixture_generator_k8",
++    )
++
++    evaluation = exp4077.evaluate_program(task, program)
++
++    assert evaluation.demo_perfect is True
++    assert evaluation.test_gold is True
++    assert evaluation.verifier_energy == 0.0
++    assert evaluation.error == ""
++
++    broken = exp4077.evaluate_program(
++        task,
++        exp4077.CandidateProgram(
++            task_id="identity",
++            program_id="broken",
++            code="def transform(grid):\n    raise RuntimeError('boom')\n",
++            source="fixture_generator_k8",
++        ),
++    )
++    assert broken.demo_perfect is False
++    assert broken.test_gold is False
++    assert "RuntimeError" in broken.error
++
++
++def test_req_learn_4077_precondition_checks_are_honest(tmp_path: Path) -> None:
++    """REQ-LEARN-4077: missing mandatory resources block before corpus work."""
++
++    hf_root = tmp_path / "hub"
++    qwen = hf_root / "models--Qwen--Qwen3.5-0.8B" / "snapshots" / "sha"
++    qwen.mkdir(parents=True)
++    (qwen / "config.json").write_text("{}", encoding="utf-8")
++    (qwen / "model-00001-of-00001.safetensors").write_text("weights", encoding="utf-8")
++
++    missing = exp4077.check_hf_safetensors_model(
++        "openbmb/MiniCPM5-1B",
++        cache_root=hf_root,
++        trust_remote_code=True,
++    )
++    present = exp4077.check_hf_safetensors_model("Qwen/Qwen3.5-0.8B", cache_root=hf_root)
++    blocked = exp4077.build_precondition_blocked_artifact(
++        [present, missing],
++        duration_s=0.1,
++    )
++
++    assert present.available is True
++    assert missing.available is False
++    assert blocked["honest_verdict"] == "blocked_hf_safetensors_openbmb_minicpm5_1b"
++    assert blocked["runner_ready"] is False
++    assert exp4077.artifact_schema_errors(blocked) == []
++
++    gguf_only = hf_root / "models--owner--GGUFOnly" / "snapshots" / "sha"
++    gguf_only.mkdir(parents=True)
++    (gguf_only / "model.gguf").write_text("weights", encoding="utf-8")
++    assert exp4077.check_hf_safetensors_model("owner/GGUFOnly", cache_root=hf_root).detail.startswith(
++        "gguf_only"
++    )
++
++    no_config = hf_root / "models--owner--NoConfig" / "snapshots" / "sha"
++    no_config.mkdir(parents=True)
++    (no_config / "model.safetensors").write_text("weights", encoding="utf-8")
++    assert "config.json missing" in exp4077.check_hf_safetensors_model(
++        "owner/NoConfig",
++        cache_root=hf_root,
++    ).detail
++
++
++def test_req_learn_4077_run_experiment_writes_blocked_or_complete(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-4077: runner writes stable JSON and does not train on failed gate."""
++
++    output_path = tmp_path / "artifact.json"
++    artifact = exp4077.run_experiment(
++        repo_root=tmp_path,
++        output_path=output_path,
++        preconditions_checker=lambda **_: _preconditions(),
++        task_loader=lambda **_: (
++            [
++                exp4077.ArcTask("heldout", "arc1", [], [], []),
++            ],
++            [
++                exp4077.ArcTask("heldout2", "arc1", [], [], []),
++            ],
++        ),
++        program_loader=lambda **_: {
++            "heldout": [
++                exp4077.CandidateProgram("heldout", "p0", "code", "fixture"),
++                exp4077.CandidateProgram("heldout", "p1", "code", "fixture"),
++            ],
++            "heldout2": [],
++        },
++        program_evaluator=lambda task, program: _eval(
++            task.task_id,
++            program.program_id,
++            demo_perfect=True,
++            test_gold=(program.program_id == "p0"),
++            split="heldout",
++        ),
++        smoke_trainer=lambda *_, **__: True,
++    )
++
++    loaded = json.loads(output_path.read_text(encoding="utf-8"))
++    assert loaded == artifact
++    assert artifact["honest_verdict"] == "blocked_precision_gate_unmet_0.5000_1.0000"
++    assert artifact["trainer_smoke_passed"] is False
++
++    blocked_output = tmp_path / "blocked.json"
++    blocked = exp4077.run_experiment(
++        repo_root=tmp_path,
++        output_path=blocked_output,
++        preconditions_checker=lambda **_: _preconditions(False),
++    )
++    assert blocked["honest_verdict"] == "blocked_hf_safetensors_qwen_qwen3_5_0_8b"
++    assert json.loads(blocked_output.read_text(encoding="utf-8")) == blocked
++
++
++def test_req_learn_4077_loaders_and_schema_defensive_branches(
++    tmp_path: Path,
++) -> None:
++    """REQ-LEARN-4077: loaders reject malformed pools and preserve k>=8 contracts."""
++
++    pool_path = tmp_path / "pool.json.gz"
++    with gzip.open(pool_path, "wt", encoding="utf-8") as handle:
++        json.dump(
++            {
++                "entries": [
++                    "skip-me",
++                    {"task": "", "demos": []},
++                    {
++                        "task": "task-a",
++                        "demos": [{"input": [[1]], "output": [[1]]}],
++                        "test_input": [[1]],
++                        "candidates": [{"grid": [[1]], "correct": True}],
++                    },
++                ]
++            },
++            handle,
++        )
++    loaded = exp4077.load_arc_pool(pool_path, pool_name="arc1")
++    assert [task.task_id for task in loaded] == ["task-a"]
++    assert exp4077.check_arc_pool(pool_path, "arc1_pool").available is True
++    assert exp4077.check_arc_pool(tmp_path / "missing.json", "arc1_pool").available is False
++
++    bad_pool = tmp_path / "bad_pool.json"
++    bad_pool.write_text(json.dumps({"not_entries": []}), encoding="utf-8")
++    with pytest.raises(ValueError, match="entries list"):
++        exp4077.load_arc_pool(bad_pool, pool_name="bad")
++
++    empty_pool = tmp_path / "empty_pool.json"
++    empty_pool.write_text(json.dumps({"entries": [{"task": ""}]}), encoding="utf-8")
++    with pytest.raises(ValueError, match="no usable ARC tasks"):
++        exp4077.load_arc_pool(empty_pool, pool_name="empty")
++
++    checkpoint = tmp_path / "checkpoint.json"
++    checkpoint.write_text(
++        json.dumps(
++            {
++                "tasks": {
++                    "task-a": [
++                        {"code": "def transform(grid):\n    return grid\n", "draw_index": idx}
++                        for idx in range(8)
++                    ],
++                    "too-short": [{"code": "def transform(grid):\n    return grid\n"}],
++                    "bad-row": ["not a mapping"] * 8,
++                }
++            }
++        ),
++        encoding="utf-8",
++    )
++    programs = exp4077.load_program_checkpoint(checkpoint)
++    assert len(programs["task-a"]) == 8
++    assert programs["task-a"][0].program_id == "task-a:draw0"
++
++    malformed_checkpoint = tmp_path / "malformed_checkpoint.json"
++    malformed_checkpoint.write_text(json.dumps({"tasks": []}), encoding="utf-8")
++    with pytest.raises(ValueError, match="tasks mapping"):
++        exp4077.load_program_checkpoint(malformed_checkpoint)
++    no_k_checkpoint = tmp_path / "no_k_checkpoint.json"
++    no_k_checkpoint.write_text(json.dumps({"tasks": {"x": []}}), encoding="utf-8")
++    with pytest.raises(ValueError, match="no tasks"):
++        exp4077.load_program_checkpoint(no_k_checkpoint)
++
++    assert exp4077._normalize_grid(np.array([[1]])) == [[1]]
++    assert exp4077._normalize_grid(((1, 2),)) == [[1, 2]]
++
++    bad_artifact = {
++        "honest_verdict": "bad",
++        "certification_precision": "x",
++        "certification_recall": 0.0,
++        "n_rft_correct": False,
++        "n_rft_ablation": 1,
++        "n_gold_sft": 2,
++        "n_heldout_tasks": 0,
++        "runner_ready": "yes",
++        "trainer_smoke_passed": False,
++        "preconditions_checked": [{}],
++        "inference_substrate": "wrong",
++    }
++    errors = exp4077.artifact_schema_errors(bad_artifact)
++    assert "honest_verdict must be terminal-prefixed" in errors
++    assert "certification_precision must be numeric" in errors
++    assert "n_rft_correct must be a bare int" in errors
++    assert "runner_ready must be a bare bool" in errors
++    assert "preconditions_checked entries must include resource and available" in errors
++
++    mismatched = dict(bad_artifact, honest_verdict="complete: x", n_rft_correct=1, runner_ready=True)
++    assert "complete artifacts must be N-matched across all three corpora" in exp4077.artifact_schema_errors(
++        mismatched
++    )
++    poisoned = dict(
++        bad_artifact,
++        honest_verdict="blocked_precision_gate_unmet_0.1_1.0",
++        certification_precision=0.1,
++        n_rft_correct=1,
++        runner_ready=True,
++        trainer_smoke_passed=True,
++        preconditions_checked=[{"resource": "x", "available": True}],
++        inference_substrate=exp4077.INFERENCE_SUBSTRATE,
++    )
++    poison_errors = exp4077.artifact_schema_errors(poisoned)
++    assert "precision-gate blocked artifacts must not include corpus rows" in poison_errors
++    assert "precision-gate blocked artifacts must not smoke train" in poison_errors
++
++    missing_errors = exp4077.artifact_schema_errors({})
++    assert "missing required field honest_verdict" in missing_errors
++    assert "honest_verdict must be a string" in missing_errors
++    assert "preconditions_checked must be a list" in missing_errors
++
++
++def test_req_learn_4077_default_split_and_complete_runner_path(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """SCENARIO-LEARN-4077-NMATCH: runner can complete when the gate passes."""
++
++    results_dir = tmp_path / "results"
++    results_dir.mkdir()
++    task_ids = tuple(f"task-{idx:02d}" for idx in range(12))
++    pool_entries = [
++        {
++            "task": task_id,
++            "demos": [{"input": [[1]], "output": [[1]]}],
++            "test_input": [[1]],
++            "candidates": [{"grid": [[1]], "correct": True}],
++        }
++        for task_id in task_ids
++    ]
++    with gzip.open(results_dir / "arc3_gap3_stage2_eval_pool.json.gz", "wt", encoding="utf-8") as handle:
++        json.dump({"entries": pool_entries}, handle)
++    (results_dir / "experiment_4012_gap4_local_best_of_n.checkpoint.json").write_text(
++        json.dumps(
++            {
++                "tasks": {
++                    task_id: [
++                        {"code": "def transform(grid):\n    return grid\n", "draw_index": idx}
++                        for idx in range(2)
++                    ]
++                    for task_id in task_ids
++                }
++            }
++        ),
++        encoding="utf-8",
++    )
++    precision, heldin, eval_tasks = exp4077.load_default_task_splits(repo_root=tmp_path, k_required=2)
++    assert [task.task_id for task in precision] == ["task-00", "task-01", "task-02", "task-03"]
++    assert [task.task_id for task in heldin] == ["task-04", "task-05", "task-06", "task-07"]
++    assert [task.task_id for task in eval_tasks] == ["task-08", "task-09", "task-10", "task-11"]
++
++    small3 = tmp_path / "small3"
++    (small3 / "results").mkdir(parents=True)
++    with gzip.open(small3 / "results" / "arc3_gap3_stage2_eval_pool.json.gz", "wt", encoding="utf-8") as handle:
++        json.dump({"entries": pool_entries[:3]}, handle)
++    (small3 / "results" / "experiment_4012_gap4_local_best_of_n.checkpoint.json").write_text(
++        json.dumps(
++            {
++                "tasks": {
++                    task_id: [{"code": "x"}] * 2
++                    for task_id in ("task-00", "task-01", "task-02")
++                }
++            }
++        ),
++        encoding="utf-8",
++    )
++    small_precision, small_heldin, small_eval = exp4077.load_default_task_splits(repo_root=small3, k_required=2)
++    assert [task.task_id for task in small_precision] == ["task-00", "task-01", "task-02"]
++    assert small_heldin == []
++    assert small_eval == []
++
++    monkeypatch.setattr(exp4077, "DEFAULT_PROGRAM_CHECKPOINT", Path("programs.json"))
++    (tmp_path / "programs.json").write_text(
++        json.dumps(
++            {
++                "tasks": {
++                    "precision": [{"code": "p"}] * 8,
++                    "train": [{"code": "t"}] * 8,
++                    "eval": [{"code": "e"}] * 8,
++                }
++            }
++        ),
++        encoding="utf-8",
++    )
++    precision_task = exp4077.ArcTask("precision", "arc1", [], [], [])
++    train_task = exp4077.ArcTask("train", "arc1", [], [], [])
++    eval_task = exp4077.ArcTask("eval", "arc1", [], [], [])
++
++    def evaluator(task: exp4077.ArcTask, program: exp4077.CandidateProgram) -> exp4077.ProgramEvaluation:
++        if task.task_id == "precision":
++            return _eval(task.task_id, program.program_id, demo_perfect=True, test_gold=True, split="wrong")
++        suffix = int(program.program_id.rsplit("draw", 1)[1])
++        if task.task_id == "train":
++            return _eval(
++                task.task_id,
++                program.program_id,
++                demo_perfect=suffix in (0, 1),
++                test_gold=suffix in (0, 1, 4, 5),
++                split="wrong",
++            )
++        return _eval(task.task_id, program.program_id, demo_perfect=False, test_gold=False, split="wrong")
++
++    artifact = exp4077.run_experiment(
++        repo_root=tmp_path,
++        preconditions_checker=lambda **_: _preconditions(),
++        task_loader=lambda **_: ([precision_task], [train_task], [eval_task]),
++        program_evaluator=evaluator,
++        smoke_trainer=lambda corpora: exp4077.smoke_train_two_tasks(
++            corpora,
++            trainer_factory=lambda records, arms: len(records) == 2 and arms == ["rft_correct", "rft_ablation", "gold_sft"],
++        ),
++    )
++
++    assert artifact["honest_verdict"] == "complete: rft_corpus_built_3arms_nA_2_nB_2_nC_2_precgate_PASS"
++    assert artifact["trainer_smoke_passed"] is True
++    assert (tmp_path / "results" / exp4077.RESULT_FILENAME).exists()
++    assert (tmp_path / "results" / "experiment_4077_rft_correct.jsonl").exists()
++
++    assert exp4077.smoke_train_two_tasks(exp4077.RftCorpora([], [], []), trainer_factory=lambda *_: True) is False
++
++    too_small = tmp_path / "small"
++    (too_small / "results").mkdir(parents=True)
++    with gzip.open(too_small / "results" / "arc3_gap3_stage2_eval_pool.json.gz", "wt", encoding="utf-8") as handle:
++        json.dump({"entries": pool_entries[:2]}, handle)
++    (too_small / "results" / "experiment_4012_gap4_local_best_of_n.checkpoint.json").write_text(
++        json.dumps({"tasks": {"a": [{"code": "x"}] * 2, "b": [{"code": "x"}] * 2}}),
++        encoding="utf-8",
++    )
++    monkeypatch.setattr(exp4077, "DEFAULT_PROGRAM_CHECKPOINT", Path("results/experiment_4012_gap4_local_best_of_n.checkpoint.json"))
++    with pytest.raises(ValueError, match="fewer than three"):
++        exp4077.load_default_task_splits(repo_root=too_small, k_required=2)
+-- 
+2.55.0
+

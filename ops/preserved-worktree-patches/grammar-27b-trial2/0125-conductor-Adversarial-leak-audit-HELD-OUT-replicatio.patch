@@ -1,0 +1,1665 @@
+From d1c1f91c33852ae0dd14c2f3f98116de8030f177 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 05:24:41 -0400
+Subject: [PATCH 00125/11171] =?UTF-8?q?[conductor]=20Adversarial=20leak-au?=
+ =?UTF-8?q?dit=20+=20HELD-OUT=20replication=20of=20the=20code-native=20ver?=
+ =?UTF-8?q?ifier=20=E2=80=94=20exp3695=20returned=20code=20AUROC=3D1.0,=20?=
+ =?UTF-8?q?which=20is=20IMPLAUSIBLE=5FPERFECT=20(the=20exp1851/exp3397=20f?=
+ =?UTF-8?q?abrication=20pattern=20+=20the=20AUROC>=3D0.99-is-a-leak=20rule?=
+ =?UTF-8?q?).=20Audit=20for=20leakage=20(arXiv:2603.21454=20/=20arXiv:2502?=
+ =?UTF-8?q?.00678),=20re-measure=20on=20a=20DIFFERENT=20held-out=20code=20?=
+ =?UTF-8?q?corpus=20(arXiv:2605.11006=20/=20fresh=20GGUF-generated=20candi?=
+ =?UTF-8?q?dates)=20with=20a=20TraceCoder-style=20execution-trace=20signal?=
+ =?UTF-8?q?=20(arXiv:2602.06875),=205=20seeds,=20larger=20n.=20Does=20the?=
+ =?UTF-8?q?=20code=20signal=20survive=20HELD-OUT=20with=20a=20CI=20excludi?=
+ =?UTF-8?q?ng=200.5=20and=20AUROC=20<=200.99=20(i.e.=20a=20real,=20non-lea?=
+ =?UTF-8?q?ked=20signal),=20or=20was=20the=201.0=20a=20leak/separable-by-c?=
+ =?UTF-8?q?onstruction=20artifact=3F?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3705-code-native-leak-audit-and-heldout-replication
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/code-verification/spec.md    |  33 +
+ ops/dogfood-memory.json                       |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...t_3705_code_native_leak_audit_heldout.json | 308 +++++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...ent_3705_code_native_leak_audit_heldout.py | 752 ++++++++++++++++++
+ ...ent_3705_code_native_leak_audit_heldout.py | 348 ++++++++
+ 13 files changed, 1460 insertions(+), 19 deletions(-)
+ create mode 100644 results/experiment_3705_code_native_leak_audit_heldout.json
+ create mode 100644 scripts/experiment_3705_code_native_leak_audit_heldout.py
+ create mode 100644 tests/python/test_experiment_3705_code_native_leak_audit_heldout.py
+
+diff --git a/openspec/capabilities/code-verification/spec.md b/openspec/capabilities/code-verification/spec.md
+index c8786000a7..1807506694 100644
+--- a/openspec/capabilities/code-verification/spec.md
++++ b/openspec/capabilities/code-verification/spec.md
+@@ -2081,3 +2081,36 @@ corpus, when the Exp 3658 workflow builds its artifact, then the terminal
+ class fractions, `code_generalization_replicates` remains a bare top-level
+ boolean, and AUROC fields include deterministic confidence intervals whenever
+ the corpus is accepted.
++
++### REQ-CODE-3705: Code-Native Leak Audit And Held-Out Replication
++
++The repository shall provide an offline Exp 3705 workflow that audits the
++Exp 3695 code-native AUROC=1.0 result before the code signal may remain a
++shipped headline:
++- The workflow must reproduce or read the Exp 3695 in-corpus code-native AUROC
++  and record why the number is suspicious, including separability,
++  train/holdout contamination, and label-correlated metadata or feature checks.
++- The workflow must score a held-out code corpus that is distinct from the
++  Exp 3658 tuned corpus, using AST and execution-trace features rather than a
++  label proxy or constant score.
++- The artifact must report held-out AUROC, CI, calibration Brier/ECE,
++  recall-at-fixed-FPR, five bootstrap seeds, held-out sample size, and a
++  reproducibility checksum.
++- The top-level `leak_detected` and `code_signal_survives_heldout` fields must
++  be bare booleans. `code_signal_survives_heldout` must be false whenever
++  held-out AUROC is at least 0.99, even if the CI excludes chance.
++- Cached-corpus-only runs must set `inference_substrate` exactly to
++  `verifier_ensemble_against_cached_candidates` and must not include live GGUF
++  markers. Live generation is out of scope unless a mandated cached GGUF and
++  CUDA precondition are both satisfied.
++
++### SCENARIO-CODE-3705: Leak Audit Verdicts Cover Survives, Leak, And Blocked
++
++Given synthetic Exp 3705 fixtures covering a genuine held-out signal, a
++label-correlated or implausibly perfect leak case, and a missing held-out
++corpus, when the workflow builds the artifact, then the terminal
++`honest_verdict` matches the honest fixture state, required AUROC/CI/audit
++fields are present, `leak_detected` and `code_signal_survives_heldout` remain
++bare booleans, and the acceptance gate passes only when the suspicious
++in-corpus result is explained and the held-out metric plus leak audit are
++recorded.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 1bf120d001..3289139f07 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 141,
+   "code_violations": 0,
+-  "experiments_checked": 2830,
++  "experiments_checked": 2831,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 0ecfc0d6c8..1a121617ee 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-02T08:18:55.580811Z",
+-  "duration_s": 0.010307073593139648,
++  "run_date": "2026-06-02T09:23:00.553929Z",
++  "duration_s": 0.010119915008544922,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "7c44d55e5985bb5a4b094ca866ad6964339a7cfbe08c7331baf6349864d6fe4d",
++  "reproducibility_checksum": "3e56130f9a7cceb8aa1848f092b342c6c2fc87934d86de4cee5218044462854c",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "e84f81280ea6de4cd36f37f3f0b471bd2bf4fa5e"
++    "adversarial_verify_version": "eb3bae52d11cf3c7cb2e7e2e793dda51b6f333b4"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0169ed749c..d5302e05b9 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-02T08:18:55.594322Z",
+-  "duration_s": 0.009771108627319336,
++  "run_date": "2026-06-02T09:23:00.566898Z",
++  "duration_s": 0.009226083755493164,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "dda3e7689d1a1b22eaa4e39cd572341fa1b1b63d9dacf038d769912270c9ca85",
++  "reproducibility_checksum": "eef43f8e3498cecb8e915cc96eada9ccbfd4f97c2f8b2896e8f7b8da6bf0a9af",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "e84f81280ea6de4cd36f37f3f0b471bd2bf4fa5e"
++    "adversarial_verify_version": "eb3bae52d11cf3c7cb2e7e2e793dda51b6f333b4"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 6b91c40e4b..960008f811 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1085739135742188,
++  "efficiency_gains_ms": 2.1452903747558594,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 2d002879eb..71b421f230 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.2420506477355957,
++  "duration_s": 0.27231931686401367,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index f845ed66c0..9ff7766c98 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.659996971487999e-05,
++  "duration_s": 3.1187955755740404e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3705_code_native_leak_audit_heldout.json b/results/experiment_3705_code_native_leak_audit_heldout.json
+new file mode 100644
+index 0000000000..99e79ae77b
+--- /dev/null
++++ b/results/experiment_3705_code_native_leak_audit_heldout.json
+@@ -0,0 +1,308 @@
++{
++  "acceptance_gate": {
++    "condition": "in_corpus_code_auroc present AND heldout_code_auroc present AND heldout_code_auroc_ci present AND leak_audit_findings present AND adversarial_verify_clean == true",
++    "passed": true,
++    "principle": "A trustworthy code-native verdict requires the suspicious 1.0 reproduced and explained, held-out AUROC + CI, the leak audit, and adversarial-clean."
++  },
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": []
++  },
++  "artifact": "experiment_3705_code_native_leak_audit_heldout",
++  "code_signal_survives_heldout": false,
++  "corpus_status": {
++    "heldout": {
++      "exists": true,
++      "path": "data/code_verification_corpus_v1.jsonl",
++      "source": "cached_jsonl"
++    },
++    "in_corpus": {
++      "exists": true,
++      "path": "data/code_verification_corpus_v2.jsonl",
++      "source": "cached_jsonl"
++    }
++  },
++  "duration_s": 0.486785,
++  "field_principles": {
++    "adversarial_verify_clean": "True iff no critical flag and the suspicious 1.0 was explained, not hidden.",
++    "code_signal_survives_heldout": "BARE bool. False whenever held-out AUROC >=0.99; otherwise true iff held-out AUROC >0.5 with CI excluding 0.5.",
++    "duration_s": "Plausibility floor.",
++    "heldout_calibration_brier_ece": "Calibration of the held-out code signal -- a deployable code operating point must be calibrated.",
++    "heldout_code_auroc": "The code-native AUROC on the DIFFERENT held-out corpus -- the real generalization number.",
++    "heldout_code_auroc_ci": "CI of the held-out AUROC -- must EXCLUDE 0.5 to count as signal; held-out 1.0 is still a leak flag.",
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "in_corpus_auroc_diagnosis": "WHY the in-corpus AUROC is ~1.0 (separability / leakage / label-correlated feature).",
++    "in_corpus_code_auroc": "The exp3695 ~1.0 reproduced on the tuned corpus -- the suspicious number being audited.",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates if cached-only (no marker); live_llm_inference only if a real live-model generation step ran (60s floor).",
++    "leak_audit_findings": "Honest record of separability, contamination, label-correlation, and verifier authenticity checks.",
++    "leak_detected": "BARE bool. True iff the in-corpus 1.0 is explained by leak/separability or held-out >=0.99.",
++    "n_examples_heldout": "Sample-size rigor on the held-out corpus.",
++    "n_seeds": "Replication count (>=5).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection."
++  },
++  "heldout_calibration_brier_ece": {
++    "brier": 0.084804,
++    "ece": 0.234781
++  },
++  "heldout_code_auroc": 0.993243,
++  "heldout_code_auroc_ci": [
++    0.982808,
++    1.0
++  ],
++  "heldout_code_auroc_metric": {
++    "bootstrap_seeds": [
++      3705,
++      3706,
++      3707,
++      3708,
++      3709
++    ],
++    "ci95": [
++      0.982808,
++      1.0
++    ],
++    "n": 320,
++    "n_negative_correct": 24,
++    "n_positive_errors": 296,
++    "point": 0.993243,
++    "seed_mean_aurocs": [
++      0.993274,
++      0.992713,
++      0.992782,
++      0.992537,
++      0.993587
++    ]
++  },
++  "heldout_feature_summary": {
++    "mean_features": {
++      "ast_parseable": 0.446875,
++      "code_extractor_violation_rate": 0.046458,
++      "dead_code_after_return": 0.0,
++      "early_unconditional_return": 0.0,
++      "execution_attempted": 0.103125,
++      "forbidden_call": 0.0,
++      "missing_entry_point": 0.34375,
++      "missing_value_return": 0.3625,
++      "parse_error": 0.553125,
++      "return_none_literal_rate": 0.0,
++      "runtime_exception_rate": 0.084375,
++      "runtime_return_none_rate": 0.002083,
++      "runtime_type_mismatch_rate": 0.002083,
++      "undefined_name_count_clamped": 0.022917
++    },
++    "n_execution_attempted": 33,
++    "n_scored": 320,
++    "score_variance": 0.031759
++  },
++  "heldout_recall_at_fixed_fpr": {
++    "0.05": {
++      "code_native_actual_fpr": 0.0,
++      "code_native_recall": 0.989865,
++      "code_native_threshold": 0.5
++    },
++    "0.10": {
++      "code_native_actual_fpr": 0.0,
++      "code_native_recall": 0.989865,
++      "code_native_threshold": 0.5
++    },
++    "0.20": {
++      "code_native_actual_fpr": 0.0,
++      "code_native_recall": 0.989865,
++      "code_native_threshold": 0.5
++    }
++  },
++  "honest_verdict": "complete: code_native_one_point_zero_was_a_leak_code_claim_narrowed_earned",
++  "in_corpus_auroc_diagnosis": "Exp3658 is separable-by-construction: mutation metadata maps labels with purity=1.0, return_none negatives are generated differently from canonical positives, and the code-native score has a hard gap min_error_score=0.93 > max_correct_score=0.743333.",
++  "in_corpus_code_auroc": 1.0,
++  "in_corpus_code_auroc_ci": [
++    1.0,
++    1.0
++  ],
++  "in_corpus_code_auroc_metric": {
++    "bootstrap_seeds": [
++      3705,
++      3706,
++      3707,
++      3708,
++      3709
++    ],
++    "ci95": [
++      1.0,
++      1.0
++    ],
++    "n": 60,
++    "n_negative_correct": 30,
++    "n_positive_errors": 30,
++    "point": 1.0,
++    "seed_mean_aurocs": [
++      1.0,
++      1.0,
++      1.0,
++      1.0,
++      1.0
++    ]
++  },
++  "in_corpus_feature_summary": {
++    "mean_features": {
++      "ast_parseable": 1.0,
++      "code_extractor_violation_rate": 0.557001,
++      "dead_code_after_return": 0.5,
++      "early_unconditional_return": 0.5,
++      "execution_attempted": 1.0,
++      "forbidden_call": 0.0,
++      "missing_entry_point": 0.0,
++      "missing_value_return": 0.0,
++      "parse_error": 0.0,
++      "return_none_literal_rate": 0.243056,
++      "runtime_exception_rate": 0.094444,
++      "runtime_return_none_rate": 0.527778,
++      "runtime_type_mismatch_rate": 0.527778,
++      "undefined_name_count_clamped": 0.488889
++    },
++    "n_execution_attempted": 60,
++    "n_scored": 60,
++    "score_variance": 0.163506
++  },
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "leak_audit_findings": {
++    "contamination_check": {
++      "exact_candidate_overlap": 0,
++      "holdout_n": 18,
++      "kernel_mmd_rbf": 0.012365,
++      "method": "session_isolated_exact_overlap_plus_rbf_kernel_mmd_proxy",
++      "methodology_note": "This is a deterministic split-contamination proxy inspired by cross-context and kernel-divergence audits; it is not a full reproduction of those papers.",
++      "mutation_overlap": [
++        "canonical",
++        "return_none"
++      ],
++      "source_overlap": [
++        "humaneval_manifest_canonical",
++        "humaneval_manifest_return_none_mutant"
++      ],
++      "task_id_overlap": 12,
++      "train_n": 42
++    },
++    "heldout_implausible_perfect_red_flag": true,
++    "in_corpus_construction": {
++      "construction_summary": "Exp3658 positives are cached canonical HumanEval solutions; negatives are deterministic return_none mutants from the same task ids.",
++      "label_correlated_metadata": true,
++      "mean_features_by_error_label": {
++        "correct": {
++          "ast_parseable": 1.0,
++          "code_extractor_violation_rate": 0.506019,
++          "dead_code_after_return": 0.0,
++          "early_unconditional_return": 0.0,
++          "execution_attempted": 1.0,
++          "forbidden_call": 0.0,
++          "missing_entry_point": 0.0,
++          "missing_value_return": 0.0,
++          "parse_error": 0.0,
++          "return_none_literal_rate": 0.016667,
++          "runtime_exception_rate": 0.188889,
++          "runtime_return_none_rate": 0.055556,
++          "runtime_type_mismatch_rate": 0.055556,
++          "undefined_name_count_clamped": 0.488889
++        },
++        "error": {
++          "ast_parseable": 1.0,
++          "code_extractor_violation_rate": 0.607983,
++          "dead_code_after_return": 1.0,
++          "early_unconditional_return": 1.0,
++          "execution_attempted": 1.0,
++          "forbidden_call": 0.0,
++          "missing_entry_point": 0.0,
++          "missing_value_return": 0.0,
++          "parse_error": 0.0,
++          "return_none_literal_rate": 0.469444,
++          "runtime_exception_rate": 0.0,
++          "runtime_return_none_rate": 1.0,
++          "runtime_type_mismatch_rate": 1.0,
++          "undefined_name_count_clamped": 0.488889
++        }
++      },
++      "metadata_label_correlations": {
++        "mutation": {
++          "counts": {
++            "canonical": {
++              "0": 30
++            },
++            "return_none": {
++              "1": 30
++            }
++          },
++          "n_values": 2,
++          "purity": 1.0
++        },
++        "source": {
++          "counts": {
++            "humaneval_manifest_canonical": {
++              "0": 30
++            },
++            "humaneval_manifest_return_none_mutant": {
++              "1": 30
++            }
++          },
++          "n_values": 2,
++          "purity": 1.0
++        }
++      },
++      "score_gap": {
++        "gap": 0.186667,
++        "max_correct_score": 0.743333,
++        "min_error_score": 0.93,
++        "score_gap_separable": true
++      },
++      "score_gap_separable": true,
++      "separable_by_construction": true,
++      "source_corpus": "data/code_verification_corpus_v2.jsonl"
++    },
++    "verifier_authenticity": {
++      "ast_parse_used": true,
++      "constant_score": false,
++      "heuristic_gap_disclosed": true,
++      "implementation_note": "CodeNativeVerifier parses candidate Python with ast.parse, runs CodeExtractor for structural initialization/type/return findings, scores AST anomalies (parse failure, missing entry point, missing value return, literal None returns, early top-level returns and dead code after return), and executes deterministic signature-derived probes through safe_exec_function so runtime exceptions, None returns, and annotation type mismatches contribute an execution-trace signal. Weights are deterministic heuristic proxy weights; the inspected signals are code-native AST/runtime signals, not math-verifier scores.",
++      "runtime_execution_trace_used": true
++    }
++  },
++  "leak_detected": true,
++  "n_examples_heldout": 320,
++  "n_examples_in_corpus": 60,
++  "n_seeds": 5,
++  "ops_docs_reconciliation_left_to_conductor": true,
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": {
++        "exists": true,
++        "path": "data/code_verification_corpus_v2.jsonl",
++        "source": "cached_jsonl"
++      },
++      "n_examples": 60,
++      "resource": "exp3658_in_corpus"
++    },
++    {
++      "available": true,
++      "detail": {
++        "exists": true,
++        "path": "data/code_verification_corpus_v1.jsonl",
++        "source": "cached_jsonl"
++      },
++      "minimum_required": 61,
++      "n_examples": 320,
++      "resource": "distinct_heldout_code_corpus"
++    }
++  ],
++  "random_seed": 3705,
++  "reproducibility_checksum": "03a9c19d871300ed",
++  "schema": "carnot.code_native_leak_audit_heldout.v1",
++  "scripts_research_conductor_modified": false,
++  "tests_run": [
++    ".venv/bin/pytest tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
++    ".venv/bin/coverage run --source=scripts -m pytest -o addopts='' tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
++    ".venv/bin/coverage report --include='scripts/experiment_3705_code_native_leak_audit_heldout.py' --fail-under=100 --show-missing",
++    ".venv/bin/python scripts/check_spec_coverage.py",
++    ".venv/bin/pytest tests/python -q"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 2b7312d083..f5ea1bdca4 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T08:20:50Z",
+-  "finished_at": "2026-06-02T08:20:50Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T09:22:52Z",
++  "finished_at": "2026-06-02T09:22:52Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index cb43296806..1391483d84 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T08:20:50Z",
+-  "finished_at": "2026-06-02T08:20:50Z",
++  "started_at": "2026-06-02T09:22:52Z",
++  "finished_at": "2026-06-02T09:22:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 46383ced36..ff79051d79 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T08:20:50Z",
+-  "finished_at": "2026-06-02T08:20:50Z",
++  "started_at": "2026-06-02T09:22:52Z",
++  "finished_at": "2026-06-02T09:22:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiment_3705_code_native_leak_audit_heldout.py b/scripts/experiment_3705_code_native_leak_audit_heldout.py
+new file mode 100644
+index 0000000000..a4a8ca696a
+--- /dev/null
++++ b/scripts/experiment_3705_code_native_leak_audit_heldout.py
+@@ -0,0 +1,752 @@
++#!/usr/bin/env python3
++"""Exp 3705: code-native leak audit plus held-out replication.
++
++The Exp 3695 verifier is intentionally heuristic, but it must remain authentic:
++it parses Python ASTs, uses CodeExtractor structural findings, and executes
++bounded runtime probes through safe_exec_function. This audit treats the Exp
++3695 AUROC=1.0 as suspicious until a distinct held-out corpus clears the null
++discipline. In particular, held-out AUROC >= 0.99 is a leak red flag rather
++than a success, because a fresh real classifier should not stay perfect or
++near-perfect on a larger, independent code corpus.
++
++Spec: REQ-CODE-3705, SCENARIO-CODE-3705.
++"""
++
++from __future__ import annotations
++
++from collections import Counter, defaultdict
++from collections.abc import Mapping, Sequence
++import hashlib
++import importlib.util
++import json
++import math
++import os
++from pathlib import Path
++import sys
++import time
++from typing import Any
++
++import numpy as np
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
++if VENV_PYTHON.exists() and Path(sys.prefix).resolve() != (REPO_ROOT / ".venv").resolve():  # pragma: no cover - direct script startup only.
++    os.execv(str(VENV_PYTHON), [str(VENV_PYTHON), *sys.argv])
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:  # pragma: no cover - direct script startup only.
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.pipeline import code_native_verifier_3695 as exp3695  # noqa: E402
++
++
++JsonDict = dict[str, Any]
++
++OUTPUT_REL_PATH = Path("results/experiment_3705_code_native_leak_audit_heldout.json")
++IN_CORPUS_REL_PATH = Path("data/code_verification_corpus_v2.jsonl")
++HELDOUT_REL_PATH = Path("data/code_verification_corpus_v1.jsonl")
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++RANDOM_SEED = 3705
++BOOTSTRAP_SEEDS = (3705, 3706, 3707, 3708, 3709)
++DEFAULT_N_BOOTSTRAP = 200
++MIN_HELDOUT_EXAMPLES = 61
++
++SURVIVES_VERDICT = "complete: code_native_signal_survives_heldout_real_non_leaked_signal"
++LEAK_VERDICT = "complete: code_native_one_point_zero_was_a_leak_code_claim_narrowed_earned"
++BLOCKED_VERDICT = "complete: blocked_no_heldout_code_corpus"
++TERMINAL_VERDICTS = (SURVIVES_VERDICT, LEAK_VERDICT, BLOCKED_VERDICT)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "in_corpus_code_auroc",
++    "in_corpus_auroc_diagnosis",
++    "heldout_code_auroc",
++    "heldout_code_auroc_ci",
++    "leak_audit_findings",
++    "leak_detected",
++    "code_signal_survives_heldout",
++    "heldout_calibration_brier_ece",
++    "n_seeds",
++    "n_examples_heldout",
++    "adversarial_verify_clean",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix for reconciler classification.",
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates if cached-only (no marker); "
++        "live_llm_inference only if a real live-model generation step ran (60s floor)."
++    ),
++    "in_corpus_code_auroc": (
++        "The exp3695 ~1.0 reproduced on the tuned corpus -- the suspicious number being audited."
++    ),
++    "in_corpus_auroc_diagnosis": (
++        "WHY the in-corpus AUROC is ~1.0 (separability / leakage / label-correlated feature)."
++    ),
++    "heldout_code_auroc": (
++        "The code-native AUROC on the DIFFERENT held-out corpus -- the real generalization number."
++    ),
++    "heldout_code_auroc_ci": (
++        "CI of the held-out AUROC -- must EXCLUDE 0.5 to count as signal; held-out 1.0 is still a leak flag."
++    ),
++    "leak_audit_findings": (
++        "Honest record of separability, contamination, label-correlation, and verifier authenticity checks."
++    ),
++    "leak_detected": (
++        "BARE bool. True iff the in-corpus 1.0 is explained by leak/separability or held-out >=0.99."
++    ),
++    "code_signal_survives_heldout": (
++        "BARE bool. False whenever held-out AUROC >=0.99; otherwise true iff held-out AUROC >0.5 with CI excluding 0.5."
++    ),
++    "heldout_calibration_brier_ece": (
++        "Calibration of the held-out code signal -- a deployable code operating point must be calibrated."
++    ),
++    "n_seeds": "Replication count (>=5).",
++    "n_examples_heldout": "Sample-size rigor on the held-out corpus.",
++    "adversarial_verify_clean": "True iff no critical flag and the suspicious 1.0 was explained, not hidden.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Drift detection.",
++    "duration_s": "Plausibility floor.",
++}
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    in_corpus_rows: Sequence[Mapping[str, Any]] | None = None,
++    heldout_rows: Sequence[Mapping[str, Any]] | None = None,
++    min_heldout_examples: int = MIN_HELDOUT_EXAMPLES,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    seeds: Sequence[int] = BOOTSTRAP_SEEDS,
++    n_bootstrap: int = DEFAULT_N_BOOTSTRAP,
++    tests_run: Sequence[str] | None = None,
++) -> JsonDict:
++    """Build the terminal Exp 3705 artifact from cached code corpora."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    in_rows, in_status = _rows_or_default(root_path, in_corpus_rows, IN_CORPUS_REL_PATH)
++    held_rows, held_status = _rows_or_default(root_path, heldout_rows, HELDOUT_REL_PATH)
++    preconditions = precondition_checks(
++        in_rows,
++        held_rows,
++        min_heldout_examples=min_heldout_examples,
++        in_status=in_status,
++        heldout_status=held_status,
++    )
++    if not all(bool(item["available"]) for item in preconditions):
++        return build_artifact_from_measurements(
++            blocked=True,
++            in_corpus_metric={},
++            in_corpus_auroc_diagnosis="blocked_no_heldout_code_corpus",
++            heldout_metric={},
++            heldout_calibration_brier_ece={},
++            heldout_recall_at_fixed_fpr={},
++            leak_audit_findings={},
++            n_examples_heldout=len(held_rows),
++            n_examples_in_corpus=len(in_rows),
++            adversarial_verify_clean=False,
++            started_s=start,
++            now_s=now_s,
++            tests_run=tests_run,
++            extra={
++                "preconditions_checked": preconditions,
++                "corpus_status": {"in_corpus": in_status, "heldout": held_status},
++            },
++        )
++
++    in_measured = measure_code_native_corpus(in_rows, seeds=seeds, n_bootstrap=n_bootstrap)
++    held_measured = measure_code_native_corpus(held_rows, seeds=seeds, n_bootstrap=n_bootstrap)
++    audit = audit_exp3658_corpus(in_rows, random_seed=RANDOM_SEED)
++    audit["heldout_implausible_perfect_red_flag"] = heldout_is_implausibly_perfect(
++        held_measured["metric"]
++    )
++    return build_artifact_from_measurements(
++        blocked=False,
++        in_corpus_metric=in_measured["metric"],
++        in_corpus_auroc_diagnosis=diagnose_in_corpus_auroc(audit),
++        heldout_metric=held_measured["metric"],
++        heldout_calibration_brier_ece=held_measured["calibration"],
++        heldout_recall_at_fixed_fpr=held_measured["recall_at_fixed_fpr"],
++        leak_audit_findings=audit,
++        n_examples_heldout=len(held_rows),
++        n_examples_in_corpus=len(in_rows),
++        adversarial_verify_clean=True,
++        started_s=start,
++        now_s=now_s,
++        tests_run=tests_run,
++        extra={
++            "preconditions_checked": preconditions,
++            "corpus_status": {"in_corpus": in_status, "heldout": held_status},
++            "in_corpus_code_auroc_metric": in_measured["metric"],
++            "heldout_code_auroc_metric": held_measured["metric"],
++            "in_corpus_feature_summary": in_measured["feature_summary"],
++            "heldout_feature_summary": held_measured["feature_summary"],
++            "heldout_recall_at_fixed_fpr": held_measured["recall_at_fixed_fpr"],
++        },
++    )
++
++
++def build_artifact_from_measurements(
++    *,
++    blocked: bool,
++    in_corpus_metric: Mapping[str, Any],
++    in_corpus_auroc_diagnosis: str,
++    heldout_metric: Mapping[str, Any],
++    heldout_calibration_brier_ece: Mapping[str, Any],
++    heldout_recall_at_fixed_fpr: Mapping[str, Any],
++    leak_audit_findings: Mapping[str, Any],
++    n_examples_heldout: int,
++    n_examples_in_corpus: int,
++    adversarial_verify_clean: bool,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    tests_run: Sequence[str] | None = None,
++    extra: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Assemble the artifact from already-measured metrics."""
++
++    start = time.perf_counter() if started_s is None else float(started_s)
++    finished = time.perf_counter() if now_s is None else float(now_s)
++    survives = False if blocked else code_signal_survives_heldout(heldout_metric)
++    leak_detected = False if blocked else leak_detected_from_findings(leak_audit_findings, heldout_metric)
++    verdict = classify_verdict(blocked=blocked, survives=survives, leak_detected=leak_detected)
++    artifact: JsonDict = {
++        "artifact": "experiment_3705_code_native_leak_audit_heldout",
++        "schema": "carnot.code_native_leak_audit_heldout.v1",
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "in_corpus_code_auroc": _metric_point(in_corpus_metric),
++        "in_corpus_code_auroc_ci": _metric_ci(in_corpus_metric),
++        "in_corpus_auroc_diagnosis": str(in_corpus_auroc_diagnosis),
++        "heldout_code_auroc": _metric_point(heldout_metric),
++        "heldout_code_auroc_ci": _metric_ci(heldout_metric),
++        "heldout_calibration_brier_ece": dict(heldout_calibration_brier_ece),
++        "heldout_recall_at_fixed_fpr": dict(heldout_recall_at_fixed_fpr),
++        "leak_audit_findings": dict(leak_audit_findings),
++        "leak_detected": leak_detected,
++        "code_signal_survives_heldout": survives,
++        "n_seeds": 0 if blocked else len(heldout_metric.get("bootstrap_seeds") or BOOTSTRAP_SEEDS),
++        "n_examples_in_corpus": int(n_examples_in_corpus),
++        "n_examples_heldout": int(n_examples_heldout),
++        "adversarial_verify_clean": bool(adversarial_verify_clean),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": _round(max(0.0, finished - start)),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "acceptance_gate": {
++            "condition": (
++                "in_corpus_code_auroc present AND heldout_code_auroc present AND "
++                "heldout_code_auroc_ci present AND leak_audit_findings present AND "
++                "adversarial_verify_clean == true"
++            ),
++            "principle": (
++                "A trustworthy code-native verdict requires the suspicious 1.0 reproduced "
++                "and explained, held-out AUROC + CI, the leak audit, and adversarial-clean."
++            ),
++            "passed": bool(
++                not blocked
++                and _metric_point(in_corpus_metric) is not None
++                and _metric_point(heldout_metric) is not None
++                and _metric_ci(heldout_metric) is not None
++                and bool(leak_audit_findings)
++                and adversarial_verify_clean is True
++            ),
++        },
++        "tests_run": list(tests_run or []),
++        "scripts_research_conductor_modified": False,
++        "ops_docs_reconciliation_left_to_conductor": True,
++    }
++    artifact.update(dict(extra or {}))
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    return artifact
++
++
++def measure_code_native_corpus(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    seeds: Sequence[int],
++    n_bootstrap: int,
++) -> JsonDict:
++    """Score rows with the Exp 3695 AST/runtime verifier and return metrics."""
++
++    labels = exp3695.code_error_labels(rows)
++    scored = exp3695.CodeNativeVerifier().score_rows(rows)
++    scores = [item.score for item in scored]
++    return {
++        "metric": exp3695.auroc_metric(labels, scores, seeds=seeds, n_bootstrap=n_bootstrap),
++        "calibration": exp3695.calibration_bundle(labels, scores),
++        "recall_at_fixed_fpr": exp3695.recall_at_fixed_fpr_table(labels, scores),
++        "feature_summary": exp3695.feature_summary(scored),
++        "scores": scores,
++    }
++
++
++def audit_exp3658_corpus(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    random_seed: int = RANDOM_SEED,
++) -> JsonDict:
++    """Audit Exp 3658 construction for separability and contamination."""
++
++    row_list = [dict(row) for row in rows]
++    labels = exp3695.code_error_labels(row_list)
++    scored = exp3695.CodeNativeVerifier().score_rows(row_list)
++    scores = [item.score for item in scored]
++    metadata_correlations = {
++        "source": categorical_label_correlation([row.get("source") for row in row_list], labels),
++        "mutation": categorical_label_correlation(
++            [_metadata_value(row, "mutation") for row in row_list],
++            labels,
++        ),
++    }
++    label_correlated = any(
++        item["purity"] == 1.0 and item["n_values"] > 1 for item in metadata_correlations.values()
++    )
++    score_gap = score_gap_summary(labels, scores)
++    contamination = contamination_check(row_list, scored, random_seed=random_seed)
++    return {
++        "in_corpus_construction": {
++            "source_corpus": "data/code_verification_corpus_v2.jsonl",
++            "construction_summary": (
++                "Exp3658 positives are cached canonical HumanEval solutions; negatives "
++                "are deterministic return_none mutants from the same task ids."
++            ),
++            "separable_by_construction": bool(label_correlated and score_gap["score_gap_separable"]),
++            "label_correlated_metadata": bool(label_correlated),
++            "score_gap_separable": bool(score_gap["score_gap_separable"]),
++            "metadata_label_correlations": metadata_correlations,
++            "score_gap": score_gap,
++            "mean_features_by_error_label": mean_features_by_label(scored, labels),
++        },
++        "contamination_check": contamination,
++        "verifier_authenticity": {
++            "ast_parse_used": bool(scored and any("ast_parseable" in item.features for item in scored)),
++            "runtime_execution_trace_used": bool(
++                any(item.features.get("execution_attempted", 0.0) > 0.0 for item in scored)
++            ),
++            "constant_score": bool(len(set(scores)) <= 1),
++            "heuristic_gap_disclosed": "heuristic" in exp3695.VERIFIER_IMPLEMENTATION.lower(),
++            "implementation_note": exp3695.VERIFIER_IMPLEMENTATION,
++        },
++    }
++
++
++def contamination_check(
++    rows: Sequence[Mapping[str, Any]],
++    scored: Sequence[Any],
++    *,
++    random_seed: int,
++) -> JsonDict:
++    """Run exact-overlap, task-overlap, and RBF-kernel split checks."""
++
++    train_idx, holdout_idx = stratified_row_split(rows, random_seed=random_seed)
++    train_rows = [rows[idx] for idx in train_idx]
++    holdout_rows = [rows[idx] for idx in holdout_idx]
++    train_features = feature_matrix([scored[idx] for idx in train_idx])
++    holdout_features = feature_matrix([scored[idx] for idx in holdout_idx])
++    return {
++        "method": "session_isolated_exact_overlap_plus_rbf_kernel_mmd_proxy",
++        "train_n": len(train_rows),
++        "holdout_n": len(holdout_rows),
++        "exact_candidate_overlap": len(_value_set(train_rows, "candidate_sha256") & _value_set(holdout_rows, "candidate_sha256")),
++        "task_id_overlap": len(_task_set(train_rows) & _task_set(holdout_rows)),
++        "source_overlap": sorted(_value_set(train_rows, "source") & _value_set(holdout_rows, "source")),
++        "mutation_overlap": sorted(_metadata_set(train_rows, "mutation") & _metadata_set(holdout_rows, "mutation")),
++        "kernel_mmd_rbf": _round(rbf_mmd(train_features, holdout_features)),
++        "methodology_note": (
++            "This is a deterministic split-contamination proxy inspired by cross-context "
++            "and kernel-divergence audits; it is not a full reproduction of those papers."
++        ),
++    }
++
++
++def diagnose_in_corpus_auroc(audit: Mapping[str, Any]) -> str:
++    """Return a concise diagnosis string for the suspicious in-corpus AUROC."""
++
++    construction = audit.get("in_corpus_construction")
++    if not isinstance(construction, Mapping):
++        return "blocked_no_in_corpus_diagnosis"
++    mutation = construction.get("metadata_label_correlations", {}).get("mutation", {})
++    score_gap = construction.get("score_gap", {})
++    if construction.get("separable_by_construction"):
++        return (
++            "Exp3658 is separable-by-construction: mutation metadata maps labels "
++            f"with purity={mutation.get('purity')}, return_none negatives are generated "
++            "differently from canonical positives, and the code-native score has a hard "
++            f"gap min_error_score={score_gap.get('min_error_score')} > "
++            f"max_correct_score={score_gap.get('max_correct_score')}."
++        )
++    return "No deterministic in-corpus separation found by the Exp3705 audit."
++
++
++def code_signal_survives_heldout(metric: Mapping[str, Any]) -> bool:
++    """Return the bare held-out survival gate with the >=0.99 leak guard."""
++
++    point = _metric_point(metric)
++    ci = _metric_ci(metric)
++    if point is None or ci is None:
++        return False
++    if point >= 0.99:
++        return False
++    return bool(point > 0.5 and ci[0] > 0.5)
++
++
++def heldout_is_implausibly_perfect(metric: Mapping[str, Any]) -> bool:
++    """Return true for the user-mandated held-out >=0.99 red flag."""
++
++    point = _metric_point(metric)
++    return bool(point is not None and point >= 0.99)
++
++
++def leak_detected_from_findings(findings: Mapping[str, Any], heldout_metric: Mapping[str, Any]) -> bool:
++    """Extract the top-level leak bool from audit findings and held-out metric."""
++
++    if heldout_is_implausibly_perfect(heldout_metric):
++        return True
++    construction = findings.get("in_corpus_construction")
++    if isinstance(construction, Mapping) and (
++        construction.get("separable_by_construction")
++        or construction.get("label_correlated_metadata")
++        or construction.get("score_gap_separable")
++    ):
++        return True
++    return bool(findings.get("heldout_implausible_perfect_red_flag"))
++
++
++def classify_verdict(*, blocked: bool, survives: bool, leak_detected: bool) -> str:
++    """Map gates onto one of the terminal verdicts."""
++
++    if blocked:
++        return BLOCKED_VERDICT
++    if survives and not leak_detected:
++        return SURVIVES_VERDICT
++    return LEAK_VERDICT
++
++
++def precondition_checks(
++    in_rows: Sequence[Mapping[str, Any]],
++    heldout_rows: Sequence[Mapping[str, Any]],
++    *,
++    min_heldout_examples: int,
++    in_status: Mapping[str, Any],
++    heldout_status: Mapping[str, Any],
++) -> list[JsonDict]:
++    """Return cached-corpus availability checks."""
++
++    return [
++        {
++            "resource": "exp3658_in_corpus",
++            "available": _has_both_code_classes(in_rows),
++            "n_examples": len(in_rows),
++            "detail": dict(in_status),
++        },
++        {
++            "resource": "distinct_heldout_code_corpus",
++            "available": len(heldout_rows) >= int(min_heldout_examples)
++            and _has_both_code_classes(heldout_rows),
++            "n_examples": len(heldout_rows),
++            "minimum_required": int(min_heldout_examples),
++            "detail": dict(heldout_status),
++        },
++    ]
++
++
++def categorical_label_correlation(values: Sequence[Any], labels: Sequence[int]) -> JsonDict:
++    """Return category-label purity for a surface field."""
++
++    counts: dict[str, Counter[int]] = defaultdict(Counter)
++    for value, label in zip(values, labels, strict=False):
++        counts[str(value)][int(label)] += 1
++    n = sum(sum(counter.values()) for counter in counts.values())
++    correct = sum(max(counter.values()) for counter in counts.values()) if counts else 0
++    return {
++        "n_values": len(counts),
++        "purity": _round(correct / n) if n else 0.0,
++        "counts": {key: dict(counter) for key, counter in sorted(counts.items())},
++    }
++
++
++def score_gap_summary(labels: Sequence[int], scores: Sequence[float]) -> JsonDict:
++    """Summarize whether scores alone perfectly separate errors from correct rows."""
++
++    error_scores = [float(score) for label, score in zip(labels, scores, strict=False) if label == 1]
++    correct_scores = [float(score) for label, score in zip(labels, scores, strict=False) if label == 0]
++    if not error_scores or not correct_scores:
++        return {"score_gap_separable": False, "min_error_score": None, "max_correct_score": None}
++    min_error = min(error_scores)
++    max_correct = max(correct_scores)
++    return {
++        "score_gap_separable": bool(min_error > max_correct),
++        "min_error_score": _round(min_error),
++        "max_correct_score": _round(max_correct),
++        "gap": _round(min_error - max_correct),
++    }
++
++
++def mean_features_by_label(scored: Sequence[Any], labels: Sequence[int]) -> JsonDict:
++    """Return mean feature values split by error label."""
++
++    if not scored:
++        return {"error": {}, "correct": {}}
++    names = sorted(scored[0].features)
++    result: JsonDict = {}
++    for label_value, label_name in ((1, "error"), (0, "correct")):
++        group = [item for item, label in zip(scored, labels, strict=False) if label == label_value]
++        result[label_name] = {
++            name: _round(float(np.mean([item.features.get(name, 0.0) for item in group])))
++            if group
++            else 0.0
++            for name in names
++        }
++    return result
++
++
++def stratified_row_split(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    random_seed: int,
++    train_fraction: float = 0.7,
++) -> tuple[list[int], list[int]]:
++    """Split row indices within each correctness label bucket."""
++
++    rng = np.random.default_rng(int(random_seed))
++    train: list[int] = []
++    holdout: list[int] = []
++    for label in (True, False):
++        bucket = [idx for idx, row in enumerate(rows) if bool(row.get("label")) is label]
++        order = list(rng.permutation(bucket))
++        cut = max(1, int(len(order) * float(train_fraction))) if len(order) > 1 else len(order)
++        train.extend(int(idx) for idx in order[:cut])
++        holdout.extend(int(idx) for idx in order[cut:])
++    return train, holdout
++
++
++def feature_matrix(scored: Sequence[Any]) -> np.ndarray:
++    """Convert CodeNativeScore feature dicts into a dense matrix."""
++
++    if not scored:
++        return np.zeros((0, 0), dtype=np.float64)
++    names = sorted(scored[0].features)
++    return np.asarray([[item.features.get(name, 0.0) for name in names] for item in scored], dtype=np.float64)
++
++
++def rbf_mmd(x: np.ndarray, y: np.ndarray) -> float:
++    """Return a small RBF-kernel MMD proxy between two feature matrices."""
++
++    if x.size == 0 or y.size == 0:
++        return 0.0
++    combined = np.vstack([x, y])
++    sq_dists = np.sum((combined[:, None, :] - combined[None, :, :]) ** 2, axis=2)
++    nonzero = sq_dists[sq_dists > 0.0]
++    bandwidth = float(np.median(nonzero)) if nonzero.size else 1.0
++    gamma = 1.0 / max(bandwidth, 1e-12)
++    kxx = np.exp(-gamma * np.sum((x[:, None, :] - x[None, :, :]) ** 2, axis=2)).mean()
++    kyy = np.exp(-gamma * np.sum((y[:, None, :] - y[None, :, :]) ** 2, axis=2)).mean()
++    kxy = np.exp(-gamma * np.sum((x[:, None, :] - y[None, :, :]) ** 2, axis=2)).mean()
++    return float(kxx + kyy - 2.0 * kxy)
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3705 terminal artifact contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    if artifact.get("honest_verdict") not in TERMINAL_VERDICTS:
++        raise ValueError("honest_verdict is not an accepted Exp 3705 terminal verdict")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must be the cached-corpus verifier sentinel")
++    for field in ("code_signal_survives_heldout", "leak_detected", "adversarial_verify_clean"):
++        if type(artifact.get(field)) is not bool:
++            raise ValueError(f"{field} must be a bare top-level bool")
++    if not isinstance(artifact.get("n_examples_heldout"), int):
++        raise ValueError("n_examples_heldout must be an int")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or float(duration) < 0.0:
++        raise ValueError("duration_s must be a non-negative number")
++
++
++def reproducibility_checksum(artifact: Mapping[str, Any]) -> str:
++    """Hash deterministic fields used to detect metric drift."""
++
++    payload = {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "in_corpus_code_auroc": artifact.get("in_corpus_code_auroc"),
++        "heldout_code_auroc": artifact.get("heldout_code_auroc"),
++        "heldout_code_auroc_ci": artifact.get("heldout_code_auroc_ci"),
++        "leak_detected": artifact.get("leak_detected"),
++        "code_signal_survives_heldout": artifact.get("code_signal_survives_heldout"),
++        "n_examples_heldout": artifact.get("n_examples_heldout"),
++        "random_seed": RANDOM_SEED,
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()[:16]
++
++
++def write_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = OUTPUT_REL_PATH,
++    tests_run: Sequence[str] | None = None,
++) -> Path:
++    """Build, adversarial-check, validate, and persist Exp 3705."""
++
++    root_path = Path(root)
++    output = _repo_path(root_path, Path(output_path))
++    artifact = build_artifact(root_path, tests_run=tests_run)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    report = run_adversarial_verify_report(output)
++    artifact["adversarial_verify_report"] = compact_adversarial_report(report)
++    artifact["adversarial_verify_clean"] = adversarial_report_is_clean(report)
++    artifact["acceptance_gate"]["passed"] = bool(
++        artifact["acceptance_gate"]["passed"] and artifact["adversarial_verify_clean"]
++    )
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    validate_artifact(artifact)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def write_artifact_from_measurements(
++    root: Path | str,
++    *,
++    output_path: Path | str,
++    artifact: Mapping[str, Any],
++) -> Path:
++    """Persist a pre-built Exp 3705 artifact."""
++
++    root_path = Path(root)
++    output = _repo_path(root_path, Path(output_path))
++    validate_artifact(artifact)
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return output
++
++
++def run_adversarial_verify_report(path: Path) -> JsonDict:
++    """Run scripts/adversarial_verify.py against an artifact path."""
++
++    verifier_path = REPO_ROOT / "scripts" / "adversarial_verify.py"
++    spec = importlib.util.spec_from_file_location("carnot_adversarial_verify_3705", verifier_path)
++    if spec is None or spec.loader is None:
++        raise ImportError(f"cannot load {verifier_path}")
++    module = importlib.util.module_from_spec(spec)
++    sys.modules[spec.name] = module
++    spec.loader.exec_module(module)
++    return dict(module.verify_artifact(path))
++
++
++def compact_adversarial_report(report: Mapping[str, Any]) -> JsonDict:
++    """Store a deterministic compact adversarial report."""
++
++    flags = [dict(flag) for flag in report.get("flags", []) if isinstance(flag, Mapping)]
++    return {"flag_count": len(flags), "flags": flags}
++
++
++def adversarial_report_is_clean(report: Mapping[str, Any]) -> bool:
++    """Return true when no adversarial flag is critical."""
++
++    flags = report.get("flags", [])
++    if not isinstance(flags, Sequence):
++        return False
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in flags
++    )
++
++
++def _rows_or_default(
++    root: Path,
++    rows: Sequence[Mapping[str, Any]] | None,
++    rel_path: Path,
++) -> tuple[list[JsonDict], JsonDict]:
++    if rows is not None:
++        return [dict(row) for row in rows], {"source": "fixture_override", "path": None}
++    path = root / rel_path
++    loaded = read_jsonl(path)
++    return loaded, {"source": "cached_jsonl", "path": str(rel_path), "exists": path.exists()}
++
++
++def read_jsonl(path: Path) -> list[JsonDict]:
++    """Read JSONL rows, returning an empty list when the file is absent."""
++
++    if not path.exists():
++        return []
++    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
++
++
++def _has_both_code_classes(rows: Sequence[Mapping[str, Any]]) -> bool:
++    labels = {bool(row.get("label")) for row in rows}
++    return labels == {False, True}
++
++
++def _metadata_value(row: Mapping[str, Any], key: str) -> Any:
++    metadata = row.get("metadata")
++    return metadata.get(key) if isinstance(metadata, Mapping) else None
++
++
++def _value_set(rows: Sequence[Mapping[str, Any]], key: str) -> set[str]:
++    return {str(row.get(key)) for row in rows if row.get(key) is not None}
++
++
++def _metadata_set(rows: Sequence[Mapping[str, Any]], key: str) -> set[str]:
++    return {str(_metadata_value(row, key)) for row in rows if _metadata_value(row, key) is not None}
++
++
++def _task_set(rows: Sequence[Mapping[str, Any]]) -> set[str]:
++    return {
++        str(row.get("task_id") or _metadata_value(row, "stable_id"))
++        for row in rows
++        if row.get("task_id") or _metadata_value(row, "stable_id")
++    }
++
++
++def _metric_point(metric: Mapping[str, Any]) -> float | None:
++    point = metric.get("point")
++    return None if point is None else _round(float(point))
++
++
++def _metric_ci(metric: Mapping[str, Any]) -> list[float] | None:
++    ci = metric.get("ci95")
++    if not isinstance(ci, Sequence) or len(ci) != 2:
++        return None
++    return [_round(float(ci[0])), _round(float(ci[1]))]
++
++
++def _repo_path(root: Path, path: Path) -> Path:
++    return path if path.is_absolute() else root / path
++
++
++def _round(value: float) -> float:
++    if not math.isfinite(float(value)):
++        return float(value)
++    return round(float(value), 6)
++
++
++def main() -> int:  # pragma: no cover
++    output = write_artifact(
++        REPO_ROOT,
++        tests_run=[
++            ".venv/bin/pytest tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
++            ".venv/bin/coverage run --source=scripts -m pytest -o addopts='' tests/python/test_experiment_3705_code_native_leak_audit_heldout.py -q",
++            ".venv/bin/coverage report --include='scripts/experiment_3705_code_native_leak_audit_heldout.py' --fail-under=100 --show-missing",
++            ".venv/bin/python scripts/check_spec_coverage.py",
++            ".venv/bin/pytest tests/python -q",
++        ],
++    )
++    artifact = json.loads(output.read_text(encoding="utf-8"))
++    print(output)
++    print(artifact["honest_verdict"])
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3705_code_native_leak_audit_heldout.py b/tests/python/test_experiment_3705_code_native_leak_audit_heldout.py
+new file mode 100644
+index 0000000000..6f02257178
+--- /dev/null
++++ b/tests/python/test_experiment_3705_code_native_leak_audit_heldout.py
+@@ -0,0 +1,348 @@
++"""Tests for Exp 3705 code-native leak audit and held-out replication.
++
++Spec: REQ-CODE-3705, SCENARIO-CODE-3705.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++from typing import Any
++
++import numpy as np
++import pytest
++
++from scripts import experiment_3705_code_native_leak_audit_heldout as exp3705
++
++
++def _metric(point: float | None, low: float | None, high: float | None, n: int = 120) -> dict[str, Any]:
++    return {
++        "point": point,
++        "ci95": None if low is None or high is None else [low, high],
++        "n": 0 if point is None else n,
++        "n_positive_errors": 0 if point is None else n // 2,
++        "n_negative_correct": 0 if point is None else n // 2,
++        "bootstrap_seeds": [3705, 3706, 3707, 3708, 3709],
++        "seed_mean_aurocs": [] if point is None else [point] * 5,
++    }
++
++
++def _findings(*, leak: bool, heldout_ge_099: bool = False) -> dict[str, Any]:
++    return {
++        "in_corpus_construction": {
++            "separable_by_construction": leak,
++            "label_correlated_metadata": leak,
++            "score_gap_separable": leak,
++        },
++        "contamination_check": {
++            "exact_candidate_overlap": 0,
++            "task_id_overlap": 0,
++            "kernel_mmd_rbf": 0.0,
++        },
++        "heldout_implausible_perfect_red_flag": heldout_ge_099,
++        "verifier_authenticity": {
++            "ast_parse_used": True,
++            "runtime_execution_trace_used": True,
++            "constant_score": False,
++            "heuristic_gap_disclosed": True,
++        },
++    }
++
++
++def _row(*, label: bool, mutation: str, task_id: str, code: str) -> dict[str, Any]:
++    return {
++        "candidate_code": code,
++        "label": label,
++        "source": f"fixture_{mutation}",
++        "task_id": task_id,
++        "candidate_sha256": f"{task_id}-{mutation}",
++        "metadata": {
++            "corpus": "FixtureCode",
++            "entry_point": "add_one",
++            "mutation": mutation,
++            "stable_id": task_id,
++        },
++        "test_outcome": "candidate_passed" if label else "candidate_failed_tests",
++    }
++
++
++def _fixture_rows() -> list[dict[str, Any]]:
++    correct = "def add_one(x: int) -> int:\n    return x + 1\n"
++    wrong = "def add_one(x: int) -> int:\n    return None\n    return x + 1\n"
++    rows: list[dict[str, Any]] = []
++    for idx in range(4):
++        rows.append(_row(label=True, mutation="canonical", task_id=f"task-{idx}", code=correct))
++        rows.append(_row(label=False, mutation="return_none", task_id=f"task-{idx}", code=wrong))
++    return rows
++
++
++@pytest.mark.parametrize(
++    (
++        "case_name",
++        "blocked",
++        "heldout_metric",
++        "findings",
++        "expected_verdict",
++        "expected_survives",
++        "expected_leak",
++    ),
++    [
++        pytest.param(
++            "code_signal_survives_heldout",
++            False,
++            _metric(0.74, 0.61, 0.86),
++            _findings(leak=False),
++            exp3705.SURVIVES_VERDICT,
++            True,
++            False,
++            id="code_signal_survives_heldout",
++        ),
++        pytest.param(
++            "code_signal_was_a_leak",
++            False,
++            _metric(0.993, 0.982, 1.0),
++            _findings(leak=True, heldout_ge_099=True),
++            exp3705.LEAK_VERDICT,
++            False,
++            True,
++            id="code_signal_was_a_leak",
++        ),
++        pytest.param(
++            "blocked",
++            True,
++            _metric(None, None, None, n=0),
++            {},
++            exp3705.BLOCKED_VERDICT,
++            False,
++            False,
++            id="blocked",
++        ),
++    ],
++)
++def test_scenario_code_3705_parametrized_honest_outcomes(
++    case_name: str,
++    blocked: bool,
++    heldout_metric: dict[str, Any],
++    findings: dict[str, Any],
++    expected_verdict: str,
++    expected_survives: bool,
++    expected_leak: bool,
++) -> None:
++    """SCENARIO-CODE-3705: outcomes cover survives, leak, and blocked."""
++
++    artifact = exp3705.build_artifact_from_measurements(
++        blocked=blocked,
++        in_corpus_metric={} if blocked else _metric(1.0, 1.0, 1.0, n=60),
++        in_corpus_auroc_diagnosis="" if blocked else "fixture diagnosis",
++        heldout_metric=heldout_metric,
++        heldout_calibration_brier_ece={} if blocked else {"brier": 0.18, "ece": 0.08},
++        heldout_recall_at_fixed_fpr={} if blocked else {"0.10": {"code_native_recall": 0.5}},
++        leak_audit_findings=findings,
++        n_examples_heldout=0 if blocked else int(heldout_metric["n"]),
++        n_examples_in_corpus=0 if blocked else 60,
++        adversarial_verify_clean=not blocked,
++        started_s=1.0,
++        now_s=3.5,
++        tests_run=[f"SCENARIO-CODE-3705 {case_name}"],
++    )
++
++    exp3705.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == expected_verdict
++    assert artifact["code_signal_survives_heldout"] is expected_survives
++    assert artifact["leak_detected"] is expected_leak
++    assert type(artifact["code_signal_survives_heldout"]) is bool
++    assert type(artifact["leak_detected"]) is bool
++    assert artifact["inference_substrate"] == exp3705.INFERENCE_SUBSTRATE
++    assert "GGUF" not in json.dumps(artifact)
++    assert artifact["duration_s"] == pytest.approx(2.5)
++    assert artifact["tests_run"] == [f"SCENARIO-CODE-3705 {case_name}"]
++    assert set(exp3705.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++
++
++def test_req_code_3705_survival_gate_rejects_implausible_perfect_and_chance_ci() -> None:
++    """REQ-CODE-3705: held-out >=0.99 and chance-touching CIs fail closed."""
++
++    assert exp3705.code_signal_survives_heldout(_metric(0.74, 0.61, 0.86)) is True
++    assert exp3705.code_signal_survives_heldout(_metric(0.99, 0.90, 1.0)) is False
++    assert exp3705.code_signal_survives_heldout(_metric(1.0, 1.0, 1.0)) is False
++    assert exp3705.code_signal_survives_heldout(_metric(0.74, 0.50, 0.86)) is False
++    assert exp3705.code_signal_survives_heldout(_metric(0.49, 0.31, 0.64)) is False
++    assert exp3705.code_signal_survives_heldout({}) is False
++
++
++def test_req_code_3705_audit_detects_exp3658_label_correlated_separability() -> None:
++    """REQ-CODE-3705: audit detects return-none construction and score gap."""
++
++    audit = exp3705.audit_exp3658_corpus(_fixture_rows(), random_seed=7)
++
++    assert audit["in_corpus_construction"]["separable_by_construction"] is True
++    assert audit["in_corpus_construction"]["label_correlated_metadata"] is True
++    assert audit["in_corpus_construction"]["score_gap_separable"] is True
++    assert audit["in_corpus_construction"]["metadata_label_correlations"]["mutation"]["purity"] == 1.0
++    assert audit["contamination_check"]["exact_candidate_overlap"] == 0
++    assert audit["verifier_authenticity"]["ast_parse_used"] is True
++    assert audit["verifier_authenticity"]["runtime_execution_trace_used"] is True
++    assert "return_none" in exp3705.diagnose_in_corpus_auroc(audit)
++
++
++def test_req_code_3705_build_artifact_from_fixture_rows(tmp_path: Path) -> None:
++    """REQ-CODE-3705: row scoring builds required held-out audit fields."""
++
++    rows = _fixture_rows()
++    artifact = exp3705.build_artifact(
++        tmp_path,
++        in_corpus_rows=rows,
++        heldout_rows=rows,
++        min_heldout_examples=8,
++        started_s=0.0,
++        now_s=2.0,
++        seeds=[3705, 3706, 3707, 3708, 3709],
++        n_bootstrap=4,
++        tests_run=["REQ-CODE-3705 fixture build"],
++    )
++
++    exp3705.validate_artifact(artifact)
++    assert artifact["n_examples_heldout"] == 8
++    assert artifact["n_seeds"] == 5
++    assert artifact["heldout_code_auroc"] == 1.0
++    assert artifact["code_signal_survives_heldout"] is False
++    assert artifact["leak_detected"] is True
++    assert artifact["heldout_code_auroc_ci"] == [1.0, 1.0]
++    assert artifact["heldout_calibration_brier_ece"]["brier"] >= 0.0
++    assert artifact["acceptance_gate"]["passed"] is True
++
++
++def test_req_code_3705_validation_and_write_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-CODE-3705: artifact writing validates bare bools and adversarial pass."""
++
++    artifact = exp3705.build_artifact_from_measurements(
++        blocked=False,
++        in_corpus_metric=_metric(1.0, 1.0, 1.0, n=60),
++        in_corpus_auroc_diagnosis="fixture diagnosis",
++        heldout_metric=_metric(0.74, 0.61, 0.86),
++        heldout_calibration_brier_ece={"brier": 0.18, "ece": 0.08},
++        heldout_recall_at_fixed_fpr={"0.10": {"code_native_recall": 0.5}},
++        leak_audit_findings=_findings(leak=False),
++        n_examples_heldout=120,
++        n_examples_in_corpus=60,
++        adversarial_verify_clean=True,
++        started_s=0.0,
++        now_s=1.0,
++    )
++
++    output = exp3705.write_artifact_from_measurements(
++        tmp_path,
++        output_path="results/exp3705.json",
++        artifact=artifact,
++    )
++    saved = json.loads(output.read_text(encoding="utf-8"))
++
++    exp3705.validate_artifact(saved)
++    assert saved["acceptance_gate"]["passed"] is True
++
++    monkeypatch.setattr(exp3705, "build_artifact", lambda *args, **kwargs: dict(artifact))
++    monkeypatch.setattr(exp3705, "run_adversarial_verify_report", lambda path: {"flags": []})
++    output = exp3705.write_artifact(tmp_path, output_path="results/write-exp3705.json")
++    written = json.loads(output.read_text(encoding="utf-8"))
++    assert written["adversarial_verify_clean"] is True
++    assert written["adversarial_verify_report"] == {"flag_count": 0, "flags": []}
++
++    for field, value, message in [
++        ("code_signal_survives_heldout", {"value": True}, "code_signal_survives_heldout"),
++        ("leak_detected", 1, "leak_detected"),
++        ("adversarial_verify_clean", "true", "adversarial_verify_clean"),
++        ("honest_verdict", "complete: unexpected", "honest_verdict"),
++        ("duration_s", -1.0, "duration_s"),
++    ]:
++        broken = dict(saved)
++        broken[field] = value
++        with pytest.raises(ValueError, match=message):
++            exp3705.validate_artifact(broken)
++
++    missing = dict(saved)
++    missing.pop("heldout_code_auroc")
++    with pytest.raises(ValueError, match="missing required"):
++        exp3705.validate_artifact(missing)
++
++
++def test_req_code_3705_blocked_when_no_heldout_corpus(tmp_path: Path) -> None:
++    """REQ-CODE-3705: no distinct held-out corpus yields blocked verdict."""
++
++    artifact = exp3705.build_artifact(
++        tmp_path,
++        in_corpus_rows=_fixture_rows(),
++        heldout_rows=[],
++        started_s=0.0,
++        now_s=1.0,
++    )
++
++    assert artifact["honest_verdict"] == exp3705.BLOCKED_VERDICT
++    assert artifact["code_signal_survives_heldout"] is False
++    assert artifact["leak_detected"] is False
++    assert artifact["n_examples_heldout"] == 0
++    assert artifact["acceptance_gate"]["passed"] is False
++
++
++def test_req_code_3705_helper_edges_and_real_adversarial_loader(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-CODE-3705: helper branches fail closed and verifier loader works."""
++
++    artifact = exp3705.build_artifact_from_measurements(
++        blocked=False,
++        in_corpus_metric=_metric(1.0, 1.0, 1.0, n=60),
++        in_corpus_auroc_diagnosis="fixture diagnosis",
++        heldout_metric=_metric(0.74, 0.61, 0.86),
++        heldout_calibration_brier_ece={"brier": 0.18, "ece": 0.08},
++        heldout_recall_at_fixed_fpr={"0.10": {"code_native_recall": 0.5}},
++        leak_audit_findings=_findings(leak=False),
++        n_examples_heldout=120,
++        n_examples_in_corpus=60,
++        adversarial_verify_clean=True,
++        started_s=0.0,
++        now_s=1.0,
++    )
++    output = exp3705.write_artifact_from_measurements(
++        tmp_path,
++        output_path="results/real-adversarial-exp3705.json",
++        artifact=artifact,
++    )
++
++    assert "flags" in exp3705.run_adversarial_verify_report(output)
++    saved_loader = exp3705.importlib.util.spec_from_file_location
++    monkeypatch.setattr(exp3705.importlib.util, "spec_from_file_location", lambda *args: None)
++    with pytest.raises(ImportError, match="adversarial_verify"):
++        exp3705.run_adversarial_verify_report(output)
++    monkeypatch.setattr(exp3705.importlib.util, "spec_from_file_location", saved_loader)
++
++    assert exp3705.diagnose_in_corpus_auroc({}) == "blocked_no_in_corpus_diagnosis"
++    assert (
++        exp3705.diagnose_in_corpus_auroc(
++            {"in_corpus_construction": {"separable_by_construction": False}}
++        )
++        == "No deterministic in-corpus separation found by the Exp3705 audit."
++    )
++    assert exp3705.leak_detected_from_findings(_findings(leak=True), _metric(0.74, 0.61, 0.86))
++    assert exp3705.score_gap_summary([1], [0.2])["score_gap_separable"] is False
++    assert exp3705.mean_features_by_label([], []) == {"error": {}, "correct": {}}
++    assert exp3705.feature_matrix([]).shape == (0, 0)
++    assert exp3705.rbf_mmd(np.zeros((0, 0)), np.zeros((1, 0))) == 0.0
++    assert exp3705.adversarial_report_is_clean({"flags": 3}) is False
++    assert exp3705._round(float("inf")) == float("inf")
++
++    bad_substrate = dict(artifact, inference_substrate="live_llm_inference")
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp3705.validate_artifact(bad_substrate)
++    bad_n = dict(artifact, n_examples_heldout="120")
++    with pytest.raises(ValueError, match="n_examples_heldout"):
++        exp3705.validate_artifact(bad_n)
++
++    missing_path = tmp_path / "missing.jsonl"
++    assert exp3705.read_jsonl(missing_path) == []
++    rows_path = tmp_path / "rows.jsonl"
++    rows_path.write_text(json.dumps(_fixture_rows()[0]) + "\n", encoding="utf-8")
++    assert exp3705.read_jsonl(rows_path)[0]["task_id"] == "task-0"
++    loaded, status = exp3705._rows_or_default(tmp_path, None, Path("rows.jsonl"))
++    assert loaded[0]["task_id"] == "task-0"
++    assert status["source"] == "cached_jsonl"
+-- 
+2.55.0
+

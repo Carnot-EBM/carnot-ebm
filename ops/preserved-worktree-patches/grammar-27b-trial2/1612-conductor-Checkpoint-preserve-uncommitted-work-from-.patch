@@ -1,0 +1,80 @@
+From 3cca968e9de9bdff71ec91fcb5730ef4cc571c3c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sat, 13 Jun 2026 09:19:50 -0400
+Subject: [PATCH 01612/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...periment_4148_sudoku_accumulate_pass3.json | 27 +++++++++++++++++--
+ 4 files changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 32d0dce1c1..ce38d0b61e 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 26, "phase": "iteration_start", "last_beat": "2026-06-13T13:05:01Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 27, "phase": "iteration_start", "last_beat": "2026-06-13T13:19:49Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 8cc27b2918..1c899a16b6 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8421,3 +8421,4 @@ c |
+ | 2026-06-13 12:33 UTC | Archive .383 -> activate .384; KEEP the hardened g | OK | 91 passed, 1 warning in 5.32s |
+ | 2026-06-13 12:48 UTC | ACCUMULATE pass 1 — DIAGNOSE + FIX the max_epochs  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+ | 2026-06-13 13:03 UTC | ACCUMULATE pass 2 (DEFENSIVE read of pass1). If pa | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_ |
++| 2026-06-13 13:17 UTC | ACCUMULATE pass 3 (DEFENSIVE read of pass2). Resum | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_ |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f9e2657625..0fc475d1a8 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 191001, "iteration": 26, "phase": "iteration_start", "started_at": "2026-06-13T13:05:01Z"}
+\ No newline at end of file
++{"pid": 191001, "iteration": 27, "phase": "iteration_start", "started_at": "2026-06-13T13:19:49Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4148_sudoku_accumulate_pass3.json b/results/experiment_4148_sudoku_accumulate_pass3.json
+index 3736102771..a141d15c15 100644
+--- a/results/experiment_4148_sudoku_accumulate_pass3.json
++++ b/results/experiment_4148_sudoku_accumulate_pass3.json
+@@ -51,5 +51,28 @@
+     "SCENARIO-LEARN-4148-BLOCKED-PASS2"
+   ],
+   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+-  "val_exact_accuracy": null
+-}
++  "val_exact_accuracy": null,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "TAUTOLOGY",
++      "severity": "critical",
++      "detail": "pass2_post_epoch=6399.0 and post_epoch=6399.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.115 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "GATE_PASSED_WITHOUT_DATA",
++      "severity": "critical",
++      "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_vs_pass2=null, pass2_delta_vs_pass1=null"
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

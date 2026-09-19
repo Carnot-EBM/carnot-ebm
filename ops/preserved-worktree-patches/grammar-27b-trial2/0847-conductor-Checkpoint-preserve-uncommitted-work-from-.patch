@@ -1,0 +1,75 @@
+From 106f824d8701f5f69d890cdd0b622d6a22008f4f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 19:37:57 -0400
+Subject: [PATCH 00847/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...eriment_3928_moat_scissor_replication.json | 22 +++++++++++++++++--
+ 4 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 3190c96bb6..df2379f774 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 912661, "iteration": 3, "phase": "iteration_start", "last_beat": "2026-06-07T22:48:37Z"}
+\ No newline at end of file
++{"pid": 912661, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-07T23:37:55Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 16e0494eed..3bf76d3cb9 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8017,3 +8017,4 @@ c |
+ | 2026-06-07 19:54 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 2 failed, 106 passed in 19.06s |
+ | 2026-06-07 22:15 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+ | 2026-06-07 22:46 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | OK | 89 passed in 4.22s |
++| 2026-06-07 23:35 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 4d603e8296..c5b54429e6 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 912661, "iteration": 3, "phase": "iteration_start", "started_at": "2026-06-07T22:48:37Z"}
+\ No newline at end of file
++{"pid": 912661, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-07T23:37:55Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3928_moat_scissor_replication.json b/results/experiment_3928_moat_scissor_replication.json
+index 06566a1b32..4e1aa7d190 100644
+--- a/results/experiment_3928_moat_scissor_replication.json
++++ b/results/experiment_3928_moat_scissor_replication.json
+@@ -100,5 +100,23 @@
+   "residual_catch_ci95": null,
+   "residual_catch_rate": null,
+   "status": "blocked_all_gguf_inference_failed",
+-  "title": "moat_scissor_replication"
+-}
++  "title": "moat_scissor_replication",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "IMPLAUSIBLE_PERFECT",
++      "severity": "info",
++      "detail": "n_residual_errors=0.0 (exactly zero). Confirm this is not a stub default."
++    },
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=13.105805397033691 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+

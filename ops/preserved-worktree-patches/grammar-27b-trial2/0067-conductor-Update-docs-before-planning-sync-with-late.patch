@@ -1,0 +1,139 @@
+From 6707d81fb4725ae0f988c624254c9bbdfbe9ee14 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 22:05:38 -0400
+Subject: [PATCH 00067/11171] =?UTF-8?q?[conductor]=20Update=20docs=20befor?=
+ =?UTF-8?q?e=20planning=20=E2=80=94=20sync=20with=20latest=20results?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ docs/index.html                                 |  2 +-
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...xperiment_3689_capstone_and_g_gate_v337.json | 17 +++++++++++++++--
+ results/experiment_625_tier1_fr11_relay.json    |  6 +++---
+ results/experiment_638_tier1_fr11_relay.json    |  6 +++---
+ results/experiment_645_tier1_fr11_relay.json    |  4 ++--
+ 8 files changed, 27 insertions(+), 13 deletions(-)
+
+diff --git a/docs/index.html b/docs/index.html
+index 230d199ea2..7633aaa590 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -302,7 +302,7 @@
+       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
+     </div>
+     <div class="stats-bar" aria-label="Project headline numbers">
+-      <div class="stat"><div class="stat-num">3,056</div><div class="stat-label">Experiment runs</div></div>
++      <div class="stat"><div class="stat-num">3,068</div><div class="stat-label">Experiment runs</div></div>
+       <div class="stat"><div class="stat-num">382</div><div class="stat-label">Completed milestones</div></div>
+       <div class="stat"><div class="stat-num">30,658</div><div class="stat-label">Automated tests</div></div>
+       <div class="stat"><div class="stat-num">0.9131</div><div class="stat-label">Verifier AUROC &mdash; FoVer math step-errors (5-seed)</div></div>
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 76a4d3d775..bda1167c5d 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 191, "phase": "iteration_start", "last_beat": "2026-06-02T01:49:41Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 192, "phase": "iteration_start", "last_beat": "2026-06-02T02:03:39Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 4aa48cae04..58f9a9add0 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7564,3 +7564,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-02 01:25 UTC | KV260 SSH-reachability continuity (UNREACHABLE .33 | OK | 89 passed in 4.27s |
+ | 2026-06-02 01:37 UTC | PolarFire opportunistic reachability + continuity  | OK | 88 passed in 4.22s |
+ | 2026-06-02 01:47 UTC | GateMate continuity audit (documentation-only — op | OK | 89 passed in 4.80s |
++| 2026-06-02 02:01 UTC | Capstone v337 + G1-G4 gate synthesis — did the dep | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 61cc6ba4b0..792798fddb 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 191, "phase": "iteration_start", "started_at": "2026-06-02T01:49:41Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 192, "phase": "iteration_start", "started_at": "2026-06-02T02:03:39Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3689_capstone_and_g_gate_v337.json b/results/experiment_3689_capstone_and_g_gate_v337.json
+index 64666d65d6..9d09027ec5 100644
+--- a/results/experiment_3689_capstone_and_g_gate_v337.json
++++ b/results/experiment_3689_capstone_and_g_gate_v337.json
+@@ -322,5 +322,18 @@
+   ],
+   "trained_judge_ood_retired": true,
+   "unmet_gates": [],
+-  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_not_measured"
+-}
++  "verifier_value_scope": "math_plus_code_discrimination_facts_retired_selection_not_measured",
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=0.321147 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 37d6081979..d1881d435b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T02:01:19Z",
+-  "finished_at": "2026-06-02T02:01:19Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-02T02:03:51Z",
++  "finished_at": "2026-06-02T02:03:51Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 6724b8a778..02f3d38207 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T02:01:19Z",
+-  "finished_at": "2026-06-02T02:01:19Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-02T02:03:51Z",
++  "finished_at": "2026-06-02T02:03:51Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d07b3ad711..ae6c6210a1 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260602",
+-  "started_at": "2026-06-02T02:01:19Z",
+-  "finished_at": "2026-06-02T02:01:20Z",
++  "started_at": "2026-06-02T02:03:51Z",
++  "finished_at": "2026-06-02T02:03:51Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+-- 
+2.55.0
+

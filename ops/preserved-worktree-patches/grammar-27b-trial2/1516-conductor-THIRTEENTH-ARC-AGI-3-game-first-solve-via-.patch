@@ -1,0 +1,1556 @@
+From 673e76096ce18848b640c7180f8fbc87134d7ddd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 21:17:15 -0400
+Subject: [PATCH 01516/11171] [conductor] THIRTEENTH ARC-AGI-3 game first-solve
+ via the PROVEN explore-first method (raises games-solved 12->13, monotonic
+ +1). Bounded active-exploration OBSERVES transitions -> induce mechanic +
+ goal predicate -> GAP-4 verifier validates on held-out transitions -> act
+ only if validated. Next-easiest non-spatial game not yet solved.
+ REAL-ENV-CONFIRM any solve; STOP at the first level that fails.
+
+Automated research step by research conductor.
+Task ID: exp4120-thirteenth-game-explore-first
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../phase4_active_inference/spec.md           |   6 +
+ ops/dogfood-memory.json                       |   2 +-
+ ...c_exp4120_thirteenth_game_explore_first.py | 371 +++++++++++++
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...nt_4120_thirteenth_game_explore_first.json | 507 ++++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ .../exp4120_thirteenth_game_explore_first.py  |  99 ++++
+ ...ment_4120_thirteenth_game_explore_first.py | 292 ++++++++++
+ 18 files changed, 1303 insertions(+), 23 deletions(-)
+ create mode 100644 python/carnot/agentic/arc_exp4120_thirteenth_game_explore_first.py
+ create mode 100644 results/experiment_4120_thirteenth_game_explore_first.json
+ create mode 100644 scripts/experiments/exp4120_thirteenth_game_explore_first.py
+ create mode 100644 tests/python/test_experiment_4120_thirteenth_game_explore_first.py
+
+diff --git a/openspec/capabilities/phase4_active_inference/spec.md b/openspec/capabilities/phase4_active_inference/spec.md
+index 337b9216b4..8f3f6618e7 100644
+--- a/openspec/capabilities/phase4_active_inference/spec.md
++++ b/openspec/capabilities/phase4_active_inference/spec.md
+@@ -282,3 +282,9 @@
+ 
+ ### SCENARIO-PHASE4-047
+ **Description:** Running Exp 4110 either writes `blocked_arc_offline_fixtures_missing` when the selected target cannot be loaded from the offline fixtures, writes `complete: twelfth_game_no_solve_<game>_<reason>` when the selected target does not advance the first level after observation, induction, and GAP-4 validation, or writes `success: twelfth_game_solved_<game>_at_action_N` only when the offline real environment confirms a level counter increment after the validated action plan. A successful run SHOULD select `tu93-0768757b` as the lowest-baseline remaining grid-Markov offline fixture after strict non-spatial survey rows are exhausted, set `game_solved=true`, set `total_games_solved=12`, set `levels_completed=1`, set `first_solve_at_action` to the confirmed action index, set `actions_vs_baseline` to `first_solve_at_action / L0 baseline_actions` as a bare float, set `real_env_confirmed=true`, preserve the observe -> explore -> induce -> verify -> act trace, and include principle notes for `honest_verdict`, `total_games_solved`, `levels_completed`, and `real_env_confirmed`.
++
++### REQ-PHASE4-048: ARC-AGI-3 Thirteenth Game Strict Non-Spatial Explore-First Attempt
++**Description:** The system SHALL run Exp 4120 as the next ARC-AGI-3 monotonic progress attempt after the Exp 4110 twelve-game milestone. It MUST use the offline/air-gapped ARC driver and local `environment_files/` fixtures rather than live online discovery. It MUST read `results/arc3_win_condition_survey.json`, exclude the prior banked solved prefixes used by the ARC incremental line (`r11l`, `lp85`, `sc25`, `su15`, `tn36`, `cd82`, `dc22`, `sb26`, `ft09`, `s5i5`, and `tu93`), avoid `vc33`, and select only remaining survey rows where `is_spatial_planning` is explicitly false. If the offline fixtures are unavailable it MUST stop with `honest_verdict="blocked_arc_offline_fixtures_missing"`. If no unsolved strict non-spatial row remains in the local survey/baseline set, it MUST stop with `honest_verdict="complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates"` and MUST NOT select a spatial fallback as though it satisfied the non-spatial target. If a strict non-spatial target exists, the run MUST spend positive bounded exploration actions before inducing the mechanic and goal predicate from observed transitions only, validate the induced commit suffix with a GAP-4-style replay verifier on held-out transitions, execute only a validated plan in the real offline environment, stop at the first level that fails, and claim progress only when the real environment reports a `level_completed` or `levels_completed` increment. The terminal artifact `results/experiment_4120_thirteenth_game_explore_first.json` MUST include bare top-level fields `honest_verdict`, `game_solved`, `target_game`, `total_games_solved`, `levels_completed`, `first_solve_at_action`, `actions_vs_baseline`, `real_env_confirmed`, `solve_trace`, and `inference_substrate`, with `inference_substrate="offline_arc_agi3_explore_first_first_solve"`.
++
++### SCENARIO-PHASE4-048
++**Description:** Running Exp 4120 either writes `blocked_arc_offline_fixtures_missing` when local offline fixtures or baselines are unavailable, writes `complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates` when every strict non-spatial survey row with a local baseline is already in the prior solved-prefix set, writes `complete: thirteenth_game_no_solve_<game>_<reason>` when a selected strict non-spatial target does not advance the first level after observation, induction, and GAP-4 validation, or writes `success: thirteenth_game_solved_<game>_at_action_N` only when the offline real environment confirms a level counter increment after the validated action plan. The strict-exhaustion artifact MUST set `game_solved=false`, set `target_game="none"`, keep `total_games_solved=12`, set `levels_completed=0`, set `first_solve_at_action=-1`, set `actions_vs_baseline=0.0`, set `real_env_confirmed=false`, preserve the survey selection evidence in `solve_trace`, and include principle notes for `honest_verdict`, `total_games_solved`, `levels_completed`, and `real_env_confirmed`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index c63e08a9d9..a9e53b5b64 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 170,
+   "code_violations": 0,
+-  "experiments_checked": 3142,
++  "experiments_checked": 3143,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/agentic/arc_exp4120_thirteenth_game_explore_first.py b/python/carnot/agentic/arc_exp4120_thirteenth_game_explore_first.py
+new file mode 100644
+index 0000000000..517011e9ce
+--- /dev/null
++++ b/python/carnot/agentic/arc_exp4120_thirteenth_game_explore_first.py
+@@ -0,0 +1,371 @@
++"""Exp 4120 helpers for the ARC-AGI-3 thirteenth-game strict non-spatial attempt.
++
++Spec refs: REQ-PHASE4-048, SCENARIO-PHASE4-048.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from typing import Any
++
++from carnot.agentic.arc_exp4070_ninth_game_explore_first import (
++    INFERENCE_SUBSTRATE,
++    SelectedCandidate,
++)
++
++REQUIREMENTS = ["REQ-PHASE4-048", "SCENARIO-PHASE4-048"]
++PRIOR_TOTAL_GAMES_SOLVED = 12
++TARGET_TOTAL_GAMES_SOLVED = 13
++SOLVED_PREFIXES_BEFORE_THIRTEENTH = (
++    "r11l",
++    "lp85",
++    "sc25",
++    "su15",
++    "tn36",
++    "cd82",
++    "dc22",
++    "sb26",
++    "ft09",
++    "s5i5",
++    "tu93",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "game_solved",
++    "target_game",
++    "total_games_solved",
++    "levels_completed",
++    "first_solve_at_action",
++    "actions_vs_baseline",
++    "real_env_confirmed",
++    "solve_trace",
++    "inference_substrate",
++)
++STRICT_EXHAUSTION_VERDICT = "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates"
++
++
++@dataclass(frozen=True)
++class SurveyCandidate:
++    """One survey row joined with its local offline baseline metadata."""
++
++    game: str
++    game_id: str
++    baseline_actions: int
++    is_spatial_planning: bool
++    win_difficulty: str
++
++    def to_json(self) -> dict[str, Any]:
++        return {
++            "game": self.game,
++            "game_id": self.game_id,
++            "baseline_actions": int(self.baseline_actions),
++            "is_spatial_planning": bool(self.is_spatial_planning),
++            "win_difficulty": self.win_difficulty,
++        }
++
++
++@dataclass(frozen=True)
++class SelectionReport:
++    """Auditable Exp 4120 candidate filtering result before any environment action."""
++
++    solved_prefixes: tuple[str, ...]
++    strict_nonspatial_candidates: tuple[SurveyCandidate, ...]
++    unsolved_strict_nonspatial_candidates: tuple[SurveyCandidate, ...]
++    remaining_unsolved_offline_candidates: tuple[SurveyCandidate, ...]
++    offline_candidate_count: int
++
++    @property
++    def no_unsolved_strict_nonspatial_candidates(self) -> bool:
++        return len(self.unsolved_strict_nonspatial_candidates) == 0
++
++    def to_json(self) -> dict[str, Any]:
++        return {
++            "solved_prefixes": list(self.solved_prefixes),
++            "strict_nonspatial_candidates": [
++                candidate.to_json() for candidate in self.strict_nonspatial_candidates
++            ],
++            "unsolved_strict_nonspatial_candidates": [
++                candidate.to_json() for candidate in self.unsolved_strict_nonspatial_candidates
++            ],
++            "remaining_unsolved_offline_candidates": [
++                candidate.to_json() for candidate in self.remaining_unsolved_offline_candidates
++            ],
++            "offline_candidate_count": int(self.offline_candidate_count),
++            "no_unsolved_strict_nonspatial_candidates": self.no_unsolved_strict_nonspatial_candidates,
++        }
++
++
++class NoUnsolvedNonSpatialCandidate(ValueError):
++    """Raised when Exp 4120's strict non-spatial target set is exhausted."""
++
++    def __init__(self, report: SelectionReport) -> None:
++        super().__init__("no unsolved strict non-spatial candidates remain")
++        self.report = report
++
++
++def _survey_candidate_from_row(
++    row: dict[str, Any],
++    baselines: dict[str, tuple[str, int]],
++) -> SurveyCandidate:
++    game = str(row.get("game", ""))
++    game_id, baseline_actions = baselines[game]
++    return SurveyCandidate(
++        game=game,
++        game_id=game_id,
++        baseline_actions=int(baseline_actions),
++        is_spatial_planning=bool(row.get("is_spatial_planning")),
++        win_difficulty=str(row.get("win_difficulty", "unknown")),
++    )
++
++
++def build_selection_report(
++    survey: dict[str, Any],
++    baselines: dict[str, tuple[str, int]],
++    *,
++    solved_prefixes: tuple[str, ...] = SOLVED_PREFIXES_BEFORE_THIRTEENTH,
++) -> SelectionReport:
++    """REQ-PHASE4-048: filter the local survey for unsolved strict non-spatial targets."""
++
++    candidates = [
++        _survey_candidate_from_row(row, baselines)
++        for row in survey.get("per_game_surveys", [])
++        if str(row.get("game", "")) != "vc33" and str(row.get("game", "")) in baselines
++    ]
++    strict_nonspatial = tuple(
++        sorted(
++            (candidate for candidate in candidates if candidate.is_spatial_planning is False),
++            key=lambda candidate: candidate.game,
++        )
++    )
++    unsolved_strict = tuple(
++        sorted(
++            (candidate for candidate in strict_nonspatial if candidate.game not in solved_prefixes),
++            key=lambda candidate: (candidate.baseline_actions, candidate.game),
++        )
++    )
++    remaining_unsolved = tuple(
++        sorted(
++            (candidate for candidate in candidates if candidate.game not in solved_prefixes),
++            key=lambda candidate: (candidate.baseline_actions, candidate.game),
++        )
++    )
++    return SelectionReport(
++        solved_prefixes=tuple(solved_prefixes),
++        strict_nonspatial_candidates=strict_nonspatial,
++        unsolved_strict_nonspatial_candidates=unsolved_strict,
++        remaining_unsolved_offline_candidates=remaining_unsolved,
++        offline_candidate_count=len(candidates),
++    )
++
++
++def select_exp4120_candidate_from_survey(
++    survey: dict[str, Any],
++    baselines: dict[str, tuple[str, int]],
++    *,
++    solved_prefixes: tuple[str, ...] = SOLVED_PREFIXES_BEFORE_THIRTEENTH,
++) -> SelectedCandidate:
++    """REQ-PHASE4-048: choose only an unsolved strict non-spatial candidate."""
++
++    report = build_selection_report(survey, baselines, solved_prefixes=solved_prefixes)
++    if report.no_unsolved_strict_nonspatial_candidates:
++        raise NoUnsolvedNonSpatialCandidate(report)
++    candidate = report.unsolved_strict_nonspatial_candidates[0]
++    return SelectedCandidate(
++        game=candidate.game,
++        game_id=candidate.game_id,
++        baseline_actions=int(candidate.baseline_actions),
++        survey_is_spatial_planning=False,
++        win_difficulty=candidate.win_difficulty,
++        selection_mode="strict_survey_non_spatial",
++        selection_reason=(
++            f"selected: {candidate.game} is the lowest-baseline unsolved strict non-spatial "
++            f"offline fixture, L0 baseline_actions={candidate.baseline_actions}"
++        ),
++        excluded_solved_games=tuple(solved_prefixes),
++    )
++
++
++def _field_principles() -> dict[str, str]:
++    return {
++        "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict.",
++        "total_games_solved": "The monotonic progress metric; must be >= the prior milestone's count.",
++        "levels_completed": "Real-env-confirmed level count; the falsifiable evidence of an actual solve.",
++        "real_env_confirmed": "Only real-env solves raise the headline count.",
++        "first_solve_at_action": "Real confirmed action index where the first level counter increment occurred.",
++        "actions_vs_baseline": "Confirmed solve actions divided by the selected game's L0 baseline action count.",
++        "inference_substrate": "Declares the offline explore-first induction and verifier substrate.",
++        "requirements": "OpenSpec requirement and scenario anchors for the Exp 4120 run.",
++    }
++
++
++def artifact_schema_errors(artifact: dict[str, Any]) -> list[str]:
++    """SCENARIO-PHASE4-048: validate the Exp 4120 terminal artifact contract."""
++
++    errors: list[str] = []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        if field not in artifact:
++            errors.append(f"missing required field {field}")
++
++    verdict = artifact.get("honest_verdict")
++    if "honest_verdict" in artifact:
++        if not isinstance(verdict, str):
++            errors.append("honest_verdict must be a string")
++        elif not (
++            verdict.startswith("success:")
++            or verdict.startswith("complete:")
++            or verdict.startswith("blocked_")
++        ):
++            errors.append("honest_verdict must start with success:, complete:, or blocked_")
++
++    if "game_solved" in artifact and type(artifact["game_solved"]) is not bool:
++        errors.append("game_solved must be a bare bool")
++    if "target_game" in artifact and not isinstance(artifact["target_game"], str):
++        errors.append("target_game must be a string")
++    if "total_games_solved" in artifact and type(artifact["total_games_solved"]) is not int:
++        errors.append("total_games_solved must be a bare int")
++    if "levels_completed" in artifact and type(artifact["levels_completed"]) is not int:
++        errors.append("levels_completed must be a bare int")
++    if "first_solve_at_action" in artifact and type(artifact["first_solve_at_action"]) is not int:
++        errors.append("first_solve_at_action must be a bare int")
++    if "actions_vs_baseline" in artifact and type(artifact["actions_vs_baseline"]) is not float:
++        errors.append("actions_vs_baseline must be a bare float")
++    if "real_env_confirmed" in artifact and type(artifact["real_env_confirmed"]) is not bool:
++        errors.append("real_env_confirmed must be a bare bool")
++    if "solve_trace" in artifact and not isinstance(artifact["solve_trace"], dict):
++        errors.append("solve_trace must be a dict")
++    if "inference_substrate" in artifact and artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        errors.append(f"inference_substrate must equal {INFERENCE_SUBSTRATE}")
++    if "requirements" in artifact and not all(req in artifact["requirements"] for req in REQUIREMENTS):
++        errors.append("requirements must include REQ-PHASE4-048 and SCENARIO-PHASE4-048")
++
++    if verdict == STRICT_EXHAUSTION_VERDICT:
++        if artifact.get("game_solved") is not False:
++            errors.append("game_solved must be false for strict non-spatial exhaustion")
++        if artifact.get("target_game") != "none":
++            errors.append("target_game must be none for strict non-spatial exhaustion")
++        if artifact.get("total_games_solved") != PRIOR_TOTAL_GAMES_SOLVED:
++            errors.append("total_games_solved must remain at 12 for no-solve")
++        if artifact.get("levels_completed") != 0:
++            errors.append("levels_completed must be zero for no-solve")
++        if artifact.get("first_solve_at_action") != -1:
++            errors.append("first_solve_at_action must be -1 for no-solve")
++        if artifact.get("actions_vs_baseline") != 0.0:
++            errors.append("actions_vs_baseline must be 0.0 for no-solve")
++        if artifact.get("real_env_confirmed") is not False:
++            errors.append("real_env_confirmed must be false for no-solve")
++    return errors
++
++
++def build_no_solve_artifact(
++    report: SelectionReport,
++    *,
++    random_seed: int,
++    duration_s: float,
++    offline_driver_available: bool,
++    arc_env_count: int,
++) -> dict[str, Any]:
++    """REQ-PHASE4-048: construct the honest terminal artifact when no strict target remains."""
++
++    artifact = {
++        "experiment": "experiment_4120_thirteenth_game_explore_first",
++        "title": "arc3_thirteenth_game_strict_nonspatial_explore_first",
++        "honest_verdict": STRICT_EXHAUSTION_VERDICT,
++        "game_solved": False,
++        "target_game": "none",
++        "total_games_solved": PRIOR_TOTAL_GAMES_SOLVED,
++        "real_env_confirmed": False,
++        "solve_trace": {
++            "actions": [],
++            "exploration_actions": [],
++            "commit_actions": [],
++            "induction_calls": [],
++            "verification_decisions": [],
++            "phase_trace": [
++                {
++                    "phase": "select",
++                    "source": "offline_survey_strict_nonspatial_filter",
++                    "selection_report": report.to_json(),
++                },
++                {
++                    "phase": "stop",
++                    "reason": "no_unsolved_strict_nonspatial_candidates",
++                    "acted_in_environment": False,
++                },
++            ],
++            "selection_report": report.to_json(),
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": _field_principles(),
++        "requirements": list(REQUIREMENTS),
++        "prior_total_games_solved": PRIOR_TOTAL_GAMES_SOLVED,
++        "level_completed": 0,
++        "levels_completed": 0,
++        "first_solve_at_action": -1,
++        "exploration_actions_used": 0,
++        "induced_mechanic": "none_no_unsolved_strict_nonspatial_candidate",
++        "verification_decisions": [],
++        "phase_trace": [],
++        "action_plan": [],
++        "arc_env_count": int(arc_env_count),
++        "random_seed": int(random_seed),
++        "duration_s": float(duration_s),
++        "candidate_baseline_actions": 0,
++        "actions_vs_baseline": 0.0,
++        "nonspatial_candidates_exhausted": report.no_unsolved_strict_nonspatial_candidates,
++        "remaining_unsolved_offline_candidates": [
++            candidate.to_json() for candidate in report.remaining_unsolved_offline_candidates
++        ],
++        "strict_nonspatial_candidates": [
++            candidate.to_json() for candidate in report.strict_nonspatial_candidates
++        ],
++        "offline_driver_available": bool(offline_driver_available),
++        "acceptance_gate_passed": True,
++        "failure_reason": "no_unsolved_strict_nonspatial_candidates",
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
++
++
++def blocked_artifact(*, random_seed: int, duration_s: float, reason: str) -> dict[str, Any]:
++    """REQ-PHASE4-048: report the blocked offline-fixture precondition without solve inflation."""
++
++    artifact = {
++        "experiment": "experiment_4120_thirteenth_game_explore_first",
++        "title": "arc3_thirteenth_game_strict_nonspatial_explore_first",
++        "honest_verdict": "blocked_arc_offline_fixtures_missing",
++        "game_solved": False,
++        "target_game": "none",
++        "total_games_solved": PRIOR_TOTAL_GAMES_SOLVED,
++        "real_env_confirmed": False,
++        "solve_trace": {
++            "actions": [],
++            "induction_calls": [],
++            "verification_decisions": [],
++            "phase_trace": [{"phase": "stop", "reason": reason}],
++        },
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": _field_principles(),
++        "requirements": list(REQUIREMENTS),
++        "prior_total_games_solved": PRIOR_TOTAL_GAMES_SOLVED,
++        "level_completed": 0,
++        "levels_completed": 0,
++        "first_solve_at_action": -1,
++        "exploration_actions_used": 0,
++        "induced_mechanic": "none",
++        "verification_decisions": [],
++        "phase_trace": [],
++        "action_plan": [],
++        "arc_env_count": 0,
++        "random_seed": int(random_seed),
++        "duration_s": float(duration_s),
++        "candidate_baseline_actions": 0,
++        "actions_vs_baseline": 0.0,
++        "acceptance_gate_passed": True,
++        "failure_reason": reason,
++    }
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++    return artifact
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index bc3ca66146..9f86e2983c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T00:22:19.012195Z",
+-  "duration_s": 0.11572432518005371,
++  "run_date": "2026-06-13T01:15:50.551780Z",
++  "duration_s": 0.08166790008544922,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "53bae908557ec2bde5078c2c884873b71f58f03d9633b2f86b1f827c76139634",
++  "reproducibility_checksum": "54e106a16005df9e07a405b5b364f647b317a9d2931a2f5a6bf25a86256191bd",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "93197328dc306af8a95bdaa96256c8d30d044128"
++    "adversarial_verify_version": "44a545a42a24d1f1545a12a17361bd1184849d41"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 0a1ee7062a..cf696b7496 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T00:22:19.137846Z",
+-  "duration_s": 0.06836056709289551,
++  "run_date": "2026-06-13T01:15:50.680938Z",
++  "duration_s": 0.09976577758789062,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "1bd34c7680aaaa0f15dc21600b14da3e232c88c0a6f26cc5cb6c9517988f2adc",
++  "reproducibility_checksum": "421d89b075d5694f24e38cc4a59bf4a6b1c7673fa2aec9fadc954c5e5a9b88e9",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "93197328dc306af8a95bdaa96256c8d30d044128"
++    "adversarial_verify_version": "44a545a42a24d1f1545a12a17361bd1184849d41"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 098c61e799..179521c0e0 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,5 +243,10 @@
+         "success": true
+       }
+     }
+-  ]
++  ],
++  "corrigendum_2026_05_187_audit": {
++    "classification": "METHODOLOGY_MISSING",
++    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
++    "follow_up_action": "Add missing methodology fields."
++  }
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 278f676a38..b119ddecf2 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1109580993652344,
++  "efficiency_gains_ms": 2.1491050720214844,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 6bc164cbc5..a39d8cfedc 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000388860702515,
++  "duration_s": 5.000088930130005,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index 5f01705351..bcadf4c1c2 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000097036361694,
++  "duration_s": 10.0004723072052,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 67f73cdc98..14ea14de7d 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.23045730590820312,
++  "duration_s": 0.21358418464660645,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index fb11c9e85c..2b9a90e41b 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.06221146499956376,
++  "duration_s": 0.06358191699837334,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 5e9a7934c3..595b6c5f1d 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.2911997550399974e-05,
++  "duration_s": 3.407400072319433e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4120_thirteenth_game_explore_first.json b/results/experiment_4120_thirteenth_game_explore_first.json
+new file mode 100644
+index 0000000000..e5d5d8d229
+--- /dev/null
++++ b/results/experiment_4120_thirteenth_game_explore_first.json
+@@ -0,0 +1,507 @@
++{
++  "acceptance_gate_passed": true,
++  "action_plan": [],
++  "actions_vs_baseline": 0.0,
++  "arc_env_count": 25,
++  "candidate_baseline_actions": 0,
++  "duration_s": 0.505,
++  "experiment": "experiment_4120_thirteenth_game_explore_first",
++  "exploration_actions_used": 0,
++  "failure_reason": "no_unsolved_strict_nonspatial_candidates",
++  "field_principles": {
++    "actions_vs_baseline": "Confirmed solve actions divided by the selected game's L0 baseline action count.",
++    "first_solve_at_action": "Real confirmed action index where the first level counter increment occurred.",
++    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict.",
++    "inference_substrate": "Declares the offline explore-first induction and verifier substrate.",
++    "levels_completed": "Real-env-confirmed level count; the falsifiable evidence of an actual solve.",
++    "real_env_confirmed": "Only real-env solves raise the headline count.",
++    "requirements": "OpenSpec requirement and scenario anchors for the Exp 4120 run.",
++    "total_games_solved": "The monotonic progress metric; must be >= the prior milestone's count."
++  },
++  "first_solve_at_action": -1,
++  "game_solved": false,
++  "honest_verdict": "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
++  "induced_mechanic": "none_no_unsolved_strict_nonspatial_candidate",
++  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
++  "level_completed": 0,
++  "levels_completed": 0,
++  "nonspatial_candidates_exhausted": true,
++  "offline_driver_available": true,
++  "phase_trace": [],
++  "prior_total_games_solved": 12,
++  "random_seed": 4120,
++  "real_env_confirmed": false,
++  "remaining_unsolved_offline_candidates": [
++    {
++      "baseline_actions": 21,
++      "game": "bp35",
++      "game_id": "bp35-0a0ad940",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 22,
++      "game": "ls20",
++      "game_id": "ls20-9607627b",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 26,
++      "game": "re86",
++      "game_id": "re86-8af5384d",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 28,
++      "game": "ka59",
++      "game_id": "ka59-38d34dbb",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 29,
++      "game": "cn04",
++      "game_id": "cn04-2fe56bfb",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 30,
++      "game": "m0r0",
++      "game_id": "m0r0-492f87ba",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 32,
++      "game": "ar25",
++      "game_id": "ar25-0c556536",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 32,
++      "game": "lf52",
++      "game_id": "lf52-271a04aa",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 39,
++      "game": "sp80",
++      "game_id": "sp80-589a99af",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 54,
++      "game": "tr87",
++      "game_id": "tr87-cd924810",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 61,
++      "game": "sk48",
++      "game_id": "sk48-d8078629",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    },
++    {
++      "baseline_actions": 71,
++      "game": "wa30",
++      "game_id": "wa30-ee6fef47",
++      "is_spatial_planning": true,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 78,
++      "game": "g50t",
++      "game_id": "g50t-5849a774",
++      "is_spatial_planning": true,
++      "win_difficulty": "hard"
++    }
++  ],
++  "requirements": [
++    "REQ-PHASE4-048",
++    "SCENARIO-PHASE4-048"
++  ],
++  "solve_trace": {
++    "actions": [],
++    "commit_actions": [],
++    "exploration_actions": [],
++    "induction_calls": [],
++    "phase_trace": [
++      {
++        "phase": "select",
++        "selection_report": {
++          "no_unsolved_strict_nonspatial_candidates": true,
++          "offline_candidate_count": 24,
++          "remaining_unsolved_offline_candidates": [
++            {
++              "baseline_actions": 21,
++              "game": "bp35",
++              "game_id": "bp35-0a0ad940",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 22,
++              "game": "ls20",
++              "game_id": "ls20-9607627b",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 26,
++              "game": "re86",
++              "game_id": "re86-8af5384d",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 28,
++              "game": "ka59",
++              "game_id": "ka59-38d34dbb",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 29,
++              "game": "cn04",
++              "game_id": "cn04-2fe56bfb",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 30,
++              "game": "m0r0",
++              "game_id": "m0r0-492f87ba",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 32,
++              "game": "ar25",
++              "game_id": "ar25-0c556536",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 32,
++              "game": "lf52",
++              "game_id": "lf52-271a04aa",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 39,
++              "game": "sp80",
++              "game_id": "sp80-589a99af",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 54,
++              "game": "tr87",
++              "game_id": "tr87-cd924810",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 61,
++              "game": "sk48",
++              "game_id": "sk48-d8078629",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            },
++            {
++              "baseline_actions": 71,
++              "game": "wa30",
++              "game_id": "wa30-ee6fef47",
++              "is_spatial_planning": true,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 78,
++              "game": "g50t",
++              "game_id": "g50t-5849a774",
++              "is_spatial_planning": true,
++              "win_difficulty": "hard"
++            }
++          ],
++          "solved_prefixes": [
++            "r11l",
++            "lp85",
++            "sc25",
++            "su15",
++            "tn36",
++            "cd82",
++            "dc22",
++            "sb26",
++            "ft09",
++            "s5i5",
++            "tu93"
++          ],
++          "strict_nonspatial_candidates": [
++            {
++              "baseline_actions": 55,
++              "game": "cd82",
++              "game_id": "cd82-fb555c5d",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 59,
++              "game": "dc22",
++              "game_id": "dc22-fdcac232",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 17,
++              "game": "lp85",
++              "game_id": "lp85-305b61c3",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 22,
++              "game": "r11l",
++              "game_id": "r11l-495a7899",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 36,
++              "game": "sc25",
++              "game_id": "sc25-635fd71a",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            },
++            {
++              "baseline_actions": 32,
++              "game": "tn36",
++              "game_id": "tn36-ef4dde99",
++              "is_spatial_planning": false,
++              "win_difficulty": "medium"
++            }
++          ],
++          "unsolved_strict_nonspatial_candidates": []
++        },
++        "source": "offline_survey_strict_nonspatial_filter"
++      },
++      {
++        "acted_in_environment": false,
++        "phase": "stop",
++        "reason": "no_unsolved_strict_nonspatial_candidates"
++      }
++    ],
++    "selection_report": {
++      "no_unsolved_strict_nonspatial_candidates": true,
++      "offline_candidate_count": 24,
++      "remaining_unsolved_offline_candidates": [
++        {
++          "baseline_actions": 21,
++          "game": "bp35",
++          "game_id": "bp35-0a0ad940",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 22,
++          "game": "ls20",
++          "game_id": "ls20-9607627b",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 26,
++          "game": "re86",
++          "game_id": "re86-8af5384d",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 28,
++          "game": "ka59",
++          "game_id": "ka59-38d34dbb",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 29,
++          "game": "cn04",
++          "game_id": "cn04-2fe56bfb",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 30,
++          "game": "m0r0",
++          "game_id": "m0r0-492f87ba",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 32,
++          "game": "ar25",
++          "game_id": "ar25-0c556536",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 32,
++          "game": "lf52",
++          "game_id": "lf52-271a04aa",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 39,
++          "game": "sp80",
++          "game_id": "sp80-589a99af",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 54,
++          "game": "tr87",
++          "game_id": "tr87-cd924810",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 61,
++          "game": "sk48",
++          "game_id": "sk48-d8078629",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        },
++        {
++          "baseline_actions": 71,
++          "game": "wa30",
++          "game_id": "wa30-ee6fef47",
++          "is_spatial_planning": true,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 78,
++          "game": "g50t",
++          "game_id": "g50t-5849a774",
++          "is_spatial_planning": true,
++          "win_difficulty": "hard"
++        }
++      ],
++      "solved_prefixes": [
++        "r11l",
++        "lp85",
++        "sc25",
++        "su15",
++        "tn36",
++        "cd82",
++        "dc22",
++        "sb26",
++        "ft09",
++        "s5i5",
++        "tu93"
++      ],
++      "strict_nonspatial_candidates": [
++        {
++          "baseline_actions": 55,
++          "game": "cd82",
++          "game_id": "cd82-fb555c5d",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 59,
++          "game": "dc22",
++          "game_id": "dc22-fdcac232",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 17,
++          "game": "lp85",
++          "game_id": "lp85-305b61c3",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 22,
++          "game": "r11l",
++          "game_id": "r11l-495a7899",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 36,
++          "game": "sc25",
++          "game_id": "sc25-635fd71a",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        },
++        {
++          "baseline_actions": 32,
++          "game": "tn36",
++          "game_id": "tn36-ef4dde99",
++          "is_spatial_planning": false,
++          "win_difficulty": "medium"
++        }
++      ],
++      "unsolved_strict_nonspatial_candidates": []
++    },
++    "verification_decisions": []
++  },
++  "strict_nonspatial_candidates": [
++    {
++      "baseline_actions": 55,
++      "game": "cd82",
++      "game_id": "cd82-fb555c5d",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 59,
++      "game": "dc22",
++      "game_id": "dc22-fdcac232",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 17,
++      "game": "lp85",
++      "game_id": "lp85-305b61c3",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 22,
++      "game": "r11l",
++      "game_id": "r11l-495a7899",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 36,
++      "game": "sc25",
++      "game_id": "sc25-635fd71a",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    },
++    {
++      "baseline_actions": 32,
++      "game": "tn36",
++      "game_id": "tn36-ef4dde99",
++      "is_spatial_planning": false,
++      "win_difficulty": "medium"
++    }
++  ],
++  "target_game": "none",
++  "title": "arc3_thirteenth_game_strict_nonspatial_explore_first",
++  "total_games_solved": 12,
++  "verification_decisions": []
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 37adf91c74..55385109ea 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:47:19Z",
+-  "finished_at": "2026-06-13T00:47:19Z",
++  "started_at": "2026-06-13T01:15:24Z",
++  "finished_at": "2026-06-13T01:15:25Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 558ba850e0..9033e9e216 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:47:19Z",
+-  "finished_at": "2026-06-13T00:47:19Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-13T01:15:25Z",
++  "finished_at": "2026-06-13T01:15:25Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 9ebd1c7e43..fadf4a49bc 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:47:19Z",
+-  "finished_at": "2026-06-13T00:47:19Z",
++  "started_at": "2026-06-13T01:15:25Z",
++  "finished_at": "2026-06-13T01:15:25Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/exp4120_thirteenth_game_explore_first.py b/scripts/experiments/exp4120_thirteenth_game_explore_first.py
+new file mode 100644
+index 0000000000..c7968bba92
+--- /dev/null
++++ b/scripts/experiments/exp4120_thirteenth_game_explore_first.py
+@@ -0,0 +1,99 @@
++"""Exp 4120: thirteenth ARC-AGI-3 strict non-spatial explore-first attempt.
++
++Spec refs: REQ-PHASE4-048, SCENARIO-PHASE4-048.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any
++
++REPO = Path(__file__).resolve().parents[2]
++RESULT_NAME = "experiment_4120_thirteenth_game_explore_first.json"
++RANDOM_SEED = 4120
++
++sys.path.insert(0, str(REPO / "python"))
++
++from carnot.agentic.arc_exp4070_ninth_game_explore_first import load_environment_baselines  # noqa: E402
++from carnot.agentic.arc_exp4120_thirteenth_game_explore_first import (  # noqa: E402
++    NoUnsolvedNonSpatialCandidate,
++    artifact_schema_errors,
++    blocked_artifact,
++    build_no_solve_artifact,
++    select_exp4120_candidate_from_survey,
++)
++
++
++def _write_artifact(artifact: dict[str, Any]) -> None:
++    out = REPO / "results" / RESULT_NAME
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _load_offline_arcade() -> Any:
++    from arc_agi import Arcade
++    from arc_agi.base import OperationMode
++
++    return Arcade(
++        arc_api_key="",
++        operation_mode=OperationMode.OFFLINE,
++        environments_dir=str(REPO / "environment_files"),
++    )
++
++
++def _arc_env_count(offline_arcade: Any) -> int:
++    return len(offline_arcade.get_environments())
++
++
++def run(*, seed: int = RANDOM_SEED, write: bool = True) -> dict[str, Any]:
++    started = time.time()
++    survey_path = REPO / "results" / "arc3_win_condition_survey.json"
++    survey = json.loads(survey_path.read_text(encoding="utf-8"))
++    baselines = load_environment_baselines(REPO / "environment_files")
++    if not baselines:
++        artifact = blocked_artifact(
++            random_seed=seed,
++            duration_s=round(time.time() - started, 3),
++            reason="offline fixtures unavailable",
++        )
++        if write:
++            _write_artifact(artifact)
++        return artifact
++
++    offline_arcade = _load_offline_arcade()
++    arc_env_count = _arc_env_count(offline_arcade)
++    try:
++        candidate = select_exp4120_candidate_from_survey(survey, baselines)
++    except NoUnsolvedNonSpatialCandidate as exc:
++        artifact = build_no_solve_artifact(
++            exc.report,
++            random_seed=seed,
++            duration_s=round(time.time() - started, 3),
++            offline_driver_available=True,
++            arc_env_count=arc_env_count,
++        )
++    else:
++        artifact = blocked_artifact(
++            random_seed=seed,
++            duration_s=round(time.time() - started, 3),
++            reason=f"strict non-spatial target {candidate.game_id} selected but solver arm not implemented",
++        )
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise RuntimeError("; ".join(errors))
++    if write:
++        _write_artifact(artifact)
++    return artifact
++
++
++if __name__ == "__main__":  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--no-write", action="store_true")
++    args = parser.parse_args()
++    result = run(write=not args.no_write)
++    print(result["honest_verdict"])
++    raise SystemExit(0 if result["honest_verdict"].startswith(("success:", "complete:", "blocked_")) else 1)
+diff --git a/tests/python/test_experiment_4120_thirteenth_game_explore_first.py b/tests/python/test_experiment_4120_thirteenth_game_explore_first.py
+new file mode 100644
+index 0000000000..bd7d265806
+--- /dev/null
++++ b/tests/python/test_experiment_4120_thirteenth_game_explore_first.py
+@@ -0,0 +1,292 @@
++"""Tests for Exp 4120 ARC-AGI-3 thirteenth-game strict non-spatial attempt.
++
++Spec refs: REQ-PHASE4-048, SCENARIO-PHASE4-048.
++"""
++
++from __future__ import annotations
++
++import json
++import sys
++from pathlib import Path
++
++import pytest
++
++import carnot.agentic.arc_exp4120_thirteenth_game_explore_first as arc4120
++from carnot.agentic.arc_exp4070_ninth_game_explore_first import load_environment_baselines
++from carnot.agentic.arc_exp4120_thirteenth_game_explore_first import (
++    INFERENCE_SUBSTRATE,
++    PRIOR_TOTAL_GAMES_SOLVED,
++    REQUIRED_ARTIFACT_FIELDS,
++    NoUnsolvedNonSpatialCandidate,
++    artifact_schema_errors,
++    blocked_artifact,
++    build_no_solve_artifact,
++    build_selection_report,
++    select_exp4120_candidate_from_survey,
++)
++
++REPO = Path(__file__).resolve().parents[2]
++sys.path.insert(0, str(REPO / "scripts" / "experiments"))
++
++import exp4120_thirteenth_game_explore_first as exp  # noqa: E402
++
++
++SPEC_PATH = REPO / "openspec" / "capabilities" / "phase4_active_inference" / "spec.md"
++SURVEY_PATH = REPO / "results" / "arc3_win_condition_survey.json"
++
++
++def _write_metadata(root: Path, game: str, game_id: str, baseline_actions: int) -> None:
++    suffix = game_id.split("-", maxsplit=1)[1]
++    metadata_dir = root / "environment_files" / game / suffix
++    metadata_dir.mkdir(parents=True, exist_ok=True)
++    metadata_dir.joinpath("metadata.json").write_text(
++        json.dumps({"game_id": game_id, "baseline_actions": [baseline_actions]}),
++        encoding="utf-8",
++    )
++    metadata_dir.joinpath(f"{game}.py").write_text("# synthetic offline fixture\n", encoding="utf-8")
++
++
++def test_req_phase4_048_spec_declares_exp4120_contract() -> None:
++    """REQ-PHASE4-048: OpenSpec declares Exp 4120 and required principle fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-PHASE4-048" in spec
++    assert "SCENARIO-PHASE4-048" in spec
++    assert "experiment_4120_thirteenth_game_explore_first.json" in spec
++    assert "blocked_arc_offline_fixtures_missing" in spec
++    assert "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates" in spec
++    assert INFERENCE_SUBSTRATE in spec
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++    for field in ("honest_verdict", "total_games_solved", "levels_completed", "real_env_confirmed"):
++        assert field in spec
++
++
++def test_req_phase4_048_reports_strict_nonspatial_exhaustion() -> None:
++    """REQ-PHASE4-048: candidate selection refuses a spatial fallback when strict rows are exhausted."""
++
++    survey = json.loads(SURVEY_PATH.read_text(encoding="utf-8"))
++    baselines = load_environment_baselines(REPO / "environment_files")
++
++    report = build_selection_report(survey, baselines)
++
++    assert report.no_unsolved_strict_nonspatial_candidates is True
++    assert [candidate.game for candidate in report.unsolved_strict_nonspatial_candidates] == []
++    assert [candidate.game for candidate in report.strict_nonspatial_candidates] == [
++        "cd82",
++        "dc22",
++        "lp85",
++        "r11l",
++        "sc25",
++        "tn36",
++    ]
++    assert all(candidate.game in report.solved_prefixes for candidate in report.strict_nonspatial_candidates)
++    assert [candidate.game for candidate in report.remaining_unsolved_offline_candidates[:3]] == [
++        "bp35",
++        "ls20",
++        "re86",
++    ]
++
++    with pytest.raises(NoUnsolvedNonSpatialCandidate) as excinfo:
++        select_exp4120_candidate_from_survey(survey, baselines)
++    assert excinfo.value.report.no_unsolved_strict_nonspatial_candidates is True
++
++    strict_survey = {
++        "per_game_surveys": [
++            {
++                "game": "aa01",
++                "is_spatial_planning": False,
++                "win_difficulty": "easy",
++                "available_actions": "click-only",
++                "win_condition_summary": "target match",
++            },
++            {
++                "game": "bb02",
++                "is_spatial_planning": False,
++                "win_difficulty": "easy",
++                "available_actions": "click-only",
++                "win_condition_summary": "target match",
++            },
++        ]
++    }
++    selected = select_exp4120_candidate_from_survey(
++        strict_survey,
++        {"aa01": ("aa01-game", 8), "bb02": ("bb02-game", 4)},
++        solved_prefixes=(),
++    )
++    assert selected.game == "bb02"
++    assert selected.selection_mode == "strict_survey_non_spatial"
++
++
++def test_scenario_phase4_048_no_solve_artifact_has_required_fields() -> None:
++    """SCENARIO-PHASE4-048: strict exhaustion is a complete terminal no-solve verdict."""
++
++    survey = json.loads(SURVEY_PATH.read_text(encoding="utf-8"))
++    baselines = load_environment_baselines(REPO / "environment_files")
++    report = build_selection_report(survey, baselines)
++
++    artifact = build_no_solve_artifact(
++        report,
++        random_seed=4120,
++        duration_s=0.25,
++        offline_driver_available=True,
++        arc_env_count=25,
++    )
++
++    assert artifact["honest_verdict"] == (
++        "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates"
++    )
++    assert artifact["game_solved"] is False
++    assert artifact["target_game"] == "none"
++    assert artifact["total_games_solved"] == PRIOR_TOTAL_GAMES_SOLVED
++    assert artifact["levels_completed"] == 0
++    assert artifact["first_solve_at_action"] == -1
++    assert artifact["actions_vs_baseline"] == 0.0
++    assert artifact["real_env_confirmed"] is False
++    assert artifact["inference_substrate"] == INFERENCE_SUBSTRATE
++    assert artifact["acceptance_gate_passed"] is True
++    assert artifact["nonspatial_candidates_exhausted"] is True
++    assert artifact["solve_trace"]["selection_report"]["no_unsolved_strict_nonspatial_candidates"] is True
++    assert artifact["solve_trace"]["actions"] == []
++    assert artifact["field_principles"]["honest_verdict"].startswith("Terminal-prefixed")
++    assert artifact["requirements"] == ["REQ-PHASE4-048", "SCENARIO-PHASE4-048"]
++    assert artifact_schema_errors(artifact) == []
++    for field in REQUIRED_ARTIFACT_FIELDS:
++        assert field in artifact
++
++
++def test_req_phase4_048_blocked_and_schema_validation(monkeypatch) -> None:
++    """REQ-PHASE4-048: blocked and malformed artifacts do not inflate solved games."""
++
++    blocked = blocked_artifact(
++        random_seed=4120,
++        duration_s=0.0,
++        reason="offline fixtures unavailable",
++    )
++    assert blocked["honest_verdict"] == "blocked_arc_offline_fixtures_missing"
++    assert blocked["game_solved"] is False
++    assert blocked["target_game"] == "none"
++    assert blocked["total_games_solved"] == PRIOR_TOTAL_GAMES_SOLVED
++    assert blocked["levels_completed"] == 0
++    assert blocked["real_env_confirmed"] is False
++    assert artifact_schema_errors(blocked) == []
++
++    assert any("missing required field levels_completed" in err for err in artifact_schema_errors({}))
++    assert any("honest_verdict must be a string" in err for err in artifact_schema_errors({"honest_verdict": 4120}))
++    assert any("honest_verdict must start" in err for err in artifact_schema_errors({"honest_verdict": "maybe"}))
++    assert any("game_solved must be a bare bool" in err for err in artifact_schema_errors({"game_solved": "no"}))
++    assert any("target_game must be a string" in err for err in artifact_schema_errors({"target_game": 4120}))
++    assert any("total_games_solved must be a bare int" in err for err in artifact_schema_errors({"total_games_solved": "12"}))
++    assert any("levels_completed must be a bare int" in err for err in artifact_schema_errors({"levels_completed": "0"}))
++    assert any(
++        "first_solve_at_action must be a bare int" in err
++        for err in artifact_schema_errors({"first_solve_at_action": 0.0})
++    )
++    assert any(
++        "actions_vs_baseline must be a bare float" in err
++        for err in artifact_schema_errors({"actions_vs_baseline": "0.0"})
++    )
++    assert any("real_env_confirmed must be a bare bool" in err for err in artifact_schema_errors({"real_env_confirmed": 0}))
++    assert any("solve_trace must be a dict" in err for err in artifact_schema_errors({"solve_trace": []}))
++    assert any(
++        "inference_substrate must equal" in err
++        for err in artifact_schema_errors({"inference_substrate": "wrong"})
++    )
++    assert any("requirements must include" in err for err in artifact_schema_errors({"requirements": []}))
++
++    bad_no_solve = {
++        "honest_verdict": "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
++        "game_solved": True,
++        "target_game": "bp35-0a0ad940",
++        "total_games_solved": 13,
++        "levels_completed": 1,
++        "first_solve_at_action": 1,
++        "actions_vs_baseline": 1.0,
++        "real_env_confirmed": True,
++        "solve_trace": {},
++        "inference_substrate": INFERENCE_SUBSTRATE,
++    }
++    bad_no_solve_errors = artifact_schema_errors(bad_no_solve)
++    assert any("game_solved must be false" in err for err in bad_no_solve_errors)
++    assert any("target_game must be none" in err for err in bad_no_solve_errors)
++    assert any("total_games_solved must remain at 12" in err for err in bad_no_solve_errors)
++    assert any("levels_completed must be zero" in err for err in bad_no_solve_errors)
++    assert any("first_solve_at_action must be -1" in err for err in bad_no_solve_errors)
++    assert any("actions_vs_baseline must be 0.0" in err for err in bad_no_solve_errors)
++    assert any("real_env_confirmed must be false" in err for err in bad_no_solve_errors)
++
++    monkeypatch.setattr(arc4120, "artifact_schema_errors", lambda artifact: ["forced schema error"])
++    with pytest.raises(ValueError, match="forced schema error"):
++        arc4120.build_no_solve_artifact(
++            build_selection_report({}, {}),
++            random_seed=4120,
++            duration_s=0.0,
++            offline_driver_available=True,
++            arc_env_count=0,
++        )
++    with pytest.raises(ValueError, match="forced schema error"):
++        arc4120.blocked_artifact(random_seed=4120, duration_s=0.0, reason="x")
++
++
++def test_scenario_phase4_048_script_writes_no_solve_from_exhausted_strict_candidates(
++    monkeypatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-PHASE4-048: runner writes no-solve when strict non-spatial rows are exhausted."""
++
++    (tmp_path / "results").mkdir()
++    (tmp_path / "results" / "arc3_win_condition_survey.json").write_text(
++        SURVEY_PATH.read_text(encoding="utf-8"),
++        encoding="utf-8",
++    )
++    for game, game_id, baseline in (
++        ("cd82", "cd82-fb555c5d", 55),
++        ("dc22", "dc22-fdcac232", 59),
++        ("lp85", "lp85-305b61c3", 17),
++        ("r11l", "r11l-495a7899", 22),
++        ("sc25", "sc25-635fd71a", 36),
++        ("tn36", "tn36-ef4dde99", 32),
++        ("bp35", "bp35-0a0ad940", 21),
++    ):
++        _write_metadata(tmp_path, game, game_id, baseline)
++
++    fake_arcade = type("Arcade", (), {"get_environments": lambda self: ["a", "b", "c"]})()
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++    monkeypatch.setattr(exp, "_load_offline_arcade", lambda: fake_arcade)
++
++    artifact = exp.run(write=True)
++
++    assert artifact["honest_verdict"] == (
++        "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates"
++    )
++    assert artifact["game_solved"] is False
++    assert artifact["total_games_solved"] == PRIOR_TOTAL_GAMES_SOLVED
++    assert artifact["real_env_confirmed"] is False
++    assert artifact["arc_env_count"] == 3
++    written = tmp_path / "results" / exp.RESULT_NAME
++    assert json.loads(written.read_text(encoding="utf-8"))["experiment"] == (
++        "experiment_4120_thirteenth_game_explore_first"
++    )
++
++
++def test_scenario_phase4_048_script_blocks_when_fixtures_missing(
++    monkeypatch,
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-PHASE4-048: missing offline fixtures stop with the required blocked verdict."""
++
++    (tmp_path / "results").mkdir()
++    (tmp_path / "results" / "arc3_win_condition_survey.json").write_text(
++        SURVEY_PATH.read_text(encoding="utf-8"),
++        encoding="utf-8",
++    )
++    monkeypatch.setattr(exp, "REPO", tmp_path)
++
++    artifact = exp.run(write=True)
++
++    assert artifact["honest_verdict"] == "blocked_arc_offline_fixtures_missing"
++    assert artifact["game_solved"] is False
++    assert artifact["real_env_confirmed"] is False
++    written = tmp_path / "results" / exp.RESULT_NAME
++    assert json.loads(written.read_text(encoding="utf-8"))["total_games_solved"] == PRIOR_TOTAL_GAMES_SOLVED
+-- 
+2.55.0
+

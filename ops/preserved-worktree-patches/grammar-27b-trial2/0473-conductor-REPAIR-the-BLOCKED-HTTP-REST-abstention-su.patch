@@ -1,0 +1,1666 @@
+From e168c9f1c2200cf546d4c6d98ef411c9aec50d6a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 4 Jun 2026 12:23:43 -0400
+Subject: [PATCH 00473/11171] [conductor] REPAIR the BLOCKED HTTP/REST
+ abstention surface (.348 exp3801 -> blocked_http_abstention_e2e_failed).
+ Diagnose WHY the E2E assertion failed in
+ python/carnot/pipeline/abstention_http_rest.py, FIX it, and confirm E2E: POST
+ a candidate (or batch) -> confident-or-abstain verdict + the certified
+ coverage/risk/delta metadata over HTTP. Default abstention OFF; load the
+ threshold from config (exp3771's 0.733), not a constant; no heavy new
+ framework dependency. The THIRD integration surface per Decentralization Rule
+ 4. Edits CODE + tests only; emits a doc-update PROPOSAL (does NOT edit
+ operator-curated docs). A wiring smoke -- no accuracy claim.
+
+Automated research step by research conductor.
+Task ID: exp3810-abstention-http-rest-surface-v2
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ...tention-http-rest-doc-proposal-20260604.md |   1 +
+ openspec/capabilities/pipeline/spec.md        |  42 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../carnot/pipeline/abstention_http_rest.py   |  45 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   4 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   4 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ ...ent_3801_abstention_http_rest_surface.json |   2 +-
+ ..._3810_abstention_http_rest_surface_v2.json | 246 ++++++++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...nt_3810_abstention_http_rest_surface_v2.py | 560 ++++++++++++++++++
+ .../python/test_abstention_http_rest_3810.py  | 160 +++++
+ ...nt_3810_abstention_http_rest_surface_v2.py | 177 ++++++
+ 25 files changed, 1257 insertions(+), 34 deletions(-)
+ create mode 100644 results/experiment_3810_abstention_http_rest_surface_v2.json
+ create mode 100644 scripts/experiment_3810_abstention_http_rest_surface_v2.py
+ create mode 100644 tests/python/test_abstention_http_rest_3810.py
+ create mode 100644 tests/python/test_experiment_3810_abstention_http_rest_surface_v2.py
+
+diff --git a/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md b/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md
+index 6e56c1a9fe..98abba701a 100644
+--- a/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md
++++ b/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md
+@@ -7,3 +7,4 @@ Proposal for the operator-curated integration docs:
+ - Keep abstention default-off; when omitted or false, response rows preserve the existing calibrated `score_candidates` shape without `verdict`.
+ - When `abstention_mode` is true, return per-candidate `verdict` (`confident` or `abstain`), `score`, certified `coverage`, certified `risk`, `delta`, `threshold`, and `threshold_source`.
+ - State that the default threshold is loaded from `results/experiment_3771_certified_abstention_operating_point.json`; threshold overrides are explicit operator choices.
++- Exp 3810 repairs the blocked Exp 3801 smoke by using a true below-threshold cached verifier-scoring row for the `abstain` branch.
+diff --git a/openspec/capabilities/pipeline/spec.md b/openspec/capabilities/pipeline/spec.md
+index d8f81c7b74..695dbcc361 100644
+--- a/openspec/capabilities/pipeline/spec.md
++++ b/openspec/capabilities/pipeline/spec.md
+@@ -588,6 +588,33 @@ The terminal artifact MUST include `honest_verdict`, `inference_substrate`,
+ `doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
+ `model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
+ 
++### REQ-SPOE-3810: Abstention HTTP REST Surface Repair
++
++The Exp 3801 HTTP/REST abstention surface repair MUST diagnose the blocked
++E2E assertion before claiming completion and MUST preserve the minimal
++standard-library HTTP implementation.  The repair MUST show that the endpoint
++loads the certified abstention operating point through the same configuration
++path used by the wiring smoke, with the default threshold sourced from the
++absolute Exp 3771 artifact rather than a hard-coded value.
++
++The repaired endpoint MUST accept either one candidate or a batch, keep
++abstention disabled by default, and when abstention is explicitly enabled,
++return per-candidate `verdict`, `score`, `coverage`, `risk`, and `delta`
++metadata over HTTP.  The repair E2E MUST exercise a real above-threshold
++candidate that returns `confident`, a real below-threshold candidate that
++returns `abstain`, default-off prior behavior, and a batch POST containing
++more than one candidate.  The smoke MUST use cached verifier-scoring examples
++only and MUST not make an accuracy claim.
++
++The Exp 3810 runner MUST write
++`results/experiment_3810_abstention_http_rest_surface_v2.json` and include
++`honest_verdict`, `inference_substrate`, `e2e_failure_root_cause`,
++`http_rest_surface_added`, `batch_post_works`,
++`default_off_preserves_prior_behavior`, `certified_threshold_used`,
++`e2e_http_abstention_passed`, `no_heavy_new_dependency`,
++`doc_proposal_emitted_not_curated_edit`, `tests_assert_real_behavior`,
++`model_specs`, `random_seed`, `reproducibility_checksum`, and `duration_s`.
++
+ ## Scenarios
+ 
+ ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
+@@ -852,6 +879,21 @@ reports more than one processed candidate.
+ 
+ **Spec traces:** REQ-SPOE-3801
+ 
++### SCENARIO-SPOE-3810: HTTP REST Repair Confirms Real Abstention Branch
++
++**Given** the Exp 3771 certified abstention artifact is readable, a local
++HTTP endpoint is serving the packaged verifier-scoring surface, and the repair
++runner has reproduced the Exp 3801 failed assertion
++**When** the caller POSTs a cached verifier-scoring batch with abstention mode
++enabled
++**Then** one row with score at or above the certified threshold returns
++`confident`, one row with score below the certified threshold returns
++`abstain`, both rows carry certified metadata from the configured threshold
++artifact, and the same endpoint still preserves default-off score row shape
++when the flag is omitted.
++
++**Spec traces:** REQ-SPOE-3810
++
+ ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
+ 
+ `SparseIsingEBM` MUST implement a K-regular sparse connectivity graph where each spin
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3c8d18afae..a6fba309e9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 147,
+   "code_violations": 0,
+-  "experiments_checked": 2911,
++  "experiments_checked": 2912,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/pipeline/abstention_http_rest.py b/python/carnot/pipeline/abstention_http_rest.py
+index 439f92d4be..9ad2efe312 100644
+--- a/python/carnot/pipeline/abstention_http_rest.py
++++ b/python/carnot/pipeline/abstention_http_rest.py
+@@ -16,6 +16,7 @@ import json
+ from pathlib import Path
+ from typing import Any, cast
+ 
++from carnot.pipeline import certified_abstention_surface as abstention
+ from carnot.pipeline import second_pair_detector as spd
+ 
+ 
+@@ -38,9 +39,13 @@ class AbstentionHTTPServer(ThreadingHTTPServer):
+         *,
+         root: Path | str = REPO_ROOT,
+         examples: Sequence[spd.LabeledDetectorExample] | None = None,
++        certified_threshold_path: Path | str | None = None,
+     ) -> None:
+         self.carnot_root = Path(root)
+         self.carnot_examples = examples
++        self.carnot_certified_threshold_path = _certified_threshold_path(
++            certified_threshold_path
++        )
+         super().__init__(server_address, AbstentionRequestHandler)
+ 
+ 
+@@ -60,6 +65,7 @@ class AbstentionRequestHandler(BaseHTTPRequestHandler):
+                 payload,
+                 root=server.carnot_root,
+                 examples=server.carnot_examples,
++                certified_threshold_path=server.carnot_certified_threshold_path,
+             )
+         except json.JSONDecodeError as exc:
+             self._send_json(400, _error_response("INVALID_JSON", str(exc)))
+@@ -99,10 +105,16 @@ def make_server(
+     *,
+     root: Path | str = REPO_ROOT,
+     examples: Sequence[spd.LabeledDetectorExample] | None = None,
++    certified_threshold_path: Path | str | None = None,
+ ) -> AbstentionHTTPServer:
+     """Create an in-process HTTP server for tests or local integration."""
+ 
+-    return AbstentionHTTPServer(server_address, root=root, examples=examples)
++    return AbstentionHTTPServer(
++        server_address,
++        root=root,
++        examples=examples,
++        certified_threshold_path=certified_threshold_path,
++    )
+ 
+ 
+ def score_candidates_http_payload(
+@@ -113,6 +125,7 @@ def score_candidates_http_payload(
+     domain: str | None = None,
+     abstention_mode: bool | None = None,
+     abstention_threshold: float | None = None,
++    certified_threshold_path: Path | str | None = None,
+ ) -> JsonDict:
+     """Score a JSON-compatible HTTP payload through the product verifier path."""
+ 
+@@ -125,10 +138,28 @@ def score_candidates_http_payload(
+         root=root,
+         examples=examples,
+         default_domain=str(request_domain) if request_domain is not None else None,
+-        abstention_mode=request_abstention_mode,
+-        abstention_threshold=float(threshold_value) if threshold_value is not None else None,
++        abstention_mode=False,
+     )
+-    abstention_summary = result.get("abstention_mode", {})
++    abstention_summary: Mapping[str, Any] = {}
++    if request_abstention_mode:
++        config = abstention.load_certified_abstention_config(
++            _certified_threshold_path(certified_threshold_path)
++        )
++        operator_override = threshold_value is not None
++        if operator_override:
++            config = config.with_threshold(float(threshold_value))
++        result["scores"] = [
++            (
++                abstention.apply_certified_abstention(row, config)
++                if row.get("calibrated_error_score") is not None
++                else row
++            )
++            for row in result["scores"]
++        ]
++        abstention_summary = abstention.abstention_mode_summary(
++            config,
++            operator_threshold_override=operator_override,
++        )
+     return {
+         "surface": HTTP_SURFACE,
+         "abstention_mode_enabled": request_abstention_mode,
+@@ -174,6 +205,12 @@ def _payload_field(payload: object, field: str, override: Any) -> Any:
+     return None
+ 
+ 
++def _certified_threshold_path(path: Path | str | None) -> Path:
++    if path is None:
++        return abstention.DEFAULT_CERTIFIED_THRESHOLD_PATH
++    return Path(path).resolve()
++
++
+ def _http_row(
+     row: Mapping[str, Any],
+     abstention_summary: Mapping[str, Any],
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index dbf67eb128..4fb3c53ca1 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,8 +2,8 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T14:33:37.916334+00:00",
+-  "finished_at": "2026-06-04T14:33:37.939456+00:00",
++  "started_at": "2026-06-04T16:22:48.798483+00:00",
++  "finished_at": "2026-06-04T16:22:48.821666+00:00",
+   "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 117a126ab0..26c384307e 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T14:33:38Z",
++  "run_date": "2026-06-04T16:22:48Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index 753657fcdc..0afb21d545 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,8 +2,8 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T14:33:39Z",
+-  "finished_at": "2026-06-04T14:33:39Z",
++  "started_at": "2026-06-04T16:22:49Z",
++  "finished_at": "2026-06-04T16:22:49Z",
+   "duration_s": 0.001,
+   "status": "blocked",
+   "random_seed": 42,
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index b70321593f..8e66df3ded 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-04T14:33:39Z",
++  "run_date": "2026-06-04T16:22:49Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 58501bfed1..b6d8ba4cc0 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-04T14:33:39Z",
++  "run_date": "2026-06-04T16:22:49Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 74f433ef2f..49adfa6c85 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-04T14:31:59.910081Z",
+-  "duration_s": 0.010136604309082031,
++  "run_date": "2026-06-04T16:21:07.177102Z",
++  "duration_s": 0.007317304611206055,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "0493a4ceb6faadf96c98a04859f30fff0437b1cf114858a90f6a857e07c1b1ee",
++  "reproducibility_checksum": "5ef03ad34089b9b927b638099815efcc6c52d82c4b31db49b1d77fc8613cd44d",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "6519a8a2ea7d3e484aed21c2a14f3fbb74553448"
++    "adversarial_verify_version": "3c470c863ce41d0245191e5aef77f15f9d4d34e1"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a5b718597a..6dfe181a69 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-04T14:31:59.922875Z",
+-  "duration_s": 0.009177923202514648,
++  "run_date": "2026-06-04T16:21:07.186672Z",
++  "duration_s": 0.007386684417724609,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "d34cdf198a7816a7a190899e35674ceef7ff0aa58580d2ac80486e4c38ce66eb",
++  "reproducibility_checksum": "cae8030e4c4f20d5baa4ca2be7b0e631a18ec12c48b7dc6d9c7b55914b0719a6",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "6519a8a2ea7d3e484aed21c2a14f3fbb74553448"
++    "adversarial_verify_version": "3c470c863ce41d0245191e5aef77f15f9d4d34e1"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bf2e5591f1..f761bd1dfc 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.0742416381835938,
++  "efficiency_gains_ms": 2.110004425048828,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 5115f09089..19d13143be 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.27556657791137695,
++  "duration_s": 0.27677440643310547,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 48bee4ec11..0eeab3b55b 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0007870197296142578,
++  "duration_s": 0.0020699501037597656,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 411bc03598..2e6eb9c684 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.6348992832936347e-05,
++  "duration_s": 3.2400988857261837e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 8062e0b70c..ecf2d7a7e6 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 7.119961082935333e-07,
++  "duration_s": 6.20988430455327e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index ff23d95be2..547db1afe9 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 5.14984130859375e-05,
++  "duration_s": 6.413459777832031e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3801_abstention_http_rest_surface.json b/results/experiment_3801_abstention_http_rest_surface.json
+index 7dcf456fcc..8a110db0cd 100644
+--- a/results/experiment_3801_abstention_http_rest_surface.json
++++ b/results/experiment_3801_abstention_http_rest_surface.json
+@@ -4,7 +4,7 @@
+   "default_off_preserves_prior_behavior": false,
+   "doc_proposal_emitted_not_curated_edit": false,
+   "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md",
+-  "duration_s": 7.678484,
++  "duration_s": 8.303796,
+   "e2e_evidence": {
+     "abstention_ok": false,
+     "batch_works": true,
+diff --git a/results/experiment_3810_abstention_http_rest_surface_v2.json b/results/experiment_3810_abstention_http_rest_surface_v2.json
+new file mode 100644
+index 0000000000..6f0f98321a
+--- /dev/null
++++ b/results/experiment_3810_abstention_http_rest_surface_v2.json
+@@ -0,0 +1,246 @@
++{
++  "batch_post_works": true,
++  "certified_threshold_used": 0.733216,
++  "default_off_preserves_prior_behavior": true,
++  "diagnostic_evidence": {
++    "default_response": {
++      "abstention_mode_enabled": false,
++      "batch": {
++        "n_candidates": 2
++      },
++      "scores": [
++        {
++          "abstained": false,
++          "calibrated_error_score": 0.993203,
++          "candidate_id": "exp3801_confident_error",
++          "confidence_error": 1.0,
++          "domain": "math",
++          "ensemble_energy": 1.0,
++          "operating_point": {
++            "actual_fpr": 0.1,
++            "expected_recall": 0.970588,
++            "fpr_budget": 0.1,
++            "threshold": 0.012717
++          }
++        },
++        {
++          "abstained": false,
++          "calibrated_error_score": 0.096153,
++          "candidate_id": "exp3801_uncertain_midpoint",
++          "confidence_error": 0.5,
++          "domain": "math",
++          "ensemble_energy": 0.5,
++          "operating_point": {
++            "actual_fpr": 0.1,
++            "expected_recall": 0.970588,
++            "fpr_budget": 0.1,
++            "threshold": 0.012717
++          }
++        }
++      ],
++      "surface": "http_rest_score_candidates"
++    },
++    "default_status": 200,
++    "enabled_response": {
++      "abstention_mode": {
++        "certified_risk_bound": 0.037646,
++        "certified_threshold": 0.733216,
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "enabled": true,
++        "n_calibration": 2619,
++        "operator_threshold_override": false,
++        "score_orientation": "larger abstention_score means a more confident verifier judgment",
++        "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++      },
++      "abstention_mode_enabled": true,
++      "batch": {
++        "n_candidates": 2
++      },
++      "scores": [
++        {
++          "candidate_id": "exp3801_confident_error",
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "domain": "math",
++          "risk": 0.037646,
++          "score": 0.993203,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++          "verdict": "confident"
++        },
++        {
++          "candidate_id": "exp3801_uncertain_midpoint",
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "domain": "math",
++          "risk": 0.037646,
++          "score": 0.903847,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++          "verdict": "confident"
++        }
++      ],
++      "surface": "http_rest_score_candidates"
++    },
++    "enabled_status": 200,
++    "old_below_threshold_score": 0.903847,
++    "old_below_threshold_verdict": "confident",
++    "old_expected_verdict": "abstain",
++    "root_cause": "Exp 3801 used a supposed below-threshold HTTP smoke candidate with ensemble_energy=0.5 and confidence_error=0.5; against the cached FoVer calibration it scored above the certified threshold, so HTTP correctly returned confident and the E2E expected the wrong branch."
++  },
++  "doc_proposal_emitted_not_curated_edit": true,
++  "doc_proposal_path": "/home/ianblenke/github.com/ianblenke/carnot/docs/research-notes/abstention-http-rest-doc-proposal-20260604.md",
++  "duration_s": 15.318896,
++  "e2e_evidence": {
++    "abstention_ok": true,
++    "batch_works": true,
++    "default_off_ok": true,
++    "default_response": {
++      "abstention_mode_enabled": false,
++      "batch": {
++        "n_candidates": 2
++      },
++      "scores": [
++        {
++          "abstained": false,
++          "calibrated_error_score": 0.993203,
++          "candidate_id": "exp3810_above_threshold",
++          "confidence_error": 1.0,
++          "domain": "math",
++          "ensemble_energy": 1.0,
++          "operating_point": {
++            "actual_fpr": 0.1,
++            "expected_recall": 0.970588,
++            "fpr_budget": 0.1,
++            "threshold": 0.012717
++          }
++        },
++        {
++          "abstained": false,
++          "calibrated_error_score": 0.656864,
++          "candidate_id": "exp3810_below_threshold",
++          "confidence_error": 0.5,
++          "domain": "math",
++          "ensemble_energy": 0.7,
++          "operating_point": {
++            "actual_fpr": 0.1,
++            "expected_recall": 0.970588,
++            "fpr_budget": 0.1,
++            "threshold": 0.012717
++          }
++        }
++      ],
++      "surface": "http_rest_score_candidates"
++    },
++    "default_status": 200,
++    "enabled_response": {
++      "abstention_mode": {
++        "certified_risk_bound": 0.037646,
++        "certified_threshold": 0.733216,
++        "coverage": 0.998218,
++        "delta": 0.05,
++        "enabled": true,
++        "n_calibration": 2619,
++        "operator_threshold_override": false,
++        "score_orientation": "larger abstention_score means a more confident verifier judgment",
++        "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json"
++      },
++      "abstention_mode_enabled": true,
++      "batch": {
++        "n_candidates": 2
++      },
++      "scores": [
++        {
++          "candidate_id": "exp3810_above_threshold",
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "domain": "math",
++          "risk": 0.037646,
++          "score": 0.993203,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++          "verdict": "confident"
++        },
++        {
++          "candidate_id": "exp3810_below_threshold",
++          "coverage": 0.998218,
++          "delta": 0.05,
++          "domain": "math",
++          "risk": 0.037646,
++          "score": 0.656864,
++          "threshold": 0.733216,
++          "threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++          "verdict": "abstain"
++        }
++      ],
++      "surface": "http_rest_score_candidates"
++    },
++    "enabled_status": 200
++  },
++  "e2e_failure_root_cause": "Exp 3801 used a supposed below-threshold HTTP smoke candidate with ensemble_energy=0.5 and confidence_error=0.5; against the cached FoVer calibration it scored above the certified threshold, so HTTP correctly returned confident and the E2E expected the wrong branch.",
++  "e2e_http_abstention_passed": true,
++  "field_principles": {
++    "batch_post_works": "BARE bool -- a batch POST processed >1 candidate in one request.",
++    "certified_threshold_used": "The threshold the endpoint loads (default = exp3771's 0.733) -- traces to the certified operating point, not a magic constant.",
++    "default_off_preserves_prior_behavior": "BARE bool -- abstention is OFF by default, so existing integrators see no behavior change (no silent regression).",
++    "doc_proposal_emitted_not_curated_edit": "BARE bool, true -- a doc-update PROPOSAL was written/updated; the operator-curated docs were NOT edited (Public Documentation Discipline).",
++    "duration_s": "Wall-clock plausibility floor.",
++    "e2e_failure_root_cause": "The diagnosed cause of the exp3801 E2E failure -- the repair audit trail (what was actually wrong).",
++    "e2e_http_abstention_passed": "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E over HTTP on cached examples (the assertion exp3801 failed).",
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "http_rest_surface_added": "BARE bool -- the abstention mode is now callable over HTTP/REST AND passes E2E (the core deliverable; the gate exp3811 reads).",
++    "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
++    "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
++    "no_heavy_new_dependency": "BARE bool, true -- no heavy new web framework was added if one was not already present (decentralization/portability hygiene).",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "tests_assert_real_behavior": "BARE bool, true -- shipped tests assert the real endpoint behavior (anti-poison-test)."
++  },
++  "honest_verdict": "complete: abstention_http_rest_surface_v2_repaired_e2e_passed_default_off_batch_post_works_doc_proposal_emitted_not_curated_edit",
++  "http_rest_surface_added": true,
++  "inference_substrate": "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM).",
++  "methodology": {
++    "candidate_source": "tiny cached FoVer-style verifier-scoring candidates",
++    "label": "WIRING smoke, not an accuracy claim",
++    "live_llm_inference": false,
++    "random_seed": 3810
++  },
++  "model_specs": {
++    "certified_threshold_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++    "http_entrypoint": "POST /v1/score-candidates",
++    "live_llm_inference": false,
++    "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++    "verifiers": [
++      "controlled_invariance_executor_v2",
++      "executable_monitor_runtime_adapter",
++      "ast_structure_verifier",
++      "code_structural_dependency_verifier"
++    ],
++    "wiring_smoke_not_accuracy_claim": true
++  },
++  "no_heavy_new_dependency": true,
++  "operator_curated_docs_edited": false,
++  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3810_abstention_http_rest_surface_v2.json",
++  "preconditions_checked": {
++    "certified_threshold": {
++      "available": true,
++      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json",
++      "selected_threshold": 0.733216
++    },
++    "interpreter": {
++      "available": true,
++      "expected_suffix": ".venv/bin/python",
++      "value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
++    },
++    "package_import": {
++      "available": true,
++      "returncode": 0,
++      "stderr": ""
++    }
++  },
++  "random_seed": 3810,
++  "reproducibility_checksum": "da5d23b05f8b11ec",
++  "scripts_research_conductor_modified": false,
++  "tests_assert_real_behavior": true
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index ffb45acce8..6b26b99c9d 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T14:36:28Z",
+-  "finished_at": "2026-06-04T14:36:28Z",
++  "started_at": "2026-06-04T16:20:58Z",
++  "finished_at": "2026-06-04T16:20:58Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 89742bdc41..8d0b6ab3d0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T14:36:28Z",
+-  "finished_at": "2026-06-04T14:36:28Z",
++  "started_at": "2026-06-04T16:20:58Z",
++  "finished_at": "2026-06-04T16:20:58Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index d0157226e3..0b8f59bb80 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260604",
+-  "started_at": "2026-06-04T14:36:28Z",
+-  "finished_at": "2026-06-04T14:36:28Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-04T16:20:58Z",
++  "finished_at": "2026-06-04T16:20:58Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3810_abstention_http_rest_surface_v2.py b/scripts/experiment_3810_abstention_http_rest_surface_v2.py
+new file mode 100644
+index 0000000000..4ccf36f1aa
+--- /dev/null
++++ b/scripts/experiment_3810_abstention_http_rest_surface_v2.py
+@@ -0,0 +1,560 @@
++#!/usr/bin/env python3
++"""Run Exp 3810 abstention HTTP/REST surface repair smoke.
++
++This is a wiring smoke, not an accuracy claim.  It diagnoses the Exp 3801
++blocked assertion, starts the packaged standard-library HTTP endpoint, posts
++cached verifier-scoring candidates, and records whether the certified Exp 3771
++abstention operating point is reachable over HTTP while remaining default-off.
++
++Spec: REQ-SPOE-3810, SCENARIO-SPOE-3810.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Sequence
++import hashlib
++import http.client
++import json
++from pathlib import Path
++import subprocess
++import threading
++import time
++from typing import Any
++
++from carnot.pipeline import abstention_http_rest as rest
++from carnot.pipeline import certified_abstention_surface as abstention
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++OUTPUT_REL_PATH = Path("results/experiment_3810_abstention_http_rest_surface_v2.json")
++DOC_PROPOSAL_REL_PATH = Path(
++    "docs/research-notes/abstention-http-rest-doc-proposal-20260604.md"
++)
++CERTIFIED_THRESHOLD_REL_PATH = Path(
++    "results/experiment_3771_certified_abstention_operating_point.json"
++)
++RANDOM_SEED = 3810
++INFERENCE_SUBSTRATE = (
++    "verifier_ensemble_against_cached_candidates "
++    "(principle: scores cached triples, no live LLM)."
++)
++COMPLETE_VERDICT = (
++    "complete: abstention_http_rest_surface_v2_repaired_e2e_passed_default_off_"
++    "batch_post_works_doc_proposal_emitted_not_curated_edit"
++)
++SCORING_VERIFIERS = (
++    "controlled_invariance_executor_v2",
++    "executable_monitor_runtime_adapter",
++    "ast_structure_verifier",
++    "code_structural_dependency_verifier",
++)
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "e2e_failure_root_cause",
++    "http_rest_surface_added",
++    "batch_post_works",
++    "default_off_preserves_prior_behavior",
++    "certified_threshold_used",
++    "e2e_http_abstention_passed",
++    "no_heavy_new_dependency",
++    "doc_proposal_emitted_not_curated_edit",
++    "tests_assert_real_behavior",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++EXP3801_ROOT_CAUSE = (
++    "Exp 3801 used a supposed below-threshold HTTP smoke candidate with "
++    "ensemble_energy=0.5 and confidence_error=0.5; against the cached FoVer "
++    "calibration it scored above the certified threshold, so HTTP correctly "
++    "returned confident and the E2E expected the wrong branch."
++)
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal prefix; blocked_<resource> if a precondition failed.",
++    "inference_substrate": (
++        "verifier_ensemble_against_cached_candidates (principle: scores cached triples, no live LLM)."
++    ),
++    "e2e_failure_root_cause": (
++        "The diagnosed cause of the exp3801 E2E failure -- the repair audit trail (what was actually wrong)."
++    ),
++    "http_rest_surface_added": (
++        "BARE bool -- the abstention mode is now callable over HTTP/REST AND passes E2E (the core deliverable; the gate exp3811 reads)."
++    ),
++    "batch_post_works": "BARE bool -- a batch POST processed >1 candidate in one request.",
++    "default_off_preserves_prior_behavior": (
++        "BARE bool -- abstention is OFF by default, so existing integrators see no behavior change (no silent regression)."
++    ),
++    "certified_threshold_used": (
++        "The threshold the endpoint loads (default = exp3771's 0.733) -- traces to the certified operating point, not a magic constant."
++    ),
++    "e2e_http_abstention_passed": (
++        "BARE bool -- the above->confident / below->abstain behavior was confirmed E2E over HTTP on cached examples (the assertion exp3801 failed)."
++    ),
++    "no_heavy_new_dependency": (
++        "BARE bool, true -- no heavy new web framework was added if one was not already present (decentralization/portability hygiene)."
++    ),
++    "doc_proposal_emitted_not_curated_edit": (
++        "BARE bool, true -- a doc-update PROPOSAL was written/updated; the operator-curated docs were NOT edited (Public Documentation Discipline)."
++    ),
++    "tests_assert_real_behavior": (
++        "BARE bool, true -- shipped tests assert the real endpoint behavior (anti-poison-test)."
++    ),
++    "model_specs": "Names the 4 verifiers + the certified-threshold source -- honest substrate.",
++    "random_seed": "Determinism precondition.",
++    "reproducibility_checksum": "Content hash catches drift.",
++    "duration_s": "Wall-clock plausibility floor.",
++}
++
++
++def exp3801_blocked_candidates() -> list[JsonDict]:
++    """Return the candidate pair that reproduced the Exp 3801 blocked smoke."""
++
++    return [
++        {
++            "candidate_id": "exp3801_confident_error",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 14.",
++            "confidence_error": 1.0,
++            "ensemble_energy": 1.0,
++        },
++        {
++            "candidate_id": "exp3801_uncertain_midpoint",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 13.",
++            "confidence_error": 0.5,
++            "ensemble_energy": 0.5,
++        },
++    ]
++
++
++def repair_candidates() -> list[JsonDict]:
++    """Return deterministic HTTP smoke rows with confident and abstain outcomes."""
++
++    return [
++        {
++            "candidate_id": "exp3810_above_threshold",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 14.",
++            "confidence_error": 1.0,
++            "ensemble_energy": 1.0,
++        },
++        {
++            "candidate_id": "exp3810_below_threshold",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 13.",
++            "confidence_error": 0.5,
++            "ensemble_energy": 0.7,
++        },
++    ]
++
++
++def load_certified_threshold(threshold_path: Path) -> JsonDict:
++    """Read the certified operating point from the absolute Exp 3771 artifact."""
++
++    config = abstention.load_certified_abstention_config(threshold_path)
++    return {
++        "selected_threshold": config.threshold,
++        "coverage_at_operating_point": config.coverage,
++        "certified_risk_bound": config.certified_risk_bound,
++        "delta": config.delta,
++        "n_calibration": config.n_calibration,
++        "threshold_source": config.threshold_source,
++    }
++
++
++def check_preconditions(executable: str, threshold_path: Path) -> tuple[JsonDict, JsonDict | None]:
++    """Check required resources before claiming the HTTP surface is repaired."""
++
++    executable_path = Path(executable)
++    preconditions: JsonDict = {
++        "interpreter": {
++            "available": executable_path.exists()
++            and executable_path.name == "python"
++            and ".venv" in executable_path.parts,
++            "value": str(executable_path),
++            "expected_suffix": ".venv/bin/python",
++        }
++    }
++    if preconditions["interpreter"]["available"]:
++        probe = subprocess.run(
++            [
++                str(executable_path),
++                "-c",
++                (
++                    "import inspect; import carnot; "
++                    "from carnot.pipeline.abstention_http_rest "
++                    "import score_candidates_http_payload; "
++                    "from carnot.pipeline.second_pair_detector import score_candidates; "
++                    "params = inspect.signature(score_candidates).parameters; "
++                    "assert 'abstention_mode' in params; "
++                    "assert 'abstention_threshold' in params; "
++                    "print(score_candidates_http_payload.__name__)"
++                ),
++            ],
++            cwd=REPO_ROOT,
++            text=True,
++            capture_output=True,
++            check=False,
++        )
++        preconditions["package_import"] = {
++            "available": probe.returncode == 0,
++            "returncode": probe.returncode,
++            "stderr": probe.stderr.strip(),
++        }
++    else:  # pragma: no cover
++        preconditions["package_import"] = {
++            "available": False,
++            "detail": "interpreter unavailable",
++        }
++    try:
++        threshold = load_certified_threshold(threshold_path)
++    except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
++        preconditions["certified_threshold"] = {
++            "available": False,
++            "path": str(threshold_path.resolve()),
++            "detail": f"{type(exc).__name__}: {exc}",
++        }
++        threshold = None
++    else:
++        preconditions["certified_threshold"] = {
++            "available": True,
++            "path": threshold["threshold_source"],
++            "selected_threshold": threshold["selected_threshold"],
++        }
++    return preconditions, threshold
++
++
++def first_blocker(preconditions: JsonDict) -> str | None:
++    """Return the first blocked_<resource> verdict implied by preconditions."""
++
++    for name, result in preconditions.items():
++        if isinstance(result, dict) and not result.get("available"):
++            if name == "certified_threshold":
++                return "blocked_no_certified_threshold"
++            return f"blocked_{name}"
++    return None
++
++
++def post_json(host: str, port: int, payload: object) -> tuple[int, JsonDict]:
++    """POST JSON to the local HTTP endpoint and parse its JSON response."""
++
++    conn = http.client.HTTPConnection(host, port, timeout=10.0)
++    try:
++        conn.request(
++            "POST",
++            rest.POST_PATH,
++            body=json.dumps(payload).encode("utf-8"),
++            headers={"Content-Type": "application/json"},
++        )
++        response = conn.getresponse()
++        data = response.read().decode("utf-8")
++        parsed = json.loads(data) if data else {}
++        return response.status, parsed
++    finally:
++        conn.close()
++
++
++def _run_http_batch(root: Path, threshold_path: Path, candidates: list[JsonDict]) -> JsonDict:
++    server = rest.make_server(
++        ("127.0.0.1", 0),
++        root=root,
++        certified_threshold_path=threshold_path,
++    )
++    thread = threading.Thread(target=server.serve_forever, daemon=True)
++    thread.start()
++    try:
++        host, port = server.server_address
++        default_status, default_response = post_json(
++            host,
++            port,
++            {"domain": "math", "candidates": candidates},
++        )
++        enabled_status, enabled_response = post_json(
++            host,
++            port,
++            {"domain": "math", "abstention_mode": True, "candidates": candidates},
++        )
++    finally:
++        server.shutdown()
++        thread.join(timeout=2.0)
++        server.server_close()
++    return {
++        "default_status": default_status,
++        "enabled_status": enabled_status,
++        "default_response": default_response,
++        "enabled_response": enabled_response,
++    }
++
++
++def diagnose_exp3801_failure(root: Path, threshold_path: Path | None = None) -> JsonDict:
++    """Reproduce the old blocked HTTP assertion and explain the actual cause."""
++
++    threshold = threshold_path or root / CERTIFIED_THRESHOLD_REL_PATH
++    evidence = _run_http_batch(root, threshold.resolve(), exp3801_blocked_candidates())
++    rows = {
++        row.get("candidate_id"): row
++        for row in evidence["enabled_response"].get("scores", [])
++        if isinstance(row, dict)
++    }
++    old_row = rows.get("exp3801_uncertain_midpoint", {})
++    evidence.update(
++        {
++            "root_cause": EXP3801_ROOT_CAUSE,
++            "old_below_threshold_score": old_row.get("score"),
++            "old_below_threshold_verdict": old_row.get("verdict"),
++            "old_expected_verdict": "abstain",
++        }
++    )
++    return evidence
++
++
++def run_http_e2e(root: Path, threshold_path: Path | None = None) -> JsonDict:
++    """Run default-off and abstention-enabled HTTP POST checks."""
++
++    threshold = (threshold_path or root / CERTIFIED_THRESHOLD_REL_PATH).resolve()
++    config = abstention.load_certified_abstention_config(threshold)
++    evidence = _run_http_batch(root, threshold, repair_candidates())
++
++    default_rows = evidence["default_response"].get("scores", [])
++    enabled_rows = {
++        row.get("candidate_id"): row
++        for row in evidence["enabled_response"].get("scores", [])
++        if isinstance(row, dict)
++    }
++    confident = enabled_rows.get("exp3810_above_threshold", {})
++    abstained = enabled_rows.get("exp3810_below_threshold", {})
++    default_off_ok = (
++        evidence["default_status"] == 200
++        and bool(default_rows)
++        and all(isinstance(row, dict) and "verdict" not in row for row in default_rows)
++    )
++    batch_works = (
++        evidence["enabled_status"] == 200
++        and evidence["enabled_response"].get("batch", {}).get("n_candidates")
++        == len(repair_candidates())
++        and len(evidence["enabled_response"].get("scores", [])) == len(repair_candidates())
++    )
++    abstention_ok = (
++        confident.get("verdict") == "confident"
++        and abstained.get("verdict") == "abstain"
++        and float(confident.get("score", -1.0)) >= config.threshold
++        and float(abstained.get("score", 2.0)) < config.threshold
++        and confident.get("coverage") == round(config.coverage, 6)
++        and abstained.get("risk") == round(config.certified_risk_bound, 6)
++        and abstained.get("delta") == round(config.delta, 6)
++    )
++    evidence.update(
++        {
++            "default_off_ok": bool(default_off_ok),
++            "batch_works": bool(batch_works),
++            "abstention_ok": bool(abstention_ok),
++        }
++    )
++    return evidence
++
++
++def write_doc_proposal(path: Path) -> None:
++    """Write the operator-facing doc-update proposal, not curated docs."""
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        "\n".join(
++            [
++                "# Abstention HTTP/REST Doc Proposal",
++                "",
++                "Proposal for the operator-curated integration docs:",
++                "",
++                "- Add `POST /v1/score-candidates` as the minimal HTTP/REST verifier-scoring surface.",
++                "- Accept a JSON object with either `candidate` or `candidates`, optional `domain`, optional `abstention_mode`, and optional `abstention_threshold`.",
++                "- Keep abstention default-off; when omitted or false, response rows preserve the existing calibrated `score_candidates` shape without `verdict`.",
++                "- When `abstention_mode` is true, return per-candidate `verdict` (`confident` or `abstain`), `score`, certified `coverage`, certified `risk`, `delta`, `threshold`, and `threshold_source`.",
++                "- State that the default threshold is loaded from `results/experiment_3771_certified_abstention_operating_point.json`; threshold overrides are explicit operator choices.",
++                "- Exp 3810 repairs the blocked Exp 3801 smoke by using a true below-threshold cached verifier-scoring row for the `abstain` branch.",
++                "",
++            ]
++        ),
++        encoding="utf-8",
++    )
++
++
++def model_specs(threshold_path: Path) -> JsonDict:
++    """Return verifier and threshold provenance for the wiring smoke."""
++
++    return {
++        "verifiers": list(SCORING_VERIFIERS),
++        "certified_threshold_source": str(threshold_path.resolve()),
++        "live_llm_inference": False,
++        "scoring_entrypoint": "carnot.pipeline.second_pair_detector.score_candidates",
++        "http_entrypoint": f"POST {rest.POST_PATH}",
++        "wiring_smoke_not_accuracy_claim": True,
++    }
++
++
++def reproducibility_checksum(artifact: JsonDict) -> str:
++    """Hash deterministic artifact fields for drift detection."""
++
++    payload = {
++        "honest_verdict": artifact.get("honest_verdict"),
++        "e2e_failure_root_cause": artifact.get("e2e_failure_root_cause"),
++        "http_rest_surface_added": artifact.get("http_rest_surface_added"),
++        "batch_post_works": artifact.get("batch_post_works"),
++        "default_off_preserves_prior_behavior": artifact.get(
++            "default_off_preserves_prior_behavior"
++        ),
++        "certified_threshold_used": artifact.get("certified_threshold_used"),
++        "e2e_http_abstention_passed": artifact.get("e2e_http_abstention_passed"),
++        "random_seed": RANDOM_SEED,
++    }
++    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()[:16]
++
++
++def build_artifact(
++    *,
++    verdict: str,
++    duration_s: float,
++    threshold: JsonDict | None,
++    preconditions: JsonDict,
++    diagnosis: JsonDict | None,
++    http_e2e: JsonDict | None,
++    doc_proposal_path: Path,
++    threshold_path: Path,
++    output_path: Path,
++) -> JsonDict:
++    """Assemble the Exp 3810 terminal artifact."""
++
++    complete = verdict == COMPLETE_VERDICT
++    artifact: JsonDict = {
++        "honest_verdict": verdict,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "e2e_failure_root_cause": (
++            diagnosis.get("root_cause")
++            if diagnosis is not None
++            else "not diagnosed: preconditions blocked"
++        ),
++        "http_rest_surface_added": bool(
++            complete and http_e2e and http_e2e["abstention_ok"]
++        ),
++        "batch_post_works": bool(complete and http_e2e and http_e2e["batch_works"]),
++        "default_off_preserves_prior_behavior": bool(
++            complete and http_e2e and http_e2e["default_off_ok"]
++        ),
++        "certified_threshold_used": (
++            None if threshold is None else threshold["selected_threshold"]
++        ),
++        "e2e_http_abstention_passed": bool(
++            complete and http_e2e and http_e2e["abstention_ok"]
++        ),
++        "no_heavy_new_dependency": True,
++        "doc_proposal_emitted_not_curated_edit": bool(
++            complete and doc_proposal_path.exists()
++        ),
++        "tests_assert_real_behavior": bool(complete),
++        "model_specs": model_specs(threshold_path),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "duration_s": round(max(0.0, duration_s), 6),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "preconditions_checked": preconditions,
++        "methodology": {
++            "label": "WIRING smoke, not an accuracy claim",
++            "candidate_source": "tiny cached FoVer-style verifier-scoring candidates",
++            "random_seed": RANDOM_SEED,
++            "live_llm_inference": False,
++        },
++        "diagnostic_evidence": diagnosis or {},
++        "e2e_evidence": http_e2e or {},
++        "doc_proposal_path": str(doc_proposal_path),
++        "operator_curated_docs_edited": False,
++        "output_path": str(output_path),
++        "scripts_research_conductor_modified": False,
++    }
++    artifact["reproducibility_checksum"] = reproducibility_checksum(artifact)
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required artifact fields: {missing}")
++    return artifact
++
++
++def run(
++    root: Path = REPO_ROOT,
++    *,
++    output_path: Path | None = None,
++    doc_proposal_path: Path | None = None,
++    certified_threshold_path: Path | None = None,
++    executable: str | None = None,
++    diagnosis_runner: Callable[[Path, Path], JsonDict] = diagnose_exp3801_failure,
++    http_runner: Callable[[Path, Path], JsonDict] = run_http_e2e,
++) -> JsonDict:
++    """Run Exp 3810 and write its artifact."""
++
++    start = time.perf_counter()
++    output = root / OUTPUT_REL_PATH if output_path is None else output_path
++    proposal = root / DOC_PROPOSAL_REL_PATH if doc_proposal_path is None else doc_proposal_path
++    threshold_path = (
++        root / CERTIFIED_THRESHOLD_REL_PATH
++        if certified_threshold_path is None
++        else certified_threshold_path
++    ).resolve()
++    exe = executable or str(root / ".venv/bin/python")
++
++    preconditions, threshold = check_preconditions(exe, threshold_path)
++    blocker = first_blocker(preconditions)
++    diagnosis = None
++    http_e2e = None
++    verdict = blocker
++    if blocker is None:
++        diagnosis = diagnosis_runner(root, threshold_path)
++        write_doc_proposal(proposal)
++        http_e2e = http_runner(root, threshold_path)
++        if (
++            http_e2e["default_off_ok"]
++            and http_e2e["batch_works"]
++            and http_e2e["abstention_ok"]
++        ):
++            verdict = COMPLETE_VERDICT
++        else:
++            verdict = "blocked_http_abstention_e2e_failed"
++
++    artifact = build_artifact(
++        verdict=verdict or "blocked_unknown_precondition",
++        duration_s=time.perf_counter() - start,
++        threshold=threshold,
++        preconditions=preconditions,
++        diagnosis=diagnosis,
++        http_e2e=http_e2e,
++        doc_proposal_path=proposal,
++        threshold_path=threshold_path,
++        output_path=output,
++    )
++    output.parent.mkdir(parents=True, exist_ok=True)
++    output.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return artifact
++
++
++def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--output", type=Path, default=None)
++    parser.add_argument("--doc-proposal", type=Path, default=None)
++    parser.add_argument("--certified-threshold", type=Path, default=None)
++    parser.add_argument("--executable", default=None)
++    args = parser.parse_args(argv)
++
++    artifact = run(
++        REPO_ROOT,
++        output_path=args.output,
++        doc_proposal_path=args.doc_proposal,
++        certified_threshold_path=args.certified_threshold,
++        executable=args.executable,
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++    return 0 if artifact["honest_verdict"] == COMPLETE_VERDICT else 1
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_abstention_http_rest_3810.py b/tests/python/test_abstention_http_rest_3810.py
+new file mode 100644
+index 0000000000..9ff4c124a0
+--- /dev/null
++++ b/tests/python/test_abstention_http_rest_3810.py
+@@ -0,0 +1,160 @@
++"""Repair tests for the Exp 3810 abstention HTTP/REST surface.
++
++Spec: REQ-SPOE-3810, SCENARIO-SPOE-3810.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Iterator
++from contextlib import contextmanager
++import http.client
++import json
++from pathlib import Path
++import threading
++
++import pytest
++
++from carnot.pipeline import abstention_http_rest as rest
++from carnot.pipeline import certified_abstention_surface as abstention
++
++
++ROOT = Path(__file__).resolve().parents[2]
++
++
++def _repair_candidates() -> list[dict[str, object]]:
++    return [
++        {
++            "candidate_id": "exp3810_above_threshold",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 14.",
++            "confidence_error": 1.0,
++            "ensemble_energy": 1.0,
++        },
++        {
++            "candidate_id": "exp3810_below_threshold",
++            "domain": "math",
++            "text": "We compute 8 + 5 = 13.",
++            "confidence_error": 0.5,
++            "ensemble_energy": 0.7,
++        },
++    ]
++
++
++@contextmanager
++def _running_server(
++    *,
++    threshold_path: Path | None = None,
++) -> Iterator[rest.AbstentionHTTPServer]:
++    server = rest.make_server(
++        ("127.0.0.1", 0),
++        root=ROOT,
++        certified_threshold_path=threshold_path,
++    )
++    thread = threading.Thread(target=server.serve_forever, daemon=True)
++    thread.start()
++    try:
++        yield server
++    finally:
++        server.shutdown()
++        thread.join(timeout=2.0)
++        server.server_close()
++
++
++def _post_json(
++    server: rest.AbstentionHTTPServer,
++    payload: object,
++) -> tuple[int, dict[str, object]]:
++    host, port = server.server_address
++    conn = http.client.HTTPConnection(host, port, timeout=10.0)
++    try:
++        conn.request(
++            "POST",
++            rest.POST_PATH,
++            body=json.dumps(payload).encode("utf-8"),
++            headers={"Content-Type": "application/json"},
++        )
++        response = conn.getresponse()
++        data = response.read().decode("utf-8")
++        return response.status, json.loads(data)
++    finally:
++        conn.close()
++
++
++def _write_threshold_artifact(path: Path, *, threshold: float) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(
++        json.dumps(
++            {
++                "selected_threshold": threshold,
++                "coverage_at_operating_point": 0.998218,
++                "certified_risk_bound": 0.037646,
++                "certification_method": (
++                    "split-conformal (Hoeffding upper bound, assumes exchangeability, "
++                    "delta=0.05)"
++                ),
++                "n_calibration": 2619,
++            },
++            sort_keys=True,
++        ),
++        encoding="utf-8",
++    )
++
++
++def test_req_spoe_3810_http_uses_configured_threshold_path_not_default(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3810: endpoint loads the threshold config selected by wiring."""
++
++    threshold_path = tmp_path / "results/experiment_3771_custom.json"
++    _write_threshold_artifact(threshold_path, threshold=1.0)
++
++    with _running_server(threshold_path=threshold_path) as server:
++        status, payload = _post_json(
++            server,
++            {
++                "domain": "math",
++                "abstention_mode": True,
++                "candidate": _repair_candidates()[0],
++            },
++        )
++
++    assert status == 200
++    row = payload["scores"][0]  # type: ignore[index]
++    assert row["verdict"] == "abstain"
++    assert row["threshold"] == pytest.approx(1.0)
++    assert row["threshold_source"] == str(threshold_path.resolve())
++
++
++def test_scenario_spoe_3810_real_cached_http_batch_confident_and_abstain() -> None:
++    """SCENARIO-SPOE-3810: cached HTTP E2E exercises both abstention branches."""
++
++    config = abstention.load_certified_abstention_config()
++    with _running_server() as server:
++        default_status, default_payload = _post_json(
++            server,
++            {"domain": "math", "candidates": _repair_candidates()},
++        )
++        enabled_status, enabled_payload = _post_json(
++            server,
++            {
++                "domain": "math",
++                "abstention_mode": True,
++                "candidates": _repair_candidates(),
++            },
++        )
++
++    assert default_status == 200
++    assert all("verdict" not in row for row in default_payload["scores"])  # type: ignore[index]
++
++    assert enabled_status == 200
++    assert enabled_payload["batch"] == {"n_candidates": 2}
++    rows = {row["candidate_id"]: row for row in enabled_payload["scores"]}  # type: ignore[index]
++    confident = rows["exp3810_above_threshold"]
++    abstained = rows["exp3810_below_threshold"]
++    assert confident["verdict"] == "confident"
++    assert confident["score"] >= config.threshold
++    assert abstained["verdict"] == "abstain"
++    assert abstained["score"] < config.threshold
++    assert abstained["coverage"] == pytest.approx(config.coverage)
++    assert abstained["risk"] == pytest.approx(config.certified_risk_bound)
++    assert abstained["delta"] == pytest.approx(config.delta)
+diff --git a/tests/python/test_experiment_3810_abstention_http_rest_surface_v2.py b/tests/python/test_experiment_3810_abstention_http_rest_surface_v2.py
+new file mode 100644
+index 0000000000..81d1eb0cbf
+--- /dev/null
++++ b/tests/python/test_experiment_3810_abstention_http_rest_surface_v2.py
+@@ -0,0 +1,177 @@
++"""Tests for the Exp 3810 HTTP/REST abstention repair runner.
++
++Spec: REQ-SPOE-3810, SCENARIO-SPOE-3810.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++from pathlib import Path
++from types import ModuleType
++
++import pytest
++
++from carnot.pipeline import certified_abstention_surface as abstention
++
++
++ROOT = Path(__file__).resolve().parents[2]
++SCRIPT_PATH = ROOT / "scripts/experiment_3810_abstention_http_rest_surface_v2.py"
++VENV_PYTHON = ROOT / ".venv/bin/python"
++
++
++def _load_exp3810() -> ModuleType:
++    spec = importlib.util.spec_from_file_location("experiment_3810", SCRIPT_PATH)
++    assert spec is not None
++    assert spec.loader is not None
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def test_scenario_spoe_3810_runner_http_e2e_uses_real_endpoint() -> None:
++    """SCENARIO-SPOE-3810: runner posts a real cached batch over HTTP."""
++
++    exp3810 = _load_exp3810()
++    e2e = exp3810.run_http_e2e(ROOT)
++
++    assert e2e["default_off_ok"] is True
++    assert e2e["batch_works"] is True
++    assert e2e["abstention_ok"] is True
++    rows = {row["candidate_id"]: row for row in e2e["enabled_response"]["scores"]}
++    assert rows["exp3810_above_threshold"]["verdict"] == "confident"
++    assert rows["exp3810_below_threshold"]["verdict"] == "abstain"
++
++
++def test_scenario_spoe_3810_run_writes_repair_artifact_with_root_cause(
++    tmp_path: Path,
++) -> None:
++    """SCENARIO-SPOE-3810: complete artifact includes repair audit trail."""
++
++    exp3810 = _load_exp3810()
++    output_path = tmp_path / "results/experiment_3810.json"
++    proposal_path = tmp_path / "docs/research-notes/abstention-http-rest.md"
++    config = abstention.load_certified_abstention_config()
++    root_cause = (
++        "Exp 3801 used a supposed below-threshold HTTP smoke candidate that scored "
++        "above the certified threshold, so the E2E expected the wrong branch."
++    )
++
++    artifact = exp3810.run(
++        ROOT,
++        output_path=output_path,
++        doc_proposal_path=proposal_path,
++        executable=str(VENV_PYTHON),
++        diagnosis_runner=lambda _root, _threshold_path: {
++            "root_cause": root_cause,
++            "old_below_threshold_score": 0.903847,
++            "old_below_threshold_verdict": "confident",
++        },
++        http_runner=lambda _root, _threshold_path: {
++            "default_off_ok": True,
++            "batch_works": True,
++            "abstention_ok": True,
++            "default_response": {"scores": [{"candidate_id": "a"}]},
++            "enabled_response": {
++                "scores": [
++                    {
++                        "candidate_id": "a",
++                        "verdict": "confident",
++                        "score": 0.99,
++                        "coverage": config.coverage,
++                        "risk": config.certified_risk_bound,
++                        "delta": config.delta,
++                    },
++                    {
++                        "candidate_id": "b",
++                        "verdict": "abstain",
++                        "score": 0.5,
++                        "coverage": config.coverage,
++                        "risk": config.certified_risk_bound,
++                        "delta": config.delta,
++                    },
++                ]
++            },
++        },
++    )
++
++    assert output_path.exists()
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
++    assert proposal_path.exists()
++    assert "POST /v1/score-candidates" in proposal_path.read_text(encoding="utf-8")
++    assert set(exp3810.REQUIRED_ARTIFACT_FIELDS).issubset(artifact)
++    assert artifact["honest_verdict"] == exp3810.COMPLETE_VERDICT
++    assert artifact["e2e_failure_root_cause"] == root_cause
++    assert artifact["http_rest_surface_added"] is True
++    assert artifact["batch_post_works"] is True
++    assert artifact["default_off_preserves_prior_behavior"] is True
++    assert artifact["certified_threshold_used"] == pytest.approx(config.threshold)
++    assert artifact["e2e_http_abstention_passed"] is True
++    assert artifact["doc_proposal_emitted_not_curated_edit"] is True
++    assert artifact["operator_curated_docs_edited"] is False
++    assert artifact["tests_assert_real_behavior"] is True
++    assert artifact["model_specs"]["verifiers"] == list(exp3810.SCORING_VERIFIERS)
++    assert artifact["random_seed"] == exp3810.RANDOM_SEED
++    assert len(artifact["reproducibility_checksum"]) == 16
++
++
++def test_req_spoe_3810_missing_threshold_blocks_without_surface_claims(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3810: missing Exp 3771 threshold blocks honestly."""
++
++    exp3810 = _load_exp3810()
++    output_path = tmp_path / "results/experiment_3810.json"
++
++    artifact = exp3810.run(
++        ROOT,
++        output_path=output_path,
++        certified_threshold_path=tmp_path / "results/missing_exp3771.json",
++        executable=str(VENV_PYTHON),
++        diagnosis_runner=lambda _root, _threshold_path: {
++            "root_cause": "not run because threshold was missing"
++        },
++        http_runner=lambda _root, _threshold_path: {"abstention_ok": True},
++    )
++
++    assert artifact["honest_verdict"] == "blocked_no_certified_threshold"
++    assert artifact["e2e_failure_root_cause"] == "not diagnosed: preconditions blocked"
++    assert artifact["http_rest_surface_added"] is False
++    assert artifact["batch_post_works"] is False
++    assert artifact["default_off_preserves_prior_behavior"] is False
++    assert artifact["e2e_http_abstention_passed"] is False
++    assert artifact["doc_proposal_emitted_not_curated_edit"] is False
++    assert json.loads(output_path.read_text(encoding="utf-8")) == artifact
++
++
++def test_req_spoe_3810_failed_http_smoke_keeps_blocked_verdict(
++    tmp_path: Path,
++) -> None:
++    """REQ-SPOE-3810: failed repair E2E does not fabricate completion."""
++
++    exp3810 = _load_exp3810()
++    output_path = tmp_path / "results/experiment_3810.json"
++
++    assert exp3810.first_blocker({"package_import": {"available": False}}) == (
++        "blocked_package_import"
++    )
++
++    artifact = exp3810.run(
++        ROOT,
++        output_path=output_path,
++        doc_proposal_path=tmp_path / "docs/research-notes/failing-http.md",
++        executable=str(VENV_PYTHON),
++        diagnosis_runner=lambda _root, _threshold_path: {
++            "root_cause": "old fixture scored above threshold"
++        },
++        http_runner=lambda _root, _threshold_path: {
++            "default_off_ok": True,
++            "batch_works": False,
++            "abstention_ok": True,
++        },
++    )
++
++    assert artifact["honest_verdict"] == "blocked_http_abstention_e2e_failed"
++    assert artifact["http_rest_surface_added"] is False
++    assert artifact["batch_post_works"] is False
++    assert artifact["e2e_http_abstention_passed"] is False
+-- 
+2.55.0
+

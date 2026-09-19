@@ -1,0 +1,43 @@
+From f6db881d7170aec1759a192d3b7b3da7fe306cf4 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 09:48:13 -0400
+Subject: [PATCH 00638/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e64f6fb4e5..27d8b0731f 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-06-05T13:27:25Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-06-05T13:48:11Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index aecdb37b4a..327d561c29 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7882,3 +7882,4 @@ ERROR: {
+ | 2026-06-05 12:29 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
+ | 2026-06-05 13:08 UTC | Facts-domain COMPLEMENTARITY (gated on exp3862 fac | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3863_graph_v |
+ | 2026-06-05 13:25 UTC | FR-11 continuous self-learning v23 (research-progr | OK | 89 passed in 4.06s |
++| 2026-06-05 13:46 UTC | LDT-lattice margin sharpening (re-issue of exp3853 | OK | 91 passed in 5.43s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 69c68dbfa7..43bc3a8b32 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 51, "phase": "iteration_start", "started_at": "2026-06-05T13:27:25Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 52, "phase": "iteration_start", "started_at": "2026-06-05T13:48:11Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

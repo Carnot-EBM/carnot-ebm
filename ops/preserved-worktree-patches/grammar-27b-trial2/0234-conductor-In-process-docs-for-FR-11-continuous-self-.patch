@@ -1,0 +1,35 @@
+From 7850b848409e00573a2b45d1d1fd3e1724a30ac3 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 18:27:39 -0400
+Subject: [PATCH 00234/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20FR-11=20continuous=20self-learning=20v15=20=E2=80=94=20Tie?=
+ =?UTF-8?q?r-1=20ONLINE=20stabilizer-efficacy=20tracker=20for=20EBT=20trai?=
+ =?UTF-8?q?ning:=20from=20the=20exp3734/3735=20stability=20diagnostics,=20?=
+ =?UTF-8?q?track=20which=20stabilizers=20(random-alpha,=20replay=20buffer,?=
+ =?UTF-8?q?=20Langevin=20noise,=20grad-clip,=20KL-term=20CD)=20correlate?=
+ =?UTF-8?q?=20with=20NO-divergence=20across=20chunks,=20upweight=20the=20e?=
+ =?UTF-8?q?ffective=20ones,=20and=20recommend=20a=20recipe=20for=20the=20n?=
+ =?UTF-8?q?ext=20bounded=20run.=20CPU=20counter-updates=20only=20(the=20Ti?=
+ =?UTF-8?q?er-1=20hardware=20path).=20The=20self-learning=20experiment=20m?=
+ =?UTF-8?q?andated=20by=20research-program.md.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index f3c7e1140a..7c61e4d31c 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8380,3 +8380,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: RESUME bounded checkpointed training (chunk 2): load exp3734's checkpoint and train another bounded chunk (<=1500s) of BOTH the tiny EBT + matched AR, accumulating steps and extending the stability diagnostics. Gated on exp3734 having trained >0 steps. THESIS-A genuine kill-gate part-(a), run 2. (⚠️ Blocked) — honest_verdict=blocked_cuda; results/experiment_3735_bounded_train_chunk2_resume.json
+ - 2026-06-02: REAL Thesis-A kill-gate part-(a) VERDICT over the GENUINE training run (exp3734 + exp3735), SUPERSEDING the false-negative exp3729: did the tiny EBT train to STABLE convergence within the bounded 3090 budget? Emit green_light_342 (BARE bool). GREEN-LIGHT the matched-COMPUTE comparison only if genuinely stable. (✅ Complete) — honest_verdict=complete: real_kill_gate_part_a_untested_training_did_not_complete; results/experiment_3736_real_kill_gate_part_a_verdict.json
+ - 2026-06-02: Thesis-A kill-gate part-(b) VERDICT: at EQUAL inference compute, does the EBT beat the matched AR baseline on held-out reasoning accuracy? Reads exp3738 (matched-compute) honestly. A clean NEGATIVE (AR >= EBT at equal compute, gap does not narrow) bounds the route -- as valuable as a positive. States the .342 Thesis-A outcome. (✅ Complete) — honest_verdict=complete: kill_gate_part_b_not_run_part_a_did_not_green_light; results/experiment_3739_kill_gate_part_b_verdict.json
++- 2026-06-02: FR-11 continuous self-learning v15 — Tier-1 ONLINE stabilizer-efficacy tracker for EBT training: from the exp3734/3735 stability diagnostics, track which stabilizers (random-alpha, replay buffer, Langevin noise, grad-clip, KL-term CD) correlate with NO-divergence across chunks, upweight the effective ones, and recommend a recipe for the next bounded run. CPU counter-updates only (the Tier-1 hardware path). The self-learning experiment mandated by research-program.md. (✅ Complete) — honest_verdict=complete: fr11_v15_tier1_stabilizer_efficacy_tracker_recipe_recommended_state_persisted_preliminary_over_3_chunks; results/experiment_3740_fr11_self_learning_v15_stabilizer_tracker.json
+-- 
+2.55.0
+

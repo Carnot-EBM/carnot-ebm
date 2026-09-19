@@ -1,0 +1,1294 @@
+From c330c997bd3e174e16fbfdbec0f444a9c29b184f Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 21:31:40 -0400
+Subject: [PATCH 01519/11171] [conductor] SOTA-INGESTION SLOT (reserved;
+ headline is a bleeding-edge track): ingest RESUMABLE/long-horizon training +
+ verifier-guided-training-for-recursive-reasoners literature mapped onto the
+ .381 nano-trm baseline + Carnot-verifier-graft headline. TRM foundational
+ (2510.04871), TTA-TRM (2511.02886), V-STaR (2402.06457),
+ checkpoint-resume/curriculum best practices. Emit a SOTA->experiment mapping
+ note; flag the strongest for .382. Cite real arXiv IDs.
+
+Automated research step by research conductor.
+Task ID: exp4121-sota-ingestion-trm-baseline-graft
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ...ingestion-trm-baseline-graft-2026-06-13.md | 154 ++++++
+ .../capabilities/research-reporting/spec.md   |  59 +++
+ ops/dogfood-memory.json                       |   2 +-
+ .../sota_ingestion_trm_baseline_graft_4121.py | 470 ++++++++++++++++++
+ research-studying.md                          |  29 ++
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...121_sota_ingestion_trm_baseline_graft.json |  46 ++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ..._sota_ingestion_trm_baseline_graft_4121.py | 369 ++++++++++++++
+ 12 files changed, 1137 insertions(+), 10 deletions(-)
+ create mode 100644 docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md
+ create mode 100644 python/carnot/sota_ingestion_trm_baseline_graft_4121.py
+ create mode 100644 results/experiment_4121_sota_ingestion_trm_baseline_graft.json
+ create mode 100644 tests/python/test_sota_ingestion_trm_baseline_graft_4121.py
+
+diff --git a/docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md b/docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md
+new file mode 100644
+index 0000000000..ffb9e31cbf
+--- /dev/null
++++ b/docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md
+@@ -0,0 +1,154 @@
++# SOTA ingestion 2026-06-13: TRM baseline graft with resumable verifier discipline
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_trm_baseline_graft_mapped`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `TRM resumable Sudoku baseline gate`, arxiv_id: `2510.04871`, url: `https://arxiv.org/abs/2510.04871`}
++  - {name: `TTA-TRM full-fine-tune control`, arxiv_id: `2511.02886`, url: `https://arxiv.org/abs/2511.02886`}
++  - {name: `Verifier-guided adaptive candidate expansion`, arxiv_id: `2602.01070`, url: `https://arxiv.org/abs/2602.01070`}
++  - {name: `V-STaR accepted/rejected Sudoku selector`, arxiv_id: `2402.06457`, url: `https://arxiv.org/abs/2402.06457`}
++  - {name: `ReST resumable generate-filter-improve curriculum`, arxiv_id: `2308.08998`, url: `https://arxiv.org/abs/2308.08998`}
++  - principle: Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication.
++- flagged_for_v382: `verifier_guided_adaptive_candidate_expansion_over_resumed_trm`
++  - principle: Closes the discover->ingest->plan loop: names the strongest method for the next planner.
++
++**Fresh-pass provenance**
++
++Read the local TRM, verifier-guided-training, and long-horizon-training track in
++`research-studying.md` and `research-references.md`, including the Exp 4102
++`.379` V-STaR flag, the Exp 4111 `.380` in-loop verifier-guided search flag,
++the `.351` recursive-refiner notes, and the long-horizon VPR notes. Ran the
++required helpers:
++
++- `.venv/bin/python scripts/sweep_clusters.py 0 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 1 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 3 --max-results 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "TRM Tiny Recursive Models verifier Sudoku baseline test-time adaptation" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "verifier guided training V-STaR STaR ReST recursive reasoning verifier" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "long horizon training verifier process reward recursive reasoning TRM" --limit 8`
++
++Semantic Scholar returned `arXiv:2603.15641` for the TRM baseline/adaptation
++query and HTTP 429 for the two verifier-training queries; it did not displace
++the operator-specified anchors. The arXiv cluster helpers emitted reliable
++verifier, energy, and active-inference query URLs. Low-concurrency
++WebSearch/WebFetch verified the primary arXiv pages for `arXiv:2510.04871`,
++`arXiv:2511.02886`, `arXiv:2402.06457`, `arXiv:2203.14465`,
++`arXiv:2308.08998`, `arXiv:2602.01070`, `arXiv:2601.17223`, and
++`arXiv:2605.10325`. The `/deep-research` loop was not invoked.
++
++## Current .381 resumable baseline-graft anchor
++
++The `.381` headline should stay narrower than a general verifier-training
++claim. Exp 4108 proved the native nano-trm Sudoku Extreme path can train,
++checkpoint, and reload, but its measured validation exact accuracy was 0.0232
++with `matches_published_087=false`. Exp 4109 then grafted the executable Sudoku
++verifier onto candidate pools from that checkpoint and found no post-hoc lift
++over vote. Exp 4111 therefore flagged moving verification into candidate
++expansion before spending on another training loop.
++
++For `.382`, the planner needs a method that preserves all three facts: the TRM
++baseline must be resumable and reproduced before headline claims, the verifier
++must act before a fixed weak pool is exhausted, and any training curriculum must
++record rejected traces instead of throwing them away.
++
++## TRM resumable Sudoku baseline gate
++
++**Method:** TRM, `arXiv:2510.04871`
++(https://arxiv.org/abs/2510.04871), is the substrate to reproduce. The paper
++reports a tiny recursive model with a single small network and strong puzzle
++generalization, including Sudoku Extreme and ARC-style tasks.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Treat the resumed
++baseline as a gate. Continue from the saved nano-trm checkpoint only with a
++stable dataset checksum, optimizer-state receipt, checkpoint reload proof, and
++held-out Sudoku Extreme validation trace. The Carnot verifier graft should only
++claim value after the TRM baseline approaches the published Sudoku target or is
++explicitly labeled as a partial-baseline mechanism probe.
++
++**Pitfalls / where it fails:** A resumable checkpoint is not a reproduced TRM.
++The existing partial baseline can validate code paths while still producing a
++candidate pool too weak for post-hoc verifier selection to matter.
++
++## TTA-TRM full-fine-tune control
++
++**Method:** Test-time Adaptation of Tiny Recursive Models,
++`arXiv:2511.02886` (https://arxiv.org/abs/2511.02886), is the adaptation
++control because it reports that full fine-tuning, not LoRA or task embeddings
++alone, drives the tiny recursive model's competition-budget adaptation.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Keep three arms:
++resumed baseline without extra training, no-verifier full fine-tuning, and
++verifier-admitted full fine-tuning. Log optimizer steps, task splits, wall time,
++checkpoint source, and verifier admission counts so adaptation gain is not
++misreported as verifier gain.
++
++**Pitfalls / where it fails:** Full fine-tuning can memorize public-task
++structure or simply spend more compute. Without the no-verifier control, every
++improvement is ambiguous.
++
++## Verifier-guided adaptive candidate expansion
++
++**Method:** Adaptive test-time compute allocation,
++`arXiv:2602.01070` (https://arxiv.org/abs/2602.01070), is the strongest
++follow-on because it uses verification during generation and expansion rather
++than only for final reranking. Verifiable process reward work, `arXiv:2601.17223`
++(https://arxiv.org/abs/2601.17223) and `arXiv:2605.10325`
++(https://arxiv.org/abs/2605.10325), supplies the long-horizon dense-feedback
++pattern when intermediate steps are objectively checkable.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Move row, column,
++box, and given-cell checks into the recursive candidate expansion loop. Spend
++extra samples or recursive steps on partial boards that remain recoverable,
++prune irreparable branches early, and compare against fixed-K vote plus Exp
++4109 post-hoc verifier reranking. Report pass@1, oracle support, final exact
++validity, verifier-call count, and prune-error rate.
++
++**Pitfalls / where it fails:** Sudoku has local constraints that can look good
++while the board is globally unrecoverable. Final exact validity must remain the
++acceptance authority, and the experiment must measure whether pruning removes
++any candidate that could have become valid.
++
++## V-STaR accepted/rejected Sudoku selector
++
++**Method:** V-STaR, `arXiv:2402.06457`
++(https://arxiv.org/abs/2402.06457), trains a verifier from both correct and
++incorrect self-generated solutions and uses it to choose among candidates.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Keep all completions
++from the resumed TRM: exact-valid, row/column/box invalid, duplicate vote,
++timeout, and parse fail. Build within-puzzle preference pairs only where the
++executable Sudoku verifier and final exact label agree. Use the selector first
++as a reranker before allowing it to gate a second RFT corpus.
++
++**Pitfalls / where it fails:** V-STaR needs diverse failures. If the resumed
++checkpoint emits many near-duplicate wrong boards, the selector learns surface
++regularities and still cannot create correct candidates absent from the pool.
++
++## ReST resumable generate-filter-improve curriculum
++
++**Method:** ReST, `arXiv:2308.08998`
++(https://arxiv.org/abs/2308.08998), gives the reusable offline
++generate-filter-improve cadence. STaR, `arXiv:2203.14465`
++(https://arxiv.org/abs/2203.14465), supplies the older rationale
++self-training loop that keeps only generated reasoning that reaches correct
++answers.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Cache Sudoku
++candidate batches, filter exact-valid completions with Carnot, train on unique
++positives, and then resume generation from the updated checkpoint. Retain
++rejected rows for the V-STaR selector rather than discarding them.
++
++**Pitfalls / where it fails:** The loop only amplifies support already present
++in the generator. If resumed TRM rarely samples valid boards, the curriculum
++creates too few positives and can collapse into memorization.
++
++## Flagged for the .382 roadmap
++
++`verifier_guided_adaptive_candidate_expansion_over_resumed_trm` is the strongest
++single `.382` candidate. It directly addresses the Exp 4109 null by moving the
++Sudoku verifier before fixed-pool reranking, while preserving the Exp 4108
++baseline-reproduction gate. The next planner should require pass@1 or oracle
++support lift over fixed-K vote and post-hoc verifier rerank. If it fails,
++selector/RFT work should stay blocked.
++
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index bf3e32050e..b5e6435d33 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -19919,6 +19919,65 @@ leaves conductor and reconciliation files untouched.
+ |---|---|---|
+ | REQ-REPORT-4111 | Implemented (`python/carnot/sota_ingestion_trm_verifier_training_4111.py`, `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_trm_verifier_training_4111.py`) |
+ 
++### REQ-REPORT-4121: SOTA Ingestion Mapping For Resumable TRM Baseline Reproduction Plus Verifier Graft
++
++The Exp 4121 workflow SHALL emit a dated SOTA-to-experiment mapping note for
++the `.381` resumable TRM baseline reproduction plus Carnot verifier graft
++headline. The markdown note SHALL be written to
++`docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md` and the
++machine-checkable mapping artifact SHALL be written to
++`results/experiment_4121_sota_ingestion_trm_baseline_graft.json`.
++
++Before writing the note, the workflow SHALL read the TRM,
++verifier-guided-training, and long-horizon-training entries in
++`research-studying.md` and `research-references.md`, run
++`scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`, and verify the
++top five to eight method papers with low-concurrency WebSearch/WebFetch. The
++workflow SHALL use the reliable search/fetch path and SHALL NOT invoke
++`/deep-research`.
++
++For each mapped method, the note SHALL state what would have to change over the
++`nano-trm` plus Carnot-verifier stack and SHALL include the main pitfall or
++failure mode. The mapped method set SHALL include at least three verified
++primary-paper anchors from `arXiv:2510.04871`, `arXiv:2511.02886`,
++`arXiv:2402.06457`, `arXiv:2203.14465`, `arXiv:2308.08998`,
++`arXiv:2602.01070`, `arXiv:2601.17223`, and `arXiv:2605.10325`. Every method
++claim SHALL carry a real arXiv ID and URL. The note SHALL include a `Flagged
++for the .382 roadmap` section naming the single strongest follow-on method and
++SHALL update `research-studying.md` to mark the `.381` TRM baseline-graft
++candidate set as ingested. The workflow SHALL NOT update `ops/changelog.md`,
++`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
++
++The JSON artifact SHALL contain the top-level fields `honest_verdict`,
++`methods_mapped`, `flagged_for_v382`, and `field_principles`.
++`field_principles` SHALL contain exactly the principle annotations for
++`honest_verdict`, `methods_mapped`, and `flagged_for_v382`.
++`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
++with `complete: sota_ingestion_trm_baseline_graft_mapped`.
++`methods_mapped` SHALL be a list of three to five dicts with exactly `name`,
++`arxiv_id`, `url`, `implementation_over_stack`, and `failure_mode`; each
++`arxiv_id` SHALL be one of the WebFetch-verified primary-paper IDs, preventing
++fabricated or uncited method rows. `flagged_for_v382` SHALL be a non-empty
++concrete roadmap slug identifying the strongest candidate input for `.382`.
++
++#### SCENARIO-REPORT-4121: Resumable TRM Baseline-Graft Mapping Closes The Discover-To-Plan Loop
++
++**Given** `.381` targets a resumed TRM Sudoku baseline reproduction and verifier
++graft after Exp 4108 produced a partial baseline, Exp 4109 found no post-hoc
++verifier lift, and Exp 4111 flagged in-loop verifier-guided search
++**When** the Exp 4121 SOTA-ingestion workflow runs
++**Then** it writes the required markdown note and JSON mapping artifact, maps
++verified method papers to implementation work and failure modes over the
++`nano-trm` plus Carnot-verifier stack, updates `research-studying.md` with the
++ingested `.381` candidate set, flags the single strongest `.382` follow-up, and
++leaves conductor and reconciliation files untouched.
++
++## Implementation Status (REQ-REPORT-4121)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4121 | Implemented (`python/carnot/sota_ingestion_trm_baseline_graft_4121.py`, `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`) | Implemented (`tests/python/test_sota_ingestion_trm_baseline_graft_4121.py`) |
++
+ ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+ 
+ The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index a9e53b5b64..424ee4af10 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 170,
+   "code_violations": 0,
+-  "experiments_checked": 3143,
++  "experiments_checked": 3144,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/sota_ingestion_trm_baseline_graft_4121.py b/python/carnot/sota_ingestion_trm_baseline_graft_4121.py
+new file mode 100644
+index 0000000000..12b5071b07
+--- /dev/null
++++ b/python/carnot/sota_ingestion_trm_baseline_graft_4121.py
+@@ -0,0 +1,470 @@
++"""Schema helpers for the Exp 4121 TRM baseline-graft SOTA ingestion.
++
++Spec refs: REQ-REPORT-4121, SCENARIO-REPORT-4121.
++
++This module produces a research-planning artifact, not a model score. The
++current TRM line has an important trap: a resumed checkpoint can be operational
++without reproducing the published Sudoku baseline, and a verifier can be real
++without adding value when it only reranks a weak fixed candidate pool. The JSON
++and markdown validators keep that distinction explicit so the next planner gets
++cite-backed implementation choices instead of an ungrounded headline.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++import json
++from pathlib import Path
++from typing import Any
++
++
++REQUIRED_ARTIFACT_FIELDS = frozenset(
++    {
++        "honest_verdict",
++        "methods_mapped",
++        "flagged_for_v382",
++        "field_principles",
++    }
++)
++REQUIRED_METHOD_FIELDS = frozenset(
++    {
++        "name",
++        "arxiv_id",
++        "url",
++        "implementation_over_stack",
++        "failure_mode",
++    }
++)
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:", "blocked_")
++DEFAULT_HONEST_VERDICT = "complete: sota_ingestion_trm_baseline_graft_mapped"
++DEFAULT_FLAGGED_FOR_V382 = "verifier_guided_adaptive_candidate_expansion_over_resumed_trm"
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": (
++        "Each method MUST carry a real arXiv ID/URL; an ingestion note without "
++        "verifiable citations is treated as fabrication."
++    ),
++    "flagged_for_v382": (
++        "Closes the discover->ingest->plan loop: names the strongest method "
++        "for the next planner."
++    ),
++}
++
++VERIFIED_ARXIV_IDS = frozenset(
++    {
++        "2203.14465",
++        "2308.08998",
++        "2402.06457",
++        "2510.04871",
++        "2511.02886",
++        "2601.17223",
++        "2602.01070",
++        "2605.10325",
++    }
++)
++
++NOTE_REQUIRED_ARXIV_IDS = frozenset(
++    {
++        "2203.14465",
++        "2308.08998",
++        "2402.06457",
++        "2510.04871",
++        "2511.02886",
++        "2601.17223",
++        "2602.01070",
++        "2605.10325",
++    }
++)
++
++DEFAULT_METHODS_MAPPED = [
++    {
++        "name": "TRM resumable Sudoku baseline gate",
++        "arxiv_id": "2510.04871",
++        "url": "https://arxiv.org/abs/2510.04871",
++        "implementation_over_stack": (
++            "Resume the nano-trm Sudoku Extreme checkpoint until the baseline "
++            "reproduction is trustworthy before treating verifier lift as meaningful."
++        ),
++        "failure_mode": (
++            "A checkpoint can reload and still remain far below the published TRM "
++            "target, making any verifier-graft conclusion underpowered."
++        ),
++    },
++    {
++        "name": "TTA-TRM full-fine-tune control",
++        "arxiv_id": "2511.02886",
++        "url": "https://arxiv.org/abs/2511.02886",
++        "implementation_over_stack": (
++            "Keep a no-verifier full-fine-tune arm beside verifier-admitted training "
++            "so adaptation compute is not confused with verifier value."
++        ),
++        "failure_mode": (
++            "Full fine-tuning can win by public-task adaptation or leakage unless "
++            "checkpoint source, split, and optimizer budget are isolated."
++        ),
++    },
++    {
++        "name": "Verifier-guided adaptive candidate expansion",
++        "arxiv_id": "2602.01070",
++        "url": "https://arxiv.org/abs/2602.01070",
++        "implementation_over_stack": (
++            "Move exact Sudoku checks into candidate expansion so resumed TRM compute "
++            "is spent on recoverable partial boards before post-hoc reranking."
++        ),
++        "failure_mode": (
++            "Local verifier scores can prefer near-valid dead ends, so final exact "
++            "validity and prune-error rate must remain authoritative."
++        ),
++    },
++    {
++        "name": "V-STaR accepted/rejected Sudoku selector",
++        "arxiv_id": "2402.06457",
++        "url": "https://arxiv.org/abs/2402.06457",
++        "implementation_over_stack": (
++            "Train a selector from exact-valid and verifier-rejected Sudoku traces "
++            "sampled from the same resumed checkpoint."
++        ),
++        "failure_mode": (
++            "Near-duplicate invalid boards can teach shallow artifacts unless the "
++            "pool has real within-puzzle diversity."
++        ),
++    },
++    {
++        "name": "ReST resumable generate-filter-improve curriculum",
++        "arxiv_id": "2308.08998",
++        "url": "https://arxiv.org/abs/2308.08998",
++        "implementation_over_stack": (
++            "Cache generated Sudoku batches, filter them with the Carnot verifier, "
++            "resume improvement from unique positives, and retain rejects for selectors."
++        ),
++        "failure_mode": (
++            "If the baseline checkpoint rarely samples valid completions, the cached "
++            "curriculum collapses into memorization or too few positives."
++        ),
++    },
++]
++
++NOTE_MARKDOWN = """# SOTA ingestion 2026-06-13: TRM baseline graft with resumable verifier discipline
++
++**Artifact fields**
++- honest_verdict: `complete: sota_ingestion_trm_baseline_graft_mapped`
++  - principle: Terminal-prefixed. Records ingestion completed with verifiable citations.
++- methods_mapped:
++  - {name: `TRM resumable Sudoku baseline gate`, arxiv_id: `2510.04871`, url: `https://arxiv.org/abs/2510.04871`}
++  - {name: `TTA-TRM full-fine-tune control`, arxiv_id: `2511.02886`, url: `https://arxiv.org/abs/2511.02886`}
++  - {name: `Verifier-guided adaptive candidate expansion`, arxiv_id: `2602.01070`, url: `https://arxiv.org/abs/2602.01070`}
++  - {name: `V-STaR accepted/rejected Sudoku selector`, arxiv_id: `2402.06457`, url: `https://arxiv.org/abs/2402.06457`}
++  - {name: `ReST resumable generate-filter-improve curriculum`, arxiv_id: `2308.08998`, url: `https://arxiv.org/abs/2308.08998`}
++  - principle: Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication.
++- flagged_for_v382: `verifier_guided_adaptive_candidate_expansion_over_resumed_trm`
++  - principle: Closes the discover->ingest->plan loop: names the strongest method for the next planner.
++
++**Fresh-pass provenance**
++
++Read the local TRM, verifier-guided-training, and long-horizon-training track in
++`research-studying.md` and `research-references.md`, including the Exp 4102
++`.379` V-STaR flag, the Exp 4111 `.380` in-loop verifier-guided search flag,
++the `.351` recursive-refiner notes, and the long-horizon VPR notes. Ran the
++required helpers:
++
++- `.venv/bin/python scripts/sweep_clusters.py 0 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 1 --max-results 8`
++- `.venv/bin/python scripts/sweep_clusters.py 3 --max-results 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "TRM Tiny Recursive Models verifier Sudoku baseline test-time adaptation" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "verifier guided training V-STaR STaR ReST recursive reasoning verifier" --limit 8`
++- `.venv/bin/python scripts/sweep_semscholar.py "long horizon training verifier process reward recursive reasoning TRM" --limit 8`
++
++Semantic Scholar returned `arXiv:2603.15641` for the TRM baseline/adaptation
++query and HTTP 429 for the two verifier-training queries; it did not displace
++the operator-specified anchors. The arXiv cluster helpers emitted reliable
++verifier, energy, and active-inference query URLs. Low-concurrency
++WebSearch/WebFetch verified the primary arXiv pages for `arXiv:2510.04871`,
++`arXiv:2511.02886`, `arXiv:2402.06457`, `arXiv:2203.14465`,
++`arXiv:2308.08998`, `arXiv:2602.01070`, `arXiv:2601.17223`, and
++`arXiv:2605.10325`. The `/deep-research` loop was not invoked.
++
++## Current .381 resumable baseline-graft anchor
++
++The `.381` headline should stay narrower than a general verifier-training
++claim. Exp 4108 proved the native nano-trm Sudoku Extreme path can train,
++checkpoint, and reload, but its measured validation exact accuracy was 0.0232
++with `matches_published_087=false`. Exp 4109 then grafted the executable Sudoku
++verifier onto candidate pools from that checkpoint and found no post-hoc lift
++over vote. Exp 4111 therefore flagged moving verification into candidate
++expansion before spending on another training loop.
++
++For `.382`, the planner needs a method that preserves all three facts: the TRM
++baseline must be resumable and reproduced before headline claims, the verifier
++must act before a fixed weak pool is exhausted, and any training curriculum must
++record rejected traces instead of throwing them away.
++
++## TRM resumable Sudoku baseline gate
++
++**Method:** TRM, `arXiv:2510.04871`
++(https://arxiv.org/abs/2510.04871), is the substrate to reproduce. The paper
++reports a tiny recursive model with a single small network and strong puzzle
++generalization, including Sudoku Extreme and ARC-style tasks.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Treat the resumed
++baseline as a gate. Continue from the saved nano-trm checkpoint only with a
++stable dataset checksum, optimizer-state receipt, checkpoint reload proof, and
++held-out Sudoku Extreme validation trace. The Carnot verifier graft should only
++claim value after the TRM baseline approaches the published Sudoku target or is
++explicitly labeled as a partial-baseline mechanism probe.
++
++**Pitfalls / where it fails:** A resumable checkpoint is not a reproduced TRM.
++The existing partial baseline can validate code paths while still producing a
++candidate pool too weak for post-hoc verifier selection to matter.
++
++## TTA-TRM full-fine-tune control
++
++**Method:** Test-time Adaptation of Tiny Recursive Models,
++`arXiv:2511.02886` (https://arxiv.org/abs/2511.02886), is the adaptation
++control because it reports that full fine-tuning, not LoRA or task embeddings
++alone, drives the tiny recursive model's competition-budget adaptation.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Keep three arms:
++resumed baseline without extra training, no-verifier full fine-tuning, and
++verifier-admitted full fine-tuning. Log optimizer steps, task splits, wall time,
++checkpoint source, and verifier admission counts so adaptation gain is not
++misreported as verifier gain.
++
++**Pitfalls / where it fails:** Full fine-tuning can memorize public-task
++structure or simply spend more compute. Without the no-verifier control, every
++improvement is ambiguous.
++
++## Verifier-guided adaptive candidate expansion
++
++**Method:** Adaptive test-time compute allocation,
++`arXiv:2602.01070` (https://arxiv.org/abs/2602.01070), is the strongest
++follow-on because it uses verification during generation and expansion rather
++than only for final reranking. Verifiable process reward work, `arXiv:2601.17223`
++(https://arxiv.org/abs/2601.17223) and `arXiv:2605.10325`
++(https://arxiv.org/abs/2605.10325), supplies the long-horizon dense-feedback
++pattern when intermediate steps are objectively checkable.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Move row, column,
++box, and given-cell checks into the recursive candidate expansion loop. Spend
++extra samples or recursive steps on partial boards that remain recoverable,
++prune irreparable branches early, and compare against fixed-K vote plus Exp
++4109 post-hoc verifier reranking. Report pass@1, oracle support, final exact
++validity, verifier-call count, and prune-error rate.
++
++**Pitfalls / where it fails:** Sudoku has local constraints that can look good
++while the board is globally unrecoverable. Final exact validity must remain the
++acceptance authority, and the experiment must measure whether pruning removes
++any candidate that could have become valid.
++
++## V-STaR accepted/rejected Sudoku selector
++
++**Method:** V-STaR, `arXiv:2402.06457`
++(https://arxiv.org/abs/2402.06457), trains a verifier from both correct and
++incorrect self-generated solutions and uses it to choose among candidates.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Keep all completions
++from the resumed TRM: exact-valid, row/column/box invalid, duplicate vote,
++timeout, and parse fail. Build within-puzzle preference pairs only where the
++executable Sudoku verifier and final exact label agree. Use the selector first
++as a reranker before allowing it to gate a second RFT corpus.
++
++**Pitfalls / where it fails:** V-STaR needs diverse failures. If the resumed
++checkpoint emits many near-duplicate wrong boards, the selector learns surface
++regularities and still cannot create correct candidates absent from the pool.
++
++## ReST resumable generate-filter-improve curriculum
++
++**Method:** ReST, `arXiv:2308.08998`
++(https://arxiv.org/abs/2308.08998), gives the reusable offline
++generate-filter-improve cadence. STaR, `arXiv:2203.14465`
++(https://arxiv.org/abs/2203.14465), supplies the older rationale
++self-training loop that keeps only generated reasoning that reaches correct
++answers.
++
++**Implementation over nano-trm + Carnot-verifier stack:** Cache Sudoku
++candidate batches, filter exact-valid completions with Carnot, train on unique
++positives, and then resume generation from the updated checkpoint. Retain
++rejected rows for the V-STaR selector rather than discarding them.
++
++**Pitfalls / where it fails:** The loop only amplifies support already present
++in the generator. If resumed TRM rarely samples valid boards, the curriculum
++creates too few positives and can collapse into memorization.
++
++## Flagged for the .382 roadmap
++
++`verifier_guided_adaptive_candidate_expansion_over_resumed_trm` is the strongest
++single `.382` candidate. It directly addresses the Exp 4109 null by moving the
++Sudoku verifier before fixed-pool reranking, while preserving the Exp 4108
++baseline-reproduction gate. The next planner should require pass@1 or oracle
++support lift over fixed-K vote and post-hoc verifier rerank. If it fails,
++selector/RFT work should stay blocked.
++"""
++
++STUDYING_SECTION = """## 2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`.
++
++**Filtered track:** resumable TRM Sudoku baseline reproduction plus Carnot
++verifier graft, after Exp 4108 produced a checkpointed but partial baseline,
++Exp 4109 found no post-hoc verifier lift over vote, and Exp 4111 flagged
++in-loop verifier-guided search as the next candidate.
++
++**Seed and fresh-pass candidates marked ingested:**
++- TRM, arXiv:2510.04871 - mapped as the resumed Sudoku Extreme baseline gate
++  before any verifier-lift claim.
++- TTA-TRM, arXiv:2511.02886 - mapped as the full-fine-tuning adaptation control
++  that must be isolated from verifier-admission effects.
++- Adaptive verifier-guided candidate expansion, arXiv:2602.01070, with VPRM/VPR
++  support from arXiv:2601.17223 and arXiv:2605.10325 - mapped as the strongest
++  .382 follow-on because post-hoc verifier reranking already tied vote.
++- V-STaR, arXiv:2402.06457 - mapped as accepted/rejected Sudoku trace selector
++  training once candidate diversity and oracle support exist.
++- ReST, arXiv:2308.08998, and STaR, arXiv:2203.14465 - mapped as the resumable
++  generate-filter-improve curriculum, with rejected rows retained for selector
++  data.
++
++Flagged for .382: `verifier_guided_adaptive_candidate_expansion_over_resumed_trm`.
++
++**Bottom line for the .382 roadmap:** put the executable Sudoku verifier inside
++candidate expansion over the resumed TRM checkpoint before spending on selector
++or RFT work. Require pass@1 or oracle-support lift over fixed-K vote and Exp
++4109 post-hoc verifier rerank; otherwise selector/RFT work should stay blocked.
++"""
++
++STUDYING_MARKER = (
++    "## 2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested"
++)
++
++
++def build_artifact(
++    *,
++    methods_mapped: Sequence[Mapping[str, str]],
++    flagged_for_v382: str,
++    honest_verdict: str = DEFAULT_HONEST_VERDICT,
++) -> dict[str, object]:
++    """Build and validate the REQ-REPORT-4121 mapping artifact."""
++
++    artifact: dict[str, object] = {
++        "honest_verdict": honest_verdict,
++        "methods_mapped": [dict(method) for method in methods_mapped],
++        "flagged_for_v382": flagged_for_v382,
++        "field_principles": dict(FIELD_PRINCIPLES),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the exact JSON contract so uncited method rows fail closed."""
++
++    missing = REQUIRED_ARTIFACT_FIELDS.difference(artifact)
++    extra = set(artifact).difference(REQUIRED_ARTIFACT_FIELDS)
++    if missing:
++        raise ValueError(f"artifact missing required fields: {sorted(missing)}")
++    if extra:
++        raise ValueError(f"artifact has unexpected fields: {sorted(extra)}")
++
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not verdict.startswith(TERMINAL_PREFIXES):
++        raise ValueError("honest_verdict must use a terminal prefix")
++
++    field_principles = artifact["field_principles"]
++    if field_principles != FIELD_PRINCIPLES:
++        raise ValueError("field_principles must match the required annotations")
++
++    methods_mapped = artifact["methods_mapped"]
++    if not isinstance(methods_mapped, list) or not 3 <= len(methods_mapped) <= 5:
++        raise ValueError("methods_mapped must contain three to five methods")
++
++    seen: set[str] = set()
++    for method in methods_mapped:
++        if not isinstance(method, dict) or set(method) != REQUIRED_METHOD_FIELDS:
++            raise ValueError(
++                "each method must contain exactly name, arxiv_id, url, "
++                "implementation_over_stack, and failure_mode"
++            )
++        arxiv_id = method["arxiv_id"]
++        if arxiv_id not in VERIFIED_ARXIV_IDS:
++            raise ValueError(f"method arxiv_id must be a verified arxiv ID: {arxiv_id}")
++        if arxiv_id in seen:
++            raise ValueError(f"duplicate method arxiv_id: {arxiv_id}")
++        seen.add(arxiv_id)
++        expected_url = f"https://arxiv.org/abs/{arxiv_id}"
++        if method["url"] != expected_url:
++            raise ValueError(f"method url must be {expected_url!r}")
++        for field in REQUIRED_METHOD_FIELDS - {"arxiv_id", "url"}:
++            value = method[field]
++            if not isinstance(value, str) or not value.strip():
++                raise ValueError(f"method {field} must be a non-empty string")
++
++    flagged = artifact["flagged_for_v382"]
++    if not isinstance(flagged, str) or not flagged.strip():
++        raise ValueError("flagged_for_v382 must be a non-empty string")
++
++
++def validate_markdown_note(markdown: str) -> None:
++    """Check that the paired note maps papers to TRM work and closes planning."""
++
++    required_phrases = (
++        "Current .381 resumable baseline-graft anchor",
++        "TRM resumable Sudoku baseline gate",
++        "TTA-TRM full-fine-tune control",
++        "Verifier-guided adaptive candidate expansion",
++        "V-STaR accepted/rejected Sudoku selector",
++        "ReST resumable generate-filter-improve curriculum",
++        "Implementation over nano-trm + Carnot-verifier stack",
++        "Pitfalls / where it fails",
++        "Flagged for the .382 roadmap",
++    )
++    missing_phrases = [phrase for phrase in required_phrases if phrase not in markdown]
++    if missing_phrases:
++        raise ValueError(f"markdown note missing required sections: {missing_phrases}")
++
++    missing_ids = [
++        arxiv_id
++        for arxiv_id in NOTE_REQUIRED_ARXIV_IDS
++        if f"arXiv:{arxiv_id}" not in markdown
++        and f"arxiv.org/abs/{arxiv_id}" not in markdown
++    ]
++    if missing_ids:
++        raise ValueError(f"markdown note missing verified arxiv citations: {missing_ids}")
++
++
++def write_outputs(
++    *,
++    note_path: Path,
++    artifact_path: Path,
++    studying_path: Path,
++) -> dict[str, object]:
++    """Write the note, JSON artifact, and idempotent studying-section update."""
++
++    artifact = build_artifact(
++        methods_mapped=DEFAULT_METHODS_MAPPED,
++        flagged_for_v382=DEFAULT_FLAGGED_FOR_V382,
++    )
++    validate_markdown_note(NOTE_MARKDOWN)
++
++    note_path.parent.mkdir(parents=True, exist_ok=True)
++    artifact_path.parent.mkdir(parents=True, exist_ok=True)
++    note_path.write_text(NOTE_MARKDOWN + "\n", encoding="utf-8")
++    artifact_path.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True) + "\n",
++        encoding="utf-8",
++    )
++
++    existing = studying_path.read_text(encoding="utf-8")
++    studying_path.write_text(_with_studying_section(existing), encoding="utf-8")
++    return artifact
++
++
++def _with_studying_section(existing: str) -> str:
++    if STUDYING_MARKER not in existing:
++        if "\n## " not in existing:
++            return existing.rstrip() + "\n\n" + STUDYING_SECTION
++        return existing.replace("\n## ", "\n" + STUDYING_SECTION + "\n## ", 1)
++
++    before, after_marker = existing.split(STUDYING_MARKER, 1)
++    next_section = after_marker.find("\n## ")
++    if next_section == -1:
++        return before + STUDYING_SECTION.rstrip() + "\n"
++    return before + STUDYING_SECTION + after_marker[next_section + 1 :]
+diff --git a/research-studying.md b/research-studying.md
+index 16ec1bc403..4ec1f30a98 100644
+--- a/research-studying.md
++++ b/research-studying.md
+@@ -8,6 +8,35 @@ loop) executes the current experiments.
+ **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
+ **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+ 
++## 2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested
++
++**Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`.
++
++**Filtered track:** resumable TRM Sudoku baseline reproduction plus Carnot
++verifier graft, after Exp 4108 produced a checkpointed but partial baseline,
++Exp 4109 found no post-hoc verifier lift over vote, and Exp 4111 flagged
++in-loop verifier-guided search as the next candidate.
++
++**Seed and fresh-pass candidates marked ingested:**
++- TRM, arXiv:2510.04871 - mapped as the resumed Sudoku Extreme baseline gate
++  before any verifier-lift claim.
++- TTA-TRM, arXiv:2511.02886 - mapped as the full-fine-tuning adaptation control
++  that must be isolated from verifier-admission effects.
++- Adaptive verifier-guided candidate expansion, arXiv:2602.01070, with VPRM/VPR
++  support from arXiv:2601.17223 and arXiv:2605.10325 - mapped as the strongest
++  .382 follow-on because post-hoc verifier reranking already tied vote.
++- V-STaR, arXiv:2402.06457 - mapped as accepted/rejected Sudoku trace selector
++  training once candidate diversity and oracle support exist.
++- ReST, arXiv:2308.08998, and STaR, arXiv:2203.14465 - mapped as the resumable
++  generate-filter-improve curriculum, with rejected rows retained for selector
++  data.
++
++Flagged for .382: `verifier_guided_adaptive_candidate_expansion_over_resumed_trm`.
++
++**Bottom line for the .382 roadmap:** put the executable Sudoku verifier inside
++candidate expansion over the resumed TRM checkpoint before spending on selector
++or RFT work. Require pass@1 or oracle-support lift over fixed-K vote and Exp
++4109 post-hoc verifier rerank; otherwise selector/RFT work should stay blocked.
+ ## 2026-06-12 Exp 4111 - .380 TRM verifier-training SOTA ingestion ingested
+ 
+ **Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`.
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index b119ddecf2..8378d7016f 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1491050720214844,
++  "efficiency_gains_ms": 2.1321773529052734,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index 595b6c5f1d..b251409853 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.407400072319433e-05,
++  "duration_s": 3.370299964444712e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_4121_sota_ingestion_trm_baseline_graft.json b/results/experiment_4121_sota_ingestion_trm_baseline_graft.json
+new file mode 100644
+index 0000000000..6aa4983b3a
+--- /dev/null
++++ b/results/experiment_4121_sota_ingestion_trm_baseline_graft.json
+@@ -0,0 +1,46 @@
++{
++  "field_principles": {
++    "flagged_for_v382": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
++    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
++    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
++  },
++  "flagged_for_v382": "verifier_guided_adaptive_candidate_expansion_over_resumed_trm",
++  "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
++  "methods_mapped": [
++    {
++      "arxiv_id": "2510.04871",
++      "failure_mode": "A checkpoint can reload and still remain far below the published TRM target, making any verifier-graft conclusion underpowered.",
++      "implementation_over_stack": "Resume the nano-trm Sudoku Extreme checkpoint until the baseline reproduction is trustworthy before treating verifier lift as meaningful.",
++      "name": "TRM resumable Sudoku baseline gate",
++      "url": "https://arxiv.org/abs/2510.04871"
++    },
++    {
++      "arxiv_id": "2511.02886",
++      "failure_mode": "Full fine-tuning can win by public-task adaptation or leakage unless checkpoint source, split, and optimizer budget are isolated.",
++      "implementation_over_stack": "Keep a no-verifier full-fine-tune arm beside verifier-admitted training so adaptation compute is not confused with verifier value.",
++      "name": "TTA-TRM full-fine-tune control",
++      "url": "https://arxiv.org/abs/2511.02886"
++    },
++    {
++      "arxiv_id": "2602.01070",
++      "failure_mode": "Local verifier scores can prefer near-valid dead ends, so final exact validity and prune-error rate must remain authoritative.",
++      "implementation_over_stack": "Move exact Sudoku checks into candidate expansion so resumed TRM compute is spent on recoverable partial boards before post-hoc reranking.",
++      "name": "Verifier-guided adaptive candidate expansion",
++      "url": "https://arxiv.org/abs/2602.01070"
++    },
++    {
++      "arxiv_id": "2402.06457",
++      "failure_mode": "Near-duplicate invalid boards can teach shallow artifacts unless the pool has real within-puzzle diversity.",
++      "implementation_over_stack": "Train a selector from exact-valid and verifier-rejected Sudoku traces sampled from the same resumed checkpoint.",
++      "name": "V-STaR accepted/rejected Sudoku selector",
++      "url": "https://arxiv.org/abs/2402.06457"
++    },
++    {
++      "arxiv_id": "2308.08998",
++      "failure_mode": "If the baseline checkpoint rarely samples valid completions, the cached curriculum collapses into memorization or too few positives.",
++      "implementation_over_stack": "Cache generated Sudoku batches, filter them with the Carnot verifier, resume improvement from unique positives, and retain rejects for selectors.",
++      "name": "ReST resumable generate-filter-improve curriculum",
++      "url": "https://arxiv.org/abs/2308.08998"
++    }
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 55385109ea..112a2e8116 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T01:15:24Z",
+-  "finished_at": "2026-06-13T01:15:25Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-13T01:31:11Z",
++  "finished_at": "2026-06-13T01:31:11Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 9033e9e216..aac71c23df 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T01:15:25Z",
+-  "finished_at": "2026-06-13T01:15:25Z",
++  "started_at": "2026-06-13T01:31:11Z",
++  "finished_at": "2026-06-13T01:31:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index fadf4a49bc..c991ce9e70 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T01:15:25Z",
+-  "finished_at": "2026-06-13T01:15:25Z",
++  "started_at": "2026-06-13T01:31:11Z",
++  "finished_at": "2026-06-13T01:31:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/tests/python/test_sota_ingestion_trm_baseline_graft_4121.py b/tests/python/test_sota_ingestion_trm_baseline_graft_4121.py
+new file mode 100644
+index 0000000000..59d07560e7
+--- /dev/null
++++ b/tests/python/test_sota_ingestion_trm_baseline_graft_4121.py
+@@ -0,0 +1,369 @@
++"""Tests for REQ-REPORT-4121 / SCENARIO-REPORT-4121."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import sota_ingestion_trm_baseline_graft_4121 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++NOTE_PATH = Path("docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md")
++ARTIFACT_PATH = Path("results/experiment_4121_sota_ingestion_trm_baseline_graft.json")
++STUDYING_PATH = Path("research-studying.md")
++
++
++def _valid_methods() -> list[dict[str, str]]:
++    return [
++        {
++            "name": "TRM resumable Sudoku baseline gate",
++            "arxiv_id": "2510.04871",
++            "url": "https://arxiv.org/abs/2510.04871",
++            "implementation_over_stack": (
++                "Resume the nano-trm Sudoku Extreme checkpoint until the baseline "
++                "reproduction is trustworthy before treating verifier lift as meaningful."
++            ),
++            "failure_mode": (
++                "A checkpoint can reload and still remain far below the published TRM "
++                "target, making any verifier-graft conclusion underpowered."
++            ),
++        },
++        {
++            "name": "TTA-TRM full-fine-tune control",
++            "arxiv_id": "2511.02886",
++            "url": "https://arxiv.org/abs/2511.02886",
++            "implementation_over_stack": (
++                "Keep a no-verifier full-fine-tune arm beside verifier-admitted training "
++                "so adaptation compute is not confused with verifier value."
++            ),
++            "failure_mode": (
++                "Full fine-tuning can win by public-task adaptation or leakage unless "
++                "checkpoint source, split, and optimizer budget are isolated."
++            ),
++        },
++        {
++            "name": "Verifier-guided adaptive candidate expansion",
++            "arxiv_id": "2602.01070",
++            "url": "https://arxiv.org/abs/2602.01070",
++            "implementation_over_stack": (
++                "Move exact Sudoku checks into candidate expansion so resumed TRM compute "
++                "is spent on recoverable partial boards before post-hoc reranking."
++            ),
++            "failure_mode": (
++                "Local verifier scores can prefer near-valid dead ends, so final exact "
++                "validity and prune-error rate must remain authoritative."
++            ),
++        },
++        {
++            "name": "V-STaR accepted/rejected Sudoku selector",
++            "arxiv_id": "2402.06457",
++            "url": "https://arxiv.org/abs/2402.06457",
++            "implementation_over_stack": (
++                "Train a selector from exact-valid and verifier-rejected Sudoku traces "
++                "sampled from the same resumed checkpoint."
++            ),
++            "failure_mode": (
++                "Near-duplicate invalid boards can teach shallow artifacts unless the "
++                "pool has real within-puzzle diversity."
++            ),
++        },
++        {
++            "name": "ReST resumable generate-filter-improve curriculum",
++            "arxiv_id": "2308.08998",
++            "url": "https://arxiv.org/abs/2308.08998",
++            "implementation_over_stack": (
++                "Cache generated Sudoku batches, filter them with the Carnot verifier, "
++                "resume improvement from unique positives, and retain rejects for selectors."
++            ),
++            "failure_mode": (
++                "If the baseline checkpoint rarely samples valid completions, the cached "
++                "curriculum collapses into memorization or too few positives."
++            ),
++        },
++    ]
++
++
++def _valid_artifact() -> dict[str, object]:
++    return mod.build_artifact(
++        methods_mapped=_valid_methods(),
++        flagged_for_v382="verifier_guided_adaptive_candidate_expansion_over_resumed_trm",
++    )
++
++
++def test_req_report_4121_spec_anchor_exists() -> None:
++    """REQ-REPORT-4121: OpenSpec declares the TRM baseline-graft ingestion."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-4121" in spec
++    assert "SCENARIO-REPORT-4121" in spec
++    assert NOTE_PATH.as_posix() in spec
++    assert ARTIFACT_PATH.as_posix() in spec
++    assert "flagged_for_v382" in spec
++    assert "arXiv:2510.04871" in spec
++    assert "arXiv:2602.01070" in spec
++
++
++def test_build_artifact_has_required_schema_fields_for_req_report_4121() -> None:
++    """REQ-REPORT-4121: artifact exposes the required principle-annotated fields."""
++
++    artifact = _valid_artifact()
++
++    assert artifact == {
++        "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
++        "methods_mapped": _valid_methods(),
++        "flagged_for_v382": "verifier_guided_adaptive_candidate_expansion_over_resumed_trm",
++        "field_principles": {
++            "honest_verdict": (
++                "Terminal-prefixed. Records ingestion completed with verifiable citations."
++            ),
++            "methods_mapped": (
++                "Each method MUST carry a real arXiv ID/URL; an ingestion note without "
++                "verifiable citations is treated as fabrication."
++            ),
++            "flagged_for_v382": (
++                "Closes the discover->ingest->plan loop: names the strongest method "
++                "for the next planner."
++            ),
++        },
++    }
++
++
++@pytest.mark.parametrize(
++    ("bad_artifact", "message"),
++    [
++        (_valid_artifact() | {"honest_verdict": "draft"}, "terminal prefix"),
++        (_valid_artifact() | {"methods_mapped": []}, "three to five"),
++        (_valid_artifact() | {"methods_mapped": _valid_methods()[:2]}, "three to five"),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {
++                        "name": "fake",
++                        "arxiv_id": "9999.99999",
++                        "url": "https://arxiv.org/abs/9999.99999",
++                        "implementation_over_stack": "fake",
++                        "failure_mode": "fake",
++                    }
++                ]
++                + _valid_methods()[1:]
++            },
++            "verified arxiv",
++        ),
++        (
++            _valid_artifact()
++            | {
++                "methods_mapped": [
++                    {
++                        "name": "TRM",
++                        "arxiv_id": "2510.04871",
++                        "url": "https://example.com/2510.04871",
++                        "implementation_over_stack": "use it",
++                        "failure_mode": "breaks",
++                    }
++                ]
++                + _valid_methods()[1:]
++            },
++            "url",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [{"name": "TRM", "arxiv_id": "2510.04871"}] + _valid_methods()[1:]},
++            "exactly",
++        ),
++        (
++            _valid_artifact() | {"methods_mapped": [_valid_methods()[0]] + _valid_methods()[:-1]},
++            "duplicate method",
++        ),
++        (
++            _valid_artifact()
++            | {"methods_mapped": [_valid_methods()[0] | {"failure_mode": ""}] + _valid_methods()[1:]},
++            "non-empty string",
++        ),
++        (_valid_artifact() | {"flagged_for_v382": ""}, "flagged_for_v382"),
++        (
++            _valid_artifact() | {"field_principles": {"honest_verdict": "loose"}},
++            "field_principles",
++        ),
++    ],
++)
++def test_validate_artifact_rejects_schema_violations_for_scenario_report_4121(
++    bad_artifact: dict[str, object], message: str
++) -> None:
++    """SCENARIO-REPORT-4121: invalid mapping artifacts fail closed."""
++
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(bad_artifact)
++
++
++def test_validate_artifact_rejects_missing_and_extra_fields() -> None:
++    """SCENARIO-REPORT-4121: artifact fields are exact."""
++
++    missing_artifact = _valid_artifact()
++    missing_artifact.pop("methods_mapped")
++    with pytest.raises(ValueError, match="missing required fields"):
++        mod.validate_artifact(missing_artifact)
++
++    extra_artifact = _valid_artifact()
++    extra_artifact["inference_substrate"] = "aggregation_from_upstream_artifacts"
++    with pytest.raises(ValueError, match="unexpected fields"):
++        mod.validate_artifact(extra_artifact)
++
++
++def test_validate_markdown_note_checks_scenario_report_4121_sections() -> None:
++    """SCENARIO-REPORT-4121: note maps methods to implementation work and risks."""
++
++    note = """
++    # SOTA ingestion TRM baseline graft
++
++    ## Current .381 resumable baseline-graft anchor
++    arXiv:2510.04871 and arXiv:2511.02886 define the TRM substrate.
++
++    ## TRM resumable Sudoku baseline gate
++    arXiv:2510.04871.
++    Implementation over nano-trm + Carnot-verifier stack: resume baseline.
++    Pitfalls / where it fails: partial checkpoint.
++
++    ## TTA-TRM full-fine-tune control
++    arXiv:2511.02886.
++    Implementation over nano-trm + Carnot-verifier stack: isolate adaptation.
++    Pitfalls / where it fails: leakage.
++
++    ## Verifier-guided adaptive candidate expansion
++    arXiv:2602.01070, arXiv:2601.17223, and arXiv:2605.10325.
++    Implementation over nano-trm + Carnot-verifier stack: prune during expansion.
++    Pitfalls / where it fails: local checks miss final correctness.
++
++    ## V-STaR accepted/rejected Sudoku selector
++    arXiv:2402.06457.
++    Implementation over nano-trm + Carnot-verifier stack: train selector pairs.
++    Pitfalls / where it fails: duplicate traces.
++
++    ## ReST resumable generate-filter-improve curriculum
++    arXiv:2308.08998 and arXiv:2203.14465.
++    Implementation over nano-trm + Carnot-verifier stack: cache, filter, improve.
++    Pitfalls / where it fails: sparse positives.
++
++    ## Flagged for the .382 roadmap
++    verifier_guided_adaptive_candidate_expansion_over_resumed_trm
++    """
++
++    mod.validate_markdown_note(note)
++
++
++def test_validate_markdown_note_rejects_missing_roadmap_flag() -> None:
++    """SCENARIO-REPORT-4121: note must close the discover-to-plan loop."""
++
++    with pytest.raises(ValueError, match="Flagged for the .382 roadmap"):
++        mod.validate_markdown_note(
++            "## Current .381 resumable baseline-graft anchor\n"
++            "## TRM resumable Sudoku baseline gate\n"
++            "arXiv:2510.04871.\n"
++            "Implementation over nano-trm + Carnot-verifier stack\n"
++            "Pitfalls / where it fails\n"
++        )
++
++
++def test_validate_markdown_note_rejects_missing_verified_citations() -> None:
++    """SCENARIO-REPORT-4121: every mapped method cites a verified paper."""
++
++    note = """
++    ## Current .381 resumable baseline-graft anchor
++    ## TRM resumable Sudoku baseline gate
++    arXiv:2510.04871.
++    Implementation over nano-trm + Carnot-verifier stack.
++    Pitfalls / where it fails.
++    ## TTA-TRM full-fine-tune control
++    arXiv:2511.02886.
++    Implementation over nano-trm + Carnot-verifier stack.
++    Pitfalls / where it fails.
++    ## Verifier-guided adaptive candidate expansion
++    arXiv:2602.01070 and arXiv:2601.17223.
++    Implementation over nano-trm + Carnot-verifier stack.
++    Pitfalls / where it fails.
++    ## V-STaR accepted/rejected Sudoku selector
++    arXiv:2402.06457.
++    Implementation over nano-trm + Carnot-verifier stack.
++    Pitfalls / where it fails.
++    ## ReST resumable generate-filter-improve curriculum
++    arXiv:2308.08998.
++    Implementation over nano-trm + Carnot-verifier stack.
++    Pitfalls / where it fails.
++    ## Flagged for the .382 roadmap
++    verifier_guided_adaptive_candidate_expansion_over_resumed_trm
++    """
++
++    with pytest.raises(ValueError, match="verified arxiv citations"):
++        mod.validate_markdown_note(note)
++
++
++def test_write_outputs_updates_files_idempotently_for_req_report_4121(tmp_path: Path) -> None:
++    """REQ-REPORT-4121: writer emits note, artifact, and one studying section."""
++
++    note_path = tmp_path / "note.md"
++    artifact_path = tmp_path / "artifact.json"
++    studying_path = tmp_path / "research-studying.md"
++    studying_path.write_text("# Research Studying\n\nExisting body.\n", encoding="utf-8")
++
++    artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++    )
++    second_artifact = mod.write_outputs(
++        note_path=note_path,
++        artifact_path=artifact_path,
++        studying_path=studying_path,
++    )
++
++    mod.validate_artifact(artifact)
++    mod.validate_artifact(second_artifact)
++    mod.validate_markdown_note(note_path.read_text(encoding="utf-8"))
++    saved_artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
++    studying = studying_path.read_text(encoding="utf-8")
++
++    assert saved_artifact == artifact
++    assert studying.count("2026-06-13 Exp 4121") == 1
++    assert "Flagged for .382" in studying
++
++
++def test_studying_section_update_handles_heading_layouts_for_req_report_4121() -> None:
++    """REQ-REPORT-4121: studying update works before or between sections."""
++
++    without_marker = "# Research Studying\n\n## Existing\nBody.\n"
++    with_marker_and_next = mod._with_studying_section(without_marker)
++    refreshed = mod._with_studying_section(with_marker_and_next)
++    no_heading = mod._with_studying_section("# Research Studying\nOnly body.\n")
++    marker_at_end = mod._with_studying_section(with_marker_and_next.split("\n## Existing")[0])
++
++    assert with_marker_and_next.index("2026-06-13 Exp 4121") < with_marker_and_next.index(
++        "## Existing"
++    )
++    assert refreshed.count("2026-06-13 Exp 4121") == 1
++    assert "## Existing\nBody." in refreshed
++    assert no_heading.rstrip().endswith("selector/RFT work should stay blocked.")
++    assert marker_at_end.count("2026-06-13 Exp 4121") == 1
++
++
++def test_deliverable_files_validate_against_req_report_4121() -> None:
++    """REQ-REPORT-4121: committed note and JSON artifact satisfy the contract."""
++
++    artifact = json.loads(ARTIFACT_PATH.read_text(encoding="utf-8"))
++    note = NOTE_PATH.read_text(encoding="utf-8")
++    studying = STUDYING_PATH.read_text(encoding="utf-8")
++
++    mod.validate_artifact(artifact)
++    mod.validate_markdown_note(note)
++    assert len(artifact["methods_mapped"]) >= 3
++    assert artifact["flagged_for_v382"] == (
++        "verifier_guided_adaptive_candidate_expansion_over_resumed_trm"
++    )
++    assert "2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested" in studying
++    assert (
++        "Flagged for .382: "
++        "`verifier_guided_adaptive_candidate_expansion_over_resumed_trm`"
++    ) in studying
+-- 
+2.55.0
+

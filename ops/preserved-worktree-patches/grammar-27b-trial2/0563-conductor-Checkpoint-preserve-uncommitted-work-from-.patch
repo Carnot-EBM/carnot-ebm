@@ -1,0 +1,43 @@
+From 8dddf7fb23a249b3e88a148b572b70fb4816cc9a Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 00:16:37 -0400
+Subject: [PATCH 00563/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index e49643600b..403743e3e2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 14950, "iteration": 30, "phase": "iteration_start", "last_beat": "2026-06-05T04:12:06Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-05T04:16:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index aecd50b7ef..d891057605 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7816,3 +7816,4 @@ ERROR: {
+ | 2026-06-05 03:13 UTC | Ship a CERTIFIED abstention operating point on the | OK | 94 passed in 4.29s |
+ | 2026-06-05 03:59 UTC | Characterize the LEARNED-probe contribution HONEST | OK | 89 passed in 3.99s |
+ | 2026-06-05 04:10 UTC | FR-11 continuous self-learning v22 — Tier-4 ADAPTI | OK | 84 passed in 3.60s |
++| 2026-06-05 04:14 UTC | EDLM minimal kill-gate EXECUTION (operator-gated — | OK | 82 passed in 3.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 60a98fb9e6..c536076c9f 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 14950, "iteration": 30, "phase": "iteration_start", "started_at": "2026-06-05T04:12:06Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-05T04:16:36Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

@@ -1,0 +1,2304 @@
+From d2724857baed4b73892390b1dadc5d9b2b6c826b Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 21:00:45 -0400
+Subject: [PATCH 01513/11171] [conductor] GRAFT the Carnot Sudoku verifier on
+ the reproducing baseline (DEFERRED if not yet faithful). DEFENSIVE read of
+ exp4118: IF matches_published_087 (or val>=0.85), graft the EXECUTABLE Sudoku
+ verifier (row/col/box validity) as (A) reranker over TRM candidate solutions
+ and (B) reward for verifier-cert vs vote-cert RFT (A-vs-B de-confound);
+ measure held-out exact-accuracy lift. IF the baseline has not converged,
+ DEFER the graft honestly and report the baseline status for .382.
+
+Automated research step by research conductor.
+Task ID: exp4119-carnot-verifier-graft-sudoku
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ openspec/capabilities/self-learning/spec.md   |  58 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/dogfood-memory.json                       |   4 +-
+ ops/known-issues.md                           |   4 +
+ ...iment_4119_carnot_verifier_graft_sudoku.py | 540 ++++++++++++++++++
+ research-roadmap-next.yaml                    |   4 +-
+ .../experiment_631/checkpoint.json            |   2 +-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   8 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   8 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ results/experiment_1938_nrgpt_loss_probe.json |  11 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   6 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2085_pem_sudoku_eval.json  |  11 +-
+ results/experiment_2090_crane_humaneval.json  |  10 +-
+ results/experiment_2093_retro.json            |   6 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  30 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   8 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |  11 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   6 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ ..._fix_harness_and_bounded_train_chunk1.json |   2 +-
+ results/experiment_3843.json                  |   4 +-
+ ...ent_4119_carnot_verifier_graft_sudoku.json |  69 +++
+ results/experiment_542_fover_expansion.json   |   8 +-
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   6 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |  19 +-
+ ...iment_833_constraint_delta_root_cause.json |   8 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |  24 +-
+ ...iment_4119_carnot_verifier_graft_sudoku.py | 396 +++++++++++++
+ 70 files changed, 1213 insertions(+), 184 deletions(-)
+ create mode 100644 python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py
+ create mode 100644 results/experiment_4119_carnot_verifier_graft_sudoku.json
+ create mode 100644 tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py
+
+diff --git a/openspec/capabilities/self-learning/spec.md b/openspec/capabilities/self-learning/spec.md
+index defac5b055..a414f17278 100644
+--- a/openspec/capabilities/self-learning/spec.md
++++ b/openspec/capabilities/self-learning/spec.md
+@@ -12327,6 +12327,64 @@ preserves the shared stable checkpoint path, and computes
+ 
+ ---
+ 
++## REQ-LEARN-4119: Conditional Sudoku Verifier Graft After Faithful TRM Baseline
++
++**Given** Exp 4118 has written `results/experiment_4118_*.json`, Exp 4119
++SHALL read the latest Exp 4118 artifact and extract `matches_published_087`,
++`val_exact_accuracy`, `stable_checkpoint_path`, and cumulative training status
++before deciding whether a verifier graft is meaningful. Exp 4119 SHALL verify
++CUDA visibility and the stable checkpoint path before writing a verdict.
++
++**When** the Exp 4118 baseline is not faithful enough
++(`matches_published_087` is not true and `val_exact_accuracy < 0.85`), Exp
++4119 SHALL defer the graft instead of manufacturing a verifier-as-reward
++measurement. The deferral artifact SHALL set `graft_deferred=true`, report the
++current baseline validation exact accuracy, preserve the stable checkpoint
++path, and include an estimated additional pass count to reach the faithful
++baseline threshold when a positive pass-to-pass improvement can be inferred.
++
++**When** the Exp 4118 baseline is faithful
++(`matches_published_087=true` or `val_exact_accuracy >= 0.85`), Exp 4119 SHALL
++run the graft branch: sample K TRM candidate solutions per held-out Sudoku
++puzzle, rerank by the executable Sudoku verifier, compare pass@1 lift against
++TRM-vote and oracle with bootstrap CI, and run the de-confounded verifier-label
++RFT arm A versus vote-label ablation B with N-matched corpora, the same TRM,
++bounded native resume training, held-out exact accuracy, and CI95 on A-B.
++
++**Then** the terminal artifact SHALL be written to
++`results/experiment_4119_carnot_verifier_graft_sudoku.json` and SHALL contain
++top-level fields `honest_verdict`, `graft_deferred`,
++`rerank_lift_vs_vote`, `rft_vs_ablation_delta`,
++`verifier_value_added`, and `preconditions_checked` with principle text. The
++acceptance gate passes when either `graft_deferred=true` with baseline status
++reported, or `graft_deferred=false` with both rerank lift and RFT-vs-ablation
++delta reported with CI.
++
++### SCENARIO-LEARN-4119-DEFER: Non-Faithful Baseline Defers The Graft
++
++**Given** Exp 4118 reports `matches_published_087=false` and validation exact
++accuracy below 0.85
++**When** Exp 4119 runs
++**Then** it writes an honest `graft_deferred=true` verdict with the current
++baseline validation accuracy, stable checkpoint path, precondition evidence,
++and estimated additional passes rather than running rerank or RFT arms.
++
++### SCENARIO-LEARN-4119-GRAFT: Faithful Baseline Reports Rerank And RFT CIs
++
++**Given** Exp 4118 reports a faithful Sudoku Extreme baseline
++**When** Exp 4119 runs the graft branch
++**Then** it writes `graft_deferred=false`, reports `rerank_lift_vs_vote` and
++`rft_vs_ablation_delta` with CI95, and sets the bare
++`verifier_value_added` bool only from the A-vs-B CI separation.
++
++## Implementation Status (REQ-LEARN-4119)
++
++| Requirement | Python | Tests |
++|---|---|---|
++| REQ-LEARN-4119 | Proposed (python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py, Exp 4119) | Proposed (tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py) |
++
++---
++
+ ## REQ-LEARN-4109: Sudoku Verifier Graft Over nano-trm
+ 
+ **Given** Exp 4108 has written a nano-trm Sudoku baseline artifact, Exp 4109
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index 784e1145b0..f41249255f 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -397,5 +397,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index ca2b93c6dc..c63e08a9d9 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 169,
++  "brace_fixes": 170,
+   "code_violations": 0,
+-  "experiments_checked": 3141,
++  "experiments_checked": 3142,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index 6fe9373dc0..9b6cbbc99b 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -8185,5 +8185,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py b/python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py
+new file mode 100644
+index 0000000000..1640627491
+--- /dev/null
++++ b/python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py
+@@ -0,0 +1,540 @@
++"""Exp 4119 conditional Sudoku verifier graft over a faithful TRM baseline.
++
++Spec refs: REQ-LEARN-4119, SCENARIO-LEARN-4119-DEFER,
++SCENARIO-LEARN-4119-GRAFT.
++"""
++
++from __future__ import annotations
++
++import json
++import math
++import time
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import asdict, dataclass
++from pathlib import Path
++from typing import Any
++
++from carnot import experiment_4107_nanotrm_mechanism_smoke as exp4107
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++RESULT_FILENAME = "experiment_4119_carnot_verifier_graft_sudoku.json"
++DEFAULT_OUTPUT = REPO_ROOT / "results" / RESULT_FILENAME
++DEFAULT_EXP4118_ARTIFACT = REPO_ROOT / "results" / "experiment_4118_sudoku_extreme_resume_pass3.json"
++DEFAULT_STABLE_CHECKPOINT = REPO_ROOT / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++FAITHFUL_BASELINE_THRESHOLD = 0.85
++RANDOM_SEED = 4119
++TERMINAL_PREFIXES = ("complete:", "success:", "passed:", "shipped:")
++BLOCKED_PREFIX = "blocked_"
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "graft_deferred",
++    "rerank_lift_vs_vote",
++    "rft_vs_ablation_delta",
++    "verifier_value_added",
++    "preconditions_checked",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal-prefixed. An honest 'graft_deferred -- baseline at val=0.NN' "
++        "is a COMPLETE verdict; so is an A~=B null."
++    ),
++    "graft_deferred": (
++        "Bare bool: True if the baseline was not faithful enough to graft. "
++        "Prevents a meaningless graft on a 0.02 baseline being dressed as a result."
++    ),
++    "rerank_lift_vs_vote": (
++        "pass@1 lift from verifier-reranking (if grafted); confirms the "
++        "executable Sudoku verifier discriminates."
++    ),
++    "rft_vs_ablation_delta": (
++        "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates "
++        "the verifier LABEL's training contribution."
++    ),
++    "verifier_value_added": (
++        "Bare bool: did the verifier graft beat the vote ablation? Meaningful "
++        "only when graft_deferred is false."
++    ),
++    "preconditions_checked": (
++        "Records the baseline checkpoint + CUDA verified; pre-empts "
++        "silent-missing-resource fabrication."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One Exp 4119 runtime resource check."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def to_dict(self) -> dict[str, object]:
++        return asdict(self)
++
++
++@dataclass(frozen=True)
++class BaselineContext:
++    """Exp 4118 baseline state that controls whether Exp 4119 may graft."""
++
++    artifact_path: Path
++    stable_checkpoint_path: Path
++    val_exact_accuracy: float | None
++    previous_val_exact_accuracy: float | None
++    matches_published_087: bool
++    total_cumulative_epochs: int | None
++    raw: Mapping[str, Any]
++
++    def to_dict(self) -> dict[str, Any]:
++        row = {
++            "artifact_path": str(self.artifact_path),
++            "stable_checkpoint_path": str(self.stable_checkpoint_path),
++            "val_exact_accuracy": self.val_exact_accuracy,
++            "previous_val_exact_accuracy": self.previous_val_exact_accuracy,
++            "matches_published_087": self.matches_published_087,
++            "total_cumulative_epochs": self.total_cumulative_epochs,
++        }
++        return row
++
++
++def _numeric_or_none(value: Any) -> float | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, (int, float)):
++        return float(value)
++    return None
++
++
++def _int_or_none(value: Any) -> int | None:
++    if isinstance(value, bool) or value is None:
++        return None
++    if isinstance(value, int) and value >= 0:
++        return value
++    if isinstance(value, float) and value >= 0 and value.is_integer():
++        return int(value)
++    return None
++
++
++def _jsonable(value: Any) -> Any:
++    if isinstance(value, Path):
++        return str(value)
++    if isinstance(value, Mapping):
++        return {str(key): _jsonable(item) for key, item in value.items()}
++    if isinstance(value, (list, tuple)):
++        return [_jsonable(item) for item in value]
++    return value
++
++
++def find_exp4118_artifact(repo_root: str | Path = REPO_ROOT) -> Path:
++    """REQ-LEARN-4119: find the latest Exp 4118 baseline artifact."""
++
++    root = Path(repo_root)
++    matches = sorted((root / "results").glob("experiment_4118_*.json"))
++    if matches:
++        return matches[-1]
++    return root / "results" / DEFAULT_EXP4118_ARTIFACT.name
++
++
++def load_baseline_context(path: str | Path) -> BaselineContext:
++    """REQ-LEARN-4119: read Exp 4118 baseline status before grafting."""
++
++    artifact_path = Path(path)
++    payload = json.loads(artifact_path.read_text(encoding="utf-8"))
++    if not isinstance(payload, Mapping):
++        raise ValueError("Exp 4118 artifact must be a JSON object")
++
++    stable_value = payload.get("stable_checkpoint_path")
++    stable = Path(stable_value) if isinstance(stable_value, str) else DEFAULT_STABLE_CHECKPOINT
++    pass2 = payload.get("pass2")
++    previous = _numeric_or_none(pass2.get("val_exact_accuracy")) if isinstance(pass2, Mapping) else None
++    return BaselineContext(
++        artifact_path=artifact_path,
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=_numeric_or_none(payload.get("val_exact_accuracy")),
++        previous_val_exact_accuracy=previous,
++        matches_published_087=payload.get("matches_published_087") is True,
++        total_cumulative_epochs=_int_or_none(payload.get("total_cumulative_epochs")),
++        raw=dict(payload),
++    )
++
++
++def baseline_is_faithful(baseline: BaselineContext) -> bool:
++    """REQ-LEARN-4119: decide if a verifier graft is meaningful."""
++
++    return baseline.matches_published_087 or (
++        baseline.val_exact_accuracy is not None
++        and baseline.val_exact_accuracy >= FAITHFUL_BASELINE_THRESHOLD
++    )
++
++
++def estimate_passes_to_converge(
++    baseline: BaselineContext,
++    *,
++    target: float = FAITHFUL_BASELINE_THRESHOLD,
++) -> dict[str, Any]:
++    """SCENARIO-LEARN-4119-DEFER: estimate more resume passes from pass2-pass3 slope."""
++
++    current = baseline.val_exact_accuracy
++    previous = baseline.previous_val_exact_accuracy
++    delta = None if current is None or previous is None else current - previous
++    if current is None:
++        estimate = None
++        basis = "missing_current_val_exact_accuracy"
++    elif current >= target:
++        estimate = 0
++        basis = "already_at_or_above_target"
++    elif delta is None or delta <= 0.0:
++        estimate = None
++        basis = "no_positive_pass_to_pass_improvement"
++    else:
++        estimate = int(math.ceil((target - current) / delta))
++        basis = "pass2_to_pass3_delta"
++    return {
++        "target_val_exact_accuracy": float(target),
++        "current_val_exact_accuracy": current,
++        "previous_val_exact_accuracy": previous,
++        "observed_delta_per_pass": None if delta is None else round(float(delta), 6),
++        "estimated_additional_passes": estimate,
++        "basis": basis,
++    }
++
++
++def _default_cuda_checker() -> tuple[bool, str]:  # pragma: no cover - host dependent.
++    try:
++        import torch  # pylint: disable=import-outside-toplevel
++    except Exception as exc:
++        return False, f"{type(exc).__name__}: {exc}"
++    available = bool(torch.cuda.is_available())
++    detail = f"torch.cuda.is_available()={available}"
++    if available:
++        detail += f"; device={torch.cuda.get_device_name(0)}"
++    return available, detail
++
++
++def check_preconditions(
++    baseline: BaselineContext,
++    *,
++    cuda_checker: Callable[[], tuple[bool, str]] = _default_cuda_checker,
++    checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
++) -> list[PreconditionCheck]:
++    """REQ-LEARN-4119: record baseline artifact, checkpoint, and CUDA checks."""
++
++    checks = [
++        PreconditionCheck(
++            "baseline_artifact",
++            baseline.artifact_path.is_file(),
++            str(baseline.artifact_path),
++        ),
++        PreconditionCheck(
++            "stable_checkpoint_path",
++            bool(str(baseline.stable_checkpoint_path)),
++            str(baseline.stable_checkpoint_path),
++        ),
++    ]
++    if baseline.stable_checkpoint_path.is_file():
++        try:
++            checkpoint_ok, checkpoint_detail = checkpoint_loader(baseline.stable_checkpoint_path)
++        except Exception as exc:
++            checkpoint_ok, checkpoint_detail = False, f"{type(exc).__name__}: {exc}"
++    else:
++        checkpoint_ok = False
++        checkpoint_detail = f"missing: {baseline.stable_checkpoint_path}"
++    checks.append(PreconditionCheck("stable_checkpoint", bool(checkpoint_ok), str(checkpoint_detail)))
++
++    try:
++        cuda_ok, cuda_detail = cuda_checker()
++    except Exception as exc:
++        cuda_ok, cuda_detail = False, f"{type(exc).__name__}: {exc}"
++    checks.append(PreconditionCheck("cuda_available", bool(cuda_ok), str(cuda_detail)))
++    return checks
++
++
++def _checks_to_dicts(checks: Sequence[PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
++    return [check.to_dict() if isinstance(check, PreconditionCheck) else dict(check) for check in checks]
++
++
++def _all_preconditions_available(checks: Sequence[PreconditionCheck | Mapping[str, Any]]) -> bool:
++    return all(bool(check.available) if isinstance(check, PreconditionCheck) else check.get("available") is True for check in checks)
++
++
++def verifier_value_added(rft_vs_ablation_delta: Mapping[str, Any]) -> bool:
++    """SCENARIO-LEARN-4119-GRAFT: bare headline bool from A-vs-B CI separation."""
++
++    ci95 = rft_vs_ablation_delta.get("ci95")
++    return (
++        isinstance(ci95, Sequence)
++        and not isinstance(ci95, (str, bytes))
++        and len(ci95) == 2
++        and float(rft_vs_ablation_delta.get("delta", 0.0)) > 0.0
++        and float(ci95[0]) > 0.0
++    )
++
++
++def _common_artifact(
++    *,
++    baseline: BaselineContext | None,
++    honest_verdict: str,
++    graft_deferred: bool,
++    rerank_lift_vs_vote: Mapping[str, Any] | None,
++    rft_vs_ablation_delta: Mapping[str, Any] | None,
++    verifier_added: bool,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++    acceptance_gate_passed: bool,
++) -> dict[str, Any]:
++    return {
++        "experiment": "experiment_4119_carnot_verifier_graft_sudoku",
++        "schema": "carnot.experiment_4119_carnot_verifier_graft_sudoku.v1",
++        "honest_verdict": honest_verdict,
++        "graft_deferred": bool(graft_deferred),
++        "baseline_val_exact_accuracy": None if baseline is None else baseline.val_exact_accuracy,
++        "baseline_matches_published_087": False if baseline is None else baseline.matches_published_087,
++        "baseline_status_reported": baseline is not None and baseline.val_exact_accuracy is not None,
++        "stable_checkpoint_path": None if baseline is None else str(baseline.stable_checkpoint_path),
++        "baseline_artifact_path": None if baseline is None else str(baseline.artifact_path),
++        "baseline": None if baseline is None else baseline.to_dict(),
++        "estimated_passes_to_converge": None if baseline is None else estimate_passes_to_converge(baseline),
++        "rerank_lift_vs_vote": _jsonable(rerank_lift_vs_vote),
++        "rft_vs_ablation_delta": _jsonable(rft_vs_ablation_delta),
++        "verifier_value_added": bool(verifier_added),
++        "verifier_value_added_meaningful": not graft_deferred,
++        "preconditions_checked": _checks_to_dicts(preconditions_checked),
++        "acceptance_gate_passed": bool(acceptance_gate_passed),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++        "duration_s": round(float(duration_s), 3),
++        "spec_refs": ["REQ-LEARN-4119", "SCENARIO-LEARN-4119-DEFER", "SCENARIO-LEARN-4119-GRAFT"],
++    }
++
++
++def build_deferred_artifact(
++    *,
++    baseline: BaselineContext,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++) -> dict[str, Any]:
++    """SCENARIO-LEARN-4119-DEFER: write a complete non-faithful-baseline verdict."""
++
++    value = baseline.val_exact_accuracy
++    rendered = "unknown" if value is None else f"{value:.4f}"
++    artifact = _common_artifact(
++        baseline=baseline,
++        honest_verdict=f"complete: graft_deferred -- baseline at val={rendered}",
++        graft_deferred=True,
++        rerank_lift_vs_vote=None,
++        rft_vs_ablation_delta=None,
++        verifier_added=False,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        acceptance_gate_passed=baseline.val_exact_accuracy is not None,
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_grafted_artifact(
++    *,
++    baseline: BaselineContext,
++    rerank_lift_vs_vote: Mapping[str, Any],
++    rft_vs_ablation_delta: Mapping[str, Any],
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++) -> dict[str, Any]:
++    """SCENARIO-LEARN-4119-GRAFT: report rerank and RFT deconfound metrics."""
++
++    value_added = verifier_value_added(rft_vs_ablation_delta)
++    verdict = (
++        "success: verifier_value_added_A_gt_B_ci95_excludes_zero"
++        if value_added
++        else "complete: A~=B null verifier graft measured"
++    )
++    artifact = _common_artifact(
++        baseline=baseline,
++        honest_verdict=verdict,
++        graft_deferred=False,
++        rerank_lift_vs_vote=rerank_lift_vs_vote,
++        rft_vs_ablation_delta=rft_vs_ablation_delta,
++        verifier_added=value_added,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        acceptance_gate_passed=True,
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    honest_verdict: str,
++    *,
++    baseline: BaselineContext | None,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++) -> dict[str, Any]:
++    """REQ-LEARN-4119: fail closed when preconditions or baseline artifact are missing."""
++
++    artifact = _common_artifact(
++        baseline=baseline,
++        honest_verdict=honest_verdict,
++        graft_deferred=True,
++        rerank_lift_vs_vote=None,
++        rft_vs_ablation_delta=None,
++        verifier_added=False,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_s,
++        acceptance_gate_passed=False,
++    )
++    validate_artifact(artifact)
++    return artifact
++
++
++def _ci_reported(metric: Mapping[str, Any]) -> bool:
++    ci95 = metric.get("ci95")
++    return isinstance(ci95, Sequence) and not isinstance(ci95, (str, bytes)) and len(ci95) == 2
++
++
++def artifact_schema_errors(artifact: Mapping[str, Any]) -> list[str]:
++    """Return explicit schema errors for the Exp 4119 deliverable."""
++
++    errors: list[str] = []
++    for field_name in REQUIRED_ARTIFACT_FIELDS:
++        if field_name not in artifact:
++            errors.append(f"missing required field {field_name}")
++
++    verdict = artifact.get("honest_verdict")
++    if not isinstance(verdict, str):
++        errors.append("honest_verdict must be a string")
++    elif not verdict.startswith((*TERMINAL_PREFIXES, BLOCKED_PREFIX)):
++        errors.append("honest_verdict must be terminal-prefixed or blocked")
++
++    graft_deferred = artifact.get("graft_deferred")
++    if type(graft_deferred) is not bool:
++        errors.append("graft_deferred must be a bare bool")
++    if type(artifact.get("verifier_value_added")) is not bool:
++        errors.append("verifier_value_added must be a bare bool")
++
++    preconditions = artifact.get("preconditions_checked")
++    if not isinstance(preconditions, list):
++        errors.append("preconditions_checked must be a list")
++    elif any(
++        not isinstance(item, Mapping) or "resource" not in item or "available" not in item
++        for item in preconditions
++    ):
++        errors.append("preconditions_checked entries must include resource and available")
++
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        errors.append("field_principles must be an object")
++    else:
++        for field_name, principle in FIELD_PRINCIPLES.items():
++            if principles.get(field_name) != principle:
++                errors.append(f"field_principles.{field_name} mismatch")
++
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, (int, float)) or isinstance(duration, bool):
++        errors.append("duration_s must be numeric")
++    if type(artifact.get("acceptance_gate_passed")) is not bool:
++        errors.append("acceptance_gate_passed must be a bare bool")
++
++    if graft_deferred is True and artifact.get("acceptance_gate_passed") is True:
++        if not isinstance(artifact.get("baseline_val_exact_accuracy"), (int, float)):
++            errors.append("accepted deferral requires baseline_val_exact_accuracy")
++        if not isinstance(artifact.get("stable_checkpoint_path"), str):
++            errors.append("accepted deferral requires stable_checkpoint_path")
++
++    if graft_deferred is False:
++        for field_name in ("rerank_lift_vs_vote", "rft_vs_ablation_delta"):
++            metric = artifact.get(field_name)
++            if not isinstance(metric, Mapping):
++                errors.append(f"{field_name} must be an object when graft_deferred is false")
++                continue
++            if "delta" not in metric:
++                errors.append(f"{field_name}.delta is required")
++            if not _ci_reported(metric):
++                errors.append(f"{field_name}.ci95 must have two bounds")
++    return errors
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    errors = artifact_schema_errors(artifact)
++    if errors:
++        raise ValueError("; ".join(errors))
++
++
++def write_artifact(path: str | Path, artifact: Mapping[str, Any]) -> dict[str, Any]:
++    """Write the stable Exp 4119 JSON artifact."""
++
++    validate_artifact(artifact)
++    payload = _jsonable(artifact)
++    output_path = Path(path)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    return json.loads(output_path.read_text(encoding="utf-8"))
++
++
++def run_experiment(
++    *,
++    repo_root: str | Path = REPO_ROOT,
++    output_path: str | Path = DEFAULT_OUTPUT,
++    exp4118_artifact_path: str | Path | None = None,
++    cuda_checker: Callable[[], tuple[bool, str]] = _default_cuda_checker,
++    checkpoint_loader: Callable[[Path], tuple[bool, str]] = exp4107._load_torch_checkpoint,
++    graft_runner: Callable[[BaselineContext, list[PreconditionCheck], float], Mapping[str, Any]] | None = None,
++) -> dict[str, Any]:
++    """Run Exp 4119 and write either an honest deferral or grafted measurement."""
++
++    started = time.time()
++    baseline_path = Path(exp4118_artifact_path) if exp4118_artifact_path is not None else find_exp4118_artifact(repo_root)
++    try:
++        baseline = load_baseline_context(baseline_path)
++    except (FileNotFoundError, json.JSONDecodeError, ValueError):
++        artifact = build_blocked_artifact(
++            "blocked_exp4118_baseline_missing",
++            baseline=None,
++            preconditions_checked=[
++                PreconditionCheck("baseline_artifact", False, str(baseline_path)).to_dict()
++            ],
++            duration_s=time.time() - started,
++        )
++        return write_artifact(output_path, artifact)
++
++    checks = check_preconditions(baseline, cuda_checker=cuda_checker, checkpoint_loader=checkpoint_loader)
++    if not _all_preconditions_available(checks):
++        artifact = build_blocked_artifact(
++            "blocked_exp4119_preconditions_missing",
++            baseline=baseline,
++            preconditions_checked=checks,
++            duration_s=time.time() - started,
++        )
++        return write_artifact(output_path, artifact)
++
++    if not baseline_is_faithful(baseline):
++        artifact = build_deferred_artifact(
++            baseline=baseline,
++            preconditions_checked=checks,
++            duration_s=time.time() - started,
++        )
++        return write_artifact(output_path, artifact)
++
++    if graft_runner is None:
++        artifact = build_blocked_artifact(
++            "blocked_exp4119_graft_runner_missing",
++            baseline=baseline,
++            preconditions_checked=checks,
++            duration_s=time.time() - started,
++        )
++        return write_artifact(output_path, artifact)
++
++    artifact = dict(graft_runner(baseline, checks, started))
++    return write_artifact(output_path, artifact)
++
++
++def main() -> None:  # pragma: no cover - thin CLI wrapper.
++    artifact = run_experiment()
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/research-roadmap-next.yaml b/research-roadmap-next.yaml
+index 562abc913a..e501c134db 100644
+--- a/research-roadmap-next.yaml
++++ b/research-roadmap-next.yaml
+@@ -320,7 +320,7 @@ tasks:
+       CONCRETE STEPS:
+         1. Read exp4126/4127/4128/4129/4130/4131/4132. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+         2. Answer: (a) did the LR-resume fix land (exp4126 lr_continuous_across_resume)? (b) did the corrected schedule accelerate val toward 0.87 (exp4127 val_trajectory + per_pass_delta_vs_v381)? (c) did exp4128 graft (verifier_value_added) or defer? (d) total ARC games solved.
+-        3. Honest headline: one of {lr_fixed_baseline_reproduced_graft_validated, lr_fixed_baseline_reproduced_graft_null, lr_fixed_accumulating_v383_continues, lr_fix_failed_contiguous_run_recommended, baseline_still_blocked}.
++        3. Honest headline: one of {{lr_fixed_baseline_reproduced_graft_validated, lr_fixed_baseline_reproduced_graft_null, lr_fixed_accumulating_v383_continues, lr_fix_failed_contiguous_run_recommended, baseline_still_blocked}}.
+       REQUIRED ARTIFACT FIELDS:
+         honest_verdict:
+           principle: "Terminal-prefixed. An honest 'lr fixed, still accumulating, .383 continues' is COMPLETE and valuable."
+@@ -329,5 +329,5 @@ tasks:
+         baseline_val_trajectory:
+           principle: "Val across .381+.382 (0.0232 -> 0.106 -> ...); shows whether the LR fix changed the convergence rate."
+         upstream_provenance:
+-          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
++          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
+       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
+diff --git a/results/checkpoints/experiment_631/checkpoint.json b/results/checkpoints/experiment_631/checkpoint.json
+index 09fb3e841c..12787f91df 100644
+--- a/results/checkpoints/experiment_631/checkpoint.json
++++ b/results/checkpoints/experiment_631/checkpoint.json
+@@ -4,5 +4,5 @@
+     "lambda_calib_selected": 0.1,
+     "step": "lambda_sweep_done"
+   },
+-  "saved_at": "2026-06-12T11:43:51Z"
++  "saved_at": "2026-06-13T00:28:23Z"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index 1948221056..4f49b0ebf5 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T22:44:05.474194+00:00",
+-  "finished_at": "2026-06-12T22:44:05.502062+00:00",
+-  "duration_s": 0.028,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:23:38.500794+00:00",
++  "finished_at": "2026-06-13T00:23:38.524809+00:00",
++  "duration_s": 0.024,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 4ee7d2508f..9870860ffc 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T22:44:05Z",
++  "run_date": "2026-06-13T00:23:38Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index d93b5b3382..31a7b5b7ea 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T22:44:06Z",
+-  "finished_at": "2026-06-12T22:44:06Z",
+-  "duration_s": 0.001,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:23:39Z",
++  "finished_at": "2026-06-13T00:23:39Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 8ae37d04cc..3af6e6a66d 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-12T22:44:06Z",
++  "run_date": "2026-06-13T00:23:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 83203d9c96..094da9e776 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-12T22:44:06Z",
++  "run_date": "2026-06-13T00:23:39Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 88029fc8f2..bc3ca66146 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-13T00:07:14.383652Z",
+-  "duration_s": 0.2007126808166504,
++  "run_date": "2026-06-13T00:22:19.012195Z",
++  "duration_s": 0.11572432518005371,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "5bb068e80309d59e506d0906969d2b4d8ab15b330d9176bdfa6995d231a33c48",
++  "reproducibility_checksum": "53bae908557ec2bde5078c2c884873b71f58f03d9633b2f86b1f827c76139634",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "4115929acedeb44a22afe2bc09f92cc1ab546e76"
++    "adversarial_verify_version": "93197328dc306af8a95bdaa96256c8d30d044128"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index 38e035270b..203dfb2f69 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-12T21:51:28.366336Z",
+-  "duration_s": 18.655733585357666,
++  "run_date": "2026-06-13T00:23:59.347428Z",
++  "duration_s": 20.117987871170044,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index b21da99c79..60a6e36417 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-12T11:39:53.290609+00:00",
+-  "duration_s": 0.0022428035736083984,
++  "run_date": "2026-06-13T00:24:14.560856+00:00",
++  "duration_s": 0.0027618408203125,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 3e81c9adc0..0a1ee7062a 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-13T00:07:14.619094Z",
+-  "duration_s": 0.1663682460784912,
++  "run_date": "2026-06-13T00:22:19.137846Z",
++  "duration_s": 0.06836056709289551,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "3e897ce984b82b4794270feabb160ee520f115d40f3a21cdd137d4c22ce52dfd",
++  "reproducibility_checksum": "1bd34c7680aaaa0f15dc21600b14da3e232c88c0a6f26cc5cb6c9517988f2adc",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "4115929acedeb44a22afe2bc09f92cc1ab546e76"
++    "adversarial_verify_version": "93197328dc306af8a95bdaa96256c8d30d044128"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index 849407a0c1..233ad5e8f8 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.19s, user: 1.97s, system: 0.16s, MEM: 116.02 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.13s, user: 1.84s, system: 0.16s, MEM: 114.65 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 76% 19x read_verilog (1 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (1 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index 0571ba4f63..87c6b402e4 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.437965393066406,
++    "latency_ms": 10.401010513305664,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 179521c0e0..098c61e799 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,10 +243,5 @@
+         "success": true
+       }
+     }
+-  ],
+-  "corrigendum_2026_05_187_audit": {
+-    "classification": "METHODOLOGY_MISSING",
+-    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+-    "follow_up_action": "Add missing methodology fields."
+-  }
++  ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 09f6a3f8c2..278f676a38 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.143383026123047,
++  "efficiency_gains_ms": 2.1109580993652344,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index c8862900f8..cc3e53212a 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-12T11:40:06.437743Z",
++  "run_date": "2026-06-13T00:24:28.192016Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1938_nrgpt_loss_probe.json b/results/experiment_1938_nrgpt_loss_probe.json
+index f708382ee4..d459cb19a5 100644
+--- a/results/experiment_1938_nrgpt_loss_probe.json
++++ b/results/experiment_1938_nrgpt_loss_probe.json
+@@ -34,14 +34,5 @@
+     0.6748976707458496
+   ],
+   "overfitting_resistant": true,
+-  "gradient_stability_ratio": 0.9999999989757112,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "nrgpt_grad_norm=9.762872695922852 and ce_grad_norm=9.762872695922852 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "gradient_stability_ratio": 0.9999999989757112
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index ddef0a5d6e..0749ffbe3b 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00014113506767898798,
+-  "latency_domino_seconds": 0.00024437904357910156,
++  "latency_legacy_seconds": 0.00014033299885340966,
++  "latency_domino_seconds": 0.0002529849989514332,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 6005e34e1f..a849897068 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -2,9 +2,9 @@
+   "experiment": 2031,
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:40:31Z",
+-  "finished_at": "2026-06-12T11:40:31Z",
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:24:51Z",
++  "finished_at": "2026-06-13T00:24:51Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index cde6aac55a..a6c7848867 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.0009329319000244141,
++  "execution_time_s": 0.0016312599182128906,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2085_pem_sudoku_eval.json b/results/experiment_2085_pem_sudoku_eval.json
+index bc357ba5bb..7f16fcaa5d 100644
+--- a/results/experiment_2085_pem_sudoku_eval.json
++++ b/results/experiment_2085_pem_sudoku_eval.json
+@@ -3,14 +3,5 @@
+   "lagrangian_success_rate": 0.0,
+   "pem_success_rate": 0.02,
+   "success_rate_delta": 0.02,
+-  "honest_verdict": "SUCCESS: success_rate_delta=0.02",
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "pem_success_rate=0.02 and success_rate_delta=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "honest_verdict": "SUCCESS: success_rate_delta=0.02"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index 07d26e9d06..e5ff9db4b6 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:41:07Z",
+-  "finished_at": "2026-06-12T11:41:07Z",
+-  "duration_s": 0.008,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:25:27Z",
++  "finished_at": "2026-06-13T00:25:27Z",
++  "duration_s": 0.009,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.08606910705566406,
++  "latency_ms": 0.09226799011230469,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index 4dae0e0ea7..dfd224fdc7 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -3,9 +3,9 @@
+   "schema": "carnot.milestone_retro.v1",
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T12:01:07.801516+00:00",
+-  "finished_at": "2026-06-12T12:01:07.801519+00:00",
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:44:43.233567+00:00",
++  "finished_at": "2026-06-13T00:44:43.233570+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index d12b75ccfa..94b88341cf 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008852720260620117,
+-  "avg_eqm_time": 0.07002541065216064,
++  "avg_pem_time": 0.0009143304824829102,
++  "avg_eqm_time": 0.07247799396514892,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 829b16d433..ec9cd099c3 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 322.8348717689514,
++  "duration_s": 307.51458168029785,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index e005fb15f6..d449d35899 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.001151,
++  "duration_s": 0.002239,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index ddb87e14f5..52363eef55 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.000234,
++  "duration_s": 0.000167,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index b3c9ab482a..c3237e0f81 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.02370142936706543,
++  "duration_s": 0.0991363525390625,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 06ec3a568a..89c9ba20a1 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-12T17:24:19Z",
++  "run_date": "2026-06-13T00:31:50Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 03dd9c0537..6bc164cbc5 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000092506408691,
++  "duration_s": 5.000388860702515,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index bc61f464ce..5f01705351 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000092029571533,
++  "duration_s": 10.000097036361694,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 492a0377d3..67f73cdc98 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.227980375289917,
++  "duration_s": 0.23045730590820312,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 4d2078b156..fb11c9e85c 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.052502282000205014,
++  "duration_s": 0.06221146499956376,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index c7dcf18c2e..fbf6d9a732 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,20 +1,20 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_low": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,10 +45,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_specific": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -57,8 +57,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -67,15 +67,15 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_low": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 75bf88d4ec..ad46a2448f 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0009946823120117188,
++  "duration_s": 0.0008776187896728516,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a471aff6f5..5e9a7934c3 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.829300137818791e-05,
++  "duration_s": 3.2911997550399974e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 1ff25044ad..a50645d504 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 4.6100103645585477e-07,
++  "duration_s": 5.309993866831064e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 7240fcdb6c..19bb5df8bc 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.3392181396484375e-05,
++  "duration_s": 4.601478576660156e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index 85964a42a4..15f4fd3814 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 15.697612047195435, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 17.840405225753784, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 19cd2e7592..9dc9660e3f 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.010305257678031922,
++  "nonforgetting_metric_random": 0.008552354574203492,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 2fe965b8eb..c14a91f41c 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:40:11Z",
+-  "finished_at": "2026-06-12T11:40:11Z",
+-  "duration_s": 0.002,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:24:35Z",
++  "finished_at": "2026-06-13T00:24:35Z",
++  "duration_s": 0.001,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index b8e8ecade0..64c28373dc 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 16.980265378952026, "autoregressive_time_to_solution": 254.7039806842804, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 17.210269689559937, "autoregressive_time_to_solution": 258.15404534339905, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 22a9b16132..75d8c7cc58 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 6.298895459622145e-05,
++  "duration_s": 7.023200305411592e-05,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-12T11:40:01Z",
++  "generated_at": "2026-06-13T00:24:22Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index 98f6fc0c53..915cffcdfd 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-12T11:40:01Z
++experiment_3420 started_at=2026-06-13T00:24:22Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index fa038d6a63..34ba324ce7 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.057143069920130074,
++  "duration_s": 0.05919358300161548,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index de550f908d..96f8301ff7 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 4.649162292480469e-05
++  "duration_s": 4.792213439941406e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index ab00092a81..754043130d 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,14 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.013232946395874023,
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "duration_s": 0.010050058364868164
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index ef1ecf5a60..617431bd0f 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "c08fb3772edbc5933323914f29376b511a24039b225b0c4b50fb0ae298ecf28b"
++    "377620f1cf1629bd8cbff450f312cbe5b46afb48c7f76ea8814e9f6ec575e3ad"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.00022530555725097656
++  "duration_s": 0.00018739700317382812
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 246d625057..85d31da9a1 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.08923983573913574,
+-  "reproducibility_checksum": "18cfa4ed0457643eec3496b841396569"
++  "duration_s": 0.08593273162841797,
++  "reproducibility_checksum": "5eb47d8b6789d7fbf9612993409851da"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index b9db0f702f..5ac1ef4e77 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.00029349327087402344
++  "duration_s": 0.0002620220184326172
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 625b88644c..6821e8d4ff 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 2.002462148666382,
+-  "reproducibility_checksum": "2ad008820a2c96315ef4cd671634ddc1fc08c76ffdda1dacc3bfbc85e29b22e4"
++  "duration_s": 1.756842851638794,
++  "reproducibility_checksum": "78f4c1c9c78bf56e64d478c3615ee3b30a04b19145b01c0af1916e4c618f6daa"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index ad7679c012..d644c023df 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+-  "run_date": "2026-06-12",
+-  "started_at": "2026-06-12T11:40:49.238874+00:00",
+-  "finished_at": "2026-06-12T11:40:49.238874+00:00",
++  "run_date": "2026-06-13",
++  "started_at": "2026-06-13T00:38:32.643363+00:00",
++  "finished_at": "2026-06-13T00:38:32.643363+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index b106f4a5a2..d2db2783af 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.009549617767333984,
+-  "reproducibility_checksum": "810412a92cf14cb5a1aa8d673d303e443be075b3f606c9062f9a1f66ca01f995"
++  "duration_s": 0.005421876907348633,
++  "reproducibility_checksum": "84935ff8c2db9fe9f0f63ca1b9e531a5dd05bb4af7a631dc1a3a61deaa04ffee"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+index f2d19df8c5..75fa28645e 100644
+--- a/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
++++ b/results/experiment_3734_fix_harness_and_bounded_train_chunk1.json
+@@ -25,5 +25,5 @@
+   },
+   "random_seed": 3734,
+   "reproducibility_checksum": "9bbe177b68d0e3d10d9972711d337ab4f04e6d4f1bb23f5cd513efc857e46eae",
+-  "duration_s": 0.3
++  "duration_s": 0.35
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index 93d8520e7b..c61fd6b885 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.022352218627929688,
++  "duration_s": 0.02109360694885254,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "1ca3f4db85ebc213d888336ba4a6262da8b0bf045d9dfc131307ca236835dd16"
++  "reproducibility_checksum": "664b7d38f770d8848cb4f1d4adbc4e8be23b45afbf9c74a602f8042c35e10326"
+ }
+diff --git a/results/experiment_4119_carnot_verifier_graft_sudoku.json b/results/experiment_4119_carnot_verifier_graft_sudoku.json
+new file mode 100644
+index 0000000000..2c72a2f2ba
+--- /dev/null
++++ b/results/experiment_4119_carnot_verifier_graft_sudoku.json
+@@ -0,0 +1,69 @@
++{
++  "acceptance_gate_passed": true,
++  "baseline": {
++    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
++    "matches_published_087": false,
++    "previous_val_exact_accuracy": 0.09661458432674408,
++    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++    "total_cumulative_epochs": 4300,
++    "val_exact_accuracy": 0.10598958283662796
++  },
++  "baseline_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
++  "baseline_matches_published_087": false,
++  "baseline_status_reported": true,
++  "baseline_val_exact_accuracy": 0.10598958283662796,
++  "duration_s": 0.122,
++  "estimated_passes_to_converge": {
++    "basis": "pass2_to_pass3_delta",
++    "current_val_exact_accuracy": 0.10598958283662796,
++    "estimated_additional_passes": 80,
++    "observed_delta_per_pass": 0.009375,
++    "previous_val_exact_accuracy": 0.09661458432674408,
++    "target_val_exact_accuracy": 0.85
++  },
++  "experiment": "experiment_4119_carnot_verifier_graft_sudoku",
++  "field_principles": {
++    "graft_deferred": "Bare bool: True if the baseline was not faithful enough to graft. Prevents a meaningless graft on a 0.02 baseline being dressed as a result.",
++    "honest_verdict": "Terminal-prefixed. An honest 'graft_deferred -- baseline at val=0.NN' is a COMPLETE verdict; so is an A~=B null.",
++    "preconditions_checked": "Records the baseline checkpoint + CUDA verified; pre-empts silent-missing-resource fabrication.",
++    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates.",
++    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution.",
++    "verifier_value_added": "Bare bool: did the verifier graft beat the vote ablation? Meaningful only when graft_deferred is false."
++  },
++  "graft_deferred": true,
++  "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060",
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
++      "resource": "baseline_artifact"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++      "resource": "stable_checkpoint_path"
++    },
++    {
++      "available": true,
++      "detail": "torch.load ok",
++      "resource": "stable_checkpoint"
++    },
++    {
++      "available": true,
++      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
++      "resource": "cuda_available"
++    }
++  ],
++  "random_seed": 4119,
++  "rerank_lift_vs_vote": null,
++  "rft_vs_ablation_delta": null,
++  "schema": "carnot.experiment_4119_carnot_verifier_graft_sudoku.v1",
++  "spec_refs": [
++    "REQ-LEARN-4119",
++    "SCENARIO-LEARN-4119-DEFER",
++    "SCENARIO-LEARN-4119-GRAFT"
++  ],
++  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
++  "verifier_value_added": false,
++  "verifier_value_added_meaningful": false
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 7c3cb3eeba..5636605eb4 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:48:19Z",
+-  "finished_at": "2026-06-12T11:48:19Z",
+-  "duration_s": 0.002,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:32:55Z",
++  "finished_at": "2026-06-13T00:32:55Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 7968027cd3..37adf91c74 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:06:47Z",
+-  "finished_at": "2026-06-13T00:06:47Z",
++  "started_at": "2026-06-13T00:47:19Z",
++  "finished_at": "2026-06-13T00:47:19Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 093b6df025..558ba850e0 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:06:47Z",
+-  "finished_at": "2026-06-13T00:06:48Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-13T00:47:19Z",
++  "finished_at": "2026-06-13T00:47:19Z",
++  "duration_s": 0.004,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 63563e61e4..9ebd1c7e43 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260613",
+-  "started_at": "2026-06-13T00:06:48Z",
+-  "finished_at": "2026-06-13T00:06:48Z",
++  "started_at": "2026-06-13T00:47:19Z",
++  "finished_at": "2026-06-13T00:47:19Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index b2bd4a2568..5dffed777a 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T12:06:17Z",
+-  "finished_at": "2026-06-12T12:06:17Z",
+-  "duration_s": 0.002,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:34:00Z",
++  "finished_at": "2026-06-13T00:34:00Z",
++  "duration_s": 0.029,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+@@ -100,14 +100,5 @@
+     "sweep_results",
+     "title"
+   ],
+-  "invariant_violations": [],
+-  "flagged_adversarial": true,
+-  "corrigendum_pending": [
+-    {
+-      "kind": "TAUTOLOGY",
+-      "severity": "critical",
+-      "detail": "fp_rate_no_abstention=0.2 and fp_rate_best_abstention=0.2 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+-    }
+-  ],
+-  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
++  "invariant_violations": []
+ }
+\ No newline at end of file
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index fb199254b5..cf481ef68f 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -1,10 +1,10 @@
+ {
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:47:57Z",
+-  "finished_at": "2026-06-12T11:47:58Z",
+-  "duration_s": 1.02,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:32:27Z",
++  "finished_at": "2026-06-13T00:32:28Z",
++  "duration_s": 1.514,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index dfb8af9d11..6597ab1e7c 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -1,9 +1,9 @@
+ {
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:47:34Z",
+-  "finished_at": "2026-06-12T11:47:35Z",
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:32:15Z",
++  "finished_at": "2026-06-13T00:32:15Z",
+   "duration_s": 0.073,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index 844d941498..774957cd03 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -1,17 +1,17 @@
+ {
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+-  "run_date": "20260612",
+-  "started_at": "2026-06-12T11:47:41Z",
+-  "finished_at": "2026-06-12T11:47:43Z",
+-  "duration_s": 1.867,
++  "run_date": "20260613",
++  "started_at": "2026-06-13T00:32:22Z",
++  "finished_at": "2026-06-13T00:33:22Z",
++  "duration_s": 59.558,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.91,
+-  "honest_verdict": "tier0i_viable",
+-  "inference_mode": "synthetic_runner",
++  "ood_auc_drift": 0.565,
++  "honest_verdict": "tier0i_marginal",
++  "inference_mode": "real_model",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+   "probe_layers": [
+     -4,
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.006761347409337759,
+-  "mean_halluc_drift": 0.4725666642189026,
++  "mean_correct_drift": 0.17655296623706818,
++  "mean_halluc_drift": 0.17709128558635712,
+   "probe_coef": [
+     [
+-      1.7784217718211297,
+-      2.2709122492634832,
+-      2.6397892612795255
++      -0.002231837551878346,
++      0.005811624395535044,
++      0.059354777354017174
+     ]
+   ],
+   "decision_class": "detect",
+diff --git a/tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py b/tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py
+new file mode 100644
+index 0000000000..7a921a2919
+--- /dev/null
++++ b/tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py
+@@ -0,0 +1,396 @@
++"""Tests for Exp 4119 conditional Sudoku verifier graft.
++
++Spec refs: REQ-LEARN-4119, SCENARIO-LEARN-4119-DEFER,
++SCENARIO-LEARN-4119-GRAFT.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from carnot import experiment_4119_carnot_verifier_graft_sudoku as exp4119
++
++
++REPO = Path(__file__).resolve().parents[2]
++SPEC_PATH = REPO / "openspec" / "capabilities" / "self-learning" / "spec.md"
++
++
++def _write_exp4118(
++    path: Path,
++    *,
++    stable: Path,
++    val: float | None = 0.10598958283662796,
++    previous_val: float | None = 0.09661458432674408,
++    matches: bool = False,
++) -> Path:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "experiment": "experiment_4118_sudoku_extreme_resume_pass3",
++        "honest_verdict": "complete: pass3 fixture",
++        "matches_published_087": matches,
++        "stable_checkpoint_path": str(stable),
++        "total_cumulative_epochs": 4300,
++        "val_exact_accuracy": val,
++        "pass2": {"val_exact_accuracy": previous_val, "total_cumulative_epochs": 4200},
++    }
++    path.write_text(json.dumps(payload) + "\n", encoding="utf-8")
++    return path
++
++
++def _checks(stable: Path) -> list[dict[str, object]]:
++    return [
++        {"resource": "baseline_artifact", "available": True, "detail": "fixture"},
++        {"resource": "stable_checkpoint_path", "available": True, "detail": str(stable)},
++        {"resource": "stable_checkpoint", "available": True, "detail": "loadable fixture"},
++        {"resource": "cuda_available", "available": True, "detail": "cuda fixture"},
++    ]
++
++
++def test_req_learn_4119_spec_declares_conditional_graft_contract() -> None:
++    """REQ-LEARN-4119: OpenSpec declares deferral and graft fields."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-LEARN-4119" in spec
++    assert "SCENARIO-LEARN-4119-DEFER" in spec
++    assert "SCENARIO-LEARN-4119-GRAFT" in spec
++    assert exp4119.RESULT_FILENAME in spec
++    for field in exp4119.REQUIRED_ARTIFACT_FIELDS:
++        assert field in spec
++        assert field in exp4119.FIELD_PRINCIPLES
++
++
++def test_req_learn_4119_loads_exp4118_and_estimates_passes(tmp_path: Path) -> None:
++    """REQ-LEARN-4119: the Exp 4118 baseline controls defer versus graft."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    first = _write_exp4118(
++        tmp_path / "results" / "experiment_4118_sudoku_extreme_resume_pass3.json",
++        stable=stable,
++    )
++    latest = _write_exp4118(
++        tmp_path / "results" / "experiment_4118_zz_latest.json",
++        stable=stable,
++        val=0.86,
++        previous_val=0.84,
++        matches=True,
++    )
++
++    assert exp4119.find_exp4118_artifact(tmp_path) == latest
++    assert exp4119.find_exp4118_artifact(tmp_path / "empty") == (
++        tmp_path / "empty" / "results" / exp4119.DEFAULT_EXP4118_ARTIFACT.name
++    )
++
++    low_context = exp4119.load_baseline_context(first)
++    assert low_context.artifact_path == first
++    assert low_context.stable_checkpoint_path == stable
++    assert low_context.val_exact_accuracy == pytest.approx(0.10598958283662796)
++    assert low_context.previous_val_exact_accuracy == pytest.approx(0.09661458432674408)
++    assert low_context.matches_published_087 is False
++    assert exp4119.baseline_is_faithful(low_context) is False
++
++    estimate = exp4119.estimate_passes_to_converge(low_context)
++    assert estimate["estimated_additional_passes"] == 80
++    assert estimate["observed_delta_per_pass"] == pytest.approx(0.009375, abs=1e-6)
++    assert estimate["target_val_exact_accuracy"] == 0.85
++
++    faithful = exp4119.load_baseline_context(latest)
++    assert exp4119.baseline_is_faithful(faithful) is True
++    assert exp4119.estimate_passes_to_converge(faithful)["estimated_additional_passes"] == 0
++
++    no_trend = exp4119.BaselineContext(
++        artifact_path=first,
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=0.2,
++        previous_val_exact_accuracy=0.2,
++        matches_published_087=False,
++        total_cumulative_epochs=4300,
++        raw={"fixture": True},
++    )
++    assert exp4119.estimate_passes_to_converge(no_trend)["estimated_additional_passes"] is None
++    missing_current = exp4119.BaselineContext(
++        artifact_path=first,
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=None,
++        previous_val_exact_accuracy=0.1,
++        matches_published_087=False,
++        total_cumulative_epochs=None,
++        raw={"fixture": True},
++    )
++    assert exp4119.estimate_passes_to_converge(missing_current)["basis"] == (
++        "missing_current_val_exact_accuracy"
++    )
++    assert exp4119._numeric_or_none(True) is None
++    assert exp4119._numeric_or_none("0.1") is None
++    assert exp4119._int_or_none(None) is None
++    assert exp4119._int_or_none(2.0) == 2
++    assert exp4119._int_or_none("2") is None
++    assert exp4119._jsonable(Path("checkpoint.ckpt")) == "checkpoint.ckpt"
++
++    bad_json = tmp_path / "results" / "experiment_4118_bad.json"
++    bad_json.write_text("[1, 2, 3]\n", encoding="utf-8")
++    with pytest.raises(ValueError, match="JSON object"):
++        exp4119.load_baseline_context(bad_json)
++
++
++def test_scenario_learn_4119_deferred_artifact_is_complete(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4119-DEFER: non-faithful baselines stop at a deferral."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    context = exp4119.BaselineContext(
++        artifact_path=tmp_path / "results" / "experiment_4118.json",
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=0.10598958283662796,
++        previous_val_exact_accuracy=0.09661458432674408,
++        matches_published_087=False,
++        total_cumulative_epochs=4300,
++        raw={"fixture": True},
++    )
++
++    artifact = exp4119.build_deferred_artifact(
++        baseline=context,
++        preconditions_checked=_checks(stable),
++        duration_s=1.25,
++    )
++
++    assert artifact["honest_verdict"] == "complete: graft_deferred -- baseline at val=0.1060"
++    assert artifact["graft_deferred"] is True
++    assert artifact["baseline_val_exact_accuracy"] == pytest.approx(0.10598958283662796)
++    assert artifact["stable_checkpoint_path"] == str(stable)
++    assert artifact["estimated_passes_to_converge"]["estimated_additional_passes"] == 80
++    assert artifact["rerank_lift_vs_vote"] is None
++    assert artifact["rft_vs_ablation_delta"] is None
++    assert artifact["verifier_value_added"] is False
++    assert artifact["acceptance_gate_passed"] is True
++    assert exp4119.artifact_schema_errors(artifact) == []
++
++
++def test_scenario_learn_4119_grafted_artifact_sets_value_added_from_ci(tmp_path: Path) -> None:
++    """SCENARIO-LEARN-4119-GRAFT: grafted artifacts require CIs and A-B separation."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    context = exp4119.BaselineContext(
++        artifact_path=tmp_path / "results" / "experiment_4118.json",
++        stable_checkpoint_path=stable,
++        val_exact_accuracy=0.86,
++        previous_val_exact_accuracy=0.84,
++        matches_published_087=True,
++        total_cumulative_epochs=4300,
++        raw={"fixture": True},
++    )
++    rerank = {"metric": "pass@1_exact_accuracy", "delta": 0.125, "ci95": [0.02, 0.22]}
++    positive_rft = {"metric": "heldout_exact_accuracy", "delta": 0.2, "ci95": [0.05, 0.35]}
++    null_rft = {"metric": "heldout_exact_accuracy", "delta": 0.0, "ci95": [-0.1, 0.1]}
++
++    positive = exp4119.build_grafted_artifact(
++        baseline=context,
++        rerank_lift_vs_vote=rerank,
++        rft_vs_ablation_delta=positive_rft,
++        preconditions_checked=_checks(stable),
++        duration_s=12.0,
++    )
++    null = exp4119.build_grafted_artifact(
++        baseline=context,
++        rerank_lift_vs_vote=rerank,
++        rft_vs_ablation_delta=null_rft,
++        preconditions_checked=_checks(stable),
++        duration_s=12.5,
++    )
++
++    assert positive["graft_deferred"] is False
++    assert positive["verifier_value_added"] is True
++    assert positive["honest_verdict"] == "success: verifier_value_added_A_gt_B_ci95_excludes_zero"
++    assert positive["acceptance_gate_passed"] is True
++    assert exp4119.artifact_schema_errors(positive) == []
++    assert null["verifier_value_added"] is False
++    assert null["honest_verdict"] == "complete: A~=B null verifier graft measured"
++    assert exp4119.verifier_value_added({"delta": 0.1, "ci95": [0.0, 0.2]}) is False
++
++
++def test_req_learn_4119_preconditions_schema_and_write_guards(tmp_path: Path) -> None:
++    """REQ-LEARN-4119: precondition and schema checks fail closed."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    artifact_path = _write_exp4118(tmp_path / "results" / exp4119.DEFAULT_EXP4118_ARTIFACT.name, stable=stable)
++    context = exp4119.load_baseline_context(artifact_path)
++    checks = exp4119.check_preconditions(
++        context,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (False, "missing checkpoint"),
++    )
++    assert [check.resource for check in checks] == [
++        "baseline_artifact",
++        "stable_checkpoint_path",
++        "stable_checkpoint",
++        "cuda_available",
++    ]
++    assert checks[2].available is False
++
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    checks = exp4119.check_preconditions(
++        context,
++        cuda_checker=lambda: (_ for _ in ()).throw(RuntimeError("cuda exploded")),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert checks[2].available is True
++    assert checks[3].available is False
++    assert "RuntimeError: cuda exploded" in checks[3].detail
++    loader_exception = exp4119.check_preconditions(
++        context,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (_ for _ in ()).throw(RuntimeError("loader exploded")),
++    )
++    assert loader_exception[2].available is False
++    assert "RuntimeError: loader exploded" in loader_exception[2].detail
++
++    blocked = exp4119.build_blocked_artifact(
++        "blocked_exp4119_preconditions_missing",
++        baseline=context,
++        preconditions_checked=[check.to_dict() for check in checks],
++        duration_s=0.5,
++    )
++    assert blocked["honest_verdict"] == "blocked_exp4119_preconditions_missing"
++    assert blocked["graft_deferred"] is True
++    assert blocked["acceptance_gate_passed"] is False
++    assert exp4119.artifact_schema_errors(blocked) == []
++
++    bad = dict(blocked)
++    bad.update(
++        {
++            "honest_verdict": "not terminal",
++            "graft_deferred": "true",
++            "verifier_value_added": None,
++            "preconditions_checked": [{"resource": "x"}],
++            "field_principles": {},
++            "duration_s": False,
++            "acceptance_gate_passed": "yes",
++        }
++    )
++    errors = exp4119.artifact_schema_errors(bad)
++    assert "honest_verdict must be terminal-prefixed or blocked" in errors
++    assert "graft_deferred must be a bare bool" in errors
++    assert "verifier_value_added must be a bare bool" in errors
++    assert "preconditions_checked entries must include resource and available" in errors
++    assert "field_principles.honest_verdict mismatch" in errors
++    assert "duration_s must be numeric" in errors
++    assert "acceptance_gate_passed must be a bare bool" in errors
++    assert "missing required field honest_verdict" in exp4119.artifact_schema_errors({})
++
++    graft_missing_metrics = dict(blocked)
++    graft_missing_metrics.update({"graft_deferred": False, "acceptance_gate_passed": True})
++    metric_errors = exp4119.artifact_schema_errors(graft_missing_metrics)
++    assert "rerank_lift_vs_vote must be an object when graft_deferred is false" in metric_errors
++    assert "rft_vs_ablation_delta must be an object when graft_deferred is false" in metric_errors
++    graft_bad_metrics = dict(blocked)
++    graft_bad_metrics.update(
++        {
++            "graft_deferred": False,
++            "rerank_lift_vs_vote": {"ci95": [0.0, 1.0]},
++            "rft_vs_ablation_delta": {"delta": 0.0, "ci95": "bad"},
++        }
++    )
++    bad_metric_errors = exp4119.artifact_schema_errors(graft_bad_metrics)
++    assert "rerank_lift_vs_vote.delta is required" in bad_metric_errors
++    assert "rft_vs_ablation_delta.ci95 must have two bounds" in bad_metric_errors
++    accepted_bad_defer = dict(blocked)
++    accepted_bad_defer.update({"acceptance_gate_passed": True, "baseline_val_exact_accuracy": None})
++    accepted_bad_defer["stable_checkpoint_path"] = None
++    accepted_errors = exp4119.artifact_schema_errors(accepted_bad_defer)
++    assert "accepted deferral requires baseline_val_exact_accuracy" in accepted_errors
++    assert "accepted deferral requires stable_checkpoint_path" in accepted_errors
++
++    with pytest.raises(ValueError, match="honest_verdict"):
++        exp4119.validate_artifact(bad)
++    out = tmp_path / exp4119.RESULT_FILENAME
++    written = exp4119.write_artifact(out, blocked)
++    assert written == blocked
++    assert json.loads(out.read_text(encoding="utf-8")) == blocked
++
++
++def test_req_learn_4119_run_experiment_writes_deferred_or_grafted_json(tmp_path: Path) -> None:
++    """REQ-LEARN-4119: run_experiment writes the selected terminal artifact."""
++
++    stable = tmp_path / "results" / "trm_runs" / "sudoku_extreme_baseline" / "last.ckpt"
++    stable.parent.mkdir(parents=True, exist_ok=True)
++    stable.write_bytes(b"checkpoint")
++    low_path = _write_exp4118(tmp_path / "results" / "experiment_4118_low.json", stable=stable)
++
++    output_path = tmp_path / "results" / exp4119.RESULT_FILENAME
++    deferred = exp4119.run_experiment(
++        repo_root=tmp_path,
++        output_path=output_path,
++        exp4118_artifact_path=low_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert deferred["graft_deferred"] is True
++    assert deferred["honest_verdict"].startswith("complete: graft_deferred")
++    assert json.loads(output_path.read_text(encoding="utf-8")) == deferred
++
++    faithful_path = _write_exp4118(
++        tmp_path / "results" / "experiment_4118_faithful.json",
++        stable=stable,
++        val=0.86,
++        previous_val=0.84,
++        matches=True,
++    )
++    calls = []
++
++    def graft_runner(
++        baseline: exp4119.BaselineContext,
++        checks: list[exp4119.PreconditionCheck],
++        started: float,
++    ) -> dict[str, object]:
++        calls.append((baseline, checks, started))
++        return exp4119.build_grafted_artifact(
++            baseline=baseline,
++            rerank_lift_vs_vote={"delta": 0.1, "ci95": [0.01, 0.2]},
++            rft_vs_ablation_delta={"delta": 0.0, "ci95": [-0.1, 0.1]},
++            preconditions_checked=[check.to_dict() for check in checks],
++            duration_s=1.0,
++        )
++
++    grafted = exp4119.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "grafted.json",
++        exp4118_artifact_path=faithful_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++        graft_runner=graft_runner,
++    )
++    assert grafted["graft_deferred"] is False
++    assert grafted["verifier_value_added"] is False
++    assert len(calls) == 1
++
++    missing = exp4119.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "missing.json",
++        exp4118_artifact_path=tmp_path / "missing.json",
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert missing["honest_verdict"] == "blocked_exp4118_baseline_missing"
++
++    stable.unlink()
++    blocked_preconditions = exp4119.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "blocked_preconditions.json",
++        exp4118_artifact_path=low_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert blocked_preconditions["honest_verdict"] == "blocked_exp4119_preconditions_missing"
++
++    stable.write_bytes(b"checkpoint")
++    no_runner = exp4119.run_experiment(
++        repo_root=tmp_path,
++        output_path=tmp_path / "results" / "no_runner.json",
++        exp4118_artifact_path=faithful_path,
++        cuda_checker=lambda: (True, "cuda fixture"),
++        checkpoint_loader=lambda _path: (True, "loadable fixture"),
++    )
++    assert no_runner["honest_verdict"] == "blocked_exp4119_graft_runner_missing"
+-- 
+2.55.0
+

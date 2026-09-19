@@ -1,0 +1,43 @@
+From 846855ee0a6de1a763e0b010619fcd58435aa854 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 01:18:28 -0400
+Subject: [PATCH 00959/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 4ab9ea08c6..e7f24d66b2 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 4, "phase": "iteration_start", "last_beat": "2026-06-09T05:03:52Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-09T05:18:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9060feb65e..936d6d0b60 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8052,3 +8052,4 @@ c |
+ | 2026-06-09 04:44 UTC | Literature synthesis — where Carnot's NOW-CREDIBLE | OK | 86 passed in 4.03s |
+ | 2026-06-09 04:59 UTC | Capstone .364 — the verifier scorecard with the ef | OK | 86 passed in 5.17s |
+ | 2026-06-09 05:01 UTC | Milestone 2026.06.365 activated | OK | 7 tasks queued |
++| 2026-06-09 05:16 UTC | Archive .364 -> activate .365; GREEN-GATE: assert  | OK | 108 passed in 5.13s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f68685d09f..1b909189c7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 4, "phase": "iteration_start", "started_at": "2026-06-09T05:03:52Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-09T05:18:26Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

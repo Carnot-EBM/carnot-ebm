@@ -1,0 +1,43 @@
+From 122032094109a2870232eeac76bcaaa66d369435 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 9 Jun 2026 09:01:51 -0400
+Subject: [PATCH 00998/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 9762e03413..588d28e5ff 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 51, "phase": "iteration_start", "last_beat": "2026-06-09T12:48:21Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 52, "phase": "iteration_start", "last_beat": "2026-06-09T13:01:50Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index fa65ba2268..f6ecea9850 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8103,3 +8103,4 @@ c |
+ | 2026-06-09 12:16 UTC | Milestone 2026.06.367 activated | OK | 11 tasks queued |
+ | 2026-06-09 12:33 UTC | Archive .366 -> activate .367; GREEN-GATE: assert  | OK | 110 passed in 5.51s |
+ | 2026-06-09 12:46 UTC | r11l INCREMENTAL solve (+1..+2 levels, per the MAN | OK | 84 passed in 4.69s |
++| 2026-06-09 12:59 UTC | lp85 INCREMENTAL solve (+1 level, per the MANDATOR | OK | 88 passed in 4.58s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 5443c718b1..a2322cbca5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1513578, "iteration": 51, "phase": "iteration_start", "started_at": "2026-06-09T12:48:21Z"}
+\ No newline at end of file
++{"pid": 1513578, "iteration": 52, "phase": "iteration_start", "started_at": "2026-06-09T13:01:50Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

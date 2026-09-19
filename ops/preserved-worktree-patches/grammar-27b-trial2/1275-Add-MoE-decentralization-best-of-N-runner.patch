@@ -1,0 +1,1810 @@
+From 6fa0f1f6241a2b0bafac19aa8d2021e01530f5fb Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 11:59:48 -0400
+Subject: [PATCH 01275/11171] Add MoE decentralization best-of-N runner
+
+---
+ openspec/capabilities/verification/spec.md    |  52 ++
+ ...exp4047_decentralization_moe_base_build.py | 409 +++++++++++
+ ...048_decentralization_moe_base_best_of_n.py | 672 ++++++++++++++++++
+ ...nt_4047_decentralization_moe_base_build.py | 630 ++++++++++++++++
+ 4 files changed, 1763 insertions(+)
+ create mode 100644 scripts/experiments/exp4047_decentralization_moe_base_build.py
+ create mode 100644 scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py
+ create mode 100644 tests/python/test_experiment_4047_decentralization_moe_base_build.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index 9a913c7ee1..79b33774f9 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -12230,6 +12230,58 @@ surfaced tasks in `missing_verifier_gaps`, emits a terminal verdict of either
+ `complete: decentralization_stronger_base_cov_<X>_absent_leash_holds`, and
+ does not mutate the Exp 4012 or raw Exp 4037 artifacts.
+ 
++### REQ-VERIFY-4047: Decentralization MoE-Base Best-of-N Build Gate
++
++The repository SHALL provide Exp 4047 at
++`scripts/experiments/exp4047_decentralization_moe_base_build.py` and Exp 4048 at
++`scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py` to
++repeat the Exp 4012 local best-of-N ARC rule-induction run with the
++throughput-oriented MoE base `unsloth/Qwen3.6-35B-A3B-GGUF` only. Exp 4048
++SHALL mirror Exp 4012 over the identical 31-entry / 30-unique-task ARC-1 pool,
++`k=8` local samples per unique task, unchanged GAP-4 model-free demo-fit
++verifier primitives, unchanged candidate snap threshold, unchanged vote-primary
++gated pass@2 scorer, and per-task checkpointing. It SHALL not select or fall
++back to the dense `unsloth/gemma-4-31B-it-GGUF` path.
++
++Before any live inference, Exp 4047 and Exp 4048 SHALL verify that the Qwen MoE
++GGUF cache directory is non-empty and resolves to a concrete `.gguf` path,
++`llama_cpp` imports, and the Exp 4012 ARC-1 pool plus verifier primitives load.
++If the MoE GGUF is unavailable, the build artifact SHALL report
++`honest_verdict=blocked_moe_base_not_cached`; if `llama_cpp` is unavailable it
++SHALL report `blocked_llama_cpp_unavailable`; and if the pool/verifier load
++fails it SHALL report `blocked_exp4012_pool_unreadable`. Blocked runs SHALL NOT
++launch inference or silently fall back to DSL-only, Codex, Gemma-12B, or
++Gemma-31B.
++
++Exp 4048 SHALL batch requested generations by prompt while keeping independent
++draw seeds and temperatures, and SHALL stop sampling a task once the first
++demo-perfect candidate is found. It SHALL checkpoint after each task so the
++throughput-failure mode can still be collected as a partial run. It SHALL write
++`results/experiment_4048_decentralization_moe_base_raw.json` with top-level
++fields for per-task demo-perfect status, best-of-N coverage, gated pass@2,
++local seconds, `model_specs`, `random_seed`, and `reproducibility_checksum`.
++Exp 4047 SHALL smoke Exp 4048 on two tasks, compute bare-float
++`smoke_per_task_seconds`, launch the full Exp 4048 run under `nohup` with
++`k=8`, and write
++`results/experiment_4047_decentralization_moe_base_build.json` with bare
++top-level fields `honest_verdict`, `runner_ready`, `moe_base_model`,
++`smoke_per_task_seconds`, `smoke_passed`, `launched_pid`,
++`preconditions_checked`, and `inference_substrate=live_llm_inference`.
++
++### SCENARIO-VERIFY-4047: MoE Base Runner Launches With Throughput Evidence
++
++Given the cached Qwen MoE GGUF, importable `llama_cpp`, and the Exp 4012 ARC-1
++pool, when Exp 4047 runs, then it smokes Exp 4048 on two pool tasks without
++changing the verifier side, writes the required build artifact with
++`runner_ready=true`, `smoke_passed=true`,
++`inference_substrate=live_llm_inference`, a bare-float
++`smoke_per_task_seconds`, and a terminal-prefix `honest_verdict` of
++`success: decentralization_moe_base_runner_launched_qwen35moe`, then starts
++the full Exp 4048 run under `nohup` with `k=8` and records the launched PID. If
++any precondition fails, it writes the corresponding `blocked_*` artifact with
++`runner_ready=false`, `smoke_passed=false`, `smoke_per_task_seconds=0.0`, and
++`launched_pid=0`.
++
+ ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
+ 
+ The repository SHALL provide Exp 4013 at
+diff --git a/scripts/experiments/exp4047_decentralization_moe_base_build.py b/scripts/experiments/exp4047_decentralization_moe_base_build.py
+new file mode 100644
+index 0000000000..a4bc5fe5ac
+--- /dev/null
++++ b/scripts/experiments/exp4047_decentralization_moe_base_build.py
+@@ -0,0 +1,409 @@
++"""Exp 4047 build gate for the MoE-base decentralization run.
++
++Spec refs: REQ-VERIFY-4047, SCENARIO-VERIFY-4047.
++
++The build half checks the Qwen MoE resources, smokes Exp 4048 on two tasks,
++and launches the full best-of-N run in the background. It does not wait for the
++long run; Exp 4048 checkpoints after each task.
++"""
++
++from __future__ import annotations
++
++import argparse
++import json
++import subprocess
++import sys
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Callable
++
++import experiment_4048_decentralization_moe_base_best_of_n as run4048
++from experiment_4002_gap4_local_generator_arm import POOL
++from scripts.experiment_template import _compute_repro_checksum
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++OUTPUT = REPO_ROOT / "results" / "experiment_4047_decentralization_moe_base_build.json"
++SMOKE_OUTPUT = REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_smoke.json"
++RAW_OUTPUT = REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_raw.json"
++SMOKE_CHECKPOINT = (
++    REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_smoke.checkpoint.json"
++)
++FULL_CHECKPOINT = (
++    REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_raw.checkpoint.json"
++)
++LOG_PATH = REPO_ROOT / "logs" / "decentralization_moe_run.log"
++
++INFERENCE_SUBSTRATE = "live_llm_inference"
++DEFAULT_FULL_K = 8
++DEFAULT_SMOKE_K = 8
++DEFAULT_SMOKE_LIMIT = 2
++DEFAULT_FULL_TIME_BUDGET_S = 4500.0
++
++REQUIRED_BUILD_FIELDS = [
++    "honest_verdict",
++    "runner_ready",
++    "moe_base_model",
++    "smoke_per_task_seconds",
++    "smoke_passed",
++    "launched_pid",
++    "preconditions_checked",
++    "inference_substrate",
++]
++
++
++@dataclass(frozen=True)
++class LaunchSpec:
++    argv: list[str]
++    log_path: Path
++    k: int
++    max_wall_s: float
++
++    @property
++    def command_text(self) -> str:
++        return " ".join(self.argv) + f" > {self.log_path} 2>&1 &"
++
++
++def _is_bare_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool)
++
++
++def _is_bare_float(value: Any) -> bool:
++    return isinstance(value, float) and not isinstance(value, bool)
++
++
++def validate_build_artifact(artifact: dict[str, Any]) -> None:
++    """Validate the fields that the conductor gates on."""
++    for field in REQUIRED_BUILD_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("success:")
++        or verdict.startswith("complete:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    for field in ("runner_ready", "smoke_passed"):
++        if not isinstance(artifact[field], bool):
++            raise ValueError(f"{field} must be a bare bool")
++    if not _is_bare_float(artifact["smoke_per_task_seconds"]):
++        raise ValueError("smoke_per_task_seconds must be a bare float")
++    if not _is_bare_int(artifact["launched_pid"]):
++        raise ValueError("launched_pid must be a bare int")
++    for field in ("moe_base_model", "inference_substrate"):
++        if not isinstance(artifact[field], str):
++            raise ValueError(f"{field} must be a string")
++    if not isinstance(artifact["preconditions_checked"], list):
++        raise ValueError("preconditions_checked must be a list")
++    if "duration_s" in artifact and not _is_bare_float(artifact["duration_s"]):
++        raise ValueError("duration_s must be a bare float")
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _repro_checksum(pool_path: Path | str) -> str:
++    return _compute_repro_checksum(
++        run4048.SEED,
++        [
++            str(Path(__file__).resolve()),
++            str(
++                (
++                    REPO_ROOT
++                    / "scripts"
++                    / "experiments"
++                    / "experiment_4048_decentralization_moe_base_best_of_n.py"
++                )
++            ),
++            str(
++                (REPO_ROOT / "scripts" / "experiments" / "experiment_4012_gap4_local_best_of_n.py")
++            ),
++        ],
++        str(pool_path),
++    )
++
++
++def blocked_build_artifact(
++    verdict: str,
++    *,
++    chosen_model: dict[str, str] | None,
++    preconditions: list[dict[str, Any]],
++    duration_s: float,
++    output_path: Path,
++    smoke_error: str | None = None,
++    pool_path: Path | str = POOL,
++) -> dict[str, Any]:
++    """Build a blocked Exp 4047 artifact without launching inference."""
++    artifact = {
++        "experiment": "experiment_4047_decentralization_moe_base_build",
++        "schema": "carnot.experiment_4047_decentralization_moe_base_build.v1",
++        "title": "Decentralization MoE-base runner build and launch gate",
++        "honest_verdict": verdict,
++        "runner_ready": False,
++        "moe_base_model": chosen_model["name"] if chosen_model else "none",
++        "smoke_per_task_seconds": 0.0,
++        "smoke_passed": False,
++        "launched_pid": 0,
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 2),
++        "build_artifact_path": str(output_path),
++        "smoke_error": smoke_error,
++        "model_specs": {
++            "generator_model": chosen_model["name"] if chosen_model else "none",
++            "generator_hf_id": chosen_model["hf_id"] if chosen_model else "none",
++            "generator_gguf_path": chosen_model["model_path"] if chosen_model else "none",
++        },
++        "random_seed": run4048.SEED,
++        "reproducibility_checksum": _repro_checksum(pool_path),
++    }
++    validate_build_artifact(artifact)
++    return artifact
++
++
++def _python_executable() -> str:
++    venv_python = REPO_ROOT / ".venv" / "bin" / "python"
++    return str(venv_python if venv_python.exists() else Path(sys.executable))
++
++
++def make_launch_spec(
++    *,
++    raw_output_path: Path,
++    checkpoint_path: Path,
++    log_path: Path,
++    model_key: str,
++    k: int,
++    max_wall_s: float,
++    n_ctx: int,
++    batch_size: int,
++) -> LaunchSpec:
++    script = (
++        REPO_ROOT
++        / "scripts"
++        / "experiments"
++        / "experiment_4048_decentralization_moe_base_best_of_n.py"
++    )
++    argv = [
++        "nohup",
++        _python_executable(),
++        str(script),
++        "--model",
++        model_key,
++        "--k",
++        str(k),
++        "--max-wall-s",
++        str(max_wall_s),
++        "--n-ctx",
++        str(n_ctx),
++        "--batch-size",
++        str(batch_size),
++        "--output",
++        str(raw_output_path),
++        "--checkpoint",
++        str(checkpoint_path),
++    ]
++    return LaunchSpec(argv=argv, log_path=log_path, k=k, max_wall_s=max_wall_s)
++
++
++def launch_background(spec: LaunchSpec) -> int:  # pragma: no cover - exercised by operator run.
++    spec.log_path.parent.mkdir(parents=True, exist_ok=True)
++    log_handle = spec.log_path.open("wb")
++    proc = subprocess.Popen(
++        spec.argv,
++        cwd=REPO_ROOT,
++        stdout=log_handle,
++        stderr=subprocess.STDOUT,
++        start_new_session=True,
++    )
++    log_handle.close()
++    return int(proc.pid)
++
++
++def _smoke_seconds_per_task(smoke_artifact: dict[str, Any]) -> float:
++    per_task = smoke_artifact.get("per_task")
++    if isinstance(per_task, list) and per_task:
++        unique_tasks = {row.get("task") for row in per_task if row.get("task") is not None}
++        denom = max(1, len(unique_tasks))
++    else:
++        denom = max(1, int(smoke_artifact.get("n_unique_tasks", 1) or 1))
++    return round(float(smoke_artifact.get("local_seconds", 0.0)) / denom, 2)
++
++
++def success_build_artifact(
++    *,
++    chosen_model: dict[str, str],
++    preconditions: list[dict[str, Any]],
++    smoke_artifact: dict[str, Any],
++    launch_spec: LaunchSpec,
++    launched_pid: int,
++    output_path: Path,
++    smoke_output_path: Path,
++    raw_output_path: Path,
++    duration_s: float,
++    pool_path: Path | str,
++) -> dict[str, Any]:
++    """Build the successful Exp 4047 launch receipt."""
++    artifact = {
++        "experiment": "experiment_4047_decentralization_moe_base_build",
++        "schema": "carnot.experiment_4047_decentralization_moe_base_build.v1",
++        "title": "Decentralization MoE-base runner build and launch gate",
++        "honest_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
++        "runner_ready": True,
++        "moe_base_model": chosen_model["name"],
++        "smoke_per_task_seconds": _smoke_seconds_per_task(smoke_artifact),
++        "smoke_passed": True,
++        "launched_pid": int(launched_pid),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 2),
++        "build_artifact_path": str(output_path),
++        "smoke_artifact_path": str(smoke_output_path),
++        "raw_artifact_path": str(raw_output_path),
++        "launch_command": launch_spec.command_text,
++        "full_time_budget_s": float(launch_spec.max_wall_s),
++        "full_k_samples_per_task": int(launch_spec.k),
++        "smoke_best_of_n_coverage": float(smoke_artifact["best_of_n_coverage"]),
++        "model_specs": smoke_artifact["model_specs"],
++        "random_seed": run4048.SEED,
++        "reproducibility_checksum": _repro_checksum(pool_path),
++    }
++    validate_build_artifact(artifact)
++    return artifact
++
++
++def run_build(
++    *,
++    pool_path: Path | str = POOL,
++    output_path: Path = OUTPUT,
++    smoke_output_path: Path = SMOKE_OUTPUT,
++    raw_output_path: Path = RAW_OUTPUT,
++    smoke_checkpoint_path: Path = SMOKE_CHECKPOINT,
++    full_checkpoint_path: Path = FULL_CHECKPOINT,
++    log_path: Path = LOG_PATH,
++    model_key: str = "auto",
++    resolver: Callable[[str], str | None] = run4048.exp4012.resolve_local_gguf,
++    cache_dir: Path | str = run4048.MOE_CACHE_DIR,
++    llama_available_override: bool | None = None,
++    smoke_sampler: Any | None = None,
++    launcher: Callable[[LaunchSpec], int] = launch_background,
++    smoke_k: int = DEFAULT_SMOKE_K,
++    smoke_limit: int = DEFAULT_SMOKE_LIMIT,
++    full_k: int = DEFAULT_FULL_K,
++    full_time_budget_s: float = DEFAULT_FULL_TIME_BUDGET_S,
++    n_ctx: int = 16384,
++    batch_size: int = run4048.DEFAULT_DRAW_BATCH_SIZE,
++    write: bool = True,
++) -> dict[str, Any]:
++    """Check resources, smoke Exp 4048, write the build receipt, and launch full Exp 4048."""
++    started = time.time()
++    preconditions, chosen_model = run4048.check_preconditions(
++        model_key=model_key,
++        pool_path=pool_path,
++        resolver=resolver,
++        cache_dir=cache_dir,
++        llama_available_override=llama_available_override,
++    )
++    blocker = run4048.blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = blocked_build_artifact(
++            blocker,
++            chosen_model=chosen_model,
++            preconditions=preconditions,
++            duration_s=time.time() - started,
++            output_path=output_path,
++            pool_path=pool_path,
++        )
++        if write:
++            _write_json(output_path, artifact)
++        return artifact
++
++    if chosen_model is None:  # pragma: no cover - defensive; blocker should have caught this.
++        raise RuntimeError("MoE model unavailable after precondition pass")
++
++    try:
++        smoke_artifact = run4048.run(
++            model_key=chosen_model["model_key"],
++            pool_path=pool_path,
++            output_path=smoke_output_path,
++            checkpoint_path=smoke_checkpoint_path,
++            k=smoke_k,
++            limit=smoke_limit,
++            max_wall_s=full_time_budget_s,
++            n_ctx=n_ctx,
++            batch_size=batch_size,
++            sampler=smoke_sampler,
++            resolver=resolver,
++            cache_dir=cache_dir,
++            llama_available_override=llama_available_override,
++            write=True,
++        )
++        run4048.validate_raw_artifact(smoke_artifact)
++        smoke_ok = smoke_artifact.get("runner_ready") is True
++    except Exception as exc:  # pragma: no cover - live smoke failure path.
++        smoke_artifact = {}
++        smoke_ok = False
++        smoke_error = f"{type(exc).__name__}: {exc}"
++    else:
++        smoke_error = None
++
++    if not smoke_ok:
++        artifact = blocked_build_artifact(
++            "blocked_smoke_failed",
++            chosen_model=chosen_model,
++            preconditions=preconditions,
++            duration_s=time.time() - started,
++            output_path=output_path,
++            smoke_error=smoke_error,
++            pool_path=pool_path,
++        )
++        if write:
++            _write_json(output_path, artifact)
++        return artifact
++
++    launch_spec = make_launch_spec(
++        raw_output_path=raw_output_path,
++        checkpoint_path=full_checkpoint_path,
++        log_path=log_path,
++        model_key=chosen_model["model_key"],
++        k=full_k,
++        max_wall_s=full_time_budget_s,
++        n_ctx=n_ctx,
++        batch_size=batch_size,
++    )
++    launched_pid = launcher(launch_spec)
++    artifact = success_build_artifact(
++        chosen_model=chosen_model,
++        preconditions=preconditions,
++        smoke_artifact=smoke_artifact,
++        launch_spec=launch_spec,
++        launched_pid=launched_pid,
++        output_path=output_path,
++        smoke_output_path=smoke_output_path,
++        raw_output_path=raw_output_path,
++        duration_s=time.time() - started,
++        pool_path=pool_path,
++    )
++    if write:
++        _write_json(output_path, artifact)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised by required operator command.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--full-time-budget-s", type=float, default=DEFAULT_FULL_TIME_BUDGET_S)
++    parser.add_argument("--smoke-k", type=int, default=DEFAULT_SMOKE_K)
++    parser.add_argument("--batch-size", type=int, default=run4048.DEFAULT_DRAW_BATCH_SIZE)
++    args = parser.parse_args()
++    artifact = run_build(
++        full_time_budget_s=args.full_time_budget_s,
++        smoke_k=args.smoke_k,
++        batch_size=args.batch_size,
++    )
++    print(json.dumps(artifact, indent=2, sort_keys=True))
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py b/scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py
+new file mode 100644
+index 0000000000..a10126fdf8
+--- /dev/null
++++ b/scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py
+@@ -0,0 +1,672 @@
++"""Exp 4048 MoE-base local best-of-N ARC induction runner.
++
++Spec refs: REQ-VERIFY-4047, SCENARIO-VERIFY-4047.
++
++This is the raw run half for Exp 4047. It mirrors Exp 4012's ARC pool,
++restricted execution verifier, candidate snap, and gated pass@2 scoring. The
++only intended experimental variable is the local inducer base:
++Qwen3.6-35B-A3B-GGUF, selected for MoE throughput rather than dense 31B
++latency.
++"""
++
++from __future__ import annotations
++
++import argparse
++import gzip
++import hashlib
++import json
++import sys
++import time
++from pathlib import Path
++from typing import Any, Callable
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++if str(REPO_ROOT) not in sys.path:  # pragma: no cover - direct script bootstrap.
++    sys.path.insert(0, str(REPO_ROOT))
++
++import experiment_4012_gap4_local_best_of_n as exp4012
++from experiment_4002_gap4_local_generator_arm import CODEX_REF, POOL, SEED
++from scripts.experiment_template import _compute_repro_checksum
++
++OUTPUT = REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_raw.json"
++CHECKPOINT = REPO_ROOT / "results" / "experiment_4048_decentralization_moe_base_raw.checkpoint.json"
++
++INFERENCE_SUBSTRATE = "live_llm_inference"
++DEFAULT_K = 8
++DEFAULT_DRAW_BATCH_SIZE = 4
++BASELINE_12B_COVERAGE = 0.2581
++MOE_CACHE_DIR = (
++    Path.home() / ".cache" / "huggingface" / "hub" / ("models--unsloth--Qwen3.6-35B-A3B-GGUF")
++)
++
++MOE_MODEL = {
++    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
++    "name": "Qwen3.6-35B-A3B",
++    "model_key": "qwen35moe",
++    "selection_note": "MoE throughput base, ~3B active params",
++}
++
++REQUIRED_RAW_FIELDS = [
++    "honest_verdict",
++    "runner_ready",
++    "moe_base_model",
++    "best_of_n_coverage",
++    "local_demo_perfect_coverage_bestofn",
++    "k_samples_per_task",
++    "gated_pass_at_2",
++    "local_gated_pass2",
++    "local_seconds",
++    "per_task",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++    "launched_pid",
++]
++
++
++def _cache_dir_nonempty(cache_dir: Path | str) -> bool:
++    path = Path(cache_dir).expanduser()
++    try:
++        return path.is_dir() and any(path.iterdir())
++    except OSError:  # pragma: no cover - filesystem race while probing cache dir.
++        return False
++
++
++def select_moe_model(
++    model_key: str = "auto",
++    resolver: Callable[[str], str | None] = exp4012.resolve_local_gguf,
++) -> dict[str, str] | None:
++    """Return the Qwen MoE model if its concrete GGUF path resolves."""
++    if model_key not in {"auto", MOE_MODEL["model_key"]}:
++        return None
++    model_path = resolver(MOE_MODEL["hf_id"])
++    if not model_path:
++        return None
++    return {**MOE_MODEL, "model_path": str(model_path)}
++
++
++def check_preconditions(
++    *,
++    pool_path: Path | str,
++    model_key: str = "auto",
++    resolver: Callable[[str], str | None] = exp4012.resolve_local_gguf,
++    cache_dir: Path | str = MOE_CACHE_DIR,
++    llama_available_override: bool | None = None,
++) -> tuple[list[dict[str, Any]], dict[str, str] | None]:
++    """Check all resources before any live inference is attempted."""
++    chosen = select_moe_model(model_key, resolver=resolver)
++    cache_ok = _cache_dir_nonempty(cache_dir)
++    if llama_available_override is None:
++        try:
++            import llama_cpp  # noqa: F401
++
++            llama_ok = True
++        except Exception:
++            llama_ok = False
++    else:
++        llama_ok = bool(llama_available_override)
++
++    pool_ok = exp4012._pool_and_verifier_loadable(pool_path)
++    gguf_ok = cache_ok and chosen is not None
++    preconditions = [
++        {
++            "resource": "moe_base_gguf_cached",
++            "available": gguf_ok,
++            "cache_dir": str(Path(cache_dir).expanduser()),
++            "selected_model": chosen["name"] if chosen else None,
++            "model_path": chosen["model_path"] if chosen else None,
++        },
++        {"resource": "llama_cpp", "available": llama_ok},
++        {"resource": "exp4012_arc1_pool_and_verifier_primitives", "available": pool_ok},
++    ]
++    return preconditions, chosen if gguf_ok else None
++
++
++def blocker_from_preconditions(preconditions: list[dict[str, Any]]) -> str | None:
++    """Map the first failed precondition to the required blocked verdict."""
++    by_resource = {row["resource"]: bool(row["available"]) for row in preconditions}
++    if not by_resource.get("moe_base_gguf_cached", False):
++        return "blocked_moe_base_not_cached"
++    if not by_resource.get("llama_cpp", False):
++        return "blocked_llama_cpp_unavailable"
++    if not by_resource.get("exp4012_arc1_pool_and_verifier_primitives", False):
++        return "blocked_exp4012_pool_unreadable"
++    return None
++
++
++def _is_bare_float(value: Any) -> bool:
++    return isinstance(value, float) and not isinstance(value, bool)
++
++
++def _is_bare_int(value: Any) -> bool:
++    return isinstance(value, int) and not isinstance(value, bool)
++
++
++def validate_raw_artifact(artifact: dict[str, Any]) -> None:
++    """Validate the raw artifact fields consumed by Exp 4047 and Exp 4048 collection."""
++    for field in REQUIRED_RAW_FIELDS:
++        if field not in artifact:
++            raise ValueError(f"missing required field: {field}")
++    verdict = artifact["honest_verdict"]
++    if not isinstance(verdict, str) or not (
++        verdict.startswith("complete:")
++        or verdict.startswith("success:")
++        or verdict.startswith("blocked_")
++    ):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    if not isinstance(artifact["runner_ready"], bool):
++        raise ValueError("runner_ready must be a bare bool")
++    for field in (
++        "best_of_n_coverage",
++        "local_demo_perfect_coverage_bestofn",
++        "gated_pass_at_2",
++        "local_gated_pass2",
++        "local_seconds",
++        "duration_s",
++    ):
++        if not _is_bare_float(artifact[field]):
++            raise ValueError(f"{field} must be a bare float")
++    for field in ("k_samples_per_task", "random_seed", "launched_pid"):
++        if not _is_bare_int(artifact[field]):
++            raise ValueError(f"{field} must be a bare int")
++    for field in ("moe_base_model", "inference_substrate", "reproducibility_checksum"):
++        if not isinstance(artifact[field], str):
++            raise ValueError(f"{field} must be a string")
++    for field in ("per_task", "preconditions_checked"):
++        if not isinstance(artifact[field], list):
++            raise ValueError(f"{field} must be a list")
++    if not isinstance(artifact["model_specs"], dict):
++        raise ValueError("model_specs must be a dict")
++
++
++def _repro_checksum(output_path: Path | str, pool_path: Path | str) -> str:
++    code_files = [
++        str(Path(__file__).resolve()),
++        str((REPO_ROOT / "scripts" / "experiments" / "experiment_4012_gap4_local_best_of_n.py")),
++        str((REPO_ROOT / "python" / "carnot" / "agentic" / "arc_gap4_execution_verifier.py")),
++    ]
++    checksum = _compute_repro_checksum(SEED, code_files, str(pool_path))
++    salt = str(output_path).encode("utf-8")
++    return hashlib.sha256((checksum + salt.hex()).encode("utf-8")).hexdigest()[:16]
++
++
++def _write_json(path: Path, payload: dict[str, Any]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++class BatchedIndependentLocalSampler:
++    """Batch-shaped wrapper around llama.cpp chat completion for independent draws."""
++
++    SYSTEM = exp4012.IndependentLocalSampler.SYSTEM
++
++    def __init__(
++        self,
++        llama: Any,
++        *,
++        max_tokens: int = 2048,
++        base_seed: int = SEED,
++        base_temperature: float = 0.25,
++    ) -> None:
++        self._llama = llama
++        self.max_tokens = max_tokens
++        self.base_seed = base_seed
++        self.base_temperature = base_temperature
++
++    def sample_many(self, prompt: str, draw_indices: list[int]) -> list[tuple[int, str, float]]:
++        """Generate a batch of independent samples for one task prompt."""
++        outputs: list[tuple[int, str, float]] = []
++        for draw_index in draw_indices:
++            temperature = round(min(0.95, self.base_temperature + 0.05 * (draw_index % 8)), 3)
++            seed = self.base_seed + 1009 * draw_index
++            t0 = time.time()
++            try:
++                out = self._llama.create_chat_completion(
++                    messages=[
++                        {"role": "system", "content": self.SYSTEM},
++                        {"role": "user", "content": prompt},
++                    ],
++                    max_tokens=self.max_tokens,
++                    temperature=temperature,
++                    top_p=0.95,
++                    seed=seed,
++                )
++                text = out["choices"][0]["message"]["content"] or ""
++            except Exception as exc:  # pragma: no cover - defensive around live model failures.
++                text = f"__local_error__:{type(exc).__name__}"
++            outputs.append((draw_index, text, round(time.time() - t0, 2)))
++        return outputs
++
++
++def _call_sample_many(
++    sampler: Any,
++    prompt: str,
++    draw_indices: list[int],
++) -> list[tuple[int, str, float]]:
++    if hasattr(sampler, "sample_many"):
++        return list(sampler.sample_many(prompt, draw_indices))
++    return [(draw_index, *sampler(prompt, draw_index)) for draw_index in draw_indices]
++
++
++def _grade_sample(
++    *,
++    task_name: str,
++    demos: list[dict[str, Any]],
++    draw_index: int,
++    raw: str,
++    local_s: float,
++) -> dict[str, Any]:
++    code = exp4012._extract_code(raw)
++    if code is None:
++        return {
++            "task": task_name,
++            "draw_index": draw_index,
++            "status": "no_code",
++            "demo_fit": 0.0,
++            "demo_perfect": False,
++            "local_s": local_s,
++            "code": None,
++        }
++    fn = exp4012.safe_transform_from_code(code)
++    if fn is None:
++        return {
++            "task": task_name,
++            "draw_index": draw_index,
++            "status": "unsafe_or_uncompilable",
++            "demo_fit": 0.0,
++            "demo_perfect": False,
++            "local_s": local_s,
++            "code": code,
++        }
++    fit = exp4012.demo_fit(fn, demos)
++    return {
++        "task": task_name,
++        "draw_index": draw_index,
++        "status": "graded",
++        "demo_fit": round(fit, 4),
++        "demo_perfect": bool(fit >= 1.0),
++        "local_s": local_s,
++        "code_len": len(code),
++        "code": code,
++    }
++
++
++def induce_task_samples_batched(
++    task_name: str,
++    demos: list[dict[str, Any]],
++    sampler: Any,
++    *,
++    k: int,
++    batch_size: int = DEFAULT_DRAW_BATCH_SIZE,
++) -> list[dict[str, Any]]:
++    """Draw up to k samples, stopping future batches after the first demo-perfect sample."""
++    prompt = exp4012.demo_only_prompt(demos, task_name=task_name)
++    samples: list[dict[str, Any]] = []
++    for start in range(0, k, max(1, batch_size)):
++        draw_indices = list(range(start, min(k, start + max(1, batch_size))))
++        batch = sorted(_call_sample_many(sampler, prompt, draw_indices), key=lambda row: row[0])
++        for draw_index, raw, local_s in batch:
++            sample = _grade_sample(
++                task_name=task_name,
++                demos=demos,
++                draw_index=draw_index,
++                raw=raw,
++                local_s=local_s,
++            )
++            samples.append(sample)
++            if sample["demo_perfect"]:
++                return samples
++    return samples
++
++
++def _checkpoint_payload(
++    tasks: dict[str, list[dict[str, Any]]],
++    *,
++    k: int,
++    model_name: str,
++) -> dict[str, Any]:
++    return {
++        "schema": "carnot.experiment_4048_decentralization_moe_base_raw.checkpoint.v1",
++        "k_samples_per_task": k,
++        "local_model_used": model_name,
++        "tasks": tasks,
++    }
++
++
++def _load_checkpoint(
++    checkpoint_path: Path | None,
++    *,
++    k: int,
++    model_name: str,
++) -> dict[str, list[dict[str, Any]]]:
++    if checkpoint_path is None or not checkpoint_path.exists():
++        return {}
++    try:
++        payload = json.loads(checkpoint_path.read_text(encoding="utf-8"))
++    except Exception:  # pragma: no cover - malformed checkpoint is treated as absent.
++        return {}
++    if payload.get("k_samples_per_task") != k or payload.get("local_model_used") != model_name:
++        return {}
++    tasks = payload.get("tasks")
++    return tasks if isinstance(tasks, dict) else {}
++
++
++def _save_checkpoint(
++    checkpoint_path: Path | None,
++    tasks: dict[str, list[dict[str, Any]]],
++    *,
++    k: int,
++    model_name: str,
++) -> None:
++    if checkpoint_path is None:
++        return
++    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
++    checkpoint_path.write_text(
++        json.dumps(_checkpoint_payload(tasks, k=k, model_name=model_name), indent=2, sort_keys=True)
++        + "\n",
++        encoding="utf-8",
++    )
++
++
++def _entries_by_task(entries: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
++    by_task: dict[str, list[dict[str, Any]]] = {}
++    for entry in entries:
++        by_task.setdefault(entry["task"], []).append(entry)
++    return by_task
++
++
++def _task_done(samples: list[dict[str, Any]], k: int) -> bool:
++    return any(sample.get("demo_perfect") for sample in samples) or len(samples) >= k
++
++
++def induce_pool_best_of_n_batched(
++    entries: list[dict[str, Any]],
++    sampler: Any,
++    *,
++    k: int,
++    checkpoint_path: Path | None,
++    model_name: str,
++    started_s: float | None = None,
++    max_wall_s: float | None = None,
++    batch_size: int = DEFAULT_DRAW_BATCH_SIZE,
++) -> dict[str, list[dict[str, Any]]]:
++    """Run batched best-of-N induction per unique task and checkpoint after each task."""
++    by_task = _entries_by_task(entries)
++    samples_by_task = _load_checkpoint(checkpoint_path, k=k, model_name=model_name)
++    for task_name in sorted(by_task):
++        cached = samples_by_task.get(task_name)
++        if isinstance(cached, list) and _task_done(cached, k):
++            samples_by_task[task_name] = cached
++            continue
++        if (
++            started_s is not None
++            and max_wall_s is not None
++            and time.time() - started_s >= max_wall_s
++        ):
++            break
++        samples_by_task[task_name] = induce_task_samples_batched(
++            task_name,
++            by_task[task_name][0]["demos"],
++            sampler,
++            k=k,
++            batch_size=batch_size,
++        )
++        _save_checkpoint(checkpoint_path, samples_by_task, k=k, model_name=model_name)
++    return samples_by_task
++
++
++def blocked_raw_artifact(
++    verdict: str,
++    *,
++    chosen_model: dict[str, str] | None,
++    preconditions: list[dict[str, Any]],
++    duration_s: float,
++    k: int = DEFAULT_K,
++    output_path: Path | str = OUTPUT,
++    pool_path: Path | str = POOL,
++) -> dict[str, Any]:
++    """Build a valid raw artifact for precondition-blocked runs."""
++    artifact = {
++        "experiment": "experiment_4048_decentralization_moe_base_raw",
++        "schema": "carnot.experiment_4048_decentralization_moe_base_raw.v1",
++        "title": "Decentralization MoE-base ARC best-of-N raw run",
++        "honest_verdict": verdict,
++        "runner_ready": False,
++        "moe_base_model": chosen_model["name"] if chosen_model else "none",
++        "best_of_n_coverage": 0.0,
++        "local_demo_perfect_coverage_bestofn": 0.0,
++        "k_samples_per_task": k,
++        "gated_pass_at_2": 0.0,
++        "local_gated_pass2": 0.0,
++        "local_seconds": 0.0,
++        "per_task": [],
++        "per_task_sample_summary": [],
++        "model_specs": {
++            "generator_model": chosen_model["name"] if chosen_model else "none",
++            "generator_hf_id": chosen_model["hf_id"] if chosen_model else "none",
++            "generator_gguf_path": chosen_model["model_path"] if chosen_model else "none",
++            "verifier": "model-free GAP-4 verifier primitives reused unchanged",
++        },
++        "random_seed": SEED,
++        "reproducibility_checksum": _repro_checksum(output_path, pool_path),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": round(float(duration_s), 2),
++        "launched_pid": 0,
++        "verifier_side_unchanged": True,
++    }
++    validate_raw_artifact(artifact)
++    return artifact
++
++
++def _fmt(value: float) -> str:
++    text = f"{value:.4f}".rstrip("0").rstrip(".")
++    return text if text else "0"
++
++
++def _raw_verdict(coverage: float, pass2: float) -> str:
++    if coverage > BASELINE_12B_COVERAGE:
++        return (
++            "success: decentralization_moe_base_latent_support_cov"
++            + _fmt(coverage)
++            + "_pass2"
++            + _fmt(pass2)
++            + "_inducerqwen35moe"
++        )
++    return (
++        "complete: decentralization_moe_base_cov"
++        + _fmt(coverage)
++        + "_pass2"
++        + _fmt(pass2)
++        + "_absent_or_flat"
++    )
++
++
++def _annotated_per_task(base_artifact: dict[str, Any]) -> list[dict[str, Any]]:
++    summary = {row["task"]: row for row in base_artifact.get("per_task_sample_summary", [])}
++    annotated = []
++    for row in base_artifact.get("per_task", []):
++        task_summary = summary.get(row["task"], {})
++        annotated.append(
++            {
++                **row,
++                "local_seconds": float(task_summary.get("local_seconds", 0.0)),
++                "best_of_n_demo_perfect": bool(row.get("demo_perfect")),
++                "n_demo_perfect_samples": int(task_summary.get("n_demo_perfect", 0)),
++                "best_demo_fit": float(
++                    task_summary.get("best_demo_fit", row.get("demo_fit") or 0.0)
++                ),
++            }
++        )
++    return annotated
++
++
++def build_raw_artifact(
++    *,
++    base_artifact: dict[str, Any],
++    chosen_model: dict[str, str],
++    preconditions: list[dict[str, Any]],
++    output_path: Path | str,
++    pool_path: Path | str,
++) -> dict[str, Any]:
++    """Adapt the Exp 4012-compatible result into the Exp 4048 raw schema."""
++    coverage = float(base_artifact["local_demo_perfect_coverage_bestofn"])
++    pass2 = float(base_artifact["local_gated_pass2"])
++    raw = {
++        **base_artifact,
++        "experiment": "experiment_4048_decentralization_moe_base_raw",
++        "schema": "carnot.experiment_4048_decentralization_moe_base_raw.v1",
++        "title": "Decentralization MoE-base ARC best-of-N raw run",
++        "honest_verdict": _raw_verdict(coverage, pass2),
++        "runner_ready": True,
++        "moe_base_model": chosen_model["name"],
++        "local_model_used": chosen_model["name"],
++        "best_of_n_coverage": coverage,
++        "gated_pass_at_2": pass2,
++        "local_seconds": float(base_artifact["total_local_seconds"]),
++        "per_task": _annotated_per_task(base_artifact),
++        "model_specs": {
++            **base_artifact["model_specs"],
++            "generator_model": chosen_model["name"],
++            "generator_hf_id": chosen_model["hf_id"],
++            "generator_gguf_path": chosen_model["model_path"],
++            "selection_note": chosen_model["selection_note"],
++            "comparator_exp4012_model": "gemma-4-12B",
++        },
++        "reproducibility_checksum": _repro_checksum(output_path, pool_path),
++        "preconditions_checked": preconditions,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "launched_pid": 0,
++    }
++    validate_raw_artifact(raw)
++    return raw
++
++
++def run(
++    *,
++    model_key: str = "auto",
++    pool_path: Path | str = POOL,
++    output_path: Path = OUTPUT,
++    codex_ref_path: Path = CODEX_REF,
++    checkpoint_path: Path | None = CHECKPOINT,
++    k: int = DEFAULT_K,
++    limit: int = 0,
++    n_ctx: int = 16384,
++    max_wall_s: float = 4500.0,
++    batch_size: int = DEFAULT_DRAW_BATCH_SIZE,
++    sampler: Any | None = None,
++    resolver: Callable[[str], str | None] = exp4012.resolve_local_gguf,
++    cache_dir: Path | str = MOE_CACHE_DIR,
++    llama_available_override: bool | None = None,
++    write: bool = True,
++) -> dict[str, Any]:
++    """Run the MoE best-of-N experiment or emit a blocked artifact."""
++    started = time.time()
++    preconditions, chosen_model = check_preconditions(
++        model_key=model_key,
++        pool_path=pool_path,
++        resolver=resolver,
++        cache_dir=cache_dir,
++        llama_available_override=llama_available_override,
++    )
++    blocker = blocker_from_preconditions(preconditions)
++    if blocker:
++        artifact = blocked_raw_artifact(
++            blocker,
++            chosen_model=chosen_model,
++            preconditions=preconditions,
++            duration_s=time.time() - started,
++            k=k,
++            output_path=output_path,
++            pool_path=pool_path,
++        )
++        if write:
++            _write_json(output_path, artifact)
++        print(f"-> {artifact['honest_verdict']}", flush=True)
++        return artifact
++
++    if chosen_model is None:  # pragma: no cover - defensive; blocker should have caught this.
++        raise RuntimeError("MoE model unavailable after precondition pass")
++
++    with gzip.open(pool_path, "rt", encoding="utf-8") as handle:
++        pool = json.load(handle)
++    entries = pool["entries"]
++    if limit:
++        entries = entries[:limit]
++
++    if sampler is None:  # pragma: no cover - live multi-GB model load.
++        llama = exp4012.load_local_llama(chosen_model["model_path"], n_ctx=n_ctx, seed=SEED)
++        sampler = BatchedIndependentLocalSampler(llama, base_seed=SEED)
++
++    samples_by_task = induce_pool_best_of_n_batched(
++        entries,
++        sampler,
++        k=k,
++        checkpoint_path=checkpoint_path,
++        model_name=chosen_model["name"],
++        started_s=started,
++        max_wall_s=max_wall_s,
++        batch_size=batch_size,
++    )
++    verifier_t0 = time.time()
++    prog_by_entry_id = exp4012.build_entry_programs(entries, samples_by_task)
++    scored = exp4012.score_best_of_n_pool(entries, prog_by_entry_id, seed=SEED)
++    verifier_s = time.time() - verifier_t0
++    base_artifact = exp4012.build_complete_artifact(
++        entries=entries,
++        samples_by_task=samples_by_task,
++        prog_by_entry_id=prog_by_entry_id,
++        scored=scored,
++        chosen_model=chosen_model,
++        preconditions=preconditions,
++        verifier_seconds=verifier_s,
++        started_s=started,
++        now_s=time.time(),
++        k=k,
++        codex_ref_path=codex_ref_path,
++    )
++    artifact = build_raw_artifact(
++        base_artifact=base_artifact,
++        chosen_model=chosen_model,
++        preconditions=preconditions,
++        output_path=output_path,
++        pool_path=pool_path,
++    )
++    if write:
++        _write_json(output_path, artifact)
++    print(f"-> {artifact['honest_verdict']}", flush=True)
++    return artifact
++
++
++def main() -> None:  # pragma: no cover - exercised by operator command.
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--model", choices=["auto", "qwen35moe"], default="auto")
++    parser.add_argument("--k", type=int, default=DEFAULT_K)
++    parser.add_argument("--limit", type=int, default=0)
++    parser.add_argument("--n-ctx", type=int, default=16384)
++    parser.add_argument("--max-wall-s", type=float, default=4500.0)
++    parser.add_argument("--batch-size", type=int, default=DEFAULT_DRAW_BATCH_SIZE)
++    parser.add_argument("--output", type=Path, default=OUTPUT)
++    parser.add_argument("--checkpoint", type=Path, default=CHECKPOINT)
++    args = parser.parse_args()
++    if args.k < 1 or args.k > 16:
++        raise SystemExit("--k must be between 1 and 16")
++    if args.batch_size < 1 or args.batch_size > 16:
++        raise SystemExit("--batch-size must be between 1 and 16")
++    run(
++        model_key=args.model,
++        k=args.k,
++        limit=args.limit,
++        n_ctx=args.n_ctx,
++        max_wall_s=args.max_wall_s,
++        batch_size=args.batch_size,
++        output_path=args.output,
++        checkpoint_path=args.checkpoint,
++    )
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/tests/python/test_experiment_4047_decentralization_moe_base_build.py b/tests/python/test_experiment_4047_decentralization_moe_base_build.py
+new file mode 100644
+index 0000000000..22b79abcb3
+--- /dev/null
++++ b/tests/python/test_experiment_4047_decentralization_moe_base_build.py
+@@ -0,0 +1,630 @@
++"""Tests for Exp 4047/4048 MoE-base decentralization build.
++
++Spec refs: REQ-VERIFY-4047, SCENARIO-VERIFY-4047.
++"""
++
++from __future__ import annotations
++
++import gzip
++import json
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++import exp4047_decentralization_moe_base_build as build
++import experiment_4048_decentralization_moe_base_best_of_n as run4048
++
++
++PLUS_ONE = "```python\ndef transform(grid):\n    return grid + 1\n```"
++PLUS_TWO = "```python\ndef transform(grid):\n    return grid + 2\n```"
++IDENTITY = "```python\ndef transform(grid):\n    return grid\n```"
++
++
++class _BatchSampler:
++    def __init__(self, responses: list[str], seconds: float = 0.2) -> None:
++        self.responses = responses
++        self.seconds = seconds
++        self.calls: list[tuple[str, tuple[int, ...]]] = []
++
++    def sample_many(self, prompt: str, draw_indices: list[int]) -> list[tuple[int, str, float]]:
++        self.calls.append((prompt, tuple(draw_indices)))
++        out: list[tuple[int, str, float]] = []
++        for draw_index in draw_indices:
++            out.append((draw_index, self.responses[draw_index % len(self.responses)], self.seconds))
++        return out
++
++
++class _FakeLlama:
++    def __init__(self, content: str = PLUS_ONE) -> None:
++        self.content = content
++        self.calls: list[dict[str, Any]] = []
++
++    def create_chat_completion(self, messages, **kwargs):  # noqa: ANN001
++        self.calls.append({"messages": messages, "kwargs": kwargs})
++        return {"choices": [{"message": {"content": self.content}}]}
++
++
++class _BoomBatchSampler:
++    def sample_many(self, prompt: str, draw_indices: list[int]) -> list[tuple[int, str, float]]:
++        raise RuntimeError("smoke exploded")
++
++
++def _demo(value_in: int, value_out: int) -> dict[str, Any]:
++    return {"input": [[value_in]], "output": [[value_out]]}
++
++
++def _cand(grid: list[list[int]], votes: int, correct: bool, q: float = 0.5) -> dict[str, Any]:
++    return {"grid": grid, "votes": votes, "correct": correct, "q_mean": q}
++
++
++def _entry(
++    task: str,
++    rule_delta: int,
++    test_in: int,
++    candidates: list[dict[str, Any]],
++) -> dict[str, Any]:
++    return {
++        "task": task,
++        "demos": [_demo(1, 1 + rule_delta), _demo(3, 3 + rule_delta)],
++        "test_input": [[test_in]],
++        "candidates": candidates,
++    }
++
++
++def _synthetic_pool() -> list[dict[str, Any]]:
++    return [
++        _entry(
++            "T1",
++            1,
++            5,
++            [
++                _cand([[6]], votes=1, correct=True),
++                _cand([[9]], votes=9, correct=False),
++                _cand([[8]], votes=8, correct=False),
++            ],
++        ),
++        _entry("T2", 2, 4, [_cand([[12]], votes=9, correct=True), _cand([[0]], 1, False)]),
++        _entry(
++            "T3",
++            3,
++            2,
++            [
++                _cand([[5]], votes=1, correct=True),
++                _cand([[7]], votes=9, correct=False),
++                _cand([[1]], votes=8, correct=False),
++            ],
++        ),
++        _entry("T4", 1, 5, [_cand([[3]], votes=5, correct=False), _cand([[2]], 4, False)]),
++    ]
++
++
++def _write_pool(path: Path, entries: list[dict[str, Any]]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with gzip.open(path, "wt", encoding="utf-8") as fh:
++        json.dump({"entries": entries}, fh)
++
++
++def _write_codex_ref(path: Path) -> None:
++    path.write_text(
++        json.dumps(
++            {"generator": {"total_codex_seconds": 20.0}, "n_unique_tasks": 4, "per_task": []}
++        ),
++        encoding="utf-8",
++    )
++
++
++def _cache_dir(tmp_path: Path) -> Path:
++    cache_dir = tmp_path / "models--unsloth--Qwen3.6-35B-A3B-GGUF"
++    cache_dir.mkdir()
++    (cache_dir / "marker").write_text("cached", encoding="utf-8")
++    return cache_dir
++
++
++def test_req_4047_spec_declared() -> None:
++    # REQ-VERIFY-4047: OpenSpec declares the MoE build gate before code.
++    spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
++    assert "REQ-VERIFY-4047" in spec
++    assert "SCENARIO-VERIFY-4047" in spec
++    assert "experiment_4047_decentralization_moe_base_build.json" in spec
++    assert "experiment_4048_decentralization_moe_base_raw.json" in spec
++    assert "smoke_per_task_seconds" in spec
++
++
++def test_select_moe_model_is_qwen_only(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: dense Gemma is not eligible for the throughput rerun.
++    chosen = run4048.select_moe_model(
++        resolver=lambda hf_id: "/cache/qwen.gguf" if "Qwen3.6" in hf_id else None
++    )
++    assert chosen["name"] == "Qwen3.6-35B-A3B"
++    assert chosen["model_key"] == "qwen35moe"
++    assert chosen["model_path"] == "/cache/qwen.gguf"
++    assert run4048.select_moe_model("gemma31", resolver=lambda _hf_id: "/cache/gemma.gguf") is None
++
++
++def test_preconditions_block_in_order(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: missing resources map to explicit blocked_<resource> verdicts.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    precs, chosen = run4048.check_preconditions(
++        pool_path=pool,
++        resolver=lambda _hf_id: None,
++        cache_dir=tmp_path / "missing-cache",
++        llama_available_override=False,
++    )
++    assert chosen is None
++    assert run4048.blocker_from_preconditions(precs) == "blocked_moe_base_not_cached"
++
++    cache_dir = _cache_dir(tmp_path)
++    precs, chosen = run4048.check_preconditions(
++        pool_path=pool,
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=cache_dir,
++        llama_available_override=False,
++    )
++    assert chosen["name"] == "Qwen3.6-35B-A3B"
++    assert run4048.blocker_from_preconditions(precs) == "blocked_llama_cpp_unavailable"
++
++    precs, _chosen = run4048.check_preconditions(
++        pool_path=tmp_path / "missing.json.gz",
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=cache_dir,
++        llama_available_override=True,
++    )
++    assert run4048.blocker_from_preconditions(precs) == "blocked_exp4012_pool_unreadable"
++
++
++def test_preconditions_real_llama_import_branches(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    # REQ-VERIFY-4047: the live import check is recorded when no override is supplied.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    cache_dir = _cache_dir(tmp_path)
++    precs, _chosen = run4048.check_preconditions(
++        pool_path=pool,
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=cache_dir,
++    )
++    assert {row["resource"]: row["available"] for row in precs}["llama_cpp"] is True
++
++    import builtins
++
++    real_import = builtins.__import__
++
++    def fake_import(name, *args, **kwargs):  # noqa: ANN001
++        if name == "llama_cpp":
++            raise ImportError("simulated")
++        return real_import(name, *args, **kwargs)
++
++    monkeypatch.setattr(builtins, "__import__", fake_import)
++    precs, _chosen = run4048.check_preconditions(
++        pool_path=pool,
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=cache_dir,
++    )
++    assert {row["resource"]: row["available"] for row in precs}["llama_cpp"] is False
++
++
++def test_batched_llama_sampler_varies_seed_and_temperature() -> None:
++    # SCENARIO-VERIFY-4047: batched independent draws still vary seed and temperature.
++    fake = _FakeLlama()
++    sampler = run4048.BatchedIndependentLocalSampler(fake, base_seed=100, base_temperature=0.2)
++    rows = sampler.sample_many("prompt", [0, 1])
++    assert [row[0] for row in rows] == [0, 1]
++    first, second = fake.calls
++    assert first["kwargs"]["seed"] != second["kwargs"]["seed"]
++    assert first["kwargs"]["temperature"] != second["kwargs"]["temperature"]
++    assert first["messages"][1]["content"] == "prompt"
++
++
++def test_induce_task_samples_batch_early_stops_after_demo_perfect() -> None:
++    # SCENARIO-VERIFY-4047: RoBoN-style sampling stops the task once a demo-perfect rule appears.
++    sampler = _BatchSampler([PLUS_ONE, IDENTITY, IDENTITY])
++    samples = run4048.induce_task_samples_batched(
++        "T1",
++        [_demo(1, 2), _demo(3, 4)],
++        sampler,
++        k=8,
++        batch_size=3,
++    )
++    assert len(samples) == 1
++    assert samples[0]["demo_perfect"] is True
++    assert len(sampler.calls) == 1
++    assert sampler.calls[0][1] == (0, 1, 2)
++
++
++def test_callable_sampler_and_grade_edges() -> None:
++    # REQ-VERIFY-4047: sample grading preserves no-code and unsafe failure rows.
++    unsafe = "```python\nimport os\ndef transform(grid):\n    return grid\n```"
++    responses = ["no code here", unsafe, PLUS_ONE]
++
++    def sampler(prompt: str, draw_index: int) -> tuple[str, float]:
++        return responses[draw_index], 0.1
++
++    samples = run4048.induce_task_samples_batched(
++        "T1",
++        [_demo(1, 2), _demo(3, 4)],
++        sampler,
++        k=3,
++        batch_size=1,
++    )
++    assert [sample["status"] for sample in samples] == [
++        "no_code",
++        "unsafe_or_uncompilable",
++        "graded",
++    ]
++    assert samples[-1]["demo_perfect"] is True
++
++
++def test_checkpoint_resume_and_task_early_stop(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: every completed task is checkpointed and reused after interruption.
++    entries = [_entry("T1", 1, 5, [_cand([[6]], 1, True)])]
++    checkpoint = tmp_path / "ckpt.json"
++    sampler = _BatchSampler([PLUS_ONE, IDENTITY], seconds=0.1)
++    first = run4048.induce_pool_best_of_n_batched(
++        entries,
++        sampler,
++        k=8,
++        checkpoint_path=checkpoint,
++        model_name="Qwen3.6-35B-A3B",
++    )
++    assert len(first["T1"]) == 1
++    assert first["T1"][0]["demo_perfect"] is True
++    assert checkpoint.exists()
++
++    class _Boom:
++        def sample_many(self, prompt: str, draw_indices: list[int]) -> list[tuple[int, str, float]]:
++            raise AssertionError("checkpoint was not used")
++
++    second = run4048.induce_pool_best_of_n_batched(
++        entries,
++        _Boom(),
++        k=8,
++        checkpoint_path=checkpoint,
++        model_name="Qwen3.6-35B-A3B",
++    )
++    assert second == first
++
++
++def test_checkpoint_mismatch_none_save_and_timeout(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: stale checkpoints are ignored and timeout preserves partial progress.
++    entries = [_entry("T1", 1, 5, [_cand([[6]], 1, True)])]
++    checkpoint = tmp_path / "ckpt.json"
++    checkpoint.write_text(
++        json.dumps({"k_samples_per_task": 99, "local_model_used": "old", "tasks": {"T1": []}}),
++        encoding="utf-8",
++    )
++    timed_out = run4048.induce_pool_best_of_n_batched(
++        entries,
++        _BatchSampler([PLUS_ONE]),
++        k=8,
++        checkpoint_path=checkpoint,
++        model_name="Qwen3.6-35B-A3B",
++        started_s=0.0,
++        max_wall_s=0.0,
++    )
++    assert timed_out == {}
++    run4048._save_checkpoint(None, {"T1": []}, k=8, model_name="Qwen3.6-35B-A3B")
++
++
++def test_run4048_blocked_writes_required_raw_fields(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: blocked raw runs still emit the required schema.
++    out = tmp_path / "raw.json"
++    artifact = run4048.run(
++        output_path=out,
++        checkpoint_path=tmp_path / "ckpt.json",
++        resolver=lambda _hf_id: None,
++        cache_dir=tmp_path / "missing-cache",
++        llama_available_override=True,
++        write=True,
++    )
++    assert artifact["honest_verdict"] == "blocked_moe_base_not_cached"
++    assert artifact["runner_ready"] is False
++    assert artifact["moe_base_model"] == "none"
++    assert artifact["inference_substrate"] == run4048.INFERENCE_SUBSTRATE
++    run4048.validate_raw_artifact(artifact)
++    assert out.exists()
++
++
++def test_run4048_blocked_no_write(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: blocked raw runs can be inspected without writing.
++    out = tmp_path / "raw.json"
++    artifact = run4048.run(
++        output_path=out,
++        checkpoint_path=tmp_path / "ckpt.json",
++        resolver=lambda _hf_id: None,
++        cache_dir=tmp_path / "missing-cache",
++        llama_available_override=True,
++        write=False,
++    )
++    assert artifact["honest_verdict"] == "blocked_moe_base_not_cached"
++    assert not out.exists()
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("honest_verdict", "done", "terminal prefix"),
++        ("runner_ready", "yes", "bare bool"),
++        ("best_of_n_coverage", "0.5", "bare float"),
++        ("launched_pid", 1.2, "bare int"),
++        ("moe_base_model", 35, "must be a string"),
++        ("per_task", "bad", "must be a list"),
++        ("model_specs", [], "must be a dict"),
++    ],
++)
++def test_validate_raw_artifact_rejects_bad_schema(field: str, value: Any, message: str) -> None:
++    # REQ-VERIFY-4047: downstream gates receive bare, typed raw fields.
++    artifact = run4048.blocked_raw_artifact(
++        "blocked_moe_base_not_cached",
++        chosen_model=None,
++        preconditions=[{"resource": "moe_base_gguf_cached", "available": False}],
++        duration_s=0.1,
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        run4048.validate_raw_artifact(artifact)
++
++
++def test_validate_raw_artifact_rejects_missing_field() -> None:
++    # REQ-VERIFY-4047: raw artifacts cannot omit required fields.
++    with pytest.raises(ValueError, match="missing required field"):
++        run4048.validate_raw_artifact({})
++
++
++def test_run4048_complete_with_fake_batch_sampler_writes_raw_artifact(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: the MoE runner mirrors 4012 scoring with unchanged verifier.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    codex = tmp_path / "codex.json"
++    _write_codex_ref(codex)
++    out = tmp_path / "raw.json"
++    artifact = run4048.run(
++        pool_path=pool,
++        output_path=out,
++        codex_ref_path=codex,
++        checkpoint_path=tmp_path / "ckpt.json",
++        k=8,
++        sampler=_BatchSampler([IDENTITY, PLUS_ONE], seconds=0.25),
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        write=True,
++    )
++    run4048.validate_raw_artifact(artifact)
++    assert artifact["experiment"] == "experiment_4048_decentralization_moe_base_raw"
++    assert artifact["moe_base_model"] == "Qwen3.6-35B-A3B"
++    assert artifact["best_of_n_coverage"] == pytest.approx(0.5)
++    assert artifact["gated_pass_at_2"] == artifact["local_gated_pass2"]
++    assert artifact["k_samples_per_task"] == 8
++    assert artifact["model_specs"]["generator_hf_id"] == "unsloth/Qwen3.6-35B-A3B-GGUF"
++    assert len(artifact["reproducibility_checksum"]) == 16
++    assert all("local_seconds" in row for row in artifact["per_task"])
++    assert out.exists()
++
++
++def test_run4048_complete_no_write_and_complete_verdict_branch(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: write=False leaves only the returned raw artifact.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    codex = tmp_path / "codex.json"
++    _write_codex_ref(codex)
++    out = tmp_path / "raw.json"
++    artifact = run4048.run(
++        pool_path=pool,
++        output_path=out,
++        codex_ref_path=codex,
++        checkpoint_path=tmp_path / "ckpt.json",
++        k=1,
++        limit=2,
++        sampler=_BatchSampler([IDENTITY], seconds=0.1),
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        write=False,
++    )
++    assert artifact["honest_verdict"].startswith("complete: decentralization_moe_base_cov0")
++    assert not out.exists()
++
++
++def test_run_build_blocks_before_smoke_or_launch(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: Exp 4047 stops before inference when a precondition is missing.
++    launched: list[object] = []
++    artifact = build.run_build(
++        output_path=tmp_path / "build.json",
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: None,
++        cache_dir=tmp_path / "missing-cache",
++        llama_available_override=True,
++        launcher=lambda spec: launched.append(spec) or 99,
++        write=True,
++    )
++    build.validate_build_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_moe_base_not_cached"
++    assert artifact["runner_ready"] is False
++    assert artifact["smoke_passed"] is False
++    assert artifact["smoke_per_task_seconds"] == 0.0
++    assert artifact["launched_pid"] == 0
++    assert launched == []
++    assert Path(artifact["build_artifact_path"]).exists()
++    assert not (tmp_path / "smoke.json").exists()
++
++
++def test_run_build_blocks_without_writing_when_requested(tmp_path: Path) -> None:
++    # REQ-VERIFY-4047: tests can exercise the blocked path without mutating an artifact.
++    out = tmp_path / "build.json"
++    artifact = build.run_build(
++        output_path=out,
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: None,
++        cache_dir=tmp_path / "missing-cache",
++        llama_available_override=True,
++        write=False,
++    )
++    assert artifact["honest_verdict"] == "blocked_moe_base_not_cached"
++    assert not out.exists()
++
++
++def test_run_build_blocks_when_smoke_runner_fails(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: failed smoke prevents the full background launch.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    launched: list[object] = []
++    artifact = build.run_build(
++        pool_path=pool,
++        output_path=tmp_path / "build.json",
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        smoke_sampler=_BoomBatchSampler(),
++        launcher=lambda spec: launched.append(spec) or 99,
++        write=True,
++    )
++    build.validate_build_artifact(artifact)
++    assert artifact["honest_verdict"] == "blocked_smoke_failed"
++    assert artifact["smoke_passed"] is False
++    assert artifact["launched_pid"] == 0
++    assert "smoke exploded" in artifact["smoke_error"]
++    assert launched == []
++
++
++def test_run_build_smoke_failure_no_write(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: smoke failures also support no-write callers.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    out = tmp_path / "build.json"
++    artifact = build.run_build(
++        pool_path=pool,
++        output_path=out,
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        smoke_sampler=_BoomBatchSampler(),
++        write=False,
++    )
++    assert artifact["honest_verdict"] == "blocked_smoke_failed"
++    assert not out.exists()
++
++
++def test_run_build_smokes_and_launches_full_runner(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: a valid build writes the MoE launch receipt and records the PID.
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    launched: list[build.LaunchSpec] = []
++
++    def fake_launcher(spec: build.LaunchSpec) -> int:
++        launched.append(spec)
++        spec.log_path.parent.mkdir(parents=True, exist_ok=True)
++        spec.log_path.write_text("launched\n", encoding="utf-8")
++        return 4048
++
++    artifact = build.run_build(
++        pool_path=pool,
++        output_path=tmp_path / "build.json",
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        smoke_sampler=_BatchSampler([PLUS_ONE, PLUS_TWO], seconds=0.1),
++        launcher=fake_launcher,
++        smoke_k=8,
++        full_k=8,
++        full_time_budget_s=4500.0,
++        write=True,
++    )
++    build.validate_build_artifact(artifact)
++    assert artifact["honest_verdict"] == (
++        "success: decentralization_moe_base_runner_launched_qwen35moe"
++    )
++    assert artifact["runner_ready"] is True
++    assert artifact["moe_base_model"] == "Qwen3.6-35B-A3B"
++    assert artifact["smoke_passed"] is True
++    assert artifact["smoke_per_task_seconds"] == pytest.approx(0.15)
++    assert artifact["launched_pid"] == 4048
++    assert artifact["inference_substrate"] == "live_llm_inference"
++    assert Path(artifact["smoke_artifact_path"]).exists()
++    assert launched and launched[0].k == 8
++    assert launched[0].max_wall_s == 4500.0
++    assert "nohup" in artifact["launch_command"]
++    assert "experiment_4048_decentralization_moe_base_best_of_n.py" in " ".join(launched[0].argv)
++
++
++def test_run_build_success_no_write_and_smoke_seconds_fallback(tmp_path: Path) -> None:
++    # SCENARIO-VERIFY-4047: build success supports no-write callers and fallback timing math.
++    assert build._smoke_seconds_per_task({"local_seconds": 3.0, "n_unique_tasks": 2}) == 1.5
++    pool = tmp_path / "pool.json.gz"
++    _write_pool(pool, _synthetic_pool())
++    out = tmp_path / "build.json"
++    artifact = build.run_build(
++        pool_path=pool,
++        output_path=out,
++        smoke_output_path=tmp_path / "smoke.json",
++        raw_output_path=tmp_path / "raw.json",
++        smoke_checkpoint_path=tmp_path / "smoke.ckpt.json",
++        full_checkpoint_path=tmp_path / "full.ckpt.json",
++        log_path=tmp_path / "run.log",
++        resolver=lambda _hf_id: "/cache/qwen.gguf",
++        cache_dir=_cache_dir(tmp_path),
++        llama_available_override=True,
++        smoke_sampler=_BatchSampler([PLUS_ONE, PLUS_TWO], seconds=0.1),
++        launcher=lambda _spec: 4049,
++        write=False,
++    )
++    assert artifact["runner_ready"] is True
++    assert not out.exists()
++
++
++@pytest.mark.parametrize(
++    ("field", "value", "message"),
++    [
++        ("honest_verdict", "done", "terminal prefix"),
++        ("runner_ready", "true", "bare bool"),
++        ("smoke_passed", "true", "bare bool"),
++        ("smoke_per_task_seconds", "0.1", "bare float"),
++        ("launched_pid", "4048", "bare int"),
++        ("moe_base_model", 35, "must be a string"),
++        ("preconditions_checked", {}, "must be a list"),
++        ("duration_s", "0.1", "bare float"),
++    ],
++)
++def test_validate_build_artifact_rejects_bad_schema(field: str, value: Any, message: str) -> None:
++    # REQ-VERIFY-4047: the build gate emits bare scalar fields for conductor gating.
++    artifact = build.blocked_build_artifact(
++        "blocked_moe_base_not_cached",
++        chosen_model=None,
++        preconditions=[{"resource": "moe_base_gguf_cached", "available": False}],
++        duration_s=0.1,
++        output_path=Path("results/experiment_4047_decentralization_moe_base_build.json"),
++    )
++    artifact[field] = value
++    with pytest.raises(ValueError, match=message):
++        build.validate_build_artifact(artifact)
++
++
++def test_validate_build_artifact_rejects_missing_field() -> None:
++    # REQ-VERIFY-4047: build artifacts cannot omit conductor-gated fields.
++    with pytest.raises(ValueError, match="missing required field"):
++        build.validate_build_artifact({})
+-- 
+2.55.0
+

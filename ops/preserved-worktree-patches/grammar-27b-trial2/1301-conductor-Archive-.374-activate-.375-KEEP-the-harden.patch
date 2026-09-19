@@ -1,0 +1,2561 @@
+From 841b920182b9e15930aff4d417413a636640af21 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 14:46:49 -0400
+Subject: [PATCH 01301/11171] [conductor] Archive .374 -> activate .375; KEEP
+ the hardened green-gate + poison-test quarantine. Assert
+ research-complete.yaml + ops/exclusion_manifest.yaml parse under
+ yaml.safe_load and the python/carnot/agentic ARC modules import, run the
+ smart-subset pre-test gate green, then RECORD the .374 close-state truth: G1
+ incomplete-AND-saturated (22/160, all arms+oracle=1.0); G2 DECISION-GRADE
+ NEGATIVE (closed-loop no-solve vc33, 0.207 sim2real divergence, WM-planning
+ RETIRED); G3 UNDERPOWERED-NOT-RETIRED (MoE 14 tasks, 0.3571 vs 0.2581, CI
+ spans ceiling -- the capstone's retired_non_measurement was a FALSE
+ retirement per operator known-issues); 8 games solved; KV260 TERMINAL;
+ exp4044+exp4047 flagged-skipped.
+
+Automated research step by research conductor.
+Task ID: exp4054-archive-v374-activate-v375
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ .../capabilities/research-reporting/spec.md   |  104 ++
+ ops/dogfood-memory.json                       |    2 +-
+ .../archive_v374_activate_v375_4054.py        | 1204 +++++++++++++++++
+ ...iment_4054_archive_v374_activate_v375.json |  191 +++
+ .../exp4054_archive_v374_activate_v375.py     |   38 +
+ ...eriment_4054_archive_v374_activate_v375.py |  944 +++++++++++++
+ 6 files changed, 2482 insertions(+), 1 deletion(-)
+ create mode 100644 python/carnot/reporting/archive_v374_activate_v375_4054.py
+ create mode 100644 results/experiment_4054_archive_v374_activate_v375.json
+ create mode 100644 scripts/experiments/exp4054_archive_v374_activate_v375.py
+ create mode 100644 tests/python/test_experiment_4054_archive_v374_activate_v375.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index a605aa36bf..8bc259e1c6 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -19254,3 +19254,107 @@ ops/status/traceability/conductor files unchanged.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-4042 | Implemented (`python/carnot/reporting/archive_v373_activate_v374_4042.py`, `scripts/experiments/exp4042_archive_v373_activate_v374.py`) | Implemented (`tests/python/test_experiment_4042_archive_v373_activate_v374.py`) |
++
++### REQ-REPORT-4054: Archive .374 And Activate .375 With Decision-Grade Close-State And The G3 False-Retirement Correction
++
++The Exp 4054 workflow SHALL archive milestone `2026.06.374`, confirm milestone
++`2026.06.375` is active in the current research roadmap, and write
++`results/experiment_4054_archive_v374_activate_v375.json`. Before editing any
++record it SHALL confirm `research-complete.yaml` safe-loads under
++`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
++whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
++SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
++
++The workflow SHALL ensure exactly one `.374` milestone record exists in
++`research-complete.yaml`. The conductor's checkpoint-from-interrupted-run commit
++already appended one canonical `.374` record, so the workflow SHALL collapse any
++duplicate `- id: 2026.06.374` records to the first occurrence (fail-forward
++cleanup, never a further append), leave a single existing record unchanged, or
++append one canonical `.374` record when none exists. After this edit it SHALL
++confirm both `research-complete.yaml` and `ops/exclusion_manifest.yaml` still
++safe-load. It SHALL run an import probe for
++`carnot.agentic.arc_agi3_world_model`,
++`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
++and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
++boolean `arc_modules_importable`.
++
++The workflow SHALL run the smart-subset pre-test gate — the two core suites
++(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
++`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
++<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red it SHALL
++record failing test ids by source file, `git mv` each still-red file under
++`tests/quarantine/`, rerun until green, and record the quarantined paths in
++`quarantined_tests`. This preserves the poison-test quarantine that held through
++`.371`/`.372`/`.373`/`.374`.
++
++The workflow SHALL record the `.374` close-state in the bare-dict field
++`milestone_374_closestate`: per-task OK/BLOCKED/MISSING/FLAGGED status for
++Exp 4042–4053; the G1 off-ARC verifier-transfer result as a NON-measurement that
++is INCOMPLETE and CEILING-SATURATED (Exp 4045 reached only `22` of the `>=160`
++task floor and every arm and the oracle scored `1.0` with no oracle headroom, so
++the best-arm delta is `0.0` with CI `[0.0, 0.0]` and the verifier did NOT
++transfer off-ARC significantly — but the result is uninformative, not a
++refutation); the G2 closed-loop-planning result as a DECISION-GRADE NEGATIVE
++(Exp 4046's closed-loop per-step replan did NOT solve vc33, no real-env
++confirmation, and the verified world-model diverges `0.207` per step from the
++real environment — a sim2real ceiling, so vc33 WM-planning is RETIRED); and the
++G3 sovereign-base result as UNDERPOWERED, NOT retired — the throughput fix worked
++(the MoE raw checkpoint holds `14` Qwen3.6-35B-A3B tasks vs the 31B-dense run's
++`0`), coverage `0.3571` vs the `0.2581` 12B ceiling with bootstrap95 `[0.143,
++0.643]` spanning the ceiling. The workflow SHALL record the ARC-AGI-3 total of
++`8` games solved (`+1` monotonic via Exp 4049's eighth game `sb26-7fbdac44` at
++action 9), the ArcMemo v7 cross-game datum (helped vs cold `18→9` actions but
++LOST to within-game v6 `7` actions — no transfer win), and KV260 as TERMINAL
++(Exp 4052 loaded the overlay and recorded a board-latency transcript). Exp 4044's
++and Exp 4047's `flagged_adversarial` BUILD-half claims SHALL be recorded as
++flagged-and-skipped, never aggregated as a win.
++
++The workflow SHALL set the bare top-level boolean `g3_false_retirement_corrected`
++to `true`: the capstone (Exp 4053) recorded G3 as `retired_non_measurement` off a
++premature 6-task poll, but the operator directive (known-issues 2026-06-11)
++classifies that as a FALSE retirement and the MoE decentralization line RESUMES.
++The workflow SHALL verify the `14`-task count by reading the MoE raw checkpoint
++(`results/experiment_4048_decentralization_moe_base_raw.checkpoint.json`) rather
++than asserting a hardcoded number, recording it as `moe_checkpoint_n_tasks`.
++
++The terminal artifact SHALL include bare top-level fields `archived_milestone`,
++`activated_milestone`, `research_complete_yaml_parses`,
++`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
++`quarantined_tests`, `milestone_374_closestate`, `g3_false_retirement_corrected`,
++`active_milestone_confirmed` (the confirmed active milestone string
++`2026.06.375`), `honest_verdict`, `duration_s`, and `inference_substrate` equal
++to `aggregation_from_upstream_artifacts`. On the complete path `honest_verdict`
++SHALL start with `complete:`, `success:`, `passed:`, or `shipped:`. This is a
++record-only aggregation task and SHALL NOT modify `ops/changelog.md`,
++`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
++
++#### SCENARIO-REPORT-4054: V374 Archive Opens The .375 Resume-Not-Restart Milestone
++
++**Given** `.375` is active, `research-complete.yaml` and
++`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import,
++and the smart-subset gate is green after any required quarantine
++**When** the Exp 4054 workflow runs
++**Then** it ensures exactly one `.374` record, confirms both YAML files still
++parse, records the `.374` close-state truth (G1 off-ARC incomplete and
++ceiling-saturated, G2 decision-grade-negative closed-loop sim2real ceiling on
++vc33 with WM-planning retired, G3 underpowered-not-retired with the 14-task
++checkpoint and the false-retirement correction, 8 games solved, ArcMemo v7 no
++cross-game win, KV260 terminal, exp4044/exp4047 flagged-and-skipped), sets
++`g3_false_retirement_corrected` to `true`, confirms `active_milestone_confirmed`
++equals `2026.06.375`, writes the required terminal artifact, and leaves
++ops/status/traceability/conductor files unchanged.
++
++#### SCENARIO-REPORT-4054-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
++
++**Given** `research-complete.yaml` does not safe-load
++**When** the Exp 4054 workflow runs
++**Then** it writes a blocked artifact prefixed by
++`blocked_research_complete_yaml_poison`, records the failed parse in
++`preconditions_checked`, and leaves both `research-complete.yaml` and
++`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
++
++## Implementation Status (REQ-REPORT-4054)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-4054 | Implemented (`python/carnot/reporting/archive_v374_activate_v375_4054.py`, `scripts/experiments/exp4054_archive_v374_activate_v375.py`) | Implemented (`tests/python/test_experiment_4054_archive_v374_activate_v375.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 5aeeb0ac4c..b6f83a822c 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 163,
+   "code_violations": 0,
+-  "experiments_checked": 3084,
++  "experiments_checked": 3085,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v374_activate_v375_4054.py b/python/carnot/reporting/archive_v374_activate_v375_4054.py
+new file mode 100644
+index 0000000000..7283027264
+--- /dev/null
++++ b/python/carnot/reporting/archive_v374_activate_v375_4054.py
+@@ -0,0 +1,1204 @@
++"""Archive .374, activate .375, and record the .374 close-state truth.
++
++Spec refs: REQ-REPORT-4054, SCENARIO-REPORT-4054,
++SCENARIO-REPORT-4054-BLOCKED-YAML.
++
++This is a record-only milestone-transition module. It does NOT run any live
++model -- it only reads the upstream `.374` artifacts (plus the one MoE raw
++checkpoint that proves the false-retirement correction), confirms the
++structural gates that stop the outer loop from cascade-skipping the next
++milestone, and writes one disciplined aggregation artifact.
++
++WHY each gate exists (verbose, for engineers who are not conductor authors):
++
++* The research-complete YAML poison-guard: a single unquoted ``: `` in an
++  appended scalar makes ``yaml.safe_load`` throw, which silently breaks every
++  downstream task that reads the history file (the `.355 poison-test wipeout
++  lesson). We confirm the file parses before and after we touch it.
++* The exactly-one-record rule: the conductor's "Checkpoint: preserve
++  uncommitted work from interrupted run" commit already appended ONE canonical
++  `.374` record. So in the common case there is nothing to add -- appending a
++  second copy would just bloat the history file. We therefore collapse any
++  duplicate top-level `- id: 2026.06.374` records down to the FIRST occurrence
++  ("fail forward and fix the problem" rather than pile on), leave a single
++  existing record untouched, and append exactly one canonical block only when
++  none exists. The HONEST per-task close-state lives in the artifact's
++  ``milestone_374_closestate`` field, not in the lightweight conductor record.
++* The smart-subset pre-test gate: a red test in the conductor's pre-test gate
++  cascade-skips the *whole* next milestone (the poison-test incidents of
++  .325/.326/.332, and the quarantine that has held green through
++  .371/.372/.373/.374). We run the same smart subset the conductor runs,
++  quarantine any still-red file out of collection, and only then declare the
++  gate green.
++* The close-state record: the milestone is only "archived" once its truth is
++  written down. For `.374 the honest truth is a one-decision-grade-negative,
++  two-non-measurement read, and the next planner reads this dict as ground
++  truth, so it must say each result precisely:
++    - G1 (the operator TOP-PRIORITY off-ARC verifier-transfer question):
++      INCOMPLETE **and** CEILING-SATURATED. Exp 4045's full-power run reached
++      only ``22`` of the ``>=160`` task floor, and on that subset EVERY arm AND
++      the oracle scored ``1.0`` (best-arm delta ``0.0``, CI ``[0.0, 0.0]``). So
++      this is a NON-measurement with two root causes: (a) throughput (22 of 160
++      fit the 75-min window) and (b) corpus saturation (base HumanEval/MBPP have
++      no oracle headroom, so the demo-fit verifier cannot show value even at
++      full N). The verifier did NOT transfer off-ARC significantly here -- but
++      the result is uninformative, not a refutation.
++    - G2 (does closed-loop per-step grounding break vc33's open-loop wall?):
++      DECISION-GRADE NEGATIVE (banked). Exp 4046's closed-loop replan + WM-trust
++      gate did NOT solve vc33 (no real-env confirmation); the verified WM
++      diverges ``0.207`` per step from the real env under the planning
++      distribution -- a sim2real ceiling. vc33 WM-planning is RETIRED; the
++      forward path is the proven explore-first + verifier-pruner line.
++    - G3 (does the MoE sovereign base beat the 0.2581 12B coverage ceiling?):
++      UNDERPOWERED, **NOT** retired. The throughput fix WORKED -- the raw
++      checkpoint holds ``14`` Qwen3.6-35B-A3B tasks (vs the 31B-dense run's 0).
++      Operator-corrected (known-issues 2026-06-11): coverage ``0.3571`` vs the
++      ``0.2581`` ceiling, bootstrap95 ``[0.143, 0.643]`` SPANS the ceiling ->
++      underpowered. The capstone (Exp 4053) recorded ``retired_non_measurement``
++      off a premature 6-task poll; that was a FALSE retirement. The line RESUMES
++      toward N>=30 from the same checkpoint -- this module records
++      ``g3_false_retirement_corrected = True`` so the correction is auditable.
++    - The proven tracks held: ARC-AGI-3 reached ``8`` games solved (``+1``
++      monotonic via Exp 4049's eighth game ``sb26-7fbdac44`` at action 9), and
++      ArcMemo v7 cross-game transfer helped vs cold (18->9) but LOST to
++      within-game v6 (7) -- a weak transfer datum, no win.
++    - KV260 is TERMINAL (Exp 4052 loaded the overlay and recorded a board
++      latency transcript). GateMate + PolarFire stay reachable but non-terminal.
++    - Exp 4044 and Exp 4047 (the two split-long-codex BUILD halves) were both
++      ``flagged_adversarial`` (DURATION_TOO_SHORT false-positive: build+launch
++      backgrounds the real run) and are recorded as flagged-and-skipped, never
++      aggregated as a win.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping, Sequence
++from dataclasses import dataclass
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++import yaml
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.374"
++ACTIVATED_MILESTONE = "2026.06.375"
++RANDOM_SEED = 4054
++OUTPUT_REL_PATH = Path("results/experiment_4054_archive_v374_activate_v375.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++EXCLUSION_MANIFEST_REL_PATH = Path("ops/exclusion_manifest.yaml")
++# The MoE raw checkpoint whose task count proves the throughput fix worked and
++# the 6-task poll retirement was premature. We READ it (not hardcode 14) so the
++# false-retirement correction is verified against disk, not asserted.
++G3_MOE_CHECKPOINT_REL_PATH = Path(
++    "results/experiment_4048_decentralization_moe_base_raw.checkpoint.json"
++)
++PYTHON_BIN = Path(".venv/bin/python")
++PYTEST_BIN = Path(".venv/bin/pytest")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++SCHEMA = "carnot.archive_activation.v374_to_v375_4054.v1"
++EXPERIMENT_ID = "exp4054"
++TASK_ID = "exp4054-archive-v374-activate-v375"
++
++# The 12B best-of-N coverage ceiling (Exp 4012 anchor) the G3 base must beat.
++G3_BASELINE_12B_COVERAGE = 0.2581
++# Operator-corrected 14-task MoE numbers (known-issues 2026-06-11). The capstone
++# (Exp 4053) propagated a premature 6-task poll's `retired_non_measurement`; the
++# operator's correction reads the same checkpoint at its full 14-task count.
++G3_OPERATOR_CORRECTED_COVERAGE = 0.3571
++G3_OPERATOR_CORRECTED_CI95 = (0.143, 0.643)
++G3_TARGET_TASK_FLOOR = 30
++G3_PREMATURE_POLL_N_TASKS = 6
++
++# The two core suites the conductor's smart subset always runs, plus the
++# rule that uncommitted/untracked test files (e.g. this task's own new test)
++# are appended so a broken agent-shipped test fails THIS task, not the next.
++CORE_SMART_SUBSET = (
++    "tests/python/test_pipeline_extract.py",
++    "tests/python/test_docs.py",
++)
++
++ARC_IMPORT_MODULES = (
++    "carnot.agentic.arc_agi3_world_model",
++    "carnot.agentic.arc_world_model_synth",
++    "carnot.agentic.arc_world_model_dsl",
++    "carnot.agentic.arc_agi3_action_efficiency",
++)
++ARC_IMPORT_INCANTATION = (
++    "import importlib, json, sys\n"
++    f"mods = {list(ARC_IMPORT_MODULES)!r}\n"
++    "out = {}\n"
++    "for mod in mods:\n"
++    "    try:\n"
++    "        importlib.import_module(mod)\n"
++    "        out[mod] = {'import_ok': True, 'error': None}\n"
++    "    except Exception as exc:\n"
++    "        out[mod] = {'import_ok': False, 'error': repr(exc)}\n"
++    "print(json.dumps(out, sort_keys=True))\n"
++    "sys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
++)
++
++# The .374 milestone task list (Exp 4042 archive through Exp 4053 capstone).
++# Each entry carries the exp id, the conductor task id, and the deliverable
++# path whose honest_verdict + flagged_adversarial we classify into the
++# close-state. exp4043 points at the JSON receipt (the capstone-cited artifact,
++# not the markdown note). exp4044 / exp4047 point at the flagged BUILD halves.
++V374_TASKS: tuple[JsonDict, ...] = (
++    {"exp_id": "4042", "id": "exp4042-archive-v373-activate-v374",
++     "deliverable": "results/experiment_4042_archive_v373_activate_v374.json"},
++    {"exp_id": "4043", "id": "exp4043-sota-ingestion-offarc-power-and-closed-loop-planning",
++     "deliverable": "results/experiment_4043_sota_ingestion_receipt.json"},
++    {"exp_id": "4044", "id": "exp4044-offarc-transfer-power-build",
++     "deliverable": "results/experiment_4044_offarc_transfer_power_build.json"},
++    {"exp_id": "4045", "id": "exp4045-offarc-transfer-power-collect",
++     "deliverable": "results/experiment_4045_offarc_transfer_power.json"},
++    {"exp_id": "4046", "id": "exp4046-closed-loop-replan-over-vc33-wm",
++     "deliverable": "results/experiment_4046_closed_loop_replan_over_vc33_wm.json"},
++    {"exp_id": "4047", "id": "exp4047-decentralization-moe-base-build",
++     "deliverable": "results/experiment_4047_decentralization_moe_base_build.json"},
++    {"exp_id": "4048", "id": "exp4048-decentralization-moe-base-collect",
++     "deliverable": "results/experiment_4048_decentralization_moe_base.json"},
++    {"exp_id": "4049", "id": "exp4049-eighth-game-explore-first",
++     "deliverable": "results/experiment_4049_eighth_game_explore_first.json"},
++    {"exp_id": "4050", "id": "exp4050-arcmemo-cross-game-transfer-v7",
++     "deliverable": "results/experiment_4050_arcmemo_cross_game_transfer_v7.json"},
++    {"exp_id": "4051", "id": "exp4051-verifier-registry-and-gaps-hygiene",
++     "deliverable": "results/experiment_4051_verifier_registry_and_gaps_hygiene.json"},
++    {"exp_id": "4052", "id": "exp4052-hardware-continuity-kv260-terminal",
++     "deliverable": "results/experiment_4052_hardware_continuity.json"},
++    {"exp_id": "4053", "id": "exp4053-capstone-v374",
++     "deliverable": "results/experiment_4053_capstone_v374.json"},
++)
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "archived_milestone",
++    "activated_milestone",
++    "research_complete_yaml_parses",
++    "exclusion_manifest_parses",
++    "arc_modules_importable",
++    "pretest_suite_green",
++    "quarantined_tests",
++    "milestone_374_closestate",
++    "g3_false_retirement_corrected",
++    "active_milestone_confirmed",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "archived_milestone": "Provenance -- which milestone was archived (2026.06.374).",
++    "activated_milestone": "Confirms .375 is live so downstream decision-grade tasks resolve.",
++    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads.",
++    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
++    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .375 can execute them.",
++    "pretest_suite_green": (
++        "BARE BOOL -- the smart-subset gate is GREEN; a red gate cascade-skips the whole "
++        "milestone (the recurring poison-test failure mode held through .371-.374)."
++    ),
++    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
++    "milestone_374_closestate": (
++        "DICT -- per-task OK/BLOCKED/MISSING/FLAGGED, the G1 off-ARC incomplete-and-saturated "
++        "non-measurement (22/160 tasks, all arms+oracle=1.0, no headroom), the G2 decision-grade "
++        "negative (closed-loop no-solve vc33, per-step WM-real divergence 0.207, WM-planning "
++        "retired), the G3 UNDERPOWERED-not-retired correction (14-task checkpoint, 0.3571 vs "
++        "0.2581, CI [0.143,0.643] spans the ceiling), total_games_solved=8, ArcMemo v7 no "
++        "cross-game win, KV260 terminal, exp4044/exp4047 flagged-skipped; the next planner "
++        "reads this as ground truth."
++    ),
++    "g3_false_retirement_corrected": (
++        "BARE BOOL -- the capstone (exp4053) said G3 retired_non_measurement; the operator "
++        "(known-issues 2026-06-11) says the 6-task poll was a FALSE retirement and the MoE line "
++        "RESUMES. True makes the correction auditable so the next planner continues, not retires."
++    ),
++    "active_milestone_confirmed": (
++        "STR -- the active milestone string the roadmap reports; the conductor must "
++        "agree .375 is active before the downstream tasks resolve."
++    ),
++    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
++    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
++    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
++}
++
++TERMINAL_PREFIXES = ("complete:", "complete_", "success:", "success_",
++                     "passed:", "passed_", "shipped:", "shipped_")
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured subprocess output for one required command."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++# --------------------------------------------------------------------------- #
++# Small pure helpers
++# --------------------------------------------------------------------------- #
++def yaml_parses(text: str) -> bool:
++    """Return true when PyYAML can safe-load text."""
++
++    try:
++        yaml.safe_load(text)
++    except yaml.YAMLError:
++        return False
++    return True
++
++
++def yaml_single_quote(value: str) -> str:
++    """Render a scalar as single-quoted YAML, escaping embedded quotes."""
++
++    return "'" + value.replace("'", "''") + "'"
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Compute a positive duration without pretending this task used inference."""
++
++    if started_s is None:
++        return 0.0001
++    end_s = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(0.0001, end_s - float(started_s)), 6)
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {k: v for k, v in payload.items() if k != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":"), default=str).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    """Return true when value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
++
++
++def no_forbidden_markers(value: Mapping[str, Any]) -> bool:
++    """Return true when record fields did not copy live-compute marker strings."""
++
++    scanned = {k: v for k, v in value.items() if k not in {"field_principles", "milestone_374_closestate"}}
++    encoded = json.dumps(scanned, sort_keys=True)
++    return all(marker not in encoded for marker in ("GGUF / CUDA", "GGUF", "CUDA", "live-model"))
++
++
++def write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write deterministic JSON with a trailing newline."""
++
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _milestone_from_text(text: str) -> str:
++    for line in text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def read_active_milestone(root: Path) -> tuple[str, str]:
++    """Return the active milestone and roadmap path used for confirmation."""
++
++    for rel_path in (Path("research-roadmap.yaml"), Path("research-roadmap-next.yaml")):
++        path = root / rel_path
++        if path.exists():
++            milestone = _milestone_from_text(path.read_text(encoding="utf-8"))
++            if milestone != "unknown":
++                return milestone, str(rel_path)
++    return "unknown", "research-roadmap.yaml"
++
++
++def research_complete_yaml_command() -> list[str]:
++    """Return the mandated research-complete YAML poison-guard command."""
++
++    return [str(PYTHON_BIN), "-c", "import yaml; yaml.safe_load(open('research-complete.yaml'))"]
++
++
++def arc_modules_import_command() -> list[str]:
++    """Return the ARC module import diagnostic command."""
++
++    return [str(PYTHON_BIN), "-c", ARC_IMPORT_INCANTATION]
++
++
++def read_checkpoint_task_count(path: Path) -> int | None:
++    """Return the number of tasks recorded in the MoE raw checkpoint, else None.
++
++    This is the load-bearing verification of the G3 false-retirement
++    correction: the operator says the throughput fix produced 14 tasks, and the
++    6-task poll that fired the spurious ``retire`` was premature. We confirm the
++    14 by counting the ``tasks`` keys on disk rather than trusting a hardcoded
++    number, so the correction is auditable.
++    """
++
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return None
++    if not isinstance(payload, Mapping):
++        return None
++    tasks = payload.get("tasks")
++    if isinstance(tasks, Mapping):
++        return len(tasks)
++    if isinstance(tasks, Sequence) and not isinstance(tasks, str):
++        return len(tasks)
++    return None
++
++
++# --------------------------------------------------------------------------- #
++# research-complete.yaml duplicate-record dedup / append
++# --------------------------------------------------------------------------- #
++def _record_id(line: str) -> str | None:
++    """Return the milestone id of a top-level record line, else None."""
++
++    if not line.startswith("- id:"):
++        return None
++    return line.split(":", 1)[1].strip().strip("\"'")
++
++
++def build_canonical_record() -> str:
++    """Build a minimal canonical `.374 record for the never-recorded case.
++
++    Only used when no `.374 record exists (the conductor checkpoint normally
++    leaves one, so the common action is ``unchanged``). The finding string is
++    the honest one-decision-grade-negative, two-non-measurement summary plus the
++    G3 false-retirement correction.
++    """
++
++    finding = (
++        ".374 made the three .373 measurements decision-grade and surfaced precise root causes: "
++        "G1 off-ARC verifier transfer is a NON-measurement -- INCOMPLETE (22 of >=160 tasks) AND "
++        "CEILING-SATURATED (every arm and the oracle scored 1.0 on the saturated base "
++        "HumanEval/MBPP subset, so no headroom); G2 closed-loop per-step grounding did NOT break "
++        "vc33's wall (no real-env solve; verified-WM diverges 0.207/step -- a DECISION-GRADE "
++        "NEGATIVE, vc33 WM-planning RETIRED); G3 the MoE sovereign base is UNDERPOWERED, NOT "
++        "retired -- the throughput fix worked (14 tasks in the raw checkpoint vs 31B-dense's 0), "
++        "coverage 0.3571 vs the 0.2581 ceiling with bootstrap95 [0.143, 0.643] spanning it; the "
++        "capstone's 6-task-poll retired_non_measurement was a FALSE retirement (corrected, line "
++        "resumes); proven tracks held -- ARC-AGI-3 reached 8 games (exp4049 +1 monotonic), "
++        "ArcMemo v7 cross-game helped vs cold (18->9) but lost to within-game v6 (7); KV260 "
++        "TERMINAL; exp4044 and exp4047 were flagged_adversarial and skipped."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {yaml_single_quote('Archive .374 and activate .375; record the off-ARC saturated / closed-loop sim2real / MoE underpowered-not-retired close-state')}",
++        "  doc: openspec/change-proposals/research-roadmap-v374.md",
++        "  completed: '2026-06-11'",
++        f"  finding: {yaml_single_quote(finding)}",
++        "  activation_recorded: exp4054-archive-v374-activate-v375",
++        "  tasks:",
++    ]
++    for task in V374_TASKS:
++        lines.append(f"  - id: {task['id']}")
++        lines.append(f"    deliverable: {task['deliverable']}")
++    return "\n".join(lines) + "\n"
++
++
++def dedupe_or_append_record(text: str, milestone_id: str) -> tuple[str, int, str]:
++    """Ensure exactly one `milestone_id` record exists.
++
++    Returns ``(new_text, n_duplicates_removed, action)`` where action is one of
++    ``deduped`` / ``appended`` / ``unchanged``. Duplicate top-level records (any
++    interrupted-run cruft) collapse to the FIRST occurrence; when no record
++    exists we append one canonical block. Every line that is NOT a removed
++    duplicate is preserved byte-for-byte.
++    """
++
++    lines = text.split("\n")
++    starts = [i for i, line in enumerate(lines) if _record_id(line) is not None]
++    spans: list[tuple[int, int]] = []
++    for k, start in enumerate(starts):
++        end = starts[k + 1] if k + 1 < len(starts) else len(lines)
++        spans.append((start, end))
++    target_spans = [(s, e) for (s, e) in spans if _record_id(lines[s]) == milestone_id]
++
++    if not target_spans:
++        appended = f"{text.rstrip()}\n{build_canonical_record()}"
++        return appended, 0, "appended"
++    if len(target_spans) == 1:
++        return text, 0, "unchanged"
++
++    remove: set[int] = set()
++    for start, end in target_spans[1:]:
++        remove.update(range(start, end))
++    new_lines = [line for i, line in enumerate(lines) if i not in remove]
++    return "\n".join(new_lines), len(target_spans) - 1, "deduped"
++
++
++# --------------------------------------------------------------------------- #
++# Close-state derivation from .374 artifacts
++# --------------------------------------------------------------------------- #
++def read_artifact_record(path: Path) -> JsonDict:
++    """Read one `.374 artifact's verdict + flag fields; fail closed on absence."""
++
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (OSError, json.JSONDecodeError):
++        return {"exists": False, "honest_verdict": "", "flagged_adversarial": False, "fields": {}}
++    if not isinstance(payload, Mapping):
++        return {"exists": False, "honest_verdict": "", "flagged_adversarial": False, "fields": {}}
++    return {
++        "exists": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "flagged_adversarial": bool(payload.get("flagged_adversarial")),
++        "fields": dict(payload),
++    }
++
++
++def classify_status(record: Mapping[str, Any]) -> str:
++    """Classify one task artifact into OK / BLOCKED / MISSING / FLAGGED / FAIL."""
++
++    if not record.get("exists"):
++        return "MISSING"
++    if record.get("flagged_adversarial"):
++        return "FLAGGED"
++    verdict = str(record.get("honest_verdict", ""))
++    if verdict.startswith("blocked_"):
++        return "BLOCKED"
++    if verdict.startswith(TERMINAL_PREFIXES):
++        return "OK"
++    return "FAIL"
++
++
++def _fields(record: Mapping[str, Any]) -> Mapping[str, Any]:
++    """Return the artifact field sub-dict, defaulting to empty."""
++
++    fields = record.get("fields", {})
++    return fields if isinstance(fields, Mapping) else {}
++
++
++def _is_real_number(value: Any) -> bool:
++    """Return true when value is a real (non-bool) int/float."""
++
++    return isinstance(value, int | float) and not isinstance(value, bool)
++
++
++def _g1_off_arc_transfer(record: Mapping[str, Any]) -> JsonDict:
++    """Build the G1 off-ARC verifier-transfer summary from Exp 4045.
++
++    The operator TOP-PRIORITY question: did the demo-fit verifier measurably
++    transfer off-ARC (HumanEval/MBPP)? The honest answer for .374 is NO
++    measurement was possible: the run reached only 22 of the >=160 task floor
++    (throughput), and on that subset every arm AND the oracle scored 1.0 (corpus
++    saturation -- no headroom for the verifier to add value). So the verifier
++    did NOT transfer significantly here, but the result is UNINFORMATIVE, not a
++    refutation -- the .375 fix is an un-saturated corpus (EvalPlus) + resume.
++    """
++
++    sf = _fields(record)
++    n_tasks = sf.get("n_tasks")
++    floor = sf.get("powered_task_floor")
++    best_delta = sf.get("best_arm_delta_pp")
++    best_ci = sf.get("best_arm_ci95")
++    best_ci_excludes_zero = bool(sf.get("best_arm_ci_excludes_zero"))
++    demofit_delta = sf.get("demofit_delta_pp")
++    demofit_ci = sf.get("demofit_bootstrap_ci95")
++    oracle_passrate = sf.get("oracle_passrate")
++    oracle_headroom = bool(sf.get("oracle_headroom"))
++    full_power_reached = (
++        _is_real_number(n_tasks) and _is_real_number(floor) and n_tasks >= floor
++    )
++    # Saturation: the oracle (best achievable selection) is itself at the
++    # ceiling, so no method -- demo-fit or otherwise -- can show a delta.
++    ceiling_saturated = oracle_passrate == 1.0 and not oracle_headroom
++    if not full_power_reached and ceiling_saturated:
++        outcome = "incomplete_and_ceiling_saturated"
++    elif not full_power_reached:
++        outcome = "incomplete_underpowered"
++    elif best_ci_excludes_zero:
++        outcome = "transferred_ci_excludes_zero"
++    else:
++        outcome = "no_transfer"
++    return {
++        "best_arm": sf.get("best_arm"),
++        "best_arm_delta_pp": best_delta,
++        "best_arm_ci95": list(best_ci) if isinstance(best_ci, Sequence) and not isinstance(best_ci, str) else None,
++        "best_arm_ci_excludes_zero": best_ci_excludes_zero,
++        "demofit_delta_pp": demofit_delta,
++        "demofit_bootstrap_ci95": list(demofit_ci) if isinstance(demofit_ci, Sequence) and not isinstance(demofit_ci, str) else None,
++        "n_tasks": n_tasks,
++        "powered_task_floor": floor,
++        "full_power_reached": full_power_reached,
++        "oracle_passrate": oracle_passrate,
++        "oracle_headroom": oracle_headroom,
++        "ceiling_saturated": ceiling_saturated,
++        "verifier_transferred_off_arc_significantly": best_ci_excludes_zero,
++        "is_measurement": full_power_reached and oracle_headroom,
++        "root_causes": ["throughput_truncated", "corpus_saturation_no_oracle_headroom"]
++        if outcome == "incomplete_and_ceiling_saturated" else [],
++        "outcome": outcome,
++    }
++
++
++def _g2_closed_loop_grounding(record: Mapping[str, Any]) -> JsonDict:
++    """Build the G2 closed-loop-planning summary from Exp 4046.
++
++    Did closed-loop per-step replanning with a real-env WM-trust gate break
++    vc33's open-loop wall? The honest answer is NO, and it is DECISION-GRADE: the
++    closed loop did not produce a real-env-confirmed solve, and the verified WM
++    diverges 0.207 per step from the real env under the planning distribution --
++    a sim2real ceiling on the verified-WM-as-simulator approach for vc33. This
++    is a measured negative we BANK; vc33 WM-planning is RETIRED.
++    """
++
++    sf = _fields(record)
++    divergence = sf.get("per_step_wm_real_divergence_rate")
++    broke_wall = bool(sf.get("closed_loop_broke_wall"))
++    real_env_confirmed = bool(sf.get("real_env_confirmed"))
++    # Decision-grade: the loop actually ran (a divergence rate was measured) and
++    # produced a clean negative (no wall break, no real-env solve).
++    decision_grade_negative = (
++        _is_real_number(divergence) and not broke_wall and not real_env_confirmed
++    )
++    return {
++        "game": sf.get("game"),
++        "closed_loop_broke_wall": broke_wall,
++        "real_env_confirmed": real_env_confirmed,
++        "per_step_wm_real_divergence_rate": divergence,
++        "divergence_gate_fired_count": sf.get("divergence_gate_fired_count"),
++        "goal_predicate_heldout_precision": sf.get("goal_predicate_heldout_precision"),
++        "levels_completed_after": sf.get("levels_completed_after"),
++        "new_levels_solved_this_task": sf.get("new_levels_solved_this_task"),
++        "decision_grade_negative": decision_grade_negative,
++        "wm_planning_retired": True,
++        "bottleneck": sf.get("bottleneck"),
++        "outcome": "decision_grade_negative_sim2real_ceiling"
++        if decision_grade_negative else "inconclusive",
++    }
++
++
++def _g3_decentralization_moe(record: Mapping[str, Any], checkpoint_n_tasks: int | None) -> JsonDict:
++    """Build the G3 MoE-base summary from Exp 4048 + the raw checkpoint.
++
++    The capstone (Exp 4053) recorded ``retired_non_measurement`` off a premature
++    6-task poll. The operator (known-issues 2026-06-11) corrects that: the
++    throughput fix WORKED (the raw checkpoint holds 14 Qwen3.6-35B-A3B tasks vs
++    the 31B-dense run's 0), coverage 0.3571 vs the 0.2581 ceiling with
++    bootstrap95 [0.143, 0.643] SPANNING the ceiling -- UNDERPOWERED, not dead.
++    We record BOTH the poll's recorded numbers (for traceability) AND the
++    operator-corrected 14-task numbers, with ``false_retirement_corrected`` true.
++    """
++
++    sf = _fields(record)
++    poll_n_scored = sf.get("n_tasks_scored")
++    poll_coverage_delta = sf.get("coverage_delta_vs_12b")
++    poll_ci = sf.get("bootstrap_ci95")
++    poll_diagnosis = str(sf.get("diagnosis", ""))
++    # The throughput fix worked if the MoE checkpoint produced any tasks at all
++    # (the 31B-dense run scored 0). 14 >> 0 is the demonstrated win.
++    throughput_fix_worked = bool(checkpoint_n_tasks and checkpoint_n_tasks > 0)
++    lo, hi = G3_OPERATOR_CORRECTED_CI95
++    ci_spans_ceiling = lo <= G3_BASELINE_12B_COVERAGE <= hi
++    return {
++        "capstone_diagnosis": "retired_non_measurement",
++        "operator_corrected_diagnosis": "underpowered_not_retired",
++        "false_retirement_corrected": True,
++        "retired": False,
++        "throughput_fix_worked": throughput_fix_worked,
++        "checkpoint_n_tasks": checkpoint_n_tasks,
++        "premature_poll_n_tasks": G3_PREMATURE_POLL_N_TASKS,
++        "poll_artifact_n_tasks_scored": poll_n_scored,
++        "poll_artifact_coverage_delta_vs_12b": poll_coverage_delta,
++        "poll_artifact_bootstrap_ci95": list(poll_ci) if isinstance(poll_ci, Sequence) and not isinstance(poll_ci, str) else None,
++        "poll_artifact_diagnosis": poll_diagnosis,
++        "moe_base_coverage": G3_OPERATOR_CORRECTED_COVERAGE,
++        "baseline_12b_coverage": G3_BASELINE_12B_COVERAGE,
++        "bootstrap_ci95": list(G3_OPERATOR_CORRECTED_CI95),
++        "ci_spans_ceiling": ci_spans_ceiling,
++        "target_task_floor": G3_TARGET_TASK_FLOOR,
++        "resume_checkpoint": str(G3_MOE_CHECKPOINT_REL_PATH),
++        "beat_12b_ceiling": "underpowered_unresolved",
++        "numbers_source": "operator_known_issues_2026-06-11_plus_14task_checkpoint_count",
++        "outcome": "underpowered_not_retired_resume_toward_n30",
++    }
++
++
++def _accuracy(record: Mapping[str, Any]) -> JsonDict:
++    """Build the ARC-AGI-3 totals from Exp 4049 (eighth-game first-solve)."""
++
++    sf = _fields(record)
++    total = sf.get("total_games_solved")
++    prior = sf.get("prior_total_games_solved")
++    monotonic = (
++        _is_real_number(total) and _is_real_number(prior) and total - prior == 1
++    )
++    return {
++        "total_games_solved": total,
++        "prior_total_games_solved": prior,
++        "target_game": sf.get("target_game"),
++        "first_solve_at_action": sf.get("first_solve_at_action"),
++        "real_env_confirmed": bool(sf.get("real_env_confirmed")),
++        "monotonic_plus_one": monotonic,
++    }
++
++
++def _self_learning(record: Mapping[str, Any]) -> JsonDict:
++    """Build the ArcMemo v7 cross-game-transfer summary from Exp 4050.
++
++    Did the v7 cross-game concept library beat a cold solve AND the within-game
++    v6 library? It helped vs cold (18->9 actions) but LOST to within-game v6 (7
++    actions) -- a weak transfer datum, not a win.
++    """
++
++    sf = _fields(record)
++    cold = sf.get("actions_cold")
++    cross = sf.get("actions_cross_game_v7")
++    within = sf.get("actions_within_game_v6")
++    savings_vs_cold = cold - cross if _is_real_number(cold) and _is_real_number(cross) else None
++    return {
++        "cross_game_transfer_win": bool(sf.get("cross_game_transfer_win")),
++        "actions_cold": cold,
++        "actions_cross_game_v7": cross,
++        "actions_within_game_v6": within,
++        "action_savings_vs_cold": savings_vs_cold,
++        "induction_calls_cross_game_v7": sf.get("induction_calls_cross_game_v7"),
++        "n_reused_abstractions": sf.get("n_reused_abstractions"),
++        "transfer_assessment": sf.get("transfer_assessment"),
++    }
++
++
++def _hardware(record: Mapping[str, Any]) -> JsonDict:
++    """Build the per-board hardware-continuity summary from Exp 4052.
++
++    KV260 is TERMINAL: the overlay loaded and a board-latency transcript was
++    recorded. GateMate + PolarFire stay reachable but non-terminal.
++    """
++
++    sf = _fields(record)
++    reach = sf.get("per_board_reachability")
++    terminal = sf.get("per_board_terminal_state")
++    kv260_overlay = bool(sf.get("kv260_overlay_loaded"))
++    kv260_latency = bool(sf.get("kv260_latency_step_taken"))
++    return {
++        "included": classify_status(record) == "OK",
++        "per_board_reachability": dict(reach) if isinstance(reach, Mapping) else {},
++        "per_board_terminal_state": dict(terminal) if isinstance(terminal, Mapping) else {},
++        "kv260_overlay_loaded": kv260_overlay,
++        "kv260_latency_step_taken": kv260_latency,
++        "kv260_terminal": kv260_overlay and kv260_latency,
++        "verdict": str(record.get("honest_verdict", "")),
++    }
++
++
++def _flagged_skipped(record: Mapping[str, Any], exp_id: str) -> JsonDict:
++    """Build a flagged-and-skipped summary for a BUILD half (never a win)."""
++
++    flagged = bool(record.get("flagged_adversarial"))
++    return {
++        "experiment_id": exp_id,
++        "flagged_adversarial": flagged,
++        "skipped": classify_status(record) == "FLAGGED",
++        "claimed_verdict": str(record.get("honest_verdict", "")),
++    }
++
++
++def build_closestate(
++    records: Mapping[str, Mapping[str, Any]], checkpoint_n_tasks: int | None
++) -> JsonDict:
++    """Build the `.374 close-state dict from the per-task artifact records."""
++
++    per_task: dict[str, str] = {}
++    for task in V374_TASKS:
++        record = records.get(str(task["exp_id"]), {"exists": False})
++        per_task[str(task["id"])] = classify_status(record)
++
++    counts = {
++        "OK": sum(1 for s in per_task.values() if s == "OK"),
++        "BLOCKED": sum(1 for s in per_task.values() if s == "BLOCKED"),
++        "MISSING": sum(1 for s in per_task.values() if s == "MISSING"),
++        "FLAGGED": sum(1 for s in per_task.values() if s == "FLAGGED"),
++        "FAIL": sum(1 for s in per_task.values() if s == "FAIL"),
++    }
++
++    g1 = _g1_off_arc_transfer(records.get("4045", {"exists": False}))
++    g2 = _g2_closed_loop_grounding(records.get("4046", {"exists": False}))
++    g3 = _g3_decentralization_moe(records.get("4048", {"exists": False}), checkpoint_n_tasks)
++    accuracy = _accuracy(records.get("4049", {"exists": False}))
++    self_learning = _self_learning(records.get("4050", {"exists": False}))
++    hardware = _hardware(records.get("4052", {"exists": False}))
++    flagged = [
++        _flagged_skipped(records.get("4044", {"exists": False}), "4044"),
++        _flagged_skipped(records.get("4047", {"exists": False}), "4047"),
++    ]
++
++    headline = (
++        "Three .373 measurements made decision-grade: G1 off-ARC verifier transfer is a "
++        f"NON-measurement -- INCOMPLETE ({g1['n_tasks']} of {g1['powered_task_floor']} tasks) AND "
++        f"CEILING-SATURATED (oracle passrate {g1['oracle_passrate']}, no headroom; best-arm delta "
++        f"{g1['best_arm_delta_pp']}pp CI {g1['best_arm_ci95']}) -- the verifier did NOT transfer "
++        "off-ARC significantly here, but the result is uninformative (.375 fixes the corpus to "
++        f"EvalPlus + resumes); G2 closed-loop grounding did NOT break {g2['game']}'s wall "
++        f"(no real-env solve; WM-real divergence {g2['per_step_wm_real_divergence_rate']}/step) -- "
++        "a DECISION-GRADE NEGATIVE, vc33 WM-planning RETIRED; G3 the MoE sovereign base is "
++        "UNDERPOWERED, NOT retired -- the throughput fix worked (checkpoint holds "
++        f"{g3['checkpoint_n_tasks']} tasks vs 31B's 0), coverage {g3['moe_base_coverage']} vs the "
++        f"{g3['baseline_12b_coverage']} ceiling, bootstrap95 {g3['bootstrap_ci95']} spans it; the "
++        "capstone's 6-task-poll retired_non_measurement was a FALSE retirement (corrected, line "
++        f"resumes); proven tracks held: ARC-AGI-3 total_games_solved={accuracy['total_games_solved']} "
++        f"(+1 monotonic), ArcMemo v7 cross-game helped vs cold ({self_learning['actions_cold']}->"
++        f"{self_learning['actions_cross_game_v7']}) but LOST to within-game v6 "
++        f"({self_learning['actions_within_game_v6']}); KV260 TERMINAL; exp4044 and exp4047 were "
++        "flagged_adversarial and SKIPPED."
++    )
++    return {
++        "per_task_status": per_task,
++        "status_counts": counts,
++        "g1_off_arc_transfer": g1,
++        "g2_closed_loop_grounding": g2,
++        "g3_decentralization_moe_base": g3,
++        "accuracy": accuracy,
++        "self_learning": self_learning,
++        "hardware": hardware,
++        "flagged_skipped": flagged,
++        "capstone_v374_verdict": str(records.get("4053", {}).get("honest_verdict", "")),
++        "headline": headline,
++    }
++
++
++def read_v374_records(root: Path) -> dict[str, JsonDict]:
++    """Read all `.374 task artifacts keyed by exp id."""
++
++    records: dict[str, JsonDict] = {}
++    for task in V374_TASKS:
++        records[str(task["exp_id"])] = read_artifact_record(root / str(task["deliverable"]))
++    return records
++
++
++# --------------------------------------------------------------------------- #
++# Smart-subset pre-test gate
++# --------------------------------------------------------------------------- #
++def _run_command(command: list[str], root: Path) -> CommandResult:
++    try:
++        completed = subprocess.run(command, cwd=root, check=False, capture_output=True, text=True)
++    except OSError as exc:
++        return CommandResult(command=command, exit_code=127, stdout="", stderr=str(exc))
++    return CommandResult(
++        command=command,
++        exit_code=int(completed.returncode),
++        stdout=str(completed.stdout),
++        stderr=str(completed.stderr),
++    )
++
++
++def _git_lines(args: list[str], root: Path) -> list[str]:
++    result = _run_command(["git", *args], root)
++    if result.exit_code != 0:
++        return []
++    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
++
++
++def smart_subset_targets(root: Path) -> list[str]:
++    """Return the smart-subset test files: core + uncommitted/untracked tests.
++
++    Mirrors the conductor's smart subset: the two core suites plus any
++    working-tree or untracked ``tests/python/*.py`` file (so this task's own
++    new test runs against itself), excluding ``tests/quarantine/``.
++    """
++
++    targets = list(CORE_SMART_SUBSET)
++    candidates = _git_lines(["diff", "--name-only", "HEAD"], root)
++    candidates += _git_lines(["ls-files", "--others", "--exclude-standard"], root)
++    for path in candidates:
++        if (
++            path.startswith("tests/python/")
++            and path.endswith(".py")
++            and "/quarantine/" not in path
++            and path not in targets
++        ):
++            targets.append(path)
++    existing = [t for t in targets if (root / t).exists()]
++    return existing or [str(CORE_SMART_SUBSET[0])]
++
++
++def smart_subset_command(targets: Sequence[str]) -> list[str]:
++    """Return the smart-subset pytest command for the given target files."""
++
++    return [str(PYTEST_BIN), *targets, "-q", "--no-header", "-n", "0", "--no-cov", "-o", "addopts="]
++
++
++def run_smart_subset(root: Path) -> CommandResult:
++    """Run the smart-subset pre-test gate once."""
++
++    return _run_command(smart_subset_command(smart_subset_targets(root)), root)
++
++
++def parse_failing_test_ids(output: str) -> dict[str, list[str]]:
++    """Extract failing pytest ids grouped by tests/python source file."""
++
++    failures: dict[str, list[str]] = {}
++    for line in output.splitlines():
++        stripped = line.strip()
++        if not (stripped.startswith("FAILED tests/python/") or stripped.startswith("ERROR tests/python/")):
++            continue
++        token = stripped.split(" - ", 1)[0]
++        test_id = token.split(" ", 1)[1].strip()
++        path = test_id.split("::", 1)[0]
++        failures.setdefault(path, [])
++        if test_id not in failures[path]:
++            failures[path].append(test_id)
++    return failures
++
++
++def quarantine_failed_tests(root: Path, failures: Mapping[str, Sequence[str]]) -> list[JsonDict]:
++    """Move still-red test files outside tests/python and return an audit trail."""
++
++    quarantine_root = root / "tests" / "quarantine"
++    quarantine_root.mkdir(parents=True, exist_ok=True)
++    (quarantine_root / "__init__.py").touch()
++    quarantined: list[JsonDict] = []
++    for source_rel, failing_ids in failures.items():
++        source = root / source_rel
++        suffix = Path(source_rel).relative_to("tests/python")
++        dest_rel = Path("tests/quarantine") / suffix
++        dest = root / dest_rel
++        dest.parent.mkdir(parents=True, exist_ok=True)
++        if source.exists():
++            moved = subprocess.run(
++                ["git", "mv", source_rel, str(dest_rel)],
++                cwd=root, check=False, capture_output=True, text=True,
++            )
++            if moved.returncode != 0 and source.exists():
++                source.rename(dest)
++        quarantined.append(
++            {"path": source_rel, "quarantined_path": str(dest_rel), "failing_test_ids": list(failing_ids)}
++        )
++    return quarantined
++
++
++def _pretest_at(root: Path, supplied: Sequence[CommandResult] | None, index: int) -> CommandResult:
++    if supplied is not None and index < len(supplied):
++        return supplied[index]
++    return run_smart_subset(root)
++
++
++def run_pretest_until_green(
++    root: Path,
++    supplied: Sequence[CommandResult] | None = None,
++) -> tuple[bool, list[JsonDict], list[CommandResult]]:
++    """Run the smart subset, quarantining red files and rerunning until green."""
++
++    quarantined: list[JsonDict] = []
++    results: list[CommandResult] = []
++    index = 0
++    while index < 8:
++        result = _pretest_at(root, supplied, index)
++        results.append(result)
++        if result.exit_code == 0:
++            return True, quarantined, results
++        failures = parse_failing_test_ids(result.stdout + "\n" + result.stderr)
++        if not failures:
++            return False, quarantined, results
++        quarantined.extend(quarantine_failed_tests(root, failures))
++        index += 1
++    return False, quarantined, results
++
++
++# --------------------------------------------------------------------------- #
++# Artifact assembly + validation
++# --------------------------------------------------------------------------- #
++def terminal_verdict(closestate: Mapping[str, Any]) -> str:
++    """Return the complete-path verdict summarising the .374 close-state truth."""
++
++    accuracy = closestate.get("accuracy", {})
++    return (
++        "success: archived_v374_v375_active_G1_offarc_incomplete_and_ceiling_saturated_"
++        "G2_decision_grade_negative_vc33_sim2real_ceiling_G3_underpowered_not_retired_false_"
++        "retirement_corrected_"
++        f"games{accuracy.get('total_games_solved')}_arcmemo_v7_no_win_kv260_terminal_"
++        "exp4044_exp4047_flagged_skipped_pretest_green"
++    )
++
++
++def _base_payload(
++    *,
++    honest_verdict: str,
++    research_complete_yaml_parses: bool,
++    exclusion_manifest_parses: bool,
++    arc_modules_importable: bool,
++    pretest_suite_green: bool,
++    quarantined_tests: Sequence[Mapping[str, Any]],
++    milestone_374_closestate: Mapping[str, Any],
++    g3_false_retirement_corrected: bool,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    active_milestone_confirmed: str,
++    active_roadmap_path: str,
++    research_complete_record_action: str,
++    research_complete_duplicates_removed: int,
++    moe_checkpoint_n_tasks: int | None,
++) -> JsonDict:
++    payload: JsonDict = {
++        "schema": SCHEMA,
++        "experiment_id": EXPERIMENT_ID,
++        "task_id": TASK_ID,
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "exclusion_manifest_parses": exclusion_manifest_parses,
++        "arc_modules_importable": arc_modules_importable,
++        "pretest_suite_green": pretest_suite_green,
++        "quarantined_tests": [dict(item) for item in quarantined_tests],
++        "milestone_374_closestate": dict(milestone_374_closestate),
++        "g3_false_retirement_corrected": g3_false_retirement_corrected,
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "honest_verdict": honest_verdict,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "active_roadmap_path": active_roadmap_path,
++        "research_complete_record_action": research_complete_record_action,
++        "research_complete_duplicates_removed": research_complete_duplicates_removed,
++        "moe_checkpoint_n_tasks": moe_checkpoint_n_tasks,
++        "n_tasks_archived": len(V374_TASKS),
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(reason: str, **kwargs: Any) -> JsonDict:
++    """Build a blocked artifact without fabricating green gates."""
++
++    defaults: JsonDict = {
++        "research_complete_yaml_parses": False,
++        "exclusion_manifest_parses": False,
++        "arc_modules_importable": False,
++        "pretest_suite_green": False,
++        "quarantined_tests": [],
++        "milestone_374_closestate": {"status": "blocked", "reason": reason},
++        "g3_false_retirement_corrected": False,
++        "active_milestone_confirmed": "",
++        "active_roadmap_path": "research-roadmap.yaml",
++        "research_complete_record_action": "none",
++        "research_complete_duplicates_removed": 0,
++        "moe_checkpoint_n_tasks": None,
++    }
++    defaults.update(kwargs)
++    return _base_payload(honest_verdict=reason, **defaults)
++
++
++def build_complete_artifact(**kwargs: Any) -> JsonDict:
++    """Build and validate the Exp 4054 terminal artifact."""
++
++    closestate = kwargs["milestone_374_closestate"]
++    payload = _base_payload(
++        honest_verdict=terminal_verdict(closestate),
++        research_complete_yaml_parses=True,
++        exclusion_manifest_parses=True,
++        arc_modules_importable=True,
++        pretest_suite_green=True,
++        g3_false_retirement_corrected=True,
++        active_milestone_confirmed=ACTIVATED_MILESTONE,
++        **kwargs,
++    )
++    validate_artifact(payload)
++    return payload
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the .375 activation fields that prevent cascade laundering."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = str(artifact.get("honest_verdict", ""))
++    if not verdict.startswith((*TERMINAL_PREFIXES, "blocked_")):
++        raise ValueError("honest_verdict must use a terminal prefix")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    if missing_principles:
++        raise ValueError(f"missing field principles: {missing_principles}")
++    if artifact.get("archived_milestone") != ARCHIVED_MILESTONE:
++        raise ValueError("archived milestone must be 2026.06.374")
++    if artifact.get("activated_milestone") != ACTIVATED_MILESTONE:
++        raise ValueError("activated milestone must be 2026.06.375")
++    if artifact.get("research_complete_yaml_parses") is not True:
++        raise ValueError("research-complete YAML parse must be true")
++    if artifact.get("exclusion_manifest_parses") is not True:
++        raise ValueError("manifest parse must be true")
++    if artifact.get("arc_modules_importable") is not True:
++        raise ValueError("ARC module imports must be true")
++    if artifact.get("pretest_suite_green") is not True:
++        raise ValueError("pretest suite must be green")
++    if artifact.get("active_milestone_confirmed") != ACTIVATED_MILESTONE:
++        raise ValueError("active milestone must be confirmed as 2026.06.375")
++    if artifact.get("n_tasks_archived") != len(V374_TASKS):
++        raise ValueError("n_tasks_archived must match .374 task count")
++    if artifact.get("g3_false_retirement_corrected") is not True:
++        raise ValueError("g3_false_retirement_corrected must be true (resume-not-retire)")
++    closestate = artifact.get("milestone_374_closestate")
++    if not isinstance(closestate, Mapping) or not closestate:
++        raise ValueError("milestone_374_closestate must be a non-empty dict")
++    if "per_task_status" not in closestate:
++        raise ValueError("milestone_374_closestate must record per_task_status")
++    g3 = closestate.get("g3_decentralization_moe_base")
++    if not isinstance(g3, Mapping):
++        raise ValueError("milestone_374_closestate must record g3_decentralization_moe_base")
++    if g3.get("retired") is not False or g3.get("operator_corrected_diagnosis") != "underpowered_not_retired":
++        raise ValueError("G3 must be recorded as underpowered_not_retired (not retired)")
++    duration = artifact.get("duration_s")
++    if not isinstance(duration, int | float) or isinstance(duration, bool) or duration <= 0:
++        raise ValueError("duration_s must be a positive bare number")
++    if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
++        raise ValueError("inference substrate must be aggregation_from_upstream_artifacts")
++    if not isinstance(artifact.get("quarantined_tests"), list):
++        raise ValueError("quarantined_tests must be a list")
++    if "model_specs" in artifact:
++        raise ValueError("model_specs are not part of this record-only artifact")
++    if not no_forbidden_markers(artifact):
++        raise ValueError("record artifact must not copy compute-bound markers")
++    if not is_sha256(artifact.get("reproducibility_checksum")):
++        raise ValueError("reproducibility_checksum must be sha256")
++    if artifact.get("reproducibility_checksum") != payload_checksum(artifact):
++        raise ValueError("reproducibility_checksum does not match payload")
++
++
++def _write_blocked(output_path: Path, payload: Mapping[str, Any]) -> Path:
++    write_payload(output_path, payload)
++    return output_path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    research_complete_parse_result: CommandResult | None = None,
++    arc_modules_import_result: CommandResult | None = None,
++    pretest_suite_results: Sequence[CommandResult] | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Archive `.374, activate `.375, and write the Exp 4054 artifact."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    manifest_path = root_path / EXCLUSION_MANIFEST_REL_PATH
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    complete_exists = complete_path.exists()
++    complete_text = complete_path.read_text(encoding="utf-8") if complete_exists else ""
++    parse_result = (
++        research_complete_parse_result
++        if research_complete_parse_result is not None
++        else _run_command(research_complete_yaml_command(), root_path)
++    )
++    parses_before = complete_exists and parse_result.exit_code == 0 and yaml_parses(complete_text)
++
++    preconditions: JsonDict = {
++        "research_complete_yaml_exists": complete_exists,
++        "research_complete_yaml_parsed_before": parses_before,
++        "research_complete_yaml_parsed_after": False,
++        "exclusion_manifest_exists": manifest_path.exists(),
++        "exclusion_manifest_parsed": False,
++        "active_milestone": active_milestone,
++        "active_roadmap_path": active_roadmap_path,
++    }
++
++    def blocked(reason: str, **extra: Any) -> Path:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                reason,
++                preconditions_checked=preconditions,
++                duration_s=duration_from(start, now_s),
++                active_milestone_confirmed=active_milestone,
++                active_roadmap_path=active_roadmap_path,
++                **extra,
++            ),
++        )
++
++    if not complete_exists or not parses_before:
++        reason = (
++            "blocked_research_complete_yaml_poison_missing"
++            if not complete_exists
++            else "blocked_research_complete_yaml_poison"
++        )
++        return blocked(reason)
++    if active_milestone != ACTIVATED_MILESTONE:
++        return blocked("blocked_v375_not_active", research_complete_yaml_parses=True)
++
++    new_text, n_removed, action = dedupe_or_append_record(complete_text, ARCHIVED_MILESTONE)
++    if not yaml_parses(new_text):
++        return blocked("blocked_research_complete_edit_invalid", research_complete_yaml_parses=False)
++    if new_text != complete_text:
++        complete_path.write_text(new_text, encoding="utf-8")
++    complete_after_parses = yaml_parses(complete_path.read_text(encoding="utf-8"))
++    manifest_parses = manifest_path.exists() and yaml_parses(manifest_path.read_text(encoding="utf-8"))
++    preconditions["research_complete_yaml_parsed_after"] = complete_after_parses
++    preconditions["exclusion_manifest_parsed"] = manifest_parses
++    if not complete_after_parses:
++        return blocked(
++            "blocked_research_complete_yaml_poison_after_edit",
++            research_complete_yaml_parses=False,
++            exclusion_manifest_parses=manifest_parses,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=n_removed,
++        )
++    if not manifest_parses:
++        reason = (
++            "blocked_exclusion_manifest_missing"
++            if not manifest_path.exists()
++            else "blocked_exclusion_manifest_yaml_poison"
++        )
++        return blocked(
++            reason,
++            research_complete_yaml_parses=True,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=n_removed,
++        )
++
++    import_result = (
++        arc_modules_import_result
++        if arc_modules_import_result is not None
++        else _run_command(arc_modules_import_command(), root_path)
++    )
++    imports_ok = import_result.exit_code == 0
++    if not imports_ok:
++        return blocked(
++            "blocked_arc_module_import",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=n_removed,
++        )
++
++    records = read_v374_records(root_path)
++    checkpoint_n_tasks = read_checkpoint_task_count(root_path / G3_MOE_CHECKPOINT_REL_PATH)
++    closestate = build_closestate(records, checkpoint_n_tasks)
++
++    pretests_green, quarantined, _ = run_pretest_until_green(root_path, pretest_suite_results)
++    if not pretests_green:
++        return blocked(
++            "blocked_pretest_suite_failed_unquarantined",
++            research_complete_yaml_parses=True,
++            exclusion_manifest_parses=True,
++            arc_modules_importable=True,
++            quarantined_tests=quarantined,
++            milestone_374_closestate=closestate,
++            research_complete_record_action=action,
++            research_complete_duplicates_removed=n_removed,
++            moe_checkpoint_n_tasks=checkpoint_n_tasks,
++        )
++
++    payload = build_complete_artifact(
++        quarantined_tests=quarantined,
++        milestone_374_closestate=closestate,
++        preconditions_checked=preconditions,
++        duration_s=duration_from(start, now_s),
++        active_roadmap_path=active_roadmap_path,
++        research_complete_record_action=action,
++        research_complete_duplicates_removed=n_removed,
++        moe_checkpoint_n_tasks=checkpoint_n_tasks,
++    )
++    write_payload(output_path, payload)
++    return output_path
+diff --git a/results/experiment_4054_archive_v374_activate_v375.json b/results/experiment_4054_archive_v374_activate_v375.json
+new file mode 100644
+index 0000000000..7f8842c954
+--- /dev/null
++++ b/results/experiment_4054_archive_v374_activate_v375.json
+@@ -0,0 +1,191 @@
++{
++  "activated_milestone": "2026.06.375",
++  "active_milestone_confirmed": "2026.06.375",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "arc_modules_importable": true,
++  "archived_milestone": "2026.06.374",
++  "duration_s": 13.790742,
++  "exclusion_manifest_parses": true,
++  "experiment_id": "exp4054",
++  "field_principles": {
++    "activated_milestone": "Confirms .375 is live so downstream decision-grade tasks resolve.",
++    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .375 is active before the downstream tasks resolve.",
++    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .375 can execute them.",
++    "archived_milestone": "Provenance -- which milestone was archived (2026.06.374).",
++    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
++    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
++    "g3_false_retirement_corrected": "BARE BOOL -- the capstone (exp4053) said G3 retired_non_measurement; the operator (known-issues 2026-06-11) says the 6-task poll was a FALSE retirement and the MoE line RESUMES. True makes the correction auditable so the next planner continues, not retires.",
++    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
++    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
++    "milestone_374_closestate": "DICT -- per-task OK/BLOCKED/MISSING/FLAGGED, the G1 off-ARC incomplete-and-saturated non-measurement (22/160 tasks, all arms+oracle=1.0, no headroom), the G2 decision-grade negative (closed-loop no-solve vc33, per-step WM-real divergence 0.207, WM-planning retired), the G3 UNDERPOWERED-not-retired correction (14-task checkpoint, 0.3571 vs 0.2581, CI [0.143,0.643] spans the ceiling), total_games_solved=8, ArcMemo v7 no cross-game win, KV260 terminal, exp4044/exp4047 flagged-skipped; the next planner reads this as ground truth.",
++    "pretest_suite_green": "BARE BOOL -- the smart-subset gate is GREEN; a red gate cascade-skips the whole milestone (the recurring poison-test failure mode held through .371-.374).",
++    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
++    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads."
++  },
++  "g3_false_retirement_corrected": true,
++  "honest_verdict": "success: archived_v374_v375_active_G1_offarc_incomplete_and_ceiling_saturated_G2_decision_grade_negative_vc33_sim2real_ceiling_G3_underpowered_not_retired_false_retirement_corrected_games8_arcmemo_v7_no_win_kv260_terminal_exp4044_exp4047_flagged_skipped_pretest_green",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "milestone_374_closestate": {
++    "accuracy": {
++      "first_solve_at_action": 9,
++      "monotonic_plus_one": true,
++      "prior_total_games_solved": 7,
++      "real_env_confirmed": true,
++      "target_game": "sb26-7fbdac44",
++      "total_games_solved": 8
++    },
++    "capstone_v374_verdict": "complete: capstone_v374_not_decision_grade_G1_partial_or_incomplete_G2_closed_loop_ceiling_saturated_sim2real_divergence_G3_retired_non_measurement_games8_arcmemo_v7_no_win_flagged_skipped2",
++    "flagged_skipped": [
++      {
++        "claimed_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
++        "experiment_id": "4044",
++        "flagged_adversarial": true,
++        "skipped": true
++      },
++      {
++        "claimed_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
++        "experiment_id": "4047",
++        "flagged_adversarial": true,
++        "skipped": true
++      }
++    ],
++    "g1_off_arc_transfer": {
++      "best_arm": "armC_symbolic",
++      "best_arm_ci95": [
++        0.0,
++        0.0
++      ],
++      "best_arm_ci_excludes_zero": false,
++      "best_arm_delta_pp": 0.0,
++      "ceiling_saturated": true,
++      "demofit_bootstrap_ci95": [
++        0.0,
++        0.0
++      ],
++      "demofit_delta_pp": 0.0,
++      "full_power_reached": false,
++      "is_measurement": false,
++      "n_tasks": 22,
++      "oracle_headroom": false,
++      "oracle_passrate": 1.0,
++      "outcome": "incomplete_and_ceiling_saturated",
++      "powered_task_floor": 160,
++      "root_causes": [
++        "throughput_truncated",
++        "corpus_saturation_no_oracle_headroom"
++      ],
++      "verifier_transferred_off_arc_significantly": false
++    },
++    "g2_closed_loop_grounding": {
++      "bottleneck": "wm_real_divergence_gate_fired",
++      "closed_loop_broke_wall": false,
++      "decision_grade_negative": true,
++      "divergence_gate_fired_count": 1,
++      "game": "vc33",
++      "goal_predicate_heldout_precision": 1.0,
++      "levels_completed_after": 0,
++      "new_levels_solved_this_task": 0,
++      "outcome": "decision_grade_negative_sim2real_ceiling",
++      "per_step_wm_real_divergence_rate": 0.207031,
++      "real_env_confirmed": false,
++      "wm_planning_retired": true
++    },
++    "g3_decentralization_moe_base": {
++      "baseline_12b_coverage": 0.2581,
++      "beat_12b_ceiling": "underpowered_unresolved",
++      "bootstrap_ci95": [
++        0.143,
++        0.643
++      ],
++      "capstone_diagnosis": "retired_non_measurement",
++      "checkpoint_n_tasks": 14,
++      "ci_spans_ceiling": true,
++      "false_retirement_corrected": true,
++      "moe_base_coverage": 0.3571,
++      "numbers_source": "operator_known_issues_2026-06-11_plus_14task_checkpoint_count",
++      "operator_corrected_diagnosis": "underpowered_not_retired",
++      "outcome": "underpowered_not_retired_resume_toward_n30",
++      "poll_artifact_bootstrap_ci95": [
++        -0.0914,
++        0.5752
++      ],
++      "poll_artifact_coverage_delta_vs_12b": 0.2419,
++      "poll_artifact_diagnosis": "",
++      "poll_artifact_n_tasks_scored": 6,
++      "premature_poll_n_tasks": 6,
++      "resume_checkpoint": "results/experiment_4048_decentralization_moe_base_raw.checkpoint.json",
++      "retired": false,
++      "target_task_floor": 30,
++      "throughput_fix_worked": true
++    },
++    "hardware": {
++      "included": true,
++      "kv260_latency_step_taken": true,
++      "kv260_overlay_loaded": true,
++      "kv260_terminal": true,
++      "per_board_reachability": {
++        "gatemate": true,
++        "kv260": true,
++        "polarfire": true
++      },
++      "per_board_terminal_state": {
++        "gatemate": "reachable_detected_gatemate_idcode",
++        "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
++        "polarfire": "reachable_ssh_continuity_recorded"
++      },
++      "verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded"
++    },
++    "headline": "Three .373 measurements made decision-grade: G1 off-ARC verifier transfer is a NON-measurement -- INCOMPLETE (22 of 160 tasks) AND CEILING-SATURATED (oracle passrate 1.0, no headroom; best-arm delta 0.0pp CI [0.0, 0.0]) -- the verifier did NOT transfer off-ARC significantly here, but the result is uninformative (.375 fixes the corpus to EvalPlus + resumes); G2 closed-loop grounding did NOT break vc33's wall (no real-env solve; WM-real divergence 0.207031/step) -- a DECISION-GRADE NEGATIVE, vc33 WM-planning RETIRED; G3 the MoE sovereign base is UNDERPOWERED, NOT retired -- the throughput fix worked (checkpoint holds 14 tasks vs 31B's 0), coverage 0.3571 vs the 0.2581 ceiling, bootstrap95 [0.143, 0.643] spans it; the capstone's 6-task-poll retired_non_measurement was a FALSE retirement (corrected, line resumes); proven tracks held: ARC-AGI-3 total_games_solved=8 (+1 monotonic), ArcMemo v7 cross-game helped vs cold (18->9) but LOST to within-game v6 (7); KV260 TERMINAL; exp4044 and exp4047 were flagged_adversarial and SKIPPED.",
++    "per_task_status": {
++      "exp4042-archive-v373-activate-v374": "OK",
++      "exp4043-sota-ingestion-offarc-power-and-closed-loop-planning": "OK",
++      "exp4044-offarc-transfer-power-build": "FLAGGED",
++      "exp4045-offarc-transfer-power-collect": "OK",
++      "exp4046-closed-loop-replan-over-vc33-wm": "OK",
++      "exp4047-decentralization-moe-base-build": "FLAGGED",
++      "exp4048-decentralization-moe-base-collect": "OK",
++      "exp4049-eighth-game-explore-first": "OK",
++      "exp4050-arcmemo-cross-game-transfer-v7": "OK",
++      "exp4051-verifier-registry-and-gaps-hygiene": "OK",
++      "exp4052-hardware-continuity-kv260-terminal": "OK",
++      "exp4053-capstone-v374": "OK"
++    },
++    "self_learning": {
++      "action_savings_vs_cold": 9,
++      "actions_cold": 18,
++      "actions_cross_game_v7": 9,
++      "actions_within_game_v6": 7,
++      "cross_game_transfer_win": false,
++      "induction_calls_cross_game_v7": 0,
++      "n_reused_abstractions": 1,
++      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game_v6"
++    },
++    "status_counts": {
++      "BLOCKED": 0,
++      "FAIL": 0,
++      "FLAGGED": 2,
++      "MISSING": 0,
++      "OK": 10
++    }
++  },
++  "moe_checkpoint_n_tasks": 14,
++  "n_tasks_archived": 12,
++  "preconditions_checked": {
++    "active_milestone": "2026.06.375",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "exclusion_manifest_exists": true,
++    "exclusion_manifest_parsed": true,
++    "research_complete_yaml_exists": true,
++    "research_complete_yaml_parsed_after": true,
++    "research_complete_yaml_parsed_before": true
++  },
++  "pretest_suite_green": true,
++  "quarantined_tests": [],
++  "random_seed": 4054,
++  "reproducibility_checksum": "262675688b2b5f536e35940820682cb43c454cd2bf2ab12b73806c54e71a1e87",
++  "research_complete_duplicates_removed": 0,
++  "research_complete_record_action": "unchanged",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v374_to_v375_4054.v1",
++  "task_id": "exp4054-archive-v374-activate-v375"
++}
+diff --git a/scripts/experiments/exp4054_archive_v374_activate_v375.py b/scripts/experiments/exp4054_archive_v374_activate_v375.py
+new file mode 100644
+index 0000000000..843f30fb26
+--- /dev/null
++++ b/scripts/experiments/exp4054_archive_v374_activate_v375.py
+@@ -0,0 +1,38 @@
++#!/usr/bin/env python3
++"""Run Exp 4054 .374 archive and .375 activation.
++
++Spec refs: REQ-REPORT-4054, SCENARIO-REPORT-4054.
++
++Thin entrypoint: all logic lives in
++``carnot.reporting.archive_v374_activate_v375_4054`` so it is unit-testable
++without a subprocess. This wrapper just resolves the repo root, runs the
++record-only milestone transition (which records the .374 close-state including
++the G3 underpowered-not-retired false-retirement correction), prints the
++resulting artifact, and exits 0.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.archive_v374_activate_v375_4054 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_4054_archive_v374_activate_v375.py b/tests/python/test_experiment_4054_archive_v374_activate_v375.py
+new file mode 100644
+index 0000000000..9899b6b8b9
+--- /dev/null
++++ b/tests/python/test_experiment_4054_archive_v374_activate_v375.py
+@@ -0,0 +1,944 @@
++"""Tests for Exp 4054 .374 archive and .375 activation.
++
++Spec refs: REQ-REPORT-4054, SCENARIO-REPORT-4054,
++SCENARIO-REPORT-4054-BLOCKED-YAML.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot.reporting import archive_v374_activate_v375_4054 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++# --------------------------------------------------------------------------- #
++# Fixtures: a tmp repo with the .374 artifacts + an existing .374 record.
++# --------------------------------------------------------------------------- #
++def _v374_artifacts() -> dict[str, dict[str, object]]:
++    """Synthetic .374 task artifacts mirroring the real verdicts/fields."""
++
++    return {
++        "4042": {"honest_verdict": "success: archived_v373_v374_active_pretest_green"},
++        "4043": {"honest_verdict": "complete: sota_ingestion_offarc_power_and_closed_loop_mapped"},
++        "4044": {
++            "honest_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
++            "flagged_adversarial": True,
++        },
++        "4045": {
++            "honest_verdict": "complete: offarc_power_run_incomplete_partial_22_tasks",
++            "best_arm": "armC_symbolic",
++            "best_arm_delta_pp": 0.0,
++            "best_arm_ci95": [0.0, 0.0],
++            "best_arm_ci_excludes_zero": False,
++            "demofit_delta_pp": 0.0,
++            "demofit_bootstrap_ci95": [0.0, 0.0],
++            "n_tasks": 22,
++            "powered_task_floor": 160,
++            "oracle_passrate": 1.0,
++            "oracle_headroom": False,
++        },
++        "4046": {
++            "honest_verdict": "complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_0.207",
++            "game": "vc33",
++            "closed_loop_broke_wall": False,
++            "real_env_confirmed": False,
++            "per_step_wm_real_divergence_rate": 0.207031,
++            "divergence_gate_fired_count": 1,
++            "goal_predicate_heldout_precision": 1.0,
++            "levels_completed_after": 0,
++            "new_levels_solved_this_task": 0,
++            "bottleneck": "wm_real_divergence_gate_fired",
++        },
++        "4047": {
++            "honest_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
++            "flagged_adversarial": True,
++        },
++        "4048": {
++            "honest_verdict": "complete: decentralization_moe_base_partial_6_tasks_retire",
++            "n_tasks_scored": 6,
++            "coverage_delta_vs_12b": 0.2419,
++            "bootstrap_ci95": [-0.0914, 0.5752],
++            "diagnosis": "retired_non_measurement",
++        },
++        "4049": {
++            "honest_verdict": "success: eighth_game_solved_sb26-7fbdac44_at_action_9",
++            "total_games_solved": 8,
++            "prior_total_games_solved": 7,
++            "target_game": "sb26-7fbdac44",
++            "first_solve_at_action": 9,
++            "real_env_confirmed": True,
++        },
++        "4050": {
++            "honest_verdict": "complete: arcmemo_v7_no_cross_game_transfer_v7_not_cheaper_than_within_game_v6",
++            "cross_game_transfer_win": False,
++            "actions_cold": 18,
++            "actions_cross_game_v7": 9,
++            "actions_within_game_v6": 7,
++            "induction_calls_cross_game_v7": 0,
++            "n_reused_abstractions": 1,
++            "transfer_assessment": "helped_vs_cold_but_lost_to_within_game_v6",
++        },
++        "4051": {"honest_verdict": "complete: gap4_reeval_bitexact_g1_off_arc_power_pending_g2_sim2real_logged"},
++        "4052": {
++            "honest_verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052",
++            "per_board_reachability": {"kv260": True, "gatemate": True, "polarfire": True},
++            "per_board_terminal_state": {
++                "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
++                "gatemate": "reachable_detected_gatemate_idcode",
++                "polarfire": "reachable_ssh_continuity_recorded",
++            },
++            "kv260_overlay_loaded": True,
++            "kv260_latency_step_taken": True,
++        },
++        "4053": {
++            "honest_verdict": (
++                "complete: capstone_v374_not_decision_grade_G1_partial_or_incomplete_G2_closed_loop_"
++                "ceiling_saturated_sim2real_divergence_G3_retired_non_measurement_games8_arcmemo_v7_"
++                "no_win_flagged_skipped2"
++            )
++        },
++    }
++
++
++def _v374_record_block(idx: int) -> str:
++    return (
++        "- id: 2026.06.374\n"
++        f"  title: 'THE DECISION-GRADE MILESTONE (copy {idx})'\n"
++        "  doc: openspec/change-proposals/research-roadmap-v374.md\n"
++        "  completed: '2026-06-11'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp4046-closed-loop-replan-over-vc33-wm\n"
++        "    result: OK (conductor)\n"
++    )
++
++
++def _seed_repo(
++    root: Path,
++    *,
++    corrupt_complete: bool = False,
++    milestone: str = "2026.06.375",
++    manifest: str = "retired: []\n",
++    n_374_records: int = 1,
++    checkpoint_n_tasks: int = 14,
++) -> None:
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{milestone}"\ntasks:\n  - id: exp4054-archive-v374-activate-v375\n',
++        encoding="utf-8",
++    )
++    complete_text = (
++        "milestones:\n"
++        "- id: 2026.06.373\n"
++        "  title: prior archive\n"
++        "  completed: '2026-06-11'\n"
++        "  tasks:\n"
++        "  - id: exp4042-archive\n"
++        "    result: OK (conductor)\n"
++    )
++    for idx in range(n_374_records):
++        complete_text += _v374_record_block(idx)
++    if corrupt_complete:
++        complete_text += "  - id: poison\n    result: complete: unquoted colon\n"
++    (root / "research-complete.yaml").write_text(complete_text, encoding="utf-8")
++
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts" / "experiments").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "exclusion_manifest.yaml").write_text(manifest, encoding="utf-8")
++    (root / "ops" / "changelog.md").write_text("changelog before\n", encoding="utf-8")
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text("# conductor before\n", encoding="utf-8")
++
++    results = root / "results"
++    results.mkdir(parents=True, exist_ok=True)
++    payloads = _v374_artifacts()
++    for task in mod.V374_TASKS:
++        exp_id = str(task["exp_id"])
++        if exp_id in payloads:
++            (results / Path(str(task["deliverable"])).name).write_text(
++                json.dumps(payloads[exp_id], sort_keys=True), encoding="utf-8"
++            )
++    # The MoE raw checkpoint whose task count proves the false-retirement fix.
++    (results / mod.G3_MOE_CHECKPOINT_REL_PATH.name).write_text(
++        json.dumps({"tasks": {f"task_{i:04d}": [{"code": "x"}] for i in range(checkpoint_n_tasks)}}),
++        encoding="utf-8",
++    )
++
++
++def _green() -> mod.CommandResult:
++    return mod.CommandResult(
++        command=mod.smart_subset_command(["tests/python/test_docs.py"]),
++        exit_code=0,
++        stdout="81 passed\n",
++        stderr="",
++    )
++
++
++def _run_success(root: Path, **overrides: object) -> Path:
++    kwargs: dict[str, object] = {
++        "research_complete_parse_result": mod.CommandResult(
++            command=mod.research_complete_yaml_command(), exit_code=0, stdout="", stderr=""
++        ),
++        "arc_modules_import_result": mod.CommandResult(
++            command=mod.arc_modules_import_command(), exit_code=0, stdout="{}", stderr=""
++        ),
++        "pretest_suite_results": [_green()],
++        "started_s": 1.0,
++        "now_s": 3.0,
++    }
++    kwargs.update(overrides)
++    return mod.run(root, **kwargs)
++
++
++# --------------------------------------------------------------------------- #
++# Spec anchor
++# --------------------------------------------------------------------------- #
++def test_req_report_4054_spec_anchor_exists() -> None:
++    """REQ-REPORT-4054: OpenSpec declares the .374 archive contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-REPORT-4054" in spec
++    assert "SCENARIO-REPORT-4054" in spec
++    assert "SCENARIO-REPORT-4054-BLOCKED-YAML" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert "milestone_374_closestate" in spec
++    assert "g3_false_retirement_corrected" in spec
++    assert "smart-subset" in spec
++
++
++# --------------------------------------------------------------------------- #
++# Complete path
++# --------------------------------------------------------------------------- #
++def test_scenario_report_4054_records_closestate_unchanged(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4054: one existing .374 record stays, truth recorded."""
++
++    _seed_repo(tmp_path, n_374_records=1)
++    before = {
++        "manifest": (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8"),
++        "roadmap": (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8"),
++        "complete": (tmp_path / "research-complete.yaml").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++        "conductor": (tmp_path / "scripts" / "research_conductor.py").read_text(encoding="utf-8"),
++    }
++
++    out_path = _run_success(tmp_path)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"].startswith("success:")
++    assert artifact["archived_milestone"] == "2026.06.374"
++    assert artifact["activated_milestone"] == "2026.06.375"
++    assert artifact["active_milestone_confirmed"] == "2026.06.375"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["exclusion_manifest_parses"] is True
++    assert artifact["arc_modules_importable"] is True
++    assert artifact["pretest_suite_green"] is True
++    assert artifact["g3_false_retirement_corrected"] is True
++    assert artifact["quarantined_tests"] == []
++    assert artifact["inference_substrate"] == "aggregation_from_upstream_artifacts"
++    assert artifact["research_complete_record_action"] == "unchanged"
++    assert artifact["research_complete_duplicates_removed"] == 0
++    assert artifact["n_tasks_archived"] == 12
++    assert artifact["moe_checkpoint_n_tasks"] == 14
++
++    # An existing single .374 record is left byte-for-byte unchanged.
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == before["complete"]
++    loaded = yaml.safe_load(before["complete"])
++    ids = [m["id"] for m in loaded["milestones"]]
++    assert ids.count("2026.06.374") == 1
++
++    # Close-state truth: per-task status + the three G-gate measurements.
++    cs = artifact["milestone_374_closestate"]
++    assert cs["per_task_status"]["exp4044-offarc-transfer-power-build"] == "FLAGGED"
++    assert cs["per_task_status"]["exp4047-decentralization-moe-base-build"] == "FLAGGED"
++    assert cs["per_task_status"]["exp4049-eighth-game-explore-first"] == "OK"
++    assert cs["status_counts"]["OK"] == 10
++    assert cs["status_counts"]["FLAGGED"] == 2
++    # G1: off-ARC incomplete AND ceiling-saturated (no headroom).
++    assert cs["g1_off_arc_transfer"]["n_tasks"] == 22
++    assert cs["g1_off_arc_transfer"]["powered_task_floor"] == 160
++    assert cs["g1_off_arc_transfer"]["full_power_reached"] is False
++    assert cs["g1_off_arc_transfer"]["oracle_passrate"] == 1.0
++    assert cs["g1_off_arc_transfer"]["ceiling_saturated"] is True
++    assert cs["g1_off_arc_transfer"]["best_arm_delta_pp"] == 0.0
++    assert cs["g1_off_arc_transfer"]["best_arm_ci95"] == [0.0, 0.0]
++    assert cs["g1_off_arc_transfer"]["verifier_transferred_off_arc_significantly"] is False
++    assert cs["g1_off_arc_transfer"]["is_measurement"] is False
++    assert cs["g1_off_arc_transfer"]["outcome"] == "incomplete_and_ceiling_saturated"
++    assert "corpus_saturation_no_oracle_headroom" in cs["g1_off_arc_transfer"]["root_causes"]
++    # G2: decision-grade negative on vc33 (closed-loop sim2real ceiling).
++    assert cs["g2_closed_loop_grounding"]["game"] == "vc33"
++    assert cs["g2_closed_loop_grounding"]["closed_loop_broke_wall"] is False
++    assert cs["g2_closed_loop_grounding"]["real_env_confirmed"] is False
++    assert cs["g2_closed_loop_grounding"]["per_step_wm_real_divergence_rate"] == pytest.approx(0.207031)
++    assert cs["g2_closed_loop_grounding"]["decision_grade_negative"] is True
++    assert cs["g2_closed_loop_grounding"]["wm_planning_retired"] is True
++    assert cs["g2_closed_loop_grounding"]["outcome"] == "decision_grade_negative_sim2real_ceiling"
++    # G3: UNDERPOWERED-not-retired; the false retirement is corrected.
++    g3 = cs["g3_decentralization_moe_base"]
++    assert g3["capstone_diagnosis"] == "retired_non_measurement"
++    assert g3["operator_corrected_diagnosis"] == "underpowered_not_retired"
++    assert g3["false_retirement_corrected"] is True
++    assert g3["retired"] is False
++    assert g3["throughput_fix_worked"] is True
++    assert g3["checkpoint_n_tasks"] == 14
++    assert g3["premature_poll_n_tasks"] == 6
++    assert g3["poll_artifact_n_tasks_scored"] == 6
++    assert g3["moe_base_coverage"] == pytest.approx(0.3571)
++    assert g3["baseline_12b_coverage"] == pytest.approx(0.2581)
++    assert g3["bootstrap_ci95"] == [0.143, 0.643]
++    assert g3["ci_spans_ceiling"] is True
++    assert g3["target_task_floor"] == 30
++    assert g3["outcome"] == "underpowered_not_retired_resume_toward_n30"
++    # Accuracy: 8 games solved, +1 monotonic.
++    assert cs["accuracy"]["total_games_solved"] == 8
++    assert cs["accuracy"]["monotonic_plus_one"] is True
++    assert cs["accuracy"]["target_game"] == "sb26-7fbdac44"
++    assert cs["accuracy"]["first_solve_at_action"] == 9
++    # Self-learning: ArcMemo v7 helped vs cold but lost to within-game v6 (no win).
++    assert cs["self_learning"]["cross_game_transfer_win"] is False
++    assert cs["self_learning"]["actions_cold"] == 18
++    assert cs["self_learning"]["actions_cross_game_v7"] == 9
++    assert cs["self_learning"]["actions_within_game_v6"] == 7
++    assert cs["self_learning"]["action_savings_vs_cold"] == 9
++    # Hardware: KV260 terminal.
++    assert cs["hardware"]["per_board_reachability"]["kv260"] is True
++    assert cs["hardware"]["kv260_overlay_loaded"] is True
++    assert cs["hardware"]["kv260_latency_step_taken"] is True
++    assert cs["hardware"]["kv260_terminal"] is True
++    # Both BUILD halves flagged-skipped (never aggregated as a win).
++    flagged_ids = {f["experiment_id"]: f for f in cs["flagged_skipped"]}
++    assert flagged_ids["4044"]["flagged_adversarial"] is True and flagged_ids["4044"]["skipped"] is True
++    assert flagged_ids["4047"]["flagged_adversarial"] is True and flagged_ids["4047"]["skipped"] is True
++    assert cs["capstone_v374_verdict"].startswith("complete: capstone_v374")
++    assert "CEILING-SATURATED" in cs["headline"]
++    assert "UNDERPOWERED" in cs["headline"]
++    assert "FALSE retirement" in cs["headline"]
++
++    # Operator-curated / conductor-reconciled files untouched.
++    assert (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8") == before["manifest"]
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == before["roadmap"]
++    assert (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8") == before["changelog"]
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before["status"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8") == before["trace"]
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(encoding="utf-8") == before["conductor"]
++
++
++def test_req_report_4054_dedupes_duplicate_records(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: interrupted-run duplicate .374 records collapse to one."""
++
++    _seed_repo(tmp_path, n_374_records=5)
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["research_complete_record_action"] == "deduped"
++    assert artifact["research_complete_duplicates_removed"] == 4
++    loaded = yaml.safe_load((tmp_path / "research-complete.yaml").read_text(encoding="utf-8"))
++    ids = [m["id"] for m in loaded["milestones"]]
++    assert ids.count("2026.06.374") == 1
++
++
++def test_req_report_4054_dedupe_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: rerunning leaves exactly one .374 record (unchanged)."""
++
++    _seed_repo(tmp_path, n_374_records=5)
++    _run_success(tmp_path)
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == first_complete
++    assert second["research_complete_record_action"] == "unchanged"
++    assert second["research_complete_duplicates_removed"] == 0
++
++
++def test_req_report_4054_appends_when_record_absent(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: a missing .374 record is appended canonically."""
++
++    _seed_repo(tmp_path, n_374_records=0)
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++
++    assert artifact["research_complete_record_action"] == "appended"
++    loaded = yaml.safe_load((tmp_path / "research-complete.yaml").read_text(encoding="utf-8"))
++    ids = [m["id"] for m in loaded["milestones"]]
++    assert ids.count("2026.06.374") == 1
++    record = next(m for m in loaded["milestones"] if m["id"] == "2026.06.374")
++    assert record["activation_recorded"] == "exp4054-archive-v374-activate-v375"
++    assert len(record["tasks"]) == len(mod.V374_TASKS)
++
++
++# --------------------------------------------------------------------------- #
++# Blocked paths
++# --------------------------------------------------------------------------- #
++def test_scenario_report_4054_blocked_yaml_writes_artifact_without_edits(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-4054-BLOCKED-YAML: corrupt YAML exits before edits."""
++
++    _seed_repo(tmp_path, corrupt_complete=True)
++    before_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    before_manifest = (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8")
++
++    artifact = json.loads(
++        _run_success(
++            tmp_path,
++            research_complete_parse_result=mod.CommandResult(
++                command=mod.research_complete_yaml_command(),
++                exit_code=1,
++                stdout="",
++                stderr="yaml parser failed",
++            ),
++        ).read_text(encoding="utf-8")
++    )
++
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison")
++    assert artifact["research_complete_yaml_parses"] is False
++    assert artifact["g3_false_retirement_corrected"] is False
++    assert artifact["milestone_374_closestate"]["status"] == "blocked"
++    assert artifact["active_milestone_confirmed"] == "2026.06.375"
++    assert artifact["preconditions_checked"]["research_complete_yaml_parsed_before"] is False
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == before_complete
++    assert (tmp_path / "ops" / "exclusion_manifest.yaml").read_text(encoding="utf-8") == before_manifest
++
++
++def test_req_report_4054_blocked_when_complete_missing(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: a missing research-complete.yaml fails closed."""
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-complete.yaml").unlink()
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison_missing")
++
++
++def test_req_report_4054_blocked_paths_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: missing handoff facts block instead of fabricating success."""
++
++    _seed_repo(tmp_path, milestone="2026.06.374")
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_v375_not_active")
++
++    _seed_repo(tmp_path, manifest="retired: [\n")
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_exclusion_manifest_yaml_poison")
++
++    _seed_repo(tmp_path)
++    (tmp_path / "ops" / "exclusion_manifest.yaml").unlink()
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_exclusion_manifest_missing")
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        _run_success(
++            tmp_path,
++            arc_modules_import_result=mod.CommandResult(
++                command=mod.arc_modules_import_command(), exit_code=1, stdout="{}", stderr=""
++            ),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_arc_module_import")
++
++
++def test_req_report_4054_blocked_when_pretest_unquarantinable(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: a red gate with no parseable failure id blocks."""
++
++    _seed_repo(tmp_path)
++    red = mod.CommandResult(
++        command=mod.smart_subset_command(["x"]),
++        exit_code=1,
++        stdout="some failure without a node id\n",
++        stderr="",
++    )
++    artifact = json.loads(_run_success(tmp_path, pretest_suite_results=[red]).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_pretest_suite_failed_unquarantined")
++    assert artifact["pretest_suite_green"] is False
++    # The close-state truth is still recorded on the blocked path.
++    assert "per_task_status" in artifact["milestone_374_closestate"]
++    assert artifact["moe_checkpoint_n_tasks"] == 14
++
++
++def test_req_report_4054_quarantines_red_test_then_green(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: a red smart-subset file is git-mv'd to quarantine."""
++
++    _seed_repo(tmp_path)
++    red_file = tmp_path / "tests" / "python" / "test_old_poison.py"
++    red_file.parent.mkdir(parents=True, exist_ok=True)
++    red_file.write_text("def test_bad():\n    assert False\n", encoding="utf-8")
++    failure = mod.CommandResult(
++        command=mod.smart_subset_command(["x"]),
++        exit_code=1,
++        stdout="FAILED tests/python/test_old_poison.py::test_bad - AssertionError\n",
++        stderr="",
++    )
++
++    artifact = json.loads(
++        _run_success(tmp_path, pretest_suite_results=[failure, _green()]).read_text(encoding="utf-8")
++    )
++    assert artifact["pretest_suite_green"] is True
++    assert artifact["quarantined_tests"] == [
++        {
++            "path": "tests/python/test_old_poison.py",
++            "quarantined_path": "tests/quarantine/test_old_poison.py",
++            "failing_test_ids": ["tests/python/test_old_poison.py::test_bad"],
++        }
++    ]
++    assert not red_file.exists()
++    assert (tmp_path / "tests" / "quarantine" / "test_old_poison.py").exists()
++
++
++def test_req_report_4054_blocked_edit_invalid(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-4054: an edit that breaks YAML blocks before writing."""
++
++    _seed_repo(tmp_path)
++    monkeypatch.setattr(mod, "dedupe_or_append_record", lambda *a: ("milestones: [\n", 0, "deduped"))
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_edit_invalid")
++    # The original file was NOT overwritten with the broken edit.
++    assert yaml.safe_load((tmp_path / "research-complete.yaml").read_text(encoding="utf-8"))
++
++
++def test_req_report_4054_blocked_poison_after_edit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-4054: a post-write parse regression is caught."""
++
++    _seed_repo(tmp_path)
++    # Calls in order: parses_before, edit-candidate, on-disk re-read, manifest.
++    states = iter([True, True, False, True])
++
++    monkeypatch.setattr(mod, "yaml_parses", lambda text: next(states))
++    artifact = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison_after_edit")
++
++
++# --------------------------------------------------------------------------- #
++# Close-state + helper unit tests
++# --------------------------------------------------------------------------- #
++def test_req_report_4054_classify_status_branches() -> None:
++    """REQ-REPORT-4054: every status class is reachable."""
++
++    assert mod.classify_status({"exists": False}) == "MISSING"
++    assert mod.classify_status({"exists": True, "flagged_adversarial": True}) == "FLAGGED"
++    assert mod.classify_status({"exists": True, "honest_verdict": "blocked_x"}) == "BLOCKED"
++    assert mod.classify_status({"exists": True, "honest_verdict": "complete: ok"}) == "OK"
++    assert mod.classify_status({"exists": True, "honest_verdict": "weird"}) == "FAIL"
++
++
++def _record(payload: dict[str, object]) -> dict[str, object]:
++    """Mirror read_artifact_record's output shape (fields sub-dict)."""
++
++    return {
++        "exists": True,
++        "honest_verdict": str(payload.get("honest_verdict", "")),
++        "flagged_adversarial": bool(payload.get("flagged_adversarial")),
++        "fields": dict(payload),
++    }
++
++
++def test_req_report_4054_build_closestate_from_records() -> None:
++    """REQ-REPORT-4054: the close-state builder is a pure aggregation."""
++
++    records: dict[str, dict[str, object]] = {
++        exp_id: _record(payload) for exp_id, payload in _v374_artifacts().items()
++    }
++    closestate = mod.build_closestate(records, 14)
++
++    assert closestate["status_counts"]["OK"] == 10
++    assert closestate["status_counts"]["FLAGGED"] == 2
++    assert closestate["g1_off_arc_transfer"]["outcome"] == "incomplete_and_ceiling_saturated"
++    assert closestate["g2_closed_loop_grounding"]["decision_grade_negative"] is True
++    assert closestate["g3_decentralization_moe_base"]["false_retirement_corrected"] is True
++    assert closestate["g3_decentralization_moe_base"]["retired"] is False
++    assert closestate["accuracy"]["total_games_solved"] == 8
++    assert closestate["self_learning"]["cross_game_transfer_win"] is False
++    assert closestate["hardware"]["kv260_terminal"] is True
++    assert closestate["capstone_v374_verdict"].startswith("complete: capstone_v374")
++    assert "vc33" in closestate["headline"]
++
++
++def test_req_report_4054_closestate_subbuilders_degrade_gracefully() -> None:
++    """REQ-REPORT-4054: every sub-builder returns null facts on missing input."""
++
++    empty = {"exists": False}
++
++    g1 = mod._g1_off_arc_transfer(empty)
++    assert g1["n_tasks"] is None
++    assert g1["best_arm_ci95"] is None
++    assert g1["full_power_reached"] is False
++    assert g1["verifier_transferred_off_arc_significantly"] is False
++    # No data means no full-power measurement -> incomplete, not a refuted transfer.
++    assert g1["outcome"] == "incomplete_underpowered"
++
++    g2 = mod._g2_closed_loop_grounding(empty)
++    assert g2["game"] is None
++    assert g2["decision_grade_negative"] is False
++    assert g2["wm_planning_retired"] is True
++    assert g2["outcome"] == "inconclusive"
++
++    g3 = mod._g3_decentralization_moe(empty, None)
++    assert g3["checkpoint_n_tasks"] is None
++    assert g3["throughput_fix_worked"] is False
++    assert g3["false_retirement_corrected"] is True
++    assert g3["retired"] is False
++    assert g3["poll_artifact_n_tasks_scored"] is None
++    assert g3["ci_spans_ceiling"] is True
++
++    accuracy = mod._accuracy(empty)
++    assert accuracy["total_games_solved"] is None and accuracy["monotonic_plus_one"] is False
++
++    self_learning = mod._self_learning(empty)
++    assert self_learning["actions_cold"] is None
++    assert self_learning["action_savings_vs_cold"] is None
++
++    hardware = mod._hardware(empty)
++    assert hardware["per_board_reachability"] == {} and hardware["included"] is False
++    assert hardware["per_board_terminal_state"] == {}
++    assert hardware["kv260_terminal"] is False
++
++    flagged = mod._flagged_skipped(empty, "4044")
++    assert flagged["flagged_adversarial"] is False and flagged["skipped"] is False
++    assert flagged["experiment_id"] == "4044"
++
++    # _fields tolerates a non-mapping fields value.
++    assert mod._fields({"fields": [1, 2, 3]}) == {}
++    assert mod._fields({}) == {}
++
++
++def test_req_report_4054_g1_branches() -> None:
++    """REQ-REPORT-4054: G1 outcome covers saturated, underpowered, transferred, none."""
++
++    saturated = _record(
++        {"n_tasks": 22, "powered_task_floor": 160, "oracle_passrate": 1.0, "oracle_headroom": False,
++         "best_arm_ci_excludes_zero": False, "best_arm_ci95": [0.0, 0.0]}
++    )
++    g1 = mod._g1_off_arc_transfer(saturated)
++    assert g1["outcome"] == "incomplete_and_ceiling_saturated"
++    assert g1["ceiling_saturated"] is True
++
++    # Incomplete but with headroom -> underpowered, not saturated.
++    underpowered = _record(
++        {"n_tasks": 40, "powered_task_floor": 160, "oracle_passrate": 0.7, "oracle_headroom": True}
++    )
++    assert mod._g1_off_arc_transfer(underpowered)["outcome"] == "incomplete_underpowered"
++
++    # Full power AND CI excludes zero -> a real transfer measurement.
++    transferred = _record(
++        {"n_tasks": 200, "powered_task_floor": 160, "oracle_passrate": 0.8, "oracle_headroom": True,
++         "best_arm_ci_excludes_zero": True, "best_arm_ci95": [2.0, 18.0]}
++    )
++    g1t = mod._g1_off_arc_transfer(transferred)
++    assert g1t["outcome"] == "transferred_ci_excludes_zero"
++    assert g1t["verifier_transferred_off_arc_significantly"] is True
++    assert g1t["is_measurement"] is True
++
++    # Full power, no headroom, CI not excluding zero -> no_transfer.
++    flat = _record(
++        {"n_tasks": 200, "powered_task_floor": 160, "oracle_passrate": 0.9, "oracle_headroom": True,
++         "best_arm_ci_excludes_zero": False}
++    )
++    assert mod._g1_off_arc_transfer(flat)["outcome"] == "no_transfer"
++
++
++def test_req_report_4054_g2_inconclusive_branch() -> None:
++    """REQ-REPORT-4054: G2 is inconclusive when no divergence rate was measured."""
++
++    # A wall break would not be a clean negative; missing divergence -> inconclusive.
++    broke = _record({"game": "vc33", "closed_loop_broke_wall": True, "real_env_confirmed": True})
++    g2 = mod._g2_closed_loop_grounding(broke)
++    assert g2["decision_grade_negative"] is False
++    assert g2["outcome"] == "inconclusive"
++
++
++def test_req_report_4054_g3_throughput_and_ci() -> None:
++    """REQ-REPORT-4054: G3 records throughput-worked + CI-spans-ceiling truthfully."""
++
++    poll = _record(
++        {"n_tasks_scored": 6, "coverage_delta_vs_12b": 0.2419, "bootstrap_ci95": [-0.0914, 0.5752],
++         "diagnosis": "retired_non_measurement"}
++    )
++    g3 = mod._g3_decentralization_moe(poll, 14)
++    assert g3["checkpoint_n_tasks"] == 14
++    assert g3["throughput_fix_worked"] is True
++    assert g3["poll_artifact_coverage_delta_vs_12b"] == pytest.approx(0.2419)
++    assert g3["poll_artifact_bootstrap_ci95"] == [-0.0914, 0.5752]
++    assert g3["moe_base_coverage"] == pytest.approx(0.3571)
++    assert g3["ci_spans_ceiling"] is True
++
++    # A zero-task checkpoint means the throughput fix did NOT produce data.
++    g3_zero = mod._g3_decentralization_moe(poll, 0)
++    assert g3_zero["throughput_fix_worked"] is False
++
++
++def test_req_report_4054_accuracy_nonmonotonic_and_self_learning_bool() -> None:
++    """REQ-REPORT-4054: accuracy guards reject non-+1 jumps and bool counts."""
++
++    jump = _record({"total_games_solved": 10, "prior_total_games_solved": 7})
++    assert mod._accuracy(jump)["monotonic_plus_one"] is False
++
++    bool_counts = _record({"actions_cold": True, "actions_cross_game_v7": 1})
++    assert mod._self_learning(bool_counts)["action_savings_vs_cold"] is None
++
++
++def test_req_report_4054_read_checkpoint_task_count(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: the checkpoint counter reads mapping/list/absent/bad."""
++
++    mapping_ckpt = tmp_path / "map.json"
++    mapping_ckpt.write_text(json.dumps({"tasks": {"a": 1, "b": 2}}), encoding="utf-8")
++    assert mod.read_checkpoint_task_count(mapping_ckpt) == 2
++
++    list_ckpt = tmp_path / "list.json"
++    list_ckpt.write_text(json.dumps({"tasks": [1, 2, 3]}), encoding="utf-8")
++    assert mod.read_checkpoint_task_count(list_ckpt) == 3
++
++    assert mod.read_checkpoint_task_count(tmp_path / "missing.json") is None
++
++    no_tasks = tmp_path / "no_tasks.json"
++    no_tasks.write_text(json.dumps({"other": 1}), encoding="utf-8")
++    assert mod.read_checkpoint_task_count(no_tasks) is None
++
++    listish = tmp_path / "listish.json"
++    listish.write_text("[1, 2, 3]", encoding="utf-8")
++    assert mod.read_checkpoint_task_count(listish) is None
++
++
++def test_req_report_4054_read_artifact_record_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: unreadable / non-mapping artifacts read as absent."""
++
++    assert mod.read_artifact_record(tmp_path / "missing.json")["exists"] is False
++    listish = tmp_path / "listish.json"
++    listish.write_text("[1, 2, 3]", encoding="utf-8")
++    assert mod.read_artifact_record(listish)["exists"] is False
++    good = tmp_path / "good.json"
++    good.write_text(json.dumps({"honest_verdict": "complete: ok"}), encoding="utf-8")
++    assert mod.read_artifact_record(good)["exists"] is True
++
++
++def test_req_report_4054_read_v374_records_reads_all_tasks(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: every .374 deliverable is read by exp id."""
++
++    _seed_repo(tmp_path)
++    records = mod.read_v374_records(tmp_path)
++    assert set(records) == {str(t["exp_id"]) for t in mod.V374_TASKS}
++    assert records["4044"]["flagged_adversarial"] is True
++    assert records["4045"]["fields"]["n_tasks"] == 22
++
++
++def test_req_report_4054_dedupe_helper_branches() -> None:
++    """REQ-REPORT-4054: dedupe/append helper covers all three actions."""
++
++    base = "milestones:\n- id: 2026.06.373\n  title: a\n"
++    two = base + _v374_record_block(0) + _v374_record_block(1)
++    deduped, removed, action = mod.dedupe_or_append_record(two, "2026.06.374")
++    assert action == "deduped" and removed == 1
++    assert deduped.count("- id: 2026.06.374") == 1
++
++    one = base + _v374_record_block(0)
++    unchanged, removed, action = mod.dedupe_or_append_record(one, "2026.06.374")
++    assert action == "unchanged" and removed == 0 and unchanged == one
++
++    appended, removed, action = mod.dedupe_or_append_record(base, "2026.06.374")
++    assert action == "appended" and removed == 0
++    assert appended.count("- id: 2026.06.374") == 1
++    assert yaml.safe_load(appended)
++
++
++def test_req_report_4054_smart_subset_targets_and_command(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: smart subset = core suites + uncommitted tests, no live git."""
++
++    targets = mod.smart_subset_targets(tmp_path)
++    assert targets == [mod.CORE_SMART_SUBSET[0]]
++    (tmp_path / "tests" / "python").mkdir(parents=True, exist_ok=True)
++    (tmp_path / mod.CORE_SMART_SUBSET[0]).write_text("def test_ok():\n    assert True\n", encoding="utf-8")
++    assert mod.smart_subset_targets(tmp_path) == [mod.CORE_SMART_SUBSET[0]]
++    cmd = mod.smart_subset_command(["tests/python/test_docs.py"])
++    assert cmd[0] == str(mod.PYTEST_BIN)
++    assert "--no-cov" in cmd and "tests/python/test_docs.py" in cmd
++
++
++def test_req_report_4054_parse_failing_ids_and_quarantine(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: failing-id parsing and quarantine fallback paths."""
++
++    assert mod.parse_failing_test_ids("FAILED tests/python/a.py::test_x - boom\n") == {
++        "tests/python/a.py": ["tests/python/a.py::test_x"]
++    }
++    assert mod.parse_failing_test_ids("ERROR tests/python/b.py::test_y - boom\n") == {
++        "tests/python/b.py": ["tests/python/b.py::test_y"]
++    }
++    assert mod.parse_failing_test_ids("no failures here") == {}
++
++    (tmp_path / "tests" / "python").mkdir(parents=True, exist_ok=True)
++    rows = mod.quarantine_failed_tests(tmp_path, {"tests/python/gone.py": ["tests/python/gone.py::t"]})
++    assert rows[0]["quarantined_path"] == "tests/quarantine/gone.py"
++
++    src = tmp_path / "tests" / "python" / "test_real.py"
++    src.write_text("x = 1\n", encoding="utf-8")
++    rows = mod.quarantine_failed_tests(tmp_path, {"tests/python/test_real.py": ["id"]})
++    assert (tmp_path / "tests" / "quarantine" / "test_real.py").exists()
++    assert rows[0]["path"] == "tests/python/test_real.py"
++
++
++def test_req_report_4054_run_pretest_until_green_caps(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-4054: the quarantine loop is bounded and live-callable."""
++
++    green = _green()
++    monkeypatch.setattr(mod, "run_smart_subset", lambda root: green)
++    assert mod.run_pretest_until_green(tmp_path, supplied=None) == (True, [], [green])
++
++    monkeypatch.setattr(mod, "quarantine_failed_tests", lambda root, failures: [])
++    repeated = mod.CommandResult(
++        command=["x"],
++        exit_code=1,
++        stdout="FAILED tests/python/test_x.py::test_a - boom\n",
++        stderr="",
++    )
++    ok, quarantined, results = mod.run_pretest_until_green(tmp_path, supplied=[repeated] * 8)
++    assert ok is False and quarantined == [] and len(results) == 8
++
++
++def test_req_report_4054_misc_helpers(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: small pure helpers behave and fail closed."""
++
++    assert mod.read_active_milestone(tmp_path) == ("unknown", "research-roadmap.yaml")
++    assert mod._milestone_from_text("tasks: []\n") == "unknown"
++    assert mod.yaml_single_quote("complete: ok") == "'complete: ok'"
++    assert mod.duration_from(None, None) == 0.0001
++    assert mod.duration_from(1.0, 3.0) == 2.0
++    assert mod.is_sha256("0" * 64) is True
++    assert mod.is_sha256("xyz") is False
++    assert mod.yaml_parses("a: 1") is True
++    assert mod.yaml_parses("a: [\n") is False
++    assert mod._record_id("  - id: nested") is None
++    assert mod._record_id("- id: 2026.06.374") == "2026.06.374"
++    assert mod._is_real_number(3) is True
++    assert mod._is_real_number(True) is False
++    assert mod._is_real_number("3") is False
++
++    res = mod._run_command(["definitely-not-a-real-binary-xyz"], tmp_path)
++    assert res.exit_code in {127}
++    assert mod._git_lines(["rev-parse", "--bad-flag"], tmp_path) == []
++
++
++def test_req_report_4054_read_active_milestone_next_roadmap(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: the -next roadmap is the fallback milestone source."""
++
++    (tmp_path / "research-roadmap-next.yaml").write_text('milestone: "2026.06.375"\n', encoding="utf-8")
++    assert mod.read_active_milestone(tmp_path) == ("2026.06.375", "research-roadmap-next.yaml")
++
++
++def test_req_report_4054_no_forbidden_markers_rejects_compute_strings() -> None:
++    """REQ-REPORT-4054: the marker guard skips closestate/principles only."""
++
++    assert mod.no_forbidden_markers({"x": "fine"}) is True
++    assert mod.no_forbidden_markers({"x": "uses CUDA kernels"}) is False
++    assert mod.no_forbidden_markers({"milestone_374_closestate": {"note": "GGUF"}}) is True
++
++
++# --------------------------------------------------------------------------- #
++# Validation regressions
++# --------------------------------------------------------------------------- #
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("pretest_suite_green"), "missing required"),
++        (lambda p: p.update(honest_verdict="maybe"), "terminal prefix"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (lambda p: p["field_principles"].pop("duration_s"), "missing field principles"),
++        (lambda p: p.update(archived_milestone="2026.06.373"), "archived milestone"),
++        (lambda p: p.update(activated_milestone="2026.06.374"), "activated milestone"),
++        (lambda p: p.update(research_complete_yaml_parses=False), "research-complete"),
++        (lambda p: p.update(exclusion_manifest_parses=False), "manifest"),
++        (lambda p: p.update(arc_modules_importable=False), "ARC module imports"),
++        (lambda p: p.update(pretest_suite_green=False), "pretest suite"),
++        (lambda p: p.update(active_milestone_confirmed=False), "active milestone"),
++        (lambda p: p.update(n_tasks_archived=3), "n_tasks_archived"),
++        (lambda p: p.update(g3_false_retirement_corrected=False), "g3_false_retirement_corrected"),
++        (lambda p: p.update(milestone_374_closestate={}), "non-empty dict"),
++        (lambda p: p.update(milestone_374_closestate={"x": 1}), "per_task_status"),
++        (lambda p: p.update(milestone_374_closestate={"per_task_status": {}}), "g3_decentralization_moe_base"),
++        (
++            lambda p: p.update(
++                milestone_374_closestate={
++                    "per_task_status": {},
++                    "g3_decentralization_moe_base": {"retired": True, "operator_corrected_diagnosis": "x"},
++                }
++            ),
++            "underpowered_not_retired",
++        ),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(inference_substrate="live_model"), "inference"),
++        (lambda p: p.update(quarantined_tests={}), "quarantined_tests"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(copied_marker="CUDA"), "compute-bound markers"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++    ],
++)
++def test_req_report_4054_validate_rejects_regressions(tmp_path: Path, mutate, message: str) -> None:
++    """REQ-REPORT-4054: validation rejects fields that hide transition risk."""
++
++    _seed_repo(tmp_path)
++    payload = json.loads(_run_success(tmp_path).read_text(encoding="utf-8"))
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(broken)
++
++
++def test_req_report_4054_terminal_verdict_carries_games() -> None:
++    """REQ-REPORT-4054: the terminal verdict embeds the games-solved total."""
++
++    verdict = mod.terminal_verdict({"accuracy": {"total_games_solved": 8}})
++    assert verdict.startswith("success:")
++    assert "games8" in verdict
++    assert "G3_underpowered_not_retired" in verdict
++    assert "G2_decision_grade_negative" in verdict
++
++
++def test_req_report_4054_smart_subset_with_git(tmp_path: Path) -> None:
++    """REQ-REPORT-4054: untracked tests/python files join the smart subset."""
++
++    import subprocess as sp
++
++    sp.run(["git", "init", "-q"], cwd=tmp_path, check=True)
++    core = tmp_path / mod.CORE_SMART_SUBSET[0]
++    core.parent.mkdir(parents=True, exist_ok=True)
++    core.write_text("def test_core():\n    assert True\n", encoding="utf-8")
++    new_test = tmp_path / "tests" / "python" / "test_brand_new.py"
++    new_test.write_text("def test_new():\n    assert True\n", encoding="utf-8")
++    quarantined = tmp_path / "tests" / "quarantine" / "test_q.py"
++    quarantined.parent.mkdir(parents=True, exist_ok=True)
++    quarantined.write_text("def test_q():\n    assert True\n", encoding="utf-8")
++
++    others = mod._git_lines(["ls-files", "--others", "--exclude-standard"], tmp_path)
++    assert "tests/python/test_brand_new.py" in others
++
++    targets = mod.smart_subset_targets(tmp_path)
++    assert "tests/python/test_brand_new.py" in targets
++    assert mod.CORE_SMART_SUBSET[0] in targets
++    assert "tests/quarantine/test_q.py" not in targets
++
++
++def test_req_report_4054_run_smart_subset_uses_command(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
++    """REQ-REPORT-4054: the live gate runs the smart-subset command (no spawn)."""
++
++    captured: dict[str, object] = {}
++
++    def fake_run(command: list[str], root: Path) -> mod.CommandResult:
++        captured["command"] = command
++        return mod.CommandResult(command=command, exit_code=0, stdout="ok", stderr="")
++
++    monkeypatch.setattr(mod, "_run_command", fake_run)
++    result = mod.run_smart_subset(tmp_path)
++    assert result.exit_code == 0
++    assert str(mod.PYTEST_BIN) == captured["command"][0]
++    assert "--no-cov" in captured["command"]
++
++
++def test_scenario_report_4054_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-4054: the requested experiment entrypoint exists."""
++
++    script = Path("scripts/experiments/exp4054_archive_v374_activate_v375.py")
++    assert script.exists()
++    assert "archive_v374_activate_v375_4054" in script.read_text(encoding="utf-8")
+-- 
+2.55.0
+

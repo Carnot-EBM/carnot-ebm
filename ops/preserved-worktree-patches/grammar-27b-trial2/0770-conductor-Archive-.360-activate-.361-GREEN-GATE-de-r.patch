@@ -1,0 +1,1864 @@
+From 22018b884d65be1c15eddd77b715665f4f8ccdf5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 00:36:46 -0400
+Subject: [PATCH 00770/11171] [conductor] Archive .360 -> activate .361;
+ GREEN-GATE de-risk: assert research-complete.yaml parses (colon-poison
+ guard), the core pretest subset (test_pipeline_extract + test_docs) is green,
+ and the .360-built harnesses import
+ (python/carnot/verify/reasoner_self_verification.py + carnot.verify). Records
+ the .360 forward-bet verdicts (moat mis-gated MOAT_SURVIVES-numbers;
+ efficiency never run; facts still fabricating; EBT superseded).
+
+Automated research step by research conductor.
+Task ID: exp3903-archive-v360-activate-v361-green-gate
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  80 ++
+ ops/dogfood-memory.json                       |   4 +-
+ .../archive_v360_activate_v361_3903.py        | 736 ++++++++++++++++++
+ research-complete.yaml                        |  53 ++
+ research-roadmap.yaml                         |  32 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3903_archive_v360_activate_v361.json |  92 +++
+ results/experiment_625_tier1_fr11_relay.json  |   4 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ ...eriment_3903_archive_v360_activate_v361.py |  28 +
+ ...eriment_3903_archive_v360_activate_v361.py | 516 ++++++++++++
+ 15 files changed, 1539 insertions(+), 34 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_v360_activate_v361_3903.py
+ create mode 100644 results/experiment_3903_archive_v360_activate_v361.json
+ create mode 100644 scripts/experiments/experiment_3903_archive_v360_activate_v361.py
+ create mode 100644 tests/python/test_experiment_3903_archive_v360_activate_v361.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index ab3664b7b9..7d232f49cb 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -18021,3 +18021,83 @@ unchanged.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3892 | Planned (`python/carnot/reporting/archive_v359_activate_v360_3892.py`, `scripts/experiments/experiment_3892_archive_v359_activate_v360.py`) | Planned (`tests/python/test_experiment_3892_archive_v359_activate_v360.py`) |
++
++### REQ-REPORT-3903: Archive .360 Harness-First Truth And Activate .361 Green Gates
++
++The Exp 3903 workflow SHALL archive milestone `2026.06.360` honestly in
++`research-complete.yaml` and confirm milestone `2026.06.361` is active in
++`research-roadmap.yaml`. Before appending any research record, it SHALL confirm
++that `research-complete.yaml` exists and safe-loads. If `research-complete.yaml`
++does not safe-load, the workflow SHALL write a blocked artifact whose
++`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
++NOT edit `research-complete.yaml`.
++
++On the complete path, the workflow SHALL read Exp 3892 through Exp 3902 task
++verdicts by invoking `scripts/summarize_artifact.py` rather than raw-reading
++those result JSON files. It SHALL preserve the .360 truth that Exp 3895 computed
++MOAT_SURVIVES numbers but was mis-gated by the in-distribution
++reasoner-self-verification AUROC, Exp 3896 is flagged as fabricated or not ready
++by the live summarizer, Exp 3893 did not land a JSON artifact, and downstream
++facts or FR-11 artifacts that are missing are recorded honestly. Critical
++summarizer flags for prior .360 artifacts SHALL NOT block the archive
++transition; they are archived evidence. A failed or unavailable summarizer
++command SHALL block with `blocked_v360_summary_command_failed`.
++
++The workflow SHALL append an append-only `.360` corrective archive record to
++`research-complete.yaml`, preserving all existing content as a prefix. Every
++appended `result:` value that contains `: ` SHALL be single-quoted so the YAML
++parse gate cannot be poisoned again. After the append, the workflow SHALL
++confirm `research-complete.yaml` still safe-loads.
++
++The workflow SHALL run the conductor smart-subset pretest command
++`.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py
++-q --no-header -n 0 --no-cov -o addopts=` and SHALL record a bare boolean
++`core_pretest_green`. It SHALL run the reasoner harness import command
++`.venv/bin/python -c "import carnot.verify; from carnot.verify import
++reasoner_self_verification; print('ok')"` and SHALL record a bare boolean
++`reasoner_harness_importable`; an import failure SHALL be recorded honestly but
++SHALL NOT by itself make the transition blocked. The backend routing
++recommendation SHALL record codex as reliable and preserve the standing
++operator gemini<->codex flip authority. The workflow SHALL leave
++`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
++`scripts/research_conductor.py` unchanged; those documents are reconciled by the
++conductor's separate status step for this milestone.
++
++The terminal artifact SHALL be written to
++`results/experiment_3903_archive_v360_activate_v361.json` and SHALL include bare
++top-level values for `archived_milestone`, `activated_milestone`,
++`research_complete_yaml_parses`, `core_pretest_green`,
++`reasoner_harness_importable`, `prior_milestone_verdicts_summary`,
++`backend_routing_recommendation`, `honest_verdict`, `duration_s`, and
++`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
++`complete:` or `success:`. Blocked verdicts SHALL start with
++`blocked_<resource>`.
++
++#### SCENARIO-REPORT-3903: V360 Archive Records Harness-First Truth And Green Gates
++
++**Given** `.361` is active in `research-roadmap.yaml`,
++`research-complete.yaml` exists and safe-loads, and Exp 3892 through Exp 3902
++can be summarized
++**When** the Exp 3903 workflow runs
++**Then** it invokes `scripts/summarize_artifact.py`, appends a `.360` archive
++record with all eleven task verdicts, preserves the Exp 3895 moat mis-gate
++truth and Exp 3896 live critical fabrication evidence without blocking the
++transition, confirms `research-complete.yaml` still safe-loads, runs the
++smart-subset pretest, records the reasoner harness import result, records codex
++plus the standing flip authority, writes the required terminal artifact, and
++leaves ops/status/traceability/conductor files unchanged.
++
++#### SCENARIO-REPORT-3903-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
++
++**Given** `research-complete.yaml` does not safe-load
++**When** the Exp 3903 workflow runs
++**Then** it writes a blocked artifact prefixed by
++`blocked_research_complete_yaml_poison`, records the failed YAML parse in
++`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
++unchanged.
++
++## Implementation Status (REQ-REPORT-3903)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3903 | Planned (`python/carnot/reporting/archive_v360_activate_v361_3903.py`, `scripts/experiments/experiment_3903_archive_v360_activate_v361.py`) | Planned (`tests/python/test_experiment_3903_archive_v360_activate_v361.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 80bf658d24..efab922d73 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -1,8 +1,8 @@
+ {
+   "patterns": {},
+-  "brace_fixes": 157,
++  "brace_fixes": 158,
+   "code_violations": 0,
+-  "experiments_checked": 2972,
++  "experiments_checked": 2973,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v360_activate_v361_3903.py b/python/carnot/reporting/archive_v360_activate_v361_3903.py
+new file mode 100644
+index 0000000000..784243de34
+--- /dev/null
++++ b/python/carnot/reporting/archive_v360_activate_v361_3903.py
+@@ -0,0 +1,736 @@
++"""Archive the .360 harness-first verdicts and confirm .361 green gates.
++
++Spec refs: REQ-REPORT-3903, SCENARIO-REPORT-3903,
++SCENARIO-REPORT-3903-BLOCKED-YAML.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++from dataclasses import dataclass
++from pathlib import Path
++import subprocess
++import time
++from typing import Any
++
++from carnot.reporting.archive_v345_activate_v346_3776 import (
++    JsonDict,
++    _ensure,
++    duration_from,
++    is_sha256,
++    no_forbidden_markers,
++    payload_checksum,
++    read_active_milestone,
++    write_payload,
++    yaml_parses,
++)
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.360"
++ACTIVATED_MILESTONE = "2026.06.361"
++RANDOM_SEED = 3903
++OUTPUT_REL_PATH = Path("results/experiment_3903_archive_v360_activate_v361.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++PYTHON_BIN = Path(".venv/bin/python")
++PYTEST_BIN = Path(".venv/bin/pytest")
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++CORRECTION_MARKER = "correction_type: v360_harness_first_archive_activation"
++BACKEND_ROUTING_RECOMMENDATION = (
++    "codex reliable; standing gemini<->codex flip authority dated 2026-06-05 "
++    "remains active for auditable backend routing"
++)
++REASONER_IMPORT_INCANTATION = (
++    "import carnot.verify; from carnot.verify import reasoner_self_verification; print('ok')"
++)
++
++V360_TASKS = (
++    {
++        "exp_id": "3892",
++        "id": "exp3892-archive-v359-activate-v360-green-gate",
++        "title": "Archive .359 and activate .360 green gates",
++        "deliverable": "results/experiment_3892_archive_v359_activate_v360.json",
++    },
++    {
++        "exp_id": "3893",
++        "id": "exp3893-ebt-fundamental-adversarial-replication",
++        "title": "EBT FUNDAMENTAL adversarial replication",
++        "deliverable": "results/experiment_3893_ebt_fundamental_replication.json",
++    },
++    {
++        "exp_id": "3894",
++        "id": "exp3894-build-test-reasoner-self-verify-harness",
++        "title": "Build and test reasoner self-verification harness",
++        "deliverable": "results/experiment_3894_reasoner_self_verify_harness.json",
++    },
++    {
++        "exp_id": "3895",
++        "id": "exp3895-moat-scissor-in-distribution-tested-harness",
++        "title": "Moat scissor in-distribution with tested harness",
++        "deliverable": "results/experiment_3895_moat_scissor_tested_harness.json",
++    },
++    {
++        "exp_id": "3896",
++        "id": "exp3896-build-test-graph-grounding-verifier",
++        "title": "Build and test graph-grounding fact verifier",
++        "deliverable": "results/experiment_3896_graph_grounding_verifier_harness.json",
++    },
++    {
++        "exp_id": "3897",
++        "id": "exp3897-graph-grounding-facts-run-tested",
++        "title": "Graph-grounding facts run with tested verifier",
++        "deliverable": "results/experiment_3897_graph_grounding_facts_run.json",
++    },
++    {
++        "exp_id": "3898",
++        "id": "exp3898-facts-complementarity",
++        "title": "Facts complementarity",
++        "deliverable": "results/experiment_3898_facts_complementarity.json",
++    },
++    {
++        "exp_id": "3899",
++        "id": "exp3899-fr11-v25-online-independence-reweighting",
++        "title": "FR-11 v25 online independence reweighting",
++        "deliverable": "results/experiment_3899_fr11_v25.json",
++    },
++    {
++        "exp_id": "3900",
++        "id": "exp3900-gatemate-terminal-confirmation",
++        "title": "GateMate terminal-state confirmation",
++        "deliverable": "results/experiment_3900_gatemate_terminal_confirmation.json",
++    },
++    {
++        "exp_id": "3901",
++        "id": "exp3901-polarfire-kv260-consolidated-continuity",
++        "title": "PolarFire and KV260 consolidated continuity",
++        "deliverable": "results/experiment_3901_polarfire_kv260_continuity.json",
++    },
++    {
++        "exp_id": "3902",
++        "id": "exp3902-capstone-v360",
++        "title": "Capstone .360 harness-first aggregation",
++        "deliverable": "results/experiment_3902_capstone_v360.json",
++    },
++)
++SUMMARY_TASK_IDS = {str(task["exp_id"]): str(task["id"]) for task in V360_TASKS}
++SUMMARY_DELIVERABLES = {str(task["exp_id"]): str(task["deliverable"]) for task in V360_TASKS}
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "archived_milestone",
++    "activated_milestone",
++    "research_complete_yaml_parses",
++    "core_pretest_green",
++    "reasoner_harness_importable",
++    "prior_milestone_verdicts_summary",
++    "backend_routing_recommendation",
++    "honest_verdict",
++    "duration_s",
++    "inference_substrate",
++)
++
++FIELD_PRINCIPLES = {
++    "archived_milestone": "Provenance: which milestone was archived.",
++    "activated_milestone": "Confirms .361 is live so downstream tasks resolve.",
++    "research_complete_yaml_parses": (
++        "The .355 colon-poison guard: asserts the file still loads."
++    ),
++    "core_pretest_green": (
++        "Bare bool: smart-subset core passes; guards against poison cascades."
++    ),
++    "reasoner_harness_importable": (
++        "Bare bool: the .360 tested reasoner-self-verify harness imports."
++    ),
++    "prior_milestone_verdicts_summary": (
++        "One-line verdicts for Exp 3892 through Exp 3902 so .361 starts from "
++        "the .360 truth, including the moat mis-gate."
++    ),
++    "backend_routing_recommendation": (
++        "Codex reliability plus standing backend flip authority for auditability."
++    ),
++    "honest_verdict": (
++        "Terminal-prefix verdict plus aggregation substrate for a record task."
++    ),
++    "duration_s": "Aggregation wall-clock duration with a small plausibility floor.",
++    "inference_substrate": "Aggregation substrate; this is not a live compute record.",
++}
++
++
++@dataclass(frozen=True)
++class CommandResult:
++    """Captured subprocess output for one required command."""
++
++    command: list[str]
++    exit_code: int
++    stdout: str
++    stderr: str
++
++
++def yaml_single_quote(value: str) -> str:
++    """Render a YAML single-quoted scalar."""
++
++    return "'" + value.replace("'", "''") + "'"
++
++
++def terminal_verdict(*, reasoner_importable: bool) -> str:
++    """Return the complete-path verdict while preserving import diagnostics."""
++
++    suffix = "reasoner_import_ok" if reasoner_importable else "reasoner_import_false"
++    return (
++        "complete: archived_v360_harness_first_v361_active_green_gates_asserted_"
++        f"{suffix}_codex_backend_recommended"
++    )
++
++
++def summary_command() -> list[str]:
++    """Return the disciplined artifact-reader command for Exp 3892-3902."""
++
++    return [
++        str(PYTHON_BIN),
++        "scripts/summarize_artifact.py",
++        *[str(task["deliverable"]) for task in V360_TASKS],
++    ]
++
++
++def core_pretest_command() -> list[str]:
++    """Return the mandated smart-subset pretest command."""
++
++    return [
++        str(PYTEST_BIN),
++        "tests/python/test_pipeline_extract.py",
++        "tests/python/test_docs.py",
++        "-q",
++        "--no-header",
++        "-n",
++        "0",
++        "--no-cov",
++        "-o",
++        "addopts=",
++    ]
++
++
++def reasoner_import_command() -> list[str]:
++    """Return the reasoner harness import diagnostic command."""
++
++    return [str(PYTHON_BIN), "-c", REASONER_IMPORT_INCANTATION]
++
++
++def _run_command(command: list[str], root: Path) -> CommandResult:
++    try:
++        completed = subprocess.run(
++            command,
++            cwd=root,
++            check=False,
++            capture_output=True,
++            text=True,
++        )
++        return CommandResult(
++            command=command,
++            exit_code=int(completed.returncode),
++            stdout=str(completed.stdout),
++            stderr=str(completed.stderr),
++        )
++    except subprocess.CalledProcessError as exc:
++        return CommandResult(
++            command=command,
++            exit_code=int(exc.returncode),
++            stdout=str(exc.output or ""),
++            stderr=str(exc.stderr or ""),
++        )
++    except OSError as exc:
++        return CommandResult(command=command, exit_code=127, stdout="", stderr=str(exc))
++
++
++def run_summarize_artifacts(root: Path) -> CommandResult:
++    """Run the disciplined artifact reader for the .360 source artifacts."""
++
++    return _run_command(summary_command(), root)
++
++
++def run_core_pretest(root: Path) -> CommandResult:
++    """Run the conductor's smart-subset core pretest."""
++
++    return _run_command(core_pretest_command(), root)
++
++
++def run_reasoner_import_check(root: Path) -> CommandResult:
++    """Run the nonfatal reasoner harness import diagnostic."""
++
++    return _run_command(reasoner_import_command(), root)
++
++
++def _exp_id_from_artifact_line(line: str) -> str | None:
++    stripped = line.strip()
++    if not stripped.startswith("ARTIFACT  experiment_"):
++        return None
++    return stripped.split("experiment_", 1)[1].split("_", 1)[0]
++
++
++def parse_summary_records(summary_stdout: str) -> dict[str, dict[str, Any]]:
++    """Extract per-experiment verdict and live-flag state from summarizer output."""
++
++    records: dict[str, dict[str, Any]] = {}
++    current_exp_id: str | None = None
++    for line in summary_stdout.splitlines():
++        exp_id = _exp_id_from_artifact_line(line)
++        if exp_id is not None:
++            current_exp_id = exp_id
++            records.setdefault(exp_id, {})
++            continue
++        if current_exp_id is None:
++            continue
++        stripped = line.strip()
++        if stripped.startswith("verdict"):
++            records[current_exp_id]["verdict"] = stripped.split(":", 1)[1].strip()
++        elif stripped.startswith("flagged_adversarial"):
++            records[current_exp_id]["stamped_flagged"] = "stamped): True" in stripped
++            records[current_exp_id]["live_critical"] = "LIVE re-check: CRITICAL" in stripped
++        elif stripped.startswith("[critical]"):
++            records.setdefault(current_exp_id, {}).setdefault("critical_flags", []).append(stripped)
++    return records
++
++
++def _decorated_verdict(exp_id: str, verdict: str, record: Mapping[str, Any]) -> str:
++    value = verdict
++    if record.get("live_critical") is True:
++        value += " [summarize_artifact LIVE_CRITICAL]"
++    elif record.get("stamped_flagged") is True:
++        value += " [summarize_artifact stamped_flagged]"
++    if exp_id == "3895":
++        value += (
++            "; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 "
++            "CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; "
++            "reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor"
++        )
++    elif exp_id == "3896":
++        value += "; facts fabricated again / graph-grounding harness not ready"
++    return value
++
++
++def task_verdicts_from_summary(summary_stdout: str) -> dict[str, str]:
++    """Return all .360 task verdicts, filling absent artifacts honestly."""
++
++    records = parse_summary_records(summary_stdout)
++    verdicts: dict[str, str] = {}
++    for task in V360_TASKS:
++        exp_id = str(task["exp_id"])
++        task_id = str(task["id"])
++        record = records.get(exp_id, {})
++        raw_verdict = str(record.get("verdict") or "")
++        if raw_verdict:
++            verdicts[task_id] = _decorated_verdict(exp_id, raw_verdict, record)
++        else:
++            deliverable = SUMMARY_DELIVERABLES[exp_id]
++            verdicts[task_id] = f"missing_artifact: summarize_artifact.py found no JSON artifact for {deliverable}"
++    return verdicts
++
++
++def build_prior_verdicts_summary(task_verdicts: Mapping[str, str]) -> str:
++    """Build the required bare scalar one-line-per-experiment summary."""
++
++    lines: list[str] = []
++    for task in V360_TASKS:
++        task_id = str(task["id"])
++        exp_id = str(task["exp_id"])
++        verdict = task_verdicts.get(task_id, "missing")
++        if exp_id == "3893":
++            verdict += "; EBT replication did not finish (checkpoint files only)"
++        elif exp_id == "3897":
++            verdict += "; facts efficiency/run axis never landed after the flagged harness"
++        elif exp_id == "3898":
++            verdict += "; facts complementarity never landed because upstream scores were absent"
++        elif exp_id == "3899":
++            verdict += "; FR-11 v25 artifact absent from the .360 result set"
++        lines.append(f"exp{exp_id}: {verdict}")
++    return "\n".join(lines)
++
++
++def build_research_complete_block(task_verdicts: Mapping[str, str]) -> str:
++    """Build the append-only `.360` corrective archive record."""
++
++    finding = (
++        ".360 was harness-first and showed the harnesses mattered: Exp 3894 "
++        "proved the reasoner self-verification positive control, Exp 3895 "
++        "computed MOAT_SURVIVES numbers but was mis-gated on the in-distribution "
++        "reasoner AUROC, Exp 3896 remained flagged/not ready, facts downstream "
++        "runs did not land, and EBT replication did not finish beyond checkpoint "
++        "files. .361 is active with green gates asserted."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        "  correction_type: v360_harness_first_archive_activation",
++        f"  title: {yaml_single_quote('Archive .360 harness-first truth and activate .361 green gates')}",
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md",
++        "  completed: '2026-06-07'",
++        f"  finding: {yaml_single_quote(finding)}",
++        "  activation_recorded: exp3903-archive-v360-activate-v361-green-gate",
++        f"  backend_routing_recommendation: {yaml_single_quote(BACKEND_ROUTING_RECOMMENDATION)}",
++        "  tasks:",
++    ]
++    for task in V360_TASKS:
++        task_id = str(task["id"])
++        result = task_verdicts.get(task_id, "missing")
++        lines.extend(
++            [
++                f"  - id: {task_id}",
++                f"    title: {yaml_single_quote(str(task['title']))}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {yaml_single_quote(result)}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def append_research_complete_record(text: str, task_verdicts: Mapping[str, str]) -> str:
++    """Append the `.360` corrective archive once, preserving existing content."""
++
++    if CORRECTION_MARKER in text:
++        return text
++    return f"{text.rstrip()}\n{build_research_complete_block(task_verdicts)}"
++
++
++def _base_payload(
++    *,
++    honest_verdict: str,
++    research_complete_yaml_parses: bool,
++    core_pretest_green: bool,
++    reasoner_harness_importable: bool,
++    preconditions_checked: Mapping[str, Any],
++    duration_s: float,
++    summary_result: CommandResult | None,
++    core_pretest_result: CommandResult | None,
++    reasoner_import_result: CommandResult | None,
++    task_verdicts: Mapping[str, str],
++    active_milestone_confirmed: bool,
++    active_roadmap_path: str,
++) -> JsonDict:
++    payload: JsonDict = {
++        "schema": "carnot.archive_activation.v360_to_v361_3903.v1",
++        "experiment_id": "exp3903",
++        "task_id": "exp3903-archive-v360-activate-v361-green-gate",
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "core_pretest_green": core_pretest_green,
++        "reasoner_harness_importable": reasoner_harness_importable,
++        "prior_milestone_verdicts_summary": build_prior_verdicts_summary(task_verdicts),
++        "backend_routing_recommendation": BACKEND_ROUTING_RECOMMENDATION,
++        "honest_verdict": honest_verdict,
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "exp3893_honest_verdict": task_verdicts.get(
++            "exp3893-ebt-fundamental-adversarial-replication"
++        ),
++        "exp3895_honest_verdict": task_verdicts.get(
++            "exp3895-moat-scissor-in-distribution-tested-harness"
++        ),
++        "exp3896_honest_verdict": task_verdicts.get(
++            "exp3896-build-test-graph-grounding-verifier"
++        ),
++        "task_verdicts": dict(task_verdicts),
++        "n_tasks_archived": len(task_verdicts),
++        "summary_command": summary_result.command if summary_result else summary_command(),
++        "summary_exit_code": summary_result.exit_code if summary_result else None,
++        "summary_critical_flags_archived": bool(
++            summary_result and summary_result.exit_code >= 2
++        ),
++        "core_pretest_command": core_pretest_result.command if core_pretest_result else core_pretest_command(),
++        "core_pretest_exit_code": core_pretest_result.exit_code if core_pretest_result else None,
++        "reasoner_import_command": (
++            reasoner_import_result.command if reasoner_import_result else reasoner_import_command()
++        ),
++        "reasoner_import_exit_code": (
++            reasoner_import_result.exit_code if reasoner_import_result else None
++        ),
++        "reasoner_import_stdout": reasoner_import_result.stdout if reasoner_import_result else "",
++        "active_milestone_confirmed": active_milestone_confirmed,
++        "active_roadmap_path": active_roadmap_path,
++        "preconditions_checked": dict(preconditions_checked),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "random_seed": RANDOM_SEED,
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    return payload
++
++
++def build_blocked_artifact(
++    reason: str,
++    *,
++    research_complete_yaml_parses: bool,
++    core_pretest_green: bool,
++    reasoner_harness_importable: bool,
++    preconditions_checked: Mapping[str, Any],
++    started_s: float | None,
++    now_s: float | None,
++    summary_result: CommandResult | None = None,
++    core_pretest_result: CommandResult | None = None,
++    reasoner_import_result: CommandResult | None = None,
++    task_verdicts: Mapping[str, str] | None = None,
++    active_milestone_confirmed: bool = False,
++    active_roadmap_path: str = "research-roadmap.yaml",
++) -> JsonDict:
++    """Build a blocked artifact without claiming .361 was cleanly activated."""
++
++    return _base_payload(
++        honest_verdict=reason,
++        research_complete_yaml_parses=research_complete_yaml_parses,
++        core_pretest_green=core_pretest_green,
++        reasoner_harness_importable=reasoner_harness_importable,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_from(started_s, now_s),
++        summary_result=summary_result,
++        core_pretest_result=core_pretest_result,
++        reasoner_import_result=reasoner_import_result,
++        task_verdicts=task_verdicts or {},
++        active_milestone_confirmed=active_milestone_confirmed,
++        active_roadmap_path=active_roadmap_path,
++    )
++
++
++def build_artifact(
++    *,
++    preconditions_checked: Mapping[str, Any],
++    started_s: float | None,
++    now_s: float | None,
++    summary_result: CommandResult,
++    core_pretest_result: CommandResult,
++    reasoner_import_result: CommandResult,
++    task_verdicts: Mapping[str, str],
++    active_roadmap_path: str,
++) -> JsonDict:
++    """Build the complete Exp 3903 terminal artifact."""
++
++    payload = _base_payload(
++        honest_verdict=terminal_verdict(reasoner_importable=reasoner_import_result.exit_code == 0),
++        research_complete_yaml_parses=True,
++        core_pretest_green=True,
++        reasoner_harness_importable=reasoner_import_result.exit_code == 0,
++        preconditions_checked=preconditions_checked,
++        duration_s=duration_from(started_s, now_s),
++        summary_result=summary_result,
++        core_pretest_result=core_pretest_result,
++        reasoner_import_result=reasoner_import_result,
++        task_verdicts=task_verdicts,
++        active_milestone_confirmed=True,
++        active_roadmap_path=active_roadmap_path,
++    )
++    validate_artifact(payload)
++    return payload
++
++
++def _write_blocked(output_path: Path, payload: Mapping[str, Any]) -> Path:
++    write_payload(output_path, payload)
++    return output_path
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    summary_result: CommandResult | None = None,
++    core_pretest_result: CommandResult | None = None,
++    reasoner_import_result: CommandResult | None = None,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Append the `.360` archive and write the Exp 3903 artifact."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    output_path = root_path / OUTPUT_REL_PATH
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    complete_exists = complete_path.exists()
++    complete_text = complete_path.read_text(encoding="utf-8") if complete_exists else ""
++    parses_before = complete_exists and yaml_parses(complete_text)
++    preconditions: JsonDict = {
++        "research_complete_yaml_exists": complete_exists,
++        "research_complete_yaml_parsed_before": parses_before,
++        "research_complete_yaml_parsed_after": False,
++        "active_milestone": active_milestone,
++        "active_roadmap_path": active_roadmap_path,
++    }
++    if not complete_exists:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_yaml_poison_missing",
++                research_complete_yaml_parses=False,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++    if not parses_before:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_yaml_poison",
++                research_complete_yaml_parses=False,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++    if active_milestone != ACTIVATED_MILESTONE:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_v361_not_active",
++                research_complete_yaml_parses=True,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++
++    summary = summary_result if summary_result is not None else run_summarize_artifacts(root_path)
++    if summary.exit_code not in {0, 1, 2}:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_v360_summary_command_failed",
++                research_complete_yaml_parses=True,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                summary_result=summary,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++    task_verdicts = task_verdicts_from_summary(summary.stdout)
++
++    appended = append_research_complete_record(complete_text, task_verdicts)
++    if not yaml_parses(appended):
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_research_complete_append_invalid",
++                research_complete_yaml_parses=False,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                summary_result=summary,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++
++    complete_path.write_text(appended, encoding="utf-8")
++    parses_after = yaml_parses(complete_path.read_text(encoding="utf-8"))
++    preconditions["research_complete_yaml_parsed_after"] = parses_after
++    core_result = core_pretest_result if core_pretest_result is not None else run_core_pretest(root_path)
++    core_green = core_result.exit_code == 0
++    if not core_green:
++        return _write_blocked(
++            output_path,
++            build_blocked_artifact(
++                "blocked_core_pretest_failed",
++                research_complete_yaml_parses=parses_after,
++                core_pretest_green=False,
++                reasoner_harness_importable=False,
++                preconditions_checked=preconditions,
++                started_s=start,
++                now_s=now_s,
++                summary_result=summary,
++                core_pretest_result=core_result,
++                task_verdicts=task_verdicts,
++                active_milestone_confirmed=True,
++                active_roadmap_path=active_roadmap_path,
++            ),
++        )
++    import_result = (
++        reasoner_import_result
++        if reasoner_import_result is not None
++        else run_reasoner_import_check(root_path)
++    )
++
++    payload = build_artifact(
++        preconditions_checked=preconditions,
++        started_s=start,
++        now_s=now_s,
++        summary_result=summary,
++        core_pretest_result=core_result,
++        reasoner_import_result=import_result,
++        task_verdicts=task_verdicts,
++        active_roadmap_path=active_roadmap_path,
++    )
++    write_payload(output_path, payload)
++    return output_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3903 archive/activation contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    _ensure(not missing_principles, f"missing field principles: {missing_principles}")
++    _ensure("model_specs" not in artifact, "model_specs must not be present")
++    _ensure("target_model" not in artifact, "target_model must not be present")
++    _ensure(no_forbidden_markers(artifact), "artifact must not contain compute-bound markers")
++    _ensure(artifact.get("archived_milestone") == ARCHIVED_MILESTONE, "archived milestone mismatch")
++    _ensure(artifact.get("activated_milestone") == ACTIVATED_MILESTONE, "activated milestone mismatch")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference substrate mismatch")
++    _ensure(isinstance(artifact.get("reasoner_harness_importable"), bool), "reasoner harness bool required")
++    verdict = str(artifact.get("honest_verdict") or "")
++    _ensure(
++        verdict.startswith(("complete:", "success:", "blocked_")),
++        "honest_verdict must have a terminal prefix",
++    )
++    if verdict.startswith(("complete:", "success:")):
++        _ensure(artifact.get("research_complete_yaml_parses") is True, "YAML must parse on complete path")
++        _ensure(artifact.get("core_pretest_green") is True, "core pretest must be green")
++        _ensure(artifact.get("active_milestone_confirmed") is True, "active milestone confirmation required")
++        _ensure(artifact.get("n_tasks_archived") == len(V360_TASKS), "n_tasks_archived must equal 11")
++        _ensure(
++            str(artifact.get("exp3895_honest_verdict") or "").startswith("complete: moat_scissor")
++            and "MOAT_SURVIVES numbers" in str(artifact.get("exp3895_honest_verdict") or ""),
++            "Exp 3895 moat mis-gate truth must be present",
++        )
++        _ensure(
++            "LIVE_CRITICAL" in str(artifact.get("exp3896_honest_verdict") or ""),
++            "Exp 3896 live critical flag must be present",
++        )
++    duration_s = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration_s, int | float)
++        and not isinstance(duration_s, bool)
++        and float(duration_s) >= 0.0001,
++        "duration_s must be numeric with the 0.0001s floor",
++    )
++    _ensure(
++        "codex reliable" in str(artifact.get("backend_routing_recommendation"))
++        and "gemini<->codex flip" in str(artifact.get("backend_routing_recommendation")),
++        "backend routing recommendation mismatch",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(is_sha256(checksum), "reproducibility_checksum must be a sha256 hex string")
++    _ensure(checksum == payload_checksum(artifact), "reproducibility_checksum does not match artifact content")
++
++
++def main() -> int:
++    """Write the default Exp 3903 artifact and print its path."""
++
++    print(run(REPO_ROOT))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/research-complete.yaml b/research-complete.yaml
+index 002b3143e6..2afd483dca 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -36203,3 +36203,56 @@ milestones:
+       \ verifier is the surviving asset. paper_ready stays TRUE; frozen 0.9131 unchanged."
+     deliverable: results/experiment_3902_capstone_v360.json
+     result: OK (conductor)
++- id: 2026.06.360
++  correction_type: v360_harness_first_archive_activation
++  title: 'Archive .360 harness-first truth and activate .361 green gates'
++  doc: openspec/change-proposals/research-roadmap-vNEXT.md
++  completed: '2026-06-07'
++  finding: '.360 was harness-first and showed the harnesses mattered: Exp 3894 proved the reasoner self-verification positive control, Exp 3895 computed MOAT_SURVIVES numbers but was mis-gated on the in-distribution reasoner AUROC, Exp 3896 remained flagged/not ready, facts downstream runs did not land, and EBT replication did not finish beyond checkpoint files. .361 is active with green gates asserted.'
++  activation_recorded: exp3903-archive-v360-activate-v361-green-gate
++  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
++  tasks:
++  - id: exp3892-archive-v359-activate-v360-green-gate
++    title: 'Archive .359 and activate .360 green gates'
++    deliverable: results/experiment_3892_archive_v359_activate_v360.json
++    result: 'complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended'
++  - id: exp3893-ebt-fundamental-adversarial-replication
++    title: 'EBT FUNDAMENTAL adversarial replication'
++    deliverable: results/experiment_3893_ebt_fundamental_replication.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json'
++  - id: exp3894-build-test-reasoner-self-verify-harness
++    title: 'Build and test reasoner self-verification harness'
++    deliverable: results/experiment_3894_reasoner_self_verify_harness.json
++    result: 'complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run'
++  - id: exp3895-moat-scissor-in-distribution-tested-harness
++    title: 'Moat scissor in-distribution with tested harness'
++    deliverable: results/experiment_3895_moat_scissor_tested_harness.json
++    result: 'complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor'
++  - id: exp3896-build-test-graph-grounding-verifier
++    title: 'Build and test graph-grounding fact verifier'
++    deliverable: results/experiment_3896_graph_grounding_verifier_harness.json
++    result: 'complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready'
++  - id: exp3897-graph-grounding-facts-run-tested
++    title: 'Graph-grounding facts run with tested verifier'
++    deliverable: results/experiment_3897_graph_grounding_facts_run.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3897_graph_grounding_facts_run.json'
++  - id: exp3898-facts-complementarity
++    title: 'Facts complementarity'
++    deliverable: results/experiment_3898_facts_complementarity.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3898_facts_complementarity.json'
++  - id: exp3899-fr11-v25-online-independence-reweighting
++    title: 'FR-11 v25 online independence reweighting'
++    deliverable: results/experiment_3899_fr11_v25.json
++    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3899_fr11_v25.json'
++  - id: exp3900-gatemate-terminal-confirmation
++    title: 'GateMate terminal-state confirmation'
++    deliverable: results/experiment_3900_gatemate_terminal_confirmation.json
++    result: 'blocked_gatemate_board_unreachable'
++  - id: exp3901-polarfire-kv260-consolidated-continuity
++    title: 'PolarFire and KV260 consolidated continuity'
++    deliverable: results/experiment_3901_polarfire_kv260_continuity.json
++    result: 'success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim'
++  - id: exp3902-capstone-v360
++    title: 'Capstone .360 harness-first aggregation'
++    deliverable: results/experiment_3902_capstone_v360.json
++    result: 'complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged'
+diff --git a/research-roadmap.yaml b/research-roadmap.yaml
+index 32b709884a..8c2f62ac15 100644
+--- a/research-roadmap.yaml
++++ b/research-roadmap.yaml
+@@ -30,7 +30,7 @@
+ #      task disk-reads its upstream and emits blocked_upstream_* if absent — a skipped
+ #      upstream costs ONE task, never a cascade (the .358 cascade root cause).
+ #   3. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar; the
+-#      principle: lines guide the agent, NOT a {value,principle} wrapper (exp3871 bug).
++#      principle: lines guide the agent, NOT a {{value,principle}} wrapper (exp3871 bug).
+ #   4. The moat re-gate (exp3904) REUSES the exp3894 tested harness + exp3884 corpus
+ #      verbatim; it changes ONLY the gate logic (decouple harness-validity from the
+ #      in-distribution reasoner AUROC) + adds a strong self-verify arm. No new build.
+@@ -102,7 +102,7 @@ tasks:
+         5. Record the backend routing diagnostic (codex reliable; standing gemini<->codex flip).
+ 
+       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines are guidance
+-      for YOU, do NOT wrap values in a {value,principle} dict):
++      for YOU, do NOT wrap values in a {{value,principle}} dict):
+         archived_milestone: principle "Provenance — which milestone was archived."
+         activated_milestone: principle "Confirms .361 is live so downstream tasks resolve."
+         research_complete_yaml_parses: principle "The .355 colon-poison guard — asserts the file still loads."
+@@ -188,7 +188,7 @@ tasks:
+            error_overlap_jaccard = |reasoner∩carnot|/|union| over gold-incorrect.
+         6. Apply the corrected gate (below) using the FIXTURE control + per-arm residual_catch + overlap.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         harness_fixture_auroc: principle "The harness-validity control (from exp3894); >0.6 means the judge harness is sound — this REPLACES the in-distribution reasoner AUROC as the control (the .360 mis-gate fix)."
+         residual_catch_rate_weak: principle "THE moat metric on the WEAK arm — of the reasoner's MISSED errors, the fraction Carnot independently catches."
+         residual_catch_ci95_weak: principle "Bootstrap CI95 on the weak arm — the gate is on the lower bound."
+@@ -224,7 +224,7 @@ tasks:
+       which has never been measured. Harness-first per the .360 lesson — deliverable is a
+       passing unit test, not the science. Not a scope-match of any prior experiment.
+     milestone: "2026.06.361"
+-    title: "BUILD + UNIT-TEST the cost-instrumented verification harness (harness-first for the EFFICIENCY axis): implement `measure_verification_cost(verifier_fn, items) -> {auroc, total_wall_s, per_item_wall_ms, est_tokens, est_flops}` that wraps BOTH (i) the energy/verifier ensemble (CPU forward-pass) and (ii) the LLM-as-judge (exp3894 reasoner self-verify over a 35B GGUF), measuring accuracy AND wall-clock/token/FLOP cost per verification. SHIP a unit test asserting both verifiers run on a tiny fixture, costs are positive and distinct, and the cost RATIO (llm/energy) is computed. Deliverable = the module + a PASSING test."
++    title: "BUILD + UNIT-TEST the cost-instrumented verification harness (harness-first for the EFFICIENCY axis): implement `measure_verification_cost(verifier_fn, items) -> {{auroc, total_wall_s, per_item_wall_ms, est_tokens, est_flops}}` that wraps BOTH (i) the energy/verifier ensemble (CPU forward-pass) and (ii) the LLM-as-judge (exp3894 reasoner self-verify over a 35B GGUF), measuring accuracy AND wall-clock/token/FLOP cost per verification. SHIP a unit test asserting both verifiers run on a tiny fixture, costs are positive and distinct, and the cost RATIO (llm/energy) is computed. Deliverable = the module + a PASSING test."
+     priority: critical
+     track: research
+     max_turns: 80
+@@ -258,8 +258,8 @@ tasks:
+            b. A SOTA GGUF cached (Qwen3.6-35B-A3B or gemma-4-26B-A4B-it via .gguf path + llama_cpp) (blocked_model_not_cached).
+            c. `import carnot.verify` (blocked_carnot_verify_import).
+         1. Implement `python/carnot/verify/cost_instrumented_verification.py` exposing
+-           `measure_verification_cost(verifier_fn, items, label) -> {auroc, total_wall_s, per_item_wall_ms,
+-           est_tokens, est_flops, n_items}`. For the LLM-judge, count actual prompt+completion tokens and
++           `measure_verification_cost(verifier_fn, items, label) -> {{auroc, total_wall_s, per_item_wall_ms,
++           est_tokens, est_flops, n_items}}`. For the LLM-judge, count actual prompt+completion tokens and
+            estimate FLOPs (~2*params*tokens). For the energy verifier, measure CPU wall-clock and count the
+            ensemble forward-pass ops. Use a monotonic clock; never assign one timer's value to another.
+         2. Build a tiny FIXTURE: ~10 (step, gold-label) items. Wrap BOTH verifiers with the harness.
+@@ -268,7 +268,7 @@ tasks:
+            not equal), and cost_ratio = llm_per_item / energy_per_item is computed and >1. Run the test and
+            assert it PASSES (a stub cannot pass a live-model timing test). Assert duration_s >= 60.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         harness_module_path: principle "Where exp3906 imports the tested cost harness from."
+         fixture_cost_ratio: principle "BARE FLOAT — llm_per_item / energy_per_item on the fixture; must be >1 (the cheap-classifier premise)."
+         fixture_energy_per_item_ms, fixture_llm_per_item_ms: principle "BARE FLOATs — per-item wall-clock for each verifier; must be positive and distinct."
+@@ -333,7 +333,7 @@ tasks:
+         3. Assert duration_s >= 60 (real LLM-judge run over hundreds of items); if <60s emit
+            blocked_llm_judge_not_invoked, do NOT fabricate.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         energy_auroc, llm_judge_auroc: principle "Accuracy of each verifier on the SAME labels — parity is energy within the LLM-judge CI."
+         accuracy_parity: principle "BARE BOOL — is the energy verifier's AUROC within the LLM-judge's CI95 (equally effective)."
+         cost_ratio_walltime: principle "BARE FLOAT — llm_per_item_ms / energy_per_item_ms; the 'Nx cheaper' headline (target 10-100x)."
+@@ -399,7 +399,7 @@ tasks:
+         2. Compute cascade_auroc, escalation_fraction, and cascade_cost = energy_cost(all) + llm_cost(escalated).
+         3. Compute cascade_cost_ratio = pure_llm_cost / cascade_cost. Report cascade AUROC vs pure-LLM AUROC.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         cascade_auroc: principle "Accuracy of the classifier-first cascade — should approach pure-LLM AUROC."
+         pure_llm_auroc: principle "The pure-LLM-judge baseline the cascade must (near-)match."
+         escalation_fraction: principle "Fraction of items escalated to the LLM — the cost driver; low => big savings."
+@@ -471,7 +471,7 @@ tasks:
+         3. Record HONESTLY that this is a scaffold on a SYNTHETIC env — NOT the real ARC-AGI-3 benchmark, NO
+            agentic-performance claim. The science is sequenced for after the offline proof.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         harness_module_path: principle "Where the future agentic-proof run imports the scaffold from."
+         unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing env+router test cannot be a fabricated stub."
+         synthetic_task_solved: principle "BARE BOOL — the router solved the tiny synthetic grid (smoke of the verifier-as-router loop)."
+@@ -543,7 +543,7 @@ tasks:
+            a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
+            b. A SOTA GGUF cached (Qwen3.6-35B-A3B or gemma-4-26B-A4B-it via .gguf path + llama_cpp) (blocked_model_not_cached).
+         1. Repair `graph_grounding_fact_verifier_defabricated.py` so `graph_ground_score(item, model_path)
+-           -> {eg, rp, cfi}` ACTUALLY invokes the model per item (entity + relation extraction + consistency),
++           -> {{eg, rp, cfi}}` ACTUALLY invokes the model per item (entity + relation extraction + consistency),
+            logging per-item token counts. NOT a rule-based stub.
+         2. Build a NON-SEPARABLE fixture: ~12 (claim, source) pairs with SUBTLE hallucinated entities/relations
+            (gold labels) chosen so a real verifier scores between 0.6 and 0.95 — NOT 1.0 (a 1.0 fixture is the
+@@ -552,7 +552,7 @@ tasks:
+            counts > 0), fixture AUROC in [0.6,0.95], and the run is not a stub. Run the test, assert PASS.
+            Assert duration_s >= 60 BEFORE emitting any READY verdict.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         verifier_module_path: principle "Where a future facts run would import the tested verifier from."
+         fixture_auroc: principle "BARE FLOAT — must be in [0.6,0.95]; a 1.0 fixture is the exp3896 separability fabrication tell."
+         model_invoked: principle "BARE BOOL — must be true with per-item token counts logged (the exp3886 de-fabrication assertion)."
+@@ -615,7 +615,7 @@ tasks:
+         3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution
+            (must stay ~+0.0185), frozen 0.9131 unchanged. Persist v25 state.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
+         memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
+         frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
+@@ -669,7 +669,7 @@ tasks:
+         2. Attempt JTAG readback and compare to the flashed bitstream hash; if unsupported, record readback_supported=false honestly.
+         3. Assess terminal-state: gatemate_bitstream_flashed AND smoke OK AND (readback_verified OR readback_supported==false) AND no tautology.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         duration_s: principle "Total task wall-clock — MUST be distinct from run_duration_s (the exp3866 TAUTOLOGY corrigendum)."
+         run_duration_s: principle "On-board run time only — distinct timer."
+         readback_verified: principle "BARE BOOL — did a JTAG readback confirm the flashed tile matches the bitstream."
+@@ -726,7 +726,7 @@ tasks:
+         2. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay
+            and whether the Carnot Ising bitstream is active. Record terminal/non-terminal state honestly.
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         polarfire_reachable, kv260_reachable: principle "Per-board SSH reachability — the honest precondition (SSH, never host SD card)."
+         polarfire_state: principle "Terminal hash-verified dispatch, soft-CPU only — NO fabric-acceleration claim."
+         kv260_state: principle "Loaded overlay + UIO presence — terminal/non-terminal record per Hardware-Task Continuity."
+@@ -785,7 +785,7 @@ tasks:
+            the recommended next step (the offline proof is done -> the ARC-AGI-3 agentic-proof venue is next;
+            the loop recommends, the operator decides).
+ 
+-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
++      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+         moat_verdict: principle "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE from the re-gated scissor (weak AND strong self-verify arms) — the ACCURACY axis answer."
+         efficiency_verdict: principle "PARITY_AND_CHEAPER / CHEAPER_NOT_PARITY / NOT_CHEAPER — the EFFICIENCY axis answer (the operator win condition)."
+         efficiency_cost_ratio: principle "BARE FLOAT — the measured 'Nx cheaper' number; the headline efficiency figure."
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index dadfc37e23..a8b61c4a4c 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-07T03:43:24.899645Z",
+-  "duration_s": 0.007688045501708984,
++  "run_date": "2026-06-07T04:35:14.910854Z",
++  "duration_s": 0.008055448532104492,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "ce9b56826aa416b099f0d8f27262e1be213a16c4f1651da85fca7c81e09cffc1",
++  "reproducibility_checksum": "52d02b5066419841efa6a489cf8e5f0336ff058cc31a75ad6fe790c158ce91e5",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "2c30e70cbdeaf183edea6d66c06bf5b045c531ed"
++    "adversarial_verify_version": "304aa1759742468b9ea1d134b8238fbe6f2737e6"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index a7988e1fd9..99ac7836bf 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-07T03:43:24.909896Z",
+-  "duration_s": 0.008277177810668945,
++  "run_date": "2026-06-07T04:35:14.920259Z",
++  "duration_s": 0.007357358932495117,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "274fa6aeb69788798af0a28cc1202703881b3cd96cfb3bc4aa27124d3bd1d07c",
++  "reproducibility_checksum": "37edcd7537853a38af7bad6db249eb48eee666b956e4c09a54c548ad49e695ba",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "2c30e70cbdeaf183edea6d66c06bf5b045c531ed"
++    "adversarial_verify_version": "304aa1759742468b9ea1d134b8238fbe6f2737e6"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index bde5cddb29..32e8768f60 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1278858184814453,
++  "efficiency_gains_ms": 2.138376235961914,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index fe5aaad26f..f647bc2154 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.092800034210086e-05,
++  "duration_s": 3.230100264772773e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3903_archive_v360_activate_v361.json b/results/experiment_3903_archive_v360_activate_v361.json
+new file mode 100644
+index 0000000000..eadab5ef2e
+--- /dev/null
++++ b/results/experiment_3903_archive_v360_activate_v361.json
+@@ -0,0 +1,92 @@
++{
++  "activated_milestone": "2026.06.361",
++  "active_milestone_confirmed": true,
++  "active_roadmap_path": "research-roadmap.yaml",
++  "archived_milestone": "2026.06.360",
++  "backend_routing_recommendation": "codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing",
++  "core_pretest_command": [
++    ".venv/bin/pytest",
++    "tests/python/test_pipeline_extract.py",
++    "tests/python/test_docs.py",
++    "-q",
++    "--no-header",
++    "-n",
++    "0",
++    "--no-cov",
++    "-o",
++    "addopts="
++  ],
++  "core_pretest_exit_code": 0,
++  "core_pretest_green": true,
++  "duration_s": 12.472321,
++  "exp3893_honest_verdict": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json",
++  "exp3895_honest_verdict": "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor",
++  "exp3896_honest_verdict": "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready",
++  "experiment_id": "exp3903",
++  "field_principles": {
++    "activated_milestone": "Confirms .361 is live so downstream tasks resolve.",
++    "archived_milestone": "Provenance: which milestone was archived.",
++    "backend_routing_recommendation": "Codex reliability plus standing backend flip authority for auditability.",
++    "core_pretest_green": "Bare bool: smart-subset core passes; guards against poison cascades.",
++    "duration_s": "Aggregation wall-clock duration with a small plausibility floor.",
++    "honest_verdict": "Terminal-prefix verdict plus aggregation substrate for a record task.",
++    "inference_substrate": "Aggregation substrate; this is not a live compute record.",
++    "prior_milestone_verdicts_summary": "One-line verdicts for Exp 3892 through Exp 3902 so .361 starts from the .360 truth, including the moat mis-gate.",
++    "reasoner_harness_importable": "Bare bool: the .360 tested reasoner-self-verify harness imports.",
++    "research_complete_yaml_parses": "The .355 colon-poison guard: asserts the file still loads."
++  },
++  "honest_verdict": "complete: archived_v360_harness_first_v361_active_green_gates_asserted_reasoner_import_ok_codex_backend_recommended",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_tasks_archived": 11,
++  "preconditions_checked": {
++    "active_milestone": "2026.06.361",
++    "active_roadmap_path": "research-roadmap.yaml",
++    "research_complete_yaml_exists": true,
++    "research_complete_yaml_parsed_after": true,
++    "research_complete_yaml_parsed_before": true
++  },
++  "prior_milestone_verdicts_summary": "exp3892: complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended\nexp3893: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json; EBT replication did not finish (checkpoint files only)\nexp3894: complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run\nexp3895: complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor\nexp3896: complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready\nexp3897: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3897_graph_grounding_facts_run.json; facts efficiency/run axis never landed after the flagged harness\nexp3898: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3898_facts_complementarity.json; facts complementarity never landed because upstream scores were absent\nexp3899: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3899_fr11_v25.json; FR-11 v25 artifact absent from the .360 result set\nexp3900: blocked_gatemate_board_unreachable\nexp3901: success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim\nexp3902: complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged",
++  "random_seed": 3903,
++  "reasoner_harness_importable": true,
++  "reasoner_import_command": [
++    ".venv/bin/python",
++    "-c",
++    "import carnot.verify; from carnot.verify import reasoner_self_verification; print('ok')"
++  ],
++  "reasoner_import_exit_code": 0,
++  "reasoner_import_stdout": "ok\n",
++  "reproducibility_checksum": "cb804ac07e4b22676944f40cb713bff4164ecbec626e8638a80f9d4523e7af46",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v360_to_v361_3903.v1",
++  "summary_command": [
++    ".venv/bin/python",
++    "scripts/summarize_artifact.py",
++    "results/experiment_3892_archive_v359_activate_v360.json",
++    "results/experiment_3893_ebt_fundamental_replication.json",
++    "results/experiment_3894_reasoner_self_verify_harness.json",
++    "results/experiment_3895_moat_scissor_tested_harness.json",
++    "results/experiment_3896_graph_grounding_verifier_harness.json",
++    "results/experiment_3897_graph_grounding_facts_run.json",
++    "results/experiment_3898_facts_complementarity.json",
++    "results/experiment_3899_fr11_v25.json",
++    "results/experiment_3900_gatemate_terminal_confirmation.json",
++    "results/experiment_3901_polarfire_kv260_continuity.json",
++    "results/experiment_3902_capstone_v360.json"
++  ],
++  "summary_critical_flags_archived": true,
++  "summary_exit_code": 2,
++  "task_id": "exp3903-archive-v360-activate-v361-green-gate",
++  "task_verdicts": {
++    "exp3892-archive-v359-activate-v360-green-gate": "complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended",
++    "exp3893-ebt-fundamental-adversarial-replication": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json",
++    "exp3894-build-test-reasoner-self-verify-harness": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
++    "exp3895-moat-scissor-in-distribution-tested-harness": "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor",
++    "exp3896-build-test-graph-grounding-verifier": "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready",
++    "exp3897-graph-grounding-facts-run-tested": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3897_graph_grounding_facts_run.json",
++    "exp3898-facts-complementarity": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3898_facts_complementarity.json",
++    "exp3899-fr11-v25-online-independence-reweighting": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3899_fr11_v25.json",
++    "exp3900-gatemate-terminal-confirmation": "blocked_gatemate_board_unreachable",
++    "exp3901-polarfire-kv260-consolidated-continuity": "success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim",
++    "exp3902-capstone-v360": "complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged"
++  }
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 4a86be1ffa..b6e31fb02b 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:47:29Z",
+-  "finished_at": "2026-06-07T03:47:29Z",
++  "started_at": "2026-06-07T04:35:06Z",
++  "finished_at": "2026-06-07T04:35:06Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 70676bdf4d..33d0984749 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:47:29Z",
+-  "finished_at": "2026-06-07T03:47:29Z",
++  "started_at": "2026-06-07T04:35:06Z",
++  "finished_at": "2026-06-07T04:35:06Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 62e359a0ff..a08580e007 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T03:47:29Z",
+-  "finished_at": "2026-06-07T03:47:29Z",
++  "started_at": "2026-06-07T04:35:06Z",
++  "finished_at": "2026-06-07T04:35:06Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/scripts/experiments/experiment_3903_archive_v360_activate_v361.py b/scripts/experiments/experiment_3903_archive_v360_activate_v361.py
+new file mode 100644
+index 0000000000..1117e2ac24
+--- /dev/null
++++ b/scripts/experiments/experiment_3903_archive_v360_activate_v361.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3903 .360 archive and .361 green-gate activation."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.archive_v360_activate_v361_3903 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3903_archive_v360_activate_v361.py b/tests/python/test_experiment_3903_archive_v360_activate_v361.py
+new file mode 100644
+index 0000000000..09709ad432
+--- /dev/null
++++ b/tests/python/test_experiment_3903_archive_v360_activate_v361.py
+@@ -0,0 +1,516 @@
++"""Tests for Exp 3903 .360 archive and .361 green-gate activation.
++
++Spec refs: REQ-REPORT-3903, SCENARIO-REPORT-3903,
++SCENARIO-REPORT-3903-BLOCKED-YAML.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++import yaml
++
++from carnot.reporting import archive_v360_activate_v361_3903 as mod
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++
++
++SUMMARY_STDOUT = """\
++==============================================================================
++ARTIFACT  experiment_3892_archive_v359_activate_v360.json
++------------------------------------------------------------------------------
++  verdict          : complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 11.52   substrate: aggregation_from_upstream_artifacts
++  adversarial flags: none
++==============================================================================
++!! no artifact matched: results/experiment_3893_ebt_fundamental_replication.json
++==============================================================================
++ARTIFACT  experiment_3894_reasoner_self_verify_harness.json
++------------------------------------------------------------------------------
++  verdict          : complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 72.48   substrate: live_llm_inference
++  headline metrics :
++      fixture_auroc = 0.9166666666666666
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3895_moat_scissor_tested_harness.json
++------------------------------------------------------------------------------
++  verdict          : complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 135.97   substrate: live_llama_cpp_qwen3.6_35b_tested_reasoner_self_verification_plus_exp3884_disk_carnot_scores
++  headline metrics :
++      carnot_ensemble_auroc = 0.9666888888888889
++      error_overlap_jaccard = 0.15942028985507245
++      reasoner_self_verify_auroc = 0.5463111111111111
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3896_graph_grounding_verifier_harness.json
++------------------------------------------------------------------------------
++  verdict          : complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue
++  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL
++  duration_s       : 43.82   substrate: live_llama_cpp_sota_gguf_graph_grounding_fixture
++  adversarial flags:
++      [critical] DURATION_TOO_SHORT: duration_s=43.82 but artifact references compute-bound markers
++==============================================================================
++!! no artifact matched: results/experiment_3897_graph_grounding_facts_run.json
++!! no artifact matched: results/experiment_3898_facts_complementarity.json
++!! no artifact matched: results/experiment_3899_fr11_v25.json
++==============================================================================
++ARTIFACT  experiment_3900_gatemate_terminal_confirmation.json
++------------------------------------------------------------------------------
++  verdict          : blocked_gatemate_board_unreachable
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 0.08   substrate: hardware_smoke
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3901_polarfire_kv260_continuity.json
++------------------------------------------------------------------------------
++  verdict          : success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 20.85   substrate: hardware_smoke
++  adversarial flags: none
++==============================================================================
++ARTIFACT  experiment_3902_capstone_v360.json
++------------------------------------------------------------------------------
++  verdict          : complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged
++  flagged_adversarial (stamped): None   |   LIVE re-check: clean
++  duration_s       : 0.44   substrate: aggregation_from_upstream_artifacts
++  adversarial flags: none
++==============================================================================
++"""
++
++
++def _summary_result(exit_code: int = 2, stdout: str = SUMMARY_STDOUT) -> mod.CommandResult:
++    return mod.CommandResult(
++        command=mod.summary_command(),
++        exit_code=exit_code,
++        stdout=stdout,
++        stderr="",
++    )
++
++
++def _command_result(
++    command: list[str],
++    *,
++    exit_code: int = 0,
++    stdout: str = "ok\n",
++) -> mod.CommandResult:
++    return mod.CommandResult(command=command, exit_code=exit_code, stdout=stdout, stderr="")
++
++
++def _seed_repo(root: Path, *, corrupt_complete: bool = False, milestone: str = "2026.06.361") -> None:
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{milestone}"\n'
++        "tasks:\n"
++        "  - id: exp3903-archive-v360-activate-v361-green-gate\n"
++        "    agent_type: codex\n"
++        "    requires_codex: true\n",
++        encoding="utf-8",
++    )
++    complete_text = (
++        "milestones:\n"
++        "- id: 2026.06.360\n"
++        "  title: stale conductor archive\n"
++        "  completed: '2026-06-07'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp3892-archive-v359-activate-v360-green-gate\n"
++        "    deliverable: results/experiment_3892_archive_v359_activate_v360.json\n"
++        "    result: OK (conductor)\n"
++    )
++    if corrupt_complete:
++        complete_text += "  - id: poison\n    result: complete: unquoted colon\n"
++    (root / "research-complete.yaml").write_text(complete_text, encoding="utf-8")
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "ops" / "changelog.md").write_text("changelog before\n", encoding="utf-8")
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text("# conductor before\n", encoding="utf-8")
++
++
++def test_req_report_3903_spec_anchor_exists() -> None:
++    """REQ-REPORT-3903: OpenSpec declares the archive and green-gate contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-REPORT-3903" in spec
++    assert "SCENARIO-REPORT-3903" in spec
++    assert "SCENARIO-REPORT-3903-BLOCKED-YAML" in spec
++    assert mod.OUTPUT_REL_PATH.as_posix() in spec
++    assert "reasoner_harness_importable" in spec
++    assert "MOAT_SURVIVES numbers" in spec
++
++
++def test_scenario_report_3903_run_appends_verdicts_and_green_gates(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3903: archive .360 truth and assert .361 green gates."""
++
++    _seed_repo(tmp_path)
++    before = {
++        "complete": (tmp_path / "research-complete.yaml").read_text(encoding="utf-8"),
++        "roadmap": (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++        "conductor": (tmp_path / "scripts" / "research_conductor.py").read_text(
++            encoding="utf-8"
++        ),
++    }
++
++    out_path = mod.run(
++        tmp_path,
++        summary_result=_summary_result(exit_code=2),
++        core_pretest_result=_command_result(mod.core_pretest_command()),
++        reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        started_s=4.0,
++        now_s=5.5,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    complete_text = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    complete = yaml.safe_load(complete_text)
++    archived = complete["milestones"][-1]
++    task_results = {task["id"]: task["result"] for task in archived["tasks"]}
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.terminal_verdict(reasoner_importable=True)
++    assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    for field in mod.REQUIRED_ARTIFACT_FIELDS:
++        assert not isinstance(artifact[field], dict), field
++    assert artifact["archived_milestone"] == "2026.06.360"
++    assert artifact["activated_milestone"] == "2026.06.361"
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["core_pretest_green"] is True
++    assert artifact["reasoner_harness_importable"] is True
++    assert artifact["summary_exit_code"] == 2
++    assert artifact["summary_critical_flags_archived"] is True
++    assert artifact["exp3893_honest_verdict"].startswith("missing_artifact:")
++    assert artifact["exp3895_honest_verdict"].startswith("complete: moat_scissor")
++    assert "LIVE_CRITICAL" in artifact["exp3896_honest_verdict"]
++    assert artifact["n_tasks_archived"] == 11
++    assert artifact["duration_s"] == 1.5
++    assert artifact["inference_substrate"] == mod.INFERENCE_SUBSTRATE
++    assert artifact["reproducibility_checksum"] == mod.payload_checksum(artifact)
++    for exp_id in range(3892, 3903):
++        assert f"exp{exp_id}:" in artifact["prior_milestone_verdicts_summary"]
++    assert "mis-gated MOAT_SURVIVES numbers" in artifact["prior_milestone_verdicts_summary"]
++    assert "residual_catch=0.905" in artifact["prior_milestone_verdicts_summary"]
++    assert "EBT replication did not finish" in artifact["prior_milestone_verdicts_summary"]
++    assert "facts fabricated again" in artifact["prior_milestone_verdicts_summary"]
++
++    assert complete_text.startswith(before["complete"].rstrip())
++    assert complete_text.count("correction_type: v360_harness_first_archive_activation") == 1
++    assert complete_text.count("- id: 2026.06.360") == 2
++    assert "result: complete:" not in complete_text
++    assert "result: 'complete: reasoner_self_verify_harness_READY" in complete_text
++    assert "result: 'missing_artifact:" in complete_text
++    assert archived["activation_recorded"] == "exp3903-archive-v360-activate-v361-green-gate"
++    assert task_results["exp3893-ebt-fundamental-adversarial-replication"].startswith(
++        "missing_artifact:"
++    )
++    assert "MOAT_SURVIVES numbers" in task_results["exp3895-moat-scissor-in-distribution-tested-harness"]
++    assert "LIVE_CRITICAL" in task_results["exp3896-build-test-graph-grounding-verifier"]
++    assert yaml.safe_load(complete_text)
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == before["roadmap"]
++    assert (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8") == before["changelog"]
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before["status"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8") == before["trace"]
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before["conductor"]
++
++
++def test_req_report_3903_append_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-3903: rerunning does not append duplicate corrective records."""
++
++    _seed_repo(tmp_path)
++
++    first = mod.run(
++        tmp_path,
++        summary_result=_summary_result(),
++        core_pretest_result=_command_result(mod.core_pretest_command()),
++        reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        started_s=1.0,
++        now_s=1.25,
++    ).read_text(encoding="utf-8")
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second = mod.run(
++        tmp_path,
++        summary_result=_summary_result(),
++        core_pretest_result=_command_result(mod.core_pretest_command()),
++        reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        started_s=1.0,
++        now_s=1.25,
++    ).read_text(encoding="utf-8")
++    second_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++
++    assert first == second
++    assert first_complete == second_complete
++    assert second_complete.count("correction_type: v360_harness_first_archive_activation") == 1
++
++
++def test_scenario_report_3903_blocked_yaml_writes_artifact_without_append(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3903-BLOCKED-YAML: corrupt YAML exits before append."""
++
++    _seed_repo(tmp_path, corrupt_complete=True)
++    before = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++
++    out_path = mod.run(
++        tmp_path,
++        summary_result=_summary_result(),
++        core_pretest_result=_command_result(mod.core_pretest_command()),
++        reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        started_s=7.0,
++        now_s=7.1,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison")
++    assert artifact["research_complete_yaml_parses"] is False
++    assert artifact["core_pretest_green"] is False
++    assert artifact["reasoner_harness_importable"] is False
++    assert artifact["preconditions_checked"]["research_complete_yaml_exists"] is True
++    assert artifact["preconditions_checked"]["research_complete_yaml_parsed_before"] is False
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == before
++
++
++def test_req_report_3903_reasoner_import_failure_is_recorded_not_fatal(tmp_path: Path) -> None:
++    """REQ-REPORT-3903: reasoner import diagnostics are bare bools, not a hard gate."""
++
++    _seed_repo(tmp_path)
++
++    out_path = mod.run(
++        tmp_path,
++        summary_result=_summary_result(),
++        core_pretest_result=_command_result(mod.core_pretest_command()),
++        reasoner_import_result=_command_result(
++            mod.reasoner_import_command(),
++            exit_code=1,
++            stdout="ImportError\n",
++        ),
++        started_s=8.0,
++        now_s=9.0,
++    )
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++
++    mod.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == mod.terminal_verdict(reasoner_importable=False)
++    assert artifact["reasoner_harness_importable"] is False
++    assert artifact["reasoner_import_exit_code"] == 1
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["core_pretest_green"] is True
++
++
++def test_req_report_3903_summary_parser_records_stamped_only_flags() -> None:
++    """REQ-REPORT-3903: stamped historical flags remain visible in archive text."""
++
++    stdout = """\
++==============================================================================
++ARTIFACT  experiment_3892_archive_v359_activate_v360.json
++------------------------------------------------------------------------------
++  verdict          : complete: historical_flagged_clean_now
++  flagged_adversarial (stamped): True   |   LIVE re-check: clean
++==============================================================================
++"""
++
++    verdicts = mod.task_verdicts_from_summary(stdout)
++
++    assert (
++        "summarize_artifact stamped_flagged"
++        in verdicts["exp3892-archive-v359-activate-v360-green-gate"]
++    )
++
++
++def test_req_report_3903_helpers_fail_closed(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3903: hard helper failures block instead of fabricating success."""
++
++    _seed_repo(tmp_path, milestone="2026.06.360")
++    artifact = json.loads(
++        mod.run(
++            tmp_path,
++            summary_result=_summary_result(),
++            core_pretest_result=_command_result(mod.core_pretest_command()),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_v361_not_active")
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        mod.run(
++            tmp_path,
++            summary_result=_summary_result(exit_code=127, stdout=""),
++            core_pretest_result=_command_result(mod.core_pretest_command()),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_v360_summary_command_failed")
++
++    _seed_repo(tmp_path)
++    artifact = json.loads(
++        mod.run(
++            tmp_path,
++            summary_result=_summary_result(),
++            core_pretest_result=_command_result(mod.core_pretest_command(), exit_code=1, stdout="failed"),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_core_pretest_failed")
++    assert artifact["core_pretest_green"] is False
++
++    _seed_repo(tmp_path)
++    before = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    monkeypatch.setattr(
++        mod,
++        "append_research_complete_record",
++        lambda _text, _verdicts: "milestones:\n- id: bad\n  result: complete: broken\n",
++    )
++    artifact = json.loads(
++        mod.run(
++            tmp_path,
++            summary_result=_summary_result(),
++            core_pretest_result=_command_result(mod.core_pretest_command()),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_append_invalid")
++    assert (tmp_path / "research-complete.yaml").read_text(encoding="utf-8") == before
++
++    missing = tmp_path / "missing"
++    missing.mkdir()
++    artifact = json.loads(
++        mod.run(
++            missing,
++            summary_result=_summary_result(),
++            core_pretest_result=_command_result(mod.core_pretest_command()),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++        ).read_text(encoding="utf-8")
++    )
++    assert artifact["honest_verdict"].startswith("blocked_research_complete_yaml_poison_missing")
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("prior_milestone_verdicts_summary"), "missing required"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (lambda p: p.update(archived_milestone="2026.06.359"), "archived milestone"),
++        (lambda p: p.update(activated_milestone="2026.06.360"), "activated milestone"),
++        (lambda p: p.update(research_complete_yaml_parses=False), "YAML must parse"),
++        (lambda p: p.update(core_pretest_green=False), "core pretest"),
++        (lambda p: p.update(reasoner_harness_importable="yes"), "reasoner harness"),
++        (lambda p: p.update(active_milestone_confirmed=False), "active milestone"),
++        (lambda p: p.update(n_tasks_archived=10), "n_tasks_archived"),
++        (lambda p: p.update(exp3895_honest_verdict="complete: wrong"), "Exp 3895"),
++        (lambda p: p.update(exp3896_honest_verdict="complete: no flag"), "Exp 3896"),
++        (lambda p: p.update(backend_routing_recommendation="gemini only"), "backend"),
++        (lambda p: p.update(inference_substrate="live_model"), "inference"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(copied_marker="GGUF"), "compute-bound markers"),
++    ],
++)
++def test_req_report_3903_validate_artifact_rejects_regressions(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3903: validation rejects fields that hide green-gate risk."""
++
++    _seed_repo(tmp_path)
++    payload = json.loads(
++        mod.run(
++            tmp_path,
++            summary_result=_summary_result(),
++            core_pretest_result=_command_result(mod.core_pretest_command()),
++            reasoner_import_result=_command_result(mod.reasoner_import_command()),
++            started_s=9.0,
++            now_s=9.5,
++        ).read_text(encoding="utf-8")
++    )
++
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        mod.validate_artifact(broken)
++
++
++def test_req_report_3903_subprocess_helpers(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-REPORT-3903: subprocess helpers use the mandated commands."""
++
++    calls: list[list[str]] = []
++
++    class Completed:
++        returncode = 0
++        stdout = SUMMARY_STDOUT
++        stderr = ""
++
++    def run_subprocess(cmd: list[str], **kwargs: object) -> Completed:
++        calls.append(cmd)
++        assert kwargs["cwd"] == tmp_path
++        return Completed()
++
++    monkeypatch.setattr(mod.subprocess, "run", run_subprocess)
++    summary = mod.run_summarize_artifacts(tmp_path)
++    assert summary.stdout == SUMMARY_STDOUT
++    assert summary.exit_code == 0
++    assert summary.command == mod.summary_command()
++
++    calls.clear()
++    assert mod.run_core_pretest(tmp_path).exit_code == 0
++    assert calls == [mod.core_pretest_command()]
++
++    calls.clear()
++    assert mod.run_reasoner_import_check(tmp_path).stdout == SUMMARY_STDOUT
++    assert calls == [mod.reasoner_import_command()]
++
++    def fail_subprocess(cmd: list[str], **kwargs: object) -> object:
++        raise mod.subprocess.CalledProcessError(1, cmd, output="", stderr="failed")
++
++    monkeypatch.setattr(mod.subprocess, "run", fail_subprocess)
++    assert mod.run_core_pretest(tmp_path).exit_code == 1
++    assert mod.run_reasoner_import_check(tmp_path).exit_code == 1
++
++    def os_error_subprocess(cmd: list[str], **kwargs: object) -> object:
++        raise OSError("missing executable")
++
++    monkeypatch.setattr(mod.subprocess, "run", os_error_subprocess)
++    assert mod.run_core_pretest(tmp_path).exit_code == 127
++    assert mod.run_reasoner_import_check(tmp_path).exit_code == 127
++
++
++def test_scenario_report_3903_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3903: the requested script entrypoint exists."""
++
++    script = Path("scripts/experiments/experiment_3903_archive_v360_activate_v361.py")
++    assert script.exists()
++    text = script.read_text(encoding="utf-8")
++    assert "archive_v360_activate_v361_3903" in text
++
++
++def test_req_report_3903_main_prints_written_path(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT-3903: module main is a thin printable runner."""
++
++    out_path = tmp_path / "results" / "experiment_3903_archive_v360_activate_v361.json"
++    monkeypatch.setattr(mod, "run", lambda root: out_path)
++
++    assert mod.main() == 0
++    assert str(out_path) in capsys.readouterr().out
+-- 
+2.55.0
+

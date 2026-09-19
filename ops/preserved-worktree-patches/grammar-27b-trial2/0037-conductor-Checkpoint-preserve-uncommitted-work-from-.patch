@@ -1,0 +1,43 @@
+From 383991c4180305be3ab3ea545eca381871ce8cf8 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Mon, 1 Jun 2026 19:06:38 -0400
+Subject: [PATCH 00037/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 346a49cbbb..ecb1ee5539 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 181, "phase": "iteration_start", "last_beat": "2026-06-01T22:54:46Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 182, "phase": "iteration_start", "last_beat": "2026-06-01T23:06:36Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index be948f38d5..f6deeecfd4 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7554,3 +7554,4 @@ web search: https://docs.garak.ai/garak/examples/pr |
+ | 2026-06-01 22:38 UTC | Plan milestone 2026.06.337 | OK | 12 tasks proposed |
+ | 2026-06-01 22:40 UTC | Milestone 2026.06.337 activated | OK | 12 tasks queued |
+ | 2026-06-01 22:52 UTC | Archive milestone .336 honestly (the first-headlin | OK | 86 passed in 4.00s |
++| 2026-06-01 23:04 UTC | Backend-state diagnostic v3 — third consecutive pr | OK | 89 passed in 4.65s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index efec7a7af2..c219f46245 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 1350941, "iteration": 181, "phase": "iteration_start", "started_at": "2026-06-01T22:54:46Z"}
+\ No newline at end of file
++{"pid": 1350941, "iteration": 182, "phase": "iteration_start", "started_at": "2026-06-01T23:06:36Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

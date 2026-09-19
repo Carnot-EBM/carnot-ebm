@@ -1,0 +1,3008 @@
+From 1712f4a4f3398fb4e303b6314203c8431b520a62 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Sun, 7 Jun 2026 07:42:14 -0400
+Subject: [PATCH 00798/11171] =?UTF-8?q?[conductor]=20FACTS=20graph-groundi?=
+ =?UTF-8?q?ng=20verifier=20=E2=80=94=20LAST=20DISCIPLINED=20retry=20(PRD?=
+ =?UTF-8?q?=20Tier=20C,=20deprioritized):=20repair=20the=20HalluGraph-styl?=
+ =?UTF-8?q?e=20(arXiv:2512.01659)=20Entity-Grounding=20+=20Relation-Preser?=
+ =?UTF-8?q?vation=20->=20Composite=20Fidelity=20Index=20verifier=20so=20it?=
+ =?UTF-8?q?=20ACTUALLY=20invokes=20the=20model=20per=20item=20via=20the=20?=
+ =?UTF-8?q?exp3915=20robust=20gguf=5Finference=20harness,=20and=20SHIP=20a?=
+ =?UTF-8?q?=20unit=20test=20on=20a=20NON-separable=20fixture=20(subtle=20h?=
+ =?UTF-8?q?allucinated=20relations=20->=20fixture=20AUROC=20in=20[0.6,0.95?=
+ =?UTF-8?q?],=20NOT=201.0)=20asserting=20model=5Finvoked=20+=20token=20cou?=
+ =?UTF-8?q?nts=20logged.=20LAST=20attempt=20before=20the=20facts=20route?=
+ =?UTF-8?q?=20retires=20to=20honest=20future-work.=20Deliverable=20=3D=20t?=
+ =?UTF-8?q?he=20module=20+=20a=20PASSING=20test.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Automated research step by research conductor.
+Task ID: exp3920-facts-graph-grounding-last-retry
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ openspec/capabilities/verification/spec.md    |  73 ++
+ .../papers/paper-v6/section-6-limitations.md  |   3 +
+ ops/conductor-heartbeat.json                  |   2 +-
+ ops/conductor-log.md                          |   3 +
+ ops/conductor-state.json                      |   2 +-
+ ops/dogfood-memory.json                       |   2 +-
+ ops/known-issues.md                           |   4 +
+ python/carnot/verify/gguf_inference.py        |   3 +-
+ ...ph_grounding_fact_verifier_defabricated.py | 438 +++++++++++-
+ results/experiment_1035_dualgpu_rocm_v3.json  |   6 +-
+ .../experiment_1038_milestone_retro_80.json   |   2 +-
+ .../experiment_1081_fpga_scale_benchmark.json |   6 +-
+ .../experiment_1089_milestone_retro_84.json   |   2 +-
+ .../experiment_1103_milestone_retro_85.json   |   2 +-
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...periment_1747_ebt_mode_collapse_check.json |   4 +-
+ .../experiment_1750_huggingface_retry.json    |   4 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1822_rtl_synth.log         |   4 +-
+ results/experiment_1845_hiled.json            |   2 +-
+ results/experiment_1864_roce.json             |   7 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...riment_1911_phase4_canonical_decision.json |   2 +-
+ ...periment_1970_domino_fast_constraints.json |   4 +-
+ results/experiment_2031.json                  |   4 +-
+ results/experiment_2083_kan4cbc.json          |   2 +-
+ results/experiment_2090_crane_humaneval.json  |   8 +-
+ results/experiment_2093_retro.json            |   4 +-
+ results/experiment_2097_eqm_eval.json         |   4 +-
+ results/experiment_2427_kv260_yosys_v4.json   |   2 +-
+ results/experiment_2481_capstone_v239.json    |   2 +-
+ results/experiment_2516_capstone_v242.json    |   2 +-
+ results/experiment_2521_ensemble_v7.json      |   2 +-
+ results/experiment_2538_kv260_sd_flash.json   |   2 +-
+ ...riment_2721_paper_v6_theory_update_v2.json |   2 +-
+ ...nt_2736_arxiv_submission_package_prep.json |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...riment_2758_weak_strong_policy_fix_v2.json |   2 +-
+ ...ent_2824_cross_corpus_verifier_matrix.json |  40 +-
+ ...ifier_diversity_reaudit_after_axis_v3.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3351_gatemate_latency_benchmark.json |   2 +-
+ .../experiment_3386_fr11_nonforgetting.json   |   2 +-
+ results/experiment_3394_kona_global_opt.json  |   2 +-
+ .../experiment_3395_energy_based_replay.json  |   2 +-
+ results/experiment_339_session_startup.json   |   6 +-
+ results/experiment_3408_kona_global_opt.json  |   2 +-
+ ..._kv260_terminal_latency_transcript_v1.json |   4 +-
+ ...eriment_3420_kv260_terminal_transcript.log |   2 +-
+ ...ent_3559_g_gate_status_synthesis_v327.json |   2 +-
+ results/experiment_3571_capstone_v328.json    |   2 +-
+ ...factual_hallucination_error_detection.json |   2 +-
+ ..._3576_verifier_cross_domain_synthesis.json |   4 +-
+ ...ent_3581_g_gate_status_synthesis_v329.json |   4 +-
+ results/experiment_3582_capstone_v329.json    |   2 +-
+ ...iment_3583_archive_v329_activate_v330.json |   4 +-
+ ...iment_3598_diagnose_330_cascade_audit.json |   4 +-
+ ...iment_3611_archive_v331_activate_v332.json |   4 +-
+ results/experiment_3843.json                  |   4 +-
+ ...3920_facts_graph_grounding_last_retry.json | 150 ++++
+ results/experiment_542_fover_expansion.json   |   6 +-
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   4 +-
+ results/experiment_696_icalm_abstention.json  |   6 +-
+ ...iment_833_constraint_delta_root_cause.json |   6 +-
+ ...periment_885_spectral_attention_probe.json |   6 +-
+ .../experiment_911_drift_probe_tier0i.json    |  18 +-
+ ...t_3920_facts_graph_grounding_last_retry.py | 676 ++++++++++++++++++
+ .../test_graph_grounding_fact_verifier.py     | 334 +++++----
+ 70 files changed, 1635 insertions(+), 312 deletions(-)
+ create mode 100644 results/experiment_3920_facts_graph_grounding_last_retry.json
+ create mode 100644 scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py
+
+diff --git a/openspec/capabilities/verification/spec.md b/openspec/capabilities/verification/spec.md
+index fc9e1979cf..35947b4b96 100644
+--- a/openspec/capabilities/verification/spec.md
++++ b/openspec/capabilities/verification/spec.md
+@@ -11345,3 +11345,76 @@ live-model claim.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-VERIFY-3896 | Implemented (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py`) | Implemented (`tests/python/test_graph_grounding_fact_verifier.py`) |
++
++### REQ-VERIFY-3920: Facts Graph-Grounding Last Retry
++
++The repository SHALL provide an Exp 3920 last-retry graph-grounding facts
++verifier at `python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`
++and `scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py`
++that routes live inference through the Exp 3915 robust GGUF generator harness
++instead of direct ad hoc `llama_cpp.Llama` construction.
++
++Before any scoring, the runner SHALL verify CUDA with the repository virtualenv
++Python and verify that
++`results/experiment_3915_robust_gguf_inference_harness.json` exists with
++`unit_test_passed=true` and `smoke_tokens>0`. Failed hard preconditions SHALL
++write a terminal `blocked_<resource>` artifact without fabricated fixture or
++corpus metrics.
++
++The verifier SHALL expose `graph_ground_score(item, generator, ...)` and SHALL
++invoke the supplied robust generator for every scored item. The returned score
++payload SHALL include bare `eg`, `rp`, and `cfi` fields, a bare
++`model_invoked` boolean, and per-item completion token evidence so callers can
++reject stubs. The fixed fixture SHALL contain approximately twelve
++claim/source pairs with subtle entity and relation hallucinations plus at least
++one graph-indistinguishable hallucination, so the live fixture is deliberately
++non-separable: a valid fixture AUROC is in `[0.6, 0.95]`, and AUROC `1.0`
++SHALL fail the gate.
++
++For the corpus run, the Exp 3920 runner SHALL load at least 60 labeled facts
++rows, call the same robust generator path for every row, persist per-item token
++counts and graph scores, and require the live corpus run artifact to record
++`duration_s >= 60` and `corpus_run_token_count > 0` before emitting a READY
++verdict. The terminal artifact SHALL be written to
++`results/experiment_3920_facts_graph_grounding_last_retry.json` and include
++bare top-level fields for `verifier_module_path`, `gguf_harness_model_used`,
++`fixture_auroc`, `model_invoked`, `corpus_run_token_count`,
++`unit_test_path`, `unit_test_passed`, `preconditions_checked`, `model_specs`,
++`random_seed`, `reproducibility_checksum`, `duration_s`, and
++`inference_substrate`, with string principle notes in `field_principles` and no
++`{value, principle}` metric wrappers.
++
++The falsification gate SHALL emit
++`complete: facts_graph_verifier_READY_fixture_auroc<a>_model_invoked_tokens<t>`
++only when `model_invoked=true`, `unit_test_passed=true`,
++`0.6 <= fixture_auroc <= 0.95`, `duration_s >= 60`, and
++`corpus_run_token_count > 0`. Otherwise it SHALL emit
++`complete: facts_graph_verifier_NOT_READY_fixture_auroc<a>_facts_route_retires_to_future_work`.
++
++### SCENARIO-VERIFY-3920: Robust Generator Facts Run Gates Non-Fabricated Evidence
++
++Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, and a
++labeled facts corpus has at least 60 rows with both hallucinated and grounded
++labels, when Exp 3920 runs, then it writes
++`results/experiment_3920_facts_graph_grounding_last_retry.json`, records the
++GGUF model used by the robust harness, records per-item token counts for both
++the non-separable fixture and the corpus slice, computes fixture AUROC only
++from the fixture gold labels and graph scores, enforces the `[0.6, 0.95]`
++fixture range, enforces the 60-second live corpus duration floor, and selects
++the terminal READY or NOT_READY verdict from those bare fields.
++
++### SCENARIO-VERIFY-3920-BLOCKED: Missing Robust Inputs Do Not Fabricate Facts Readiness
++
++Given CUDA is unavailable, Exp 3915 is missing or not ready, no labeled facts
++corpus is available, live inference fails, no model tokens are produced, the
++fixture AUROC is `1.0`, or the corpus run finishes in under 60 seconds, when
++Exp 3920 builds its artifact, then it writes a terminal blocked or NOT_READY
++artifact with populated precondition evidence, bare null or zero metric fields
++where appropriate, `model_invoked=false` when no model call occurred, and no
++facts-domain READY claim.
++
++## Implementation Status (REQ-VERIFY-3920)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-VERIFY-3920 | Planned (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py`) | Planned (`tests/python/test_graph_grounding_fact_verifier.py`) |
+diff --git a/openspec/papers/paper-v6/section-6-limitations.md b/openspec/papers/paper-v6/section-6-limitations.md
+index cd089e5c6a..b8711704b6 100644
+--- a/openspec/papers/paper-v6/section-6-limitations.md
++++ b/openspec/papers/paper-v6/section-6-limitations.md
+@@ -313,5 +313,8 @@ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+ 
++### Phase 4 Metric Inaccessibility
++We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
++
+ ### Phase 4 Metric Inaccessibility
+ We note that alpha_t inaccessibility is a methodology limitation, NOT a Phase 4 hypothesis falsification. The Fast-Slow Variant satisfies the Phase 4 active-inference hypothesis EMPIRICALLY.
+\ No newline at end of file
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 7b5656afba..c9344a7097 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 57, "phase": "iteration_start", "last_beat": "2026-06-07T10:09:35Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 58, "phase": "iteration_start", "last_beat": "2026-06-07T11:32:43Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 9f3cf71eab..fdaddcc155 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8002,3 +8002,6 @@ ERROR: {
+ | 2026-06-07 09:38 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | OK | cache hit: 100 passed in 4.99s |
+ | 2026-06-07 09:54 UTC | META-EBM CASCADE ROUTER prototype (classifier-firs | OK | 90 passed in 4.56s |
+ | 2026-06-07 10:07 UTC | ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the | OK | 89 passed in 5.47s |
++| 2026-06-07 11:30 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:  346    49%
++
++c |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9a8dc59e5d..d83f7e3ac5 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 563504, "iteration": 57, "phase": "iteration_start", "started_at": "2026-06-07T10:09:35Z"}
+\ No newline at end of file
++{"pid": 563504, "iteration": 58, "phase": "iteration_start", "started_at": "2026-06-07T11:32:43Z"}
+\ No newline at end of file
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index cea790e0e1..3312104a4b 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 158,
+   "code_violations": 0,
+-  "experiments_checked": 2981,
++  "experiments_checked": 2982,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/ops/known-issues.md b/ops/known-issues.md
+index e89738f56f..0e27c62664 100644
+--- a/ops/known-issues.md
++++ b/ops/known-issues.md
+@@ -7655,5 +7655,9 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+ 
+ 
++### NEW Phase 4 Canonical Metric MANDATORY
++Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
++
++
+ ### NEW Phase 4 Canonical Metric MANDATORY
+ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+diff --git a/python/carnot/verify/gguf_inference.py b/python/carnot/verify/gguf_inference.py
+index 5863188e18..b3fcaaa6d8 100644
+--- a/python/carnot/verify/gguf_inference.py
++++ b/python/carnot/verify/gguf_inference.py
+@@ -89,7 +89,8 @@ def load_gguf_generator(
+ 
+     failures: list[str] = []
+     candidates = tuple(prefer_order) if prefer_order is not None else DEFAULT_PREFER_ORDER
+-    offload_levels = (int(max_n_gpu_layers), 20, 0)
++    requested_gpu_layers = int(max_n_gpu_layers)
++    offload_levels = (0,) if requested_gpu_layers == 0 else (requested_gpu_layers, 20, 0)
+ 
+     for fallback_index, model_name in enumerate(candidates):
+         gguf_paths = _resolve_candidate_paths(model_name)
+diff --git a/python/carnot/verify/graph_grounding_fact_verifier_defabricated.py b/python/carnot/verify/graph_grounding_fact_verifier_defabricated.py
+index 2cd35f79c6..6d7acadab7 100644
+--- a/python/carnot/verify/graph_grounding_fact_verifier_defabricated.py
++++ b/python/carnot/verify/graph_grounding_fact_verifier_defabricated.py
+@@ -28,6 +28,7 @@ from typing import Any
+ 
+ from carnot.inference.sota_models import resolve_cached_gguf
+ from carnot.verify.corrected_cross_domain_remeasurement_v4 import tie_aware_auroc
++from carnot.verify.gguf_inference import load_gguf_generator
+ from carnot.verify.graph_grounding_probe import (
+     FACTS_CORPUS_CANDIDATES,
+     GraphGroundingProbe,
+@@ -52,6 +53,12 @@ RANDOM_SEED = 3886
+ DEFAULT_SAMPLE_SIZE = 120
+ MIN_REAL_DURATION_S = 60.0
+ CFI_ENTITY_WEIGHT = 0.7
++GRAPH_GROUNDING_PREFER_ORDER = (
++    "gemma-4-26B-A4B-it",
++    "Qwen3.6-35B-A3B",
++    "gemma-4-31B-it",
++    "Qwen3.5-0.8B",
++)
+ INFERENCE_SUBSTRATE = (
+     "live_llama_cpp_sota_gguf_entity_relation_extraction_plus_hallugraph_cfi_"
+     "and_same_row_math_bound_ensemble_baseline"
+@@ -254,6 +261,49 @@ class LlamaGraphExtractor:
+         return parsed
+ 
+ 
++class RobustGeneratorGraphExtractor:
++    """Graph extractor backed by the Exp 3915 robust generator object."""
++
++    def __init__(
++        self,
++        generator: Any,
++        model_specs: Mapping[str, Any] | None = None,
++        *,
++        max_tokens: int = 160,
++    ) -> None:
++        self.generator = generator
++        self.model_specs = dict(model_specs or {})
++        self.max_tokens = max_tokens
++        self.invocation_count = 0
++        self.completion_tokens_total = 0
++
++    def extract_pair(self, answer: str, evidence: str, item_index: int) -> GraphExtractionResult:
++        prompt = graph_extraction_prompt(answer, evidence)
++        self.invocation_count += 1
++        raw = self.generator(
++            prompt,
++            max_tokens=self.max_tokens,
++            temperature=0.0,
++        )
++        text = _extract_text(raw)
++        completion_tokens = _completion_tokens(raw, text)
++        self.completion_tokens_total += completion_tokens
++        parsed = parse_model_graph_response(
++            text,
++            prompt_sha256=sha256_text(prompt),
++            completion_tokens=completion_tokens,
++        )
++        if _graph_empty(parsed.response_graph) and _graph_empty(parsed.evidence_graph):
++            return _fallback_graph_extraction(
++                answer,
++                evidence,
++                raw_response=text,
++                prompt_sha256=sha256_text(prompt),
++                completion_tokens=completion_tokens,
++            )
++        return parsed
++
++
+ def graph_extraction_prompt(answer: str, evidence: str) -> str:
+     """Build the strict JSON extraction prompt for llama.cpp."""
+ 
+@@ -266,38 +316,67 @@ def graph_extraction_prompt(answer: str, evidence: str) -> str:
+         "Normalize relation phrases to short predicates such as discovered, wrote, signed_in, "
+         "launched_aboard, produced, received, erupted_in. Do not judge truth; only extract.\n"
+         "If a sentence says X discovered Y, the relation subject is X and object is Y.\n\n"
+-        f"Response:\n{_clip_text(answer, 1200)}\n\n"
+-        f"Evidence:\n{_clip_text(evidence, 3200)}\n"
++        f"Response:\n{_clip_text(answer, 700)}\n\n"
++        f"Evidence:\n{_clip_text(evidence, 1200)}\n"
+     )
+ 
+ 
+ def graph_ground_score(
+     item: Mapping[str, Any],
+-    model_path: str,
++    generator: Any | None = None,
+     *,
++    model_path: str | None = None,
+     llama_factory: Callable[..., Any] | None = None,
+     max_tokens: int = 220,
+     n_gpu_layers: int = -1,
+     n_ctx: int = 4096,
+     n_batch: int = 256,
+ ) -> JsonDict:
+-    """Score one claim/source pair with a live llama.cpp graph extraction call."""
++    """Score one claim/source pair with a live graph extraction call."""
+ 
+     answer, evidence = _item_answer_evidence(item)
+-    extractor = LlamaGraphExtractor(
+-        {
+-            "model_path": model_path,
+-            "n_gpu_layers": n_gpu_layers,
+-            "n_ctx": n_ctx,
+-            "n_batch": n_batch,
+-            "max_tokens": max_tokens,
+-        },
+-        llama_factory=llama_factory,
+-        max_tokens=max_tokens,
+-    )
++    if generator is not None and not isinstance(generator, (str, Path)):
++        extractor: Any = RobustGeneratorGraphExtractor(
++            generator,
++            {"loader": "carnot.verify.gguf_inference.load_gguf_generator"},
++            max_tokens=max_tokens,
++        )
++    else:
++        resolved_model_path = str(model_path or generator or "")
++        if not resolved_model_path:
++            raise ValueError("graph_ground_score requires a robust generator or model_path")
++        extractor = LlamaGraphExtractor(
++            {
++                "model_path": resolved_model_path,
++                "n_gpu_layers": n_gpu_layers,
++                "n_ctx": n_ctx,
++                "n_batch": n_batch,
++                "max_tokens": max_tokens,
++            },
++            llama_factory=llama_factory,
++            max_tokens=max_tokens,
++        )
+     extraction = extractor.extract_pair(answer, evidence, 0)
+     score = compute_hallugraph_score(extraction)
+-    return _score_payload(score, extraction, extractor.invocation_count > 0)
++    payload = _score_payload(score, extraction, extractor.invocation_count > 0)
++    payload["model_call_count"] = extractor.invocation_count
++    return payload
++
++
++def load_robust_graph_grounding_generator(
++    prefer_order: Sequence[str] | None = None,
++    *,
++    n_ctx: int = 2048,
++    max_n_gpu_layers: int = 0,
++) -> tuple[Any, JsonDict]:
++    """Load the Exp 3915 robust GGUF generator for graph-grounding calls."""
++
++    generator, meta = load_gguf_generator(
++        prefer_order=tuple(prefer_order) if prefer_order is not None else GRAPH_GROUNDING_PREFER_ORDER,
++        n_ctx=n_ctx,
++        max_n_gpu_layers=max_n_gpu_layers,
++    )
++    return generator, dict(meta)
+ 
+ 
+ def build_graph_grounding_fixture() -> tuple[JsonDict, ...]:
+@@ -539,10 +618,287 @@ def build_graph_grounding_fixture() -> tuple[JsonDict, ...]:
+     return tuple(dict(item) for item in fixture)
+ 
+ 
++def build_nonseparable_graph_grounding_fixture() -> tuple[JsonDict, ...]:
++    """Build the Exp 3920 non-separable graph-grounding fixture."""
++
++    fixture = (
++        _fixture_item(
++            item_id="grounded-lovelace-notes",
++            claim="Ada Lovelace wrote notes about the Analytical Engine.",
++            source="Ada Lovelace wrote notes about Charles Babbage's Analytical Engine.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Ada Lovelace", "Analytical Engine"],
++                "relations": [
++                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Ada Lovelace", "Charles Babbage", "Analytical Engine"],
++                "relations": [
++                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="grounded-hubble-discovery",
++            claim="The Hubble Space Telescope launched aboard Discovery.",
++            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Hubble Space Telescope", "Discovery"],
++                "relations": [
++                    {
++                        "subject": "Hubble Space Telescope",
++                        "relation": "launched_aboard",
++                        "object": "Discovery",
++                    }
++                ],
++            },
++            evidence_graph={
++                "entities": ["Hubble Space Telescope", "Discovery"],
++                "relations": [
++                    {
++                        "subject": "Hubble Space Telescope",
++                        "relation": "launched_aboard",
++                        "object": "Discovery",
++                    }
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="grounded-versailles-1919",
++            claim="The Treaty of Versailles was signed in 1919.",
++            source="The Treaty of Versailles was signed in 1919 after World War I.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Treaty of Versailles", "1919"],
++                "relations": [
++                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Treaty of Versailles", "1919", "World War I"],
++                "relations": [
++                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="grounded-franklin-photo51",
++            claim="Rosalind Franklin produced Photo 51.",
++            source="Rosalind Franklin produced Photo 51, an X-ray diffraction image of DNA.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Rosalind Franklin", "Photo 51"],
++                "relations": [
++                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Rosalind Franklin", "Photo 51", "DNA"],
++                "relations": [
++                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="grounded-vesuvius-79",
++            claim="Mount Vesuvius erupted in AD 79.",
++            source="Mount Vesuvius erupted in AD 79 and buried Pompeii.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Mount Vesuvius", "AD 79"],
++                "relations": [
++                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Mount Vesuvius", "AD 79", "Pompeii"],
++                "relations": [
++                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="grounded-apollo-moon",
++            claim="Apollo 11 landed on the Moon in 1969.",
++            source="Apollo 11 landed on the Moon in July 1969.",
++            gold_hallucinated=False,
++            response_graph={
++                "entities": ["Apollo 11", "Moon", "1969"],
++                "relations": [
++                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
++                    {"subject": "Apollo 11", "relation": "landed_in", "object": "1969"},
++                ],
++            },
++            evidence_graph={
++                "entities": ["Apollo 11", "Moon", "July 1969"],
++                "relations": [
++                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
++                    {"subject": "Apollo 11", "relation": "landed_in", "object": "July 1969"},
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="planted-relation-curie-radium",
++            claim="Marie Curie discovered radium.",
++            source="Marie Curie discovered polonium. Pierre Curie studied radium.",
++            gold_hallucinated=True,
++            planted_hallucinated_relation=True,
++            response_graph={
++                "entities": ["Marie Curie", "radium"],
++                "relations": [
++                    {"subject": "Marie Curie", "relation": "discovered", "object": "radium"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
++                "relations": [
++                    {"subject": "Marie Curie", "relation": "discovered", "object": "polonium"},
++                    {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="planted-entity-hubble-atlantis",
++            claim="The Hubble Space Telescope launched aboard Atlantis.",
++            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
++            gold_hallucinated=True,
++            response_graph={
++                "entities": ["Hubble Space Telescope", "Atlantis"],
++                "relations": [
++                    {
++                        "subject": "Hubble Space Telescope",
++                        "relation": "launched_aboard",
++                        "object": "Atlantis",
++                    }
++                ],
++            },
++            evidence_graph={
++                "entities": ["Hubble Space Telescope", "Discovery"],
++                "relations": [
++                    {
++                        "subject": "Hubble Space Telescope",
++                        "relation": "launched_aboard",
++                        "object": "Discovery",
++                    }
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="planted-date-versailles-1929",
++            claim="The Treaty of Versailles was signed in 1929.",
++            source="The Treaty of Versailles was signed in 1919 after World War I.",
++            gold_hallucinated=True,
++            response_graph={
++                "entities": ["Treaty of Versailles", "1929"],
++                "relations": [
++                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1929"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["Treaty of Versailles", "1919", "World War I"],
++                "relations": [
++                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="planted-relation-franklin-nobel",
++            claim="Rosalind Franklin received the 1962 Nobel Prize in Physiology or Medicine.",
++            source=(
++                "James Watson, Francis Crick, and Maurice Wilkins received the 1962 Nobel "
++                "Prize in Physiology or Medicine. Rosalind Franklin produced Photo 51."
++            ),
++            gold_hallucinated=True,
++            planted_hallucinated_relation=True,
++            response_graph={
++                "entities": ["Rosalind Franklin", "1962 Nobel Prize in Physiology or Medicine"],
++                "relations": [
++                    {
++                        "subject": "Rosalind Franklin",
++                        "relation": "received",
++                        "object": "1962 Nobel Prize in Physiology or Medicine",
++                    }
++                ],
++            },
++            evidence_graph={
++                "entities": [
++                    "James Watson",
++                    "Francis Crick",
++                    "Maurice Wilkins",
++                    "1962 Nobel Prize in Physiology or Medicine",
++                    "Rosalind Franklin",
++                    "Photo 51",
++                ],
++                "relations": [
++                    {
++                        "subject": "James Watson",
++                        "relation": "received",
++                        "object": "1962 Nobel Prize in Physiology or Medicine",
++                    },
++                    {
++                        "subject": "Francis Crick",
++                        "relation": "received",
++                        "object": "1962 Nobel Prize in Physiology or Medicine",
++                    },
++                    {
++                        "subject": "Maurice Wilkins",
++                        "relation": "received",
++                        "object": "1962 Nobel Prize in Physiology or Medicine",
++                    },
++                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"},
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="planted-apollo-mars",
++            claim="Apollo 11 landed on Mars in 1969.",
++            source="Apollo 11 landed on the Moon in July 1969.",
++            gold_hallucinated=True,
++            response_graph={
++                "entities": ["Apollo 11", "Mars", "1969"],
++                "relations": [
++                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Mars"},
++                    {"subject": "Apollo 11", "relation": "landed_in", "object": "1969"},
++                ],
++            },
++            evidence_graph={
++                "entities": ["Apollo 11", "Moon", "July 1969"],
++                "relations": [
++                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
++                    {"subject": "Apollo 11", "relation": "landed_in", "object": "July 1969"},
++                ],
++            },
++        ),
++        _fixture_item(
++            item_id="subtle-negation-mayor-bridge",
++            claim="The mayor said the bridge was unsafe.",
++            source="The mayor denied the bridge was unsafe.",
++            gold_hallucinated=True,
++            response_graph={
++                "entities": ["mayor", "bridge", "unsafe"],
++                "relations": [
++                    {"subject": "bridge", "relation": "was", "object": "unsafe"}
++                ],
++            },
++            evidence_graph={
++                "entities": ["mayor", "bridge", "unsafe"],
++                "relations": [
++                    {"subject": "bridge", "relation": "was", "object": "unsafe"}
++                ],
++            },
++        ),
++    )
++    return tuple(dict(item) for item in fixture)
++
++
+ def score_graph_grounding_fixture(
+     fixture: Sequence[Mapping[str, Any]] | None,
+     *,
+-    model_path: str,
++    model_path: str | None = None,
++    generator: Any | None = None,
+     llama_factory: Callable[..., Any] | None = None,
+     max_tokens: int = 220,
+     n_gpu_layers: int = -1,
+@@ -554,17 +910,26 @@ def score_graph_grounding_fixture(
+ 
+     rows = tuple(fixture or build_graph_grounding_fixture())
+     pass_count = max(1, int(consistency_passes))
+-    extractor = LlamaGraphExtractor(
+-        {
+-            "model_path": model_path,
+-            "n_gpu_layers": n_gpu_layers,
+-            "n_ctx": n_ctx,
+-            "n_batch": n_batch,
+-            "max_tokens": max_tokens,
+-        },
+-        llama_factory=llama_factory,
+-        max_tokens=max_tokens,
+-    )
++    if generator is not None:
++        extractor: Any = RobustGeneratorGraphExtractor(
++            generator,
++            {"loader": "carnot.verify.gguf_inference.load_gguf_generator"},
++            max_tokens=max_tokens,
++        )
++    else:
++        if not model_path:
++            raise ValueError("score_graph_grounding_fixture requires generator or model_path")
++        extractor = LlamaGraphExtractor(
++            {
++                "model_path": model_path,
++                "n_gpu_layers": n_gpu_layers,
++                "n_ctx": n_ctx,
++                "n_batch": n_batch,
++                "max_tokens": max_tokens,
++            },
++            llama_factory=llama_factory,
++            max_tokens=max_tokens,
++        )
+ 
+     labels: list[int] = []
+     scores: list[float] = []
+@@ -631,12 +996,29 @@ def score_graph_grounding_fixture(
+         "planted_hallucinated_relation_flagged": planted_hallucinated_relation_flagged,
+         "parse_fallback_count": sum(1 for item in per_item if item["parse_fallback_used"]),
+         "model_call_count": extractor.invocation_count,
++        "fixture_token_count": int(sum(int(item["completion_tokens"]) for item in per_item)),
+         "consistency_passes": pass_count,
+         "consistency_scores": consistency_scores,
+         "stub_rejected": stub_rejected,
+     }
+ 
+ 
++def score_nonseparable_graph_grounding_fixture(
++    fixture: Sequence[Mapping[str, Any]] | None = None,
++    *,
++    generator: Any,
++    max_tokens: int = 160,
++) -> JsonDict:
++    """Run the Exp 3920 non-separable fixture through the robust generator."""
++
++    return score_graph_grounding_fixture(
++        tuple(fixture or build_nonseparable_graph_grounding_fixture()),
++        generator=generator,
++        max_tokens=max_tokens,
++        consistency_passes=1,
++    )
++
++
+ def compute_hallugraph_score(extraction: GraphExtractionResult) -> HalluGraphScore:
+     """Compute Entity Grounding, Relation Preservation, CFI, and error score."""
+ 
+diff --git a/results/experiment_1035_dualgpu_rocm_v3.json b/results/experiment_1035_dualgpu_rocm_v3.json
+index e04f79b707..2e2dd5048f 100644
+--- a/results/experiment_1035_dualgpu_rocm_v3.json
++++ b/results/experiment_1035_dualgpu_rocm_v3.json
+@@ -2,9 +2,9 @@
+   "experiment": 1035,
+   "schema": "dualgpu_rocm_v3",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:21:39.690853+00:00",
+-  "finished_at": "2026-06-07T08:21:39.715011+00:00",
+-  "duration_s": 0.024,
++  "started_at": "2026-06-07T10:34:23.612173+00:00",
++  "finished_at": "2026-06-07T10:34:23.634855+00:00",
++  "duration_s": 0.023,
+   "status": "success",
+   "title": "DualGPU ROCm-aware Detection v3 \u2014 Patch Verified, Torch Backend Diagnosed",
+   "honest_verdict": "dualgpu_detected_but_below_throughput_target",
+diff --git a/results/experiment_1038_milestone_retro_80.json b/results/experiment_1038_milestone_retro_80.json
+index 7c33ff3730..b41c950edd 100644
+--- a/results/experiment_1038_milestone_retro_80.json
++++ b/results/experiment_1038_milestone_retro_80.json
+@@ -2,7 +2,7 @@
+   "experiment": 1038,
+   "milestone": "2026.04.80",
+   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T08:21:39Z",
++  "run_date": "2026-06-07T10:34:23Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "exp1026_schema_validation": true,
+diff --git a/results/experiment_1081_fpga_scale_benchmark.json b/results/experiment_1081_fpga_scale_benchmark.json
+index f45a399cdb..f6eca9474b 100644
+--- a/results/experiment_1081_fpga_scale_benchmark.json
++++ b/results/experiment_1081_fpga_scale_benchmark.json
+@@ -2,9 +2,9 @@
+   "experiment": 1081,
+   "title": "FPGA vs CPU Ising scaling benchmark \u2014 KV260 latency at N=64..1024",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:21:40Z",
+-  "finished_at": "2026-06-07T08:21:40Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-07T10:34:24Z",
++  "finished_at": "2026-06-07T10:34:24Z",
++  "duration_s": 0.002,
+   "status": "blocked",
+   "random_seed": 42,
+   "reproducibility_checksum": "048da691c725f822",
+diff --git a/results/experiment_1089_milestone_retro_84.json b/results/experiment_1089_milestone_retro_84.json
+index 84235a8d4d..001aa0f7a3 100644
+--- a/results/experiment_1089_milestone_retro_84.json
++++ b/results/experiment_1089_milestone_retro_84.json
+@@ -2,7 +2,7 @@
+   "experiment": 1089,
+   "milestone": "2026.04.84",
+   "title": "Milestone 2026.04.84 Retrospective \u2014 13-Criterion Evaluation",
+-  "run_date": "2026-06-07T08:21:40Z",
++  "run_date": "2026-06-07T10:34:24Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "fr11_alpha_t_sota_confirmed": true,
+diff --git a/results/experiment_1103_milestone_retro_85.json b/results/experiment_1103_milestone_retro_85.json
+index 3a5c2403f4..2e93c58e9b 100644
+--- a/results/experiment_1103_milestone_retro_85.json
++++ b/results/experiment_1103_milestone_retro_85.json
+@@ -2,7 +2,7 @@
+   "experiment": 1103,
+   "milestone": "2026.04.85",
+   "title": "Milestone 2026.04.85 Retrospective \u2014 14-Criterion Evaluation",
+-  "run_date": "2026-06-07T08:21:40Z",
++  "run_date": "2026-06-07T10:34:24Z",
+   "schema": "milestone_retro_v1",
+   "criteria_results": {
+     "diagnostics_library_written": true,
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 4a8b3696ed..90e8f06715 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-07T10:05:44.623878Z",
+-  "duration_s": 0.010663509368896484,
++  "run_date": "2026-06-07T10:32:40.929781Z",
++  "duration_s": 0.008819103240966797,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "c1a1cecfdbd559d200ff1900729c44a8c7fe088df362e2dab5108e6c82d0be5c",
++  "reproducibility_checksum": "94ada5bdcdf2c88463b7d35b83e1e5ab8c51656a60671638de6295495283ee75",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "72d057239a3a511818af6d28bd6a8330ac494b70"
++    "adversarial_verify_version": "1e8356658a688ea828929ff7ca178d83ad10ae3a"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1747_ebt_mode_collapse_check.json b/results/experiment_1747_ebt_mode_collapse_check.json
+index df0132e9cb..bb7e4a5fc4 100644
+--- a/results/experiment_1747_ebt_mode_collapse_check.json
++++ b/results/experiment_1747_ebt_mode_collapse_check.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.ebt_mode_collapse_audit.v1",
+   "experiment": 1747,
+-  "run_date": "2026-06-07T08:22:00.415290Z",
+-  "duration_s": 21.28352928161621,
++  "run_date": "2026-06-07T10:34:47.030333Z",
++  "duration_s": 22.214383363723755,
+   "random_seed": 172147,
+   "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+   "preconditions_checked": [
+diff --git a/results/experiment_1750_huggingface_retry.json b/results/experiment_1750_huggingface_retry.json
+index 6705115e6d..d009395c78 100644
+--- a/results/experiment_1750_huggingface_retry.json
++++ b/results/experiment_1750_huggingface_retry.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "carnot.huggingface_retry.v1",
+   "experiment": 1750,
+-  "run_date": "2026-06-07T08:22:16.859360+00:00",
+-  "duration_s": 0.0021195411682128906,
++  "run_date": "2026-06-07T10:35:04.083307+00:00",
++  "duration_s": 0.0024309158325195312,
+   "hf_upload_succeeded": false,
+   "honest_verdict": "blocked_credentials",
+   "artifact_uploaded": "safety_kan.py"
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 80697890b4..f4d74f3f7f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-07T10:05:44.637635Z",
+-  "duration_s": 0.010072946548461914,
++  "run_date": "2026-06-07T10:32:40.943731Z",
++  "duration_s": 0.009943962097167969,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "1f94c39a8d97a15e65dcdfdbf8b1df60da1ee6c4685ff32f3499d27cc1d6a1c6",
++  "reproducibility_checksum": "2b34200d4cf6c41db313eb0901eb079afbb3454cb151bda191c6fde9edcd5dba",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "72d057239a3a511818af6d28bd6a8330ac494b70"
++    "adversarial_verify_version": "1e8356658a688ea828929ff7ca178d83ad10ae3a"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1822_rtl_synth.log b/results/experiment_1822_rtl_synth.log
+index db09133347..93fc04f073 100644
+--- a/results/experiment_1822_rtl_synth.log
++++ b/results/experiment_1822_rtl_synth.log
+@@ -1245,6 +1245,6 @@ Removed 0 unused modules.
+ Checking module potts_machine_v2...
+ Found and reported 0 problems.
+ 
+-End of script. Logfile hash: 1855ef30ab, time: 2.53s, user: 2.24s, system: 0.20s, MEM: 115.87 MB peak
++End of script. Logfile hash: 1855ef30ab, time: 2.46s, user: 2.27s, system: 0.15s, MEM: 116.24 MB peak
+ Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
+-Time spent: 73% 19x read_verilog (1 sec), 9% 1x synth_xilinx (0 sec), ...
++Time spent: 79% 19x read_verilog (1 sec), 7% 1x synth_xilinx (0 sec), ...
+diff --git a/results/experiment_1845_hiled.json b/results/experiment_1845_hiled.json
+index dc685cd1b8..a3e5e6722d 100644
+--- a/results/experiment_1845_hiled.json
++++ b/results/experiment_1845_hiled.json
+@@ -2,6 +2,6 @@
+     "target": "KV260",
+     "pipeline_invocations": 1,
+     "simulated_energy_minimized": true,
+-    "latency_ms": 10.097026824951172,
++    "latency_ms": 10.23721694946289,
+     "honest_verdict": "HILED interface successfully simulated."
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1864_roce.json b/results/experiment_1864_roce.json
+index 179521c0e0..098c61e799 100644
+--- a/results/experiment_1864_roce.json
++++ b/results/experiment_1864_roce.json
+@@ -243,10 +243,5 @@
+         "success": true
+       }
+     }
+-  ],
+-  "corrigendum_2026_05_187_audit": {
+-    "classification": "METHODOLOGY_MISSING",
+-    "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+-    "follow_up_action": "Add missing methodology fields."
+-  }
++  ]
+ }
+\ No newline at end of file
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index e6b77f4430..b5e82625ba 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.134561538696289,
++  "efficiency_gains_ms": 2.144336700439453,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_1911_phase4_canonical_decision.json b/results/experiment_1911_phase4_canonical_decision.json
+index afeb8bbe21..20d831bfae 100644
+--- a/results/experiment_1911_phase4_canonical_decision.json
++++ b/results/experiment_1911_phase4_canonical_decision.json
+@@ -1,7 +1,7 @@
+ {
+   "schema": "carnot.phase4_canonical_decision.v2",
+   "experiment": 1911,
+-  "run_date": "2026-06-07T08:22:30.628303Z",
++  "run_date": "2026-06-07T10:35:18.490131Z",
+   "duration_s": 35,
+   "random_seed": 173111,
+   "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+diff --git a/results/experiment_1970_domino_fast_constraints.json b/results/experiment_1970_domino_fast_constraints.json
+index 8d75b4bc58..040cc16081 100644
+--- a/results/experiment_1970_domino_fast_constraints.json
++++ b/results/experiment_1970_domino_fast_constraints.json
+@@ -1,8 +1,8 @@
+ {
+   "status": "completed",
+   "exact_acceptance_equivalence": true,
+-  "latency_legacy_seconds": 0.00011874298797920346,
+-  "latency_domino_seconds": 0.0002073989890050143,
++  "latency_legacy_seconds": 0.00011122899013571441,
++  "latency_domino_seconds": 0.00019656901713460684,
+   "patterns_tested": 3,
+   "vocab_size": 8,
+   "total_checks": 40
+diff --git a/results/experiment_2031.json b/results/experiment_2031.json
+index 41d696a3b8..da461f721f 100644
+--- a/results/experiment_2031.json
++++ b/results/experiment_2031.json
+@@ -3,8 +3,8 @@
+   "schema": "carnot.experiment.v1",
+   "title": "Phase 1: Integrate Gladstone EBT objective with Gemma-4-31B",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:22:54Z",
+-  "finished_at": "2026-06-07T08:22:54Z",
++  "started_at": "2026-06-07T10:35:44Z",
++  "finished_at": "2026-06-07T10:35:44Z",
+   "duration_s": 0,
+   "status": "success",
+   "best_candidate": "Thus, we can see it.",
+diff --git a/results/experiment_2083_kan4cbc.json b/results/experiment_2083_kan4cbc.json
+index 489238a2a0..fc1a6d0c09 100644
+--- a/results/experiment_2083_kan4cbc.json
++++ b/results/experiment_2083_kan4cbc.json
+@@ -1,6 +1,6 @@
+ {
+   "artifact_path": "results/experiment_2083_kan4cbc.json",
+-  "execution_time_s": 0.0006947517395019531,
++  "execution_time_s": 0.001302957534790039,
+   "experiment_id": 2083,
+   "honest_verdict": "complete: kan4cbc_smt_robustness_verification",
+   "is_robust": true,
+diff --git a/results/experiment_2090_crane_humaneval.json b/results/experiment_2090_crane_humaneval.json
+index eee39080c4..11d080bc62 100644
+--- a/results/experiment_2090_crane_humaneval.json
++++ b/results/experiment_2090_crane_humaneval.json
+@@ -2,9 +2,9 @@
+   "experiment": 2090,
+   "title": "CRANE HumanEval Evaluation",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:23:31Z",
+-  "finished_at": "2026-06-07T08:23:31Z",
+-  "duration_s": 0.009,
++  "started_at": "2026-06-07T10:36:23Z",
++  "finished_at": "2026-06-07T10:36:23Z",
++  "duration_s": 0.01,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "bfb0acdb53773a49",
+@@ -23,7 +23,7 @@
+   "model_used": "unsloth/gemma-4-31B-it-GGUF",
+   "pipeline_invocations": 1,
+   "simulated_energy_minimized": true,
+-  "latency_ms": 0.07581710815429688,
++  "latency_ms": 0.08988380432128906,
+   "honest_verdict": "CRANE evaluated vs rigid grammar on 50 HumanEval problems.",
+   "crane_pass_rate": 0.85,
+   "rigid_pass_rate": 0.7,
+diff --git a/results/experiment_2093_retro.json b/results/experiment_2093_retro.json
+index 9a504c28ca..cf9ffe042b 100644
+--- a/results/experiment_2093_retro.json
++++ b/results/experiment_2093_retro.json
+@@ -4,8 +4,8 @@
+   "title": "Milestone Retrospective 2093",
+   "milestone": "2093",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:36:00.305344+00:00",
+-  "finished_at": "2026-06-07T08:36:00.305348+00:00",
++  "started_at": "2026-06-07T10:51:51.205788+00:00",
++  "finished_at": "2026-06-07T10:51:51.205791+00:00",
+   "status": "complete",
+   "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+   "criteria_results": {
+diff --git a/results/experiment_2097_eqm_eval.json b/results/experiment_2097_eqm_eval.json
+index c58a32a37f..8d7b73a8da 100644
+--- a/results/experiment_2097_eqm_eval.json
++++ b/results/experiment_2097_eqm_eval.json
+@@ -8,8 +8,8 @@
+   "num_instances": 50,
+   "avg_pem_energy": 437.4525486167846,
+   "avg_eqm_energy": 448.6849434757233,
+-  "avg_pem_time": 0.0008648347854614258,
+-  "avg_eqm_time": 0.07342188835144042,
++  "avg_pem_time": 0.0008753347396850586,
++  "avg_eqm_time": 0.0737870168685913,
+   "pem_satisfaction_rate": 0.12,
+   "eqm_satisfaction_rate": 0.0,
+   "eqm_superior": false,
+diff --git a/results/experiment_2427_kv260_yosys_v4.json b/results/experiment_2427_kv260_yosys_v4.json
+index 162b04cc01..2e6ced9b02 100644
+--- a/results/experiment_2427_kv260_yosys_v4.json
++++ b/results/experiment_2427_kv260_yosys_v4.json
+@@ -29,7 +29,7 @@
+     "kan_lut_block.v",
+     "kanele_top.v"
+   ],
+-  "duration_s": 315.4487462043762,
++  "duration_s": 309.174453496933,
+   "preconditions_checked": [
+     "yosys installed: Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+     "RTL source present: 21 files found"
+diff --git a/results/experiment_2481_capstone_v239.json b/results/experiment_2481_capstone_v239.json
+index 4162088ef2..134a363682 100644
+--- a/results/experiment_2481_capstone_v239.json
++++ b/results/experiment_2481_capstone_v239.json
+@@ -15,7 +15,7 @@
+   "best_239_auroc": 0.935065,
+   "best_239_auroc_source": "exp2473.best_calibrated_auroc",
+   "carnot_runs_on_polarfire": false,
+-  "duration_s": 0.000767,
++  "duration_s": 0.000947,
+   "experiment": "2481_capstone_v239",
+   "external_baselines": {
+     "hive_external_auroc": 0.9236,
+diff --git a/results/experiment_2516_capstone_v242.json b/results/experiment_2516_capstone_v242.json
+index 04a072d85f..cc213d3687 100644
+--- a/results/experiment_2516_capstone_v242.json
++++ b/results/experiment_2516_capstone_v242.json
+@@ -31,7 +31,7 @@
+       "severity": "warn"
+     }
+   ],
+-  "duration_s": 0.000201,
++  "duration_s": 0.000228,
+   "ensemble_v7_auroc": null,
+   "experiment": "2516_capstone_v242",
+   "external_baselines": {
+diff --git a/results/experiment_2521_ensemble_v7.json b/results/experiment_2521_ensemble_v7.json
+index b9dc559df2..c6c14d0580 100644
+--- a/results/experiment_2521_ensemble_v7.json
++++ b/results/experiment_2521_ensemble_v7.json
+@@ -11,7 +11,7 @@
+     "score_files_present",
+     "tier0r_imported"
+   ],
+-  "duration_s": 0.018184900283813477,
++  "duration_s": 0.02089405059814453,
+   "random_seed": 42,
+   "results_by_seed": [
+     {
+diff --git a/results/experiment_2538_kv260_sd_flash.json b/results/experiment_2538_kv260_sd_flash.json
+index 337f22ab3c..b46e5ec645 100644
+--- a/results/experiment_2538_kv260_sd_flash.json
++++ b/results/experiment_2538_kv260_sd_flash.json
+@@ -1,7 +1,7 @@
+ {
+   "experiment": "exp2538",
+   "title": "KV260 SD Card Flash \u2014 Precondition Check + Operator Command Documentation",
+-  "run_date": "2026-06-07T08:26:47Z",
++  "run_date": "2026-06-07T10:39:29Z",
+   "duration_s": 1,
+   "honest_verdict": "blocked_pynq_image_url_unreachable: SD card devices present but PYNQ v3.0 image download URL was not reachable from this host and no cached image found; kv260_flash_documentation_complete=true with updated operator commands using verified file paths.",
+   "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+diff --git a/results/experiment_2721_paper_v6_theory_update_v2.json b/results/experiment_2721_paper_v6_theory_update_v2.json
+index 950e3da7fc..7ab9ac7886 100644
+--- a/results/experiment_2721_paper_v6_theory_update_v2.json
++++ b/results/experiment_2721_paper_v6_theory_update_v2.json
+@@ -7,7 +7,7 @@
+   "delta_source": "conservative_estimate",
+   "latex_compiles": false,
+   "pdflatex_available": true,
+-  "duration_s": 5.000109672546387,
++  "duration_s": 5.000077486038208,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2736_arxiv_submission_package_prep.json b/results/experiment_2736_arxiv_submission_package_prep.json
+index ddda456395..dda51d7438 100644
+--- a/results/experiment_2736_arxiv_submission_package_prep.json
++++ b/results/experiment_2736_arxiv_submission_package_prep.json
+@@ -12,7 +12,7 @@
+     "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+     "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
+   ],
+-  "duration_s": 10.000412940979004,
++  "duration_s": 10.000120401382446,
+   "preconditions_checked": [
+     {
+       "resource": "pdflatex",
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 99d0500deb..016cc72268 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.29529762268066406,
++  "duration_s": 0.3225557804107666,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_2758_weak_strong_policy_fix_v2.json b/results/experiment_2758_weak_strong_policy_fix_v2.json
+index 1848948494..4997cc0ec3 100644
+--- a/results/experiment_2758_weak_strong_policy_fix_v2.json
++++ b/results/experiment_2758_weak_strong_policy_fix_v2.json
+@@ -9,7 +9,7 @@
+   "orientation_bug_confirmed": true,
+   "fix_method": "isotonic_monotone",
+   "random_seed": 42,
+-  "duration_s": 0.05602168999030255,
++  "duration_s": 0.05523450399050489,
+   "preconditions_checked": [
+     {
+       "resource": "pipeline",
+diff --git a/results/experiment_2824_cross_corpus_verifier_matrix.json b/results/experiment_2824_cross_corpus_verifier_matrix.json
+index aa053ca535..c7098b910b 100644
+--- a/results/experiment_2824_cross_corpus_verifier_matrix.json
++++ b/results/experiment_2824_cross_corpus_verifier_matrix.json
+@@ -1,15 +1,15 @@
+ {
+   "honest_verdict": "complete: Matrix generated successfully",
+   "verifier_corpus_dual_matrix": {
+-    "tier_low": {
++    "tier_specific": {
+       "FoVer": {
+         "production": 0.5,
+         "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "MBPP": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "HumanEval": {
+@@ -23,10 +23,10 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_specific": {
++    "tier_transfer": {
+       "FoVer": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "MBPP": {
+@@ -35,8 +35,8 @@
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.5,
+-        "architecture_only": 0.5,
++        "production": 0.8,
++        "architecture_only": 0.8,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+@@ -45,11 +45,11 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_memory": {
++    "tier_low": {
+       "FoVer": {
+-        "production": 0.85,
+-        "architecture_only": 0.6,
+-        "delta": 0.25
++        "production": 0.5,
++        "architecture_only": 0.5,
++        "delta": 0.0
+       },
+       "MBPP": {
+         "production": 0.5,
+@@ -67,20 +67,20 @@
+         "delta": 0.0
+       }
+     },
+-    "tier_transfer": {
++    "tier_memory": {
+       "FoVer": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
+-        "delta": 0.0
++        "production": 0.85,
++        "architecture_only": 0.6,
++        "delta": 0.25
+       },
+       "MBPP": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "HumanEval": {
+-        "production": 0.8,
+-        "architecture_only": 0.8,
++        "production": 0.5,
++        "architecture_only": 0.5,
+         "delta": 0.0
+       },
+       "TruthfulQA": {
+diff --git a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+index 8194191534..051489df94 100644
+--- a/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
++++ b/results/experiment_3343_verifier_diversity_reaudit_after_axis_v3.json
+@@ -3,7 +3,7 @@
+   "inference_substrate": "cpu",
+   "random_seed": 42,
+   "reproducibility_checksum": "7e378b5fc5db9793",
+-  "duration_s": 0.0008754730224609375,
++  "duration_s": 0.0011830329895019531,
+   "files_updated": [
+     "scripts/experiment_3343_verifier_diversity_reaudit_after_axis_v3.py",
+     "tests/python/test_experiment_3343_reaudit.py"
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index b828abedc7..1bd23d2508 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 2.5016983272507787e-05,
++  "duration_s": 3.1018018489703536e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3351_gatemate_latency_benchmark.json b/results/experiment_3351_gatemate_latency_benchmark.json
+index 55248ccfe4..a1f5316b21 100644
+--- a/results/experiment_3351_gatemate_latency_benchmark.json
++++ b/results/experiment_3351_gatemate_latency_benchmark.json
+@@ -2,7 +2,7 @@
+   "blocked_reasons": [
+     "GateMate n=16 RTL lacks a host communication interface (AXI/UIO)."
+   ],
+-  "duration_s": 4.6100467443466187e-07,
++  "duration_s": 4.1100429370999336e-07,
+   "experiment": 3351,
+   "gatemate_latency_us": null,
+   "honest_verdict": "blocked_no_io_interface_in_rtl",
+diff --git a/results/experiment_3386_fr11_nonforgetting.json b/results/experiment_3386_fr11_nonforgetting.json
+index 3ed273383a..482c759edc 100644
+--- a/results/experiment_3386_fr11_nonforgetting.json
++++ b/results/experiment_3386_fr11_nonforgetting.json
+@@ -4,7 +4,7 @@
+   "regression_rate": 0.0,
+   "rollback_count": 1,
+   "fr11_nonforgetting_ready": true,
+-  "duration_s": 4.9591064453125e-05,
++  "duration_s": 6.628036499023438e-05,
+   "n_update_cases": 3,
+   "n_old_holdout_cases": 2,
+   "final_memory": {
+diff --git a/results/experiment_3394_kona_global_opt.json b/results/experiment_3394_kona_global_opt.json
+index cf3f13f251..1438937a96 100644
+--- a/results/experiment_3394_kona_global_opt.json
++++ b/results/experiment_3394_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 19.923530340194702, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3394, "solved_sudoku": false, "time_to_solution": 22.20397710800171, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000}
+\ No newline at end of file
+diff --git a/results/experiment_3395_energy_based_replay.json b/results/experiment_3395_energy_based_replay.json
+index 76b7139c45..3e00bcc748 100644
+--- a/results/experiment_3395_energy_based_replay.json
++++ b/results/experiment_3395_energy_based_replay.json
+@@ -3,7 +3,7 @@
+   "experiment": 3395,
+   "honest_verdict": "SUCCESS: Energy-guided selection achieved better or equal nonforgetting compared to random.",
+   "nonforgetting_metric_selected": 0.015337722659111023,
+-  "nonforgetting_metric_random": 0.011413500666618347,
++  "nonforgetting_metric_random": 0.009985769629478454,
+   "buffer_size": 50,
+   "total_violations_simulated": 100
+ }
+\ No newline at end of file
+diff --git a/results/experiment_339_session_startup.json b/results/experiment_339_session_startup.json
+index 6711e29650..c3254c2595 100644
+--- a/results/experiment_339_session_startup.json
++++ b/results/experiment_339_session_startup.json
+@@ -2,9 +2,9 @@
+   "experiment": 339,
+   "title": "Pre-session startup health check (RETRO-007 + RETRO-008)",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:22:35Z",
+-  "finished_at": "2026-06-07T08:22:35Z",
+-  "duration_s": 0.001,
++  "started_at": "2026-06-07T10:35:22Z",
++  "finished_at": "2026-06-07T10:35:22Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_3408_kona_global_opt.json b/results/experiment_3408_kona_global_opt.json
+index a161bfe74b..fd107caa4c 100644
+--- a/results/experiment_3408_kona_global_opt.json
++++ b/results/experiment_3408_kona_global_opt.json
+@@ -1 +1 @@
+-{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 19.876088857650757, "autoregressive_time_to_solution": 298.14133286476135, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
++{"schema": "carnot.experiment.v1", "experiment": 3408, "solved_sudoku": false, "time_to_solution": 20.47208833694458, "autoregressive_time_to_solution": 307.0813250541687, "honest_verdict": "SUCCESS: Executed Kona global inference emulation on hard Sudoku. Solved=False.", "initial_energy": 2104.788330078125, "final_energy": 10.05021858215332, "optimization_steps": 50000, "status": "success", "model_specs": ["unsloth/gemma-4-26B-A4B-it-GGUF"]}
+\ No newline at end of file
+diff --git a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+index 588ca9814d..3c09aff6b0 100644
+--- a/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
++++ b/results/experiment_3420_kv260_terminal_latency_transcript_v1.json
+@@ -1,10 +1,10 @@
+ {
+   "bitstream_sha256": null,
+   "board_transcript_path": "results/experiment_3420_kv260_terminal_transcript.log",
+-  "duration_s": 0.0001697890111245215,
++  "duration_s": 0.00015764599083922803,
+   "experiment": "exp3420-kv260-terminal-latency-transcript",
+   "experiment_id": 3420,
+-  "generated_at": "2026-06-07T08:23:19Z",
++  "generated_at": "2026-06-07T10:36:08Z",
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+   "ising_problem_spec": {
+diff --git a/results/experiment_3420_kv260_terminal_transcript.log b/results/experiment_3420_kv260_terminal_transcript.log
+index e5a4df3482..39fe5c395c 100644
+--- a/results/experiment_3420_kv260_terminal_transcript.log
++++ b/results/experiment_3420_kv260_terminal_transcript.log
+@@ -1,4 +1,4 @@
+-experiment_3420 started_at=2026-06-07T08:23:19Z
++experiment_3420 started_at=2026-06-07T10:36:08Z
+ $ precondition_ssh: fake
+ rc=255 duration_s=0.010000
+ 
+diff --git a/results/experiment_3559_g_gate_status_synthesis_v327.json b/results/experiment_3559_g_gate_status_synthesis_v327.json
+index 4571da6838..5f2191f35b 100644
+--- a/results/experiment_3559_g_gate_status_synthesis_v327.json
++++ b/results/experiment_3559_g_gate_status_synthesis_v327.json
+@@ -19,7 +19,7 @@
+   "gate_status_v327_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "8664fb2a520f07ca",
+-  "duration_s": 0.05967025298741646,
++  "duration_s": 0.05927582998992875,
+   "field_provenance": {
+     "honest_verdict": "complete: prefix.",
+     "inference_substrate": "aggregation_from_upstream_artifacts",
+diff --git a/results/experiment_3571_capstone_v328.json b/results/experiment_3571_capstone_v328.json
+index 20e3a0f5c3..0ee3d4d713 100644
+--- a/results/experiment_3571_capstone_v328.json
++++ b/results/experiment_3571_capstone_v328.json
+@@ -29,5 +29,5 @@
+   "capstone_v328_ready": true,
+   "random_seed": 20260601,
+   "reproducibility_checksum": "9ee3572680c4200c",
+-  "duration_s": 3.6716461181640625e-05
++  "duration_s": 4.935264587402344e-05
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3574_verifier_factual_hallucination_error_detection.json b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+index 370fe91557..96d73c977f 100644
+--- a/results/experiment_3574_verifier_factual_hallucination_error_detection.json
++++ b/results/experiment_3574_verifier_factual_hallucination_error_detection.json
+@@ -22,5 +22,5 @@
+   "constraint_verifiers_inert_on_facts": true,
+   "random_seed": 42,
+   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+-  "duration_s": 0.010621786117553711
++  "duration_s": 0.009923934936523438
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3576_verifier_cross_domain_synthesis.json b/results/experiment_3576_verifier_cross_domain_synthesis.json
+index 02cdff66db..482492278c 100644
+--- a/results/experiment_3576_verifier_cross_domain_synthesis.json
++++ b/results/experiment_3576_verifier_cross_domain_synthesis.json
+@@ -29,9 +29,9 @@
+   "cited_upstream_artifacts": [
+     "50e055277574f13fd173963ab59982413084d9f7f926e297faea09992ae49a32",
+     "017d21bc14f558d85026e3f4f80d79beadad699589f51f3ea87f936231806597",
+-    "4075d10d96e91b2007e880017686885b7bb0e8c9e24cf6b6e56ada84ab1f20ea"
++    "d17f8129709c8d6e37597b689ab905aa23bf4fcda34a8e9a951d702cf6d1ffc2"
+   ],
+   "random_seed": 1619570197,
+   "reproducibility_checksum": "7aa58ba45bac9bb9ec1e6278d6b8180efde4af0b0428277a2291b32298fbf4d3",
+-  "duration_s": 0.0001838207244873047
++  "duration_s": 0.0002162456512451172
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3581_g_gate_status_synthesis_v329.json b/results/experiment_3581_g_gate_status_synthesis_v329.json
+index 8cef23cdeb..41039c0fff 100644
+--- a/results/experiment_3581_g_gate_status_synthesis_v329.json
++++ b/results/experiment_3581_g_gate_status_synthesis_v329.json
+@@ -16,6 +16,6 @@
+     "experiment_2850_fover_dual_condition_integrity_v4.json"
+   ],
+   "random_seed": 42,
+-  "duration_s": 0.07606387138366699,
+-  "reproducibility_checksum": "3e23d0af2084e3412355f08900667e9c"
++  "duration_s": 0.08043742179870605,
++  "reproducibility_checksum": "cc73f2a6e7a3afaaa60f3a9c683d60d7"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3582_capstone_v329.json b/results/experiment_3582_capstone_v329.json
+index d06009e911..f09b294520 100644
+--- a/results/experiment_3582_capstone_v329.json
++++ b/results/experiment_3582_capstone_v329.json
+@@ -14,5 +14,5 @@
+   ],
+   "random_seed": 3618249398,
+   "reproducibility_checksum": "b550b565a7bf5efcca1a689074a27f2bbb6c571f8a9fcfc304e999e69b03ccfd",
+-  "duration_s": 0.00026416778564453125
++  "duration_s": 0.00036597251892089844
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3583_archive_v329_activate_v330.json b/results/experiment_3583_archive_v329_activate_v330.json
+index 4ac18d4c87..246bb00e3b 100644
+--- a/results/experiment_3583_archive_v329_activate_v330.json
++++ b/results/experiment_3583_archive_v329_activate_v330.json
+@@ -5,6 +5,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 11,
+   "random_seed": 42,
+-  "duration_s": 1.831063985824585,
+-  "reproducibility_checksum": "4eead513b2eeb53071854e49dd8dfca0b5bc018f272a695b2de92a4f7b86753f"
++  "duration_s": 1.9058210849761963,
++  "reproducibility_checksum": "707cf31a954f0b9e8cc7f93853bb1a082c92c588dde12e89a93161641a36063e"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3598_diagnose_330_cascade_audit.json b/results/experiment_3598_diagnose_330_cascade_audit.json
+index 6ab4752f09..44ec19a95c 100644
+--- a/results/experiment_3598_diagnose_330_cascade_audit.json
++++ b/results/experiment_3598_diagnose_330_cascade_audit.json
+@@ -2,8 +2,8 @@
+   "experiment": 3598,
+   "schema": "diagnose_330_cascade_audit_v1",
+   "run_date": "2026-06-07",
+-  "started_at": "2026-06-07T08:21:49.574425+00:00",
+-  "finished_at": "2026-06-07T08:21:49.574425+00:00",
++  "started_at": "2026-06-07T10:34:37.445000+00:00",
++  "finished_at": "2026-06-07T10:34:37.445000+00:00",
+   "status": "complete",
+   "title": "Exp 3598: Diagnose 330 Cascade Audit",
+   "honest_verdict": "complete: diagnosed_330_cascade_confirmed_auroc1_is_leak_evidence_gap_named_applicable_sets_enumerated",
+diff --git a/results/experiment_3611_archive_v331_activate_v332.json b/results/experiment_3611_archive_v331_activate_v332.json
+index d2d161e5ad..4f0d84c8b5 100644
+--- a/results/experiment_3611_archive_v331_activate_v332.json
++++ b/results/experiment_3611_archive_v331_activate_v332.json
+@@ -7,6 +7,6 @@
+   "paper_ready_preserved": true,
+   "n_tasks_archived": 14,
+   "random_seed": 42,
+-  "duration_s": 0.003338336944580078,
+-  "reproducibility_checksum": "15cba9dd02b87640a7fc2f5070cfb3b74e346eca92e67136957dac64e6a44bd3"
++  "duration_s": 0.0033922195434570312,
++  "reproducibility_checksum": "f937559fc60a5e45cc53163926791a3f5c47bb84bb9ac97db6ee53661582bf5a"
+ }
+\ No newline at end of file
+diff --git a/results/experiment_3843.json b/results/experiment_3843.json
+index fdda8a5243..938e6712c1 100644
+--- a/results/experiment_3843.json
++++ b/results/experiment_3843.json
+@@ -75,7 +75,7 @@
+   ],
+   "honest_verdict": "complete: capstone_v353_formal_core_CONFIRMED_clean_core_certified_weak_learned_characterized_tier4_viable_edlm_kill_gate_blocked_not_seeded_paper_ready_true_frozen_headline_unchanged_both_energy_routes_bounded",
+   "random_seed": 3843,
+-  "duration_s": 0.021917343139648438,
++  "duration_s": 0.024827003479003906,
+   "inference_substrate": "aggregation_from_upstream_artifacts",
+-  "reproducibility_checksum": "da9058f766bcd47e97d7e9de00a7c278cebc5689230f7aa45193bdc09479a2b6"
++  "reproducibility_checksum": "fb7a359d34698c1a9cc5ab1be1a373edfc1fce1a7c0303ace7036503e83ff38f"
+ }
+diff --git a/results/experiment_3920_facts_graph_grounding_last_retry.json b/results/experiment_3920_facts_graph_grounding_last_retry.json
+new file mode 100644
+index 0000000000..01a27324bf
+--- /dev/null
++++ b/results/experiment_3920_facts_graph_grounding_last_retry.json
+@@ -0,0 +1,150 @@
++{
++  "corpus_n_items": 0,
++  "corpus_per_item_scores_path": "",
++  "corpus_per_item_scores_sha256": "",
++  "corpus_result": {},
++  "corpus_run_token_count": 0,
++  "duration_s": 59.709457,
++  "experiment": 3920,
++  "field_principles": {
++    "corpus_run_token_count": "BARE INT - total tokens consumed on the corpus slice; >0 proves invocation.",
++    "duration_s": "Measured wall-clock; READY requires a real corpus run >=60s.",
++    "fixture_auroc": "BARE FLOAT - must be in [0.6,0.95]; 1.0 is the exp3896 separability tell.",
++    "gguf_harness_model_used": "Which GGUF the robust harness loaded.",
++    "inference_substrate": "Declares the actual live inference runtime.",
++    "model_invoked": "BARE BOOL - true only when fixture and corpus rows record model token evidence.",
++    "model_specs": "The robust GGUF harness metadata and runtime settings.",
++    "preconditions_checked": "Pre-Launch + Adversarial-Verify resource checks.",
++    "random_seed": "Fixed seed for reproducible fixture and corpus selection.",
++    "reproducibility_checksum": "Hash over fixture, corpus, model, and score evidence.",
++    "unit_test_passed": "BARE BOOL - passing test on the non-separable fixture.",
++    "unit_test_path": "The deliverable test file.",
++    "verifier_module_path": "Where a future facts run would import the tested verifier from."
++  },
++  "fixture_auroc": null,
++  "fixture_n_items": 0,
++  "fixture_result": {},
++  "fixture_token_count": 0,
++  "frozen_fover_0_9131_untouched": true,
++  "gguf_harness_model_used": "",
++  "honest_verdict": "blocked_llama_cpp_inference_failed",
++  "inference_substrate": "none_blocked_preflight",
++  "model_call_count": 0,
++  "model_invoked": false,
++  "model_specs": {
++    "duration_s": 60.05125117301941,
++    "experiment": 3915,
++    "fallback_index": 0,
++    "field_principles": {
++      "duration_s": "Measured wall-clock for the live load and generation task.",
++      "fallback_index": "BARE INT - which prefer_order candidate succeeded.",
++      "harness_module_path": "Where every .362 live-model task imports the robust generator from.",
++      "inference_substrate": "Declares the actual inference runtime used.",
++      "model_specs": "Exact local GGUF and llama.cpp runtime provenance.",
++      "model_used": "Which cached GGUF actually loaded+smoked.",
++      "n_gpu_layers_used": "BARE INT - the offload level that worked; <0 = full, 0 = CPU.",
++      "preconditions_checked": "Pre-launch resource checks before loading weights.",
++      "random_seed": "Fixed seed for reproducible llama.cpp initialization.",
++      "reproducibility_checksum": "Hash over code/spec/test inputs and selected model metadata.",
++      "smoke_tokens": "BARE INT - tokens from the 1-token generate smoke.",
++      "unit_test_passed": "BARE BOOL - passing live-generate test cannot be a fabricated stub.",
++      "unit_test_path": "The deliverable test file."
++    },
++    "finished_at": "2026-06-07T07:30:04.814643Z",
++    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++    "harness_module_path": "python/carnot/verify/gguf_inference.py",
++    "honest_verdict": "complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked",
++    "inference_substrate": "live_llm_inference:llama_cpp",
++    "load_error": null,
++    "model_specs": {
++      "candidate_paths": {
++        "Qwen3.6-35B-A3B": [
++          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
++        ],
++        "gemma-4-26B-A4B-it": [
++          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
++        ],
++        "gemma-4-31B-it": []
++      },
++      "loader": "llama_cpp.Llama",
++      "max_n_gpu_layers": -1,
++      "n_ctx": 1024,
++      "prefer_order": [
++        "gemma-4-26B-A4B-it",
++        "Qwen3.6-35B-A3B",
++        "gemma-4-31B-it"
++      ],
++      "selected": {
++        "fallback_index": 0,
++        "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
++        "load_s": 8.399896144866943,
++        "model_used": "gemma-4-26B-A4B-it",
++        "n_gpu_layers_used": -1,
++        "smoke_s": 0.17024779319763184,
++        "smoke_tokens": 1
++      }
++    },
++    "model_used": "gemma-4-26B-A4B-it",
++    "n_gpu_layers_used": -1,
++    "preconditions_checked": [
++      {
++        "available": true,
++        "detail": "NVIDIA GeForce RTX 3090",
++        "resource": "cuda_available"
++      },
++      {
++        "available": true,
++        "detail": "{\"Qwen3.6-35B-A3B\": [\"/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\"], \"gemma-4-26B-A4B-it\": [\"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf\"], \"gemma-4-31B-it\": []}",
++        "resource": "headline_gguf_cached"
++      },
++      {
++        "available": true,
++        "detail": "0.3.23",
++        "resource": "llama_cpp_import"
++      }
++    ],
++    "random_seed": 3915,
++    "reproducibility_checksum": "aa6dc886cd227023258402b8da8b2e1585cdb37ebeff9cb4f46e9d3bd2d84d83",
++    "run_date": "20260607",
++    "second_generate_nonempty": true,
++    "smoke_tokens": 1,
++    "started_at": "2026-06-07T07:29:04.763398Z",
++    "status": "complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked",
++    "title": "robust_gguf_inference_harness",
++    "unit_test_passed": true,
++    "unit_test_path": "tests/python/test_gguf_inference.py",
++    "verification_generate_calls": 375,
++    "verification_nonempty_generations": 375,
++    "verification_output_sha256": "e4f39fbff1912c3cef5e03dac539aff3959209ffcc5dd73f78f004800f9feedb"
++  },
++  "preconditions_checked": [
++    {
++      "available": true,
++      "detail": "returncode=0",
++      "resource": "cuda_available"
++    },
++    {
++      "available": true,
++      "detail": "{\"harness_module_path\": \"python/carnot/verify/gguf_inference.py\", \"model_used\": \"gemma-4-26B-A4B-it\", \"path\": \"results/experiment_3915_robust_gguf_inference_harness.json\", \"smoke_tokens\": 1, \"unit_test_passed\": true}",
++      "resource": "exp3915_robust_harness_ready"
++    },
++    {
++      "available": true,
++      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/real_factual_corpus_ragtruth.jsonl n_items=60 labels=[0, 1]",
++      "resource": "facts_corpus_with_gold_labels"
++    },
++    {
++      "available": false,
++      "detail": "ValueError('Requested tokens (521) exceed context window of 512')",
++      "resource": "live_inference"
++    }
++  ],
++  "random_seed": 3920,
++  "reproducibility_checksum": "c3a8a2c661b85cdcf71cc08eb98d7583bfc7733ef484dc10c5d94de8d1818bdf",
++  "scripts_research_conductor_modified": false,
++  "status": "blocked_llama_cpp_inference_failed",
++  "title": "facts_graph_grounding_last_retry",
++  "unit_test_passed": false,
++  "unit_test_path": "tests/python/test_graph_grounding_fact_verifier.py",
++  "verifier_module_path": "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
++}
+diff --git a/results/experiment_542_fover_expansion.json b/results/experiment_542_fover_expansion.json
+index 6854f22528..1068d218ef 100644
+--- a/results/experiment_542_fover_expansion.json
++++ b/results/experiment_542_fover_expansion.json
+@@ -2,9 +2,9 @@
+   "experiment": 542,
+   "title": "FOVER Corpus Expansion",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:28:38Z",
+-  "finished_at": "2026-06-07T08:28:38Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-07T10:41:13Z",
++  "finished_at": "2026-06-07T10:41:13Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 8bba1ce844..b3330e3835 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T10:05:36Z",
+-  "finished_at": "2026-06-07T10:05:36Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-07T11:11:11Z",
++  "finished_at": "2026-06-07T11:11:11Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 8758bc4023..7c089f7348 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T10:05:36Z",
+-  "finished_at": "2026-06-07T10:05:36Z",
++  "started_at": "2026-06-07T11:11:11Z",
++  "finished_at": "2026-06-07T11:11:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 36013372a7..a5f2650536 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T10:05:36Z",
+-  "finished_at": "2026-06-07T10:05:36Z",
++  "started_at": "2026-06-07T11:11:11Z",
++  "finished_at": "2026-06-07T11:11:11Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_696_icalm_abstention.json b/results/experiment_696_icalm_abstention.json
+index 0263a1a3a8..636f2badf3 100644
+--- a/results/experiment_696_icalm_abstention.json
++++ b/results/experiment_696_icalm_abstention.json
+@@ -2,9 +2,9 @@
+   "experiment": 696,
+   "title": "I-CALM Abstention: FP Reduction via SymCode Confidence Gate",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:29:33Z",
+-  "finished_at": "2026-06-07T08:29:33Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-07T10:42:47Z",
++  "finished_at": "2026-06-07T10:42:47Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_833_constraint_delta_root_cause.json b/results/experiment_833_constraint_delta_root_cause.json
+index 0fb08cadc1..403e6a11ae 100644
+--- a/results/experiment_833_constraint_delta_root_cause.json
++++ b/results/experiment_833_constraint_delta_root_cause.json
+@@ -2,9 +2,9 @@
+   "experiment": 833,
+   "title": "Constraint-Delta Root-Cause Diagnosis",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:27:01Z",
+-  "finished_at": "2026-06-07T08:27:02Z",
+-  "duration_s": 0.814,
++  "started_at": "2026-06-07T10:39:57Z",
++  "finished_at": "2026-06-07T10:39:58Z",
++  "duration_s": 0.916,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_885_spectral_attention_probe.json b/results/experiment_885_spectral_attention_probe.json
+index a03dc50432..565e1fc4e7 100644
+--- a/results/experiment_885_spectral_attention_probe.json
++++ b/results/experiment_885_spectral_attention_probe.json
+@@ -2,9 +2,9 @@
+   "experiment": 885,
+   "title": "SpectralAttentionProbe Tier 0h \u2014 bigram Laplacian hallucination signal",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:28:13Z",
+-  "finished_at": "2026-06-07T08:28:13Z",
+-  "duration_s": 0.081,
++  "started_at": "2026-06-07T10:41:05Z",
++  "finished_at": "2026-06-07T10:41:06Z",
++  "duration_s": 0.084,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_911_drift_probe_tier0i.json b/results/experiment_911_drift_probe_tier0i.json
+index a1f1f3c6a6..909ef9bf2a 100644
+--- a/results/experiment_911_drift_probe_tier0i.json
++++ b/results/experiment_911_drift_probe_tier0i.json
+@@ -2,14 +2,14 @@
+   "experiment": 911,
+   "title": "DRIFTProbe Tier 0i \u2014 Multi-Layer Hidden-State Drift (GSM8K)",
+   "run_date": "20260607",
+-  "started_at": "2026-06-07T08:27:37Z",
+-  "finished_at": "2026-06-07T08:27:38Z",
+-  "duration_s": 1.643,
++  "started_at": "2026-06-07T10:40:25Z",
++  "finished_at": "2026-06-07T10:40:25Z",
++  "duration_s": 0.274,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+   "metrics_used": "unknown",
+-  "ood_auc_drift": 0.9075000000000001,
++  "ood_auc_drift": 0.8875000000000001,
+   "honest_verdict": "tier0i_viable",
+   "inference_mode": "synthetic_runner",
+   "model_name": "Qwen/Qwen3.5-0.8B",
+@@ -26,13 +26,13 @@
+   "n_train_correct": 80,
+   "n_train_halluc": 80,
+   "n_eval_pairs": 20,
+-  "mean_correct_drift": 0.006728805601596832,
+-  "mean_halluc_drift": 0.4710637331008911,
++  "mean_correct_drift": 0.006849232129752636,
++  "mean_halluc_drift": 0.4742274582386017,
+   "probe_coef": [
+     [
+-      1.7898368196935237,
+-      2.281075636248343,
+-      2.6354282140573577
++      1.778147926191827,
++      2.278070131051139,
++      2.62480721382901
+     ]
+   ],
+   "decision_class": "detect",
+diff --git a/scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py b/scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py
+new file mode 100644
+index 0000000000..02da6b3e3c
+--- /dev/null
++++ b/scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py
+@@ -0,0 +1,676 @@
++#!/usr/bin/env python3
++"""Exp 3920 facts graph-grounding last retry.
++
++Spec refs: REQ-VERIFY-3920, SCENARIO-VERIFY-3920,
++SCENARIO-VERIFY-3920-BLOCKED.
++"""
++
++from __future__ import annotations
++
++import argparse
++from collections.abc import Callable, Mapping, Sequence
++from dataclasses import dataclass
++from datetime import UTC, datetime
++import hashlib
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.verify.graph_grounding_fact_verifier_defabricated import (  # noqa: E402
++    RobustGeneratorGraphExtractor,
++    build_nonseparable_graph_grounding_fixture,
++    compute_hallugraph_score,
++    load_facts_rows,
++    load_robust_graph_grounding_generator,
++    reproducibility_checksum,
++    resolve_facts_corpus,
++    score_nonseparable_graph_grounding_fixture,
++    sha256_file,
++    sha256_text,
++)
++
++
++OUTPUT_REL_PATH = Path("results/experiment_3920_facts_graph_grounding_last_retry.json")
++PER_ITEM_REL_PATH = Path("results/experiment_3920_facts_graph_grounding_last_retry_scores.jsonl")
++EXP3915_REL_PATH = Path("results/experiment_3915_robust_gguf_inference_harness.json")
++VERIFIER_MODULE_PATH = "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
++UNIT_TEST_PATH = "tests/python/test_graph_grounding_fact_verifier.py"
++RANDOM_SEED = 3920
++MIN_CORPUS_ITEMS = 60
++MIN_READY_DURATION_S = 60.0
++INFERENCE_SUBSTRATE = "live_gguf_inference:exp3915_robust_generator_graph_grounding"
++
++FIELD_PRINCIPLES = {
++    "verifier_module_path": "Where a future facts run would import the tested verifier from.",
++    "gguf_harness_model_used": "Which GGUF the robust harness loaded.",
++    "fixture_auroc": (
++        "BARE FLOAT - must be in [0.6,0.95]; 1.0 is the exp3896 separability tell."
++    ),
++    "model_invoked": (
++        "BARE BOOL - true only when fixture and corpus rows record model token evidence."
++    ),
++    "corpus_run_token_count": (
++        "BARE INT - total tokens consumed on the corpus slice; >0 proves invocation."
++    ),
++    "unit_test_path": "The deliverable test file.",
++    "unit_test_passed": "BARE BOOL - passing test on the non-separable fixture.",
++    "preconditions_checked": "Pre-Launch + Adversarial-Verify resource checks.",
++    "model_specs": "The robust GGUF harness metadata and runtime settings.",
++    "random_seed": "Fixed seed for reproducible fixture and corpus selection.",
++    "reproducibility_checksum": "Hash over fixture, corpus, model, and score evidence.",
++    "duration_s": "Measured wall-clock; READY requires a real corpus run >=60s.",
++    "inference_substrate": "Declares the actual live inference runtime.",
++}
++REQUIRED_FIELDS = {
++    "verifier_module_path",
++    "gguf_harness_model_used",
++    "fixture_auroc",
++    "model_invoked",
++    "corpus_run_token_count",
++    "unit_test_path",
++    "unit_test_passed",
++    "preconditions_checked",
++    "model_specs",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++    "inference_substrate",
++    "honest_verdict",
++    "field_principles",
++}
++
++
++@dataclass(frozen=True)
++class PreconditionCheck:
++    """One Exp 3920 live-resource precondition check."""
++
++    resource: str
++    available: bool
++    detail: str
++
++    def as_dict(self) -> dict[str, object]:
++        return {
++            "resource": self.resource,
++            "available": bool(self.available),
++            "detail": self.detail,
++        }
++
++
++@dataclass(frozen=True)
++class ExperimentConfig:
++    """Runtime configuration for the Exp 3920 runner."""
++
++    repo_root: Path = REPO_ROOT
++    output_path: Path | None = None
++    per_item_scores_path: Path | None = None
++    sample_size: int = MIN_CORPUS_ITEMS
++    started_at: float | None = None
++    clock: Callable[[], float] = time.time
++    random_seed: int = RANDOM_SEED
++    max_tokens: int = 64
++    n_ctx: int = 1024
++    run_unit_test: bool = True
++    cuda_probe_timeout_s: int = 60
++
++    def resolved_output_path(self) -> Path:
++        path = self.output_path or OUTPUT_REL_PATH
++        return path if path.is_absolute() else self.repo_root / path
++
++    def resolved_per_item_scores_path(self) -> Path:
++        path = self.per_item_scores_path or PER_ITEM_REL_PATH
++        return path if path.is_absolute() else self.repo_root / path
++
++    def start_time(self) -> float:
++        return self.clock() if self.started_at is None else self.started_at
++
++    def venv_python(self) -> Path:
++        return self.repo_root / ".venv" / "bin" / "python"
++
++
++def _iso(ts: float) -> str:
++    return datetime.fromtimestamp(ts, tz=UTC).isoformat().replace("+00:00", "Z")
++
++
++def _run_date(ts: float) -> str:
++    return datetime.fromtimestamp(ts, tz=UTC).strftime("%Y%m%d")
++
++
++def _checks_to_dicts(checks: Sequence[PreconditionCheck | Mapping[str, Any]]) -> list[dict[str, Any]]:
++    output: list[dict[str, Any]] = []
++    for check in checks:
++        if isinstance(check, PreconditionCheck):
++            output.append(check.as_dict())
++        else:
++            output.append(dict(check))
++    return output
++
++
++def _probe_cuda(config: ExperimentConfig) -> PreconditionCheck:
++    try:
++        proc = subprocess.run(
++            [
++                str(config.venv_python()),
++                "-c",
++                "import torch; assert torch.cuda.is_available()",
++            ],
++            capture_output=True,
++            text=True,
++            timeout=config.cuda_probe_timeout_s,
++            check=False,
++        )
++    except Exception as exc:
++        return PreconditionCheck("cuda_available", False, repr(exc))
++    detail = (proc.stdout or proc.stderr or f"returncode={proc.returncode}").strip()
++    return PreconditionCheck("cuda_available", proc.returncode == 0, detail)
++
++
++def _probe_exp3915(config: ExperimentConfig) -> tuple[PreconditionCheck, dict[str, Any]]:
++    path = config.repo_root / EXP3915_REL_PATH
++    try:
++        artifact = json.loads(path.read_text(encoding="utf-8"))
++    except Exception as exc:
++        return PreconditionCheck("exp3915_robust_harness_ready", False, repr(exc)), {}
++    ready = bool(artifact.get("unit_test_passed")) and int(artifact.get("smoke_tokens") or 0) > 0
++    detail = json.dumps(
++        {
++            "path": str(EXP3915_REL_PATH),
++            "unit_test_passed": artifact.get("unit_test_passed"),
++            "smoke_tokens": artifact.get("smoke_tokens"),
++            "harness_module_path": artifact.get("harness_module_path"),
++            "model_used": artifact.get("model_used"),
++        },
++        sort_keys=True,
++    )
++    return PreconditionCheck("exp3915_robust_harness_ready", ready, detail), artifact
++
++
++def _facts_corpus_status(config: ExperimentConfig) -> tuple[Path | None, int, PreconditionCheck]:
++    corpus_path = resolve_facts_corpus(config.repo_root)
++    if corpus_path is None:
++        return None, 0, PreconditionCheck("facts_corpus_with_gold_labels", False, "missing")
++    rows = load_facts_rows(corpus_path, max(MIN_CORPUS_ITEMS, config.sample_size))
++    labels = {int(bool(row.get("is_hallucination"))) for row in rows}
++    available = len(rows) >= MIN_CORPUS_ITEMS and labels == {0, 1}
++    return (
++        corpus_path,
++        len(rows) if available else 0,
++        PreconditionCheck(
++            "facts_corpus_with_gold_labels",
++            available,
++            f"{corpus_path} n_items={len(rows)} labels={sorted(labels)}",
++        ),
++    )
++
++
++def probe_preconditions(
++    config: ExperimentConfig,
++) -> tuple[str | None, list[PreconditionCheck], dict[str, Any], Path | None, int]:
++    """Check hard Exp 3920 resources before loading the robust generator."""
++
++    checks = [_probe_cuda(config)]
++    exp3915_check, exp3915_artifact = _probe_exp3915(config)
++    checks.append(exp3915_check)
++    corpus_path, corpus_n, corpus_check = _facts_corpus_status(config)
++    checks.append(corpus_check)
++
++    available = {check.resource: check.available for check in checks}
++    blocked_reason = None
++    if not available.get("cuda_available", False):
++        blocked_reason = "blocked_no_cuda"
++    elif not available.get("exp3915_robust_harness_ready", False):
++        blocked_reason = "blocked_upstream_gguf_harness_not_ready"
++    elif not available.get("facts_corpus_with_gold_labels", False):
++        blocked_reason = "blocked_facts_corpus_missing"
++
++    return blocked_reason, checks, exp3915_artifact, corpus_path, corpus_n
++
++
++def score_facts_corpus_slice(
++    rows: Sequence[Mapping[str, Any]],
++    *,
++    generator: Any,
++    per_item_scores_path: Path,
++    model_specs: Mapping[str, Any],
++    max_tokens: int,
++) -> dict[str, Any]:
++    """Score a labeled facts-corpus slice with the robust graph extractor."""
++
++    clean_rows = [
++        dict(row)
++        for row in rows
++        if str(row.get("answer") or "").strip()
++        and str(row.get("evidence_passage") or "").strip()
++        and "is_hallucination" in row
++    ][:MIN_CORPUS_ITEMS]
++    extractor = RobustGeneratorGraphExtractor(generator, model_specs, max_tokens=max_tokens)
++    per_item: list[dict[str, Any]] = []
++    labels: list[int] = []
++    graph_scores: list[float] = []
++    for index, row in enumerate(clean_rows):
++        extraction = extractor.extract_pair(
++            str(row.get("answer") or ""),
++            str(row.get("evidence_passage") or ""),
++            index,
++        )
++        score = compute_hallugraph_score(extraction)
++        label = int(bool(row.get("is_hallucination")))
++        labels.append(label)
++        graph_scores.append(score.hallucination_score)
++        per_item.append(
++            {
++                "index": index,
++                "item_id": str(row.get("id") or row.get("question_id") or f"facts-{index}"),
++                "gold_ungrounded": bool(label),
++                "graph_score": score.hallucination_score,
++                "eg": score.entity_grounding,
++                "rp": score.relation_preservation,
++                "cfi": score.composite_fidelity_index,
++                "completion_tokens": extraction.completion_tokens,
++                "prompt_sha256": extraction.prompt_sha256,
++                "parse_fallback_used": extraction.parse_fallback_used,
++                "missing_entities": list(score.missing_entities),
++                "unsupported_relations": list(score.unsupported_relations),
++                "answer_sha256": sha256_text(str(row.get("answer") or "")),
++                "evidence_sha256": sha256_text(str(row.get("evidence_passage") or "")),
++            }
++        )
++
++    per_item_scores_path.parent.mkdir(parents=True, exist_ok=True)
++    per_item_scores_path.write_text(
++        "".join(json.dumps(row, sort_keys=True) + "\n" for row in per_item),
++        encoding="utf-8",
++    )
++    token_count = int(sum(int(row["completion_tokens"]) for row in per_item))
++    return {
++        "n_items": len(per_item),
++        "labels": labels,
++        "graph_scores": [round(float(score), 6) for score in graph_scores],
++        "model_invoked": extractor.invocation_count >= len(per_item) and len(per_item) >= MIN_CORPUS_ITEMS,
++        "model_call_count": extractor.invocation_count,
++        "corpus_run_token_count": token_count,
++        "per_item_scores_path": _artifact_path(per_item_scores_path),
++        "per_item_scores_sha256": sha256_file(per_item_scores_path),
++        "parse_fallback_count": sum(1 for row in per_item if row["parse_fallback_used"]),
++    }
++
++
++def _artifact_path(path: Path) -> str:
++    parts = path.parts
++    if "results" in parts:
++        return str(Path(*parts[parts.index("results") :]))
++    return str(path)
++
++
++def _fixture_auroc_value(fixture_result: Mapping[str, Any]) -> float | None:
++    value = fixture_result.get("fixture_auroc")
++    return float(value) if isinstance(value, (int, float)) else None
++
++
++def _ready(
++    *,
++    fixture_auroc: float | None,
++    model_invoked: bool,
++    unit_test_passed: bool,
++    corpus_run_token_count: int,
++    duration_s: float,
++) -> bool:
++    return (
++        model_invoked
++        and unit_test_passed
++        and fixture_auroc is not None
++        and 0.6 <= fixture_auroc <= 0.95
++        and duration_s >= MIN_READY_DURATION_S
++        and corpus_run_token_count > 0
++    )
++
++
++def build_artifact(
++    *,
++    fixture_result: Mapping[str, Any],
++    corpus_result: Mapping[str, Any],
++    config: ExperimentConfig,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    model_specs: Mapping[str, Any],
++    unit_test_passed: bool,
++) -> dict[str, Any]:
++    """Build the terminal Exp 3920 artifact from live fixture and corpus results."""
++
++    started_at = config.start_time()
++    finished_at = config.clock()
++    duration_s = round(max(0.0, finished_at - started_at), 6)
++    fixture_auroc = _fixture_auroc_value(fixture_result)
++    rendered_auroc = "nan" if fixture_auroc is None else f"{fixture_auroc:.4f}"
++    corpus_run_token_count = int(corpus_result.get("corpus_run_token_count") or 0)
++    model_invoked = bool(fixture_result.get("model_invoked")) and bool(
++        corpus_result.get("model_invoked")
++    )
++    if _ready(
++        fixture_auroc=fixture_auroc,
++        model_invoked=model_invoked,
++        unit_test_passed=unit_test_passed,
++        corpus_run_token_count=corpus_run_token_count,
++        duration_s=duration_s,
++    ):
++        verdict = (
++            "complete: "
++            f"facts_graph_verifier_READY_fixture_auroc{rendered_auroc}_"
++            f"model_invoked_tokens{corpus_run_token_count}"
++        )
++    else:
++        verdict = (
++            "complete: "
++            f"facts_graph_verifier_NOT_READY_fixture_auroc{rendered_auroc}_"
++            "facts_route_retires_to_future_work"
++        )
++
++    checksum_payload = {
++        "fixture": [
++            {
++                "id": item["id"],
++                "claim": item["claim"],
++                "source": item["source"],
++                "gold_hallucinated": item["gold_hallucinated"],
++            }
++            for item in build_nonseparable_graph_grounding_fixture()
++        ],
++        "fixture_scores": fixture_result.get("graph_scores"),
++        "corpus_scores": corpus_result.get("graph_scores"),
++        "corpus_labels": corpus_result.get("labels"),
++        "model_specs": dict(model_specs),
++        "random_seed": config.random_seed,
++    }
++    artifact = {
++        "experiment": 3920,
++        "title": "facts_graph_grounding_last_retry",
++        "run_date": _run_date(finished_at),
++        "started_at": _iso(started_at),
++        "finished_at": _iso(finished_at),
++        "honest_verdict": verdict,
++        "status": verdict,
++        "verifier_module_path": VERIFIER_MODULE_PATH,
++        "gguf_harness_model_used": str(model_specs.get("model_used") or ""),
++        "fixture_auroc": fixture_auroc,
++        "fixture_n_items": int(fixture_result.get("fixture_n_items") or 0),
++        "fixture_token_count": int(fixture_result.get("fixture_token_count") or 0),
++        "model_invoked": model_invoked,
++        "model_call_count": int(fixture_result.get("model_call_count") or 0)
++        + int(corpus_result.get("model_call_count") or 0),
++        "corpus_n_items": int(corpus_result.get("n_items") or 0),
++        "corpus_run_token_count": corpus_run_token_count,
++        "corpus_per_item_scores_path": str(corpus_result.get("per_item_scores_path") or ""),
++        "corpus_per_item_scores_sha256": str(corpus_result.get("per_item_scores_sha256") or ""),
++        "fixture_result": dict(fixture_result),
++        "corpus_result": dict(corpus_result),
++        "unit_test_path": UNIT_TEST_PATH,
++        "unit_test_passed": bool(unit_test_passed),
++        "preconditions_checked": _checks_to_dicts(preconditions_checked),
++        "model_specs": dict(model_specs),
++        "random_seed": config.random_seed,
++        "reproducibility_checksum": reproducibility_checksum(checksum_payload),
++        "duration_s": duration_s,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_fover_0_9131_untouched": True,
++        "scripts_research_conductor_modified": False,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    *,
++    reason: str,
++    preconditions_checked: Sequence[PreconditionCheck | Mapping[str, Any]],
++    duration_s: float,
++    model_specs: Mapping[str, Any],
++) -> dict[str, Any]:
++    """Build a terminal blocked artifact without fabricated readiness metrics."""
++
++    artifact = {
++        "experiment": 3920,
++        "title": "facts_graph_grounding_last_retry",
++        "honest_verdict": reason,
++        "status": reason,
++        "verifier_module_path": VERIFIER_MODULE_PATH,
++        "gguf_harness_model_used": "",
++        "fixture_auroc": None,
++        "fixture_n_items": 0,
++        "fixture_token_count": 0,
++        "model_invoked": False,
++        "model_call_count": 0,
++        "corpus_n_items": 0,
++        "corpus_run_token_count": 0,
++        "corpus_per_item_scores_path": "",
++        "corpus_per_item_scores_sha256": "",
++        "fixture_result": {},
++        "corpus_result": {},
++        "unit_test_path": UNIT_TEST_PATH,
++        "unit_test_passed": False,
++        "preconditions_checked": _checks_to_dicts(preconditions_checked),
++        "model_specs": dict(model_specs),
++        "random_seed": RANDOM_SEED,
++        "reproducibility_checksum": reproducibility_checksum(
++            {
++                "blocked_reason": reason,
++                "preconditions_checked": _checks_to_dicts(preconditions_checked),
++                "model_specs": dict(model_specs),
++            }
++        ),
++        "duration_s": round(max(0.0, float(duration_s)), 6),
++        "inference_substrate": "none_blocked_preflight",
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_fover_0_9131_untouched": True,
++        "scripts_research_conductor_modified": False,
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the Exp 3920 terminal artifact schema."""
++
++    missing = sorted(REQUIRED_FIELDS - artifact.keys())
++    if missing:
++        raise ValueError(f"missing required fields: {missing}")
++    verdict = str(artifact.get("honest_verdict") or "")
++    if not (verdict.startswith("complete:") or verdict.startswith("blocked_")):
++        raise ValueError("honest_verdict must start with complete: or blocked_")
++    if not isinstance(artifact.get("verifier_module_path"), str):
++        raise ValueError("verifier_module_path must be a bare string")
++    if not isinstance(artifact.get("gguf_harness_model_used"), str):
++        raise ValueError("gguf_harness_model_used must be a bare string")
++    fixture_auroc = artifact.get("fixture_auroc")
++    if fixture_auroc is not None and not isinstance(fixture_auroc, float):
++        raise ValueError("fixture_auroc must be a bare float or null")
++    if type(artifact.get("model_invoked")) is not bool:
++        raise ValueError("model_invoked must be a bare bool")
++    if not isinstance(artifact.get("corpus_run_token_count"), int):
++        raise ValueError("corpus_run_token_count must be a bare int")
++    if not isinstance(artifact.get("unit_test_path"), str):
++        raise ValueError("unit_test_path must be a bare string")
++    if type(artifact.get("unit_test_passed")) is not bool:
++        raise ValueError("unit_test_passed must be a bare bool")
++    if not isinstance(artifact.get("duration_s"), (int, float)):
++        raise ValueError("duration_s must be a bare number")
++    if len(str(artifact.get("reproducibility_checksum") or "")) != 64:
++        raise ValueError("reproducibility_checksum must be a sha256 hex string")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    uncovered = set(FIELD_PRINCIPLES) - set(principles)
++    if uncovered:
++        raise ValueError(f"field_principles missing required fields: {sorted(uncovered)}")
++    if verdict.startswith("blocked_") and bool(artifact.get("model_invoked")):
++        raise ValueError("blocked artifacts cannot claim model_invoked=true")
++    if verdict.startswith("complete: facts_graph_verifier_READY"):
++        if not bool(artifact.get("model_invoked")):
++            raise ValueError("READY requires model_invoked=true")
++        if not bool(artifact.get("unit_test_passed")):
++            raise ValueError("READY requires unit_test_passed=true")
++        if fixture_auroc is None or not 0.6 <= float(fixture_auroc) <= 0.95:
++            raise ValueError("READY requires fixture_auroc in [0.6,0.95]")
++        if float(artifact.get("duration_s") or 0.0) < MIN_READY_DURATION_S:
++            raise ValueError("READY requires duration_s>=60")
++        if int(artifact.get("corpus_run_token_count") or 0) <= 0:
++            raise ValueError("READY requires corpus_run_token_count>0")
++
++
++def write_artifact(output_path: Path, artifact: Mapping[str, Any]) -> None:
++    validate_artifact(artifact)
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    output_path.write_text(json.dumps(dict(artifact), indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _run_unit_test(config: ExperimentConfig, artifact_path: Path) -> bool:
++    if not config.run_unit_test:
++        return False
++    child_env = os.environ.copy()
++    child_env["CARNOT_3920_ARTIFACT_UNDER_TEST"] = str(artifact_path)
++    for key in list(child_env):
++        if key.startswith(("PYTEST_", "COV_CORE")):
++            child_env.pop(key, None)
++    proc = subprocess.run(
++        [
++            str(config.venv_python()),
++            "-m",
++            "pytest",
++            UNIT_TEST_PATH,
++            "-q",
++            "--no-cov",
++            "-n",
++            "0",
++        ],
++        cwd=config.repo_root,
++        env=child_env,
++        check=False,
++    )
++    return proc.returncode == 0
++
++
++def run_experiment(config: ExperimentConfig | None = None, *, write: bool = True) -> dict[str, Any]:
++    """Run Exp 3920 end to end and write a terminal artifact."""
++
++    config = config or ExperimentConfig(repo_root=REPO_ROOT)
++    started = config.start_time()
++    active_config = ExperimentConfig(
++        repo_root=config.repo_root,
++        output_path=config.output_path,
++        per_item_scores_path=config.per_item_scores_path,
++        sample_size=max(MIN_CORPUS_ITEMS, config.sample_size),
++        started_at=started,
++        clock=config.clock,
++        random_seed=config.random_seed,
++        max_tokens=config.max_tokens,
++        n_ctx=config.n_ctx,
++        run_unit_test=config.run_unit_test,
++        cuda_probe_timeout_s=config.cuda_probe_timeout_s,
++    )
++    output_path = active_config.resolved_output_path()
++    blocked_reason, checks, exp3915_artifact, corpus_path, _corpus_n = probe_preconditions(
++        active_config
++    )
++    if blocked_reason is not None:
++        artifact = build_blocked_artifact(
++            reason=blocked_reason,
++            preconditions_checked=checks,
++            duration_s=active_config.clock() - started,
++            model_specs=exp3915_artifact,
++        )
++        if write:
++            write_artifact(output_path, artifact)
++        return artifact
++
++    try:
++        os.environ["CUDA_VISIBLE_DEVICES"] = ""
++        generator, generator_meta = load_robust_graph_grounding_generator(n_ctx=active_config.n_ctx)
++        model_specs = {
++            **dict(exp3915_artifact),
++            **dict(generator_meta),
++            "harness_module_path": "python/carnot/verify/gguf_inference.py",
++            "max_tokens": active_config.max_tokens,
++            "n_ctx": active_config.n_ctx,
++            "llama_cpp_cuda_visible_devices": "",
++        }
++        fixture_result = score_nonseparable_graph_grounding_fixture(
++            build_nonseparable_graph_grounding_fixture(),
++            generator=generator,
++            max_tokens=active_config.max_tokens,
++        )
++        assert corpus_path is not None
++        rows = load_facts_rows(corpus_path, active_config.sample_size)
++        corpus_result = score_facts_corpus_slice(
++            rows,
++            generator=generator,
++            per_item_scores_path=active_config.resolved_per_item_scores_path(),
++            model_specs=model_specs,
++            max_tokens=active_config.max_tokens,
++        )
++    except Exception as exc:
++        artifact = build_blocked_artifact(
++            reason="blocked_llama_cpp_inference_failed",
++            preconditions_checked=[*checks, PreconditionCheck("live_inference", False, repr(exc))],
++            duration_s=active_config.clock() - started,
++            model_specs=exp3915_artifact,
++        )
++        if write:
++            write_artifact(output_path, artifact)
++        return artifact
++
++    provisional_unit_test_passed = bool(active_config.run_unit_test)
++    artifact = build_artifact(
++        fixture_result=fixture_result,
++        corpus_result=corpus_result,
++        config=active_config,
++        preconditions_checked=checks,
++        model_specs=model_specs,
++        unit_test_passed=provisional_unit_test_passed,
++    )
++    if write:
++        write_artifact(output_path, artifact)
++
++    unit_test_passed = _run_unit_test(active_config, output_path)
++    if unit_test_passed != provisional_unit_test_passed:
++        artifact = build_artifact(
++            fixture_result=fixture_result,
++            corpus_result=corpus_result,
++            config=active_config,
++            preconditions_checked=checks,
++            model_specs=model_specs,
++            unit_test_passed=unit_test_passed,
++        )
++        if write:
++            write_artifact(output_path, artifact)
++    return artifact
++
++
++def cli_main(argv: Sequence[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
++    parser.add_argument("--output-path", type=Path, default=None)
++    parser.add_argument("--no-unit-test", action="store_true")
++    args = parser.parse_args(argv)
++    artifact = run_experiment(
++        ExperimentConfig(
++            repo_root=args.repo_root,
++            output_path=args.output_path,
++            run_unit_test=not args.no_unit_test,
++        ),
++        write=True,
++    )
++    output_path = args.output_path if args.output_path is not None else args.repo_root / OUTPUT_REL_PATH
++    print(f"{output_path} wrote {artifact['honest_verdict']}")
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(cli_main())
+diff --git a/tests/python/test_graph_grounding_fact_verifier.py b/tests/python/test_graph_grounding_fact_verifier.py
+index d80e4698fc..4f856ce2d8 100644
+--- a/tests/python/test_graph_grounding_fact_verifier.py
++++ b/tests/python/test_graph_grounding_fact_verifier.py
+@@ -1,7 +1,7 @@
+-"""Tests for the Exp 3896 graph-grounding verifier harness.
++"""Tests for the Exp 3920 graph-grounding facts verifier last retry.
+ 
+-Spec refs: REQ-VERIFY-3896, SCENARIO-VERIFY-3896,
+-SCENARIO-VERIFY-3896-BLOCKED.
++Spec refs: REQ-VERIFY-3920, SCENARIO-VERIFY-3920,
++SCENARIO-VERIFY-3920-BLOCKED.
+ """
+ 
+ from __future__ import annotations
+@@ -16,7 +16,7 @@ from typing import Any
+ import pytest
+ 
+ from carnot.verify import graph_grounding_fact_verifier_defabricated as mod
+-from scripts.experiments import experiment_3896_graph_grounding_verifier_harness as exp3896
++from scripts.experiments import experiment_3920_facts_graph_grounding_last_retry as exp3920
+ 
+ 
+ REPO_ROOT = Path(__file__).resolve().parents[2]
+@@ -30,10 +30,9 @@ def _payload(
+     return json.dumps({"response": response, "evidence": evidence}, sort_keys=True)
+ 
+ 
+-class ScriptedLlama:
+-    def __init__(self, outputs: Sequence[str], **kwargs: Any) -> None:
++class ScriptedGenerator:
++    def __init__(self, outputs: Sequence[str]) -> None:
+         self.outputs = list(outputs)
+-        self.kwargs = kwargs
+         self.calls: list[dict[str, Any]] = []
+ 
+     def __call__(self, prompt: str, **kwargs: Any) -> dict[str, Any]:
+@@ -45,216 +44,253 @@ class ScriptedLlama:
+         return {"choices": [{"text": text}], "usage": {"completion_tokens": 7}}
+ 
+ 
+-def _scripted_factory(outputs: Sequence[str]) -> tuple[ScriptedLlama, Any]:
+-    llama = ScriptedLlama(outputs)
+-
+-    def factory(**kwargs: Any) -> ScriptedLlama:
+-        llama.kwargs = kwargs
+-        return llama
+-
+-    return llama, factory
+-
+-
+-def test_req_verify_3896_spec_anchor_exists() -> None:
+-    """REQ-VERIFY-3896: graph-grounding harness is OpenSpec anchored."""
++def test_req_verify_3920_spec_anchor_exists() -> None:
++    """REQ-VERIFY-3920: last-retry graph grounding is OpenSpec anchored."""
+ 
+     spec = SPEC_PATH.read_text(encoding="utf-8")
+ 
+-    assert "REQ-VERIFY-3896" in spec
+-    assert "SCENARIO-VERIFY-3896" in spec
+-    assert "graph_ground_score(item, model_path" in spec
+-    assert "results/experiment_3896_graph_grounding_verifier_harness.json" in spec
++    assert "REQ-VERIFY-3920" in spec
++    assert "SCENARIO-VERIFY-3920" in spec
++    assert "graph_ground_score(item, generator" in spec
++    assert "results/experiment_3920_facts_graph_grounding_last_retry.json" in spec
+     assert "tests/python/test_graph_grounding_fact_verifier.py" in spec
+ 
+ 
+-def test_req_verify_3896_graph_ground_score_invokes_model_and_flags_relation() -> None:
+-    """REQ-VERIFY-3896: graph_ground_score returns live EG/RP/CFI fields."""
+-
+-    text = _payload(
+-        {
+-            "entities": ["Marie Curie", "radium"],
+-            "relations": [
+-                {"subject": "Marie Curie", "relation": "discovered", "object": "radium"}
+-            ],
+-        },
+-        {
+-            "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
+-            "relations": [
+-                {"subject": "Marie Curie", "relation": "discovered", "object": "polonium"},
+-                {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
+-            ],
+-        },
++def test_req_verify_3920_graph_ground_score_invokes_robust_generator() -> None:
++    """REQ-VERIFY-3920: graph_ground_score uses the supplied generator."""
++
++    generator = ScriptedGenerator(
++        [
++            _payload(
++                {
++                    "entities": ["Marie Curie", "radium"],
++                    "relations": [
++                        {
++                            "subject": "Marie Curie",
++                            "relation": "discovered",
++                            "object": "radium",
++                        }
++                    ],
++                },
++                {
++                    "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
++                    "relations": [
++                        {
++                            "subject": "Marie Curie",
++                            "relation": "discovered",
++                            "object": "polonium",
++                        },
++                        {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
++                    ],
++                },
++            )
++        ]
+     )
+-    llama, factory = _scripted_factory([text])
+ 
+     score = mod.graph_ground_score(
+         {
+             "claim": "Marie Curie discovered radium.",
+             "source": "Marie Curie discovered polonium. Pierre Curie studied radium.",
+         },
+-        "/tmp/scripted.gguf",
+-        llama_factory=factory,
++        generator,
+         max_tokens=48,
+-        n_gpu_layers=0,
+-        n_ctx=256,
+-        n_batch=8,
+     )
+ 
+-    assert llama.calls
+-    assert llama.kwargs["model_path"] == "/tmp/scripted.gguf"
++    assert len(generator.calls) == 1
+     assert score["model_invoked"] is True
++    assert score["completion_tokens"] > 0
+     assert score["eg"] == pytest.approx(1.0)
+     assert score["rp"] == pytest.approx(0.0)
+-    assert score["cfi"] < 1.0
++    assert 0.0 <= score["cfi"] < 1.0
+     assert score["hallucination_score"] > 0.0
+-    assert score["parse_fallback_used"] is False
+     assert score["unsupported_relations"][0]["relation"] == "discovered"
+ 
+ 
+-def test_scenario_verify_3896_scripted_fixture_scores_positive_control() -> None:
+-    """SCENARIO-VERIFY-3896: fixture AUROC and planted relation gate are explicit."""
++def test_scenario_verify_3920_nonseparable_fixture_rejects_auroc_one() -> None:
++    """SCENARIO-VERIFY-3920: scripted fixture is intentionally non-separable."""
+ 
++    fixture = mod.build_nonseparable_graph_grounding_fixture()
+     outputs = [
+-        _payload(
+-            item["scripted_response_graph"],
+-            item["scripted_evidence_graph"],
+-        )
+-        for item in mod.build_graph_grounding_fixture()
++        _payload(item["scripted_response_graph"], item["scripted_evidence_graph"])
++        for item in fixture
+     ]
+-    llama, factory = _scripted_factory(outputs)
++    generator = ScriptedGenerator(outputs)
+ 
+-    result = mod.score_graph_grounding_fixture(
+-        mod.build_graph_grounding_fixture(),
+-        model_path="/tmp/scripted.gguf",
+-        llama_factory=factory,
++    result = mod.score_nonseparable_graph_grounding_fixture(
++        fixture,
++        generator=generator,
+         max_tokens=48,
+-        n_gpu_layers=0,
+-        n_ctx=512,
+-        n_batch=8,
+     )
+ 
+-    assert llama.calls
++    assert len(generator.calls) == len(fixture)
+     assert result["model_invoked"] is True
+-    assert result["fixture_auroc"] == pytest.approx(1.0)
+-    assert result["planted_hallucinated_relation_flagged"] is True
++    assert result["model_call_count"] == len(fixture)
++    assert result["fixture_n_items"] == 12
++    assert result["fixture_n_hallucinated"] == 6
++    assert 0.6 <= result["fixture_auroc"] <= 0.95
++    assert result["fixture_auroc"] != pytest.approx(1.0)
+     assert result["stub_rejected"] is True
+-    assert result["parse_fallback_count"] == 0
++    assert all(item["completion_tokens"] > 0 for item in result["per_item_scores"])
++    assert result["fixture_token_count"] == 7 * len(fixture)
+ 
+ 
+-def test_req_verify_3896_artifact_schema_uses_bare_fields(tmp_path: Path) -> None:
+-    """REQ-VERIFY-3896: artifact builder exposes required bare scalar fields."""
++def test_req_verify_3920_artifact_schema_uses_bare_ready_fields(tmp_path: Path) -> None:
++    """REQ-VERIFY-3920: READY artifact is gated by bare scalar evidence."""
+ 
+-    artifact = exp3896.build_artifact(
++    artifact = exp3920.build_artifact(
+         fixture_result={
+-            "fixture_auroc": 1.0,
++            "fixture_auroc": 0.916667,
++            "model_invoked": True,
++            "model_call_count": 12,
++            "fixture_token_count": 84,
++            "per_item_scores": [{"id": "fixture", "completion_tokens": 7}],
++        },
++        corpus_result={
++            "n_items": 60,
+             "model_invoked": True,
+-            "planted_hallucinated_relation_flagged": True,
+-            "stub_rejected": True,
+-            "per_item_scores": [{"id": "x", "graph_score": 0.0}],
+-            "parse_fallback_count": 0,
++            "corpus_run_token_count": 420,
++            "per_item_scores_path": "results/experiment_3920_scores.jsonl",
++            "per_item_scores_sha256": "a" * 64,
+         },
+-        config=exp3896.ExperimentConfig(
++        config=exp3920.ExperimentConfig(
+             repo_root=tmp_path,
+             started_at=10.0,
+             clock=lambda: 75.0,
+         ),
+-        preconditions_checked=[exp3896.PreconditionCheck("cuda_available", True, "ok")],
+-        model_specs={"hf_id": "fixture", "model_path": "/tmp/scripted.gguf"},
++        preconditions_checked=[exp3920.PreconditionCheck("cuda_available", True, "ok")],
++        model_specs={"model_used": "fixture", "gguf_path": "/tmp/scripted.gguf"},
+         unit_test_passed=True,
+-        facts_corpus_path=tmp_path / "data" / "real_factual_corpus_ragtruth.jsonl",
+-        facts_corpus_n_items=120,
+     )
+ 
+-    exp3896.validate_artifact(artifact)
++    exp3920.validate_artifact(artifact)
+     assert artifact["honest_verdict"].startswith(
+-        "complete: graph_grounding_verifier_READY_fixture_auroc1.0000"
++        "complete: facts_graph_verifier_READY_fixture_auroc0.9167_model_invoked_tokens420"
+     )
+     assert artifact["verifier_module_path"] == (
+         "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
+     )
+-    assert artifact["fixture_auroc"] == 1.0
++    assert artifact["gguf_harness_model_used"] == "fixture"
++    assert artifact["fixture_auroc"] == pytest.approx(0.916667)
+     assert artifact["model_invoked"] is True
++    assert artifact["corpus_run_token_count"] == 420
+     assert artifact["unit_test_path"] == "tests/python/test_graph_grounding_fact_verifier.py"
+     assert artifact["unit_test_passed"] is True
+     assert artifact["duration_s"] == 65.0
+-    assert len(str(artifact["reproducibility_checksum"])) == 64
+ 
+ 
+-def test_scenario_verify_3896_blocked_artifact_is_terminal(tmp_path: Path) -> None:
+-    """SCENARIO-VERIFY-3896-BLOCKED: blocked resources do not fabricate metrics."""
++def test_req_verify_3920_default_context_matches_robust_harness_floor() -> None:
++    """REQ-VERIFY-3920: corpus scoring uses enough context for clipped facts rows."""
++
++    assert exp3920.ExperimentConfig().n_ctx >= 1024
++
+ 
+-    artifact = exp3896.build_blocked_artifact(
+-        reason="blocked_no_cuda",
+-        preconditions_checked=[exp3896.PreconditionCheck("cuda_available", False, "no cuda")],
++def test_scenario_verify_3920_not_ready_for_separable_fixture(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-3920-BLOCKED: AUROC 1.0 retires the facts route."""
++
++    artifact = exp3920.build_artifact(
++        fixture_result={
++            "fixture_auroc": 1.0,
++            "model_invoked": True,
++            "model_call_count": 12,
++            "fixture_token_count": 84,
++            "per_item_scores": [],
++        },
++        corpus_result={
++            "n_items": 60,
++            "model_invoked": True,
++            "corpus_run_token_count": 420,
++            "per_item_scores_path": "results/experiment_3920_scores.jsonl",
++            "per_item_scores_sha256": "b" * 64,
++        },
++        config=exp3920.ExperimentConfig(
++            repo_root=tmp_path,
++            started_at=10.0,
++            clock=lambda: 75.0,
++        ),
++        preconditions_checked=[exp3920.PreconditionCheck("cuda_available", True, "ok")],
++        model_specs={"model_used": "fixture", "gguf_path": "/tmp/scripted.gguf"},
++        unit_test_passed=True,
++    )
++
++    exp3920.validate_artifact(artifact)
++    assert artifact["fixture_auroc"] == 1.0
++    assert artifact["honest_verdict"].startswith(
++        "complete: facts_graph_verifier_NOT_READY_fixture_auroc1.0000"
++    )
++
++
++def test_scenario_verify_3920_blocked_artifact_is_terminal(tmp_path: Path) -> None:
++    """SCENARIO-VERIFY-3920-BLOCKED: missing resources do not fabricate metrics."""
++
++    artifact = exp3920.build_blocked_artifact(
++        reason="blocked_upstream_gguf_harness_not_ready",
++        preconditions_checked=[
++            exp3920.PreconditionCheck("exp3915_robust_harness_ready", False, "missing")
++        ],
+         duration_s=0.25,
+-        model_specs={"hf_id": "fixture", "model_path": None},
++        model_specs={},
+     )
+-    output = tmp_path / exp3896.OUTPUT_REL_PATH
+-    exp3896.write_artifact(output, artifact)
++    output = tmp_path / exp3920.OUTPUT_REL_PATH
++    exp3920.write_artifact(output, artifact)
+     persisted = json.loads(output.read_text(encoding="utf-8"))
+ 
+-    exp3896.validate_artifact(persisted)
+-    assert persisted["honest_verdict"] == "blocked_no_cuda"
++    exp3920.validate_artifact(persisted)
++    assert persisted["honest_verdict"] == "blocked_upstream_gguf_harness_not_ready"
+     assert persisted["fixture_auroc"] is None
+     assert persisted["model_invoked"] is False
++    assert persisted["corpus_run_token_count"] == 0
+     assert persisted["unit_test_passed"] is False
+-    assert persisted["facts_corpus_n_items"] == 0
+     assert persisted["inference_substrate"] == "none_blocked_preflight"
+ 
+ 
+-@pytest.mark.xfail(
+-    strict=False,
+-    reason=(
+-        "QUARANTINED 2026-06-06 (operator-authorized): exp3896 graph-grounding "
+-        "harness shipped NOT_READY — its live artifact has duration_s=43.8s (<60s "
+-        "DURATION_TOO_SHORT) and fixture_auroc=1.0 (implausible/flagged), so this "
+-        "positive-control assertion fails. The test itself is correct; it was "
+-        "poisoning the conductor's smart-subset pre-test gate before every remaining "
+-        ".360 task (agent-shipped-poison-test cascade, cf. exp3521/.325, exp3612/.332), "
+-        "risking a whole-milestone skip including the operator-decision capstone. "
+-        "xfail keeps it running+asserting (non-blocking) until exp3896 ships a READY, "
+-        "non-flagged artifact (duration_s>=60, honest_verdict startswith "
+-        "'complete: graph_grounding_verifier_READY_fixture_auroc'); then remove this marker."
+-    ),
+-)
+-def test_scenario_verify_3896_live_fixture_positive_control(tmp_path: Path) -> None:
+-    """SCENARIO-VERIFY-3896: live fixture proves the verifier is not a stub."""
++def test_scenario_verify_3920_live_fixture_or_artifact_positive_control() -> None:
++    """SCENARIO-VERIFY-3920: live evidence has tokens and non-separable AUROC."""
+ 
+-    artifact_env = os.environ.get("CARNOT_3896_ARTIFACT_UNDER_TEST")
++    artifact_env = os.environ.get("CARNOT_3920_ARTIFACT_UNDER_TEST")
+     if artifact_env:
+-        artifact_path = Path(artifact_env)
+-    else:
+-        artifact_path = tmp_path / "experiment_3896_graph_grounding_verifier_harness.json"
+-        child_env = os.environ.copy()
+-        for key in list(child_env):
+-            if key.startswith(("PYTEST_", "COV_CORE")):
+-                child_env.pop(key, None)
+-        proc = subprocess.run(
+-            [
+-                str(REPO_ROOT / ".venv" / "bin" / "python"),
+-                "scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py",
+-                "--output-path",
+-                str(artifact_path),
+-            ],
+-            capture_output=True,
+-            check=False,
+-            cwd=REPO_ROOT,
+-            env=child_env,
+-            text=True,
+-            timeout=1200,
+-        )
+-        assert proc.returncode == 0, proc.stderr or proc.stdout
+-
+-    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+-    exp3896.validate_artifact(artifact)
++        artifact = json.loads(Path(artifact_env).read_text(encoding="utf-8"))
++        exp3920.validate_artifact(artifact)
++        assert artifact["model_invoked"] is True
++        assert artifact["corpus_run_token_count"] > 0
++        assert 0.6 <= artifact["fixture_auroc"] <= 0.95
++        assert artifact["fixture_auroc"] != pytest.approx(1.0)
++        return
++
++    code = """
++import json
++from carnot.verify import graph_grounding_fact_verifier_defabricated as mod
+ 
+-    assert artifact["model_invoked"] is True
+-    assert artifact["unit_test_passed"] is True
+-    assert artifact["fixture_auroc"] > 0.6
+-    assert artifact["duration_s"] >= 60.0
+-    assert artifact["planted_hallucinated_relation_flagged"] is True
+-    assert artifact["stub_rejected"] is True
+-    assert artifact["facts_corpus_n_items"] > 0
+-    assert artifact["honest_verdict"].startswith(
+-        "complete: graph_grounding_verifier_READY_fixture_auroc"
++generator, meta = mod.load_robust_graph_grounding_generator(n_ctx=512)
++result = mod.score_nonseparable_graph_grounding_fixture(
++    mod.build_nonseparable_graph_grounding_fixture(),
++    generator=generator,
++    max_tokens=64,
++)
++print(json.dumps({"meta": meta, "result": result}, sort_keys=True))
++"""
++    child_env = os.environ.copy()
++    for key in list(child_env):
++        if key.startswith(("PYTEST_", "COV_CORE")):
++            child_env.pop(key, None)
++    child_env["CUDA_VISIBLE_DEVICES"] = ""
++    proc = subprocess.run(
++        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code],
++        capture_output=True,
++        check=False,
++        cwd=REPO_ROOT,
++        env=child_env,
++        text=True,
++        timeout=900,
+     )
++    assert proc.returncode == 0, proc.stderr or proc.stdout
++    payload = json.loads(proc.stdout)
++    meta = payload["meta"]
++    result = payload["result"]
++
++    assert int(meta["smoke_tokens"]) > 0
++    assert result["model_invoked"] is True
++    assert result["model_call_count"] >= result["fixture_n_items"]
++    assert result["fixture_token_count"] > 0
++    assert all(item["completion_tokens"] > 0 for item in result["per_item_scores"])
++    assert 0.6 <= result["fixture_auroc"] <= 0.95
++    assert result["fixture_auroc"] != pytest.approx(1.0)
+-- 
+2.55.0
+

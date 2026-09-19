@@ -1,0 +1,34 @@
+From 97b450025d058770c79b6aff6b5715c594f686bd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Tue, 2 Jun 2026 13:03:39 -0400
+Subject: [PATCH 00178/11171] =?UTF-8?q?[conductor]=20In-process=20docs=20f?=
+ =?UTF-8?q?or=20Hardware=20continuity=20(consolidated,=20all=203=20boards)?=
+ =?UTF-8?q?=20=E2=80=94=20CONFIRM=20KV260=20terminal=20state=20(overlay=20?=
+ =?UTF-8?q?loaded=20+=20non-fabricated=20latency=20transcript=20on=20disk?=
+ =?UTF-8?q?=20from=20exp3709)=20and=20RECOMMEND=20the=20operator=20lift=20?=
+ =?UTF-8?q?the=20per-milestone=20KV260=20mandate=20(north-star=20sec-3);?=
+ =?UTF-8?q?=20PolarFire=20opportunistic=20reachability;=20GateMate=20docum?=
+ =?UTF-8?q?entation-only=20(openFPGALoader=20missing).=20SSH-reachability?=
+ =?UTF-8?q?=20preconditions=20only;=20NO=20host=20SD-card=20check;=20NO=20?=
+ =?UTF-8?q?speedup=20claim?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/changelog.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ops/changelog.md b/ops/changelog.md
+index b2c57ea3be..5705588101 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8305,3 +8305,4 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-02: RISK-COVERAGE ABSTENTION characterization of the proven 0.9131 discriminator — convert proven DISCRIMINATION (not SELECTION, which is closed) into a deployable SELECTIVE-PREDICTION operating envelope: the risk-coverage curve (AURC), risk@coverage operating points, and calibration of the shipped math-only detector as an abstention gate. Does the ENERGY signal beat the entropy/self-certainty baseline as a selective-prediction signal (arXiv:2603.21172 shows entropy fails)? This is the on-mission product framing (abstain when likely-wrong), distinct from the CLOSED best-of-N selection question (✅ Complete) — honest_verdict=complete: energy_is_a_better_selective_prediction_signal_than_entropy_deployable_abstention_gate; results/experiment_3718_risk_coverage_abstention_characterization.json
+ - 2026-06-02: REPLICATE the headline-class step-error discrimination on a FRESH corpus — measure the verifier ensemble's AUROC on a DIFFERENT step-error corpus (a fresh PRM/ProcessBench-style set, NOT FoVer) to show the 0.9131-class discrimination generalizes beyond FoVer (G1 strengthening, the north-star-sanctioned 'new corpus' move). The frozen 0.9131 stays frozen; this is a SUPPORTING second datapoint, not a re-freeze (✅ Complete) — honest_verdict=complete: headline_discrimination_is_fover_specific_generalization_narrowed_honest; results/experiment_3719_headline_replication_fresh_corpus.json
+ - 2026-06-02: FR-11 continuous self-learning v14 — distribution-SHIFT robustness of the consolidated template library: apply a v13-consolidated template to a fresh session drawn from a DIFFERENT slice (forward diff from v13's same-distribution transfer) and confirm it either still beats cold-start OR conservatively falls back without collapse — the Tier-2->Tier-4 robustness step (✅ Complete) — honest_verdict=complete: fr11_v14_template_falls_back_gracefully_under_shift_no_collapse; results/experiment_3720_fr11_continuous_self_learning_v14.json
++- 2026-06-02: Hardware continuity (consolidated, all 3 boards) — CONFIRM KV260 terminal state (overlay loaded + non-fabricated latency transcript on disk from exp3709) and RECOMMEND the operator lift the per-milestone KV260 mandate (north-star sec-3); PolarFire opportunistic reachability; GateMate documentation-only (openFPGALoader missing). SSH-reachability preconditions only; NO host SD-card check; NO speedup claim (✅ Complete) — honest_verdict=complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited; results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json
+-- 
+2.55.0
+

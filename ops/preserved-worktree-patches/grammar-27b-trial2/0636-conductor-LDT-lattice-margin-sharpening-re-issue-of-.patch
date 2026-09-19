@@ -1,0 +1,4087 @@
+From 4400f7615b9e5a295bf84232381bbbdd7e571c6d Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 09:46:06 -0400
+Subject: [PATCH 00636/11171] [conductor] LDT-lattice margin sharpening
+ (re-issue of exp3853): exp3833 landed LATTICE_VIABLE but
+ ensemble_vs_random_soundness_margin=0.010 (razor-thin vs a COUNT-matched
+ random control). Is the sound-elimination edge REAL? Re-test against a
+ SCORE-MATCHED (stratified) random control with a bootstrap CI on the margin.
+
+Automated research step by research conductor.
+Task ID: exp3865-ldt-lattice-margin-sharpening-v2
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/verifiable-reasoning/spec.md |   44 +
+ ops/dogfood-memory.json                       |    2 +-
+ .../ldt_lattice_margin_sharpening_v2.py       |  678 ++++
+ ...3865_ldt_lattice_margin_sharpening_v2.json | 2809 +++++++++++++++++
+ results/experiment_625_tier1_fr11_relay.json  |    4 +-
+ results/experiment_638_tier1_fr11_relay.json  |    4 +-
+ results/experiment_645_tier1_fr11_relay.json  |    6 +-
+ ...t_3865_ldt_lattice_margin_sharpening_v2.py |   22 +
+ ...t_3865_ldt_lattice_margin_sharpening_v2.py |  410 +++
+ 9 files changed, 3971 insertions(+), 8 deletions(-)
+ create mode 100644 python/carnot/verify/ldt_lattice_margin_sharpening_v2.py
+ create mode 100644 results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
+ create mode 100644 scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py
+ create mode 100644 tests/python/test_experiment_3865_ldt_lattice_margin_sharpening_v2.py
+
+diff --git a/openspec/capabilities/verifiable-reasoning/spec.md b/openspec/capabilities/verifiable-reasoning/spec.md
+index 3c6eab80cf..06829ecd6c 100644
+--- a/openspec/capabilities/verifiable-reasoning/spec.md
++++ b/openspec/capabilities/verifiable-reasoning/spec.md
+@@ -19966,3 +19966,47 @@ a mitigated after-curve, unchanged clean scoring behavior, real anti-poison
+ tests for at least one clean and one perturbed example, no live-model substrate
+ claim, and an honest `closed`, `narrowed`, or `failed` verdict without reopening
+ the moat/independence thread or moving the 0.9131 headline.
++
++### REQ-VERIFY-3865: LDT Lattice Margin Sharpening v2
++
++The repository shall provide a module
++`python/carnot/verify/ldt_lattice_margin_sharpening_v2.py` and a script
++`scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py`
++that sharpen Exp 3833's LDT-style abstraction-lattice measurement against a
++score-matched random elimination control.
++- The workflow SHALL run under `.venv/bin/python`, confirm `import carnot.verify`
++  succeeds, confirm `data/fover_test_v4.json` exists and is loadable, confirm
++  `scripts/experiment_3833_ldt_gap_ensemble_as_sound_lattice.py` is importable,
++  and reproduce at least one finite candidate score before computing claims.
++  Failed setup SHALL write a terminal `blocked_<resource>` artifact without
++  fabricated metrics.
++- The workflow SHALL re-score cached FoVer candidates with the Exp 3833 scoring
++  path only. It SHALL NOT call a live LLM, GPU, GGUF, or CUDA path, and SHALL
++  preserve the frozen FoVer 0.9131 AUROC/LENS headline unchanged.
++- The workflow SHALL reproduce Exp 3833's soundness/informativeness curve,
++  including `informativeness_at_soundness_0_99_reproduced` near 0.59 and
++  `count_matched_margin_reproduced` near 0.010 on the checked-in corpus.
++- The workflow SHALL build a score-matched random control by stratifying
++  candidates into deterministic score bins and eliminating the same number of
++  candidates per bin as the ensemble operating point, but randomly within each
++  bin. It SHALL report the ensemble soundness margin over this sharper control
++  and a deterministic bootstrap CI95 using at least 1000 bootstrap resamples.
++- The artifact `results/experiment_3865_ldt_lattice_margin_sharpening_v2.json`
++  SHALL include `honest_verdict`, `ensemble_vs_score_matched_margin`,
++  `margin_ci95`, `informativeness_at_soundness_0_99_reproduced`,
++  `count_matched_margin_reproduced`, `n_candidates`, `random_seed`,
++  `reproducibility_checksum`, `preconditions_checked`, `inference_substrate`,
++  `duration_s`, and `field_principles` entries explaining each required field.
++
++### SCENARIO-VERIFY-3865: Score-Matched Control Decides Real Versus Marginal Lattice Edge
++
++**Given** the cached FoVer v4 corpus and the Exp 3833 scoring script are
++available
++**When** Exp 3865 re-scores the cached candidates and compares the best
++soundness>=0.99 elimination operator with a score-matched random control
++**Then** the artifact records the reproduced Exp 3833 curve and count-matched
++margin, records `ensemble_vs_score_matched_margin` with a CI95 from at least
++1000 bootstrap resamples, sets `honest_verdict` to `complete:
++ldt_margin_LATTICE_REAL_scorematched_margin...` only when the CI lower bound is
++above zero, and otherwise sets `complete:
++ldt_margin_LATTICE_MARGINAL_scorematched_margin..._ci_includes_zero_edge_is_score_dist_not_deductive`.
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 41b9171b04..51ec145c82 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 154,
+   "code_violations": 0,
+-  "experiments_checked": 2947,
++  "experiments_checked": 2948,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/verify/ldt_lattice_margin_sharpening_v2.py b/python/carnot/verify/ldt_lattice_margin_sharpening_v2.py
+new file mode 100644
+index 0000000000..4899df7495
+--- /dev/null
++++ b/python/carnot/verify/ldt_lattice_margin_sharpening_v2.py
+@@ -0,0 +1,678 @@
++"""Exp 3865 LDT lattice margin sharpening.
++
++This module reuses Exp 3833's cached FoVer verifier scoring path, then asks a
++narrower question: after matching the ensemble's score distribution by bins, is
++there still evidence that the ensemble spares correct candidates better than a
++random operator with the same per-bin elimination counts?
++
++Spec refs: REQ-VERIFY-3865, SCENARIO-VERIFY-3865.
++"""
++
++from __future__ import annotations
++
++import hashlib
++import importlib
++import importlib.util
++import json
++import time
++from dataclasses import dataclass
++from pathlib import Path
++from typing import Any, Mapping, Sequence
++
++import numpy as np
++
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++OUTPUT_FILE = "experiment_3865_ldt_lattice_margin_sharpening_v2.json"
++DEFAULT_OUTPUT_PATH = REPO_ROOT / "results" / OUTPUT_FILE
++EXP3833_SCRIPT = "scripts/experiment_3833_ldt_gap_ensemble_as_sound_lattice.py"
++FOVER_CORPUS = "data/fover_test_v4.json"
++INFERENCE_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
++SCORING_PATH = "carnot.eval.fover_memory_leakage_v3"
++DEFAULT_RANDOM_SEED = 3865
++DEFAULT_SCORE_BINS = 20
++DEFAULT_BOOTSTRAP_RESAMPLES = 1000
++TARGET_SOUNDNESS = 0.99
++
++REQUIRED_ARTIFACT_FIELDS: tuple[str, ...] = (
++    "honest_verdict",
++    "ensemble_vs_score_matched_margin",
++    "margin_ci95",
++    "informativeness_at_soundness_0_99_reproduced",
++    "count_matched_margin_reproduced",
++    "n_candidates",
++    "random_seed",
++    "reproducibility_checksum",
++    "preconditions_checked",
++    "inference_substrate",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES: dict[str, str] = {
++    "honest_verdict": (
++        "Terminal prefix records whether the sharpened LDT lattice edge is real, "
++        "marginal, or blocked without making auditors infer status from metrics."
++    ),
++    "ensemble_vs_score_matched_margin": (
++        "THE sharpened number -- the ensemble's edge over a control that already "
++        "has its score distribution. Materially >0 => real per-candidate "
++        "discrimination; ~0 => exp3833's 0.010 was the score distribution, not "
++        "deductive power."
++    ),
++    "margin_ci95": (
++        "Bootstrap CI95 on the margin -- if the lower bound is <=0, the lattice "
++        "edge is within noise (downgrades exp3833's LATTICE_VIABLE to MARGINAL)."
++    ),
++    "informativeness_at_soundness_0_99_reproduced": ("Sanity replication of exp3833's 0.59."),
++    "count_matched_margin_reproduced": (
++        "exp3833's 0.010 count-matched margin, reproduced -- anchors the comparison."
++    ),
++    "n_candidates": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++    "random_seed": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++    "reproducibility_checksum": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++    "preconditions_checked": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++    "inference_substrate": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++    "duration_s": (
++        "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, "
++        "determinism for the stratified control."
++    ),
++}
++
++
++@dataclass(frozen=True)
++class OperatingPoint:
++    tau: float
++    soundness: float
++    informativeness: float
++    eliminated_count: int
++    false_elimination_rate: float
++
++
++@dataclass(frozen=True)
++class SoundnessCurve:
++    points: tuple[dict[str, float | int], ...]
++    best_operating_point: OperatingPoint
++    eliminated_mask: tuple[bool, ...]
++    informativeness_at_soundness_0_99: float
++    count_matched_margin: float
++    random_control_soundness: float
++
++
++@dataclass(frozen=True)
++class MarginResult:
++    curve: SoundnessCurve
++    score_matched_control_soundness: float
++    ensemble_vs_score_matched_margin: float
++    margin_ci95: tuple[float, float]
++    bootstrap_margins: tuple[float, ...]
++    bootstrap_resamples: int
++    score_bin_summary: tuple[dict[str, float | int], ...]
++
++
++@dataclass(frozen=True)
++class PreconditionResult:
++    blocked_reason: str | None
++    checks: dict[str, Any]
++
++
++def _as_arrays(scores: Sequence[float], labels: Sequence[int]) -> tuple[np.ndarray, np.ndarray]:
++    score_array = np.asarray(scores, dtype=float)
++    label_array = np.asarray(labels, dtype=int)
++    if score_array.ndim != 1 or label_array.ndim != 1:
++        raise ValueError("scores and labels must be one-dimensional")
++    if len(score_array) != len(label_array):
++        raise ValueError("scores and labels must have the same length")
++    if len(score_array) == 0:
++        raise ValueError("scores and labels must be non-empty")
++    if not np.all(np.isfinite(score_array)):
++        raise ValueError("scores must be finite")
++    if not set(np.unique(label_array)).issubset({0, 1}):
++        raise ValueError("labels must be binary labels with 1=correct and 0=incorrect")
++    return score_array, label_array
++
++
++def _operating_point_from_tau(
++    scores: np.ndarray,
++    labels: np.ndarray,
++    tau: float,
++) -> tuple[OperatingPoint, np.ndarray]:
++    eliminated = scores > tau
++    is_correct = labels == 1
++    is_incorrect = labels == 0
++    total_correct = int(np.sum(is_correct))
++    total_incorrect = int(np.sum(is_incorrect))
++    false_elimination_rate = (
++        float(np.sum(eliminated & is_correct) / total_correct) if total_correct else 0.0
++    )
++    informativeness = (
++        float(np.sum(eliminated & is_incorrect) / total_incorrect) if total_incorrect else 0.0
++    )
++    point = OperatingPoint(
++        tau=float(tau),
++        soundness=float(1.0 - false_elimination_rate),
++        informativeness=informativeness,
++        eliminated_count=int(np.sum(eliminated)),
++        false_elimination_rate=false_elimination_rate,
++    )
++    return point, eliminated
++
++
++def compute_soundness_curve(
++    scores: Sequence[float],
++    labels: Sequence[int],
++    *,
++    target_soundness: float = TARGET_SOUNDNESS,
++) -> SoundnessCurve:
++    """REQ-VERIFY-3865: reproduce Exp 3833's soundness/informativeness curve."""
++
++    score_array, label_array = _as_arrays(scores, labels)
++    curve_points: list[dict[str, float | int]] = []
++    candidates: list[tuple[OperatingPoint, np.ndarray]] = []
++    info_at_target = 0.0
++
++    for tau in np.sort(np.unique(score_array))[::-1]:
++        point, eliminated = _operating_point_from_tau(score_array, label_array, float(tau))
++        curve_points.append(
++            {
++                "tau": point.tau,
++                "soundness": point.soundness,
++                "informativeness": point.informativeness,
++                "eliminated_count": point.eliminated_count,
++            }
++        )
++        if point.soundness >= target_soundness:
++            candidates.append((point, eliminated))
++            info_at_target = max(info_at_target, point.informativeness)
++
++    best_point, best_mask = (
++        max(candidates, key=lambda item: item[0].informativeness)
++        if candidates
++        else _operating_point_from_tau(score_array, label_array, float(np.max(score_array)))
++    )
++    random_soundness = float(1.0 - (best_point.eliminated_count / len(score_array)))
++    count_matched_margin = float(best_point.soundness - random_soundness)
++    return SoundnessCurve(
++        points=tuple(curve_points),
++        best_operating_point=best_point,
++        eliminated_mask=tuple(bool(value) for value in best_mask),
++        informativeness_at_soundness_0_99=float(info_at_target),
++        count_matched_margin=count_matched_margin,
++        random_control_soundness=random_soundness,
++    )
++
++
++def score_bin_ids(scores: Sequence[float], n_score_bins: int = DEFAULT_SCORE_BINS) -> np.ndarray:
++    """Assign deterministic equal-frequency score bins."""
++
++    score_array = np.asarray(scores, dtype=float)
++    if n_score_bins <= 0:
++        raise ValueError("n_score_bins must be positive")
++    if len(score_array) == 0:
++        raise ValueError("scores must be non-empty")
++    order = np.lexsort((np.arange(len(score_array)), score_array))
++    bins = np.empty(len(score_array), dtype=int)
++    for rank, idx in enumerate(order):
++        bins[idx] = min((rank * n_score_bins) // len(score_array), n_score_bins - 1)
++    return bins
++
++
++def score_matched_control_soundness(
++    labels: Sequence[int],
++    eliminated_mask: Sequence[bool],
++    bins: Sequence[int],
++) -> tuple[float, tuple[dict[str, float | int], ...]]:
++    """SCENARIO-VERIFY-3865: randomize eliminations only within score bins."""
++
++    label_array = np.asarray(labels, dtype=int)
++    eliminated_array = np.asarray(eliminated_mask, dtype=bool)
++    bin_array = np.asarray(bins, dtype=int)
++    if not (len(label_array) == len(eliminated_array) == len(bin_array)):
++        raise ValueError("labels, eliminated_mask, and bins must have the same length")
++    total_correct = int(np.sum(label_array == 1))
++    expected_correct_eliminated = 0.0
++    summary: list[dict[str, float | int]] = []
++    for bin_id in sorted(int(value) for value in np.unique(bin_array)):
++        in_bin = bin_array == bin_id
++        bin_size = int(np.sum(in_bin))
++        eliminated_in_bin = int(np.sum(eliminated_array & in_bin))
++        correct_in_bin = int(np.sum((label_array == 1) & in_bin))
++        expected_bin_correct = eliminated_in_bin * (correct_in_bin / bin_size) if bin_size else 0.0
++        expected_correct_eliminated += expected_bin_correct
++        summary.append(
++            {
++                "bin_id": bin_id,
++                "bin_size": bin_size,
++                "ensemble_eliminated_in_bin": eliminated_in_bin,
++                "correct_in_bin": correct_in_bin,
++                "expected_correct_eliminated_by_control": float(expected_bin_correct),
++            }
++        )
++    soundness = float(1.0 - (expected_correct_eliminated / total_correct)) if total_correct else 1.0
++    return soundness, tuple(summary)
++
++
++def _margin_once(
++    scores: Sequence[float],
++    labels: Sequence[int],
++    n_score_bins: int,
++) -> tuple[SoundnessCurve, float, float, tuple[dict[str, float | int], ...]]:
++    curve = compute_soundness_curve(scores, labels)
++    bins = score_bin_ids(scores, n_score_bins)
++    control_soundness, summary = score_matched_control_soundness(
++        labels,
++        curve.eliminated_mask,
++        bins,
++    )
++    margin = float(curve.best_operating_point.soundness - control_soundness)
++    return curve, control_soundness, margin, summary
++
++
++def compute_margin(
++    scores: Sequence[float],
++    labels: Sequence[int],
++    *,
++    n_score_bins: int = DEFAULT_SCORE_BINS,
++    bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++) -> MarginResult:
++    """REQ-VERIFY-3865: compute the score-matched margin and bootstrap CI95."""
++
++    score_array, label_array = _as_arrays(scores, labels)
++    if bootstrap_resamples < 1000:
++        raise ValueError("bootstrap_resamples must be at least 1000")
++    curve, control_soundness, margin, summary = _margin_once(score_array, label_array, n_score_bins)
++    rng = np.random.default_rng(random_seed)
++    bootstrap_margins: list[float] = []
++    for _ in range(bootstrap_resamples):
++        sample = rng.integers(0, len(score_array), size=len(score_array))
++        _, _, bootstrap_margin, _ = _margin_once(
++            score_array[sample],
++            label_array[sample],
++            n_score_bins,
++        )
++        bootstrap_margins.append(float(bootstrap_margin))
++    ci_low, ci_high = np.percentile(np.asarray(bootstrap_margins, dtype=float), [2.5, 97.5])
++    return MarginResult(
++        curve=curve,
++        score_matched_control_soundness=float(control_soundness),
++        ensemble_vs_score_matched_margin=float(margin),
++        margin_ci95=(float(ci_low), float(ci_high)),
++        bootstrap_margins=tuple(bootstrap_margins),
++        bootstrap_resamples=int(bootstrap_resamples),
++        score_bin_summary=summary,
++    )
++
++
++def _round_metric(value: float | None) -> float | None:
++    return None if value is None else float(round(value, 12))
++
++
++def _verdict(margin: float, ci95: tuple[float, float]) -> str:
++    if ci95[0] > 0.0:
++        return (
++            "complete: ldt_margin_LATTICE_REAL_scorematched_margin"
++            f"{margin:.3f}_ci{ci95[0]:.3f}-{ci95[1]:.3f}_genuine_deductive_power"
++        )
++    return (
++        "complete: ldt_margin_LATTICE_MARGINAL_scorematched_margin"
++        f"{margin:.3f}_ci_includes_zero_edge_is_score_dist_not_deductive"
++    )
++
++
++def _checksum_payload(
++    scores: Sequence[float],
++    labels: Sequence[int],
++    *,
++    random_seed: int,
++    n_score_bins: int,
++    bootstrap_resamples: int,
++) -> str:
++    payload = {
++        "schema": "carnot.ldt_lattice_margin_sharpening_v2",
++        "scoring_path": SCORING_PATH,
++        "n": len(scores),
++        "random_seed": random_seed,
++        "n_score_bins": n_score_bins,
++        "bootstrap_resamples": bootstrap_resamples,
++        "scores": [round(float(value), 12) for value in scores],
++        "labels": [int(value) for value in labels],
++    }
++    return hashlib.sha256(
++        json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    ).hexdigest()
++
++
++def build_artifact_from_scores(
++    scores: Sequence[float],
++    labels: Sequence[int],
++    *,
++    started_s: float,
++    now_s: float,
++    repo_root: Path | str = REPO_ROOT,
++    preconditions_checked: Mapping[str, Any] | None = None,
++    n_score_bins: int = DEFAULT_SCORE_BINS,
++    bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++    score_one_candidate: Mapping[str, Any] | None = None,
++) -> dict[str, Any]:
++    """REQ-VERIFY-3865: build the terminal artifact from cached verifier scores."""
++
++    margin = compute_margin(
++        scores,
++        labels,
++        n_score_bins=n_score_bins,
++        bootstrap_resamples=bootstrap_resamples,
++        random_seed=random_seed,
++    )
++    curve = margin.curve
++    ci95 = margin.margin_ci95
++    artifact = {
++        "experiment_id": 3865,
++        "schema": "carnot.ldt_lattice_margin_sharpening_v2",
++        "spec": ["REQ-VERIFY-3865", "SCENARIO-VERIFY-3865"],
++        "source_experiment": "results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json",
++        "corpus_path": FOVER_CORPUS,
++        "exp3833_script_path": EXP3833_SCRIPT,
++        "honest_verdict": _verdict(margin.ensemble_vs_score_matched_margin, ci95),
++        "ensemble_vs_score_matched_margin": _round_metric(margin.ensemble_vs_score_matched_margin),
++        "margin_ci95": [_round_metric(ci95[0]), _round_metric(ci95[1])],
++        "informativeness_at_soundness_0_99_reproduced": _round_metric(
++            curve.informativeness_at_soundness_0_99
++        ),
++        "count_matched_margin_reproduced": _round_metric(curve.count_matched_margin),
++        "ensemble_soundness_at_operating_point": _round_metric(
++            curve.best_operating_point.soundness
++        ),
++        "false_elimination_rate_at_operating_point": _round_metric(
++            curve.best_operating_point.false_elimination_rate
++        ),
++        "score_threshold_at_operating_point": _round_metric(curve.best_operating_point.tau),
++        "eliminated_count_at_operating_point": curve.best_operating_point.eliminated_count,
++        "score_matched_control_soundness": _round_metric(margin.score_matched_control_soundness),
++        "random_control_soundness_at_matched_elimination_count": _round_metric(
++            curve.random_control_soundness
++        ),
++        "elimination_soundness_at_informativeness_curve": list(curve.points),
++        "score_matched_bin_summary": list(margin.score_bin_summary),
++        "score_bin_count": int(n_score_bins),
++        "bootstrap_resamples": int(bootstrap_resamples),
++        "bootstrap_ci_method": "candidate_row_percentile_bootstrap_ci95",
++        "score_matched_control_method": (
++            "equal-frequency score bins; analytic expectation of uniform random "
++            "elimination within each bin at the ensemble's per-bin counts"
++        ),
++        "n_candidates": len(scores),
++        "random_seed": int(random_seed),
++        "reproducibility_checksum": _checksum_payload(
++            scores,
++            labels,
++            random_seed=random_seed,
++            n_score_bins=n_score_bins,
++            bootstrap_resamples=bootstrap_resamples,
++        ),
++        "preconditions_checked": dict(preconditions_checked or {}),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(max(0.0, now_s - started_s)),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_fover_auroc_unchanged": True,
++        "model_specs": {
++            "live_model_invoked": False,
++            "scoring_path": SCORING_PATH,
++            "uses_cached_candidates_only": True,
++        },
++        "score_one_candidate": dict(score_one_candidate or {}),
++        "repo_root": str(repo_root),
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def build_blocked_artifact(
++    reason: str,
++    *,
++    started_s: float,
++    now_s: float,
++    preconditions_checked: Mapping[str, Any],
++) -> dict[str, Any]:
++    """REQ-VERIFY-3865: write blocked terminal artifacts without fake metrics."""
++
++    artifact = {
++        "experiment_id": 3865,
++        "schema": "carnot.ldt_lattice_margin_sharpening_v2",
++        "spec": ["REQ-VERIFY-3865", "SCENARIO-VERIFY-3865"],
++        "source_experiment": "results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json",
++        "corpus_path": FOVER_CORPUS,
++        "exp3833_script_path": EXP3833_SCRIPT,
++        "honest_verdict": reason,
++        "ensemble_vs_score_matched_margin": None,
++        "margin_ci95": [None, None],
++        "informativeness_at_soundness_0_99_reproduced": None,
++        "count_matched_margin_reproduced": None,
++        "n_candidates": 0,
++        "random_seed": DEFAULT_RANDOM_SEED,
++        "reproducibility_checksum": "",
++        "preconditions_checked": dict(preconditions_checked),
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "duration_s": float(max(0.0, now_s - started_s)),
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "frozen_fover_auroc_unchanged": True,
++        "model_specs": {
++            "live_model_invoked": False,
++            "scoring_path": SCORING_PATH,
++            "uses_cached_candidates_only": True,
++        },
++        "score_one_candidate": {},
++    }
++    validate_artifact(artifact)
++    return artifact
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    missing = set(REQUIRED_ARTIFACT_FIELDS) - set(artifact)
++    if missing:
++        raise ValueError(f"missing required artifact fields: {sorted(missing)}")
++    principles = artifact.get("field_principles")
++    if not isinstance(principles, Mapping):
++        raise ValueError("field_principles must be a mapping")
++    missing_principles = set(REQUIRED_ARTIFACT_FIELDS) - set(principles)
++    if missing_principles:
++        raise ValueError(f"field_principles missing entries: {sorted(missing_principles)}")
++    if artifact["inference_substrate"] != INFERENCE_SUBSTRATE:
++        raise ValueError("inference_substrate must declare cached verifier scoring")
++    verdict = str(artifact["honest_verdict"])
++    if not (verdict.startswith("complete: ") or verdict.startswith("blocked_")):
++        raise ValueError("honest_verdict must start with a terminal prefix")
++    if float(artifact["duration_s"]) < 0.0:
++        raise ValueError("duration_s must be non-negative")
++    if not isinstance(artifact["preconditions_checked"], Mapping):
++        raise ValueError("preconditions_checked must be a mapping")
++    ci95 = artifact["margin_ci95"]
++    if not isinstance(ci95, Sequence) or isinstance(ci95, str) or len(ci95) != 2:
++        raise ValueError("margin_ci95 must contain exactly two values")
++    if verdict.startswith("blocked_"):
++        return
++    if int(artifact.get("bootstrap_resamples", 0)) < 1000:
++        raise ValueError("bootstrap_resamples must be at least 1000")
++    if int(artifact["n_candidates"]) <= 0:
++        raise ValueError("n_candidates must be positive for complete artifacts")
++    if len(str(artifact["reproducibility_checksum"])) != 64:
++        raise ValueError("reproducibility_checksum must be a sha256 hex digest")
++    ci_low = float(ci95[0])
++    if ci_low > 0.0 and "LATTICE_REAL" not in verdict:
++        raise ValueError("positive CI lower bound requires LATTICE_REAL verdict")
++    if ci_low <= 0.0 and "LATTICE_MARGINAL" not in verdict:
++        raise ValueError("CI including zero requires LATTICE_MARGINAL verdict")
++
++
++def import_exp3833_script(repo_root: Path | str = REPO_ROOT) -> Any:
++    script_path = Path(repo_root) / EXP3833_SCRIPT
++    spec = importlib.util.spec_from_file_location("experiment_3833_ldt_gap", script_path)
++    if spec is None or spec.loader is None:
++        raise ImportError(f"cannot import {script_path}")
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _load_corpus(repo_root: Path | str = REPO_ROOT) -> list[dict[str, Any]]:
++    corpus_path = Path(repo_root) / FOVER_CORPUS
++    payload = json.loads(corpus_path.read_text(encoding="utf-8"))
++    if not isinstance(payload, list) or not payload:
++        raise ValueError("fover_test_v4 corpus must be a non-empty JSON list")
++    first = payload[0]
++    if not isinstance(first, Mapping) or not {"question_id", "step_text", "label"} <= set(first):
++        raise ValueError("fover_test_v4 rows must include question_id, step_text, and label")
++    return [dict(row) for row in payload]
++
++
++def _label_to_correct_int(row: Mapping[str, Any]) -> int:
++    return 1 if str(row.get("label", "")).lower() in {"correct", "true", "1"} else 0
++
++
++def score_candidate_rows(
++    rows: Sequence[Mapping[str, Any]],
++    repo_root: Path | str = REPO_ROOT,
++) -> list[float]:
++    """Score rows with the same cached verifier formula used by Exp 3833."""
++
++    from carnot.eval.fover_memory_leakage_v3 import (  # noqa: PLC0415
++        FR11_MEMORY_BOOST,
++        _fr11_memory_score,
++        _load_fr11_memory_index,
++        _score_text_verifiers,
++    )
++
++    texts = [str(row.get("step_text", "")) for row in rows]
++    verifier_scores = _score_text_verifiers(texts)
++    r_scores = verifier_scores["tier0r_curry_howard"]
++    u_scores = verifier_scores["tier0u_logical_consistency"]
++    architecture_scores = [0.9 * r + 0.1 * u for r, u in zip(r_scores, u_scores, strict=True)]
++    memory_index = _load_fr11_memory_index(Path(repo_root))
++    if memory_index["question_ids"] or memory_index["prompt_token_sets"]:
++        memory_scores = [_fr11_memory_score(row, memory_index) for row in rows]
++        return [
++            float(arch + FR11_MEMORY_BOOST * memory)
++            for arch, memory in zip(architecture_scores, memory_scores, strict=True)
++        ]
++    return [float(value) for value in architecture_scores]
++
++
++def check_preconditions(repo_root: Path | str = REPO_ROOT) -> PreconditionResult:
++    checks: dict[str, Any] = {}
++    try:
++        importlib.import_module("carnot.verify")
++        checks["import_carnot_verify"] = True
++    except ImportError as exc:
++        checks["import_carnot_verify"] = False
++        checks["import_error"] = str(exc)
++        return PreconditionResult("blocked_verify_module_import", checks)
++
++    try:
++        corpus = _load_corpus(repo_root)
++        checks["corpus_loaded"] = True
++        checks["corpus_path"] = FOVER_CORPUS
++        checks["corpus_rows"] = len(corpus)
++    except Exception as exc:
++        checks["corpus_loaded"] = False
++        checks["corpus_error"] = str(exc)
++        return PreconditionResult("blocked_fover_test_v4_corpus", checks)
++
++    try:
++        import_exp3833_script(repo_root)
++        checks["exp3833_script_importable"] = True
++    except Exception as exc:
++        checks["exp3833_script_importable"] = False
++        checks["exp3833_script_error"] = str(exc)
++        return PreconditionResult("blocked_exp3833_script", checks)
++
++    try:
++        score = score_candidate_rows([corpus[0]], repo_root)[0]
++        if not np.isfinite(score):
++            raise ValueError("score is not finite")
++        checks["score_one_candidate_reproduced"] = True
++        checks["score_one_candidate"] = float(score)
++    except Exception as exc:
++        checks["score_one_candidate_reproduced"] = False
++        checks["score_error"] = str(exc)
++        return PreconditionResult("blocked_score_candidate_failed", checks)
++
++    return PreconditionResult(None, checks)
++
++
++def load_and_score_cached_candidates(
++    repo_root: Path | str = REPO_ROOT,
++) -> tuple[list[float], list[int], dict[str, Any]]:
++    corpus = _load_corpus(repo_root)
++    scores = score_candidate_rows(corpus, repo_root)
++    labels = [_label_to_correct_int(row) for row in corpus]
++    return scores, labels, {"score_one_candidate": scores[0], "n_corpus_rows": len(corpus)}
++
++
++def write_artifact(
++    repo_root: Path | str = REPO_ROOT,
++    *,
++    output_path: Path | str = DEFAULT_OUTPUT_PATH,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    n_score_bins: int = DEFAULT_SCORE_BINS,
++    bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES,
++    random_seed: int = DEFAULT_RANDOM_SEED,
++) -> Path:
++    started = time.perf_counter() if started_s is None else started_s
++    preconditions = check_preconditions(repo_root)
++    if preconditions.blocked_reason is not None:
++        current = time.perf_counter() if now_s is None else now_s
++        artifact = build_blocked_artifact(
++            preconditions.blocked_reason,
++            started_s=started,
++            now_s=current,
++            preconditions_checked=preconditions.checks,
++        )
++    else:
++        scores, labels, score_metadata = load_and_score_cached_candidates(repo_root)
++        current = time.perf_counter() if now_s is None else now_s
++        artifact = build_artifact_from_scores(
++            scores,
++            labels,
++            started_s=started,
++            now_s=current,
++            repo_root=repo_root,
++            preconditions_checked=preconditions.checks,
++            n_score_bins=n_score_bins,
++            bootstrap_resamples=bootstrap_resamples,
++            random_seed=random_seed,
++            score_one_candidate=score_metadata,
++        )
++
++    destination = Path(output_path)
++    if not destination.is_absolute():
++        destination = Path(repo_root) / destination
++    destination.parent.mkdir(parents=True, exist_ok=True)
++    destination.write_text(
++        json.dumps(artifact, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
++        encoding="utf-8",
++    )
++    return destination
++
++
++def main() -> Path:
++    return write_artifact(REPO_ROOT)
++
++
++if __name__ == "__main__":  # pragma: no cover
++    main()
+diff --git a/results/experiment_3865_ldt_lattice_margin_sharpening_v2.json b/results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
+new file mode 100644
+index 0000000000..aadca24f8e
+--- /dev/null
++++ b/results/experiment_3865_ldt_lattice_margin_sharpening_v2.json
+@@ -0,0 +1,2809 @@
++{
++  "bootstrap_ci_method": "candidate_row_percentile_bootstrap_ci95",
++  "bootstrap_resamples": 1000,
++  "corpus_path": "data/fover_test_v4.json",
++  "count_matched_margin_reproduced": 0.009821127075,
++  "duration_s": 0.15381267899647355,
++  "eliminated_count_at_operating_point": 22,
++  "elimination_soundness_at_informativeness_curve": [
++    {
++      "eliminated_count": 0,
++      "informativeness": 0.0,
++      "soundness": 1.0,
++      "tau": 1.9
++    },
++    {
++      "eliminated_count": 3,
++      "informativeness": 0.13636363636363635,
++      "soundness": 1.0,
++      "tau": 1.8370000000000002
++    },
++    {
++      "eliminated_count": 4,
++      "informativeness": 0.18181818181818182,
++      "soundness": 1.0,
++      "tau": 1.5666666666666667
++    },
++    {
++      "eliminated_count": 6,
++      "informativeness": 0.22727272727272727,
++      "soundness": 0.9992223950233281,
++      "tau": 1.5405666666666666
++    },
++    {
++      "eliminated_count": 7,
++      "informativeness": 0.2727272727272727,
++      "soundness": 0.9992223950233281,
++      "tau": 1.4473
++    },
++    {
++      "eliminated_count": 8,
++      "informativeness": 0.2727272727272727,
++      "soundness": 0.9984447900466563,
++      "tau": 1.4
++    },
++    {
++      "eliminated_count": 9,
++      "informativeness": 0.2727272727272727,
++      "soundness": 0.9976671850699844,
++      "tau": 1.355
++    },
++    {
++      "eliminated_count": 10,
++      "informativeness": 0.2727272727272727,
++      "soundness": 0.9968895800933126,
++      "tau": 1.2857
++    },
++    {
++      "eliminated_count": 11,
++      "informativeness": 0.2727272727272727,
++      "soundness": 0.9961119751166407,
++      "tau": 1.2812181818181818
++    },
++    {
++      "eliminated_count": 12,
++      "informativeness": 0.3181818181818182,
++      "soundness": 0.9961119751166407,
++      "tau": 1.2333333333333334
++    },
++    {
++      "eliminated_count": 13,
++      "informativeness": 0.3181818181818182,
++      "soundness": 0.995334370139969,
++      "tau": 1.1881
++    },
++    {
++      "eliminated_count": 14,
++      "informativeness": 0.36363636363636365,
++      "soundness": 0.995334370139969,
++      "tau": 1.1449
++    },
++    {
++      "eliminated_count": 15,
++      "informativeness": 0.4090909090909091,
++      "soundness": 0.995334370139969,
++      "tau": 1.1260000000000001
++    },
++    {
++      "eliminated_count": 16,
++      "informativeness": 0.45454545454545453,
++      "soundness": 0.995334370139969,
++      "tau": 1.1244333333333334
++    },
++    {
++      "eliminated_count": 17,
++      "informativeness": 0.45454545454545453,
++      "soundness": 0.994556765163297,
++      "tau": 1.1235333333333333
++    },
++    {
++      "eliminated_count": 18,
++      "informativeness": 0.45454545454545453,
++      "soundness": 0.9937791601866252,
++      "tau": 1.1172333333333333
++    },
++    {
++      "eliminated_count": 19,
++      "informativeness": 0.45454545454545453,
++      "soundness": 0.9930015552099534,
++      "tau": 1.1035
++    },
++    {
++      "eliminated_count": 20,
++      "informativeness": 0.5,
++      "soundness": 0.9930015552099534,
++      "tau": 1.0929333333333333
++    },
++    {
++      "eliminated_count": 21,
++      "informativeness": 0.5454545454545454,
++      "soundness": 0.9930015552099534,
++      "tau": 1.0022000000000002
++    },
++    {
++      "eliminated_count": 22,
++      "informativeness": 0.5909090909090909,
++      "soundness": 0.9930015552099534,
++      "tau": 0.9856666666666667
++    },
++    {
++      "eliminated_count": 23,
++      "informativeness": 0.5909090909090909,
++      "soundness": 0.9922239502332815,
++      "tau": 0.9631666666666666
++    },
++    {
++      "eliminated_count": 24,
++      "informativeness": 0.5909090909090909,
++      "soundness": 0.9914463452566097,
++      "tau": 0.9613666666666667
++    },
++    {
++      "eliminated_count": 25,
++      "informativeness": 0.5909090909090909,
++      "soundness": 0.9906687402799378,
++      "tau": 0.9546666666666667
++    },
++    {
++      "eliminated_count": 26,
++      "informativeness": 0.5909090909090909,
++      "soundness": 0.9898911353032659,
++      "tau": 0.9516333333333333
++    },
++    {
++      "eliminated_count": 27,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9898911353032659,
++      "tau": 0.9480333333333333
++    },
++    {
++      "eliminated_count": 28,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9891135303265941,
++      "tau": 0.9478666666666667
++    },
++    {
++      "eliminated_count": 29,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9883359253499222,
++      "tau": 0.9424666666666668
++    },
++    {
++      "eliminated_count": 30,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9875583203732504,
++      "tau": 0.9406666666666668
++    },
++    {
++      "eliminated_count": 31,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9867807153965785,
++      "tau": 0.9379666666666667
++    },
++    {
++      "eliminated_count": 32,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9860031104199067,
++      "tau": 0.9343666666666667
++    },
++    {
++      "eliminated_count": 33,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9852255054432348,
++      "tau": 0.9307666666666667
++    },
++    {
++      "eliminated_count": 34,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9844479004665629,
++      "tau": 0.9298666666666667
++    },
++    {
++      "eliminated_count": 35,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9836702954898912,
++      "tau": 0.9163666666666667
++    },
++    {
++      "eliminated_count": 36,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9828926905132193,
++      "tau": 0.9131
++    },
++    {
++      "eliminated_count": 37,
++      "informativeness": 0.6363636363636364,
++      "soundness": 0.9821150855365475,
++      "tau": 0.9059
++    },
++    {
++      "eliminated_count": 38,
++      "informativeness": 0.6818181818181818,
++      "soundness": 0.9821150855365475,
++      "tau": 0.8754666666666666
++    },
++    {
++      "eliminated_count": 39,
++      "informativeness": 0.6818181818181818,
++      "soundness": 0.9813374805598756,
++      "tau": 0.8751333333333333
++    },
++    {
++      "eliminated_count": 40,
++      "informativeness": 0.7272727272727273,
++      "soundness": 0.9813374805598756,
++      "tau": 0.8697333333333332
++    },
++    {
++      "eliminated_count": 41,
++      "informativeness": 0.7272727272727273,
++      "soundness": 0.9805598755832037,
++      "tau": 0.8622000000000001
++    },
++    {
++      "eliminated_count": 42,
++      "informativeness": 0.7272727272727273,
++      "soundness": 0.9797822706065319,
++      "tau": 0.8391333333333333
++    },
++    {
++      "eliminated_count": 43,
++      "informativeness": 0.7272727272727273,
++      "soundness": 0.97900466562986,
++      "tau": 0.8231333333333334
++    },
++    {
++      "eliminated_count": 44,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.97900466562986,
++      "tau": 0.7888904761904761
++    },
++    {
++      "eliminated_count": 45,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9782270606531882,
++      "tau": 0.7854666666666666
++    },
++    {
++      "eliminated_count": 46,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9774494556765163,
++      "tau": 0.7812000000000001
++    },
++    {
++      "eliminated_count": 47,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9766718506998445,
++      "tau": 0.7785
++    },
++    {
++      "eliminated_count": 48,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9758942457231726,
++      "tau": 0.7758000000000002
++    },
++    {
++      "eliminated_count": 49,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9751166407465007,
++      "tau": 0.7708999999999999
++    },
++    {
++      "eliminated_count": 50,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9743390357698289,
++      "tau": 0.7686000000000001
++    },
++    {
++      "eliminated_count": 51,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.973561430793157,
++      "tau": 0.7668000000000001
++    },
++    {
++      "eliminated_count": 52,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9727838258164853,
++      "tau": 0.7650000000000001
++    },
++    {
++      "eliminated_count": 54,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9712286158631416,
++      "tau": 0.7632000000000001
++    },
++    {
++      "eliminated_count": 55,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9704510108864697,
++      "tau": 0.7596
++    },
++    {
++      "eliminated_count": 56,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9696734059097978,
++      "tau": 0.7569000000000001
++    },
++    {
++      "eliminated_count": 57,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.968895800933126,
++      "tau": 0.7547
++    },
++    {
++      "eliminated_count": 58,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9681181959564541,
++      "tau": 0.7515000000000001
++    },
++    {
++      "eliminated_count": 59,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9673405909797823,
++      "tau": 0.7506
++    },
++    {
++      "eliminated_count": 60,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9665629860031104,
++      "tau": 0.7488000000000001
++    },
++    {
++      "eliminated_count": 61,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9657853810264385,
++      "tau": 0.7479000000000001
++    },
++    {
++      "eliminated_count": 62,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9650077760497667,
++      "tau": 0.7434000000000001
++    },
++    {
++      "eliminated_count": 63,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9642301710730948,
++      "tau": 0.7395666666666666
++    },
++    {
++      "eliminated_count": 64,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.963452566096423,
++      "tau": 0.7212333333333334
++    },
++    {
++      "eliminated_count": 65,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9626749611197511,
++      "tau": 0.6978333333333333
++    },
++    {
++      "eliminated_count": 66,
++      "informativeness": 0.7727272727272727,
++      "soundness": 0.9618973561430794,
++      "tau": 0.6933333333333334
++    },
++    {
++      "eliminated_count": 67,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9618973561430794,
++      "tau": 0.6843333333333333
++    },
++    {
++      "eliminated_count": 68,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9611197511664075,
++      "tau": 0.6708333333333334
++    },
++    {
++      "eliminated_count": 69,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9603421461897356,
++      "tau": 0.6701
++    },
++    {
++      "eliminated_count": 70,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9595645412130638,
++      "tau": 0.6663333333333333
++    },
++    {
++      "eliminated_count": 71,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9587869362363919,
++      "tau": 0.6645333333333333
++    },
++    {
++      "eliminated_count": 72,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9580093312597201,
++      "tau": 0.6573333333333333
++    },
++    {
++      "eliminated_count": 73,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9572317262830482,
++      "tau": 0.6494
++    },
++    {
++      "eliminated_count": 75,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9556765163297045,
++      "tau": 0.6467
++    },
++    {
++      "eliminated_count": 76,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9548989113530326,
++      "tau": 0.644
++    },
++    {
++      "eliminated_count": 78,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9533437013996889,
++      "tau": 0.6359
++    },
++    {
++      "eliminated_count": 79,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9525660964230172,
++      "tau": 0.6287
++    },
++    {
++      "eliminated_count": 80,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9517884914463453,
++      "tau": 0.6285333333333334
++    },
++    {
++      "eliminated_count": 81,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9510108864696734,
++      "tau": 0.6269
++    },
++    {
++      "eliminated_count": 82,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9502332814930016,
++      "tau": 0.6242
++    },
++    {
++      "eliminated_count": 83,
++      "informativeness": 0.8181818181818182,
++      "soundness": 0.9494556765163297,
++      "tau": 0.6240333333333333
++    },
++    {
++      "eliminated_count": 84,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9494556765163297,
++      "tau": 0.6224000000000001
++    },
++    {
++      "eliminated_count": 85,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9486780715396579,
++      "tau": 0.6188
++    },
++    {
++      "eliminated_count": 86,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.947900466562986,
++      "tau": 0.617
++    },
++    {
++      "eliminated_count": 87,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9471228615863142,
++      "tau": 0.6152
++    },
++    {
++      "eliminated_count": 88,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9463452566096423,
++      "tau": 0.6116
++    },
++    {
++      "eliminated_count": 89,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9455676516329704,
++      "tau": 0.6105333333333334
++    },
++    {
++      "eliminated_count": 90,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9447900466562986,
++      "tau": 0.6098
++    },
++    {
++      "eliminated_count": 92,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9432348367029549,
++      "tau": 0.6089
++    },
++    {
++      "eliminated_count": 93,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.942457231726283,
++      "tau": 0.6078333333333333
++    },
++    {
++      "eliminated_count": 94,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9416796267496113,
++      "tau": 0.6071
++    },
++    {
++      "eliminated_count": 95,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9409020217729394,
++      "tau": 0.6026
++    },
++    {
++      "eliminated_count": 96,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9401244167962675,
++      "tau": 0.6024333333333334
++    },
++    {
++      "eliminated_count": 97,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9393468118195957,
++      "tau": 0.6017
++    },
++    {
++      "eliminated_count": 98,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9385692068429238,
++      "tau": 0.599
++    },
++    {
++      "eliminated_count": 99,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.937791601866252,
++      "tau": 0.5954
++    },
++    {
++      "eliminated_count": 100,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9370139968895801,
++      "tau": 0.5945
++    },
++    {
++      "eliminated_count": 101,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9362363919129082,
++      "tau": 0.5936
++    },
++    {
++      "eliminated_count": 102,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9354587869362364,
++      "tau": 0.59
++    },
++    {
++      "eliminated_count": 103,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9346811819595645,
++      "tau": 0.5846
++    },
++    {
++      "eliminated_count": 104,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9339035769828927,
++      "tau": 0.5837
++    },
++    {
++      "eliminated_count": 105,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9331259720062208,
++      "tau": 0.5819
++    },
++    {
++      "eliminated_count": 106,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9323483670295489,
++      "tau": 0.5801000000000001
++    },
++    {
++      "eliminated_count": 108,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9307931570762052,
++      "tau": 0.5791999999999999
++    },
++    {
++      "eliminated_count": 109,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9300155520995335,
++      "tau": 0.5738
++    },
++    {
++      "eliminated_count": 110,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9292379471228616,
++      "tau": 0.5710999999999999
++    },
++    {
++      "eliminated_count": 111,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9284603421461898,
++      "tau": 0.5637333333333333
++    },
++    {
++      "eliminated_count": 112,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9276827371695179,
++      "tau": 0.5547333333333333
++    },
++    {
++      "eliminated_count": 113,
++      "informativeness": 0.8636363636363636,
++      "soundness": 0.9269051321928461,
++      "tau": 0.5412333333333333
++    },
++    {
++      "eliminated_count": 114,
++      "informativeness": 0.9090909090909091,
++      "soundness": 0.9269051321928461,
++      "tau": 0.5367333333333333
++    },
++    {
++      "eliminated_count": 115,
++      "informativeness": 0.9090909090909091,
++      "soundness": 0.9261275272161742,
++      "tau": 0.5088333333333334
++    },
++    {
++      "eliminated_count": 116,
++      "informativeness": 0.9545454545454546,
++      "soundness": 0.9261275272161742,
++      "tau": 0.5070333333333333
++    },
++    {
++      "eliminated_count": 117,
++      "informativeness": 0.9545454545454546,
++      "soundness": 0.9253499222395023,
++      "tau": 0.5025333333333333
++    },
++    {
++      "eliminated_count": 118,
++      "informativeness": 0.9545454545454546,
++      "soundness": 0.9245723172628305,
++      "tau": 0.5007333333333333
++    },
++    {
++      "eliminated_count": 120,
++      "informativeness": 1.0,
++      "soundness": 0.9237947122861586,
++      "tau": 0.49983333333333335
++    },
++    {
++      "eliminated_count": 121,
++      "informativeness": 1.0,
++      "soundness": 0.9230171073094868,
++      "tau": 0.4935333333333333
++    },
++    {
++      "eliminated_count": 122,
++      "informativeness": 1.0,
++      "soundness": 0.9222395023328149,
++      "tau": 0.4926333333333333
++    },
++    {
++      "eliminated_count": 123,
++      "informativeness": 1.0,
++      "soundness": 0.921461897356143,
++      "tau": 0.49083333333333334
++    },
++    {
++      "eliminated_count": 124,
++      "informativeness": 1.0,
++      "soundness": 0.9206842923794712,
++      "tau": 0.48993333333333333
++    },
++    {
++      "eliminated_count": 125,
++      "informativeness": 1.0,
++      "soundness": 0.9199066874027994,
++      "tau": 0.4890333333333333
++    },
++    {
++      "eliminated_count": 126,
++      "informativeness": 1.0,
++      "soundness": 0.9191290824261276,
++      "tau": 0.4872333333333333
++    },
++    {
++      "eliminated_count": 127,
++      "informativeness": 1.0,
++      "soundness": 0.9183514774494557,
++      "tau": 0.48633333333333334
++    },
++    {
++      "eliminated_count": 128,
++      "informativeness": 1.0,
++      "soundness": 0.9175738724727838,
++      "tau": 0.48363333333333336
++    },
++    {
++      "eliminated_count": 129,
++      "informativeness": 1.0,
++      "soundness": 0.916796267496112,
++      "tau": 0.47733333333333333
++    },
++    {
++      "eliminated_count": 131,
++      "informativeness": 1.0,
++      "soundness": 0.9152410575427683,
++      "tau": 0.4764333333333333
++    },
++    {
++      "eliminated_count": 132,
++      "informativeness": 1.0,
++      "soundness": 0.9144634525660964,
++      "tau": 0.4755333333333333
++    },
++    {
++      "eliminated_count": 134,
++      "informativeness": 1.0,
++      "soundness": 0.9129082426127527,
++      "tau": 0.4728333333333333
++    },
++    {
++      "eliminated_count": 136,
++      "informativeness": 1.0,
++      "soundness": 0.911353032659409,
++      "tau": 0.4710333333333333
++    },
++    {
++      "eliminated_count": 137,
++      "informativeness": 1.0,
++      "soundness": 0.9105754276827371,
++      "tau": 0.4692333333333333
++    },
++    {
++      "eliminated_count": 138,
++      "informativeness": 1.0,
++      "soundness": 0.9097978227060654,
++      "tau": 0.4683333333333333
++    },
++    {
++      "eliminated_count": 140,
++      "informativeness": 1.0,
++      "soundness": 0.9082426127527217,
++      "tau": 0.4665333333333333
++    },
++    {
++      "eliminated_count": 141,
++      "informativeness": 1.0,
++      "soundness": 0.9074650077760498,
++      "tau": 0.46473333333333333
++    },
++    {
++      "eliminated_count": 145,
++      "informativeness": 1.0,
++      "soundness": 0.9043545878693624,
++      "tau": 0.4629333333333333
++    },
++    {
++      "eliminated_count": 146,
++      "informativeness": 1.0,
++      "soundness": 0.9035769828926905,
++      "tau": 0.4620333333333333
++    },
++    {
++      "eliminated_count": 148,
++      "informativeness": 1.0,
++      "soundness": 0.9020217729393468,
++      "tau": 0.46113333333333334
++    },
++    {
++      "eliminated_count": 149,
++      "informativeness": 1.0,
++      "soundness": 0.9012441679626749,
++      "tau": 0.4602333333333333
++    },
++    {
++      "eliminated_count": 150,
++      "informativeness": 1.0,
++      "soundness": 0.9004665629860031,
++      "tau": 0.45933333333333337
++    },
++    {
++      "eliminated_count": 151,
++      "informativeness": 1.0,
++      "soundness": 0.8996889580093312,
++      "tau": 0.45663333333333334
++    },
++    {
++      "eliminated_count": 156,
++      "informativeness": 1.0,
++      "soundness": 0.895800933125972,
++      "tau": 0.4557333333333333
++    },
++    {
++      "eliminated_count": 157,
++      "informativeness": 1.0,
++      "soundness": 0.8950233281493002,
++      "tau": 0.4539333333333333
++    },
++    {
++      "eliminated_count": 159,
++      "informativeness": 1.0,
++      "soundness": 0.8934681181959565,
++      "tau": 0.45303333333333334
++    },
++    {
++      "eliminated_count": 161,
++      "informativeness": 1.0,
++      "soundness": 0.8919129082426127,
++      "tau": 0.45213333333333333
++    },
++    {
++      "eliminated_count": 164,
++      "informativeness": 1.0,
++      "soundness": 0.8895800933125972,
++      "tau": 0.4512333333333333
++    },
++    {
++      "eliminated_count": 168,
++      "informativeness": 1.0,
++      "soundness": 0.8864696734059098,
++      "tau": 0.4503333333333333
++    },
++    {
++      "eliminated_count": 171,
++      "informativeness": 1.0,
++      "soundness": 0.8841368584758943,
++      "tau": 0.44943333333333335
++    },
++    {
++      "eliminated_count": 172,
++      "informativeness": 1.0,
++      "soundness": 0.8833592534992224,
++      "tau": 0.44853333333333334
++    },
++    {
++      "eliminated_count": 173,
++      "informativeness": 1.0,
++      "soundness": 0.8825816485225505,
++      "tau": 0.4476333333333333
++    },
++    {
++      "eliminated_count": 176,
++      "informativeness": 1.0,
++      "soundness": 0.880248833592535,
++      "tau": 0.4467333333333333
++    },
++    {
++      "eliminated_count": 178,
++      "informativeness": 1.0,
++      "soundness": 0.8786936236391913,
++      "tau": 0.4458333333333333
++    },
++    {
++      "eliminated_count": 181,
++      "informativeness": 1.0,
++      "soundness": 0.8763608087091758,
++      "tau": 0.4449333333333333
++    },
++    {
++      "eliminated_count": 182,
++      "informativeness": 1.0,
++      "soundness": 0.8755832037325039,
++      "tau": 0.44403333333333334
++    },
++    {
++      "eliminated_count": 183,
++      "informativeness": 1.0,
++      "soundness": 0.8748055987558321,
++      "tau": 0.4413333333333333
++    },
++    {
++      "eliminated_count": 184,
++      "informativeness": 1.0,
++      "soundness": 0.8740279937791602,
++      "tau": 0.44043333333333334
++    },
++    {
++      "eliminated_count": 188,
++      "informativeness": 1.0,
++      "soundness": 0.8709175738724728,
++      "tau": 0.43953333333333333
++    },
++    {
++      "eliminated_count": 192,
++      "informativeness": 1.0,
++      "soundness": 0.8678071539657854,
++      "tau": 0.4386333333333333
++    },
++    {
++      "eliminated_count": 194,
++      "informativeness": 1.0,
++      "soundness": 0.8662519440124417,
++      "tau": 0.4377333333333333
++    },
++    {
++      "eliminated_count": 195,
++      "informativeness": 1.0,
++      "soundness": 0.8654743390357699,
++      "tau": 0.4368333333333333
++    },
++    {
++      "eliminated_count": 197,
++      "informativeness": 1.0,
++      "soundness": 0.8639191290824262,
++      "tau": 0.4341333333333333
++    },
++    {
++      "eliminated_count": 200,
++      "informativeness": 1.0,
++      "soundness": 0.8615863141524106,
++      "tau": 0.4332333333333333
++    },
++    {
++      "eliminated_count": 202,
++      "informativeness": 1.0,
++      "soundness": 0.8600311041990669,
++      "tau": 0.43143333333333334
++    },
++    {
++      "eliminated_count": 205,
++      "informativeness": 1.0,
++      "soundness": 0.8576982892690513,
++      "tau": 0.4305333333333333
++    },
++    {
++      "eliminated_count": 210,
++      "informativeness": 1.0,
++      "soundness": 0.8538102643856921,
++      "tau": 0.4296333333333333
++    },
++    {
++      "eliminated_count": 212,
++      "informativeness": 1.0,
++      "soundness": 0.8522550544323484,
++      "tau": 0.4278333333333333
++    },
++    {
++      "eliminated_count": 213,
++      "informativeness": 1.0,
++      "soundness": 0.8514774494556765,
++      "tau": 0.42693333333333333
++    },
++    {
++      "eliminated_count": 218,
++      "informativeness": 1.0,
++      "soundness": 0.8475894245723172,
++      "tau": 0.4260333333333333
++    },
++    {
++      "eliminated_count": 219,
++      "informativeness": 1.0,
++      "soundness": 0.8468118195956454,
++      "tau": 0.4251333333333333
++    },
++    {
++      "eliminated_count": 221,
++      "informativeness": 1.0,
++      "soundness": 0.8452566096423018,
++      "tau": 0.42423333333333335
++    },
++    {
++      "eliminated_count": 224,
++      "informativeness": 1.0,
++      "soundness": 0.8429237947122862,
++      "tau": 0.42333333333333334
++    },
++    {
++      "eliminated_count": 227,
++      "informativeness": 1.0,
++      "soundness": 0.8405909797822706,
++      "tau": 0.4224333333333333
++    },
++    {
++      "eliminated_count": 231,
++      "informativeness": 1.0,
++      "soundness": 0.8374805598755832,
++      "tau": 0.4215333333333333
++    },
++    {
++      "eliminated_count": 233,
++      "informativeness": 1.0,
++      "soundness": 0.8359253499222394,
++      "tau": 0.4206333333333333
++    },
++    {
++      "eliminated_count": 236,
++      "informativeness": 1.0,
++      "soundness": 0.833592534992224,
++      "tau": 0.4197333333333333
++    },
++    {
++      "eliminated_count": 241,
++      "informativeness": 1.0,
++      "soundness": 0.8297045101088647,
++      "tau": 0.41883333333333334
++    },
++    {
++      "eliminated_count": 244,
++      "informativeness": 1.0,
++      "soundness": 0.8273716951788491,
++      "tau": 0.4179333333333333
++    },
++    {
++      "eliminated_count": 250,
++      "informativeness": 1.0,
++      "soundness": 0.8227060653188181,
++      "tau": 0.4170333333333333
++    },
++    {
++      "eliminated_count": 253,
++      "informativeness": 1.0,
++      "soundness": 0.8203732503888025,
++      "tau": 0.4161333333333333
++    },
++    {
++      "eliminated_count": 255,
++      "informativeness": 1.0,
++      "soundness": 0.8188180404354588,
++      "tau": 0.41523333333333334
++    },
++    {
++      "eliminated_count": 257,
++      "informativeness": 1.0,
++      "soundness": 0.8172628304821151,
++      "tau": 0.41433333333333333
++    },
++    {
++      "eliminated_count": 260,
++      "informativeness": 1.0,
++      "soundness": 0.8149300155520995,
++      "tau": 0.4134333333333333
++    },
++    {
++      "eliminated_count": 265,
++      "informativeness": 1.0,
++      "soundness": 0.8110419906687403,
++      "tau": 0.4125333333333333
++    },
++    {
++      "eliminated_count": 267,
++      "informativeness": 1.0,
++      "soundness": 0.8094867807153966,
++      "tau": 0.4116333333333333
++    },
++    {
++      "eliminated_count": 270,
++      "informativeness": 1.0,
++      "soundness": 0.807153965785381,
++      "tau": 0.41073333333333334
++    },
++    {
++      "eliminated_count": 273,
++      "informativeness": 1.0,
++      "soundness": 0.8048211508553655,
++      "tau": 0.4098333333333333
++    },
++    {
++      "eliminated_count": 276,
++      "informativeness": 1.0,
++      "soundness": 0.80248833592535,
++      "tau": 0.4089333333333333
++    },
++    {
++      "eliminated_count": 281,
++      "informativeness": 1.0,
++      "soundness": 0.7986003110419907,
++      "tau": 0.4080333333333333
++    },
++    {
++      "eliminated_count": 283,
++      "informativeness": 1.0,
++      "soundness": 0.797045101088647,
++      "tau": 0.40713333333333335
++    },
++    {
++      "eliminated_count": 284,
++      "informativeness": 1.0,
++      "soundness": 0.7962674961119751,
++      "tau": 0.40623333333333334
++    },
++    {
++      "eliminated_count": 286,
++      "informativeness": 1.0,
++      "soundness": 0.7947122861586314,
++      "tau": 0.4053333333333333
++    },
++    {
++      "eliminated_count": 290,
++      "informativeness": 1.0,
++      "soundness": 0.791601866251944,
++      "tau": 0.4044333333333333
++    },
++    {
++      "eliminated_count": 294,
++      "informativeness": 1.0,
++      "soundness": 0.7884914463452566,
++      "tau": 0.4035333333333333
++    },
++    {
++      "eliminated_count": 296,
++      "informativeness": 1.0,
++      "soundness": 0.7869362363919129,
++      "tau": 0.403
++    },
++    {
++      "eliminated_count": 297,
++      "informativeness": 1.0,
++      "soundness": 0.7861586314152411,
++      "tau": 0.4026333333333333
++    },
++    {
++      "eliminated_count": 305,
++      "informativeness": 1.0,
++      "soundness": 0.7799377916018663,
++      "tau": 0.40173333333333333
++    },
++    {
++      "eliminated_count": 309,
++      "informativeness": 1.0,
++      "soundness": 0.7768273716951788,
++      "tau": 0.4008333333333333
++    },
++    {
++      "eliminated_count": 313,
++      "informativeness": 1.0,
++      "soundness": 0.7737169517884914,
++      "tau": 0.3999333333333333
++    },
++    {
++      "eliminated_count": 317,
++      "informativeness": 1.0,
++      "soundness": 0.7706065318818041,
++      "tau": 0.3990333333333333
++    },
++    {
++      "eliminated_count": 320,
++      "informativeness": 1.0,
++      "soundness": 0.7682737169517885,
++      "tau": 0.39813333333333334
++    },
++    {
++      "eliminated_count": 323,
++      "informativeness": 1.0,
++      "soundness": 0.7659409020217729,
++      "tau": 0.3972333333333333
++    },
++    {
++      "eliminated_count": 325,
++      "informativeness": 1.0,
++      "soundness": 0.7643856920684292,
++      "tau": 0.3963333333333333
++    },
++    {
++      "eliminated_count": 326,
++      "informativeness": 1.0,
++      "soundness": 0.7636080870917574,
++      "tau": 0.3954333333333333
++    },
++    {
++      "eliminated_count": 329,
++      "informativeness": 1.0,
++      "soundness": 0.7612752721617418,
++      "tau": 0.3945333333333333
++    },
++    {
++      "eliminated_count": 331,
++      "informativeness": 1.0,
++      "soundness": 0.7597200622083982,
++      "tau": 0.39363333333333334
++    },
++    {
++      "eliminated_count": 335,
++      "informativeness": 1.0,
++      "soundness": 0.7566096423017108,
++      "tau": 0.3927333333333333
++    },
++    {
++      "eliminated_count": 338,
++      "informativeness": 1.0,
++      "soundness": 0.7542768273716952,
++      "tau": 0.3918333333333333
++    },
++    {
++      "eliminated_count": 341,
++      "informativeness": 1.0,
++      "soundness": 0.7519440124416796,
++      "tau": 0.3909333333333333
++    },
++    {
++      "eliminated_count": 344,
++      "informativeness": 1.0,
++      "soundness": 0.749611197511664,
++      "tau": 0.39003333333333334
++    },
++    {
++      "eliminated_count": 348,
++      "informativeness": 1.0,
++      "soundness": 0.7465007776049767,
++      "tau": 0.38913333333333333
++    },
++    {
++      "eliminated_count": 351,
++      "informativeness": 1.0,
++      "soundness": 0.7441679626749611,
++      "tau": 0.3882333333333333
++    },
++    {
++      "eliminated_count": 356,
++      "informativeness": 1.0,
++      "soundness": 0.7402799377916018,
++      "tau": 0.3873333333333333
++    },
++    {
++      "eliminated_count": 360,
++      "informativeness": 1.0,
++      "soundness": 0.7371695178849145,
++      "tau": 0.3864333333333333
++    },
++    {
++      "eliminated_count": 361,
++      "informativeness": 1.0,
++      "soundness": 0.7363919129082426,
++      "tau": 0.3846333333333333
++    },
++    {
++      "eliminated_count": 364,
++      "informativeness": 1.0,
++      "soundness": 0.7340590979782271,
++      "tau": 0.3837333333333333
++    },
++    {
++      "eliminated_count": 365,
++      "informativeness": 1.0,
++      "soundness": 0.7332814930015552,
++      "tau": 0.3828333333333333
++    },
++    {
++      "eliminated_count": 366,
++      "informativeness": 1.0,
++      "soundness": 0.7325038880248833,
++      "tau": 0.3819333333333333
++    },
++    {
++      "eliminated_count": 368,
++      "informativeness": 1.0,
++      "soundness": 0.7309486780715397,
++      "tau": 0.38103333333333333
++    },
++    {
++      "eliminated_count": 370,
++      "informativeness": 1.0,
++      "soundness": 0.7293934681181959,
++      "tau": 0.3801333333333333
++    },
++    {
++      "eliminated_count": 371,
++      "informativeness": 1.0,
++      "soundness": 0.728615863141524,
++      "tau": 0.3792333333333333
++    },
++    {
++      "eliminated_count": 373,
++      "informativeness": 1.0,
++      "soundness": 0.7270606531881805,
++      "tau": 0.3783333333333333
++    },
++    {
++      "eliminated_count": 374,
++      "informativeness": 1.0,
++      "soundness": 0.7262830482115086,
++      "tau": 0.3774333333333333
++    },
++    {
++      "eliminated_count": 375,
++      "informativeness": 1.0,
++      "soundness": 0.7255054432348367,
++      "tau": 0.37653333333333333
++    },
++    {
++      "eliminated_count": 376,
++      "informativeness": 1.0,
++      "soundness": 0.7247278382581648,
++      "tau": 0.3756333333333333
++    },
++    {
++      "eliminated_count": 377,
++      "informativeness": 1.0,
++      "soundness": 0.723950233281493,
++      "tau": 0.3747333333333333
++    },
++    {
++      "eliminated_count": 378,
++      "informativeness": 1.0,
++      "soundness": 0.7231726283048212,
++      "tau": 0.37420000000000003
++    },
++    {
++      "eliminated_count": 379,
++      "informativeness": 1.0,
++      "soundness": 0.7223950233281493,
++      "tau": 0.3738333333333333
++    },
++    {
++      "eliminated_count": 381,
++      "informativeness": 1.0,
++      "soundness": 0.7208398133748055,
++      "tau": 0.3720333333333333
++    },
++    {
++      "eliminated_count": 382,
++      "informativeness": 1.0,
++      "soundness": 0.7200622083981337,
++      "tau": 0.3711333333333333
++    },
++    {
++      "eliminated_count": 383,
++      "informativeness": 1.0,
++      "soundness": 0.7192846034214619,
++      "tau": 0.3652
++    },
++    {
++      "eliminated_count": 384,
++      "informativeness": 1.0,
++      "soundness": 0.71850699844479,
++      "tau": 0.35836666666666667
++    },
++    {
++      "eliminated_count": 385,
++      "informativeness": 1.0,
++      "soundness": 0.7177293934681181,
++      "tau": 0.3511666666666667
++    },
++    {
++      "eliminated_count": 386,
++      "informativeness": 1.0,
++      "soundness": 0.7169517884914464,
++      "tau": 0.3421666666666667
++    },
++    {
++      "eliminated_count": 387,
++      "informativeness": 1.0,
++      "soundness": 0.7161741835147746,
++      "tau": 0.34
++    },
++    {
++      "eliminated_count": 388,
++      "informativeness": 1.0,
++      "soundness": 0.7153965785381027,
++      "tau": 0.3292
++    },
++    {
++      "eliminated_count": 389,
++      "informativeness": 1.0,
++      "soundness": 0.7146189735614308,
++      "tau": 0.3287
++    },
++    {
++      "eliminated_count": 390,
++      "informativeness": 1.0,
++      "soundness": 0.7138413685847589,
++      "tau": 0.32866666666666666
++    },
++    {
++      "eliminated_count": 391,
++      "informativeness": 1.0,
++      "soundness": 0.7130637636080871,
++      "tau": 0.32420000000000004
++    },
++    {
++      "eliminated_count": 392,
++      "informativeness": 1.0,
++      "soundness": 0.7122861586314153,
++      "tau": 0.322
++    },
++    {
++      "eliminated_count": 393,
++      "informativeness": 1.0,
++      "soundness": 0.7115085536547434,
++      "tau": 0.3142666666666667
++    },
++    {
++      "eliminated_count": 394,
++      "informativeness": 1.0,
++      "soundness": 0.7107309486780715,
++      "tau": 0.313
++    },
++    {
++      "eliminated_count": 397,
++      "informativeness": 1.0,
++      "soundness": 0.708398133748056,
++      "tau": 0.31066666666666665
++    },
++    {
++      "eliminated_count": 399,
++      "informativeness": 1.0,
++      "soundness": 0.7068429237947123,
++      "tau": 0.3098
++    },
++    {
++      "eliminated_count": 400,
++      "informativeness": 1.0,
++      "soundness": 0.7060653188180404,
++      "tau": 0.3088666666666666
++    },
++    {
++      "eliminated_count": 401,
++      "informativeness": 1.0,
++      "soundness": 0.7052877138413686,
++      "tau": 0.3076
++    },
++    {
++      "eliminated_count": 402,
++      "informativeness": 1.0,
++      "soundness": 0.7045101088646968,
++      "tau": 0.3062666666666667
++    },
++    {
++      "eliminated_count": 403,
++      "informativeness": 1.0,
++      "soundness": 0.7037325038880249,
++      "tau": 0.3061666666666667
++    },
++    {
++      "eliminated_count": 405,
++      "informativeness": 1.0,
++      "soundness": 0.7021772939346812,
++      "tau": 0.3049
++    },
++    {
++      "eliminated_count": 406,
++      "informativeness": 1.0,
++      "soundness": 0.7013996889580093,
++      "tau": 0.30360000000000004
++    },
++    {
++      "eliminated_count": 407,
++      "informativeness": 1.0,
++      "soundness": 0.7006220839813375,
++      "tau": 0.3031
++    },
++    {
++      "eliminated_count": 408,
++      "informativeness": 1.0,
++      "soundness": 0.6998444790046656,
++      "tau": 0.30256666666666665
++    },
++    {
++      "eliminated_count": 409,
++      "informativeness": 1.0,
++      "soundness": 0.6990668740279937,
++      "tau": 0.30166666666666664
++    },
++    {
++      "eliminated_count": 410,
++      "informativeness": 1.0,
++      "soundness": 0.6982892690513219,
++      "tau": 0.3007666666666666
++    },
++    {
++      "eliminated_count": 411,
++      "informativeness": 1.0,
++      "soundness": 0.6975116640746502,
++      "tau": 0.2999
++    },
++    {
++      "eliminated_count": 412,
++      "informativeness": 1.0,
++      "soundness": 0.6967340590979783,
++      "tau": 0.2998666666666666
++    },
++    {
++      "eliminated_count": 413,
++      "informativeness": 1.0,
++      "soundness": 0.6959564541213064,
++      "tau": 0.29806666666666665
++    },
++    {
++      "eliminated_count": 414,
++      "informativeness": 1.0,
++      "soundness": 0.6951788491446345,
++      "tau": 0.2971666666666667
++    },
++    {
++      "eliminated_count": 416,
++      "informativeness": 1.0,
++      "soundness": 0.6936236391912909,
++      "tau": 0.29536666666666667
++    },
++    {
++      "eliminated_count": 417,
++      "informativeness": 1.0,
++      "soundness": 0.692846034214619,
++      "tau": 0.29446666666666665
++    },
++    {
++      "eliminated_count": 418,
++      "informativeness": 1.0,
++      "soundness": 0.6920684292379471,
++      "tau": 0.29356666666666664
++    },
++    {
++      "eliminated_count": 420,
++      "informativeness": 1.0,
++      "soundness": 0.6905132192846034,
++      "tau": 0.2917666666666667
++    },
++    {
++      "eliminated_count": 423,
++      "informativeness": 1.0,
++      "soundness": 0.6881804043545878,
++      "tau": 0.29086666666666666
++    },
++    {
++      "eliminated_count": 424,
++      "informativeness": 1.0,
++      "soundness": 0.687402799377916,
++      "tau": 0.28996666666666665
++    },
++    {
++      "eliminated_count": 425,
++      "informativeness": 1.0,
++      "soundness": 0.6866251944012441,
++      "tau": 0.2890666666666667
++    },
++    {
++      "eliminated_count": 426,
++      "informativeness": 1.0,
++      "soundness": 0.6858475894245724,
++      "tau": 0.2882
++    },
++    {
++      "eliminated_count": 427,
++      "informativeness": 1.0,
++      "soundness": 0.6850699844479005,
++      "tau": 0.2881666666666667
++    },
++    {
++      "eliminated_count": 429,
++      "informativeness": 1.0,
++      "soundness": 0.6835147744945568,
++      "tau": 0.2864
++    },
++    {
++      "eliminated_count": 430,
++      "informativeness": 1.0,
++      "soundness": 0.682737169517885,
++      "tau": 0.28636666666666666
++    },
++    {
++      "eliminated_count": 434,
++      "informativeness": 1.0,
++      "soundness": 0.6796267496111975,
++      "tau": 0.28556666666666664
++    },
++    {
++      "eliminated_count": 435,
++      "informativeness": 1.0,
++      "soundness": 0.6788491446345257,
++      "tau": 0.28456666666666663
++    },
++    {
++      "eliminated_count": 436,
++      "informativeness": 1.0,
++      "soundness": 0.6780715396578538,
++      "tau": 0.2828
++    },
++    {
++      "eliminated_count": 437,
++      "informativeness": 1.0,
++      "soundness": 0.6772939346811819,
++      "tau": 0.28186666666666665
++    },
++    {
++      "eliminated_count": 438,
++      "informativeness": 1.0,
++      "soundness": 0.67651632970451,
++      "tau": 0.2800666666666667
++    },
++    {
++      "eliminated_count": 440,
++      "informativeness": 1.0,
++      "soundness": 0.6749611197511665,
++      "tau": 0.2791666666666667
++    },
++    {
++      "eliminated_count": 443,
++      "informativeness": 1.0,
++      "soundness": 0.6726283048211509,
++      "tau": 0.27826666666666666
++    },
++    {
++      "eliminated_count": 445,
++      "informativeness": 1.0,
++      "soundness": 0.6710730948678072,
++      "tau": 0.27646666666666664
++    },
++    {
++      "eliminated_count": 446,
++      "informativeness": 1.0,
++      "soundness": 0.6702954898911353,
++      "tau": 0.2756
++    },
++    {
++      "eliminated_count": 447,
++      "informativeness": 1.0,
++      "soundness": 0.6695178849144634,
++      "tau": 0.2755666666666666
++    },
++    {
++      "eliminated_count": 448,
++      "informativeness": 1.0,
++      "soundness": 0.6687402799377916,
++      "tau": 0.27466666666666667
++    },
++    {
++      "eliminated_count": 449,
++      "informativeness": 1.0,
++      "soundness": 0.6679626749611198,
++      "tau": 0.27380000000000004
++    },
++    {
++      "eliminated_count": 450,
++      "informativeness": 1.0,
++      "soundness": 0.6671850699844479,
++      "tau": 0.27376666666666666
++    },
++    {
++      "eliminated_count": 452,
++      "informativeness": 1.0,
++      "soundness": 0.6656298600311041,
++      "tau": 0.27286666666666665
++    },
++    {
++      "eliminated_count": 456,
++      "informativeness": 1.0,
++      "soundness": 0.6625194401244168,
++      "tau": 0.2719666666666667
++    },
++    {
++      "eliminated_count": 458,
++      "informativeness": 1.0,
++      "soundness": 0.6609642301710731,
++      "tau": 0.2710666666666667
++    },
++    {
++      "eliminated_count": 462,
++      "informativeness": 1.0,
++      "soundness": 0.6578538102643857,
++      "tau": 0.2702
++    },
++    {
++      "eliminated_count": 464,
++      "informativeness": 1.0,
++      "soundness": 0.656298600311042,
++      "tau": 0.27016666666666667
++    },
++    {
++      "eliminated_count": 467,
++      "informativeness": 1.0,
++      "soundness": 0.6539657853810265,
++      "tau": 0.26926666666666665
++    },
++    {
++      "eliminated_count": 473,
++      "informativeness": 1.0,
++      "soundness": 0.6493001555209954,
++      "tau": 0.26836666666666664
++    },
++    {
++      "eliminated_count": 475,
++      "informativeness": 1.0,
++      "soundness": 0.6477449455676516,
++      "tau": 0.2675
++    },
++    {
++      "eliminated_count": 476,
++      "informativeness": 1.0,
++      "soundness": 0.6469673405909797,
++      "tau": 0.26746666666666663
++    },
++    {
++      "eliminated_count": 480,
++      "informativeness": 1.0,
++      "soundness": 0.6438569206842923,
++      "tau": 0.26566666666666666
++    },
++    {
++      "eliminated_count": 485,
++      "informativeness": 1.0,
++      "soundness": 0.6399688958009331,
++      "tau": 0.26480000000000004
++    },
++    {
++      "eliminated_count": 488,
++      "informativeness": 1.0,
++      "soundness": 0.6376360808709176,
++      "tau": 0.26476666666666665
++    },
++    {
++      "eliminated_count": 490,
++      "informativeness": 1.0,
++      "soundness": 0.6360808709175738,
++      "tau": 0.2639
++    },
++    {
++      "eliminated_count": 491,
++      "informativeness": 1.0,
++      "soundness": 0.635303265940902,
++      "tau": 0.26386666666666664
++    },
++    {
++      "eliminated_count": 494,
++      "informativeness": 1.0,
++      "soundness": 0.6329704510108864,
++      "tau": 0.2629666666666667
++    },
++    {
++      "eliminated_count": 499,
++      "informativeness": 1.0,
++      "soundness": 0.6290824261275272,
++      "tau": 0.2622238095238095
++    },
++    {
++      "eliminated_count": 500,
++      "informativeness": 1.0,
++      "soundness": 0.6283048211508553,
++      "tau": 0.2621
++    },
++    {
++      "eliminated_count": 501,
++      "informativeness": 1.0,
++      "soundness": 0.6275272161741835,
++      "tau": 0.26206666666666667
++    },
++    {
++      "eliminated_count": 502,
++      "informativeness": 1.0,
++      "soundness": 0.6267496111975117,
++      "tau": 0.26116666666666666
++    },
++    {
++      "eliminated_count": 505,
++      "informativeness": 1.0,
++      "soundness": 0.6244167962674961,
++      "tau": 0.26030000000000003
++    },
++    {
++      "eliminated_count": 506,
++      "informativeness": 1.0,
++      "soundness": 0.6236391912908242,
++      "tau": 0.26026666666666665
++    },
++    {
++      "eliminated_count": 513,
++      "informativeness": 1.0,
++      "soundness": 0.6181959564541213,
++      "tau": 0.25936666666666663
++    },
++    {
++      "eliminated_count": 516,
++      "informativeness": 1.0,
++      "soundness": 0.6158631415241058,
++      "tau": 0.2584666666666667
++    },
++    {
++      "eliminated_count": 518,
++      "informativeness": 1.0,
++      "soundness": 0.614307931570762,
++      "tau": 0.25766666666666665
++    },
++    {
++      "eliminated_count": 519,
++      "informativeness": 1.0,
++      "soundness": 0.6135303265940901,
++      "tau": 0.25756666666666667
++    },
++    {
++      "eliminated_count": 523,
++      "informativeness": 1.0,
++      "soundness": 0.6104199066874028,
++      "tau": 0.25666666666666665
++    },
++    {
++      "eliminated_count": 527,
++      "informativeness": 1.0,
++      "soundness": 0.6073094867807154,
++      "tau": 0.2557666666666667
++    },
++    {
++      "eliminated_count": 529,
++      "informativeness": 1.0,
++      "soundness": 0.6057542768273717,
++      "tau": 0.2548666666666667
++    },
++    {
++      "eliminated_count": 537,
++      "informativeness": 1.0,
++      "soundness": 0.5995334370139969,
++      "tau": 0.2539666666666667
++    },
++    {
++      "eliminated_count": 544,
++      "informativeness": 1.0,
++      "soundness": 0.5940902021772939,
++      "tau": 0.25306666666666666
++    },
++    {
++      "eliminated_count": 550,
++      "informativeness": 1.0,
++      "soundness": 0.5894245723172629,
++      "tau": 0.25216666666666665
++    },
++    {
++      "eliminated_count": 556,
++      "informativeness": 1.0,
++      "soundness": 0.5847589424572317,
++      "tau": 0.25126666666666664
++    },
++    {
++      "eliminated_count": 564,
++      "informativeness": 1.0,
++      "soundness": 0.578538102643857,
++      "tau": 0.2503666666666666
++    },
++    {
++      "eliminated_count": 571,
++      "informativeness": 1.0,
++      "soundness": 0.5730948678071539,
++      "tau": 0.24946666666666667
++    },
++    {
++      "eliminated_count": 578,
++      "informativeness": 1.0,
++      "soundness": 0.5676516329704511,
++      "tau": 0.24856666666666666
++    },
++    {
++      "eliminated_count": 586,
++      "informativeness": 1.0,
++      "soundness": 0.5614307931570762,
++      "tau": 0.2477
++    },
++    {
++      "eliminated_count": 587,
++      "informativeness": 1.0,
++      "soundness": 0.5606531881804043,
++      "tau": 0.24766666666666665
++    },
++    {
++      "eliminated_count": 597,
++      "informativeness": 1.0,
++      "soundness": 0.5528771384136859,
++      "tau": 0.24680000000000002
++    },
++    {
++      "eliminated_count": 598,
++      "informativeness": 1.0,
++      "soundness": 0.552099533437014,
++      "tau": 0.24676666666666666
++    },
++    {
++      "eliminated_count": 603,
++      "informativeness": 1.0,
++      "soundness": 0.5482115085536547,
++      "tau": 0.24586666666666665
++    },
++    {
++      "eliminated_count": 605,
++      "informativeness": 1.0,
++      "soundness": 0.5466562986003111,
++      "tau": 0.24496666666666667
++    },
++    {
++      "eliminated_count": 613,
++      "informativeness": 1.0,
++      "soundness": 0.5404354587869362,
++      "tau": 0.24406666666666665
++    },
++    {
++      "eliminated_count": 619,
++      "informativeness": 1.0,
++      "soundness": 0.5357698289269051,
++      "tau": 0.24316666666666667
++    },
++    {
++      "eliminated_count": 621,
++      "informativeness": 1.0,
++      "soundness": 0.5342146189735615,
++      "tau": 0.24226666666666666
++    },
++    {
++      "eliminated_count": 635,
++      "informativeness": 1.0,
++      "soundness": 0.5233281493001556,
++      "tau": 0.24136666666666667
++    },
++    {
++      "eliminated_count": 644,
++      "informativeness": 1.0,
++      "soundness": 0.5163297045101088,
++      "tau": 0.24046666666666666
++    },
++    {
++      "eliminated_count": 654,
++      "informativeness": 1.0,
++      "soundness": 0.5085536547433904,
++      "tau": 0.23956666666666665
++    },
++    {
++      "eliminated_count": 664,
++      "informativeness": 1.0,
++      "soundness": 0.5007776049766719,
++      "tau": 0.23866666666666667
++    },
++    {
++      "eliminated_count": 673,
++      "informativeness": 1.0,
++      "soundness": 0.49377916018662515,
++      "tau": 0.23776666666666665
++    },
++    {
++      "eliminated_count": 680,
++      "informativeness": 1.0,
++      "soundness": 0.4883359253499222,
++      "tau": 0.23686666666666667
++    },
++    {
++      "eliminated_count": 689,
++      "informativeness": 1.0,
++      "soundness": 0.4813374805598756,
++      "tau": 0.23596666666666666
++    },
++    {
++      "eliminated_count": 698,
++      "informativeness": 1.0,
++      "soundness": 0.47433903576982894,
++      "tau": 0.23506666666666665
++    },
++    {
++      "eliminated_count": 707,
++      "informativeness": 1.0,
++      "soundness": 0.4673405909797823,
++      "tau": 0.23416666666666666
++    },
++    {
++      "eliminated_count": 721,
++      "informativeness": 1.0,
++      "soundness": 0.4564541213063764,
++      "tau": 0.23326666666666665
++    },
++    {
++      "eliminated_count": 730,
++      "informativeness": 1.0,
++      "soundness": 0.44945567651632967,
++      "tau": 0.23236666666666667
++    },
++    {
++      "eliminated_count": 743,
++      "informativeness": 1.0,
++      "soundness": 0.4393468118195957,
++      "tau": 0.23146666666666665
++    },
++    {
++      "eliminated_count": 757,
++      "informativeness": 1.0,
++      "soundness": 0.4284603421461898,
++      "tau": 0.23056666666666667
++    },
++    {
++      "eliminated_count": 766,
++      "informativeness": 1.0,
++      "soundness": 0.42146189735614303,
++      "tau": 0.22966666666666669
++    },
++    {
++      "eliminated_count": 774,
++      "informativeness": 1.0,
++      "soundness": 0.4152410575427683,
++      "tau": 0.22876666666666667
++    },
++    {
++      "eliminated_count": 790,
++      "informativeness": 1.0,
++      "soundness": 0.4027993779160186,
++      "tau": 0.22786666666666666
++    },
++    {
++      "eliminated_count": 798,
++      "informativeness": 1.0,
++      "soundness": 0.3965785381026439,
++      "tau": 0.22696666666666665
++    },
++    {
++      "eliminated_count": 809,
++      "informativeness": 1.0,
++      "soundness": 0.38802488335925345,
++      "tau": 0.22606666666666667
++    },
++    {
++      "eliminated_count": 824,
++      "informativeness": 1.0,
++      "soundness": 0.37636080870917576,
++      "tau": 0.22516666666666665
++    },
++    {
++      "eliminated_count": 837,
++      "informativeness": 1.0,
++      "soundness": 0.36625194401244165,
++      "tau": 0.22426666666666667
++    },
++    {
++      "eliminated_count": 855,
++      "informativeness": 1.0,
++      "soundness": 0.3522550544323484,
++      "tau": 0.22336666666666666
++    },
++    {
++      "eliminated_count": 869,
++      "informativeness": 1.0,
++      "soundness": 0.3413685847589425,
++      "tau": 0.22246666666666665
++    },
++    {
++      "eliminated_count": 878,
++      "informativeness": 1.0,
++      "soundness": 0.33437013996889575,
++      "tau": 0.22156666666666666
++    },
++    {
++      "eliminated_count": 893,
++      "informativeness": 1.0,
++      "soundness": 0.32270606531881807,
++      "tau": 0.22066666666666665
++    },
++    {
++      "eliminated_count": 906,
++      "informativeness": 1.0,
++      "soundness": 0.31259720062208396,
++      "tau": 0.21976666666666667
++    },
++    {
++      "eliminated_count": 921,
++      "informativeness": 1.0,
++      "soundness": 0.30093312597200617,
++      "tau": 0.21886666666666665
++    },
++    {
++      "eliminated_count": 935,
++      "informativeness": 1.0,
++      "soundness": 0.29004665629860027,
++      "tau": 0.21796666666666667
++    },
++    {
++      "eliminated_count": 947,
++      "informativeness": 1.0,
++      "soundness": 0.28071539657853806,
++      "tau": 0.21706666666666666
++    },
++    {
++      "eliminated_count": 962,
++      "informativeness": 1.0,
++      "soundness": 0.2690513219284604,
++      "tau": 0.21616666666666667
++    },
++    {
++      "eliminated_count": 972,
++      "informativeness": 1.0,
++      "soundness": 0.26127527216174184,
++      "tau": 0.21526666666666666
++    },
++    {
++      "eliminated_count": 984,
++      "informativeness": 1.0,
++      "soundness": 0.25194401244167963,
++      "tau": 0.21436666666666665
++    },
++    {
++      "eliminated_count": 995,
++      "informativeness": 1.0,
++      "soundness": 0.24339035769828932,
++      "tau": 0.21346666666666667
++    },
++    {
++      "eliminated_count": 1008,
++      "informativeness": 1.0,
++      "soundness": 0.2332814930015552,
++      "tau": 0.21256666666666665
++    },
++    {
++      "eliminated_count": 1018,
++      "informativeness": 1.0,
++      "soundness": 0.22550544323483668,
++      "tau": 0.21166666666666667
++    },
++    {
++      "eliminated_count": 1034,
++      "informativeness": 1.0,
++      "soundness": 0.2130637636080871,
++      "tau": 0.21076666666666666
++    },
++    {
++      "eliminated_count": 1049,
++      "informativeness": 1.0,
++      "soundness": 0.2013996889580093,
++      "tau": 0.20986666666666665
++    },
++    {
++      "eliminated_count": 1062,
++      "informativeness": 1.0,
++      "soundness": 0.1912908242612753,
++      "tau": 0.20896666666666666
++    },
++    {
++      "eliminated_count": 1077,
++      "informativeness": 1.0,
++      "soundness": 0.1796267496111975,
++      "tau": 0.20806666666666665
++    },
++    {
++      "eliminated_count": 1086,
++      "informativeness": 1.0,
++      "soundness": 0.17262830482115088,
++      "tau": 0.20716666666666667
++    },
++    {
++      "eliminated_count": 1097,
++      "informativeness": 1.0,
++      "soundness": 0.16407465007776045,
++      "tau": 0.20626666666666665
++    },
++    {
++      "eliminated_count": 1101,
++      "informativeness": 1.0,
++      "soundness": 0.16096423017107309,
++      "tau": 0.20536666666666667
++    },
++    {
++      "eliminated_count": 1105,
++      "informativeness": 1.0,
++      "soundness": 0.15785381026438572,
++      "tau": 0.20446666666666666
++    },
++    {
++      "eliminated_count": 1115,
++      "informativeness": 1.0,
++      "soundness": 0.1500777604976672,
++      "tau": 0.20356666666666667
++    },
++    {
++      "eliminated_count": 1122,
++      "informativeness": 1.0,
++      "soundness": 0.14463452566096424,
++      "tau": 0.20266666666666666
++    },
++    {
++      "eliminated_count": 1129,
++      "informativeness": 1.0,
++      "soundness": 0.1391912908242613,
++      "tau": 0.20176666666666665
++    },
++    {
++      "eliminated_count": 1132,
++      "informativeness": 1.0,
++      "soundness": 0.1368584758942457,
++      "tau": 0.20086666666666667
++    },
++    {
++      "eliminated_count": 1136,
++      "informativeness": 1.0,
++      "soundness": 0.13374805598755835,
++      "tau": 0.19996666666666665
++    },
++    {
++      "eliminated_count": 1138,
++      "informativeness": 1.0,
++      "soundness": 0.13219284603421466,
++      "tau": 0.19906666666666667
++    },
++    {
++      "eliminated_count": 1142,
++      "informativeness": 1.0,
++      "soundness": 0.12908242612752718,
++      "tau": 0.19816666666666666
++    },
++    {
++      "eliminated_count": 1145,
++      "informativeness": 1.0,
++      "soundness": 0.1267496111975117,
++      "tau": 0.19726666666666665
++    },
++    {
++      "eliminated_count": 1149,
++      "informativeness": 1.0,
++      "soundness": 0.12363919129082424,
++      "tau": 0.19636666666666666
++    },
++    {
++      "eliminated_count": 1151,
++      "informativeness": 1.0,
++      "soundness": 0.12208398133748055,
++      "tau": 0.19546666666666665
++    },
++    {
++      "eliminated_count": 1153,
++      "informativeness": 1.0,
++      "soundness": 0.12052877138413687,
++      "tau": 0.18736666666666665
++    },
++    {
++      "eliminated_count": 1154,
++      "informativeness": 1.0,
++      "soundness": 0.11975116640746497,
++      "tau": 0.18646666666666667
++    },
++    {
++      "eliminated_count": 1155,
++      "informativeness": 1.0,
++      "soundness": 0.11897356143079318,
++      "tau": 0.18376666666666666
++    },
++    {
++      "eliminated_count": 1156,
++      "informativeness": 1.0,
++      "soundness": 0.11819595645412129,
++      "tau": 0.099
++    },
++    {
++      "eliminated_count": 1157,
++      "informativeness": 1.0,
++      "soundness": 0.1174183514774495,
++      "tau": 0.09360000000000002
++    },
++    {
++      "eliminated_count": 1158,
++      "informativeness": 1.0,
++      "soundness": 0.1166407465007776,
++      "tau": 0.0828
++    },
++    {
++      "eliminated_count": 1159,
++      "informativeness": 1.0,
++      "soundness": 0.1158631415241057,
++      "tau": 0.0819
++    },
++    {
++      "eliminated_count": 1160,
++      "informativeness": 1.0,
++      "soundness": 0.11508553654743392,
++      "tau": 0.0801
++    },
++    {
++      "eliminated_count": 1162,
++      "informativeness": 1.0,
++      "soundness": 0.11353032659409024,
++      "tau": 0.07919999999999999
++    },
++    {
++      "eliminated_count": 1164,
++      "informativeness": 1.0,
++      "soundness": 0.11197511664074655,
++      "tau": 0.07650000000000001
++    },
++    {
++      "eliminated_count": 1165,
++      "informativeness": 1.0,
++      "soundness": 0.11119751166407466,
++      "tau": 0.0729
++    },
++    {
++      "eliminated_count": 1166,
++      "informativeness": 1.0,
++      "soundness": 0.11041990668740276,
++      "tau": 0.0711
++    },
++    {
++      "eliminated_count": 1168,
++      "informativeness": 1.0,
++      "soundness": 0.10886469673405907,
++      "tau": 0.0693
++    },
++    {
++      "eliminated_count": 1170,
++      "informativeness": 1.0,
++      "soundness": 0.10730948678071539,
++      "tau": 0.0675
++    },
++    {
++      "eliminated_count": 1173,
++      "informativeness": 1.0,
++      "soundness": 0.10497667185069981,
++      "tau": 0.06659999999999999
++    },
++    {
++      "eliminated_count": 1174,
++      "informativeness": 1.0,
++      "soundness": 0.10419906687402802,
++      "tau": 0.0657
++    },
++    {
++      "eliminated_count": 1177,
++      "informativeness": 1.0,
++      "soundness": 0.10186625194401244,
++      "tau": 0.06480000000000001
++    },
++    {
++      "eliminated_count": 1180,
++      "informativeness": 1.0,
++      "soundness": 0.09953343701399686,
++      "tau": 0.06390000000000001
++    },
++    {
++      "eliminated_count": 1182,
++      "informativeness": 1.0,
++      "soundness": 0.09797822706065318,
++      "tau": 0.06300000000000001
++    },
++    {
++      "eliminated_count": 1185,
++      "informativeness": 1.0,
++      "soundness": 0.0956454121306376,
++      "tau": 0.06210000000000001
++    },
++    {
++      "eliminated_count": 1188,
++      "informativeness": 1.0,
++      "soundness": 0.09331259720062213,
++      "tau": 0.060300000000000006
++    },
++    {
++      "eliminated_count": 1192,
++      "informativeness": 1.0,
++      "soundness": 0.09020217729393465,
++      "tau": 0.0594
++    },
++    {
++      "eliminated_count": 1193,
++      "informativeness": 1.0,
++      "soundness": 0.08942457231726286,
++      "tau": 0.0585
++    },
++    {
++      "eliminated_count": 1195,
++      "informativeness": 1.0,
++      "soundness": 0.08786936236391918,
++      "tau": 0.057600000000000005
++    },
++    {
++      "eliminated_count": 1197,
++      "informativeness": 1.0,
++      "soundness": 0.08631415241057538,
++      "tau": 0.0567
++    },
++    {
++      "eliminated_count": 1202,
++      "informativeness": 1.0,
++      "soundness": 0.08242612752721612,
++      "tau": 0.0558
++    },
++    {
++      "eliminated_count": 1206,
++      "informativeness": 1.0,
++      "soundness": 0.07931570762052875,
++      "tau": 0.0549
++    },
++    {
++      "eliminated_count": 1209,
++      "informativeness": 1.0,
++      "soundness": 0.07698289269051317,
++      "tau": 0.054
++    },
++    {
++      "eliminated_count": 1213,
++      "informativeness": 1.0,
++      "soundness": 0.0738724727838258,
++      "tau": 0.0531
++    },
++    {
++      "eliminated_count": 1216,
++      "informativeness": 1.0,
++      "soundness": 0.07153965785381022,
++      "tau": 0.0522
++    },
++    {
++      "eliminated_count": 1220,
++      "informativeness": 1.0,
++      "soundness": 0.06842923794712286,
++      "tau": 0.051300000000000005
++    },
++    {
++      "eliminated_count": 1222,
++      "informativeness": 1.0,
++      "soundness": 0.06687402799377917,
++      "tau": 0.0504
++    },
++    {
++      "eliminated_count": 1225,
++      "informativeness": 1.0,
++      "soundness": 0.06454121306376359,
++      "tau": 0.0495
++    },
++    {
++      "eliminated_count": 1230,
++      "informativeness": 1.0,
++      "soundness": 0.06065318818040433,
++      "tau": 0.0486
++    },
++    {
++      "eliminated_count": 1237,
++      "informativeness": 1.0,
++      "soundness": 0.05520995334370138,
++      "tau": 0.0477
++    },
++    {
++      "eliminated_count": 1243,
++      "informativeness": 1.0,
++      "soundness": 0.05054432348367033,
++      "tau": 0.04680000000000001
++    },
++    {
++      "eliminated_count": 1246,
++      "informativeness": 1.0,
++      "soundness": 0.04821150855365475,
++      "tau": 0.0459
++    },
++    {
++      "eliminated_count": 1248,
++      "informativeness": 1.0,
++      "soundness": 0.046656298600311064,
++      "tau": 0.045000000000000005
++    },
++    {
++      "eliminated_count": 1252,
++      "informativeness": 1.0,
++      "soundness": 0.043545878693623585,
++      "tau": 0.0441
++    },
++    {
++      "eliminated_count": 1253,
++      "informativeness": 1.0,
++      "soundness": 0.0427682737169518,
++      "tau": 0.0432
++    },
++    {
++      "eliminated_count": 1256,
++      "informativeness": 1.0,
++      "soundness": 0.04043545878693622,
++      "tau": 0.042300000000000004
++    },
++    {
++      "eliminated_count": 1260,
++      "informativeness": 1.0,
++      "soundness": 0.03732503888024885,
++      "tau": 0.0414
++    },
++    {
++      "eliminated_count": 1263,
++      "informativeness": 1.0,
++      "soundness": 0.03499222395023327,
++      "tau": 0.0405
++    },
++    {
++      "eliminated_count": 1268,
++      "informativeness": 1.0,
++      "soundness": 0.031104199066874005,
++      "tau": 0.039599999999999996
++    },
++    {
++      "eliminated_count": 1269,
++      "informativeness": 1.0,
++      "soundness": 0.03032659409020222,
++      "tau": 0.038700000000000005
++    },
++    {
++      "eliminated_count": 1271,
++      "informativeness": 1.0,
++      "soundness": 0.028771384136858424,
++      "tau": 0.0378
++    },
++    {
++      "eliminated_count": 1275,
++      "informativeness": 1.0,
++      "soundness": 0.025660964230171057,
++      "tau": 0.0369
++    },
++    {
++      "eliminated_count": 1279,
++      "informativeness": 1.0,
++      "soundness": 0.02255054432348369,
++      "tau": 0.036000000000000004
++    },
++    {
++      "eliminated_count": 1282,
++      "informativeness": 1.0,
++      "soundness": 0.02021772939346811,
++      "tau": 0.0351
++    },
++    {
++      "eliminated_count": 1287,
++      "informativeness": 1.0,
++      "soundness": 0.016329704510108844,
++      "tau": 0.0342
++    },
++    {
++      "eliminated_count": 1291,
++      "informativeness": 1.0,
++      "soundness": 0.013219284603421477,
++      "tau": 0.033299999999999996
++    },
++    {
++      "eliminated_count": 1292,
++      "informativeness": 1.0,
++      "soundness": 0.01244167962674958,
++      "tau": 0.032400000000000005
++    },
++    {
++      "eliminated_count": 1295,
++      "informativeness": 1.0,
++      "soundness": 0.01010886469673411,
++      "tau": 0.03150000000000001
++    },
++    {
++      "eliminated_count": 1296,
++      "informativeness": 1.0,
++      "soundness": 0.009331259720062213,
++      "tau": 0.028800000000000003
++    },
++    {
++      "eliminated_count": 1298,
++      "informativeness": 1.0,
++      "soundness": 0.007776049766718529,
++      "tau": 0.0279
++    },
++    {
++      "eliminated_count": 1300,
++      "informativeness": 1.0,
++      "soundness": 0.0062208398133748455,
++      "tau": 0.027
++    },
++    {
++      "eliminated_count": 1301,
++      "informativeness": 1.0,
++      "soundness": 0.005443234836702948,
++      "tau": 0.0216
++    },
++    {
++      "eliminated_count": 1302,
++      "informativeness": 1.0,
++      "soundness": 0.004665629860031051,
++      "tau": 0.0207
++    },
++    {
++      "eliminated_count": 1303,
++      "informativeness": 1.0,
++      "soundness": 0.0038880248833592645,
++      "tau": 0.019799999999999998
++    },
++    {
++      "eliminated_count": 1304,
++      "informativeness": 1.0,
++      "soundness": 0.0031104199066873672,
++      "tau": 0.016200000000000003
++    },
++    {
++      "eliminated_count": 1305,
++      "informativeness": 1.0,
++      "soundness": 0.002332814930015581,
++      "tau": 0.011700000000000002
++    },
++    {
++      "eliminated_count": 1306,
++      "informativeness": 1.0,
++      "soundness": 0.0015552099533436836,
++      "tau": 0.009000000000000001
++    }
++  ],
++  "ensemble_soundness_at_operating_point": 0.99300155521,
++  "ensemble_vs_score_matched_margin": 0.005634645292,
++  "exp3833_script_path": "scripts/experiment_3833_ldt_gap_ensemble_as_sound_lattice.py",
++  "experiment_id": 3865,
++  "false_elimination_rate_at_operating_point": 0.00699844479,
++  "field_principles": {
++    "count_matched_margin_reproduced": "exp3833's 0.010 count-matched margin, reproduced -- anchors the comparison.",
++    "duration_s": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control.",
++    "ensemble_vs_score_matched_margin": "THE sharpened number -- the ensemble's edge over a control that already has its score distribution. Materially >0 => real per-candidate discrimination; ~0 => exp3833's 0.010 was the score distribution, not deductive power.",
++    "honest_verdict": "Terminal prefix records whether the sharpened LDT lattice edge is real, marginal, or blocked without making auditors infer status from metrics.",
++    "inference_substrate": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control.",
++    "informativeness_at_soundness_0_99_reproduced": "Sanity replication of exp3833's 0.59.",
++    "margin_ci95": "Bootstrap CI95 on the margin -- if the lower bound is <=0, the lattice edge is within noise (downgrades exp3833's LATTICE_VIABLE to MARGINAL).",
++    "n_candidates": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control.",
++    "preconditions_checked": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control.",
++    "random_seed": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control.",
++    "reproducibility_checksum": "Adversarial-Verify + Inference-Substrate; verifier-scoring substrate, determinism for the stratified control."
++  },
++  "frozen_fover_auroc_unchanged": true,
++  "honest_verdict": "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.006_ci0.002-0.008_genuine_deductive_power",
++  "inference_substrate": "verifier_ensemble_against_cached_candidates",
++  "informativeness_at_soundness_0_99_reproduced": 0.590909090909,
++  "margin_ci95": [
++    0.002183821363,
++    0.007993519741
++  ],
++  "model_specs": {
++    "live_model_invoked": false,
++    "scoring_path": "carnot.eval.fover_memory_leakage_v3",
++    "uses_cached_candidates_only": true
++  },
++  "n_candidates": 1308,
++  "preconditions_checked": {
++    "corpus_loaded": true,
++    "corpus_path": "data/fover_test_v4.json",
++    "corpus_rows": 1308,
++    "exp3833_script_importable": true,
++    "import_carnot_verify": true,
++    "score_one_candidate": 0.21346666666666667,
++    "score_one_candidate_reproduced": true
++  },
++  "random_control_soundness_at_matched_elimination_count": 0.983180428135,
++  "random_seed": 3865,
++  "repo_root": "/home/ianblenke/github.com/ianblenke/carnot",
++  "reproducibility_checksum": "090a2ede45cc95fad0e5242fe61fa0668288f10c35ffa78dcb071f3f8b038905",
++  "schema": "carnot.ldt_lattice_margin_sharpening_v2",
++  "score_bin_count": 20,
++  "score_matched_bin_summary": [
++    {
++      "bin_id": 0,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 1,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 2,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 3,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 4,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 5,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 6,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 7,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 8,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 9,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 10,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 11,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 12,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 13,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 14,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 15,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 16,
++      "bin_size": 65,
++      "correct_in_bin": 65,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 17,
++      "bin_size": 66,
++      "correct_in_bin": 66,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 18,
++      "bin_size": 65,
++      "correct_in_bin": 60,
++      "ensemble_eliminated_in_bin": 0,
++      "expected_correct_eliminated_by_control": 0.0
++    },
++    {
++      "bin_id": 19,
++      "bin_size": 65,
++      "correct_in_bin": 48,
++      "ensemble_eliminated_in_bin": 22,
++      "expected_correct_eliminated_by_control": 16.246153846153845
++    }
++  ],
++  "score_matched_control_method": "equal-frequency score bins; analytic expectation of uniform random elimination within each bin at the ensemble's per-bin counts",
++  "score_matched_control_soundness": 0.987366909917,
++  "score_one_candidate": {
++    "n_corpus_rows": 1308,
++    "score_one_candidate": 0.21346666666666667
++  },
++  "score_threshold_at_operating_point": 0.985666666667,
++  "source_experiment": "results/experiment_3833_ldt_gap_ensemble_as_sound_lattice.json",
++  "spec": [
++    "REQ-VERIFY-3865",
++    "SCENARIO-VERIFY-3865"
++  ]
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index 1af04b6188..ab0b6147af 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:23:31Z",
+-  "finished_at": "2026-06-05T13:23:31Z",
++  "started_at": "2026-06-05T13:45:52Z",
++  "finished_at": "2026-06-05T13:45:52Z",
+   "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index e06e626304..aa1a6c72ad 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:23:31Z",
+-  "finished_at": "2026-06-05T13:23:31Z",
++  "started_at": "2026-06-05T13:45:52Z",
++  "finished_at": "2026-06-05T13:45:52Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 01e88be22e..f90403ea43 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260605",
+-  "started_at": "2026-06-05T13:23:31Z",
+-  "finished_at": "2026-06-05T13:23:31Z",
+-  "duration_s": 0.002,
++  "started_at": "2026-06-05T13:45:52Z",
++  "finished_at": "2026-06-05T13:45:52Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py b/scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py
+new file mode 100644
+index 0000000000..afa9607376
+--- /dev/null
++++ b/scripts/experiments/experiment_3865_ldt_lattice_margin_sharpening_v2.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++"""Run Exp 3865 LDT lattice margin sharpening.
++
++Spec refs: REQ-VERIFY-3865, SCENARIO-VERIFY-3865.
++"""
++
++from __future__ import annotations
++
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[2]
++PYTHON_DIR = REPO_ROOT / "python"
++if str(PYTHON_DIR) not in sys.path:
++    sys.path.insert(0, str(PYTHON_DIR))
++
++from carnot.verify.ldt_lattice_margin_sharpening_v2 import write_artifact
++
++
++if __name__ == "__main__":  # pragma: no cover
++    write_artifact(REPO_ROOT)
+diff --git a/tests/python/test_experiment_3865_ldt_lattice_margin_sharpening_v2.py b/tests/python/test_experiment_3865_ldt_lattice_margin_sharpening_v2.py
+new file mode 100644
+index 0000000000..31366162a9
+--- /dev/null
++++ b/tests/python/test_experiment_3865_ldt_lattice_margin_sharpening_v2.py
+@@ -0,0 +1,410 @@
++"""Tests for Exp 3865 LDT lattice margin sharpening.
++
++Spec refs: REQ-VERIFY-3865, SCENARIO-VERIFY-3865.
++"""
++
++from __future__ import annotations
++
++import json
++import importlib
++from pathlib import Path
++
++import numpy as np
++import pytest
++
++from carnot.verify import ldt_lattice_margin_sharpening_v2 as exp3865
++
++
++SPEC_PATH = Path("openspec/capabilities/verifiable-reasoning/spec.md")
++
++
++def _margin_fixture(repeats: int = 1) -> tuple[list[float], list[int]]:
++    scores = [0.99, 0.98, 0.97, 0.96, 0.20, 0.10, 0.05, 0.01] * repeats
++    labels = [0, 0, 1, 0, 1, 1, 1, 0] * repeats
++    return scores, labels
++
++
++def test_req_verify_3865_spec_declares_score_matched_contract() -> None:
++    """REQ-VERIFY-3865: OpenSpec declares the score-matched margin contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++
++    assert "REQ-VERIFY-3865" in spec
++    assert "SCENARIO-VERIFY-3865" in spec
++    assert "score-matched random control" in spec
++    assert "at least 1000 bootstrap resamples" in spec
++
++
++def test_scenario_verify_3865_score_matched_control_uses_per_bin_counts() -> None:
++    """SCENARIO-VERIFY-3865: score matching preserves bin counts but randomizes within bins."""
++
++    scores, labels = _margin_fixture()
++    curve = exp3865.compute_soundness_curve(scores, labels)
++    result = exp3865.compute_margin(
++        scores,
++        labels,
++        n_score_bins=2,
++        bootstrap_resamples=1000,
++        random_seed=3865,
++    )
++
++    assert curve.best_operating_point.soundness == pytest.approx(1.0)
++    assert curve.best_operating_point.informativeness == pytest.approx(0.5)
++    assert curve.count_matched_margin == pytest.approx(0.25)
++    assert result.score_matched_control_soundness == pytest.approx(0.875)
++    assert result.ensemble_vs_score_matched_margin == pytest.approx(0.125)
++    assert result.bootstrap_resamples == 1000
++    assert len(result.bootstrap_margins) == 1000
++    assert result.margin_ci95[0] <= result.margin_ci95[1]
++
++
++def test_req_verify_3865_artifact_schema_and_real_verdict(tmp_path: Path) -> None:
++    """REQ-VERIFY-3865: artifact includes required fields and principle notes."""
++
++    scores, labels = _margin_fixture(repeats=100)
++    artifact = exp3865.build_artifact_from_scores(
++        scores,
++        labels,
++        started_s=10.0,
++        now_s=12.5,
++        repo_root=tmp_path,
++        preconditions_checked={
++            "import_carnot_verify": True,
++            "corpus_loaded": True,
++            "exp3833_script_importable": True,
++            "score_one_candidate_reproduced": True,
++        },
++        n_score_bins=2,
++        bootstrap_resamples=1000,
++        random_seed=3865,
++    )
++
++    exp3865.validate_artifact(artifact)
++    assert set(exp3865.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3865.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["honest_verdict"].startswith(
++        "complete: ldt_margin_LATTICE_REAL_scorematched_margin0.125"
++    )
++    assert artifact["ensemble_vs_score_matched_margin"] == pytest.approx(0.125)
++    assert artifact["margin_ci95"][0] > 0.0
++    assert artifact["informativeness_at_soundness_0_99_reproduced"] == pytest.approx(0.5)
++    assert artifact["count_matched_margin_reproduced"] == pytest.approx(0.25)
++    assert artifact["n_candidates"] == 800
++    assert artifact["duration_s"] == pytest.approx(2.5)
++    assert artifact["inference_substrate"] == exp3865.INFERENCE_SUBSTRATE
++    assert artifact["frozen_fover_auroc_unchanged"] is True
++    assert artifact["model_specs"]["live_model_invoked"] is False
++    assert (
++        "THE sharpened number" in artifact["field_principles"]["ensemble_vs_score_matched_margin"]
++    )
++
++
++def test_req_verify_3865_marginal_verdict_when_ci_includes_zero(tmp_path: Path) -> None:
++    """REQ-VERIFY-3865: CI lower bound gates marginal versus real lattice edge."""
++
++    scores = [0.99, 0.98, 0.97, 0.96, 0.20, 0.10, 0.05, 0.01]
++    labels = [0, 0, 0, 0, 1, 1, 1, 1]
++    artifact = exp3865.build_artifact_from_scores(
++        scores,
++        labels,
++        started_s=1.0,
++        now_s=1.1,
++        repo_root=tmp_path,
++        preconditions_checked={"all": True},
++        n_score_bins=2,
++        bootstrap_resamples=1000,
++        random_seed=3865,
++    )
++
++    exp3865.validate_artifact(artifact)
++    assert artifact["margin_ci95"][0] <= 0.0
++    assert artifact["honest_verdict"].startswith(
++        "complete: ldt_margin_LATTICE_MARGINAL_scorematched_margin"
++    )
++    assert "ci_includes_zero_edge_is_score_dist_not_deductive" in artifact["honest_verdict"]
++
++
++def test_req_verify_3865_blocked_and_validation_guards(tmp_path: Path) -> None:
++    """REQ-VERIFY-3865: blocked artifacts and schema validation fail closed."""
++
++    blocked = exp3865.build_blocked_artifact(
++        "blocked_score_candidate_failed",
++        started_s=3.0,
++        now_s=3.4,
++        preconditions_checked={"score_one_candidate_reproduced": False},
++    )
++
++    exp3865.validate_artifact(blocked)
++    assert blocked["honest_verdict"] == "blocked_score_candidate_failed"
++    assert blocked["ensemble_vs_score_matched_margin"] is None
++
++    scores, labels = _margin_fixture()
++    good = exp3865.build_artifact_from_scores(
++        scores,
++        labels,
++        started_s=0.0,
++        now_s=0.2,
++        repo_root=tmp_path,
++        preconditions_checked={"all": True},
++        n_score_bins=2,
++        bootstrap_resamples=1000,
++        random_seed=3865,
++    )
++    with pytest.raises(ValueError, match="missing required artifact fields"):
++        bad = dict(good)
++        bad.pop("honest_verdict")
++        exp3865.validate_artifact(bad)
++    with pytest.raises(ValueError, match="field_principles"):
++        exp3865.validate_artifact(dict(good, field_principles={}))
++    with pytest.raises(ValueError, match="inference_substrate"):
++        exp3865.validate_artifact(dict(good, inference_substrate="live_llm_inference"))
++    with pytest.raises(ValueError, match="margin_ci95"):
++        exp3865.validate_artifact(dict(good, margin_ci95=[0.1]))
++    with pytest.raises(ValueError, match="bootstrap_resamples"):
++        exp3865.compute_margin(scores, labels, n_score_bins=2, bootstrap_resamples=999)
++    with pytest.raises(ValueError, match="binary labels"):
++        exp3865.compute_soundness_curve(scores, [0, 1, 2, 0, 1, 0, 1, 0])
++    with pytest.raises(ValueError, match="one-dimensional"):
++        exp3865.compute_soundness_curve([[0.1]], [[1]])
++    with pytest.raises(ValueError, match="same length"):
++        exp3865.compute_soundness_curve([0.1], [1, 0])
++    with pytest.raises(ValueError, match="non-empty"):
++        exp3865.compute_soundness_curve([], [])
++    with pytest.raises(ValueError, match="finite"):
++        exp3865.compute_soundness_curve([float("nan")], [1])
++    with pytest.raises(ValueError, match="n_score_bins"):
++        exp3865.score_bin_ids(scores, 0)
++    with pytest.raises(ValueError, match="non-empty"):
++        exp3865.score_bin_ids([], 2)
++    with pytest.raises(ValueError, match="same length"):
++        exp3865.score_matched_control_soundness([1], [True, False], [0])
++    with pytest.raises(ValueError, match="field_principles"):
++        exp3865.validate_artifact(dict(good, field_principles=None))
++    with pytest.raises(ValueError, match="terminal prefix"):
++        exp3865.validate_artifact(dict(good, honest_verdict="pending"))
++    with pytest.raises(ValueError, match="duration_s"):
++        exp3865.validate_artifact(dict(good, duration_s=-1.0))
++    with pytest.raises(ValueError, match="preconditions_checked"):
++        exp3865.validate_artifact(dict(good, preconditions_checked=[]))
++    with pytest.raises(ValueError, match="bootstrap_resamples"):
++        exp3865.validate_artifact(dict(good, bootstrap_resamples=999))
++    with pytest.raises(ValueError, match="n_candidates"):
++        exp3865.validate_artifact(dict(good, n_candidates=0))
++    with pytest.raises(ValueError, match="reproducibility_checksum"):
++        exp3865.validate_artifact(dict(good, reproducibility_checksum="bad"))
++    with pytest.raises(ValueError, match="LATTICE_REAL"):
++        exp3865.validate_artifact(
++            dict(
++                good,
++                margin_ci95=[0.1, 0.2],
++                honest_verdict="complete: wrong_LATTICE_MARGINAL",
++            )
++        )
++    with pytest.raises(ValueError, match="LATTICE_MARGINAL"):
++        exp3865.validate_artifact(
++            dict(
++                good,
++                margin_ci95=[0.0, 0.1],
++                honest_verdict="complete: wrong_LATTICE_REAL",
++            )
++        )
++
++
++def test_req_verify_3865_write_artifact_uses_cached_scores(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-3865: runnable path checks preconditions and writes JSON."""
++
++    scores, labels = _margin_fixture()
++    monkeypatch.setattr(
++        exp3865,
++        "load_and_score_cached_candidates",
++        lambda repo_root: (scores, labels, {"score_one_candidate": 0.99}),
++    )
++    monkeypatch.setattr(
++        exp3865,
++        "check_preconditions",
++        lambda repo_root: exp3865.PreconditionResult(
++            blocked_reason=None,
++            checks={
++                "import_carnot_verify": True,
++                "corpus_loaded": True,
++                "exp3833_script_importable": True,
++                "score_one_candidate_reproduced": True,
++            },
++        ),
++    )
++
++    output = exp3865.write_artifact(
++        tmp_path,
++        output_path="results/out.json",
++        started_s=0.0,
++        now_s=0.3,
++        n_score_bins=2,
++        bootstrap_resamples=1000,
++        random_seed=3865,
++    )
++    saved = json.loads(output.read_text(encoding="utf-8"))
++
++    exp3865.validate_artifact(saved)
++    assert output == tmp_path / "results/out.json"
++    assert saved["n_candidates"] == 8
++    assert saved["score_one_candidate"] == {"score_one_candidate": 0.99}
++
++
++def test_req_verify_3865_preconditions_and_cached_scoring(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-3865: preconditions prove the corpus, script, and scoring substrate."""
++
++    data_dir = tmp_path / "data"
++    scripts_dir = tmp_path / "scripts"
++    data_dir.mkdir()
++    scripts_dir.mkdir()
++    rows = [
++        {"question_id": "q1", "step_text": "first", "label": "correct"},
++        {"question_id": "q2", "step_text": "second", "label": "incorrect"},
++    ]
++    (data_dir / "fover_test_v4.json").write_text(json.dumps(rows), encoding="utf-8")
++    (scripts_dir / "experiment_3833_ldt_gap_ensemble_as_sound_lattice.py").write_text(
++        "VALUE = 3833\n",
++        encoding="utf-8",
++    )
++
++    monkeypatch.setattr(exp3865, "score_candidate_rows", lambda corpus, root: [0.42])
++    preconditions = exp3865.check_preconditions(tmp_path)
++
++    assert preconditions.blocked_reason is None
++    assert preconditions.checks["import_carnot_verify"] is True
++    assert preconditions.checks["corpus_rows"] == 2
++    assert preconditions.checks["score_one_candidate"] == 0.42
++    assert exp3865.import_exp3833_script(tmp_path).VALUE == 3833
++    assert exp3865._label_to_correct_int(rows[0]) == 1
++    assert exp3865._label_to_correct_int(rows[1]) == 0
++
++    monkeypatch.setattr(exp3865, "score_candidate_rows", lambda corpus, root: [0.7, 0.2])
++    scores, labels, metadata = exp3865.load_and_score_cached_candidates(tmp_path)
++    assert scores == [0.7, 0.2]
++    assert labels == [1, 0]
++    assert metadata == {"score_one_candidate": 0.7, "n_corpus_rows": 2}
++
++
++def test_req_verify_3865_blocked_precondition_paths(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-3865: setup failures return blocked_resource verdicts."""
++
++    original_import_module = importlib.import_module
++
++    def _raise_verify_import(name: str) -> object:
++        if name == "carnot.verify":
++            raise ImportError("missing verify")
++        return original_import_module(name)
++
++    monkeypatch.setattr(exp3865.importlib, "import_module", _raise_verify_import)
++    assert exp3865.check_preconditions(tmp_path).blocked_reason == "blocked_verify_module_import"
++
++    monkeypatch.setattr(exp3865.importlib, "import_module", original_import_module)
++    assert exp3865.check_preconditions(tmp_path).blocked_reason == "blocked_fover_test_v4_corpus"
++
++    data_dir = tmp_path / "data"
++    data_dir.mkdir(exist_ok=True)
++    (data_dir / "fover_test_v4.json").write_text(
++        json.dumps([{"question_id": "q", "step_text": "t", "label": "correct"}]),
++        encoding="utf-8",
++    )
++    assert exp3865.check_preconditions(tmp_path).blocked_reason == "blocked_exp3833_script"
++
++    scripts_dir = tmp_path / "scripts"
++    scripts_dir.mkdir()
++    (scripts_dir / "experiment_3833_ldt_gap_ensemble_as_sound_lattice.py").write_text(
++        "VALUE = 3833\n",
++        encoding="utf-8",
++    )
++
++    monkeypatch.setattr(exp3865, "score_candidate_rows", lambda corpus, root: [float("nan")])
++    assert exp3865.check_preconditions(tmp_path).blocked_reason == "blocked_score_candidate_failed"
++
++    monkeypatch.setattr(
++        exp3865, "score_candidate_rows", lambda corpus, root: (_ for _ in ()).throw(ValueError("x"))
++    )
++    assert exp3865.check_preconditions(tmp_path).blocked_reason == "blocked_score_candidate_failed"
++
++    monkeypatch.setattr(exp3865.importlib.util, "spec_from_file_location", lambda name, path: None)
++    with pytest.raises(ImportError, match="cannot import"):
++        exp3865.import_exp3833_script(tmp_path)
++
++
++def test_req_verify_3865_corpus_and_scorer_branches(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-3865: cached scorer follows Exp 3833 architecture plus memory formula."""
++
++    data_dir = tmp_path / "data"
++    data_dir.mkdir()
++    (data_dir / "fover_test_v4.json").write_text("{}", encoding="utf-8")
++    with pytest.raises(ValueError, match="non-empty JSON list"):
++        exp3865._load_corpus(tmp_path)
++    (data_dir / "fover_test_v4.json").write_text(json.dumps([{"bad": "row"}]), encoding="utf-8")
++    with pytest.raises(ValueError, match="question_id"):
++        exp3865._load_corpus(tmp_path)
++
++    from carnot.eval import fover_memory_leakage_v3 as fover
++
++    rows = [{"step_text": "a"}, {"step_text": "b"}]
++    monkeypatch.setattr(
++        fover,
++        "_score_text_verifiers",
++        lambda texts: {
++            "tier0r_curry_howard": [0.2, 0.4],
++            "tier0u_logical_consistency": [0.6, 0.8],
++        },
++    )
++    monkeypatch.setattr(
++        fover,
++        "_load_fr11_memory_index",
++        lambda root: {"question_ids": set(), "prompt_token_sets": []},
++    )
++    assert exp3865.score_candidate_rows(rows, tmp_path) == pytest.approx([0.24, 0.44])
++
++    monkeypatch.setattr(
++        fover,
++        "_load_fr11_memory_index",
++        lambda root: {"question_ids": {"q"}, "prompt_token_sets": []},
++    )
++    monkeypatch.setattr(fover, "_fr11_memory_score", lambda row, index: 0.5)
++    monkeypatch.setattr(fover, "FR11_MEMORY_BOOST", 2.0)
++    assert exp3865.score_candidate_rows(rows, tmp_path) == pytest.approx([1.24, 1.44])
++
++
++def test_req_verify_3865_blocked_write_and_main(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++) -> None:
++    """REQ-VERIFY-3865: blocked runnable path still writes terminal JSON."""
++
++    monkeypatch.setattr(
++        exp3865,
++        "check_preconditions",
++        lambda repo_root: exp3865.PreconditionResult(
++            blocked_reason="blocked_score_candidate_failed",
++            checks={"score_one_candidate_reproduced": False},
++        ),
++    )
++    output = exp3865.write_artifact(
++        tmp_path,
++        output_path=tmp_path / "blocked.json",
++        started_s=4.0,
++        now_s=4.5,
++    )
++    saved = json.loads(output.read_text(encoding="utf-8"))
++    exp3865.validate_artifact(saved)
++    assert saved["honest_verdict"] == "blocked_score_candidate_failed"
++    assert saved["duration_s"] == pytest.approx(0.5)
++
++    monkeypatch.setattr(exp3865, "write_artifact", lambda repo_root: Path("main.json"))
++    assert exp3865.main() == Path("main.json")
+-- 
+2.55.0
+

@@ -1,0 +1,88 @@
+From f89d3690a5fc7306b66d4b5baa7f504ed20b7dd5 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 5 Jun 2026 12:33:57 -0400
+Subject: [PATCH 00662/11171] =?UTF-8?q?[conductor]=20Pre-gate=20block:=20E?=
+ =?UTF-8?q?BT=20System-2=20diagnostic=20(gated=20on=20exp3871=20positive?=
+ =?UTF-8?q?=5Fcontrol=5Fpassed):=20on=20the=20SAME=20confirmed-headroom=20?=
+ =?UTF-8?q?checkpoint,=20does=20held-out=20generation=20accuracy=20improve?=
+ =?UTF-8?q?=20MONOTONICALLY=20as=20the=20energy-descent=20budget=20K=20gro?=
+ =?UTF-8?q?ws=20(1,2,4,8,16=20steps)=3F=20Tests=20the=20core=20EBT=20'thin?=
+ =?UTF-8?q?king=20=3D=20optimization'=20claim=20=E2=80=94=20monotone=20gai?=
+ =?UTF-8?q?n=20=3D>=20thinking=20helps;=20flat/degrading=20=3D>=20the=20la?=
+ =?UTF-8?q?ndscape=20gives=20no=20usable=20descent=20signal=20at=20this=20?=
+ =?UTF-8?q?scale.?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed.positive_control_passed (actual=False == expected=True)
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json                  |  2 +-
+ ops/conductor-log.md                          |  1 +
+ ops/conductor-state.json                      |  2 +-
+ ...ebt_energy_descent_system2_diagnostic.json | 24 +++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 13fee9fbe8..602d1a2eb4 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 60, "phase": "iteration_start", "last_beat": "2026-06-05T16:19:27Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 61, "phase": "iteration_start", "last_beat": "2026-06-05T16:33:56Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 04798357fd..f1b3bcd6f2 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7891,3 +7891,4 @@ ERROR: {
+ | 2026-06-05 16:01 UTC | Plan milestone 2026.06.358 | OK | 11 tasks proposed |
+ | 2026-06-05 16:03 UTC | Milestone 2026.06.358 activated | OK | 11 tasks queued |
+ | 2026-06-05 16:17 UTC | Archive .357 -> activate .358; backend routing dia | OK | 104 passed in 5.30s |
++| 2026-06-05 16:31 UTC | THESIS-A PART-(b) DT-P1 ADJUDICATION on a CONFIRME | OK | 87 passed in 6.06s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index bdbdac9e3d..351dcf82a7 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 107057, "iteration": 60, "phase": "iteration_start", "started_at": "2026-06-05T16:19:27Z"}
+\ No newline at end of file
++{"pid": 107057, "iteration": 61, "phase": "iteration_start", "started_at": "2026-06-05T16:33:56Z"}
+\ No newline at end of file
+diff --git a/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json b/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+new file mode 100644
+index 0000000000..626b5f5a3c
+--- /dev/null
++++ b/results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+@@ -0,0 +1,24 @@
++{
++  "experiment": 3872,
++  "schema": "blocked_gate_check_v1",
++  "run_date": "2026-06-05",
++  "started_at": "2026-06-05T16:33:56.647066+00:00",
++  "finished_at": "2026-06-05T16:33:56.647066+00:00",
++  "duration_s": 0.0,
++  "status": "blocked",
++  "title": "EBT System-2 diagnostic (gated on exp3871 positive_control_passed): on the SAME confirmed-headroom checkpoint, does held-out generation accuracy improve MONOTONICALLY as the energy-descent budget K grows (1,2,4,8,16 steps)? Tests the core EBT 'thinking = optimization' claim \u2014 monotone gain => thinking helps; flat/degrading => the landscape gives no usable descent signal at this scale.",
++  "honest_verdict": "blocked_gate_check_failed",
++  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed.positive_control_passed (actual=False == expected=True)",
++  "gates_evaluated": [
++    {
++      "upstream": "exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed",
++      "artifact_field": "positive_control_passed",
++      "op": "==",
++      "expected": true,
++      "actual": false,
++      "passed": false,
++      "reason": "actual=False == expected=True"
++    }
++  ],
++  "blocked_at_layer": "conductor_pre_gate"
++}
+-- 
+2.55.0
+

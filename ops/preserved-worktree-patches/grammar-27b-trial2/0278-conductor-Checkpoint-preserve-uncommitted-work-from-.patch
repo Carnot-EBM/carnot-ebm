@@ -1,0 +1,43 @@
+From d149de476ed8502e61d16763adb7576729b22cfd Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 09:05:39 -0400
+Subject: [PATCH 00278/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index cfb08db3e2..26a275adfa 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-03T13:03:24Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-06-03T13:05:37Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index c2050e4180..fe7b58510d 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7689,3 +7689,4 @@ ERROR: {
+ | 2026-06-03 12:56 UTC | Reconcile the DEFINITIVE Thesis-A close into the r | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.71s |
+ | 2026-06-03 12:59 UTC | G2 mechanical reproducer: commit a standalone, dep | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.72s |
+ | 2026-06-03 13:01 UTC | G2 mechanical reproducer: commit a standalone, dep | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.49s |
++| 2026-06-03 13:03 UTC | G2 mechanical reproducer: commit a standalone, dep | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.23s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index a4c0ef64f6..ea47433ec9 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-03T13:03:24Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 12, "phase": "iteration_start", "started_at": "2026-06-03T13:05:37Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

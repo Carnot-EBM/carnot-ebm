@@ -1,0 +1,1507 @@
+From f8f4d0d0f7b2d33acc2dd9970797c6d245c39f60 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 11:58:30 -0400
+Subject: [PATCH 00308/11171] [conductor] Archive milestone .344 HONESTLY (it
+ produced ZERO completed experiments -- a malformed-YAML poison in
+ research-complete.yaml SKIP-cascaded the whole milestone per
+ operational_retro_2026_06_344.json; only exp3762/3763/3764 left partial
+ artifacts, the substantive exp3754-3761 never ran) and activate .345
+ (PRODUCT-BANKING RECOVERY: re-execute the un-landed .344 agenda -- reconcile
+ the definitive Thesis-A close, mechanize the publication gates, bank the
+ verifier toward Phase-1 ship + a certified abstention point, continue
+ self-learning).
+
+Automated research step by research conductor.
+Task ID: exp3765-archive-v344-activate-v345
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ .../capabilities/research-reporting/spec.md   |  47 ++
+ ops/dogfood-memory.json                       |   2 +-
+ .../archive_v344_activate_v345_3765.py        | 588 ++++++++++++++++++
+ research-complete.yaml                        |  99 +--
+ results/experiment_1717_findings_audit.json   |   8 +-
+ ...xperiment_1796_findings_audit_186_187.json |   8 +-
+ results/experiment_1869_hiled.json            |   2 +-
+ ...experiment_2754_empirical_delta_audit.json |   2 +-
+ ...periment_3350_kv260_latency_benchmark.json |   2 +-
+ ...iment_3765_archive_v344_activate_v345.json | 105 ++++
+ results/experiment_625_tier1_fr11_relay.json  |   6 +-
+ results/experiment_638_tier1_fr11_relay.json  |   4 +-
+ results/experiment_645_tier1_fr11_relay.json  |   6 +-
+ ...eriment_3765_archive_v344_activate_v345.py |  28 +
+ ...eriment_3765_archive_v344_activate_v345.py | 380 +++++++++++
+ 15 files changed, 1192 insertions(+), 95 deletions(-)
+ create mode 100644 python/carnot/reporting/archive_v344_activate_v345_3765.py
+ create mode 100644 results/experiment_3765_archive_v344_activate_v345.json
+ create mode 100644 scripts/experiment_3765_archive_v344_activate_v345.py
+ create mode 100644 tests/python/test_experiment_3765_archive_v344_activate_v345.py
+
+diff --git a/openspec/capabilities/research-reporting/spec.md b/openspec/capabilities/research-reporting/spec.md
+index 62025145de..7fc3eb31df 100644
+--- a/openspec/capabilities/research-reporting/spec.md
++++ b/openspec/capabilities/research-reporting/spec.md
+@@ -16538,3 +16538,50 @@ rather than fabricating the flagged result.
+ | Requirement | Implementation | Tests |
+ |---|---|---|
+ | REQ-REPORT-3764 | Planned (`python/carnot/reporting/capstone_v344_thesis_a_closed_3764.py`, `scripts/experiment_3764_capstone_v344.py`) | Planned (`tests/python/test_experiment_3764_capstone_v344.py`) |
++
++### REQ-REPORT-3765: Archive V344 Skip Cascade And Activate V345 Recovery
++
++The Exp 3765 workflow SHALL archive milestone `2026.06.344` honestly in
++`research-complete.yaml` and confirm milestone `2026.06.345` is active in the
++current roadmap. The archive SHALL record that `.344` produced zero completed
++experiments, that the whole milestone was skipped by a malformed
++`research-complete.yaml` value with an unquoted embedded colon, that the
++malformed YAML raised `yaml.ScannerError` and failed `test_public_docs_*` in the
++conductor pre-test gate, and that the un-landed `.344` agenda is carried into
++`.345` as recovery work rather than as a research negative.
++
++The workflow SHALL replace any generic `.344` conductor archive entry rather
++than duplicating it. Every string value written to `research-complete.yaml` that
++contains a colon SHALL be quoted so a safe-load parse succeeds after the write.
++It SHALL leave `scripts/research_conductor.py`, `ops/north-star.md`,
++`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
++
++The terminal artifact SHALL be written to
++`results/experiment_3765_archive_v344_activate_v345.json` and SHALL include bare
++top-level values for `honest_verdict`, `inference_substrate`,
++`v344_outcome_recorded`, `v344_skip_cause_recorded`, `v345_focus_recorded`,
++`research_complete_yaml_parses`, `paper_ready_preserved`, `n_tasks_archived`,
++`adversarial_verify_clean`, `random_seed`, `reproducibility_checksum`, and
++`duration_s`, plus `field_principles` documenting why each required value
++exists. `inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`
++and the artifact SHALL NOT contain `model_specs` or `target_model`. The terminal
++verdict SHALL equal
++`complete: archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_paper_ready_true_frozen_headline_unchanged`.
++
++#### SCENARIO-REPORT-3765: V344 Archive Records Zero Completed Experiments
++
++**Given** the `.344` operational retro reports zero completed experiments, the
++partial `.344` capstone reports missing Exp 3754 through Exp 3761 and cites only
++the partial Exp 3762 through Exp 3764 record, and the active roadmap is `.345`
++recovery
++**When** the Exp 3765 workflow runs
++**Then** it rewrites the `.344` research-complete entry as a single honest
++skip-cascade archive with 11 tasks, quotes colon-containing YAML values, confirms
++`research-complete.yaml` safe-loads, writes the required aggregation-only
++artifact, and passes adversarial verification with no critical flag.
++
++## Implementation Status (REQ-REPORT-3765)
++
++| Requirement | Implementation | Tests |
++|---|---|---|
++| REQ-REPORT-3765 | Implemented (`python/carnot/reporting/archive_v344_activate_v345_3765.py`, `scripts/experiment_3765_archive_v344_activate_v345.py`) | Implemented (`tests/python/test_experiment_3765_archive_v344_activate_v345.py`) |
+diff --git a/ops/dogfood-memory.json b/ops/dogfood-memory.json
+index 3a10ac0516..b47715ada5 100644
+--- a/ops/dogfood-memory.json
++++ b/ops/dogfood-memory.json
+@@ -2,7 +2,7 @@
+   "patterns": {},
+   "brace_fixes": 143,
+   "code_violations": 0,
+-  "experiments_checked": 2869,
++  "experiments_checked": 2870,
+   "z3_violations": 0,
+   "llm_violations": 0,
+   "brace_fix_tasks": [
+diff --git a/python/carnot/reporting/archive_v344_activate_v345_3765.py b/python/carnot/reporting/archive_v344_activate_v345_3765.py
+new file mode 100644
+index 0000000000..d5ce3f53c3
+--- /dev/null
++++ b/python/carnot/reporting/archive_v344_activate_v345_3765.py
+@@ -0,0 +1,588 @@
++"""Archive milestone .344's SKIP cascade and confirm milestone .345 is active.
++
++Spec refs: REQ-REPORT-3765, SCENARIO-REPORT-3765.
++"""
++
++from __future__ import annotations
++
++from collections.abc import Mapping
++import hashlib
++import json
++from pathlib import Path
++import time
++from typing import Any
++
++import yaml
++
++from scripts import adversarial_verify
++
++
++JsonDict = dict[str, Any]
++
++REPO_ROOT = Path(__file__).resolve().parents[3]
++ARCHIVED_MILESTONE = "2026.06.344"
++ACTIVATED_MILESTONE = "2026.06.345"
++RANDOM_SEED = 3765
++OUTPUT_REL_PATH = Path("results/experiment_3765_archive_v344_activate_v345.json")
++RESEARCH_COMPLETE_REL_PATH = Path("research-complete.yaml")
++ROADMAP_REL_PATH = Path("research-roadmap.yaml")
++ROADMAP_NEXT_REL_PATH = Path("research-roadmap-next.yaml")
++ROADMAP_DESIGN_REL_PATH = Path("openspec/change-proposals/research-roadmap-vNEXT.md")
++RETRO_REL_PATH = Path("results/operational_retro_2026_06_344.json")
++CAPSTONE_REL_PATH = Path("results/experiment_3764_capstone_v344.json")
++CONDUCTOR_REL_PATH = Path("scripts/research_conductor.py")
++NORTH_STAR_REL_PATH = Path("ops/north-star.md")
++
++INFERENCE_SUBSTRATE = "aggregation_from_upstream_artifacts"
++TERMINAL_VERDICT = (
++    "complete: "
++    "archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_"
++    "paper_ready_true_frozen_headline_unchanged"
++)
++V344_OUTCOME_RECORDED = (
++    "zero_completed_experiments_whole_milestone_skip_cascade_agenda_carried_to_v345"
++)
++V344_SKIP_CAUSE_RECORDED = (
++    "unquoted_embedded_colon_yaml_scannererror_test_public_docs_failed_skip_cascade"
++)
++V345_FOCUS_RECORDED = (
++    "reexecute_unlanded_v344_agenda_reconcile_mechanize_gates_bank_verifier_"
++    "certified_abstention_self_learning_prm_positioning"
++)
++UNLANDED_V344_AGENDA = [f"exp{experiment_id}" for experiment_id in range(3754, 3762)]
++PARTIAL_ARTIFACTS = ["exp3762", "exp3763", "exp3764"]
++
++REQUIRED_ARTIFACT_FIELDS = (
++    "honest_verdict",
++    "inference_substrate",
++    "v344_outcome_recorded",
++    "v344_skip_cause_recorded",
++    "v345_focus_recorded",
++    "research_complete_yaml_parses",
++    "paper_ready_preserved",
++    "n_tasks_archived",
++    "adversarial_verify_clean",
++    "random_seed",
++    "reproducibility_checksum",
++    "duration_s",
++)
++
++FIELD_PRINCIPLES = {
++    "honest_verdict": (
++        "Terminal prefix lets the reconciler classify the transition complete "
++        "without re-running it."
++    ),
++    "inference_substrate": (
++        "JSON-read + format; 0.0001s floor; no compute-bound marker so it does "
++        "not false-flag."
++    ),
++    "v344_outcome_recorded": (
++        "Records .344's REAL state: 0 completed experiments, whole-milestone "
++        "SKIP cascade from a malformed-YAML poison; the agenda carried into .345."
++    ),
++    "v344_skip_cause_recorded": (
++        "Records the ROOT CAUSE (unquoted embedded colon -> yaml.ScannerError -> "
++        "test_public_docs_* failed -> SKIP cascade) so a future planner does not "
++        "mis-read .344 as a research negative."
++    ),
++    "v345_focus_recorded": (
++        "Records the .345 pivot: re-execute the un-landed .344 agenda "
++        "(reconcile + mechanize-gates + bank-verifier + certified-abstention + "
++        "self-learning + PRM-positioning)."
++    ),
++    "research_complete_yaml_parses": (
++        "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads "
++        "after the write."
++    ),
++    "paper_ready_preserved": (
++        "G1-G4 stay met; the transition must not silently regress paper_ready; "
++        "frozen headline 0.9131 stays frozen."
++    ),
++    "n_tasks_archived": (
++        "Sample-size hygiene -- confirms the full milestone was archived, not a partial."
++    ),
++    "adversarial_verify_clean": (
++        "True iff the artifact passes adversarial_verify with no critical flag."
++    ),
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++}
++
++V344_TASKS = [
++    {
++        "id": "exp3754-archive-v343-activate-v344",
++        "title": "Archive .343 and activate .344",
++        "deliverable": "results/experiment_3754_archive_v343_activate_v344.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: YAML poison stopped the conductor before this "
++            "archive task ran; carried into .345 as exp3765"
++        ),
++    },
++    {
++        "id": "exp3755-thesis-a-definitive-reconcile",
++        "title": "Thesis-A definitive reconcile",
++        "deliverable": "results/experiment_3755_thesis_a_definitive_reconcile.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: substantive Thesis-A reconcile never ran; "
++            "carried into .345 as exp3766"
++        ),
++    },
++    {
++        "id": "exp3756-g2-mechanical-reproducer",
++        "title": "G2 mechanical reproducer",
++        "deliverable": "results/experiment_3756_g2_mechanical_reproducer.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: local FoVer reproducer never ran; carried "
++            "into .345 as exp3767"
++        ),
++    },
++    {
++        "id": "exp3757-g3-narrowing-lint",
++        "title": "G3 narrowing lint",
++        "deliverable": "results/experiment_3757_g3_narrowing_lint.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: narrowing lint extension never ran; carried "
++            "into .345 as exp3768"
++        ),
++    },
++    {
++        "id": "exp3758-package-cli-mcp-e2e-smoke",
++        "title": "Package CLI MCP E2E smoke",
++        "deliverable": "results/experiment_3758_package_cli_mcp_e2e_smoke.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: package CLI MCP smoke never ran; carried "
++            "into .345 as exp3769"
++        ),
++    },
++    {
++        "id": "exp3759-distribution-mirror-publish-checklist",
++        "title": "Distribution mirror and operator publish checklist",
++        "deliverable": "results/experiment_3759_distribution_mirror_publish_checklist.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: distribution mirror checklist never ran; "
++            "carried into .345 as exp3770"
++        ),
++    },
++    {
++        "id": "exp3760-certified-abstention-operating-point",
++        "title": "Certified abstention operating point",
++        "deliverable": "results/experiment_3760_certified_abstention_operating_point.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: certified abstention point never ran; carried "
++            "into .345 as exp3771"
++        ),
++    },
++    {
++        "id": "exp3761-fr11-self-learning-v17-verifier-precision-tracker",
++        "title": "FR-11 v17 verifier precision tracker",
++        "deliverable": "results/experiment_3761_fr11_self_learning_v17_verifier_precision_tracker.json",
++        "result": (
++            "SKIPPED_BY_PRETEST_GATE: FR-11 verifier precision tracker never ran; "
++            "carried into .345 as exp3772"
++        ),
++    },
++    {
++        "id": "exp3762-kv260-opportunistic-continuity-audit",
++        "title": "KV260 opportunistic continuity audit",
++        "deliverable": "results/experiment_3762_kv260_opportunistic_continuity_audit.json",
++        "result": (
++            "PARTIAL_ARTIFACT: KV260 audit artifact exists, but the .344 retro still "
++            "records zero completed experiments under the cascade"
++        ),
++    },
++    {
++        "id": "exp3763-next-phase3-thesis-decision-menu",
++        "title": "Next Phase-3 thesis decision menu",
++        "deliverable": "results/experiment_3763_next_phase3_thesis_decision_menu.json",
++        "result": (
++            "PARTIAL_ARTIFACT: next-thesis menu artifact exists as an operator "
++            "decision surface, not a self-seeded route"
++        ),
++    },
++    {
++        "id": "exp3764-capstone-v344",
++        "title": "Capstone .344",
++        "deliverable": "results/experiment_3764_capstone_v344.json",
++        "result": "PARTIAL_ARTIFACT: exp3764 honestly reports missing upstreams",
++    },
++]
++
++
++def build_research_complete_block() -> str:
++    """Return the single honest `research-complete.yaml` block for .344."""
++
++    finding = (
++        "RECORD-HONEST SKIP cascade MILESTONE: .344 produced ZERO completed "
++        "experiments. A malformed research-complete.yaml value with an unquoted "
++        "embedded colon raised yaml.ScannerError, failed test_public_docs_* in "
++        "the conductor pre-test gate, and SKIP-cascaded the whole milestone. "
++        "Only exp3762, exp3763, and exp3764 left partial artifacts; exp3764 "
++        "honestly reports both_energy_routes_bounded=false because exp3755 was "
++        "missing. The substantive exp3754-exp3761 agenda never ran and is "
++        "carried into .345 as recovery work, not a research negative. "
++        "paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
++    )
++    lines = [
++        f"- id: {ARCHIVED_MILESTONE}",
++        f"  title: {yaml_string('V344 zero-experiment SKIP cascade archived')}",
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md",
++        "  completed: '2026-06-03'",
++        f"  finding: {yaml_string(finding)}",
++        "  tasks:",
++    ]
++    for task in V344_TASKS:
++        lines.extend(
++            [
++                f"  - id: {task['id']}",
++                f"    title: {yaml_string(task['title'])}",
++                f"    deliverable: {task['deliverable']}",
++                f"    result: {yaml_string(task['result'])}",
++            ]
++        )
++    return "\n".join(lines) + "\n"
++
++
++def rewrite_research_complete(text: str) -> str:
++    """Replace or append the `.344` archive block without duplicating it."""
++
++    block = build_research_complete_block()
++    replacement = block.splitlines()
++    if not text.strip():
++        return "milestones:\n" + block
++
++    lines = text.splitlines()
++    start = next(
++        (index for index, line in enumerate(lines) if line == f"- id: {ARCHIVED_MILESTONE}"),
++        None,
++    )
++    if start is None:
++        prefix = text.rstrip()
++        if any(line.strip() == "milestones:" for line in lines):
++            return f"{prefix}\n{block}"
++        return f"{prefix}\nmilestones:\n{block}"
++
++    end = next(
++        (index for index in range(start + 1, len(lines)) if lines[index].startswith("- id: 2026.")),
++        len(lines),
++    )
++    return "\n".join([*lines[:start], *replacement, *lines[end:]]) + "\n"
++
++
++def build_artifact(
++    root: Path | str = REPO_ROOT,
++    *,
++    research_complete_yaml_parses: bool,
++    started_s: float | None = None,
++    now_s: float | None = None,
++    adversarial_report: Mapping[str, Any] | None = None,
++) -> JsonDict:
++    """Build the Exp 3765 terminal artifact from checked-in evidence."""
++
++    root_path = Path(root)
++    active_milestone, active_roadmap_path = read_active_milestone(root_path)
++    _ensure(active_milestone == ACTIVATED_MILESTONE, ".345 active milestone confirmation is required")
++
++    roadmap_text = (root_path / active_roadmap_path).read_text(encoding="utf-8")
++    design_text = (root_path / ROADMAP_DESIGN_REL_PATH).read_text(encoding="utf-8")
++    _ensure(
++        all(
++            token in f"{roadmap_text}\n{design_text}"
++            for token in ("yaml.ScannerError", "SKIP", ".345", "reconcile")
++        ),
++        ".345 roadmap evidence must record the .344 skip cascade and recovery agenda",
++    )
++
++    retro = read_json_object(root_path / RETRO_REL_PATH)
++    capstone = read_json_object(root_path / CAPSTONE_REL_PATH)
++    _ensure(retro.get("experiments_completed") == 0, ".344 retro must record zero completed experiments")
++    missing_ids = sorted(
++        item.get("experiment_id")
++        for item in capstone.get("missing_upstream_artifacts", [])
++        if isinstance(item, Mapping)
++    )
++    _ensure(
++        missing_ids == list(range(3754, 3762))
++        and capstone.get("both_energy_routes_bounded") is False,
++        "partial capstone must record missing exp3754-exp3761 upstreams",
++    )
++    paper_ready_evidence = extract_paper_ready_evidence(capstone)
++    paper_ready_preserved = (
++        paper_ready_evidence["paper_ready"] is True
++        and paper_ready_evidence["frozen_headline_unchanged"] is True
++        and paper_ready_evidence["frozen_headline_auroc"] == 0.9131
++        and all(paper_ready_evidence[gate] is True for gate in ("g1", "g2", "g3", "g4"))
++    )
++    _ensure(paper_ready_preserved, "partial capstone must preserve paper_ready and the frozen headline")
++
++    report = compact_verify_report(adversarial_report or {"flags": [], "flag_count": 0, "max_severity": -1})
++    duration_s = duration_from(started_s, now_s)
++    payload: JsonDict = {
++        "schema": "carnot.archive_activation.v344_to_v345_3765.v1",
++        "experiment_id": "exp3765",
++        "task_id": "exp3765-archive-v344-activate-v345",
++        "archived_milestone": ARCHIVED_MILESTONE,
++        "activated_milestone": ACTIVATED_MILESTONE,
++        "active_roadmap_path": active_roadmap_path,
++        "v345_active_confirmed": active_milestone == ACTIVATED_MILESTONE,
++        "honest_verdict": TERMINAL_VERDICT,
++        "inference_substrate": INFERENCE_SUBSTRATE,
++        "v344_outcome_recorded": V344_OUTCOME_RECORDED,
++        "v344_skip_cause_recorded": V344_SKIP_CAUSE_RECORDED,
++        "v345_focus_recorded": V345_FOCUS_RECORDED,
++        "research_complete_yaml_parses": research_complete_yaml_parses,
++        "paper_ready_preserved": paper_ready_preserved,
++        "n_tasks_archived": len(V344_TASKS),
++        "adversarial_verify_clean": report_is_clean(report),
++        "adversarial_verify_report": report,
++        "random_seed": RANDOM_SEED,
++        "duration_s": duration_s,
++        "field_principles": dict(FIELD_PRINCIPLES),
++        "experiments_completed": retro.get("experiments_completed"),
++        "partial_artifacts_recorded": list(PARTIAL_ARTIFACTS),
++        "unlanded_v344_agenda_carried_to_v345": list(UNLANDED_V344_AGENDA),
++        "v344_archive_evidence": {
++            "operational_retro_path": str(RETRO_REL_PATH),
++            "partial_capstone_path": str(CAPSTONE_REL_PATH),
++            "missing_upstream_experiment_ids": missing_ids,
++            "capstone_both_energy_routes_bounded": capstone.get("both_energy_routes_bounded"),
++            "skip_cascade_pattern": "incident_agent_shipped_test_cascade",
++        },
++        "paper_ready_evidence": paper_ready_evidence,
++        "source_artifact_checksums": [
++            {"path": str(RETRO_REL_PATH), "sha256": sha256_path(root_path / RETRO_REL_PATH)},
++            {"path": str(CAPSTONE_REL_PATH), "sha256": sha256_path(root_path / CAPSTONE_REL_PATH)},
++        ],
++        "source_document_checksums": [
++            {"path": active_roadmap_path, "sha256": sha256_path(root_path / active_roadmap_path)},
++            {
++                "path": str(ROADMAP_DESIGN_REL_PATH),
++                "sha256": sha256_path(root_path / ROADMAP_DESIGN_REL_PATH),
++            },
++            {"path": str(NORTH_STAR_REL_PATH), "sha256": sha256_path(root_path / NORTH_STAR_REL_PATH)},
++        ],
++    }
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    return payload
++
++
++def run(
++    root: Path | str = REPO_ROOT,
++    *,
++    started_s: float | None = None,
++    now_s: float | None = None,
++) -> Path:
++    """Write the honest `.344` archive and terminal Exp 3765 artifact."""
++
++    root_path = Path(root)
++    start = time.perf_counter() if started_s is None else float(started_s)
++    complete_path = root_path / RESEARCH_COMPLETE_REL_PATH
++    rewritten = rewrite_research_complete(complete_path.read_text(encoding="utf-8"))
++    _ensure(yaml_parses(rewritten), "rewritten research-complete.yaml must safe-load")
++    complete_path.write_text(rewritten, encoding="utf-8")
++    research_complete_parses = yaml_parses(complete_path.read_text(encoding="utf-8"))
++
++    out_path = root_path / OUTPUT_REL_PATH
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    payload = build_artifact(
++        root_path,
++        research_complete_yaml_parses=research_complete_parses,
++        started_s=start,
++        now_s=now_s,
++    )
++    write_payload(out_path, payload)
++
++    verify_report = adversarial_verify.verify_artifact(out_path)
++    payload["adversarial_verify_report"] = compact_verify_report(verify_report)
++    payload["adversarial_verify_clean"] = report_is_clean(verify_report)
++    payload["reproducibility_checksum"] = payload_checksum(payload)
++    validate_artifact(payload)
++    write_payload(out_path, payload)
++    return out_path
++
++
++def validate_artifact(artifact: Mapping[str, Any]) -> None:
++    """Validate the required Exp 3765 archive/activation contract."""
++
++    missing = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in artifact]
++    _ensure(not missing, f"missing required artifact fields: {missing}")
++    principles = artifact.get("field_principles")
++    _ensure(isinstance(principles, Mapping), "field_principles must be a mapping")
++    missing_principles = [field for field in REQUIRED_ARTIFACT_FIELDS if field not in principles]
++    _ensure(not missing_principles, f"missing field principles: {missing_principles}")
++    _ensure("model_specs" not in artifact, "model_specs must not be present")
++    _ensure("target_model" not in artifact, "target_model must not be present")
++    _ensure(no_forbidden_markers(artifact), "artifact must not contain compute-bound markers")
++    _ensure(artifact.get("honest_verdict") == TERMINAL_VERDICT, "terminal verdict mismatch")
++    _ensure(artifact.get("inference_substrate") == INFERENCE_SUBSTRATE, "inference substrate mismatch")
++    _ensure(artifact.get("v344_outcome_recorded") == V344_OUTCOME_RECORDED, ".344 outcome mismatch")
++    _ensure(artifact.get("v344_skip_cause_recorded") == V344_SKIP_CAUSE_RECORDED, ".344 skip cause mismatch")
++    _ensure(artifact.get("v345_focus_recorded") == V345_FOCUS_RECORDED, ".345 focus mismatch")
++    _ensure(artifact.get("v345_active_confirmed") is True, ".345 active confirmation required")
++    _ensure(artifact.get("research_complete_yaml_parses") is True, "safe-load confirmation required")
++    _ensure(artifact.get("paper_ready_preserved") is True, "paper_ready must remain preserved")
++    _ensure(artifact.get("n_tasks_archived") == 11, "n_tasks_archived must equal 11")
++    _ensure(artifact.get("experiments_completed") == 0, "experiments_completed must remain 0")
++    _ensure(artifact.get("partial_artifacts_recorded") == PARTIAL_ARTIFACTS, "partial artifact list mismatch")
++    _ensure(
++        artifact.get("unlanded_v344_agenda_carried_to_v345") == UNLANDED_V344_AGENDA,
++        "unlanded .344 agenda mismatch",
++    )
++    _ensure(artifact.get("adversarial_verify_clean") is True, "adversarial_verify_clean must be true")
++    _ensure(artifact.get("random_seed") == RANDOM_SEED, "random_seed must equal 3765")
++    duration_s = artifact.get("duration_s")
++    _ensure(
++        isinstance(duration_s, int | float) and not isinstance(duration_s, bool) and float(duration_s) >= 0.0001,
++        "duration_s must be numeric with the 0.0001s floor",
++    )
++    checksum = artifact.get("reproducibility_checksum")
++    _ensure(is_sha256(checksum), "reproducibility_checksum must be a sha256 hex string")
++    _ensure(checksum == payload_checksum(artifact), "reproducibility_checksum does not match artifact content")
++
++
++def extract_paper_ready_evidence(capstone: Mapping[str, Any]) -> JsonDict:
++    """Extract the stable G1-G4 and frozen-headline evidence from Exp 3764."""
++
++    gate = capstone.get("publication_gate") if isinstance(capstone.get("publication_gate"), Mapping) else {}
++    return {
++        "g1": gate.get("g1") is True,
++        "g2": gate.get("g2") is True,
++        "g3": gate.get("g3") is True,
++        "g4": gate.get("g4") is True,
++        "paper_ready": capstone.get("paper_ready_preserved") is True or gate.get("paper_ready") is True,
++        "frozen_headline_auroc": safe_point(capstone.get("frozen_fover_auroc")),
++        "frozen_headline_unchanged": capstone.get("frozen_headline_unchanged") is True,
++    }
++
++
++def read_active_milestone(root: Path) -> tuple[str, str]:
++    """Return the active milestone and roadmap path used for confirmation."""
++
++    for rel_path in (ROADMAP_REL_PATH, ROADMAP_NEXT_REL_PATH):
++        path = root / rel_path
++        if path.exists():
++            milestone = milestone_from_text(path.read_text(encoding="utf-8"))
++            if milestone != "unknown":
++                return milestone, str(rel_path)
++    return "unknown", str(ROADMAP_REL_PATH)
++
++
++def milestone_from_text(text: str) -> str:
++    """Parse the first top-level `milestone:` value from roadmap YAML text."""
++
++    for line in text.splitlines():
++        if line.startswith("milestone:"):
++            return line.split(":", 1)[1].strip().strip("\"'")
++    return "unknown"
++
++
++def read_json_object(path: Path) -> JsonDict:
++    """Read a JSON object from disk."""
++
++    payload = json.loads(path.read_text(encoding="utf-8"))
++    _ensure(isinstance(payload, dict), f"expected JSON object in {path}")
++    return payload
++
++
++def yaml_parses(text: str) -> bool:
++    """Return true when PyYAML can safe-load the provided text."""
++
++    try:
++        yaml.safe_load(text)
++    except yaml.YAMLError:
++        return False
++    return True
++
++
++def yaml_string(value: str) -> str:
++    """Render a YAML-safe quoted scalar using JSON string escaping."""
++
++    return json.dumps(value)
++
++
++def safe_point(value: Any) -> float | None:
++    """Return a rounded float from either a number or a `{point: number}` object."""
++
++    if isinstance(value, Mapping):
++        return safe_point(value.get("point"))
++    if isinstance(value, int | float) and not isinstance(value, bool):
++        return round(float(value), 4)
++    return None
++
++
++def duration_from(started_s: float | None, now_s: float | None) -> float:
++    """Compute a duration with the aggregation plausibility floor."""
++
++    if started_s is None:
++        return 0.0001
++    end_s = time.perf_counter() if now_s is None else float(now_s)
++    return round(max(0.0001, end_s - float(started_s)), 6)
++
++
++def write_payload(path: Path, payload: Mapping[str, Any]) -> None:
++    """Write deterministic JSON with a trailing newline."""
++
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def compact_verify_report(report: Mapping[str, Any]) -> JsonDict:
++    """Keep deterministic adversarial-verifier fields in the artifact."""
++
++    flags = [dict(flag) for flag in report.get("flags", []) if isinstance(flag, Mapping)]
++    severities = [severity_rank(flag.get("severity")) for flag in flags]
++    return {
++        "flag_count": len(flags),
++        "max_severity": max(severities) if severities else -1,
++        "flags": flags,
++    }
++
++
++def report_is_clean(report: Mapping[str, Any]) -> bool:
++    """Return true when the adversarial report has no critical flag."""
++
++    return not any(
++        isinstance(flag, Mapping) and str(flag.get("severity", "")).lower() == "critical"
++        for flag in report.get("flags", [])
++    )
++
++
++def severity_rank(severity: Any) -> int:
++    """Map verifier severities to a stable integer order."""
++
++    return {"info": 0, "warn": 1, "critical": 2}.get(str(severity).lower(), -1)
++
++
++def sha256_path(path: Path) -> str:
++    """Return a file checksum, using the repository's missing-file sentinel."""
++
++    try:
++        return hashlib.sha256(path.read_bytes()).hexdigest()
++    except OSError:
++        return hashlib.sha256(b"<missing>").hexdigest()
++
++
++def payload_checksum(payload: Mapping[str, Any]) -> str:
++    """Return the reproducibility checksum over payload content."""
++
++    filtered = {key: value for key, value in payload.items() if key != "reproducibility_checksum"}
++    encoded = json.dumps(filtered, sort_keys=True, separators=(",", ":")).encode("utf-8")
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def is_sha256(value: Any) -> bool:
++    """Return true when the value is a lowercase SHA-256 hex digest."""
++
++    return isinstance(value, str) and len(value) == 64 and all(ch in "0123456789abcdef" for ch in value)
++
++
++def no_forbidden_markers(value: Mapping[str, Any]) -> bool:
++    """Return true when aggregation output did not copy live-compute markers."""
++
++    encoded = json.dumps(value, sort_keys=True)
++    return all(marker not in encoded for marker in ("GGUF", "CUDA", "live-model"))
++
++
++def _ensure(condition: bool, message: str) -> None:
++    if not condition:
++        raise ValueError(message)
+diff --git a/research-complete.yaml b/research-complete.yaml
+index aff9a99cb4..07dfb3e4ae 100644
+--- a/research-complete.yaml
++++ b/research-complete.yaml
+@@ -34975,103 +34975,52 @@ milestones:
+     deliverable: results/experiment_3742_capstone_v342.json
+     result: 'SUPERSEDED by exp3743 archive honesty: part-(a) infra-blocked'
+ - id: 2026.06.344
+-  title: "CONVERGENCE & PRODUCT-BANKING \u2014 both Phase-3 energy routes are now empirically BOUNDED, so .344 stops grinding\
+-    \ the existential question and banks the one surviving positive. Energy-as-SELECTOR was settled by P0.1; energy-as-GENERATOR\
+-    \ (operator-seeded Thesis A, EBT arXiv:2507.02092) was closed DEFINITIVELY by the operator's direct dual-3090 runs: part-(a)\
+-    \ PASS (tiny 38M byte-EBT trained STABLY 800 steps and learned a discriminative held-out energy landscape, margin 0.723\
+-    \ vs untrained 0.084) but part-(b) BOUNDED AT SCALE (with a learned emb->token decoder + 3-digit + 16k steps, EBT scores\
+-    \ 0.000 under both decode methods vs AR 0.84 at matched compute -- discriminative-not-generative; neither decoder nor\
+-    \ scale fixes it). The .343 in-loop EBT kill-gate (exp3745-3750) was overtaken by those direct runs (kill_zombies reaps\
+-    \ unowned GPU procs). Field-consistent: EBT-Policy (arXiv:2510.27545) shows EBT-generation wins only in low-dim continuous\
+-    \ control, never discrete text at matched compute. .344: (A) reconcile the DEFINITIVE Thesis-A close honestly; (B) MECHANIZE\
+-    \ the publication gates (ship the G2 local reproducer + the G3 narrowing lint, north-star sec-2 forward work); (C) BANK\
+-    \ the verifier toward the Phase-1 SOFTWARE-ship gate (pip/CLI/MCP E2E + mirror/publish checklist); (D) ship a deployable\
+-    \ CERTIFIED abstention operating point on the proven 0.9131 discriminator (forward from .340 characterization); (E) continue\
+-    \ FR-11 self-learning (PIVOTED back to the live verifier from the dead EBT-stabilizer lineage), confirm KV260 terminal,\
+-    \ and SURFACE the next-Phase-3-thesis decision to the operator (the loop will NOT self-seed). INVARIANTS: paper_ready\
+-    \ stays TRUE (G1-G4); FoVer 0.9131 frozen; both energy routes stay bounded (no re-grind). The agent never edits operator-curated\
+-    \ docs, never triggers CI, never publishes, never pushes."
++  title: "V344 zero-experiment SKIP cascade archived"
+   doc: openspec/change-proposals/research-roadmap-vNEXT.md
+   completed: '2026-06-03'
+-  finding: See conductor log for per-experiment results.
++  finding: "RECORD-HONEST SKIP cascade MILESTONE: .344 produced ZERO completed experiments. A malformed research-complete.yaml value with an unquoted embedded colon raised yaml.ScannerError, failed test_public_docs_* in the conductor pre-test gate, and SKIP-cascaded the whole milestone. Only exp3762, exp3763, and exp3764 left partial artifacts; exp3764 honestly reports both_energy_routes_bounded=false because exp3755 was missing. The substantive exp3754-exp3761 agenda never ran and is carried into .345 as recovery work, not a research negative. paper_ready stayed TRUE (G1-G4), and the frozen FoVer 0.9131 stayed frozen."
+   tasks:
+   - id: exp3754-archive-v343-activate-v344
+-    title: 'Archive milestone .343 HONESTLY (the in-loop Thesis-A EBT kill-gate was OVERTAKEN BY EVENTS: the operator ran
+-      the genuine kill-gate DIRECTLY -- part-(a) PASS / part-(b) BOUNDED at scale, definitive -- so the conductor''s .343
+-      EBT tasks were superseded) and activate .344 (convergence/product-banking: reconcile the definitive Thesis-A close,
+-      mechanize the publication gates, bank the verifier toward Phase-1 ship, surface the next-thesis decision to the operator).'
++    title: "Archive .343 and activate .344"
+     deliverable: results/experiment_3754_archive_v343_activate_v344.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: YAML poison stopped the conductor before this archive task ran; carried into .345 as exp3765"
+   - id: exp3755-thesis-a-definitive-reconcile
+-    title: 'Reconcile the DEFINITIVE Thesis-A close into the research record: ingest the operator''s direct runs (part-(a)
+-      PASS / discriminative; part-(b) BOUNDED at scale / not-generative), issue a corrigendum that the in-loop exp3745-3750
+-      chain is SUPERSEDED/OBE, mark Thesis A bounded in the phase3 thesis menu, and cite EBT-Policy (arXiv:2510.27545) as
+-      the field-consistent boundary (EBT-generation wins only low-dim continuous). Records the bound; does NOT add energy-as-generator
+-      to the exclusion manifest (a finding, not a doomed-rerun id).'
++    title: "Thesis-A definitive reconcile"
+     deliverable: results/experiment_3755_thesis_a_definitive_reconcile.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: substantive Thesis-A reconcile never ran; carried into .345 as exp3766"
+   - id: exp3756-g2-mechanical-reproducer
+-    title: 'G2 mechanical reproducer: commit a standalone, dependency-light script that reproduces the FoVer headline AUROC
+-      0.9131 WITHIN CI95 [0.9027, 0.9235] in the current .venv. The GitHub Actions reproducer already closed G2 externally;
+-      this hardens the LOCAL ship-gate path and emits auroc_in_ci95 (BARE bool) as the gate for the certified abstention point.
+-      Does NOT move the frozen headline.'
++    title: "G2 mechanical reproducer"
+     deliverable: results/experiment_3756_g2_mechanical_reproducer.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: local FoVer reproducer never ran; carried into .345 as exp3767"
+   - id: exp3757-g3-narrowing-lint
+-    title: 'G3 narrowing lint: EXTEND + WIRE the EXISTING scripts/paper_v6_narrowing_lint.py (it exists but is NOT pre-commit-wired
+-      and lacks the 12th retraction) -- ADD the 12th retracted phrasing (''energy-as-generator works/scales'' -- now that
+-      Thesis A is bounded), extend the scan to results/paper_v6_* artifacts, and add the missing .pre-commit-config.yaml stanza.
+-      Mechanizes G3 from honor-discipline to an ENFORCED lint (north-star sec-2 forward work). Do NOT regenerate the file
+-      from scratch.'
++    title: "G3 narrowing lint"
+     deliverable: results/experiment_3757_g3_narrowing_lint.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: narrowing lint extension never ran; carried into .345 as exp3768"
+   - id: exp3758-package-cli-mcp-e2e-smoke
+-    title: 'Phase-1 SHIP gate: package + CLI + MCP E2E smoke. Build/install the carnot-ebm package, run the verify-repair
+-      pipeline end-to-end on a tiny example, and hit the MCP score_candidates tool via a REAL protocol exchange. Confirms
+-      >=1 external integration surface works E2E (the PRD Phase-1 software-ship gate, NOT gated on paper/hardware). Uses a
+-      small CPU model by default; a SOTA GGUF is optional via cached_sota_pair().'
++    title: "Package CLI MCP E2E smoke"
+     deliverable: results/experiment_3758_package_cli_mcp_e2e_smoke.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: package CLI MCP smoke never ran; carried into .345 as exp3769"
+   - id: exp3759-distribution-mirror-publish-checklist
+-    title: 'Distribution-mirror readiness audit + OPERATOR-ONLY publish checklist (Decentralization Rule 3): verify the PyPI
+-      publish workflow + HuggingFace mirror + IPFS CID plan are documented and ready, and emit a checklist of the steps the
+-      OPERATOR (not the agent) performs to publish. Does NOT publish anything (Operator-Only External Publication discipline).'
++    title: "Distribution mirror and operator publish checklist"
+     deliverable: results/experiment_3759_distribution_mirror_publish_checklist.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: distribution mirror checklist never ran; carried into .345 as exp3770"
+   - id: exp3760-certified-abstention-operating-point
+-    title: 'Ship a DEPLOYABLE certified abstention operating point on the proven 0.9131 step-error discriminator: build the
+-      risk-coverage (AURC) curve and SELECT a threshold at a fixed risk target via conformal / PAC-Bayes certification. Forward
+-      from .340''s risk-coverage CHARACTERIZATION to a deployable, CERTIFIED operating point. Gated on exp3756 auroc_in_ci95==true
+-      (no point certifying a point if the headline does not reproduce).'
++    title: "Certified abstention operating point"
+     deliverable: results/experiment_3760_certified_abstention_operating_point.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: certified abstention point never ran; carried into .345 as exp3771"
+   - id: exp3761-fr11-self-learning-v17-verifier-precision-tracker
+-    title: 'FR-11 continuous self-learning v17 -- Tier-1 ONLINE per-verifier precision tracker on the LIVE verifier product
+-      (pivoted off the dead EBT-stabilizer lineage): for the 4 FoVer-scoring verifiers, track per-verifier precision/recall
+-      online across the corpus, upweight high-precision verifiers, and confirm the learned weighting holds the +0.0185 memory-ablation
+-      contribution. CPU counter updates only (the Tier-1 hardware path, <1us/update). The self-learning experiment mandated
+-      by research-program.md.'
++    title: "FR-11 v17 verifier precision tracker"
+     deliverable: results/experiment_3761_fr11_self_learning_v17_verifier_precision_tracker.json
+-    result: OK (conductor)
++    result: "SKIPPED_BY_PRETEST_GATE: FR-11 verifier precision tracker never ran; carried into .345 as exp3772"
+   - id: exp3762-kv260-opportunistic-continuity-audit
+-    title: KV260 opportunistic continuity audit -- confirm terminal state holds (SSH-reachable, accelerator overlay loadable).
+-      Documentation-only; the per-milestone hardware mandate was relaxed to opportunistic at .340 (GateMate/PolarFire stay
+-      opportunistic future-work).
++    title: "KV260 opportunistic continuity audit"
+     deliverable: results/experiment_3762_kv260_opportunistic_continuity_audit.json
+-    result: OK (conductor)
++    result: "PARTIAL_ARTIFACT: KV260 audit artifact exists, but the .344 retro still records zero completed experiments under the cascade"
+   - id: exp3763-next-phase3-thesis-decision-menu
+-    title: 'Next-Phase-3-thesis DECISION MENU for the operator: now that BOTH energy routes (selection + generation) are bounded
+-      and the loop will NOT self-seed, produce a ranked menu of the genuinely-different, UNTESTED foundation-model routes
+-      -- led by EDLM (energy as a residual-corrector over discrete diffusion, reaches AR perplexity at matched compute), with
+-      latent-token diffusion reasoning, ParaRNN nonlinear-recurrent substrate, and energy-verifier-as-test-time-reweighter
+-      as alternatives. A decision surface for the operator to SEED, not a commitment by the loop.'
++    title: "Next Phase-3 thesis decision menu"
+     deliverable: results/experiment_3763_next_phase3_thesis_decision_menu.json
+-    result: OK (conductor)
++    result: "PARTIAL_ARTIFACT: next-thesis menu artifact exists as an operator decision surface, not a self-seeded route"
+   - id: exp3764-capstone-v344
+-    title: 'Capstone .344 -- aggregate the convergence/product-banking milestone: the definitive Thesis-A close reconciled
+-      (both energy routes bounded), the G2 reproducer + G3 narrowing lint mechanized, the verifier banked toward Phase-1 ship
+-      (pkg/CLI/MCP E2E + mirror checklist), a certified abstention point shipped, FR-11 pivoted to the live verifier, KV260
+-      terminal confirmed, and the next-thesis menu handed to the operator. paper_ready MUST stay TRUE; frozen 0.9131 unchanged;
+-      both energy routes stay bounded.'
++    title: "Capstone .344"
+     deliverable: results/experiment_3764_capstone_v344.json
+-    result: OK (conductor)
++    result: "PARTIAL_ARTIFACT: exp3764 honestly reports missing upstreams"
+diff --git a/results/experiment_1717_findings_audit.json b/results/experiment_1717_findings_audit.json
+index 863335fdd2..b2f5022cb8 100644
+--- a/results/experiment_1717_findings_audit.json
++++ b/results/experiment_1717_findings_audit.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1717,
+-  "run_date": "2026-06-03T15:02:17.858183Z",
+-  "duration_s": 0.012251138687133789,
++  "run_date": "2026-06-03T15:56:46.036772Z",
++  "duration_s": 0.010133504867553711,
+   "random_seed": 171617,
+-  "reproducibility_checksum": "cf3981e1f33e39a4bca094bca54ac42ff3b23a84ca42dcdf430c0653fc941e6e",
++  "reproducibility_checksum": "ff8a823b1b05affb6f323942ce717f41add705ace19f9647b96d3e3b74382f03",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.174",
+       "2026.05.175"
+     ],
+-    "adversarial_verify_version": "bce6cf4dcb30e54154f1aba4eabfc4f325ddb6a7"
++    "adversarial_verify_version": "0829ccda7fc649bc80bf79bcba0578b8c615ddd9"
+   },
+   "n_samples": 42,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1796_findings_audit_186_187.json b/results/experiment_1796_findings_audit_186_187.json
+index 8e9218e838..13f3413e1f 100644
+--- a/results/experiment_1796_findings_audit_186_187.json
++++ b/results/experiment_1796_findings_audit_186_187.json
+@@ -1,10 +1,10 @@
+ {
+   "schema": "carnot.findings_audit_corrigenda.v3",
+   "experiment": 1796,
+-  "run_date": "2026-06-03T15:02:17.872116Z",
+-  "duration_s": 0.010115385055541992,
++  "run_date": "2026-06-03T15:56:46.049273Z",
++  "duration_s": 0.009047746658325195,
+   "random_seed": 1796187,
+-  "reproducibility_checksum": "b79373e09310f4af77d7615dec9854398641f21d571c133b8b0dce49adf6a33f",
++  "reproducibility_checksum": "89dce14bb1fd78d7f3675940c4705413ec6bc1a95728f9e74680c53f64e52e5f",
+   "preconditions_checked": [
+     "scripts/adversarial_verify.py importable"
+   ],
+@@ -13,7 +13,7 @@
+       "2026.05.186",
+       "2026.05.187"
+     ],
+-    "adversarial_verify_version": "bce6cf4dcb30e54154f1aba4eabfc4f325ddb6a7"
++    "adversarial_verify_version": "0829ccda7fc649bc80bf79bcba0578b8c615ddd9"
+   },
+   "n_samples": 17,
+   "n_samples_justification": "Audit task; n is artifact count.",
+diff --git a/results/experiment_1869_hiled.json b/results/experiment_1869_hiled.json
+index 08fed66ef8..6b91c40e4b 100644
+--- a/results/experiment_1869_hiled.json
++++ b/results/experiment_1869_hiled.json
+@@ -1,5 +1,5 @@
+ {
+-  "efficiency_gains_ms": 2.1123886108398438,
++  "efficiency_gains_ms": 2.1085739135742188,
+   "constraint_enforcement_rate": 1.0,
+   "hiled_enabled": true,
+   "simulated_steps": 2
+diff --git a/results/experiment_2754_empirical_delta_audit.json b/results/experiment_2754_empirical_delta_audit.json
+index 08f5ea92c9..1c4f2314d6 100644
+--- a/results/experiment_2754_empirical_delta_audit.json
++++ b/results/experiment_2754_empirical_delta_audit.json
+@@ -8,7 +8,7 @@
+   "n_repair_attempts_definition": "Number of complete verify-repair loop iterations executed in VerifyRepairPipeline.",
+   "paper_v6_recommendation": "fix repair pipeline; block paper-v6 cite until delta validated",
+   "random_seed": 42,
+-  "duration_s": 0.4035983085632324,
++  "duration_s": 0.27958178520202637,
+   "preconditions_checked": [
+     {
+       "resource": "ttt_loop_importable",
+diff --git a/results/experiment_3350_kv260_latency_benchmark.json b/results/experiment_3350_kv260_latency_benchmark.json
+index a2a45c7b3b..144fa727fc 100644
+--- a/results/experiment_3350_kv260_latency_benchmark.json
++++ b/results/experiment_3350_kv260_latency_benchmark.json
+@@ -3,7 +3,7 @@
+     "SSH test failed"
+   ],
+   "cpu_latency_us": 0.0,
+-  "duration_s": 3.0207000236259773e-05,
++  "duration_s": 3.237100099795498e-05,
+   "hardware_latency_us": 0.0,
+   "honest_verdict": "blocked_kv260_ssh_unreachable",
+   "inference_substrate": "hardware_smoke",
+diff --git a/results/experiment_3765_archive_v344_activate_v345.json b/results/experiment_3765_archive_v344_activate_v345.json
+new file mode 100644
+index 0000000000..445d939f4d
+--- /dev/null
++++ b/results/experiment_3765_archive_v344_activate_v345.json
+@@ -0,0 +1,105 @@
++{
++  "activated_milestone": "2026.06.345",
++  "active_roadmap_path": "research-roadmap.yaml",
++  "adversarial_verify_clean": true,
++  "adversarial_verify_report": {
++    "flag_count": 0,
++    "flags": [],
++    "max_severity": -1
++  },
++  "archived_milestone": "2026.06.344",
++  "duration_s": 2.959919,
++  "experiment_id": "exp3765",
++  "experiments_completed": 0,
++  "field_principles": {
++    "adversarial_verify_clean": "True iff the artifact passes adversarial_verify with no critical flag.",
++    "duration_s": "Wall-clock plausibility floor; missing duration is the fabrication signal.",
++    "honest_verdict": "Terminal prefix lets the reconciler classify the transition complete without re-running it.",
++    "inference_substrate": "JSON-read + format; 0.0001s floor; no compute-bound marker so it does not false-flag.",
++    "n_tasks_archived": "Sample-size hygiene -- confirms the full milestone was archived, not a partial.",
++    "paper_ready_preserved": "G1-G4 stay met; the transition must not silently regress paper_ready; frozen headline 0.9131 stays frozen.",
++    "random_seed": "Determinism precondition for reproducibility.",
++    "reproducibility_checksum": "Content hash catches silent drift vs any replication.",
++    "research_complete_yaml_parses": "BARE bool, MUST be true -- confirms research-complete.yaml safe_loads after the write.",
++    "v344_outcome_recorded": "Records .344's REAL state: 0 completed experiments, whole-milestone SKIP cascade from a malformed-YAML poison; the agenda carried into .345.",
++    "v344_skip_cause_recorded": "Records the ROOT CAUSE (unquoted embedded colon -> yaml.ScannerError -> test_public_docs_* failed -> SKIP cascade) so a future planner does not mis-read .344 as a research negative.",
++    "v345_focus_recorded": "Records the .345 pivot: re-execute the un-landed .344 agenda (reconcile + mechanize-gates + bank-verifier + certified-abstention + self-learning + PRM-positioning)."
++  },
++  "honest_verdict": "complete: archived_v344_zero_experiments_skip_cascade_recorded_v345_recovery_active_paper_ready_true_frozen_headline_unchanged",
++  "inference_substrate": "aggregation_from_upstream_artifacts",
++  "n_tasks_archived": 11,
++  "paper_ready_evidence": {
++    "frozen_headline_auroc": 0.9131,
++    "frozen_headline_unchanged": true,
++    "g1": true,
++    "g2": true,
++    "g3": true,
++    "g4": true,
++    "paper_ready": true
++  },
++  "paper_ready_preserved": true,
++  "partial_artifacts_recorded": [
++    "exp3762",
++    "exp3763",
++    "exp3764"
++  ],
++  "random_seed": 3765,
++  "reproducibility_checksum": "3a4abbfcc8313b1f64399b01f51c90cca990708eb6177079d777a834d71bb41e",
++  "research_complete_yaml_parses": true,
++  "schema": "carnot.archive_activation.v344_to_v345_3765.v1",
++  "source_artifact_checksums": [
++    {
++      "path": "results/operational_retro_2026_06_344.json",
++      "sha256": "b10c20c05f25a9b48e03ccdef4fe6eaca7b53605eb443b1a286b02dcd67023cd"
++    },
++    {
++      "path": "results/experiment_3764_capstone_v344.json",
++      "sha256": "d4877ea1cb9536cbb56106f6f10986bd810993ecf95c17c8699d87d6dbd24d57"
++    }
++  ],
++  "source_document_checksums": [
++    {
++      "path": "research-roadmap.yaml",
++      "sha256": "bc10fc04fba33486ce9ab5a4a612283455224d4865626980bc852e9a18386abf"
++    },
++    {
++      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
++      "sha256": "06e131765899ff7730e0b47f03714e47aa1f7d856351f6fca57e7dab98691aaa"
++    },
++    {
++      "path": "ops/north-star.md",
++      "sha256": "e288b001d2582b5f8af368df5ef458c334b750daefdef36ec9f707c61b62b973"
++    }
++  ],
++  "task_id": "exp3765-archive-v344-activate-v345",
++  "unlanded_v344_agenda_carried_to_v345": [
++    "exp3754",
++    "exp3755",
++    "exp3756",
++    "exp3757",
++    "exp3758",
++    "exp3759",
++    "exp3760",
++    "exp3761"
++  ],
++  "v344_archive_evidence": {
++    "capstone_both_energy_routes_bounded": false,
++    "missing_upstream_experiment_ids": [
++      3754,
++      3755,
++      3756,
++      3757,
++      3758,
++      3759,
++      3760,
++      3761
++    ],
++    "operational_retro_path": "results/operational_retro_2026_06_344.json",
++    "partial_capstone_path": "results/experiment_3764_capstone_v344.json",
++    "skip_cascade_pattern": "incident_agent_shipped_test_cascade"
++  },
++  "v344_outcome_recorded": "zero_completed_experiments_whole_milestone_skip_cascade_agenda_carried_to_v345",
++  "v344_skip_cause_recorded": "unquoted_embedded_colon_yaml_scannererror_test_public_docs_failed_skip_cascade",
++  "v345_active_confirmed": true,
++  "v345_focus_recorded": "reexecute_unlanded_v344_agenda_reconcile_mechanize_gates_bank_verifier_certified_abstention_self_learning_prm_positioning"
++}
+diff --git a/results/experiment_625_tier1_fr11_relay.json b/results/experiment_625_tier1_fr11_relay.json
+index e511588a77..1f9c7553cc 100644
+--- a/results/experiment_625_tier1_fr11_relay.json
++++ b/results/experiment_625_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 625,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T15:05:15Z",
+-  "finished_at": "2026-06-03T15:05:15Z",
+-  "duration_s": 0.004,
++  "started_at": "2026-06-03T15:56:37Z",
++  "finished_at": "2026-06-03T15:56:37Z",
++  "duration_s": 0.003,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/results/experiment_638_tier1_fr11_relay.json b/results/experiment_638_tier1_fr11_relay.json
+index 0d2d315776..787189365e 100644
+--- a/results/experiment_638_tier1_fr11_relay.json
++++ b/results/experiment_638_tier1_fr11_relay.json
+@@ -2,8 +2,8 @@
+   "experiment": 638,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T15:05:15Z",
+-  "finished_at": "2026-06-03T15:05:15Z",
++  "started_at": "2026-06-03T15:56:37Z",
++  "finished_at": "2026-06-03T15:56:38Z",
+   "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+diff --git a/results/experiment_645_tier1_fr11_relay.json b/results/experiment_645_tier1_fr11_relay.json
+index 6b59368eb2..6f49cda726 100644
+--- a/results/experiment_645_tier1_fr11_relay.json
++++ b/results/experiment_645_tier1_fr11_relay.json
+@@ -2,9 +2,9 @@
+   "experiment": 645,
+   "title": "Tier 1 FR-11 Self-Learning Relay",
+   "run_date": "20260603",
+-  "started_at": "2026-06-03T15:05:15Z",
+-  "finished_at": "2026-06-03T15:05:15Z",
+-  "duration_s": 0.003,
++  "started_at": "2026-06-03T15:56:38Z",
++  "finished_at": "2026-06-03T15:56:38Z",
++  "duration_s": 0.002,
+   "status": "success",
+   "random_seed": 42,
+   "reproducibility_checksum": "a6bb133cb1e3638a",
+diff --git a/scripts/experiment_3765_archive_v344_activate_v345.py b/scripts/experiment_3765_archive_v344_activate_v345.py
+new file mode 100644
+index 0000000000..5c6224556d
+--- /dev/null
++++ b/scripts/experiment_3765_archive_v344_activate_v345.py
+@@ -0,0 +1,28 @@
++#!/usr/bin/env python3
++"""Run Exp 3765 v344 archive and v345 activation."""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++PYTHON_ROOT = REPO_ROOT / "python"
++for path in (REPO_ROOT, PYTHON_ROOT):
++    if str(path) not in sys.path:
++        sys.path.insert(0, str(path))
++
++from carnot.reporting.archive_v344_activate_v345_3765 import run  # noqa: E402
++
++
++def main() -> int:
++    output_path = run(REPO_ROOT)
++    payload = json.loads(output_path.read_text(encoding="utf-8"))
++    print(json.dumps(payload, indent=2, sort_keys=True))
++    return 0
++
++
++if __name__ == "__main__":  # pragma: no cover
++    raise SystemExit(main())
+diff --git a/tests/python/test_experiment_3765_archive_v344_activate_v345.py b/tests/python/test_experiment_3765_archive_v344_activate_v345.py
+new file mode 100644
+index 0000000000..3375017208
+--- /dev/null
++++ b/tests/python/test_experiment_3765_archive_v344_activate_v345.py
+@@ -0,0 +1,380 @@
++"""Tests for Exp 3765 v344 archive and v345 activation.
++
++Spec refs: REQ-REPORT-3765, SCENARIO-REPORT-3765.
++"""
++
++from __future__ import annotations
++
++import json
++import importlib.util
++from pathlib import Path
++
++import pytest
++import yaml
++
++
++SPEC_PATH = Path("openspec/capabilities/research-reporting/spec.md")
++MODULE_PATH = Path("python/carnot/reporting/archive_v344_activate_v345_3765.py")
++MODULE_SPEC = importlib.util.spec_from_file_location("exp3765", MODULE_PATH)
++assert MODULE_SPEC is not None
++assert MODULE_SPEC.loader is not None
++exp3765 = importlib.util.module_from_spec(MODULE_SPEC)
++MODULE_SPEC.loader.exec_module(exp3765)
++
++
++def _write_json(path: Path, payload: dict[str, object]) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def _seed_repo(root: Path, *, active_milestone: str = "2026.06.345") -> None:
++    (root / "openspec" / "change-proposals").mkdir(parents=True, exist_ok=True)
++    (root / "ops").mkdir(parents=True, exist_ok=True)
++    (root / "_bmad").mkdir(parents=True, exist_ok=True)
++    (root / "scripts").mkdir(parents=True, exist_ok=True)
++    (root / "results").mkdir(parents=True, exist_ok=True)
++    (root / "research-roadmap.yaml").write_text(
++        f'milestone: "{active_milestone}"\n'
++        'milestone_title: "PRODUCT-BANKING RECOVERY -- .344 did not land"\n'
++        "tasks:\n"
++        "  - id: exp3765-archive-v344-activate-v345\n"
++        "    title: Archive .344 and activate .345 recovery\n"
++        "  - id: exp3766-thesis-a-definitive-reconcile\n"
++        "    title: Reconcile the un-landed .344 agenda\n"
++        "  - id: exp3767-g2-mechanical-reproducer\n"
++        "    title: Mechanize gates\n"
++        "  - id: exp3771-certified-abstention-operating-point\n"
++        "    title: Bank verifier and certified abstention\n"
++        "  - id: exp3772-fr11-self-learning-v17-verifier-precision-tracker\n"
++        "    title: Self-learning recovery\n"
++        "  - id: exp3773-verifier-prm-positioning\n"
++        "    title: PRM-positioning recovery\n",
++        encoding="utf-8",
++    )
++    (root / "openspec" / "change-proposals" / "research-roadmap-vNEXT.md").write_text(
++        "# Research Roadmap - Milestone 2026.06.345\n\n"
++        ".344 produced ZERO experiments after an unquoted embedded colon in "
++        "research-complete.yaml raised yaml.ScannerError, failed test_public_docs_*, "
++        "and SKIP-cascaded the whole milestone. .345 re-executes the un-landed "
++        ".344 agenda: reconcile, mechanize-gates, bank-verifier, "
++        "certified-abstention, self-learning, PRM-positioning.\n",
++        encoding="utf-8",
++    )
++    (root / "research-complete.yaml").write_text(
++        "# completed\n\n"
++        "milestones:\n"
++        "- id: 2026.06.342\n"
++        "  finding: previous archive\n"
++        "- id: 2026.06.344\n"
++        "  title: stale generic archive\n"
++        "  doc: openspec/change-proposals/research-roadmap-vNEXT.md\n"
++        "  completed: '2026-06-03'\n"
++        "  finding: See conductor log for per-experiment results.\n"
++        "  tasks:\n"
++        "  - id: exp3754-archive-v343-activate-v344\n"
++        "    title: Archive .343 and activate .344\n"
++        "    deliverable: results/experiment_3754_archive_v343_activate_v344.json\n"
++        "    result: OK (conductor)\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "north-star.md").write_text(
++        "# North Star\n\nFrozen FoVer headline AUROC: 0.9131.\n",
++        encoding="utf-8",
++    )
++    (root / "ops" / "status.md").write_text("status before\n", encoding="utf-8")
++    (root / "ops" / "changelog.md").write_text("changelog before\n", encoding="utf-8")
++    (root / "_bmad" / "traceability.md").write_text("trace before\n", encoding="utf-8")
++    (root / "scripts" / "research_conductor.py").write_text(
++        "# conductor unchanged\n",
++        encoding="utf-8",
++    )
++    _write_json(
++        root / "results" / "operational_retro_2026_06_344.json",
++        {
++            "milestone": "2026.06.344",
++            "experiments_completed": 0,
++            "summary": "This milestone produced no experiment commits.",
++        },
++    )
++    _write_json(
++        root / "results" / "experiment_3764_capstone_v344.json",
++        {
++            "honest_verdict": (
++                "complete: capstone_v344_thesis_a_not_closed_"
++                "both_energy_routes_not_fully_cited_gates_not_mechanized_"
++                "verifier_not_banked_abstention_point_skipped_fr11_not_pivoted_"
++                "next_thesis_to_operator_paper_ready_true_frozen_headline_unchanged"
++            ),
++            "both_energy_routes_bounded": False,
++            "missing_upstream_artifacts": [
++                {
++                    "experiment_id": experiment_id,
++                    "path": f"results/experiment_{experiment_id}_missing.json",
++                    "reason": "artifact_missing",
++                }
++                for experiment_id in range(3754, 3762)
++            ],
++            "cited_upstream_artifacts": [
++                {
++                    "experiment_id": experiment_id,
++                    "path": f"results/experiment_{experiment_id}_partial.json",
++                    "sha256": f"{experiment_id:064x}"[-64:],
++                }
++                for experiment_id in (3762, 3763)
++            ],
++            "paper_ready_preserved": True,
++            "frozen_headline_unchanged": True,
++            "frozen_fover_auroc": 0.9131,
++            "publication_gate": {
++                "paper_ready": True,
++                "g1": True,
++                "g2": True,
++                "g3": True,
++                "g4": True,
++                "unmet_gates": [],
++            },
++        },
++    )
++
++
++def test_req_report_3765_spec_anchor_exists() -> None:
++    """REQ-REPORT-3765: OpenSpec declares the archive/activation contract."""
++
++    spec = SPEC_PATH.read_text(encoding="utf-8")
++    assert "REQ-REPORT-3765" in spec
++    assert "SCENARIO-REPORT-3765" in spec
++    assert exp3765.OUTPUT_REL_PATH.as_posix() in spec
++
++
++def test_scenario_report_3765_run_archives_skip_cascade_honestly(tmp_path: Path) -> None:
++    """SCENARIO-REPORT-3765: archive records the zero-experiment SKIP cascade."""
++
++    _seed_repo(tmp_path)
++    before_docs = {
++        "roadmap": (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8"),
++        "conductor": (tmp_path / "scripts" / "research_conductor.py").read_text(
++            encoding="utf-8"
++        ),
++        "north": (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8"),
++        "status": (tmp_path / "ops" / "status.md").read_text(encoding="utf-8"),
++        "changelog": (tmp_path / "ops" / "changelog.md").read_text(encoding="utf-8"),
++        "trace": (tmp_path / "_bmad" / "traceability.md").read_text(encoding="utf-8"),
++    }
++
++    out_path = exp3765.run(tmp_path, started_s=10.0, now_s=10.25)
++    artifact = json.loads(out_path.read_text(encoding="utf-8"))
++    complete_text = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    complete = yaml.safe_load(complete_text)
++    row = [item for item in complete["milestones"] if str(item.get("id")) == "2026.06.344"]
++    task_results = {task["id"]: task["result"] for task in row[0]["tasks"]}
++
++    exp3765.validate_artifact(artifact)
++    assert artifact["honest_verdict"] == exp3765.TERMINAL_VERDICT
++    assert set(exp3765.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)
++    assert set(exp3765.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
++    assert artifact["inference_substrate"] == exp3765.INFERENCE_SUBSTRATE
++    assert artifact["v344_outcome_recorded"] == exp3765.V344_OUTCOME_RECORDED
++    assert artifact["v344_skip_cause_recorded"] == exp3765.V344_SKIP_CAUSE_RECORDED
++    assert artifact["v345_focus_recorded"] == exp3765.V345_FOCUS_RECORDED
++    assert artifact["research_complete_yaml_parses"] is True
++    assert artifact["paper_ready_preserved"] is True
++    assert artifact["n_tasks_archived"] == 11
++    assert artifact["v345_active_confirmed"] is True
++    assert artifact["active_roadmap_path"] == "research-roadmap.yaml"
++    assert artifact["experiments_completed"] == 0
++    assert artifact["partial_artifacts_recorded"] == ["exp3762", "exp3763", "exp3764"]
++    assert artifact["unlanded_v344_agenda_carried_to_v345"] == [
++        "exp3754",
++        "exp3755",
++        "exp3756",
++        "exp3757",
++        "exp3758",
++        "exp3759",
++        "exp3760",
++        "exp3761",
++    ]
++    assert artifact["paper_ready_evidence"] == {
++        "g1": True,
++        "g2": True,
++        "g3": True,
++        "g4": True,
++        "paper_ready": True,
++        "frozen_headline_auroc": 0.9131,
++        "frozen_headline_unchanged": True,
++    }
++    assert artifact["adversarial_verify_clean"] is True
++    assert artifact["adversarial_verify_report"]["max_severity"] < 2
++    assert artifact["random_seed"] == 3765
++    assert artifact["duration_s"] == 0.25
++    assert artifact["reproducibility_checksum"] == exp3765.payload_checksum(artifact)
++    encoded = json.dumps(artifact, sort_keys=True)
++    assert "model_specs" not in encoded
++    assert "target_model" not in encoded
++    assert "GGUF" not in encoded
++    assert "CUDA" not in encoded
++    assert "live-model" not in encoded
++
++    assert complete_text.count("- id: 2026.06.344") == 1
++    assert yaml.safe_load(complete_text)
++    assert "See conductor log" not in complete_text
++    assert "OK (conductor)" not in complete_text
++    assert "ZERO completed experiments" in row[0]["finding"]
++    assert "SKIP cascade" in row[0]["finding"]
++    assert "carried into .345" in row[0]["finding"]
++    assert len(row[0]["tasks"]) == 11
++    assert task_results["exp3754-archive-v343-activate-v344"].startswith(
++        "SKIPPED_BY_PRETEST_GATE"
++    )
++    assert task_results["exp3761-fr11-self-learning-v17-verifier-precision-tracker"].startswith(
++        "SKIPPED_BY_PRETEST_GATE"
++    )
++    assert task_results["exp3762-kv260-opportunistic-continuity-audit"].startswith(
++        "PARTIAL_ARTIFACT"
++    )
++    assert task_results["exp3763-next-phase3-thesis-decision-menu"].startswith(
++        "PARTIAL_ARTIFACT"
++    )
++    assert task_results["exp3764-capstone-v344"].startswith("PARTIAL_ARTIFACT")
++    assert 'result: "PARTIAL_ARTIFACT: exp3764 honestly reports missing upstreams"' in (
++        complete_text
++    )
++
++    assert (tmp_path / "research-roadmap.yaml").read_text(encoding="utf-8") == before_docs[
++        "roadmap"
++    ]
++    assert (tmp_path / "scripts" / "research_conductor.py").read_text(
++        encoding="utf-8"
++    ) == before_docs["conductor"]
++    assert (tmp_path / "ops" / "north-star.md").read_text(encoding="utf-8") == before_docs[
++        "north"
++    ]
++    assert (tmp_path / "ops" / "status.md").read_text(encoding="utf-8") == before_docs[
++        "status"
++    ]
++    assert (tmp_path / "ops" / "changelog.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["changelog"]
++    assert (tmp_path / "_bmad" / "traceability.md").read_text(
++        encoding="utf-8"
++    ) == before_docs["trace"]
++
++
++def test_req_report_3765_research_complete_rewrite_is_idempotent(tmp_path: Path) -> None:
++    """REQ-REPORT-3765: the .344 archive row is replaced once and stays stable."""
++
++    _seed_repo(tmp_path)
++
++    first_path = exp3765.run(tmp_path, started_s=2.0, now_s=2.125)
++    first_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    first_artifact = json.loads(first_path.read_text(encoding="utf-8"))
++
++    second_path = exp3765.run(tmp_path, started_s=2.0, now_s=2.125)
++    second_complete = (tmp_path / "research-complete.yaml").read_text(encoding="utf-8")
++    second_artifact = json.loads(second_path.read_text(encoding="utf-8"))
++
++    assert first_complete == second_complete
++    assert first_complete.count("- id: 2026.06.344") == 1
++    assert first_artifact == second_artifact
++
++
++@pytest.mark.parametrize(
++    ("mutate", "message"),
++    [
++        (lambda p: p.pop("v344_outcome_recorded"), "missing required"),
++        (lambda p: p.update(field_principles=[]), "field_principles"),
++        (
++            lambda p: p["field_principles"].pop("v345_focus_recorded"),
++            "missing field principles",
++        ),
++        (lambda p: p.update(honest_verdict="complete: wrong"), "terminal verdict"),
++        (lambda p: p.update(inference_substrate="aggregation plus model"), "inference"),
++        (lambda p: p.update(v344_outcome_recorded="negative_result"), ".344 outcome"),
++        (lambda p: p.update(v344_skip_cause_recorded="unknown"), "skip cause"),
++        (lambda p: p.update(v345_focus_recorded="unclear"), ".345 focus"),
++        (lambda p: p.update(research_complete_yaml_parses=False), "safe-load"),
++        (lambda p: p.update(paper_ready_preserved=False), "paper_ready"),
++        (lambda p: p.update(n_tasks_archived=10), "11"),
++        (lambda p: p.update(adversarial_verify_clean=False), "adversarial"),
++        (lambda p: p.update(random_seed=1), "random_seed"),
++        (lambda p: p.update(duration_s=0.0), "duration_s"),
++        (lambda p: p.update(reproducibility_checksum="short"), "sha256"),
++        (lambda p: p.update(reproducibility_checksum="0" * 64), "does not match"),
++        (lambda p: p.update(model_specs={}), "model_specs"),
++        (lambda p: p.update(target_model="none"), "target_model"),
++    ],
++)
++def test_req_report_3765_validate_artifact_rejects_dishonest_fields(
++    tmp_path: Path,
++    mutate,
++    message: str,
++) -> None:
++    """REQ-REPORT-3765: validation blocks silent archive regressions."""
++
++    _seed_repo(tmp_path)
++    payload = json.loads(
++        exp3765.run(tmp_path, started_s=4.0, now_s=4.5).read_text(encoding="utf-8")
++    )
++    exp3765.validate_artifact(payload)
++
++    broken = json.loads(json.dumps(payload))
++    mutate(broken)
++    with pytest.raises(ValueError, match=message):
++        exp3765.validate_artifact(broken)
++
++
++def test_req_report_3765_defensive_helpers_fail_closed(tmp_path: Path) -> None:
++    """REQ-REPORT-3765: malformed inputs do not produce a terminal archive."""
++
++    _seed_repo(tmp_path, active_milestone="2026.06.344")
++    with pytest.raises(ValueError, match=".345 active"):
++        exp3765.run(tmp_path, started_s=1.0, now_s=1.1)
++
++    _seed_repo(tmp_path)
++    _write_json(
++        tmp_path / "results" / "operational_retro_2026_06_344.json",
++        {"experiments_completed": 1},
++    )
++    with pytest.raises(ValueError, match="zero completed"):
++        exp3765.build_artifact(tmp_path, research_complete_yaml_parses=True)
++
++    _seed_repo(tmp_path)
++    _write_json(
++        tmp_path / "results" / "experiment_3764_capstone_v344.json",
++        {"paper_ready_preserved": False, "missing_upstream_artifacts": []},
++    )
++    with pytest.raises(ValueError, match="partial capstone"):
++        exp3765.build_artifact(tmp_path, research_complete_yaml_parses=True)
++
++    _seed_repo(tmp_path)
++    (tmp_path / "research-roadmap.yaml").write_text("tasks: []\n", encoding="utf-8")
++    assert exp3765.read_active_milestone(tmp_path) == ("unknown", "research-roadmap.yaml")
++
++    appended = exp3765.rewrite_research_complete("milestones:\n- id: 2026.06.343\n")
++    assert appended.count("- id: 2026.06.344") == 1
++    assert yaml.safe_load(appended)
++    assert exp3765.rewrite_research_complete("").startswith("milestones:\n- id: 2026.06.344")
++    assert "milestones:\n- id: 2026.06.344" in exp3765.rewrite_research_complete(
++        "# completed only\n"
++    )
++    assert exp3765.yaml_parses("bad: [") is False
++    assert exp3765.yaml_parses(appended) is True
++    assert exp3765.safe_point({"point": 0.9131234}) == 0.9131
++    assert exp3765.safe_point("not-number") is None
++    assert exp3765.duration_from(None, None) == 0.0001
++    assert exp3765.compact_verify_report({"flags": [{"severity": "warn"}]}) == {
++        "flag_count": 1,
++        "max_severity": 1,
++        "flags": [{"severity": "warn"}],
++    }
++    assert exp3765.sha256_path(tmp_path / "missing.json") == (
++        "769b8995b8bf4407c89e906d67601a46266d34922a63ab1754440eecb0657aab"
++    )
++
++
++def test_scenario_report_3765_script_wrapper_exists() -> None:
++    """SCENARIO-REPORT-3765: the requested script entrypoint exists."""
++
++    script = Path("scripts/experiment_3765_archive_v344_activate_v345.py")
++    assert script.exists()
++    text = script.read_text(encoding="utf-8")
++    assert "archive_v344_activate_v345_3765" in text
+-- 
+2.55.0
+

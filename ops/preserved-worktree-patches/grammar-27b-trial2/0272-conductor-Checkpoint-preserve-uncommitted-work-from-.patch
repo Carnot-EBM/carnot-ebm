@@ -1,0 +1,43 @@
+From fe6b1e82df5ee1937cbe9c43d1c043753b409c2c Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 08:52:22 -0400
+Subject: [PATCH 00272/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 5cc1cc476d..58d7cc9803 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 5, "phase": "iteration_start", "last_beat": "2026-06-03T12:50:08Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 6, "phase": "iteration_start", "last_beat": "2026-06-03T12:52:21Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 1c4a233704..248e7adf41 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7683,3 +7683,4 @@ ERROR: {
+ | 2026-06-03 12:43 UTC | Milestone 2026.06.344 activated | OK | 11 tasks queued |
+ | 2026-06-03 12:45 UTC | Archive milestone .343 HONESTLY (the in-loop Thesi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.59s |
+ | 2026-06-03 12:48 UTC | Archive milestone .343 HONESTLY (the in-loop Thesi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.89s |
++| 2026-06-03 12:50 UTC | Archive milestone .343 HONESTLY (the in-loop Thesi | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.52s |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index f62c9f2573..0a0f395926 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 13710, "iteration": 5, "phase": "iteration_start", "started_at": "2026-06-03T12:50:08Z"}
+\ No newline at end of file
++{"pid": 13710, "iteration": 6, "phase": "iteration_start", "started_at": "2026-06-03T12:52:21Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

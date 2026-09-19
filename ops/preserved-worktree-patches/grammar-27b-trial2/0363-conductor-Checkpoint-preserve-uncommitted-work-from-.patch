@@ -1,0 +1,43 @@
+From f737c200b29dc6614bad18b00f1c79bef5922cb0 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Wed, 3 Jun 2026 23:22:34 -0400
+Subject: [PATCH 00363/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Gemini CLI <noreply@google.com>
+---
+ ops/conductor-heartbeat.json | 2 +-
+ ops/conductor-log.md         | 1 +
+ ops/conductor-state.json     | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 8142b72541..df99c49678 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 1, "phase": "iteration_start", "last_beat": "2026-06-04T02:59:24Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 2, "phase": "iteration_start", "last_beat": "2026-06-04T03:22:33Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index 7ee6889dcf..15a77dc237 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -7728,3 +7728,4 @@ ERROR: {
+ | 2026-06-04 02:03 UTC | Milestone 2026.06.346 activated | OK | 10 tasks queued |
+ | 2026-06-04 02:18 UTC | Archive milestone .345 (PRODUCT-BANKING RECOVERY - | OK | 106 passed in 4.65s |
+ | 2026-06-04 02:42 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
++| 2026-06-04 03:20 UTC | P1 discrete-search adjudication v3 (the LAST open  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (1191s silence). Last ou |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 9fc5975f42..d38a13a7b0 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 253975, "iteration": 1, "phase": "iteration_start", "started_at": "2026-06-04T02:59:24Z"}
+\ No newline at end of file
++{"pid": 253975, "iteration": 2, "phase": "iteration_start", "started_at": "2026-06-04T03:22:33Z"}
+\ No newline at end of file
+-- 
+2.55.0
+

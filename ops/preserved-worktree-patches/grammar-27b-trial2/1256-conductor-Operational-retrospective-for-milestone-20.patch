@@ -1,0 +1,81 @@
+From 99de9a7af4f0d4c87fe55f65ed05f615a9934a3e Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Thu, 11 Jun 2026 07:52:25 -0400
+Subject: [PATCH 01256/11171] [conductor] Operational retrospective for
+ milestone 2026.06.373
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ docs/research-log.md                       |  6 +++++
+ ops/changelog.md                           |  6 +++++
+ results/operational_retro_2026_06_373.json | 30 ++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
+ create mode 100644 results/operational_retro_2026_06_373.json
+
+diff --git a/docs/research-log.md b/docs/research-log.md
+index 1875137fbb..9b3ec64792 100644
+--- a/docs/research-log.md
++++ b/docs/research-log.md
+@@ -5163,3 +5163,9 @@ The critical path for milestone .250:
+ - theme: 8th consecutive false-zero detector gap — while .372 actually ran the Deep-Think pivot's central bet: a heuristic search layer over the verifier-certified world model
+ - key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle at the snapshot with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .372 shipped exp4020-exp4028: per the .372 capstone (exp4028) the search-layer pivot ADVANCED — a best-first/heuristic search over the verifier-certified world model (exp4021) broke a planning wall single-step re-induction had stalled on (r11l L4, real-env-confirmed), with the goal predicate induced separately at held-out precision 1.000 (exp4020), so the wall was SEARCH not representation; plus +1 ARC level, +1 distinct game (exp4024 cd82 solved at action 5), an ArcMemo solve-transfer win (exp4025, 71->21 actions), and an efficiency win (exp4026, verifier parity at 95.3x cheaper than the LLM-judge). Decentralization was skipped (exp4022 flagged_adversarial) and the agreement-as-selector line was retired to confidence-label-only (exp4023). So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
+ - acceptance: retro-data 0/0 (false-zero); per .372 capstone exp4028 the Deep-Think pivot's central bet was met — search layer broke the r11l L4 wall (search-not-representation), +1 level, +1 game (cd82), ArcMemo + efficiency wins — with decentralization skipped (1 flagged-skipped: exp4022) and 0 cited arms missing
++
++### Milestone 2026.06.373
++- exp_range: exp4029-exp4041 (per ops/changelog.md window read this turn; the authoritative timing detector again falsely reported 0 — 9th consecutive false-zero across .363/.365/.366/.367/.368/.369/.370/.372/.373)
++- theme: 9th consecutive false-zero detector gap — while .373 actually ran the "did it GENERALIZE?" battery: off-ARC verifier transfer + hierarchical search past the bespoke r11l point
++- key result: Honest negative on the retro's own authoritative data (0 experiment commits since activation; both GPUs idle with 0 compute-bound tasks, so the idle GPU is correct and gpu_idle_on_compute_bound_tasks=null). But .373 shipped exp4029-exp4041: per the .373 capstone (exp4041) the three open arguments were MEASURED and most came back negative — G1 off-ARC verifier transfer DIRECTIONAL but UNDERPOWERED (CI touches zero); G2 the search layer did NOT generalize (the hierarchical search failed to break vc33's wall, real-env-confirmed — exp4035 — so the .372 r11l search win was a bespoke trick, not a general planner); G3 decentralization stronger-base ABSENT (exp4037 did not beat the 0.2581 gemma-4-12B ceiling). Offsetting wins: 7th ARC game first-solved (exp4038, dc22 at action 20), vc33 goal predicate induced at held-out precision 1.000 (exp4034), and an ArcMemo v6 concept-library transfer (exp4039, 59->18 actions); 1 flagged-skipped. So the zero timing is a detector artifact (detector_gap_suspected=true), and the recurring failure is observability, not execution.
++- acceptance: retro-data 0/0 (false-zero); per .373 capstone exp4041 the milestone honestly MEASURED its three open arguments and most returned negative — G1 directional/underpowered (CI touches zero), G2 no generalization (search did not break vc33), G3 absent (stronger base did not lift) — while the accuracy axis advanced to 7 games solved with an ArcMemo win, 1 flagged-skipped, 0 cited arms missing
+diff --git a/ops/changelog.md b/ops/changelog.md
+index a7462f094c..0ef43c0c34 100644
+--- a/ops/changelog.md
++++ b/ops/changelog.md
+@@ -8942,3 +8942,9 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
+ - 2026-06-11: ArcMemo v6: concept-LIBRARY learning (self-learning MANDATE; extends the exp4025 v5 71->21-action transfer): v5 stored raw concepts; v6 COMPRESSES recurring induced-program fragments into NAMED, documented abstractions (LILO/Stitch, arXiv:2310.19791) that seed future induction. Measure whether the compressed library makes THIS milestone's new solves (exp4035 search-layer / exp4038 7th game) cheaper (fewer actions / fewer induction calls) than v5's raw memory and a cold start. (⚠️ Research Finding) — honest_verdict=success: arcmemo_v6_library_transfer_59to18_actions; results/experiment_4039_arcmemo_concept_library_v6.json
+ - 2026-06-11: Hardware continuity (consolidated; KV260 drive-toward-terminal per north-star §3): per-board SSH/USB reachability + KV260 toward its terminal state. exp4027 found KV260 reachable but the carnot_ising OVERLAY ABSENT -- this task loads it (xmutil loadapp) and takes a board-latency-transcript step (the KV260 terminal-state gate). GateMate (openFPGALoader -c dirtyJtag --detect) + PolarFire (ssh polarfire) opportunistic. Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability is the ONLY valid KV260 precondition. DISTINCT wall-clock timers per board (no shared-timestamp tautology). (⚠️ Blocked) — honest_verdict=complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded; results/experiment_4040_hardware_continuity.json
+ - 2026-06-11: Capstone .373 (UNGATED): the milestone's headline question is DID THE VERIFIER MEASURABLY GENERALIZE OFF-ARC, AND DID THE SEARCH LAYER GENERALIZE PAST THE BESPOKE r11l POINT? Aggregate: G1 VERIFIER-GENERALITY = exp4032 (does the GAP-4 execution primitive transfer to MBPP/HumanEval -- CI-excl-0 delta or honest negative or uninformative?) + exp4033 (registry/gap recorded); G2 SEARCH-GENERALIZATION = exp4034 (vc33 goal predicate) + exp4035 (hierarchical search over vc33 WM: search_layer_generalizes + heuristic_was_non_bespoke + nodes_expanded -- did a GENERAL heuristic break a SECOND game's wall?); G3 DECENTRALIZATION = exp4037 (did a stronger local base beat the 0.2581 12B ceiling -- latent vs absent?); ACCURACY = exp4038 (total_games_solved); SELF-LEARNING = exp4039; HARDWARE = exp4040. Honest verdict on whether .373 converted the three open arguments into measurements. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists. (✅ Complete) — honest_verdict=complete: capstone_v373_arguments_measured_G1_directional_underpowered_ci_touches_zero_G2_no_generalization_G3_absent_games7_arcmemo_win_flagged_skipped1; results/experiment_4041_capstone_v373.json
++
++## 2026-06-11 (Operational retrospective — .373)
++
++- Wrote `results/operational_retro_2026_06_373.json` (schema carnot.operational_retro.v64). The authoritative timing block reported 0 experiment commits since activation, so the locked numeric fields are all 0 (total_wall_time_minutes, experiments_completed, compute_bound_experiments_count) and slowest_experiments is empty. Both RTX 3090s read 0% at the retro snapshot — correct post-milestone idle with 0 compute-bound tasks in the block, so gpu_idle_on_compute_bound_tasks=null and GPU idle is NOT flagged.
++- **Meta-finding:** this is the 9th consecutive false-zero (.363/.365/.366/.367/.368/.369/.370/.372/.373). The on-disk ops/changelog.md window for .373 records real committed work (exp4029-exp4041, the "did it GENERALIZE?" battery: off-ARC verifier-transfer probe + vc33 goal-induction/hierarchical search + decentralization stronger-base + 7th game + ArcMemo v6 + capstone), so the zero is a milestone-scoped commit-detection gap, not an idle milestone. The earlier "detector fixed" claim is still unverified end-to-end — this retro received another zero block. Top-3 highest-leverage actions: (1) repair the detector/windowing and prove it end-to-end on a live retro (must report exp4029-exp4041, not 0); (2) add a detector-independent glob/git fallback keyed to the activation SHA + a loud self-check that FAILS when count==0 but on-disk artifacts exist; (3) verify-or-revert the standing "detector fixed" claim.
++- Appended the .373 narrative to `docs/research-log.md`. No edits to operator-curated docs (roadmap.md, index.html, README.md), research_conductor.py, or research-roadmap.yaml.
+diff --git a/results/operational_retro_2026_06_373.json b/results/operational_retro_2026_06_373.json
+new file mode 100644
+index 0000000000..9978f5910f
+--- /dev/null
++++ b/results/operational_retro_2026_06_373.json
+@@ -0,0 +1,30 @@
++{
++  "schema": "carnot.operational_retro.v64",
++  "milestone": "2026.06.373",
++  "generated_at": "2026-06-11T11:49:11Z",
++  "retro_type": "operational_full",
++  "total_wall_time_minutes": 0,
++  "experiments_completed": 0,
++  "compute_bound_experiments_count": 0,
++  "slowest_experiments": [],
++  "gpu_idle_on_compute_bound_tasks": null,
++  "summary": "The authoritative timing block reported 0 experiment commits since activation of 2026.06.373, so total_wall_time_minutes, experiments_completed, and compute_bound_experiments_count are all 0 and slowest_experiments is empty. With 0 compute-bound tasks in the block and both RTX 3090s reading 0% at the snapshot, the idle GPU is correct post-milestone behaviour, so gpu_idle_on_compute_bound_tasks is null and GPU idle is NOT flagged as a bottleneck. This is the 9th consecutive false-zero: the on-disk ops/changelog.md records real .373 work (exp4029-exp4041), so the zero is a milestone-scoped commit-detection gap, not an idle milestone.",
++  "bottlenecks_identified": [
++    "Milestone-scoped commit detector returned 0 experiments for the 9th consecutive milestone (.363/.365/.366/.367/.368/.369/.370/.372/.373) despite on-disk ops/changelog.md recording the full exp4029-exp4041 chain for .373 — the operational retrospective is structurally running on empty input and cannot measure execution efficiency.",
++    "The standing 'detector fixed' claim (made same-milestone in a prior task) remains unverified on the live retro-timing feed: this retro received another zero block, so the fix is absent, regressed, or was never exercised end-to-end.",
++    "No GPU bottleneck: both RTX 3090s read 0% at the snapshot with 0 compute-bound tasks in the block, which is correct post-milestone idle — not a bug, and explicitly NOT flagged per the GPU idle interpretation rule."
++  ],
++  "improvements_suggested": [
++    "Repair the milestone-scoped commit-detection/windowing so the retro receives the real exp range (must report exp4029-exp4041 for .373, not 0), and prove it end-to-end on a live .374 retro before claiming fixed.",
++    "Add a detector-independent fallback: glob results/experiment_*.json (or git log --since the activation SHA/timestamp) and cross-check against the timing block; emit a loud self-check that FAILS when count==0 but on-disk milestone artifacts exist.",
++    "Stamp each milestone's first/last experiment_id into the activation manifest so the retro has an authoritative range independent of commit-message parsing.",
++    "Verify-or-revert the standing 'detector fixed' claim — treat an unverified infra claim as a regression until a live retro reports a non-zero count, and record the verification artifact."
++  ],
++  "top_3_highest_leverage_actions": [
++    "Fix the commit detector/windowing and demonstrate it on a live .374 retro that reports the real range (exp4029-exp4041 for .373), not 0 — this single recurring failure has now persisted across 9 milestones and blocks every operational retro from doing its job.",
++    "Ship a detector-independent on-disk glob/git fallback plus a fail-loud assert (count==0 while on-disk milestone artifacts are present == hard error), so a future false-zero cannot silently pass as a real retrospective.",
++    "Verify-or-revert the prior 'detector fixed' claim and commit the verification artifact, closing the trust gap on unverified infrastructure fixes."
++  ],
++  "estimated_time_savings_pct": 5,
++  "meta_reflection": "For the 9th consecutive milestone the retrospective's authoritative input was a false zero while the milestone actually shipped a full experiment chain (exp4029-exp4041 per on-disk changelog: the off-ARC verifier-transfer probe, vc33 goal-induction plus hierarchical search, the decentralization stronger-base rerun, the 7th ARC game, ArcMemo v6, and the capstone). The recurring failure is observability, not execution — the experiments are running; the detector that feeds this retro is not seeing them. Until the detector is fixed and verified on a live feed, every operational retro is structurally unable to measure execution efficiency because it never receives the timing data it exists to analyze."
++}
+-- 
+2.55.0
+

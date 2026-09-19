@@ -1,0 +1,70 @@
+From 9638ac3086772258b1487ea3f1959ede3b8df439 Mon Sep 17 00:00:00 2001
+From: Ian Blenke <ian@blenke.com>
+Date: Fri, 12 Jun 2026 19:23:28 -0400
+Subject: [PATCH 01505/11171] [conductor] Checkpoint: preserve uncommitted work
+ from interrupted run
+
+Co-Authored-By: Codex CLI <noreply@openai.com>
+---
+ ops/conductor-heartbeat.json                    |  2 +-
+ ops/conductor-log.md                            |  1 +
+ ops/conductor-state.json                        |  2 +-
+ ...riment_4116_sudoku_extreme_resume_pass1.json | 17 +++++++++++++++--
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/ops/conductor-heartbeat.json b/ops/conductor-heartbeat.json
+index 6b2816fdff..e4956a3b39 100644
+--- a/ops/conductor-heartbeat.json
++++ b/ops/conductor-heartbeat.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 11, "phase": "iteration_start", "last_beat": "2026-06-12T22:54:25Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 12, "phase": "iteration_start", "last_beat": "2026-06-12T23:23:26Z"}
+\ No newline at end of file
+diff --git a/ops/conductor-log.md b/ops/conductor-log.md
+index cd60d9d853..ec84b36aef 100644
+--- a/ops/conductor-log.md
++++ b/ops/conductor-log.md
+@@ -8385,3 +8385,4 @@ c |
+ | 2026-06-12 22:11 UTC | Capstone .380 (UNGATED): headline question is DID  | OK | 88 passed in 4.69s |
+ | 2026-06-12 22:21 UTC | Milestone 2026.06.381 activated | OK | 10 tasks queued |
+ | 2026-06-12 22:44 UTC | Archive .380 -> activate .381; KEEP the hardened g | OK | 94 passed in 4.84s |
++| 2026-06-12 23:13 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 1 (estab | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+diff --git a/ops/conductor-state.json b/ops/conductor-state.json
+index 1f1dd9e39d..044eea530e 100644
+--- a/ops/conductor-state.json
++++ b/ops/conductor-state.json
+@@ -1 +1 @@
+-{"pid": 34755, "iteration": 11, "phase": "iteration_start", "started_at": "2026-06-12T22:54:25Z"}
+\ No newline at end of file
++{"pid": 34755, "iteration": 12, "phase": "iteration_start", "started_at": "2026-06-12T23:23:26Z"}
+\ No newline at end of file
+diff --git a/results/experiment_4116_sudoku_extreme_resume_pass1.json b/results/experiment_4116_sudoku_extreme_resume_pass1.json
+index ef61df29f3..761c481567 100644
+--- a/results/experiment_4116_sudoku_extreme_resume_pass1.json
++++ b/results/experiment_4116_sudoku_extreme_resume_pass1.json
+@@ -143,5 +143,18 @@
+     "val_exact_accuracy=val/exact_accuracy metric missing under /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4116_sudoku_extreme_resume_pass1_hydra; q_halt_accuracy is not a solve metric",
+     "cumulative_epochs=None"
+   ],
+-  "val_exact_accuracy": null
+-}
++  "val_exact_accuracy": null,
++  "flagged_adversarial": true,
++  "corrigendum_pending": [
++    {
++      "kind": "DURATION_TOO_SHORT",
++      "severity": "critical",
++      "detail": "duration_s=5.992 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
++    },
++    {
++      "kind": "METHODOLOGY_MISSING",
++      "severity": "warn",
++      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
++    }
++  ]
++}
+\ No newline at end of file
+-- 
+2.55.0
+
