@@ -9889,6 +9889,42 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-09-19: AUTORESEARCH CIRCUIT BREAKER SELF-LOCKS ON A CUMULATIVE, NEVER-RESET COUNTER — HAPPENED TWICE IN ONE DAY
+
+**What happened.** `AutoresearchConfig.max_consecutive_failures=10` counts the
+trailing streak of `rejected` outcomes in the PERSISTED, ALL-TIME experiment log
+(`ExperimentLog.consecutive_failures()`, `python/carnot/autoresearch/experiment_log.py`)
+BEFORE the generator is ever called for a new round. This check has no decay and
+no per-invocation reset, so once ten rejections accumulate at the tail (a
+perfectly normal outcome for a working research loop — most hypotheses are
+supposed to be rejected), every future round trips the breaker at iteration 0
+with zero error text, forever, until a human manually truncates the log. This
+happened twice on 2026-09-19 alone (once ~04:00 UTC, fixed by an operator-directed
+log reset that also unblocked the circuit breaker's first-ever real acceptance
+—`calibrated_decision` energy 0.5 -> 0.295, `11936f946a`; again ~14:30 UTC after
+one round's honest 4-rejection tail plus prior history re-crossed the threshold).
+Both times fixed the same way: back up the gitignored `ops/.autoresearch_
+experiment_log.json`, reset it to `[]`. This is a cache reset of local
+bookkeeping, not a research-record deletion — the log is gitignored and never
+committed; the actual accepted-hypothesis history lives in the git-committed
+`ops/autoresearch_discoveries/` lineage instead.
+
+**Why this will keep recurring without a structural fix.** A cumulative,
+never-decaying failure counter over an unbounded log is definitionally a matter
+of "when," not "if," it re-trips — a genuinely working benchmark will produce
+long honest-rejection streaks by design (see `verifier_auroc`'s own docstring:
+"further improvements this benchmark can report are plausibly sampling noise").
+Manually resetting the log every time it trips is not a fix, it is a recurring
+chore.
+
+**Queued fix, not implemented in this pass.** `consecutive_failures()` should
+either (a) window over a bounded recent slice (e.g. last N rounds, not all-time),
+or (b) reset per script invocation rather than reading the full persisted
+history, or (c) both. This is a `python/carnot/autoresearch/experiment_log.py` +
+`scripts/autoresearch_conductor_round.py` code change, out of scope for an
+outer-loop hot-fix — queued here as a hard pickup, same "convert the lesson into
+a check that fires" principle as the GitHub pack-size entry below.
+
 ### NEW 2026-09-18: GITHUB PACK-SIZE INCIDENT — HISTORY REWRITTEN, CONDUCTOR-SIDE SIZE GATE STILL NEEDED
 
 **What happened.** GitHub push had been silently failing since 2026-08-30 (19 days,
