@@ -18199,3 +18199,4 @@ code |
 | 2026-09-19 00:39 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 00:41 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
 | 2026-09-19 00:43 UTC | Measure certified memory on fresh bounded model pr | GATE_BLOCK | 2 of 6 gate(s) failed; first failure: exp7402-proposal-capture.candidate_capture_complete_score (actual=0 == expected=1) |
+| 2026-09-19 01:22 UTC | Audit synthetic and live proof claims independentl | OK | 112 passed, 1 warning in 36.73s |
