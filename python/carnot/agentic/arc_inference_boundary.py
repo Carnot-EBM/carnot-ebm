@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from carnot.agentic.arc_request_budget import RequestReservation, reserve_for_proposer
+
 BOUNDARY_LEDGER_ENV = "CARNOT_ARC_BOUNDARY_LEDGER_PATH"
 BOUNDARY_EVENT_SCHEMA = "carnot.arc_inference_boundary_event.v1"
 OPERATIONS = frozenset({"model_load", "generation"})
@@ -87,11 +89,14 @@ class BoundaryCall:
     owner_pid: int
     started_monotonic_ns: int
     child_pid: int | None
+    request_reservation: RequestReservation | None = None
     terminal: bool = False
 
     @classmethod
-    def disabled(cls, operation: str) -> BoundaryCall:
-        return cls(None, operation, "", {}, os.getpid(), 0, None)
+    def disabled(
+        cls, operation: str, request_reservation: RequestReservation | None = None
+    ) -> BoundaryCall:
+        return cls(None, operation, "", {}, os.getpid(), 0, None, request_reservation)
 
     def _append(self, state: str, **values: Any) -> None:
         if self.ledger is None:
@@ -122,6 +127,8 @@ class BoundaryCall:
         """Append a completed state without treating content quality as transport."""
         if self.terminal:
             raise RuntimeError("boundary call is already terminal")
+        if self.request_reservation is not None:
+            self.request_reservation.complete()
         self.terminal = True
         self._append(
             "completed",
@@ -133,6 +140,8 @@ class BoundaryCall:
         """Append a failed state while retaining the earlier attempt."""
         if self.terminal:
             raise RuntimeError("boundary call is already terminal")
+        if self.request_reservation is not None:
+            self.request_reservation.fail(error)
         self.terminal = True
         self._append(
             "failed",
@@ -214,16 +223,19 @@ class InvocationBoundaryLedger:
 
 def boundary_call_for_proposer(proposer: Any, operation: str) -> BoundaryCall:
     """Start a receipt when the optional live-ledger environment variable is set."""
+    reservation = reserve_for_proposer(proposer, operation)
     path = os.environ.get(BOUNDARY_LEDGER_ENV)
     if not path:
-        return BoundaryCall.disabled(operation)
+        return BoundaryCall.disabled(operation, reservation)
     process = getattr(proposer, "_proc", None)
     child_pid = getattr(process, "pid", None) if operation == "generation" else None
-    return InvocationBoundaryLedger(path).begin(
+    call = InvocationBoundaryLedger(path).begin(
         operation,
         model_identity_from_proposer(proposer),
         child_pid=child_pid,
     )
+    call.request_reservation = reservation
+    return call
 
 
 def _empty_counts() -> dict[str, int]:

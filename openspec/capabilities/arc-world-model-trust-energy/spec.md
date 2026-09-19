@@ -13,6 +13,109 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+## V650 live ARC episode request budget — 2026-09-19
+
+**Status:** Specified. This work hardens request accounting at the live
+transport boundary. Scripted transport tests plumbing only. They do not
+measure model efficacy.
+
+### REQ-ARC-WMTE-7411: Enforce one shared request budget at dispatch
+
+The live ARC inference boundary SHALL accept an optional episode request
+budget. The default path SHALL remain unchanged when no budget is attached.
+The budget SHALL atomically reserve one slot before each generation dispatch.
+A failed, timed-out, or cancelled dispatch SHALL consume its reserved slot.
+No primary, parser-retry, repair, refinement, nested, concurrent, or supervisor
+callback SHALL dispatch after the shared budget is exhausted.
+
+The budget SHALL use one monotonic episode deadline and one cancellation token.
+Episode closure SHALL cancel in-flight reservations. A response that arrives
+after closure SHALL receive a terminal cancelled disposition. It SHALL raise at
+the inference boundary before caller code can commit an action, engine, or
+memory. Every reserved dispatch SHALL have exactly one terminal disposition.
+Accounting SHALL satisfy `attempted=completed+failed+cancelled+in_flight`.
+
+The budget SHALL expose immutable callback rows. Each row SHALL identify the
+episode, request, branch, reservation time, terminal time, and disposition.
+Concurrent reservation and nested callback races SHALL not exceed the limit.
+Restart from a durable receipt SHALL preserve completed request identities.
+Replaying a completed request identity SHALL not dispatch or consume a new
+slot. Elapsed cost SHALL use measured monotonic time.
+
+Experiment 7411 SHALL first reproduce the Experiment 7406 overflow with private
+scripted transport through `make_carnot_agent` and `E3AgentPolicy`. It SHALL
+trace primary, parser-failure, retry, repair, refinement, nested, concurrent,
+late-completion, cancellation, and supervisor callbacks. Historical runtime
+receipts and scripted response bytes SHALL remain in hash-bound sidecars. They
+SHALL not enter current model invocation counters.
+
+The experiment SHALL run one scored-policy plumbing episode on each of three
+registry-rotated public games. It SHALL freeze selection before current
+outcomes. It SHALL withhold adapters, saved engines, solve lookups, game source,
+and ground-truth search from the policy. Each episode SHALL use scripted
+transport, at most 12 environment actions, and a request budget of two. No row
+may report more than two observed dispatches. A described solve SHALL use
+`solve_provenance=development_proxy` and receive no solve credit.
+
+The experiment SHALL inspect the existing supervisor redirect ledger. It SHALL
+bank existing outcomes only. When no supported firing exists, it SHALL report
+nothing to refine. It SHALL not add an arm or change arm order. Small Gibbs
+training SHALL use `small_ebm_training` receipts. It SHALL not change generator
+weights or production defaults.
+
+The terminal artifact SHALL use run date `20260919`, milestone `2026.09.650`,
+`MODEL_SPECS=[]`, `model_invoked=false`, zero current LLM invocation counts,
+`inference_substrate_class=no_model_load`, and `execution_venue=host`.
+`arc_budget_ready_score` SHALL equal one only when every request invariant,
+cold-restart parity check, affected check, applicable end-to-end check,
+independent reduction, adversarial verification, and strict row check passes.
+`live_efficacy_score` and `promotion_score` SHALL remain zero.
+
+#### SCENARIO-ARC-WMTE-7411-OVERFLOW
+
+- GIVEN the authenticated Experiment 7406 record and the actual scored policy factory
+- WHEN private scripted callbacks reproduce the old episode-level accounting boundary
+- THEN the diagnostic shows that launcher metadata did not reserve at dispatch
+- AND historical or scripted calls remain outside current invocation counters.
+
+#### SCENARIO-ARC-WMTE-7411-ATOMIC-RESERVATION
+
+- GIVEN primary, retry, repair, refinement, nested, supervisor, and concurrent callbacks
+- WHEN all callbacks share a request budget of two
+- THEN no more than two callbacks reach transport
+- AND every reserved callback has exactly one terminal disposition.
+
+#### SCENARIO-ARC-WMTE-7411-CANCELLATION
+
+- GIVEN an in-flight request and one monotonic episode deadline
+- WHEN the request times out, cancellation closes the episode, or a response arrives late
+- THEN the reserved slot remains consumed and the row becomes terminal
+- AND late caller code cannot commit an action, engine, or memory.
+
+#### SCENARIO-ARC-WMTE-7411-RESTART
+
+- GIVEN a durable receipt with a completed request identity
+- WHEN a cold process reconstructs the budget and replays that identity
+- THEN no duplicate dispatch occurs and the original terminal row is retained
+- AND accounting and measured elapsed time match the pre-restart receipt.
+
+#### SCENARIO-ARC-WMTE-7411-SCORED-PLUMBING
+
+- GIVEN three registry-rotated public games with all per-game help withheld
+- WHEN the real scored policy runs at most 12 actions with scripted transport
+- THEN every game remains within the two-dispatch budget and records real elapsed cost
+- AND the rows provide development-proxy plumbing evidence only.
+
+#### SCENARIO-ARC-WMTE-7411-TERMINAL
+
+- GIVEN raw callback rows, scored-policy rows, validation receipts, and sidecars
+- WHEN independent readers recompute the candidate before atomic publication
+- THEN zero budget, deadline, and late-write violations are required for readiness
+- AND `live_efficacy_score=0` states that no current Qwen evidence exists.
+
+Implementation status: specified 2026-09-19. The conductor owns later status,
+changelog, and traceability reconciliation.
+
 ## V649 bounded adapter-withheld ARC generalization panel — 2026-09-19
 
 **Status:** Specified. This panel measures the live self-discovery method on
