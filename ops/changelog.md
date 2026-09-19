@@ -20142,3 +20142,4 @@ stderr is empty, and added regression tests reproducing the exact banner-then-er
 - 2026-09-19: Enforce ARC request budgets at the live callback boundary (⚠️ Research Finding) — honest_verdict=complete_disqualified_required_evidence; results/experiment_7411_v650_arc_call_budget.json
 - 2026-09-19: Prototype source-aware energy inputs and freeze decision tests (⚠️ Research Finding) — honest_verdict=complete_null_source_feature_protocol_ready_real_efficacy_unmeasured; results/experiment_7412_v650_source_features.json
 - 2026-09-19: Measure source-grounded Gibbs calibration against simple controls (⚠️ Research Finding) — honest_verdict=complete_null_source_calibration_no_registered_decision_benefit; results/experiment_7413_v650_source_calibration.json
+- 2026-09-19: Measure continuous energy calibration under selected feedback (⚠️ Research Finding) — honest_verdict=complete_null_insufficient_online_support; results/experiment_7414_v650_selected_feedback.json
